@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\User;
 
 class SaleFactory extends Factory
 {
@@ -27,7 +28,7 @@ class SaleFactory extends Factory
     {
         return [
             'progressive_discount' => null,
-            'owner_id' => Company::USER_ID_DEMO,
+            'owner_id' => User::DEMO_ID,
             'gateway_id'=>Gateway::SAFE2PAY_PRODUCTION_ID,
             'customer_id' =>  null,
             'project_id' =>  null,

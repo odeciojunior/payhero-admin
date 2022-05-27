@@ -237,7 +237,7 @@ class CoreApiController extends Controller
                 ->orderBy('order_priority')->get();
 
             $company_default_name = 'Empresa Demo';
-            if($user->company_default > Company::COMPANY_ID_DEMO)
+            if($user->company_default > Company::DEMO_ID)
             {
                 $companyDefault = Company::select('company_type','fantasy_name')
                     ->where('id', $user->company_default)

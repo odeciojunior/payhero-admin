@@ -5,13 +5,28 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\ActivecampaignIntegration;
+use Modules\Core\Entities\AstronMembersIntegration;
 use Modules\Core\Entities\BlockReason;
 use Modules\Core\Entities\BlockReasonSale;
+use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\HotbilletIntegration;
+use Modules\Core\Entities\HotzappIntegration;
+use Modules\Core\Entities\MelhorenvioIntegration;
+use Modules\Core\Entities\NotazzIntegration;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\ReportanaIntegration;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
+use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\SmartfunnelIntegration;
 use Modules\Core\Entities\Ticket;
+use Modules\Core\Entities\UnicodropIntegration;
+use Modules\Core\Entities\Whatsapp2Integration;
+use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Notazz\Http\Controllers\NotazzController;
 
 class DemoAccountFakeData extends Command
 {
@@ -48,12 +63,14 @@ class DemoAccountFakeData extends Command
     {
         Config::set('database.default', 'demo');
 
-        $gatewayService = new Safe2PayService();
-        $gatewayService->updateAvailableBalance();
+        // $gatewayService = new Safe2PayService();
+        // $gatewayService->updateAvailableBalance();
 
-        $this->createFakeContestation();
+        // $this->createFakeContestation();
 
-        $this->createFakeTicket();
+        // $this->createFakeTicket();
+
+        $this->generateApisFakeData();
     }
 
     public function createFakeContestation(){
@@ -113,6 +130,23 @@ class DemoAccountFakeData extends Command
                 'customer_id'=>$sale->customer_id
             ]);
         }
+    }
+    
+    public function generateApisFakeData(){
+        $project = Project::select('id')->inRandomOrder()->first();
 
+        NotazzIntegration::factory()->for($project)->create();
+        HotzappIntegration::factory()->for($project)->create();
+        ShopifyIntegration::factory()->for($project)->create();
+        ConvertaxIntegration::factory()->for($project)->create();
+        ActivecampaignIntegration::factory()->for($project)->create();
+        Whatsapp2Integration::factory()->for($project)->create();
+        ReportanaIntegration::factory()->for($project)->create();
+        UnicodropIntegration::factory()->for($project)->create();
+        SmartfunnelIntegration::factory()->for($project)->create();
+        WooCommerceIntegration::factory()->for($project)->create();
+        MelhorenvioIntegration::factory()->create();
+        HotbilletIntegration::factory()->for($project)->create();
+        AstronMembersIntegration::factory()->for($project)->create();
     }
 }

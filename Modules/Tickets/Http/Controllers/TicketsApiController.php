@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\TicketAttachment;
 use Modules\Core\Entities\TicketMessage;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\Sac\TicketMessageEvent;
 use Modules\Core\Services\AttendanceService;
 use Modules\Core\Services\FoxUtils;
@@ -24,10 +25,10 @@ use Vinkla\Hashids\Facades\Hashids;
 class TicketsApiController extends Controller
 {
     public function index(Request $request)
-    {
+    {        
         try {
             $data = (object)$request->all();
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
 
             $ticketsQuery = Ticket::select([
                 'tickets.id',

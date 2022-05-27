@@ -43,7 +43,7 @@ class CreateSalesFakeForDemoAccount extends Command
     {        
         Config::set('database.default', 'demo');
 
-        $this->company = Company::find(Company::COMPANY_ID_DEMO);
+        $this->company = Company::find(Company::DEMO_ID);
         $attemps = 3;
         $counter = 1;
         do{

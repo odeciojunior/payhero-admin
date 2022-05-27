@@ -18,13 +18,13 @@ use Modules\Core\Entities\HotbilletIntegration;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Entities\MelhorenvioIntegration;
 use Modules\Apps\Http\Controllers\AppsApiController;
-use Modules\Core\Entities\Company;
+use Modules\Core\Entities\User;
 
 class AppsApiDemoController extends AppsApiController
 {
     public function index(): JsonResponse
     {
-        $accountOwnerId = Company::USER_ID_DEMO;
+        $accountOwnerId = User::DEMO_ID;
         
         return response()->json([
             'hotzappIntegrations' => HotzappIntegration::where('user_id', $accountOwnerId)->count(),

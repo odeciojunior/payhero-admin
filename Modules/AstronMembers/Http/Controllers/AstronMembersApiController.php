@@ -31,14 +31,16 @@ class AstronMembersApiController extends Controller
             $userProjectModel   = new UserProject();
             $projectModel       = new Project();
 
-            $astronMembersIntegrations = $astronMembersIntegration->where('user_id', auth()->user()->account_owner_id)
+            $user = auth()->user();
+            $astronMembersIntegrations = $astronMembersIntegration->where('user_id', $user->getAccountOwnerId())
                                                       ->with('project')->get();
 
             $projects     = collect();
             $userProjects = $userProjectModel->where([[
-                'user_id', auth()->user()->account_owner_id],[
-                'company_id', auth()->user()->company_default
+                'user_id', $user->getAccountOwnerId()],[
+                'company_id', $user->company_default
             ]])->orderBy('id', 'desc')->get();
+            
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject->project()->where('status', $projectModel->present()->getStatus('active'))

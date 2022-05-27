@@ -45,12 +45,8 @@ class SaleService
             $customerModel = new Customer();
             $transactionModel = new Transaction();            
 
-            if (!$userId) {
-                $user = auth()->user();
-                $userId = Company::USER_ID_DEMO;
-                if(!empty($user)){
-                    $userId = $user->account_owner_id;
-                }
+            if (!$userId) {                
+                $userId = auth()->user()->getAccountOwnerId();     
             }
 
             if (empty($filters["company"])) {

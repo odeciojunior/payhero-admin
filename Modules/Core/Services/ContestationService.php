@@ -12,6 +12,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleContestationFile;
+use Modules\Core\Entities\User;
 use Modules\Sales\Http\Controllers\SalesController;
 use ParagonIE\Sodium\Compat;
 use stringEncode\Exception;
@@ -40,11 +41,8 @@ class ContestationService
 
     function getQuery($filters)
     {
-        $user = \Auth::user();
-        $account_owner_id = $user->account_owner_id;
-        if($user->company_default == Company::COMPANY_ID_DEMO){
-            $account_owner_id = Company::USER_ID_DEMO;
-        }
+        $account_owner_id = auth()->user()->getAccountOwnerId();
+        
         $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name',
         'sales.total_paid_value','sales.sub_total','sales.shipment_value',\DB::Raw("CAST(sales.shopify_discount as DECIMAL) AS shopify_discount"))
             ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '". Carbon::now()->addDay(2)->endOfDay()."' THEN 1 ELSE 0 END) as custom_expired"))
@@ -165,7 +163,7 @@ class ContestationService
                 return $query->where('sales.status', Sale::STATUS_APPROVED);
             }
         });
-\Log::info(str_replace_array('?',$contestations->getBindings(),$contestations->toSql()));
+
         return $contestations;
     }
 

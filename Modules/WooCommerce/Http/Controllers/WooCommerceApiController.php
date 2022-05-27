@@ -44,7 +44,7 @@ class WooCommerceApiController extends Controller
             )->log('Visualizou tela todos as integrações com o woocommerce');
             $woocommerceIntegrations = $woocommerceIntegrationModel->where(
                 'user_id',
-                auth()->user()->account_owner_id
+                auth()->user()->getAccountOwnerId()
             )->get();
             $projects = [];
             foreach ($woocommerceIntegrations as $woocommerceIntegration) {

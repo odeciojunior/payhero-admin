@@ -26,10 +26,10 @@ class Whatsapp2ApiController extends Controller
             activity()->on((new Whatsapp2Integration()))->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações whatsapp 2.0');
+            
+            $accountOwnerId = auth()->user()->getAccountOwnerId();
 
-            $authUser = auth()->user();
-
-            $whatsapp2Integrations = Whatsapp2Integration::where('user_id', $authUser->account_owner_id)
+            $whatsapp2Integrations = Whatsapp2Integration::where('user_id', $accountOwnerId)
                 ->with('project')
                 ->get();
 
@@ -38,7 +38,7 @@ class Whatsapp2ApiController extends Controller
                 'project' => function ($query) {
                     $query->where('status', Project::STATUS_ACTIVE);
                 }
-            ])->where([['user_id', $authUser->account_owner_id],[
+            ])->where([['user_id', $accountOwnerId],[
                 'company_id', auth()->user()->company_default
             ]])->get();
 
@@ -53,7 +53,7 @@ class Whatsapp2ApiController extends Controller
             return response()->json([
                 'integrations' => Whatsapp2Resource::collection($whatsapp2Integrations),
                 'projects' => ProjectsSelectResource::collection($projects),
-                'token_whatsapp2' => hashids_encode($authUser->account_owner_id, 'whatsapp2_token'),
+                'token_whatsapp2' => hashids_encode($accountOwnerId, 'whatsapp2_token'),
             ]);
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu algum erro'], 400);

@@ -117,6 +117,8 @@ class User extends Authenticable
     public const CELLPHONE_VERIFIED = 1;
     public const EMAIL_VERIFIED = 1;
 
+    public const DEMO_ID = 1;
+
     protected $presenter = UserPresenter::class;
     /**
      * @var array
@@ -415,5 +417,10 @@ class User extends Authenticable
             ->join('benefits', 'benefits.id', '=', 'user_benefits.benefit_id')
             ->select('user_benefits.*', 'benefits.name', 'benefits.description', 'benefits.level');
     }
-    
+
+    public function getAccountOwnerId()
+    {
+        return $this->company_default == Company::DEMO_ID ? self::DEMO_ID : $this->account_owner_id;        
+    }    
+        
 }
