@@ -30,7 +30,7 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 class Safe2PayService implements Statement
 {
     public Company $company;
-    public CompanyBankAccount $companyBankAccount;
+    public $companyBankAccount;
     public $gatewayIds = [];
     public $apiKey;
     public $companyId;
