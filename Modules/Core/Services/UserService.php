@@ -31,17 +31,6 @@ class UserService
         return false;
     }
 
-    public function haveAnyDocumentPending_(): bool
-    {
-        $user = User::find(auth()->user()->account_owner_id);
-
-        if ($user->address_document_status == UserDocument::STATUS_APPROVED && $user->personal_document_status == UserDocument::STATUS_APPROVED) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function haveAnyDocumentApproved(): bool
     {
         $user = User::find(auth()->user()->account_owner_id);
