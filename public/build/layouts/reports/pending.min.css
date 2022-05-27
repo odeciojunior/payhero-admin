@@ -1420,7 +1420,10 @@ h4.number{
     flex-direction: column;
 }
 @media only screen and (min-width: 1227px){
-    .box-conversion-state { flex-direction: row; }
+    .box-conversion-state { 
+        flex-direction: row; 
+        height: 353px;
+    }
 }
 
 .box-states, .brazil-map { flex:1; }
@@ -1507,7 +1510,7 @@ h4.number{
     padding: 0; 
     list-style: none;
     display: flex;
-    height: 308px;
+    height: 284px;
     flex-direction: column;
     justify-content: space-between;
 }
@@ -1566,9 +1569,7 @@ h4.number{
     font-weight: bold;
 }
 /* mapa brasil */
-#svg-map {
-    height: 340px;
-}
+#svg-map { height: 303px; }
 
 #svg-map path {
     fill: #f9f9f9;
