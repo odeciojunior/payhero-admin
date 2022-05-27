@@ -10,6 +10,7 @@ use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
+use Modules\Core\Entities\Ticket;
 use Modules\Core\Services\Gateways\Safe2PayService;
 
 class DemoAccountFakeData extends Command
@@ -51,6 +52,8 @@ class DemoAccountFakeData extends Command
         $gatewayService->updateAvailableBalance();
 
         $this->createFakeContestation();
+
+        $this->createFakeTicket();
     }
 
     public function createFakeContestation(){
@@ -90,5 +93,26 @@ class DemoAccountFakeData extends Command
                 'observation'=>$blockObs
             ]);
         }
+    }
+
+    public function createFakeTicket()
+    {
+        $sales = Sale::select('sales.id','sales.customer_id')
+                ->leftJoin('tickets as c','sales.id','=','c.sale_id')
+                ->whereNull('c.id')
+                ->where('sales.gateway_id',Gateway::SAFE2PAY_PRODUCTION_ID)
+                ->where('sales.status',Sale::STATUS_APPROVED)
+                ->inRandomOrder()
+                ->limit(3)
+                ->get(); 
+                
+        foreach($sales as $sale){
+            Ticket::factory()
+            ->for($sale)
+            ->create([
+                'customer_id'=>$sale->customer_id
+            ]);
+        }
+
     }
 }

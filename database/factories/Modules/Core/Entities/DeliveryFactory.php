@@ -2,9 +2,7 @@
 
 namespace Database\Factories\Modules\Core\Entities;
 
-use Google\Service\Monitoring\Custom;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Arr;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Delivery;
 use Modules\Core\Services\FoxUtilsFakeService;

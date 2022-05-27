@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -37,7 +38,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Ticket extends Model
 {
-    use PresentableTrait, LogsActivity;
+    use PresentableTrait, LogsActivity, HasFactory;
 
     const CATEGORY_COMPLAINT = 1;
     const CATEGORY_DOUBT = 2;
