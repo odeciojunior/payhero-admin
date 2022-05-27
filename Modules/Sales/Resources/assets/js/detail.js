@@ -1367,6 +1367,7 @@ $(() => {
         partial = 0,
         refundObservation
     ) {
+        $(".btn-confirm-refund-transaction").prop('disabled', true);
         loadingOnChart("#modal-refund");
         $.ajax({
             method: "POST",
@@ -1386,6 +1387,7 @@ $(() => {
                 $("#modal-refund-transaction").modal('toggle')
                 errorAjaxResponse(response);
                 atualizar(currentPage);
+                $(".btn-confirm-refund-transaction").prop('disabled', false);
             },
             success: (response) => {
                 loadingOnChartRemove(".sirius-loading");
@@ -1393,6 +1395,7 @@ $(() => {
                 alertCustom("success", response.message);
                 $("#refund_observation").val("");
                 atualizar(currentPage);
+                $(".btn-confirm-refund-transaction").prop('disabled', false);
             },
         });
     }
