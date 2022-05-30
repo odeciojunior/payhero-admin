@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -103,6 +104,7 @@ class User extends Authenticable
     use Notifiable;
     use PresentableTrait;
     use SoftDeletes;
+    use HasFactory;
 
     public const STATUS_ACTIVE = 1;
     public const STATUS_WITHDRAWAL_BLOCKED = 2;

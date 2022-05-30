@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\NotazzIntegration;
+use Illuminate\Support\Facades\Config;
+use Modules\Core\Services\DemoFakeDataService;
 
 class GenericCommand extends Command
 {
@@ -13,6 +14,9 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        
+        Config::set('database.default', 'demo');
+
+        $demo = new DemoFakeDataService();
+        $demo->createAffiliates();
     }
 }

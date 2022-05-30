@@ -818,7 +818,7 @@ class SaleService
                     },
                 ]
             )
-                ->where('user_id', auth()->user()->account_owner_id)                
+                ->where('user_id', auth()->user()->getAccountOwnerId())                
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereHas(
                     'blockReasonSale',
@@ -940,7 +940,7 @@ class SaleService
             ];
 
             $transactions = $transactionModel->with($relationsArray)
-                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('user_id', auth()->user()->getAccountOwnerId())
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->where(
                     'transactions.status_enum',

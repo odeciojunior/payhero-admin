@@ -12,6 +12,8 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\CustomerCard;
 use Modules\Core\Entities\Delivery;
+use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\PixCharge;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlanSale;
@@ -73,6 +75,8 @@ trait DemoPaymentFlowTrait
     protected $installmentFreeTaxValue = 0;
 
     protected $automaticDiscount = 0;
+
+    protected $cupomCode = '';
     
     public function createCheckout(){
         try { 
@@ -163,7 +167,22 @@ trait DemoPaymentFlowTrait
         $this->shippingPrice = FoxUtils::onlyNumbers($this->shipping->value);
         $this->totalValue+= $this->shippingPrice;
         return $this;
-    }    
+    } 
+    
+    public function checkDiscountCoupon()
+    {
+        $this->totalValue -= $this->automaticDiscount;
+       
+        $discountCoupon = DiscountCoupon::where('project_id', $this->project->id)->where('status',1)->inRandomOrder()->first();
+        
+        if (!empty($discountCoupon) && $this->totalValue > ($discountCoupon->rule_value ?? 0)) {
+            $this->cupomCode = $discountCoupon->code;
+            $discountValue = $this->applyDiscount($discountCoupon, $this->subTotal);
+            $this->totalValue -= $discountValue;
+        }       
+
+        return $this;
+    }
 
     public function checkProgressiveDiscount(){
         $this->progressiveDiscount = 0;
@@ -264,7 +283,7 @@ trait DemoPaymentFlowTrait
                 'original_total_paid_value' => $this->totalValue,
                 'sub_total' => FoxUtils::floatFormat($this->subTotal),
                 'shipment_value' => FoxUtils::floatFormat($this->shippingPrice),
-                'cupom_code' => '',
+                'cupom_code' => $this->cupomCode,
                 'start_date' => Carbon::now(),
                 'gateway_transaction_id' => '',                
                 'installments_amount' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT ? $this->installment_amount : null,
@@ -343,6 +362,12 @@ trait DemoPaymentFlowTrait
                 break;
             case Sale::PAYMENT_TYPE_PIX:
                 SaleInformation::factory()->for($this->sale)->create();
+
+                $pixCharge = PixCharge::factory()->for($this->sale)->create();
+                $pixCharge->update([
+                    'status'=>$this->sale->status ==Sale::STATUS_APPROVED ? 'RECEBIDO' : 'ATIVA'
+                ]);
+
             break;
         }
         return $this;
@@ -358,6 +383,41 @@ trait DemoPaymentFlowTrait
             ]);
         }
         return $this;
+    }
+
+    public function applyDiscount(DiscountCoupon $discountCoupon, $totalValue)
+    {
+
+        try {$totalValue = intval($totalValue);
+            if (!empty($discountCoupon)) {
+                $discountCouponModel = new DiscountCoupon();
+
+                if ($discountCoupon->type == 1) {
+                    if (($totalValue - $discountCoupon->value) < 500) {
+                        return 0;
+                    } else {
+                        return $discountCoupon->value;
+                    }
+                } else {
+                    $discount = intval($totalValue * ($discountCoupon->value / 100));
+                    if (($totalValue - $discount) < 500) {
+                        return 0;
+                    } else {
+
+                        $discount = str_replace('.', '', $discount);
+
+                        return $discount;
+                    }
+                }
+            } else {
+                return 0;
+            }
+        } catch (Exception $e) {
+            Log::warning('erro ao aplicar cupom de desconto');
+            report($e);
+
+            return 0;
+        }
     }
 
 }

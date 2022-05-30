@@ -25,7 +25,7 @@ class AppsApiController extends Controller
 {
     public function index(): JsonResponse
     {
-        $accountOwnerId = auth()->user()->account_owner_id;
+        $accountOwnerId = auth()->user()->getAccountOwnerId();
         $company_default = auth()->user()->company_default;
         return response()->json([
 

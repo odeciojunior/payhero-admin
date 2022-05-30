@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,7 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Sale $sale
  */
 class CompanyBankAccount extends Model
-{
+{    
+    use HasFactory;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string

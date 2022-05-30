@@ -39,7 +39,7 @@ class DashboardApiController extends Controller
     public function index()
     {
         try {
-            $companies = Company::where('user_id', auth()->user()->account_owner_id)
+            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())
                     ->where('active_flag', true)
                     ->orderBy('order_priority')
                     ->get() ?? collect();
@@ -473,7 +473,7 @@ class DashboardApiController extends Controller
 
             $user = auth()->user();
 
-            if (!($user->id == $user->account_owner_id)) {
+            if (!($user->id == $user->getAccountOrderId())) {
                 return \response()->json([
                     'message' => 'Usuário não é o dono da conta'
                 ]);

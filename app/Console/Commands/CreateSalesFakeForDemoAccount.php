@@ -51,6 +51,7 @@ class CreateSalesFakeForDemoAccount extends Command
                 ->preparePlans()        
                 ->prepareData()
                 ->checkAutomaticDiscount()
+                ->checkDiscountCoupon()
                 ->setCustomer()
                 ->setShipping()    
                 ->checkProgressiveDiscount()        

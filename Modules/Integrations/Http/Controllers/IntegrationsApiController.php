@@ -30,7 +30,7 @@ class IntegrationsApiController extends Controller
         try {
             $apiTokenModel = new ApiToken();
             $tokens        = $apiTokenModel->newQuery()
-                                            ->where('user_id', auth()->user()->account_owner_id)
+                                            ->where('user_id', auth()->user()->getAccountOwnerId())
                                             ->latest()
                                             ->paginate();
 

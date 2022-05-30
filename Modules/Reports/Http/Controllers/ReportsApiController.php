@@ -249,7 +249,7 @@ class ReportsApiController extends Controller
     public function getSalesByOrigin(Request $request)
     {
         try {
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
 
             if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
                 $affiliate = Affiliate::where([
@@ -459,7 +459,7 @@ class ReportsApiController extends Controller
             }
 
             $checkouts = Checkout::select(\DB::raw('count(*) as qtd_checkout, '.$request->origin.' as origin'));
-            $affiliate = Affiliate::select('id')->where('user_id', auth()->user()->account_owner_id);
+            $affiliate = Affiliate::select('id')->where('user_id', auth()->user()->getAccountOwnerId());
 
             if($request->project_id != "all"){
                 $checkouts = $checkouts->where('project_id', hashids_decode($request->project_id));
@@ -489,7 +489,7 @@ class ReportsApiController extends Controller
         try {
             $companyId = current(Hashids::decode($request->input('company')));
 
-            $company = Company::where('user_id', auth()->user()->account_owner_id)
+            $company = Company::where('user_id', auth()->user()->getAccountOwnerId())
                 ->where('id', $companyId)
                 ->first();
 
@@ -678,7 +678,7 @@ class ReportsApiController extends Controller
     {
         try {
             $projectId = $request->input('project');
-            $projects = UserProject::where('user_id', auth()->user()->account_owner_id)
+            $projects = UserProject::where('user_id', auth()->user()->getAccountOwnerId())
                 ->with('project')
                 ->where('type', 'producer');
 
