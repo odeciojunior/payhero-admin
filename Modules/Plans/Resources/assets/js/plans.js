@@ -1496,7 +1496,7 @@ $(function () {
     $('body').on('keyup', '.form-control[name="value"]', function() {
         var same_cost = $('#check-values').val();
         if (same_cost == 1) {
-            $('.box-products .form-control[name="value"]').val($(this).val());
+            $('.box-products').find('.form-control[name="value"]').val($(this).val());
         }
     });
 
@@ -1504,7 +1504,7 @@ $(function () {
         var same_cost = $('#check-values').val();
         if (same_cost == 1) {
             $('.box-products select[name="currency_type_enum"]').val($(this).data('value'));
-            $('.box-products select[name="currency_type_enum"]').change();
+            $('.box-products select[name="currency_type_enum"]').trigger('change');
         }
     });
 
