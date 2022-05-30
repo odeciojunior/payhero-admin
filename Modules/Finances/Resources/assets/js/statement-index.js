@@ -188,7 +188,7 @@ console.log(response.data);
                     $("#nav-statement").css('display', '');
                 });
 
-                $('.company_name').val( $("#company-navbar").find('option:selected').text() );
+                $('.company_name').val( sessionStorage.getItem('company_default_name') );
 
                 loadingOnScreenRemove();
             }

@@ -99,7 +99,7 @@ function atualizar (link = null) {
 
 function getFilters(urlParams = false) {
     let data = {
-        'company': $("#company-navbar").val(),
+        'company': sessionStorage.getItem('company_default'),
         'project': $("#project").val(),
         'client': $("#client").val(),
         'customer_document': $("#customer_document").val(),
@@ -274,7 +274,7 @@ $(document).ready(function () {
     function getProjects() {
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ $("#company-navbar").val(),
+            url: '/api/projects?select=true&company='+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -343,10 +343,6 @@ $(document).ready(function () {
         }
     });
 
-    console.log('preencher imput text from session agora')
-    //$('.company_name').val( $("#company-navbar").find('option:selected').text() );
-    //$('.company_name').val( $("#company-navbar option[value='"+sessionStorage.getItem('company_default')+"']").text() );
     $('.company_name').val( sessionStorage.getItem('company_default_name') );
-    //$('.company_name').val( $("#company-navbar").val() );
 
 });

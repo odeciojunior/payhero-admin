@@ -24,11 +24,9 @@ class ReportanaApiController extends Controller
     public function index()
     {
         try {
-            $reportanaIntegration = new ReportanaIntegration();
-            $userProjectModel     = new UserProject();
-            $projectModel         = new Project();
+            $user = auth()->user();
 
-            activity()->on($reportanaIntegration)->tap(function(Activity $activity) {
+            activity()->on((new ReportanaIntegration()))->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações Reportana');
 
@@ -44,14 +42,22 @@ class ReportanaApiController extends Controller
             ]])->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $project = $userProject->project()->where('status', $projectModel->present()->getStatus('active'))
-                                           ->first();
+                    $project = $userProject
+                        ->project()
+                        ->join('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                                         'integrations' => ReportanaResource::collection($reportanaIntegrations),
                                         'projects'     => ProjectsSelectResource::collection($projects)

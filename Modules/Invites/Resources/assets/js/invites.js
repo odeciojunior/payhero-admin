@@ -24,9 +24,9 @@ $(document).ready(function () {
         var cont = 0;
 
         if (link == null) {
-            link = '/api/invitations?company='+ $("#company-navbar").val();
+            link = '/api/invitations?company='+ sessionStorage.getItem('company_default');
         } else {
-            link = '/api/invitations' + link + '&company='+ $("#company-navbar").val();
+            link = '/api/invitations' + link + '&company='+ sessionStorage.getItem('company_default');
         }
 
         $.ajax({
@@ -224,7 +224,7 @@ $(document).ready(function () {
                             $("#company-list").html('').append(selCompany);
 
                             var linkInvite = '';
-                            var companyId = $("#company-navbar").val(); //$("#select-company-list option:selected").val();
+                            var companyId = sessionStorage.getItem('company_default'); //$("#select-company-list option:selected").val();
                             linkInvite = 'https://accounts.cloudfox.net/signup?i=' + companyId; //$("#select-company-list option:selected").val();
 
                             $("#invite-link").val(linkInvite);
@@ -299,7 +299,7 @@ $(document).ready(function () {
     function getInvitationData() {
         $.ajax({
             method: "GET",
-            url: '/api/invitations/getinvitationdata' + '?company='+ $("#company-navbar").val(),
+            url: '/api/invitations/getinvitationdata' + '?company='+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -396,7 +396,7 @@ $(document).ready(function () {
         }
     }
 
-    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
+    $('.company_name').val( sessionStorage.getItem('company_default_name') );
 
     //ALTERAÇÃO DE HTML
 

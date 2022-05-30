@@ -26,25 +26,31 @@ class UnicodropApiController extends Controller
     public function index()
     {
         try {
-
-            $unicodropIntegrations = UnicodropIntegration::where('user_id', auth()->user()->account_owner_id)
-                                                               ->with('project')
-                                                               ->get();
-
+            $user = auth()->user();
+            $unicodropIntegrations = UnicodropIntegration::where('user_id', $user->account_owner_id)->with('project')->get();
             $projects = collect();
             $userProjects = UserProject::where([[
-                'user_id', auth()->user()->account_owner_id],[
-                'company_id', auth()->user()->company_default
+                'user_id', $user->account_owner_id],[
+                'company_id', $user->company_default
             ]])->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $project = $userProject->project()->where('status', Project::STATUS_ACTIVE)->first();
+                    $project = $userProject
+                        ->project()
+                        ->join('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                                         'integrations' => UnicodropResource::collection($unicodropIntegrations),
                                         'projects'     => ProjectsSelectResource::collection($projects),

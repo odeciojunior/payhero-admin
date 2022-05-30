@@ -166,7 +166,7 @@ $(document).ready(function () {
                         var integration_id = $(this).attr("integration");
                         $.ajax({
                             method: "GET",
-                            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
+                            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
                             headers: {
                                 Authorization: $(
                                     'meta[name="access-token"]'
@@ -363,7 +363,7 @@ $(document).ready(function () {
         clearForm();
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
+            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
             data: {
                 status: "active",
             },
@@ -394,13 +394,15 @@ $(document).ready(function () {
                 } else {
                     $("#select_projects_create").html("");
                     $(response.data).each(function (index, data) {
-                        $("#select_projects_create").append(
-                            "<option value='" +
-                                data.id +
-                                "'>" +
-                                data.name +
-                                "</option>"
-                        );
+                        if(data.status===1){
+                            $("#select_projects_create").append(
+                                "<option value='" +
+                                    data.id +
+                                    "'>" +
+                                    data.name +
+                                    "</option>"
+                            );
+                        }
                     });
                     $(".modal-title").html(
                         "Adicionar nova Integração com Notazz"

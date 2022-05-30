@@ -23,7 +23,9 @@ $(document).ready(function () {
                     $('#project_id, #select_projects_edit').html("");
                     let projects = response.projects;
                     for (let i = 0; i < projects.length; i++) {
-                        $('#project_id, #select_projects_edit').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
+                        if(projects[i].status === 1){
+                            $('#project_id, #select_projects_edit').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
+                        }
                     }
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();

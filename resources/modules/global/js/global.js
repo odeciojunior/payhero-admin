@@ -2,10 +2,11 @@ $(document).ready(function () {
     getCompanies();
 
     $('#company-navbar').change(function () {
-        sessionStorage.removeItem('companies')
-        sessionStorage.removeItem('company_default')
-        sessionStorage.setItem('company_default', $(this).val())
-        sessionStorage.setItem('company_default_name', $(this).find('option:selected').text())
+        let thisPage = new URL(window.location)
+        caminho = thisPage.pathname ;
+        if( caminho.match( /\/projects\/[a-zA-Z0-9]*/i ) )
+            return;
+        loadingOnScreen();
         $.ajax({
             method: 'POST',
             url: '/api/core/company-default',
@@ -14,11 +15,44 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: response => {
+            error: function error(response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
-            success: response => {
-                window.location.href = window.location.href;
+            success: function success(data1) {
+                $.ajax({
+                    method: "GET",
+                    url: `/api/core/usercompanies`,
+                    dataType: "json",
+                    headers: {
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'appliation/json',
+                    },
+                    error: function error(response) {
+                        loadingOnScreenRemove();
+                        errorAjaxResponse(response);
+                    },
+                    success: function success(data) {
+                        companies = data.companies;
+                        company_default = data.company_default;
+                        company_default_name = data.company_default_name;
+                        if (!isEmpty(companies)) {
+                            sessionStorage.removeItem('company_default')
+                            sessionStorage.removeItem('company_default_name')
+                            sessionStorage.removeItem('companies')
+                            sessionStorage.setItem('companies', JSON.stringify(companies));
+                            sessionStorage.setItem('company_default', company_default);
+                            sessionStorage.setItem('company_default_name', company_default_name);
+                            window.location.href = window.location.href;
+                        } else {
+                            $(".content-error").show();
+                            $('#company-select, .page-content').hide();
+                            loadingOnScreenRemove();
+                        }
+                    }
+                });
+
+
             },
         });
 
@@ -1462,7 +1496,6 @@ function removeMoneyCurrency(string) {
 }
 
 function selectCompanies() {
-
     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
     $('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
@@ -1479,7 +1512,11 @@ function selectCompanies() {
         if (parseSessionStorageCompanies[i].company_type == '1') {
             $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
         } else {
-            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + parseSessionStorageCompanies[i].name + '</option>')
+            if(parseSessionStorageCompanies[i].name.length>20)
+                companyName = parseSessionStorageCompanies[i].name.substring(0,20)+'...';
+            else
+                companyName = parseSessionStorageCompanies[i].name;
+            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
         }
     }
     $('#company-select').addClass('d-sm-flex');
@@ -1516,7 +1553,7 @@ function getCompanies() {
                 if (!isEmpty(companies)) {
                     sessionStorage.setItem('companies', JSON.stringify(companies));
                     sessionStorage.setItem('company_default', company_default);
-                    //sessionStorage.setItem('company_default_name', company_default_name);
+                    sessionStorage.setItem('company_default_name', company_default_name);
 
                     $('.company_name').val( company_default_name );
                     $('.company_id').val( company_default );

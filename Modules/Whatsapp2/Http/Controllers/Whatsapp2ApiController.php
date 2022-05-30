@@ -23,10 +23,12 @@ class Whatsapp2ApiController extends Controller
     public function index()
     {
         try {
+            $user = auth()->user();
+
             activity()->on((new Whatsapp2Integration()))->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações whatsapp 2.0');
-            
+
             $accountOwnerId = auth()->user()->getAccountOwnerId();
 
             $whatsapp2Integrations = Whatsapp2Integration::where('user_id', $accountOwnerId)
@@ -41,15 +43,24 @@ class Whatsapp2ApiController extends Controller
             ])->where([['user_id', $accountOwnerId],[
                 'company_id', auth()->user()->company_default
             ]])->get();
-
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    if (!empty($userProject->project)) {
+                    $project = $userProject
+                        ->project()
+                        ->join('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
+                    if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                 'integrations' => Whatsapp2Resource::collection($whatsapp2Integrations),
                 'projects' => ProjectsSelectResource::collection($projects),

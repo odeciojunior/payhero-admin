@@ -24,11 +24,9 @@ class SmartfunnelApiController extends Controller
     public function index()
     {
         try {
-            $smartfunnelIntegration = new SmartfunnelIntegration();
-            $userProjectModel       = new UserProject();
-            $projectModel           = new Project();
+            $user = auth()->user();
 
-            activity()->on($smartfunnelIntegration)->tap(function(Activity $activity) {
+            activity()->on((new SmartfunnelIntegration()))->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações Smart Funnel');
 
@@ -44,14 +42,22 @@ class SmartfunnelApiController extends Controller
             ]])->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $project = $userProject->project()->where('status', $projectModel->present()->getStatus('active'))
-                                           ->first();
+                    $project = $userProject
+                        ->project()
+                        ->join('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                                         'integrations' => SmartfunnelResource::collection($smartfunnelIntegrations),
                                         'projects'     => ProjectsSelectResource::collection($projects)

@@ -278,7 +278,7 @@ function getFilters(urlParams = false) {
         'cashback': $("#cashback").val(),
         'plan': $('#plan').val(),
         'coupon': $("#cupom").val(),
-        'company': $("#company-navbar").val(), //$("#empresa").val(),
+        'company': sessionStorage.getItem('company_default'), //$("#empresa").val(),
         'value': $("#valor").val().replace(/[^\d]+/g, ''),
         'email_client': $("#email_cliente").val(),
         'upsell': $("#upsell").val(),
@@ -602,7 +602,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
+            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -877,6 +877,6 @@ $(document).ready(function () {
         }
     });
 
-    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
+    $('.company_name').val( sessionStorage.getItem('company_default_name') );
 
 });

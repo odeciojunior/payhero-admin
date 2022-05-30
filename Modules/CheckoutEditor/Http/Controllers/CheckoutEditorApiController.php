@@ -3,7 +3,9 @@
 namespace Modules\CheckoutEditor\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
 use Modules\CheckoutEditor\Http\Requests\SendSupportEmailVerificationRequest;
 use Modules\CheckoutEditor\Http\Requests\SendSupportPhoneVerificationRequest;
 use Modules\CheckoutEditor\Http\Requests\UpdateCheckoutConfigRequest;
@@ -12,6 +14,7 @@ use Modules\CheckoutEditor\Http\Requests\VerifySupportPhoneRequest;
 use Modules\CheckoutEditor\Transformers\CheckoutConfigResource;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\CacheService;
 use Modules\Core\Services\SendgridService;
@@ -81,8 +84,15 @@ class CheckoutEditorApiController extends Controller
             }
 
             if ($data['company_id'] !== $config->company_id) {
-                $bankAccount = Company::find($data['company_id'])->getDefaultBankAccount();                                
+                $bankAccount = Company::find($data['company_id'])->getDefaultBankAccount();
                 $data['pix_enabled'] = !empty($bankAccount) && $bankAccount->transfer_type=='PIX' && $data['pix_enabled'];
+                // update company_id at users_projects table
+                UserProject::where('project_id', $config->project_id)
+                    ->update(['company_id' => $data['company_id']]);
+                // update company_default at users table
+                $user = Auth::user();
+                $user->company_default = $data['company_id'];
+                $user->save();
             }
 
             if(empty($data['support_phone'])){

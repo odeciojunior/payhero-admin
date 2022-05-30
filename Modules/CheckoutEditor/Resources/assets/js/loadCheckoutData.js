@@ -200,6 +200,12 @@ $(() => {
                                 $('#save_load').fadeOut('slow', 'linear');
                                 $('#save_success').fadeIn('slow', 'linear');
 
+                                // update session storage of company_default
+                                sessionStorage.removeItem('company_default')
+                                sessionStorage.removeItem('company_default_name')
+                                sessionStorage.setItem('company_default', $("#checkout_editor #companies").val());
+                                sessionStorage.setItem('company_default_name', $("#checkout_editor #companies").find('option:selected').text().trim());
+
                                 setTimeout(function() {
                                     $('#save_success').fadeOut('slow', 'linear');
                                 }, 4000)
@@ -878,8 +884,12 @@ $(() => {
             for (let company of checkout.companies) {
                 const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
                 if ( company.status != "pending") {
+                    if(company.name.length>20)
+                        companyName = company.name.substring(0,20)+'...';
+                    else
+                        companyName = company.name;
                     $("#checkout_editor #companies").append(`<option value="${company.id}" ${company.id === checkout.company_id ? "selected" : ""} data-toggle="tooltip" title="${document}" >
-                                                                ${company.name}
+                                                                ${companyName}
                                                              </option>`);
                 }
             }

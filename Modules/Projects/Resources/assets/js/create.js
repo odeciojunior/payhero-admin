@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
-    $('.company_id').val( $("#company-navbar").find('option:selected').val() );
+    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    $('.company_id').val( sessionStorage.getItem('company_default') );
 
     loadingOnScreen();
     $.ajax({

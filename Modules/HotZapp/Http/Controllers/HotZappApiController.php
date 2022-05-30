@@ -43,18 +43,26 @@ class HotZappApiController extends Controller
             ]])->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $project = $userProject->project()->where('status', $projectModel->present()->getStatus('active'))
-                                           ->first();
+                    $project = $userProject
+                        ->project()
+                        ->join('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
-                                        'integrations' => HotZappResource::collection($hotzappIntegrations),
-                                        'projects'     => ProjectsSelectResource::collection($projects),
-                                    ]);
+                'integrations' => HotZappResource::collection($hotzappIntegrations),
+                'projects'     => ProjectsSelectResource::collection($projects),
+            ]);
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
