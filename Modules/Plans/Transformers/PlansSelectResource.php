@@ -17,10 +17,16 @@ class PlansSelectResource extends JsonResource
     public function toArray($request)
     {
         $photo = '/build/global/img/produto.svg';
+        
         if (!empty($this->productsPlans[0]->product->photo)) {
             if (\foxutils()->remoteUrlExists($this->productsPlans[0]->product->photo)) {
                 $photo = $this->productsPlans[0]->product->photo;
             }
+        }
+
+        $cost = "R$ 0,00";
+        if (!empty($this->productsPlans[0]->cost)) {
+            $cost = 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->productsPlans[0]->cost)) / 100, 2, ',', '.');
         }
 
         $limit_description = 24;
@@ -33,7 +39,7 @@ class PlansSelectResource extends JsonResource
             'description'               => $this->description,
             'description_short'         => Str::limit($this->description, $limit_description),
             'description_short_flag'    => mb_strwidth($this->description, 'UTF-8') <= $limit_description ? false : true,
-            'custo'                     => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->productsPlans[0]->cost)) / 100, 2, ',', '.'),
+            'custo'                     => $cost,
             'photo'                     => $photo
         ];
     }
