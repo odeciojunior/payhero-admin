@@ -28,6 +28,12 @@
     display: none;
 } */
 
+@media( min-width: 1227px ) {
+    .container { max-width: 1227px; }
+    .page-header { padding-left: 0; padding-right: 10px; }
+    .header-reports  { padding-left: 0; }
+}
+
 .scrollbar {
     height:195px;
     overflow: hidden;
@@ -301,10 +307,17 @@ h4.number{
     .box-reports { padding: 0 30px; }
 }
 
+@media only screen and (min-width: 1227px) {
+    .box-reports { padding: 0px; }
+}
+
 .container-reports { padding-right: 1.0715rem; }
 
 @media only screen and (min-width: 1223px) {
-    .container-reports { padding-right: 0; }
+    .container-reports { 
+        padding-right: 0; 
+        padding-left: 0;
+    }
 }
 
 .header-reports {
@@ -509,7 +522,8 @@ h4.number{
 
 @media only screen and (min-width: 1220px) {
     .cards-reports .card { 
-        width: calc(1/3*100% - (1 - 1/3)* 30px); 
+        /* width: calc(1/3*100% - (1 - 1/3)* 30px);  */
+        max-width: 393px;
         height: 219px;
     }
 }
@@ -655,6 +669,10 @@ h4.number{
     .col-payment { font-size: 14px; }
     .container-devices .box-image-payment { min-width: 117px; }
 }
+
+.bar-payment { max-width: 80px; }
+.percentage-card { max-width: 59px; }
+.ico-pay { max-width: 111px; }
 
 .bar {
     overflow: hidden;
@@ -847,7 +865,7 @@ h4.number{
 }
 
 @media only screen and (min-width: 1220px) {
-    .box-items-finance  { padding-right: 0; }
+    /* .box-items-finance  { padding-right: 0; } */
     .pending.box-items-finance { padding-right: 1.0715rem; }
 }
 
@@ -951,13 +969,13 @@ h4.number{
 /* graphs primary finance */
 .box-chart-primary {
     justify-content: space-between;
-    padding-right: 0;
     margin-right: 22px;
     flex-direction: column;
 }
 @media only screen and (min-width: 1220px) {
     .box-chart-primary {
         margin-right: 0;
+        margin-left: 0;
         flex-direction: row;
     }
 }
@@ -982,14 +1000,14 @@ h4.number{
 }
 
 @media only screen and (min-width: 1220px) {
-    .primary { width: 753px; }
-    .distribution { width: 344px;  }
+    .primary { width: 820px; }
+    .distribution { width: 394px;  }
     .commission.mkt { flex: 0 0 65.8%; }
 }
 @media only screen and (min-width: 1600px) {
     .distribution.mkt { flex: 0 0 31.75%; }
-    .distribution { width: 353px; }
-    .primary { width: 915px; }
+    .distribution { width: 378px; }
+    /* .primary { width: 915px; } */
 }
 
 .box-chart-primary .title-graph {

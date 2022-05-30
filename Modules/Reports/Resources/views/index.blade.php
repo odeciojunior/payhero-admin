@@ -124,7 +124,7 @@
 				</div>
 
                 <div class="row">
-                    <div class="container d-flex box-chart-primary">
+                    <div class="col-12 d-flex box-chart-primary">
                         <!-- comission -->
                         <div class="primary">
                             <div class="card" id="card-status">

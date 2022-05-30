@@ -456,7 +456,7 @@ $(function () {
                             <div class="container">
                                 <div class="data-holder b-bottom">
                                     <div class="box-payment-option">
-                                        <div class="col-payment grey box-image-payment">
+                                        <div class="col-payment grey box-image-payment ico-pay">
                                             <div class="box-ico">
                                                 <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.806 10.415C13.3901 10.415 13.053 10.7814 13.053 11.2334C13.053 11.6855 13.3901 12.0519 13.806 12.0519H16.3163C16.7322 12.0519 17.0693 11.6855 17.0693 11.2334C17.0693 10.7814 16.7322 10.415 16.3163 10.415H13.806ZM2.30106 0.047699C1.03022 0.047699 0 1.16738 0 2.54858V13.0068C0 14.388 1.03022 15.5077 2.30106 15.5077H17.7809C19.0517 15.5077 20.082 14.388 20.082 13.0068V2.54858C20.082 1.16738 19.0517 0.047699 17.7809 0.047699H2.30106ZM1.25512 13.0068V5.95886H18.8268V13.0068C18.8268 13.6346 18.3586 14.1435 17.7809 14.1435H2.30106C1.7234 14.1435 1.25512 13.6346 1.25512 13.0068ZM1.25512 4.59475V2.54858C1.25512 1.92076 1.7234 1.41181 2.30106 1.41181H17.7809C18.3586 1.41181 18.8268 1.92076 18.8268 2.54858V4.59475H1.25512Z" fill="#636363"/>
@@ -465,11 +465,11 @@ $(function () {
                                         </div>
                                         
                                         <div class="box-payment-option option">
-                                            <div class="col-payment grey" id='percent-credit-card'>${credit_card.percentage}</div>
-                                            <div class="col-payment col-graph">
+                                            <div class="col-payment grey percentage-card" id='percent-credit-card'>${credit_card.percentage}</div>
+                                            <div class="col-payment col-graph bar-payment">
                                                 <div class="bar blue" style="width: ${credit_card.percentage};">-</div>
                                             </div>
-                                            <div class="col-payment end"><span class="money-td green bold grey" id='credit-card-value'>${credit_card.value}</span></div>
+                                            <div class="col-payment end"><span class="money-td green bold grey" id='credit-card-value'>R$ ${credit_card.value}</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -477,7 +477,7 @@ $(function () {
                             <div class="container">
                                 <div class="data-holder b-bottom">
                                     <div class="box-payment-option">
-                                        <div class="col-payment grey box-image-payment">
+                                        <div class="col-payment grey box-image-payment ico-pay">
                                             <div class="box-ico">
                                                 <svg xmlns="http://www.w3.org/2000/svg" 
                                                     width="38.867" 
@@ -500,14 +500,14 @@ $(function () {
                                             </div> Pix
                                         </div>
                                         <div class="box-payment-option option">
-                                            <div class="col-payment grey" id='percent-values-pix'>
+                                            <div class="col-payment grey percentage-card" id='percent-values-pix'>
                                                 ${pix.percentage}
                                             </div>
-                                            <div class="col-payment col-graph">
+                                            <div class="col-payment col-graph bar-payment">
                                                 <div class="bar pink" style="width: ${pix.percentage};">-</div>
                                             </div>
                                             <div class="col-payment end">
-                                                <span class="money-td green grey bold" id='pix-value'>${pix.value}</span>
+                                                <span class="money-td green grey bold" id='pix-value'>R$ ${pix.value}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -516,7 +516,7 @@ $(function () {
                             <div class="container">
                                 <div class="data-holder b-bottom">
                                     <div class="box-payment-option">
-                                        <div class="col-payment grey box-image-payment">
+                                        <div class="col-payment grey box-image-payment ico-pay">
                                             <div class="box-ico">
                                             <span class="">
                                                 <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -535,14 +535,14 @@ $(function () {
                                             </div> Boleto
                                         </div>
                                         <div class="box-payment-option option">
-                                            <div class="col-payment grey" id='percent-values-boleto'>
+                                            <div class="col-payment grey percentage-card" id='percent-values-boleto'>
                                                 ${boleto.percentage}
                                             </div>
-                                            <div class="col-payment col-graph">
+                                            <div class="col-payment col-graph bar-payment">
                                                 <div class="bar purple" style="width: ${boleto.percentage};">-</div>
                                             </div>
                                             <div class="col-payment end">
-                                                <span class="money-td green bold grey" id='boleto-value'>${boleto.value}</span>
+                                                <span class="money-td green bold grey" id='boleto-value'>R$ ${boleto.value}</span>
                                             </div>
                                         </div>
                                     </div>
