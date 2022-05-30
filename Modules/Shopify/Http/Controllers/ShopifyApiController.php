@@ -47,7 +47,7 @@ class ShopifyApiController extends Controller
                 }
             )->log('Visualizou tela todos as integrações com o shopify');
 
-            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->account_owner_id)->get();
+            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->getAccountOwnerId())->get();
 
             $projects = [];
 

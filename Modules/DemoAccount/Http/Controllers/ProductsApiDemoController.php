@@ -9,6 +9,7 @@ use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Category;
 use Illuminate\Support\Facades\Http;
+use Modules\Core\Entities\User;
 use Modules\Products\Transformers\ProductsResource;
 use Modules\Products\Transformers\EditProductResource;
 use Modules\Products\Http\Requests\IndexProductRequest;
@@ -21,7 +22,7 @@ class ProductsApiDemoController extends ProductsApiController
         try {
             $filters = $request->validated();
 
-            $productsSearch = Product::with('productsPlans')->where('user_id', Company::USER_ID_DEMO);
+            $productsSearch = Product::with('productsPlans')->where('user_id', User::DEMO_ID);
 
             if (isset($filters['shopify']) && $filters['shopify'] == 1) {
                 $productsSearch->where('shopify', $filters['shopify']);

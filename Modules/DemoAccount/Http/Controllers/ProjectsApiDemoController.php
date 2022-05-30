@@ -29,7 +29,7 @@ class ProjectsApiDemoController extends ProjectsApiController
             $projects = Project::leftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
             ->select('projects.*', 'users_projects.order_priority as order_p')
             ->where('projects.status', Project::STATUS_ACTIVE)
-            ->where('users_projects.user_id', Company::USER_ID_DEMO)
+            ->where('users_projects.user_id', User::DEMO_ID)
             ->whereNull('users_projects.deleted_at')
             ->orderBy('projects.status')
             ->orderBy('order_p')
@@ -46,7 +46,7 @@ class ProjectsApiDemoController extends ProjectsApiController
     public function show($id)
     {
         try {
-            $userId = Company::USER_ID_DEMO;
+            $userId = User::DEMO_ID;
 
             $id = hashids_decode($id);
             $project = Project::where('id', $id)
@@ -87,7 +87,7 @@ class ProjectsApiDemoController extends ProjectsApiController
     public function edit($id): JsonResponse
     {
         try {
-            $user = User::with('companies')->find(Company::USER_ID_DEMO);
+            $user = User::with('companies')->find(User::DEMO_ID);
 
             $project = Project::with(
                 [

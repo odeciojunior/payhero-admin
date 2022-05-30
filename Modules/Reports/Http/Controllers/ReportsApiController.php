@@ -24,6 +24,7 @@ use Modules\Reports\Transformers\CheckoutsByOriginResource;
 use Modules\Core\Entities\Transaction;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Core\Entities\User;
 use Modules\Reports\Exports\Reports\ReportExport;
 use Modules\Reports\Transformers\ReportCouponResource;
 use Spatie\Activitylog\Models\Activity;
@@ -36,11 +37,8 @@ class ReportsApiController extends Controller
     public function index(request $request): JsonResponse
     {
         try {
-            $user = auth()->user();
-            $accountOwnerId = $user->account_owner_id;
-            if($user->company_default == Company::COMPANY_ID_DEMO){
-                $accountOwnerId = Company::USER_ID_DEMO;
-            }
+            
+            $accountOwnerId = auth()->user()->getAccountOwnerId();
 
             $userProjectModel = new UserProject();
             $salesModel = new Sale();
@@ -304,12 +302,10 @@ class ReportsApiController extends Controller
 
             $requestStartDate = $request->input('startDate');
             $requestEndDate = $request->input('endDate');
-            if ($projectId) {
-                $user = auth()->user();
-                $userId = Company::USER_ID_DEMO;
-                if($user->company_default <> Company::COMPANY_ID_DEMO){
-                    $userId = $user->account_owner_id;
-                }
+
+            if ($projectId)
+            {
+                $userId = auth()->user()->getAccountOwnerId();
 
                 $userProject = $userProjectModel->where([
                     ['user_id', $userId],

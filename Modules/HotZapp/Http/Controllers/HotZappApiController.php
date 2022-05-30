@@ -27,11 +27,18 @@ class HotZappApiController extends Controller
     public function index()
     {
         try {
+            $hotzappIntegration = new HotzappIntegration();
+            $userProjectModel   = new UserProject();
+            $projectModel       = new Project();
+
             $user = auth()->user();
-            $hotzappIntegrations = HotzappIntegration::where('user_id', $user->account_owner_id)->with('project')->get();
-            $projects = collect();
-            $userProjects = UserProject::where([[
-                'user_id', $user->account_owner_id],[
+
+            $hotzappIntegrations = $hotzappIntegration->where('user_id', $user->getAccountOwnerId())
+                                                      ->with('project')->get();
+
+            $projects     = collect();
+            $userProjects = $userProjectModel->where([[
+                'user_id', $user->getAccountOwnerId()],[
                 'company_id', $user->company_default
             ]])->get();
             if ($userProjects->count() > 0) {

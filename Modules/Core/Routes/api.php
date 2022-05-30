@@ -7,6 +7,7 @@ Route::group(
         'middleware' => ['auth:api'],
     ],
     function() {
+        Route::get('/core/verify-account/{userID}', 'CoreApiController@verifyAccount');
 
         Route::get('/core/verifydocuments', 'CoreApiController@verifyDocuments');
 

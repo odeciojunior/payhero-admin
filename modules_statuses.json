@@ -58,5 +58,8 @@
     "AstronMembers": true,
     "CheckoutApiPostback": true,
     "CheckoutEditor": true,
-    "DemoAccount": true
+    "DemoAccount": true,
+    "UserInformations": true,
+    "Users": true,
+    "NotificacoesInteligentes": true
 }

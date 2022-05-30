@@ -36,7 +36,7 @@ class WithdrawalsApiController
                 ],403);
             }
 
-            if ($company->id <> Company::COMPANY_ID_DEMO && !Gate::allows('edit', [$company])) {
+            if ($company->id <> Company::DEMO_ID && !Gate::allows('edit', [$company])) {
                 return response()->json([
                         'message' => 'Sem permissão para visualizar saques',
                     ],403);
@@ -281,7 +281,7 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
-            if (!$userService->haveAnyDocumentPending()) {
+            if ($userService->haveAnyDocumentPending()) {
                 return response()->json([
                     'data' => [
                         'user_pending' => true,

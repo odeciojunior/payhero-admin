@@ -29,7 +29,7 @@ class ConvertaXApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações do ConvertaX');
 
-            $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->account_owner_id)
+            $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->getAccountOwnerId())
                                                           ->with('project')->get();
 
             return ConvertaxResource::collection($convertaxIntegrations);

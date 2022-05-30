@@ -19,6 +19,7 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleInformation;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Entities\User;
 use Modules\Core\Services\DemoSplitPayment;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\FoxUtilsFakeService;
@@ -252,7 +253,7 @@ trait DemoPaymentFlowTrait
         $this->sale = Sale::factory()->create(
             [
                 'progressive_discount' => $this->progressiveDiscount,
-                'owner_id' => Company::USER_ID_DEMO,
+                'owner_id' => User::DEMO_ID,
                 'customer_id' => $this->customer->id,
                 'project_id' => $this->project ? $this->project->id : null,
                 'shipping_id' => $this->shipping->id,

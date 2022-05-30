@@ -216,7 +216,9 @@ class TrackingService
                 //atualiza
                 $tracking->fill($newAttributes);
                 if ($tracking->isDirty()) {
+                    DB::beginTransaction();
                     $tracking->save();
+                    DB::commit();
                     event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
                 }
 
@@ -233,7 +235,9 @@ class TrackingService
                     $notify = false;
                 }
             } else { //senão cria um novo tracking
+                DB::beginTransaction();
                 $tracking = Tracking::updateOrCreate($commonAttributes + $newAttributes);
+                DB::commit();
                 event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 
@@ -243,6 +247,7 @@ class TrackingService
 
             return $tracking;
         } catch (\Exception $e) {
+            DB::rollBack();
             report($e);
             return null;
         }
@@ -256,7 +261,10 @@ class TrackingService
 
         $filters['status'] = is_array($filters['status']) ? implode(',', $filters['status']) : $filters['status'];
         $filters['project'] = is_array($filters['project']) ? implode(',', $filters['project']) : $filters['project'];
-        $filters['transaction_status'] = is_array($filters['transaction_status']) ? implode(',', $filters['transaction_status']) : $filters['transaction_status'];
+
+        if(!empty($filters['transaction_status'])){
+            $filters['transaction_status'] = is_array($filters['transaction_status']) ? implode(',', $filters['transaction_status']) : $filters['transaction_status'];
+        }
 
         $productPlanSales = ProductPlanSale::join('sales as s', function ($join) use ($userId, $filters) {
             $join->on('s.id', '=', 'products_plans_sales.sale_id')

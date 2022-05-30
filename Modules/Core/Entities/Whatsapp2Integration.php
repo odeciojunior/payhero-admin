@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -31,7 +32,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Whatsapp2Integration extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use SoftDeletes, LogsActivity, HasFactory;
 
     public const STATUS_PENDING = 'pending';
     public const STATUS_PAID = 'paid';

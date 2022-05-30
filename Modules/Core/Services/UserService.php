@@ -31,29 +31,45 @@ class UserService
         return false;
     }
 
+    public function haveAnyDocumentApproved(): bool
+    {
+        $user = User::find(auth()->user()->account_owner_id);
+
+        if ($user->address_document_status == UserDocument::STATUS_APPROVED && $user->personal_document_status == UserDocument::STATUS_APPROVED) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function haveAnyDocumentPending(): bool
     {
         $user = User::find(auth()->user()->account_owner_id);
 
-        return (
-            $user->address_document_status == UserDocument::STATUS_APPROVED &&
-            $user->personal_document_status == UserDocument::STATUS_APPROVED &&
-            $user->email_verified == User::EMAIL_VERIFIED &&
-            $user->cellphone_verified == User::CELLPHONE_VERIFIED
-        );
+        if ($user->address_document_status == UserDocument::STATUS_PENDING || $user->personal_document_status == UserDocument::STATUS_PENDING) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function haveAnyDocumentAnalyzing(): bool
+    {
+        $user = User::find(auth()->user()->account_owner_id);
+
+        if ($user->address_document_status == UserDocument::STATUS_ANALYZING || $user->personal_document_status == UserDocument::STATUS_ANALYZING) {
+            return true;
+        }
+
+        return false;
     }
 
     public function haveAnyDocumentRefused(): bool
     {
-        $userModel = new User();
-        $user = auth()->user();
-        $userPresenter = $userModel->present();
+        $user = User::find(auth()->user()->account_owner_id);
 
-        if (!empty($user)) {
-            if ($user->address_document_status == $userPresenter->getAddressDocumentStatus('refused') ||
-                $user->personal_document_status == $userPresenter->getPersonalDocumentStatus('refused')) {
-                return true;
-            }
+        if ($user->address_document_status == UserDocument::STATUS_REFUSED || $user->personal_document_status == UserDocument::STATUS_REFUSED) {
+            return true;
         }
 
         return false;

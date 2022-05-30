@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\Core\Entities\Company;
 use Modules\ProjectNotification\Transformers\ProjectNotificationResource;
 use Modules\Core\Entities\ProjectNotification;
+use Modules\Core\Entities\User;
 use Modules\ProjectNotification\Http\Controllers\ProjectNotificationApiController;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -19,7 +20,7 @@ class ProjectNotificationApiDemoController extends ProjectNotificationApiControl
 
             $projectNotifications = ProjectNotification::where('project_id', $projectId)
             ->whereHas('userProject', function($q) {
-                $q->where('user_id', Company::USER_ID_DEMO);
+                $q->where('user_id', User::DEMO_ID);
             })
             ->paginate(5);
 

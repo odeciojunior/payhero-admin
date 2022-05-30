@@ -33,7 +33,7 @@ class FinancesApiController extends Controller
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
-            if ($company->id <> Company::COMPANY_ID_DEMO && Gate::denies('edit', [$company])) {
+            if ($company->id <> Company::DEMO_ID && Gate::denies('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 
@@ -44,11 +44,11 @@ class FinancesApiController extends Controller
 
             return response()->json(
                 [
-                    'available_balance' => foxutils()->formatMoney($balanceResume['available_balance'] / 100),
-                    'total_balance' => foxutils()->formatMoney($balanceResume['total_balance'] / 100),
-                    'pending_balance' => foxutils()->formatMoney($balanceResume['pending_balance'] / 100),
-                    'blocked_balance' => foxutils()->formatMoney($balanceResume['blocked_balance'] / 100),
-                    'pending_debt_balance' => foxutils()->formatMoney($balanceResume['pending_debt_balance'] / 100)
+                    'available_balance' => foxutils()->formatMoney(($balanceResume['available_balance']??0) / 100),
+                    'total_balance' => foxutils()->formatMoney(($balanceResume['total_balance']??0) / 100),
+                    'pending_balance' => foxutils()->formatMoney(($balanceResume['pending_balance']??0) / 100),
+                    'blocked_balance' => foxutils()->formatMoney(($balanceResume['blocked_balance']??0) / 100),
+                    'pending_debt_balance' => foxutils()->formatMoney(($balanceResume['pending_debt_balance']??0) / 100)
                 ]);
 
         } catch (Exception $e) {

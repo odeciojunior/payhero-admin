@@ -8,10 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleContestationFile;
+use Modules\Core\Entities\User;
 use Modules\Sales\Http\Controllers\SalesController;
+use ParagonIE\Sodium\Compat;
 use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -38,6 +41,8 @@ class ContestationService
 
     function getQuery($filters)
     {
+        $account_owner_id = auth()->user()->getAccountOwnerId();
+        
         $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name',
         'sales.total_paid_value','sales.sub_total','sales.shipment_value',\DB::Raw("CAST(sales.shopify_discount as DECIMAL) AS shopify_discount"))
             ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '". Carbon::now()->addDay(2)->endOfDay()."' THEN 1 ELSE 0 END) as custom_expired"))
@@ -48,7 +53,7 @@ class ContestationService
                  ->where('transactions.type', '=', 2);
              })
             ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
-            ->where('sales.owner_id', \Auth::user()->account_owner_id);
+            ->where('sales.owner_id', $account_owner_id);
 
 
         $contestations->when(request('date_type'), function ($query, $search) {
@@ -69,6 +74,10 @@ class ContestationService
                 $search_input_date = 'sale_contestations.expiration_date';
             }
 
+            if(request('transaction')){
+                return $query;
+            }
+            
             return $query->whereBetween(
                 $search_input_date,
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
