@@ -209,7 +209,7 @@
                         </div>
                     </div>
                     <div class="col-6 col-xl-3 mt-20">
-                        <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
+                        <div id="bt_filter" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
                             <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} " />
                             Aplicar <br class="d-flex d-sm-none"> filtros
                         </div>
@@ -228,16 +228,16 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <!-- Aviso de Saldo Bloqueado -->
+            <!-- Aviso de Saldo retido -->
             <div id="alert-blockedbalance" class="alert alert-danger alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
                 <div class="d-flex">
                     <span class="o-info-help-1"></span>
                     <div class="w-full">
-                        <strong class="font-size-16">Saldo Bloqueado</strong>
+                        <strong class="font-size-16">Saldo retido</strong>
                         <p class="font-size-14 pr-md-100 mb-5">
                             Você possui <b>R$
                                 <span id="blocked-balance"></span>
-                                de saldo bloqueado</b> por não informar os códigos de rastreios de <b>
+                                de saldo retido</b> por não informar os códigos de rastreios de <b>
                                 <span id="blocked-balance-sales"></span>
                                 vendas</b>. Informe os códigos de rastreio dessas vendas para que o dinheiro seja
                             transferido.

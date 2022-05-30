@@ -81,8 +81,6 @@ class Whatsapp2Service
     {
         try {
             if (!empty($domain)) {
-                $checkout = $sale->checkout;
-
                 $dataProducts = [];
                 foreach ($planSales as $planSale) {
                     $dataProducts[] = [
@@ -125,6 +123,9 @@ class Whatsapp2Service
                         $sale->shipment_value);
                 $totalValue = substr_replace($totalValue, '.', strlen($totalValue) - 2, 0);
 
+                $domainName = $domain->name??'cloudfox.net';
+                $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
+
                 $data = [
                     'type' => 'order',
                     'api_token' => $this->apiToken,
@@ -132,7 +133,7 @@ class Whatsapp2Service
                     'order' => [
                         'token' => Hashids::encode($sale->checkout_id),
                         'financial_status' => $status,
-                        'billet_url' => $sale->boleto_link,
+                        'billet_url' => $boletoLink,
                         'gateway' => 'cloudfox',
                         'checkout_url' => "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
                         'id' => $sale->checkout_id,

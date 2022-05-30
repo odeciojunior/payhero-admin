@@ -2,7 +2,7 @@
 <div id="project-empty" class="content-error text-center" style="display:none !important;
                                                                 height: 100%;
                                                                 width: 100%;
-                                                                position: absolute;
+                                                                position: relative;
                                                                 display: -webkit-flex;
                                                                 display: flex;
                                                                 -webkit-align-items: center;

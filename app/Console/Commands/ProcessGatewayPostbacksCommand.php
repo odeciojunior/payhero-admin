@@ -92,16 +92,13 @@ class ProcessGatewayPostbacksCommand extends Command
                         ->where('processed_flag', false)
                         ->where('gateway_id', 21)
                         ->orderBy('id', 'asc')
-                        ->limit(100)
+                        ->limit(250)
                         ->get()->toArray();
 
             $url = getenv('CHECKOUT_URL') . '/api/postback/process/safe2pay';
 
             foreach ($postbacks as $postback)
             {
-                // ProcessPostbacks::dispatch($url, 'POST', ['postback_id' => hashids_encode($postback['id'])])
-                // ->onConnection('redis-horizon-long-running')
-                // ->onQueue('long');
                 $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback['id'])]);
             }
 

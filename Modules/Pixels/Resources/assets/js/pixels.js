@@ -587,7 +587,7 @@ $(function () {
 
         $("#add_pixel_plans").val(null).trigger("change");
 
-        isChecked($("#modal-create-pixel .status"), true);
+        isChecked($("#modal-create-pixel .pixel-status"), true);
         isChecked($("#modal-create-pixel .checkout"), true);
         isChecked($("#modal-create-pixel .basic-data"), true);
         isChecked($("#modal-create-pixel .delivery"), true);
@@ -683,7 +683,7 @@ $(function () {
     $("#modal-create-pixel #btn-store-pixel").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
 
-        formData.append('status', $("#modal-create-pixel .status").is(':checked'));
+        formData.append('status', $("#modal-create-pixel .pixel-status").is(':checked'));
         formData.append('checkout', $("#modal-create-pixel .checkout").is(':checked'));
         formData.append('basic_data', true) // $("#modal-create-pixel .basic-data").is(':checked'));
         formData.append('delivery', true) // $("#modal-create-pixel .delivery").is(':checked'));
