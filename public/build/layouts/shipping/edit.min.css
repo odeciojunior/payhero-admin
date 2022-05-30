@@ -1,1 +1,6 @@
-.select2-selection.select2-selection--multiple{border-color:#e0e7ee}.select2-container--default.select2-container--focus .select2-selection--multiple{border-color:#88bfff!important}
+.select2-selection.select2-selection--multiple{
+    border-color: #e0e7ee;
+}
+.select2-container--default.select2-container--focus .select2-selection--multiple{
+    border-color: #88BFFF !important;
+}
