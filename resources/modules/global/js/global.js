@@ -847,7 +847,7 @@ $('.top-alert-close').on('click', function () {
 
 sessionStorage.removeItem('documentsPending');
 
-function ajaxVerifyAccount() {
+function verifyDocumentPending() {
     $.ajax({
         method: 'GET',
         url: '/api/core/verify-account/' + $('meta[name="user-id"]').attr('content'),
@@ -986,6 +986,8 @@ function ajaxVerifyAccount() {
                     </div>
                 `);
             } else {
+                $('.new-register-navbar-open-modal-container').remove();
+
                 let verifyAccount = JSON.parse(localStorage.getItem('verifyAccount'));
                 if (verifyAccount.account !== 'approved') {
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));
@@ -993,10 +995,6 @@ function ajaxVerifyAccount() {
             }
         },
     });
-}
-
-function verifyDocumentPending() {
-    ajaxVerifyAccount();
 }
 
 function setNewRegisterStep(step) {
@@ -1180,6 +1178,8 @@ function saveNewRegisterData() {
             alertCustom('error', response.responseJSON.message);
         },
         success: function success(response) {
+            verifyDocumentPending();
+
             setNewRegisterStep('4');
 
             $('#new-register-step-3-container').removeClass('d-flex flex-column');
