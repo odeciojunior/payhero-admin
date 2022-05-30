@@ -1182,7 +1182,7 @@ $(function () {
 
                     getCustom(modal, false);
 
-                    alertCustom("success", "Configurações do plano atualizado com sucesso");
+                    alertCustom("success", "Configurações do plano atualizadas com sucesso");
                 }
             });
         });
