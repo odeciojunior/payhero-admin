@@ -884,8 +884,12 @@ $(() => {
             for (let company of checkout.companies) {
                 const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
                 if ( company.status != "pending") {
+                    if(company.name.length>20)
+                        companyName = company.name.substring(0,20)+'...';
+                    else
+                        companyName = company.name;
                     $("#checkout_editor #companies").append(`<option value="${company.id}" ${company.id === checkout.company_id ? "selected" : ""} data-toggle="tooltip" title="${document}" >
-                                                                ${company.name}
+                                                                ${companyName}
                                                              </option>`);
                 }
             }

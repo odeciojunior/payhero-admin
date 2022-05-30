@@ -1512,7 +1512,11 @@ function selectCompanies() {
         if (parseSessionStorageCompanies[i].company_type == '1') {
             $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
         } else {
-            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + parseSessionStorageCompanies[i].name + '</option>')
+            if(parseSessionStorageCompanies[i].name.length>20)
+                companyName = parseSessionStorageCompanies[i].name.substring(0,20)+'...';
+            else
+                companyName = parseSessionStorageCompanies[i].name;
+            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
         }
     }
     $('#company-select').addClass('d-sm-flex');
