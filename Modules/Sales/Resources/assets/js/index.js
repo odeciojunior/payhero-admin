@@ -6,7 +6,7 @@ var exportFormat = null;
 // Obtem lista de vendas
 //atualizar = function (link = null) {
 function atualizar(link = null) {
-    loadingOnScreen();
+    //loadingOnScreen();
 
     currentPage = link;
 
