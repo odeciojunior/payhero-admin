@@ -34,15 +34,15 @@
                 </a>
             </header>       
             
-            <div class="row align-items-center justify-content-between" style="min-height: 50px;">
-                <div class="col-8">
+            <div class="row align-items-center justify-content-between top-inner-reports">
+                <div class="col-8 inner-reports-content">
                     <h1 class="d-flex title-system">
                         <span class="box-title ico-pending">Pendente</span>
                         Saldo Pendente
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
                 </div>
-                <div class="col-4">
+                <div class="col-4 inner-reports-content">
                     <div class="box-projects">
                         <select id='select_projects' class="form-control input-pad">
                             {{-- JS carrega.. --}}
@@ -53,12 +53,12 @@
         </div>
         <div id="project-not-empty" style="display: none">
             
-            <section class="container box-reports" id="reports-content">
+            <section class="container box-reports inner-reports-content" id="reports-content">
                 <div class="row">
 					<div class="col-12 box-items-finance pending">
                         <div class="row mb-20">
                         @if(!auth()->user()->hasRole('attendance'))
-                            <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
+                            <div class="fianance-items box-inner-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border orange mb-10">
                                     <span class="title">Total pendente</span>
                                     <div class="d-flex">
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                         
-                            <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
+                            <div class="fianance-items box-inner-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border blue mb-10">
                                     <span class="title">Quantidade de vendas</span>
                                     <div class="d-flex">
@@ -82,7 +82,7 @@
 				</div>
             </section>
 
-            <div id="reports-content" class="page-content container">
+            <div id="reports-content" class="page-content container inner-reports-content">
                 <div class="row justify-content-between">
                     <div class="col-lg-12">
                         <form id='filter_form'>

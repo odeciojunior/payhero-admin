@@ -2118,6 +2118,20 @@ h4.number{
 }
 .origin-report img { height: 129px; }
 .origin-report td { padding: 0 18px; }
+
+.top-inner-reports {
+    min-height: 50px;
+    margin: 0 auto;
+    width: 1227px;   
+}
+.box-inner-items { max-width: 604px; }
+
+.inner-reports-content { padding: 0 30px; }
+.top-system { padding: 0 30px 30px 30px; }
+
+@media( min-width: 1024px ){
+    /* .inner-reports-content { padding: 0 !important; } */
+}
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;
