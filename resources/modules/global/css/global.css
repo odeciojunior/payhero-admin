@@ -1920,6 +1920,7 @@ tbody td{
 
 .sirius-select-container .sirius-select-text {
     width: 100%;
+    min-height: 43.14px;
     padding: 10px 35px 12px 16px;
     background-color: #FFFFFF;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMC43ODEgMS4yMjUgNi4wMjggNS43OWEuNzY5Ljc2OSAwIDAgMS0xLjA1NiAwTC4yMTkgMS4yMjVhLjY5Ny42OTcgMCAwIDEgMC0xLjAxNS43NjkuNzY5IDAgMCAxIDEuMDU2IDBMNS41IDQuMjY4IDkuNzI1LjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDAgLjY5Ny42OTcgMCAwIDEgMCAxLjAxNVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPgo=);
