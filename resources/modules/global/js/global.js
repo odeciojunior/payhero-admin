@@ -74,12 +74,19 @@ $(document).ready(function () {
         if ($(this).hasClass('option-selected')) {
             $(this).removeClass('option-selected');
             $(this).attr('data-step-1-selected', '0');
+
+            localStorage.removeItem($(this).attr('id'));
         } else {
             $(this).addClass('option-selected');
             $(this).attr('data-step-1-selected', '1');
+
+            localStorage.setItem($(this).attr('id'), "true");
         }
 
         setStepButton(getNewRegisterStep());
+    });
+
+    $(".step-2-checkbox-option input[type='checkbox']").on('click', function () {
     });
 
     $("input[name='step-2-other-ecommerce-check']").change(function () {
