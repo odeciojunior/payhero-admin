@@ -15,13 +15,9 @@ class PlanStoreRequest extends FormRequest
     {
         return [
             'project_id'                    => 'required',
-            
             'name'                          => 'required|max:50',
-            
             'price'                         => 'required',
-            
             'description'                   => 'nullable|max:50',
-            
             'products'                      => 'required',
             'products.*.amount'             => 'required',
             'products.*.currency_type_enum' => 'required',
@@ -41,12 +37,9 @@ class PlanStoreRequest extends FormRequest
     {
         return [
             'name.required'                 => 'O campo Nome é obrigatório',
-            
             'price.required'                => 'O campo Preço é obrigatório',
-            
             'description.required'          => 'O campo Descrição é obrigatório',
             'description.max'               => 'O campo Descrição permite apenas 30 caracteres',
-            
             'products.required'             => 'O campo Produto é obrigatório',
             'products.*.amount.required'    => 'O campo Quantidade é obrigatório',
             'products.*.currency_type_enum' => 'O campo Moeda é obrigatório'

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Listeners;
+namespace Modules\Core\Listeners\Sac;
 
 use Carbon\Carbon;
 use Exception;
@@ -8,9 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\TicketMessage;
-use Modules\Core\Events\TicketMessageEvent;
-use Modules\Core\Services\FoxUtils;
+use Modules\Core\Events\Sac\TicketMessageEvent;
 use Modules\Core\Services\SendgridService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Vinkla\Hashids\Facades\Hashids;

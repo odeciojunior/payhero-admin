@@ -13,7 +13,7 @@
         <div style="background-color: #FFF4F6; border: 1px solid #ED1C24;" class="col-md col-xs-12 card p-0 mx-md-5 balance-resume">
             <div class="card-body">
                 <div class="price-holder">
-                    <h5 class="font-size-14" style="color: #636363"> Bloqueado </h5>
+                    <h5 class="font-size-14" style="color: #636363"> Retido </h5>
                     <h4 class="number saldoBloqueado">
                         <span style="color:#9E9E9E">R$ </span><span class="font-size-24 bold blocked-balance" style="color: #ED1C24">0,00</span>
                     </h4>

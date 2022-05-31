@@ -3,28 +3,22 @@
 namespace Modules\Core\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Modules\Companies\Http\Requests\CompanyCreateRequest;
-use Modules\Companies\Http\Requests\CompanyUpdateRequest;
-use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
+use Modules\Core\Entities\Ticket;
+use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
+use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
+use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
 use Modules\Core\Transformers\CompaniesSelectResource;
-use Modules\Companies\Transformers\CompanyCpfResource;
-use Modules\Companies\Transformers\CompanyDocumentsResource;
-use Modules\Core\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
-use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\GatewaysCompaniesCredential;
-use Modules\Core\Entities\Project;
-use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\BankService;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserDocument;
+use Modules\Core\Entities\UserInformation;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\CompanyServiceGetnet;
-use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -35,13 +29,112 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class CoreApiController extends Controller
 {
+    public function verifyAccount($id)
+    {
+        try {
+            $userModel = new User();
+            $userService = new UserService();
 
+            $companyModel = new Company();
+            $companyService = new CompanyService();
+
+            $user = User::find(current(Hashids::decode($id)));
+
+            $userInformations = UserInformation::where('document', $user->document)->exists();
+
+            $userStatus = null;
+            $userRedirect = null;
+            if ($userService->haveAnyDocumentPending()) {
+                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
+                $userRedirect = '/personal-info';
+            }
+
+            if ($userService->haveAnyDocumentAnalyzing()) {
+                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_ANALYZING);
+                $userRedirect = '/personal-info';
+            }
+
+            if ($userService->haveAnyDocumentApproved()) {
+                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_APPROVED);
+                $userRedirect = '/personal-info';
+            }
+
+            if ($userService->haveAnyDocumentRefused()) {
+                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_REFUSED);
+                $userRedirect = '/personal-info';
+            }
+
+            $companyStatus = null;
+            $companyRedirect = null;
+
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+
+            if ($companies->count() == 0) {
+                $companyStatus = null;
+                $companyRedirect = '/companies';
+            } else {
+                $companyApproved = $companyService->companyDocumentApproved();
+                if (!empty($companyApproved)) {
+                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_APPROVED);
+                    $companyRedirect = '/companies';
+                } else {
+                    $companyPending = $companyService->companyDocumentPending();
+                    if (!empty($companyPending)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_PENDING);
+                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyPending->id);
+                    }
+
+                    $companyAnalyzing = $companyService->companyDocumentAnalyzing();
+                    if (!empty($companyAnalyzing)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_ANALYZING);
+                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyAnalyzing->id);
+                    }
+
+                    $companyRefused = $companyService->companyDocumentRefused();
+                    if (!empty($companyRefused)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_REFUSED);
+                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyRefused->id);
+                    }
+                }
+            }
+
+            if (!$user->account_is_approved) {
+                if ($userStatus == 'approved' && $userInformations == true && !empty($companyApproved)) {
+                    $user->update([
+                        'account_is_approved' => 1
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'data' => [
+                    'account' => $userModel->present()->getAccountStatus($user->account_is_approved),
+                    'user' => [
+                        'status' => $userStatus,
+                        'document' => $user->document,
+                        'email' => $user->email,
+                        'informations' => $userInformations,
+                        'link' => $userRedirect,
+                    ],
+                    'company' => [
+                        'status' => $companyStatus,
+                        'link' => $companyRedirect,
+                    ]
+                ]
+            ], Response::HTTP_OK);
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     public function verifyDocuments()
     {
         try {
             $companyService = new CompanyService();
             $userService = new UserService();
+            $userModel = new User();
 
             $userDocumentRefused = $userService->haveAnyDocumentRefused();
 
@@ -91,7 +184,7 @@ class CoreApiController extends Controller
                     'refused' => $refused,
                     'link' => $link,
                     'accountType' => $accountType,
-                    'accountStatus' => $user->present()->getStatus($user->status),
+                    'accountStatus' => $userModel->present()->getStatus($user->status),
                 ]
             );
         } catch (Exception $e) {
@@ -146,4 +239,58 @@ class CoreApiController extends Controller
         }
     }
 
+    public function allowBlockBalance($companyId, $saleId)
+    {
+        try {
+            $company = Company::find(hashids_decode($companyId));
+            $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
+
+            if (empty($company) || empty($sale)) {
+                return response()->json('Dados inválidos', 400);
+            }
+
+            $safe2payService = new Safe2PayService();
+            $safe2payService->setCompany($company);
+
+            $availableBalance = $safe2payService->getAvailableBalance();
+            $pendingBalance = $safe2payService->getPendingBalance();
+            $safe2payService->applyBlockedBalance($availableBalance, $pendingBalance);
+
+            $transaction = Transaction::where('sale_id', $sale->id)->where('company_id', $company->id)->first();
+
+            $response = (object)[
+                'allow_block' => ($availableBalance + $pendingBalance) >= $transaction->value
+            ];
+
+            return response()->json($response);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao verificar bloqueio da comissão!'], 400);
+        }
+    }
+
+    public function notifyTicket($ticketId)
+    {
+        try {
+            $id = hashids_decode($ticketId);
+            $ticket = Ticket::find($id);
+
+            switch ($ticket->ticket_status_enum) {
+                case Ticket::STATUS_OPEN:
+                    event(new NotifyTicketOpenEvent($ticket->id));
+                    break;
+                case Ticket::STATUS_CLOSED:
+                    event(new NotifyTicketClosedEvent($ticket->id));
+                    break;
+                case Ticket::STATUS_MEDIATION:
+                    event(new NotifyTicketMediationEvent($ticket->id));
+                    break;
+            }
+
+            return response()->json(['message' => 'Sucesso']);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao notificar alteração no chamado!'], 400);
+        }
+    }
 }

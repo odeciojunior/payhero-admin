@@ -120,7 +120,9 @@
                         <div class="card app-integration" data-url="/apps/woocommerce" style='width: 270px;'>
                             <a id="woocom-bt" href="/apps/woocommerce" class="add-btn">
                                 <i id="woocom-icon" class="o-add-1" aria-hidden="true"></i></a>
-                            <img class="card-img-top card-img-controll mt-30" src="{!! mix('build/global/img/woocom.jpg') !!}" alt="">
+                                <div style="height: 250px; line-height:250px">
+                                    <img class="card-img-top card-img-controll " src="{!! asset('build/global/img/woocom.jpg') !!}" alt="">
+                                </div>
                             <div class="card-body">
                                 <h5 class="card-title">WooCommerce</h5>
                                 <p class="card-text sm">Integre suas lojas com WooCommerce </p>
@@ -144,7 +146,9 @@
                         <div class="card app-integration" data-url="/apps/hotbillet" style='width: 270px;'>
                             <a id="hotbillet-bt" href="/apps/hotbillet" class="add-btn">
                                 <i id="hotbillet-icon" class="o-add-1" aria-hidden="true"></i></a>
-                            <img class="card-img-top card-img-controll  mt-100 mb-100" src="{!! mix('build/global/img/hotbillet.png') !!}" alt="">
+                                <div style="height: 250px; line-height:250px">
+                                    <img class="card-img-top card-img-controll  " src="{!! asset('build/global/img/hotbillet.png') !!}" alt="">
+                                </div>
                             <div class="card-body">
                                 <h5 class="card-title">HotBillet</h5>
                                 <p class="card-text sm">Integre suas lojas com HotBillet </p>
@@ -157,13 +161,30 @@
                         <div class="card app-integration" data-url="/apps/astronmembers" style='width: 270px;'>
                             <a id="astronmembers-bt" href="/apps/astronmembers" class="add-btn">
                                 <i id="astronmembers-icon" class="o-add-1" aria-hidden="true"></i></a>
-                            <img class="card-img-top card-img-controll  mt-100 " src="{!! mix('build/global/img/astromembers.jpeg') !!}" alt="">
+                                <div style="height: 250px; line-height:250px">
+                                    <img class="card-img-top card-img-controll   " src="{!! asset('build/global/img/astromembers.jpeg') !!}" alt="">
+                                </div>
                             <div class="card-body">
                                 <h5 class="card-title">Astron Members</h5>
                                 <p class="card-text sm">Integre suas lojas com Astron Members </p>
                             </div>
                         </div>
                     </div>
+                    @if(auth()->user()->id == 3774)
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                        <div class="card app-integration" data-url="/apps/notificacoesinteligentes" style='width: 270px;'>
+                            <a id="notificacoesinteligentes-bt" href="/apps/notificacoesinteligentes" class="add-btn">
+                                <i id="notificacoesinteligentes-icon" class="o-add-1" aria-hidden="true"></i></a>
+                                <div style="height: 250px; line-height:250px">
+                                    <img class="card-img-top card-img-controll  " src="{!! asset('build/global/img/notificacoesinteligentes.png') !!}" alt="">
+                                </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Notificações Inteligentes</h5>
+                                <p class="card-text sm">Integre suas lojas com Notificações Inteligentes</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
                     {{--
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">

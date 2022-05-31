@@ -20,6 +20,33 @@ class UserPresenter extends Presenter
      * @param $status
      * @return int|string
      */
+    public function getAccountStatus($status)
+    {
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 0:
+                    return 'demo';
+                case 1:
+                    return 'approved';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'demo':
+                    return 0;
+                case 'approved':
+                    return 1;
+            }
+
+            return '';
+        }
+    }
+
+    /**
+     * @param $status
+     * @return int|string
+     */
     public function getStatus($status)
     {
         if (is_numeric($status)) {

@@ -38,7 +38,6 @@ function atualizar(link = null) {
                 4: 'danger',
                 3: 'danger',
                 2: 'pendente',
-                20: 'antifraude',
                 12: 'success',
                 20: 'antifraude',
                 22: 'danger',
@@ -123,6 +122,7 @@ function getFilters(urlParams = false) {
         'date_type': $("#date_type").val(),
         'date_range': $("#date_range").val(),
         'transaction': $("#transaction").val().replace('#', ''),
+        'reason': $('#reason').val(),
         'plan': $('#plan').val(),
     };
 
@@ -174,8 +174,8 @@ function blockedResume() {
                 $('#total_sales, #commission_blocked, #total').text('');
                 $('#total_sales').html(response.total_sales);
                 $('#commission_blocked').html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
-                $('.blocked-balance-icon').attr('title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
-                $('.blocked-balance-icon').attr('data-original-title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
+                $('.blocked-balance-icon').attr('title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
+                $('.blocked-balance-icon').attr('data-original-title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
                 $('#total').html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
             }
         }
@@ -260,6 +260,28 @@ $(document).ready(function () {
 
     // FIM - COMPORTAMENTOS DA JANELA
 
+    getBlockReasons();
+
+    function getBlockReasons() {
+        $.ajax({
+            url: '/api/reports/block-reasons',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+            },
+            error: resp => {
+                errorAjaxResponse(response);
+            },
+            success: resp => {
+                for(const item of resp) {
+                    const option = `<option value="${item.id}" data-toggle="tooltip" title="${item.reason}">
+                                        ${item.reason}
+                                    </option>`;
+                    $('#reason').append(option)
+                }
+            }
+        })
+    }
+
     getProjects();
 
     // Obtem o os campos dos filtros
@@ -302,7 +324,6 @@ $(document).ready(function () {
             }
         });
     }
-
 
     $("#project").on('change', function () {
         let value = $(this).val();

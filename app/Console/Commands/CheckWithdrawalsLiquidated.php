@@ -15,7 +15,7 @@ class CheckWithdrawalsLiquidated extends Command
 {
     protected $signature = 'getnet:check-withdrawals-liquidated';
 
-    protected $description = 'Command description';
+    protected $description = 'Command para verificar se a transaction foi transferida';
 
     public function __construct()
     {

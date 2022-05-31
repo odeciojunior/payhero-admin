@@ -842,6 +842,7 @@ class BoletoService
     {
         $compensationDays = 2;
         $compensationDate = Carbon::now()->subDay($compensationDays)->toDateString();
+        $todayDate = Carbon::now()->toDateString();
 
         try {
             $boletos = Sale::with(['customer'])
@@ -865,8 +866,8 @@ class BoletoService
                     $bankSlipCompensationDate = $bankSlipCompensationDate->nextWeekday();
                 }
                 $dueDate = $bankSlipCompensationDate->toDateString();
-
-                if ($dueDate >= $compensationDate) continue;
+                
+                if ($dueDate >= $todayDate) continue;
 
                 $boleto->update(
                     [
