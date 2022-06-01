@@ -1024,10 +1024,6 @@ function verifyDocumentPending() {
     });
 }
 
-function verifyDocumentPending() {
-    ajaxVerifyAccount();
-}
-
 function setNewRegisterSavedItem(item, value) {
     if (!localStorage.getItem('newRegisterData')) {
         localStorage.setItem('newRegisterData', JSON.stringify({}));
