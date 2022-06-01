@@ -700,7 +700,7 @@ mix.styles([
  * Modules/Reports/Resources/views/blockedbalance.blade.php
  */
 mix.styles([
-    'Modules/Sales/Resources/assets/css/index.css',
+    'Modules/Reports/Resources/assets/css/reports.css',
     'resources/modules/global/css/empty.css',
     'resources/modules/global/css/switch.css',
     'resources/modules/global/css/new-dashboard.css',

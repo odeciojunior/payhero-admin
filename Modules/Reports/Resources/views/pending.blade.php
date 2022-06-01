@@ -63,7 +63,7 @@
                                     <span class="title">Total pendente</span>
                                     <div class="d-flex">
                                         <span class="detail">R$</span>
-                                        <strong class="number">1.440,20</strong>
+                                        <strong class="number">0</strong>
                                     </div>
                                 </div>
                             </div>

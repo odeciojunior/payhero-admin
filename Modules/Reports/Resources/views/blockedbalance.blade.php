@@ -55,11 +55,6 @@
     <!-- Page -->
     <div class="page mb-0">
         <div style="display: none" class="page-header container">
-            <!-- <div class="row align-items-center justify-content-between" style="min-height:50px">
-                <div class="col-6">
-                    <h1 class="page-title">Vendas com saldo retido</h1>
-                </div>
-            </div> -->
             <header class="top-system">
                 <a href="{!! route('reports.finances') !!}" class="back">
                     <i class="fa-solid fa-arrow-left-long"></i>
@@ -67,15 +62,15 @@
                 </a>
             </header>       
         
-            <div class="row align-items-center justify-content-between" style="min-height: 50px;">
-                <div class="col-8">
+            <div class="row align-items-center justify-content-between top-inner-reports">
+                <div class="col-8 inner-reports-content">
                     <h1 class="d-flex title-system">
-                        <span class="box-title ico-blocked">Bloqueado</span>
+                        <span class="box-title ico-pending">bloqueado</span>
                         Saldo bloqueado
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
                 </div>
-                <div class="col-4">
+                <div class="col-4 inner-reports-content">
                     <div class="box-projects">
                         <select id='select_projects' class="form-control input-pad">
                             {{-- JS carrega.. --}}
@@ -89,7 +84,7 @@
 
         <div id="project-not-empty" style="display: none">
 
-            <section class="container box-reports" id="reports-content">
+            <section class="container box-reports inner-reports-content" id="reports-content">
                 <div class="row">
 					<div class="col-12 box-items-finance pending">
                         <div class="row mb-20">
@@ -98,7 +93,7 @@
                                 <div class="finance-card border pink mb-10">
                                     <span class="title">Total bloqueado</span>
                                     <div class="d-flex">
-                                        <!-- <span class="detail">R$</span> -->
+                                        <span class="detail">R$</span>
                                         <strong class="number" id="commission_blocked">0</strong>
                                     </div>
                                 </div>
@@ -118,7 +113,7 @@
 				</div>
             </section>
 
-            <div class="page-content container">
+            <div class="page-content container inner-reports-content">
                 <!-- Filtro -->
                 <form id='filter_form'>
                     <div id="" class="card shadow p-20">
