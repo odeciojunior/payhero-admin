@@ -980,8 +980,13 @@ class CloudFlareService
         } catch (Exception $e) {
             //$this->deleteZone($domain->name);
         }
-        //$this->deleteZoneById($domain->cloudflare_domain_id);
-        $this->deleteZone($domain->name);
+
+        if(!foxutils()->isEmpty($domain->cloudflare_domain_id)) {
+            $this->deleteZoneById($domain->cloudflare_domain_id);
+        } else {
+            $this->deleteZone($domain->name);
+        }
+
     }
 
     public function setSecurityLevel(string $zoneId, string $level): bool
