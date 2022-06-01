@@ -183,7 +183,9 @@ $(document).ready(function () {
 
     const monthRevenueInput = document.getElementById('new-register-range');
 
-    monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
+    if (monthRevenueInput) {
+        monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
+    }
 
     function handleInputRangeChange(e) {
         let target = e.target;
@@ -866,7 +868,11 @@ function verifyDocumentPending() {
             errorAjaxResponse(response);
         },
         success: response => {
-            if (response.data.account !== 'approved') {
+            if (response.data.account.type === 'collaborator') {
+                return;
+            }
+
+            if (response.data.account.status !== 'approved') {
                 let verifyAccount = localStorage.getItem('verifyAccount');
                 if (verifyAccount == null) {
                     $('.new-register-page-open-modal-container').hide();
@@ -996,7 +1002,7 @@ function verifyDocumentPending() {
                 $('.new-register-navbar-open-modal-container').remove();
 
                 let verifyAccount = JSON.parse(localStorage.getItem('verifyAccount'));
-                if (verifyAccount.account !== 'approved') {
+                if (verifyAccount.account.status !== 'approved') {
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
             }

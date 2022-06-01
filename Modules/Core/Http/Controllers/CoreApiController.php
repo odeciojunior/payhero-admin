@@ -108,7 +108,10 @@ class CoreApiController extends Controller
 
             return response()->json([
                 'data' => [
-                    'account' => $userModel->present()->getAccountStatus($user->account_is_approved),
+                    'account' => [
+                        'status' => $userModel->present()->getAccountStatus($user->account_is_approved),
+                        'type' => $userModel->present()->getAccountType($user->id, $user->account_owner_id)
+                    ],
                     'user' => [
                         'status' => $userStatus,
                         'document' => $user->document,
