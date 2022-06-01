@@ -264,8 +264,21 @@ class WooCommerceService
             $newValues = false;
 
             $planExists = $planModel->where('shopify_variant_id', $shopifyVariantId)->first();
+            
 
-            if(!empty($planExists)){
+            if(!empty($planExists) && !empty($productExists)){
+                //check relation
+                $planProductRelation = $productPlanModel->where('product_id', $productExists->id)
+                                                        ->where('plan_id', $planExists->id)->first();
+                
+                if(empty($planProductRelation)){
+                    $dataProductPlan = [
+                        'product_id' => $productExists->id,
+                        'plan_id' => $planExists->id,
+                        'amount' => '1',
+                    ];
+                    $productPlanModel->create($dataProductPlan);
+                }
 
                 if($planExists->name != $_product->name){
                     $planExists->name = $_product->name;
