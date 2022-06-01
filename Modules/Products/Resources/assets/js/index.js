@@ -184,7 +184,7 @@ jQuery(function () {
                     $("#data-table-products").html("");
                     let dados = "";
                     $.each(response.data, function (index, value) {
-                        shopifyProduct = value.id != value.id_view;
+                        shopifyProduct = value.id_view; //value.id != value.id_view;
                         dados = `
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
                             <div class="card shadow mb-20 mx-0" style="flex: 1 1 100%">
