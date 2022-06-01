@@ -14,7 +14,7 @@ class CreateUserAndCompanyBureauResultColumn extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->json('bureau_result')->after('id_wall_date_update')->nullable();
+            $table->json('bureau_result')->after('id_wall_result')->nullable();
         });
 
         Schema::table('companies', function (Blueprint $table) {
