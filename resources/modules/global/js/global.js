@@ -64,6 +64,12 @@ $(document).ready(function () {
 
     $('#new-register-step-container input[type=text]').on('input', function() {
         setStepButton(getNewRegisterStep());
+
+        if ($(this).val()) {
+            setNewRegisterSavedItem($(this).attr('id'), $(this).val());
+        } else {
+            removeNewRegisterSavedItem($(this).attr('id'));
+        }
     });
 
     $('#new-register-step-container input[type=checkbox]').change(function() {
@@ -75,39 +81,46 @@ $(document).ready(function () {
             $(this).removeClass('option-selected');
             $(this).attr('data-step-1-selected', '0');
 
-            localStorage.removeItem($(this).attr('id'));
+            removeNewRegisterSavedItem($(this).attr('id'));
         } else {
             $(this).addClass('option-selected');
             $(this).attr('data-step-1-selected', '1');
 
-            localStorage.setItem($(this).attr('id'), "true");
+            setNewRegisterSavedItem($(this).attr('id'), 'true');
         }
 
         setStepButton(getNewRegisterStep());
     });
 
     $(".step-2-checkbox-option input[type='checkbox']").on('click', function () {
-    });
-
-    $("input[name='step-2-other-ecommerce-check']").change(function () {
-        let input = $("input[name='step-2-other-ecommerce']");
-
         if ($(this).is(":checked")) {
-            input.removeAttr('disabled');
+            setNewRegisterSavedItem($(this).attr('id'), 'true');
         } else {
-            input.val('');
-            input.attr('disabled', true);
+            removeNewRegisterSavedItem($(this).attr('id'));
         }
     });
 
-    $("input[name='step-2-know-cloudfox-check']").change(function () {
-        let input = $("input[name='step-2-know-cloudfox']");
+    $("input[name='step-2-other-ecommerce-check']").on('change', function () {
+        step2CheckboxOnChange($(this), $("input[name='step-2-other-ecommerce']"));
+    });
 
-        if ($(this).is(":checked")) {
-            input.removeAttr('disabled');
+    $("input[name='step-2-know-cloudfox-check']").on('change', function () {
+        step2CheckboxOnChange($(this), $("input[name='step-2-know-cloudfox']"));
+    });
+
+    $("input[name='step-2-other-ecommerce']").on('input', function () {
+        if (!$(this).val()) {
+            removeNewRegisterSavedItem($(this).attr('id'));
         } else {
-            input.val('');
-            input.attr('disabled', true);
+            setNewRegisterSavedItem($(this).attr('id'), $(this).val());
+        }
+    });
+
+    $("input[name='step-2-know-cloudfox']").on('input', function () {
+        if (!$(this).val()) {
+            removeNewRegisterSavedItem($(this).attr('id'));
+        } else {
+            setNewRegisterSavedItem($(this).attr('id'), $(this).val());
         }
     });
 
@@ -117,8 +130,13 @@ $(document).ready(function () {
         if ($(this).is(":checked")) {
             input.val('');
             input.attr('disabled', true);
+
+            setNewRegisterSavedItem($(this).attr('id'), 'true');
+            removeNewRegisterSavedItem(input.attr('id'));
         } else {
             input.removeAttr('disabled');
+
+            removeNewRegisterSavedItem($(this).attr('id'));
         }
     });
 
@@ -128,8 +146,13 @@ $(document).ready(function () {
         if ($(this).is(":checked")) {
             input.val('');
             input.attr('disabled', true);
+
+            setNewRegisterSavedItem($(this).attr('id'), 'true');
+            removeNewRegisterSavedItem(input.attr('id'));
         } else {
             input.removeAttr('disabled');
+
+            removeNewRegisterSavedItem($(this).attr('id'));
         }
     });
 
@@ -186,21 +209,12 @@ $(document).ready(function () {
     monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
 
     function handleInputRangeChange(e) {
-        let target = e.target;
-
-        const minVal = target.min;
-        const maxVal = target.max;
-        let val = target.value;
-
-        target.style.backgroundSize = (val - minVal) * 100 / (maxVal - minVal) + '% 100%';
-
-        val = val * 1000;
-
-        $('#new-register-month-revenue span:first-child').text((val === 5000 ? 'Até ' : val === 1000000 ? 'Acima de ' : '') + 'R$');
-        $('#new-register-month-revenue span:last-child').text(val.toLocaleString('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 }));
+        setInputRangeOnInput(e.target);
     }
 
     monthRevenueInput.addEventListener('input', handleInputRangeChange);
+
+    loadNewRegisterSavedData();
 });
 
 function redirectToAccounts(url_data)
@@ -1006,6 +1020,28 @@ function verifyDocumentPending() {
     ajaxVerifyAccount();
 }
 
+function setNewRegisterSavedItem(item, value) {
+    if (!localStorage.getItem('newRegisterData')) {
+        localStorage.setItem('newRegisterData', JSON.stringify({}));
+    }
+
+    if (item) {
+        let obj = JSON.parse(localStorage.getItem('newRegisterData'));
+        obj[item] = value;
+
+        localStorage.setItem('newRegisterData', JSON.stringify(obj));
+    }
+}
+
+function removeNewRegisterSavedItem(item) {
+    if (localStorage.getItem('newRegisterData')) {
+        let obj = JSON.parse(localStorage.getItem('newRegisterData'));
+        delete obj[item];
+
+        localStorage.setItem('newRegisterData', JSON.stringify(obj));
+    }
+}
+
 function setNewRegisterStep(step) {
     try {
         localStorage.setItem('new-register-step', step);
@@ -1134,6 +1170,61 @@ function setStepButton(step) {
     btn.attr('data-step-btn', step);
 }
 
+function step2CheckboxOnChange(checkbox, inputText) {
+    if (checkbox.is(":checked")) {
+        inputText.removeAttr('disabled');
+    } else {
+        inputText.val('');
+        inputText.attr('disabled', true);
+
+        removeNewRegisterSavedItem(inputText.attr('id'));
+    }
+}
+
+function setInputRangeOnInput(target) {
+    const minVal = target.min;
+    const maxVal = target.max;
+    let val = target.value;
+
+    target.style.backgroundSize = (val - minVal) * 100 / (maxVal - minVal) + '% 100%';
+
+    val = val * 1000;
+
+    $('#new-register-month-revenue span:first-child').text((val === 5000 ? 'Até ' : val === 1000000 ? 'Acima de ' : '') + 'R$');
+    $('#new-register-month-revenue span:last-child').text(val.toLocaleString('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 }));
+
+    setNewRegisterSavedItem(target.id, target.value);
+}
+
+function loadNewRegisterSavedData() {
+    if (localStorage.getItem('newRegisterData')) {
+        let obj = JSON.parse(localStorage.getItem('newRegisterData'));
+
+        for (const prop in obj) {
+            const element = $('#' + prop);
+
+            if (element.prop('nodeName') === 'DIV') {
+                element.addClass('option-selected')
+                    .attr('data-step-1-selected', 1);
+            }
+
+            if (element.prop('nodeName') === 'INPUT' && element.attr('type') === 'checkbox') {
+                element.prop("checked", true);
+                element.trigger('change');
+            }
+
+            if (element.prop('nodeName') === 'INPUT' && element.attr('type') === 'text') {
+                element.val(obj[prop]);
+            }
+
+            if (element.prop('nodeName') === 'INPUT' && element.attr('type') === 'range') {
+                element.val(obj[prop]);
+                setInputRangeOnInput(document.getElementById('new-register-range'));
+            }
+        }
+    }
+}
+
 function saveNewRegisterData() {
     const newRegisterData = {
         document: JSON.parse(localStorage.getItem('verifyAccount')).user.document,
@@ -1198,6 +1289,9 @@ function saveNewRegisterData() {
             $('.extra-informations-user').hide();
 
             $('#new-register-steps-actions').html('<button type="button" class="btn new-register-btn close-modal">Fechar</button>');
+
+            localStorage.removeItem('newRegisterData');
+            localStorage.removeItem('new-register-step');
 
             loadingOnScreenRemove();
         }

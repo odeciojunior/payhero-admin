@@ -198,7 +198,7 @@
                                         <div class="step-2-checkbox-option">
                                             <div class="d-flex flex-row">
                                                 <div>
-                                                    <input type="checkbox" id="other-ecommerce" name="step-2-other-ecommerce-check" />
+                                                    <input type="checkbox" id="other-ecommerce-check" name="step-2-other-ecommerce-check" />
                                                 </div>
                                                 <div>
                                                     <span>Outros</span>
@@ -271,7 +271,7 @@
                                         </div>
                                         <div class="step-2-checkbox-option">
                                             <div style="width: 100%">
-                                                <input type="text" name="step-2-know-cloudfox" placeholder="Qual outro?" disabled />
+                                                <input type="text" id="know-cloudfox" name="step-2-know-cloudfox" placeholder="Qual outro?" disabled />
                                             </div>
                                         </div>
                                     </div>
