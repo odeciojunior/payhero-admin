@@ -153,7 +153,6 @@ class WooCommerceService
 
             $hashedProjectId = Hashids::encode($projectId);
 
-
             $description = '';
             if(empty($_product->variations)){
 
@@ -164,14 +163,10 @@ class WooCommerceService
                     ];
                     $this->woocommerce->post('products/'.$_product->id, $data);
 
-
-
-
             }else{
 
-
                 foreach($_product->variations as $variationId){
-                    
+
                     ImportWooCommerceProductVariation::dispatch($projectId, $userId, $_product, $variationId);
 
                 }
@@ -179,7 +174,6 @@ class WooCommerceService
             }
 
         }catch(Exception $e){
-            //Log::debug($e);
             report($e);
         }
     }
@@ -195,22 +189,16 @@ class WooCommerceService
                 $description .= $attribute->option.' ';
         }
 
-
         $_product->price = $variation->price;
         $_product->images[0]->src = $variation->images[0]->src;
 
         $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
-
-
 
         $data = [
             'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
         ];
 
         ProcessWooCommerceSaveProductSku::dispatch($projectId, $_product->id, $variation->id, $data, 3);
-
-
-
 
     }
 
@@ -358,8 +346,6 @@ class WooCommerceService
             return $shopifyVariantId;
         }
 
-
-
     }
 
 
@@ -441,11 +427,9 @@ class WooCommerceService
         $webhooks = $this->woocommerce->get('webhooks');
         $ids = array();
 
-
         foreach($webhooks as $webhook){
 
             if($webhook->name == 'cf-'.$hashedProjectId){
-
 
                 $ids[] = $webhook->id;
 
@@ -466,7 +450,6 @@ class WooCommerceService
 
             $this->woocommerce->post('webhooks/batch', $data);
         }
-
 
     }
 
@@ -550,7 +533,6 @@ class WooCommerceService
             }
 
 
-
             if(!empty($order->correios_tracking_code)){
 
 
@@ -583,19 +565,17 @@ class WooCommerceService
 
             $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
 
-            return '{"status":true,"msg":""}';
+            return true;
 
         } else {
             $start_date = strtotime($integration->synced_at);
             $diff = (time() - $start_date) / 60;
 
             if($diff < 30) {
-                return '{"status":false,"msg":""}';
-                // !
+                return false;
             } else {
                 $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
-
-                return '{"status":true,"msg":""}';
+                return true;
             }
 
         }
@@ -620,7 +600,7 @@ class WooCommerceService
                 $res = json_encode($result);
 
                 if(!empty($result->status) && $result->status == 'processing') {
-                    
+
                     if($logRequest)
                         $this->updatePostRequest($requestId, 1, $res);
 
@@ -734,16 +714,11 @@ class WooCommerceService
 
         if (!empty($data["line_items"])) {
 
-            
-
-
             try {
                 $result = $this->woocommerce->put('orders/' . $orderId, $data);
 
-
             } catch (Exception $e) {
-            
-            
+
             }
         }
 
