@@ -66,7 +66,10 @@ class CoreApiController extends Controller
 
             $companyStatus = null;
             $companyRedirect = null;
-            if ($user->companies->count() == 0) {
+
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+
+            if ($companies->count() == 0) {
                 $companyStatus = null;
                 $companyRedirect = '/companies';
             } else {
@@ -105,7 +108,10 @@ class CoreApiController extends Controller
 
             return response()->json([
                 'data' => [
-                    'account' => $userModel->present()->getAccountStatus($user->account_is_approved),
+                    'account' => [
+                        'status' => $userModel->present()->getAccountStatus($user->account_is_approved),
+                        'type' => $userModel->present()->getAccountType($user->id, $user->account_owner_id)
+                    ],
                     'user' => [
                         'status' => $userStatus,
                         'document' => $user->document,

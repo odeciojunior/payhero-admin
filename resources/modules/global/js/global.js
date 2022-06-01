@@ -206,7 +206,9 @@ $(document).ready(function () {
 
     const monthRevenueInput = document.getElementById('new-register-range');
 
-    monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
+    if (monthRevenueInput) {
+        monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
+    }
 
     function handleInputRangeChange(e) {
         setInputRangeOnInput(e.target);
@@ -868,7 +870,7 @@ $('.top-alert-close').on('click', function () {
 
 sessionStorage.removeItem('documentsPending');
 
-function ajaxVerifyAccount() {
+function verifyDocumentPending() {
     $.ajax({
         method: 'GET',
         url: '/api/core/verify-account/' + $('meta[name="user-id"]').attr('content'),
@@ -880,7 +882,11 @@ function ajaxVerifyAccount() {
             errorAjaxResponse(response);
         },
         success: response => {
-            if (response.data.account !== 'approved') {
+            if (response.data.account.type === 'collaborator') {
+                return;
+            }
+
+            if (response.data.account.status !== 'approved') {
                 let verifyAccount = localStorage.getItem('verifyAccount');
                 if (verifyAccount == null) {
                     $('.new-register-page-open-modal-container').hide();
@@ -1007,8 +1013,10 @@ function ajaxVerifyAccount() {
                     </div>
                 `);
             } else {
+                $('.new-register-navbar-open-modal-container').remove();
+
                 let verifyAccount = JSON.parse(localStorage.getItem('verifyAccount'));
-                if (verifyAccount.account !== 'approved') {
+                if (verifyAccount.account.status !== 'approved') {
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
             }
@@ -1278,6 +1286,8 @@ function saveNewRegisterData() {
             alertCustom('error', response.responseJSON.message);
         },
         success: function success(response) {
+            verifyDocumentPending();
+
             setNewRegisterStep('4');
 
             $('#new-register-step-3-container').removeClass('d-flex flex-column');
