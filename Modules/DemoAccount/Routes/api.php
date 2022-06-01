@@ -47,6 +47,8 @@ Route::group([
         Route::get('/products', 'ProductsApiDemoController@index');
         Route::get('/products/{id}', 'ProductsApiDemoController@show');
         Route::get('/products/{id}/edit', 'ProductsApiDemoController@edit');
+        Route::get('/products/saleproducts/{saleId}', 'ProductsApiDemoController@getProductBySale')
+        ->name('api.products.saleproducts');
     });
 
     //Sales
@@ -131,6 +133,9 @@ Route::group([
         Route::get('/dashboard/get-chart-data', 'DashboardApiDemoController@getChartData');
         Route::get('/dashboard/get-performance', 'DashboardApiDemoController@getPerformance');
         Route::get('/dashboard/get-account-health', 'DashboardApiDemoController@getAccountHealth');
+        Route::get('/dashboard/get-account-chargeback', 'DashboardApiDemoController@getAccountChargeback');
+        Route::get('/dashboard/get-account-attendance', 'DashboardApiDemoController@getAccountAttendance');
+        Route::get('/dashboard/get-account-tracking', 'DashboardApiDemoController@getAccountTracking');
         Route::get('/dashboard/verify-achievements', 'DashboardApiDemoController@getAchievements');
         Route::get('/dashboard/verify-pix-onboarding', 'DashboardApiDemoController@verifyPixOnboarding');
 

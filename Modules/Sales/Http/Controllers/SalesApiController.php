@@ -79,7 +79,7 @@ class SalesApiController extends Controller
                 ];
             }
 
-            if (!in_array(auth()->user()->account_owner_id, $users)) {
+            if (!in_array(auth()->user()->getAccountOwnerId(), $users)) {
                 return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
 

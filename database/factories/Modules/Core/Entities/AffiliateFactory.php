@@ -27,7 +27,7 @@ class AffiliateFactory extends Factory
     {        
         return [
             'user_id'=>User::factory(),
-            'project_id'=>Project::factory(),
+            'project_id'=>null,
             'company_id'=>Company::DEMO_ID,
             'percentage'=>rand(10,45),
             'status_enum'=>Affiliate::STATUS_ACTIVE,

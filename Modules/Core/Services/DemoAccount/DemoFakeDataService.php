@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Services;
+namespace Modules\Core\Services\DemoAccount;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -125,15 +125,20 @@ class DemoFakeDataService
 
     public function createAffiliates(){
         $project = Project::select('id')->inRandomOrder()->first();
-        $user = User::select('id')->where('id','!',User::DEMO_ID)->inRandomOrder()->first();
+        $user = User::select('id')->where('id','<>',User::DEMO_ID)->inRandomOrder()->first();
 
-        Affiliate::factory()->for($user,$project)->create();
+        Affiliate::factory()->for($user)->create([
+            'project_id'=>$project->id
+        ]);
     }
 
     public function verifyAbandonedCarts(){
-        $sales = DB::table('sales')->select('id')->where('status',Sale::STATUS_PENDING)->where('start_date','<=',Carbon::now()->subDay())->get();
+        $sales = DB::table('sales')->select('id','checkout_id')->where('status',Sale::STATUS_CANCELED)->where('start_date','<=',Carbon::now()->subDay())->get();
         foreach($sales as $sale){
-
+            Checkout::find($sale->checkout_id)->update([
+                'status'=>'abandoned',
+                'status_enum'=>Checkout::STATUS_ABANDONED_CART
+            ]);
         }
     }
 }

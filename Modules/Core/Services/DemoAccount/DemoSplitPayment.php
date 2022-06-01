@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Services;
+namespace Modules\Core\Services\DemoAccount;
 
 
 use Carbon\Carbon;

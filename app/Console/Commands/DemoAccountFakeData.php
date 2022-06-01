@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Services\BoletoService;
-use Modules\Core\Services\DemoFakeDataService;
+use Modules\Core\Services\DemoAccount\DemoFakeDataService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\PixService;
 use Modules\Notazz\Http\Controllers\NotazzController;
@@ -61,16 +61,19 @@ class DemoAccountFakeData extends Command
         // }
 
         $demo =  new DemoFakeDataService();
+        $demo->createAffiliates();
 
         // $demo->createFakeContestation();
 
         // $demo->createFakeTicket();
 
-        $boletoService = new BoletoService();
-        $boletoService->changeBoletoPendingToCanceled();
+        // $boletoService = new BoletoService();
+        // $boletoService->changeBoletoPendingToCanceled();
 
-        $pixService = new PixService();
-        $pixService->changePixToCanceled();
+        // $pixService = new PixService();
+        // $pixService->changePixToCanceled();
+
+        // $demo->verifyAbandonedCarts();
         
     }        
 
