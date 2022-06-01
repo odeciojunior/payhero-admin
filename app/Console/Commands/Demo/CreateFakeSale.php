@@ -50,6 +50,7 @@ class CreateFakeSale extends Command
         do{
             $this->validateCheckoutLogs()                
                 ->preparePlans()        
+                ->prepareOrderBump()
                 ->prepareData()
                 ->checkAutomaticDiscount()
                 ->checkDiscountCoupon()

@@ -12,6 +12,7 @@ use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\FoxUtils;
 
 /**
  * Class SplitPayment

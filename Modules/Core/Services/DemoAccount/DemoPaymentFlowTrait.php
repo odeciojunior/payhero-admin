@@ -67,6 +67,8 @@ trait DemoPaymentFlowTrait
     protected $cupomCode = '';
 
     protected $onlyDigitalProducts = false;
+
+    protected $hasOrderBump = false;
     
     public function validateCheckoutLogs(){
          
@@ -81,11 +83,11 @@ trait DemoPaymentFlowTrait
     }
 
     public function preparePlans()
-    {       
+    {
         $planIds = $this->checkout->checkoutPlans()->pluck('plan_id');
-
+        
         $this->plans = Plan::with(['productsPlans.product'])
-        ->whereIn('id',$planIds)->get();
+        ->whereIn('id',$planIds)->get();        
         
         foreach($this->plans as $plan){
             $this->subTotal += FoxUtils::onlyNumbers($plan->price) * 1;            
@@ -98,32 +100,21 @@ trait DemoPaymentFlowTrait
 
     private function getOrderBump()
     {
-        $currentPlans = collect($this->plans)->pluck('id');
+        $currentPlans = $this->plans->pluck('id');
         
-        $currentPlansKey = implode('-', $currentPlans->toArray());
-        $applyOnPlans = CacheService::remember(function () use ($currentPlans) {
-            return Plan::select('p.id')
-                ->leftJoin('plans as p', function ($join) {
-                    $join->on('plans.shopify_id', '=', 'p.shopify_id')
-                    ->where('plans.shopify_id','<>','')
-                    ->whereNotNull('plans.shopify_id')
-                    ->orWhere('plans.id', '=', DB::raw('p.id'));
-                })->whereIn('plans.id', $currentPlans)->get();
-        }, CacheService::CHECKOUT_OB_APPLY_ON_PLANS, $currentPlansKey);
-
         $project = $this->project;
-        $applyOnPlansKey = $project->id .'-'. implode('-', $applyOnPlans->pluck('id')->toArray());
-        $rules = CacheService::remember(function () use ($project, $applyOnPlans) {
+        $applyOnPlansKey = $project->id .'-'. implode('-', $currentPlans->toArray());
+        $rules = CacheService::remember(function () use ($project, $currentPlans) {
             return OrderBumpRule::where('project_id', $project->id)
                 ->where('active_flag', true)
-                ->where(function ($query) use ($applyOnPlans) {
-                    foreach ($applyOnPlans as $plan) {
-                        $query->orWhereJsonContains('apply_on_plans', $plan->id);
+                ->where(function ($query) use ($currentPlans) {
+                    foreach ($currentPlans as $planId) {
+                        $query->orWhereJsonContains('apply_on_plans', $planId);
                     }
                     $query->orWhereJsonContains('apply_on_plans', 'all');
                 })->get();
         }, CacheService::CHECKOUT_OB_RULES, $applyOnPlansKey);
-
+        
         if (!$rules->count()) return null;
 
         $rulesArray = [];
@@ -159,33 +150,42 @@ trait DemoPaymentFlowTrait
 
     public function prepareOrderBump()
     {        
+        if(!$this->keepGoing()){
+            return $this;
+        }
+
         $rulesArray = $this->getOrderBump();
 
         $rules = OrderBumpRule::whereIn('id', array_keys($rulesArray))->get();
 
-        foreach ($rules as $rule) {
+        $limitOrderBump = rand(1,3);
+        $counterOrderBump = 0;
+
+        foreach ($rules as $rule)
+        {
             $selectedPlans = $rulesArray[$rule->id];
-            $plans = Plan::whereIn('id', $selectedPlans)->get();
-            foreach ($plans as $plan) {
+            $plansOb = Plan::whereIn('id', $selectedPlans)->get();
+
+            foreach ($plansOb as $planOb) {
                 $alreadyInArray = false;
-                foreach ($this->planIds as $key => $value) {
-                    if ($plan->id === $value) {
-                        $this->plansAmount[$key] += 1;
+
+                foreach ($this->plans as $plan) {
+                    if ($planOb->id === $plan->id) {
                         $alreadyInArray = true;
                         break;
                     }
                 }
-                if (!$alreadyInArray) {
-                    $this->plans[] = $plan;
-                    $this->planIds[] = $plan->id;
-                    $this->plansAmount[] = 1;
-                }
 
-                $price = number_format(
-                    floatval($plan->price) - (floatval($plan->price) * $rule->discount / 100),
-                    2
-                );
-                $this->subTotal += FoxUtils::onlyNumbers($price);
+                if (!$alreadyInArray && $counterOrderBump < $limitOrderBump) {
+                    $this->plans[] = $plan;                                        
+                    $price = number_format(
+                        floatval($plan->price) - (floatval($plan->price) * $rule->discount / 100),
+                        2
+                    );
+                    $this->subTotal += FoxUtils::onlyNumbers($price);
+
+                    $counterOrderBump++;
+                }
             }
         }
 
@@ -193,7 +193,6 @@ trait DemoPaymentFlowTrait
             $this->hasOrderBump = true;
             $this->totalValue = $this->subTotal;
         }
-
 
         return $this;
     }
@@ -250,6 +249,10 @@ trait DemoPaymentFlowTrait
     public function checkDiscountCoupon()
     {
         $this->totalValue -= $this->automaticDiscount;
+
+        if(!$this->keepGoing()){
+            return $this;
+        }
        
         $discountCoupon = DiscountCoupon::where('project_id', $this->project->id)->where('status',1)->inRandomOrder()->first();
         
@@ -262,21 +265,23 @@ trait DemoPaymentFlowTrait
         return $this;
     }
 
-    public function checkProgressiveDiscount(){
+    public function checkProgressiveDiscount()
+    {
         $this->progressiveDiscount = 0;
 
-        if(Rand(0,1))
-        {
-            $this->progressiveDiscount = (Rand(1,30)/100)*$this->subTotal;
-    
-            if($this->progressiveDiscount > 0){
-                if($this->totalValue - $this->progressiveDiscount > 500){
-                    $this->totalValue -= $this->progressiveDiscount;
-                }else{
-                    $this->progressiveDiscount = 0;
-                }
-            }
+        if(!$this->keepGoing()){
+            return $this;
         }
+
+        $this->progressiveDiscount = (Rand(1,30)/100)*$this->subTotal;
+
+        if($this->progressiveDiscount > 0){
+            if($this->totalValue - $this->progressiveDiscount > 500){
+                $this->totalValue -= $this->progressiveDiscount;
+            }else{
+                $this->progressiveDiscount = 0;
+            }
+        }        
 
         return $this;
     }
@@ -357,12 +362,12 @@ trait DemoPaymentFlowTrait
                 'checkout_id' => $this->checkout ? $this->checkout->id : null,
                 'affiliate_id' => $this->project ? FoxUtils::getCookieAffiliate($this->project->id) : null,
                 'payment_method' => $this->payment_method,
-                'total_paid_value' => FoxUtils::floatFormat($this->totalValue),
+                'total_paid_value' => intval($this->totalValue)/100,
                 'original_total_paid_value' => $this->totalValue,
                 'sub_total' => FoxUtils::floatFormat($this->subTotal),
                 'shipment_value' => FoxUtils::floatFormat($this->shippingPrice),
                 'cupom_code' => $this->cupomCode,
-                'start_date' => Carbon::now(),
+                'start_date' => $this->checkout->created_at,
                 'gateway_transaction_id' => '',                
                 'installments_amount' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT ? $this->installment_amount : null,
                 'installments_value' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT
@@ -374,7 +379,7 @@ trait DemoPaymentFlowTrait
                 'upsell_id' => null,
                 'automatic_discount' => $this->automaticDiscount,
                 'interest_total_value' => $this->totalInterestValue ?? 0,
-                'has_order_bump' => 0,                     
+                'has_order_bump' => $this->hasOrderBump,                     
                 'status'=>FoxUtilsFakeService::getRandomStatus($this->payment_method)
             ]            
         );
@@ -412,8 +417,10 @@ trait DemoPaymentFlowTrait
         return $this;
     }
 
-    public function executePayment(){
-        switch($this->payment_method){
+    public function executePayment()
+    {
+        switch($this->payment_method)
+        {
             case Sale::PAYMENT_TYPE_CREDIT_CARD:
                 $card = CustomerCard::factory()
                     ->for($this->customer)
@@ -495,6 +502,10 @@ trait DemoPaymentFlowTrait
 
             return 0;
         }
+    }
+
+    public function keepGoing(){
+        return rand(1,10) % 2 == 0;
     }
 
 }
