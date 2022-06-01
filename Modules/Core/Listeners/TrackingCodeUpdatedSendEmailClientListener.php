@@ -72,35 +72,33 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                     ->where('status', $projectNotificationPresenter->getStatus('active'))
                     ->first();
 
-                if (!empty($domain)) {
-                    $linkBase = 'https://tracking.' . $domain->name . '/';
-                    if (!empty($projectNotificationSms)) {
-                        $message = $projectNotificationSms->message;
-                        $smsMessage = $projectNotificationService->formatNotificationData($message, $sale, $project, 'sms', null, null, $tracking->tracking_code);
-                        if (!empty($smsMessage) && !empty($clientTelephone)) {
-                            $smsService->sendSms($clientTelephone, $smsMessage);
-                        }
+                $linkBase = 'https://tracking.' . ($domain ? $domain->name : 'cloudfox.net') . '/';
+                if (!empty($projectNotificationSms)) {
+                    $message = $projectNotificationSms->message;
+                    $smsMessage = $projectNotificationService->formatNotificationData($message, $sale, $project, 'sms', null, null, $tracking->tracking_code);
+                    if (!empty($smsMessage) && !empty($clientTelephone)) {
+                        $smsService->sendSms($clientTelephone, $smsMessage);
                     }
-                    if (!empty($projectNotificationEmail)) {
-                        $message = json_decode($projectNotificationEmail->message);
-                        $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $sale, $project, null, null, null, $tracking->tracking_code);
-                        $titleMessage = $projectNotificationService->formatNotificationData($message->title, $sale, $project, null, null, null, $tracking->tracking_code);
-                        $contentMessage = $projectNotificationService->formatNotificationData($message->content, $sale, $project, null, null, null, $tracking->tracking_code);
-                        $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                        $data = [
-                            'name' => $clientName,
-                            'project_logo' => $checkoutConfig->checkout_logo,
-                            'tracking_code' => $tracking->tracking_code,
-                            "subject" => $subjectMessage,
-                            "title" => $titleMessage,
-                            "content" => $contentMessage,
-                            "products" => $products,
-                            "link" => $linkBase,
-                            'sac_link' => "https://sac." . $domain->name,
-                        ];
+                }
+                if (!empty($projectNotificationEmail)) {
+                    $message = json_decode($projectNotificationEmail->message);
+                    $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $sale, $project, null, null, null, $tracking->tracking_code);
+                    $titleMessage = $projectNotificationService->formatNotificationData($message->title, $sale, $project, null, null, null, $tracking->tracking_code);
+                    $contentMessage = $projectNotificationService->formatNotificationData($message->content, $sale, $project, null, null, null, $tracking->tracking_code);
+                    $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                    $data = [
+                        'name' => $clientName,
+                        'project_logo' => $checkoutConfig->checkout_logo,
+                        'tracking_code' => $tracking->tracking_code,
+                        "subject" => $subjectMessage,
+                        "title" => $titleMessage,
+                        "content" => $contentMessage,
+                        "products" => $products,
+                        "link" => $linkBase
+                    ];
 
-                        $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-347cde26384449548df47e290ad50906', $data);
-                    }
+                    $fromEmail = 'noreply@' . ($domain ? $domain->name : 'cloudfox.net');
+                    $sendGridService->sendEmail($fromEmail, $projectName, $clientEmail, $clientName, 'd-347cde26384449548df47e290ad50906', $data);
                 }
             }
         } catch (Exception $e) {
