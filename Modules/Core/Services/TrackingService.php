@@ -216,9 +216,7 @@ class TrackingService
                 //atualiza
                 $tracking->fill($newAttributes);
                 if ($tracking->isDirty()) {
-                    DB::beginTransaction();
                     $tracking->save();
-                    DB::commit();
                     event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
                 }
 
@@ -235,9 +233,7 @@ class TrackingService
                     $notify = false;
                 }
             } else { //senão cria um novo tracking
-                DB::beginTransaction();
                 $tracking = Tracking::updateOrCreate($commonAttributes + $newAttributes);
-                DB::commit();
                 event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 
@@ -247,7 +243,6 @@ class TrackingService
 
             return $tracking;
         } catch (\Exception $e) {
-            DB::rollBack();
             report($e);
             return null;
         }

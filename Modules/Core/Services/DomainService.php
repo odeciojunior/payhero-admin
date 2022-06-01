@@ -262,7 +262,6 @@ class DomainService
     public function deleteDomain(Domain $domain)
     {
         try {
-            $domainRecordModel = new DomainRecord();
             $domain->load('domainsRecords', 'project', 'project.shopifyIntegrations');
 
             if (empty($domain->project) && !Gate::allows('edit', [$domain->project])) {
@@ -273,37 +272,22 @@ class DomainService
             }
 
             if (empty($domain->cloudflare_domain_id)) {
-                $domainRecordModel->where('domain_id', $domain->id)->delete();
-                $domainDeleted = $domain->delete();
+                DomainRecord::where('domain_id', $domain->id)->delete();
+                $domain->delete();
 
-                if ($domainDeleted) {
-                    return ([
-                        'message' => 'Dominio removido com sucesso!',
-                        'success' => true
-                    ]);
-                }
                 return ([
-                    'message' => 'Não foi possível deletar o domínio!',
-                    'success' => false
+                    'message' => 'Dominio removido com sucesso!',
+                    'success' => true
                 ]);
+
             }
 
             $cloudflareService = new CloudFlareService();
-            $sendgridService = new SendgridService();
-            if ($cloudflareService->deleteZoneById($domain->cloudflare_domain_id) || empty($cloudflareService->getZones($domain->name))) {
-                //zona deletada
-                $sendgridService->deleteLinkBrand($domain->name);
-                $sendgridService->deleteZone($domain->name);
 
-                $domainRecordModel->where('domain_id', $domain->id)->delete();
-                $domainDeleted = $domain->delete();
+            if ($cloudflareService->removeDomain($domain) || empty($cloudflareService->getZones($domain->name))) {
 
-                if (empty($domainDeleted)) {
-                    return ([
-                        'message' => 'Não foi possível deletar o registro do domínio!',
-                        'success' => false
-                    ]);
-                }
+                DomainRecord::where('domain_id', $domain->id)->delete();
+                $domain->delete();
 
                 if (!empty($domain->project->shopify_id)) {
                     //se for shopify, voltar as integraçoes ao html padrao
