@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\BlockReason;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Illuminate\Routing\Controller;
@@ -71,14 +72,14 @@ class ReportsApiController extends Controller
 
                 if (!empty($requestStartDate) && !empty($requestEndDate)) {
                     $itens->whereBetween('sales.start_date',
-                        [$requestStartDate, date('Y-m-d', strtotime($requestEndDate.' + 1 day'))]);
+                        [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
                 } else {
                     if (!empty($requestStartDate)) {
                         $itens->whereDate('sales.start_date', '>=', $requestStartDate);
                     }
 
                     if (!empty($requestEndDate)) {
-                        $itens->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($requestEndDate.' + 1 day')));
+                        $itens->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
                     }
                 }
 
@@ -86,7 +87,7 @@ class ReportsApiController extends Controller
                 $plans = [];
                 foreach ($itens as $key => $iten) {
                     $plan = $planModel->with('products')->find($iten['plan_id']);
-                    $plans[$key]['name'] = $plan->name.' - '.$plan->description;
+                    $plans[$key]['name'] = $plan->name . ' - ' . $plan->description;
                     $plans[$key]['photo'] = $plan->products[0]->photo;
                     $plans[$key]['quantidade'] = $iten['count'];
                     unset($plan);
@@ -123,7 +124,7 @@ class ReportsApiController extends Controller
                 }
                 if (!empty($requestStartDate) && !empty($requestEndDate)) {
                     $salesDetails->whereBetween('start_date',
-                        [$requestStartDate.' 00:00:00', $requestEndDate.' 23:59:59']);
+                        [$requestStartDate . ' 00:00:00', $requestEndDate . ' 23:59:59']);
                 }
                 $salesDetails->where(function ($q1) {
                     $q1->where('sales.status', 4)->whereDoesntHave('saleLogs', function ($querySaleLog) {
@@ -159,9 +160,9 @@ class ReportsApiController extends Controller
 
                 $chartData = $reportService->getChartData($dataSearch, $projectId, $currency);
 
-                $cartaoConvert = $contCreditCardAproved.'/'.$contCreditCard;
-                $boletoConvert = $contBoletoAproved.'/'.$contBoleto;
-                $pixConvert = $contPixAproved.'/'.$contPix;
+                $cartaoConvert = $contCreditCardAproved . '/' . $contCreditCard;
+                $boletoConvert = $contBoletoAproved . '/' . $contBoleto;
+                $pixConvert = $contPixAproved . '/' . $contPix;
 
                 if ($contBoleto != 0) {
                     $convercaoBoleto = number_format((intval($contBoletoAproved) * 100) / intval($contBoleto), 2, ',',
@@ -192,7 +193,7 @@ class ReportsApiController extends Controller
                     $totalPercentPaidBoleto = number_format((intval($totalValueBoleto) * 100) / intval($totalPaidValueAproved),
                         2, ',', ' . ');
                     $totalPercentPaidPix = number_format((intval($totalValuePix) * 100) / intval($totalPaidValueAproved),
-                                                            2, ',', ' . ');
+                        2, ',', ' . ');
                     $ticketMedio = number_format($totalPaidValueAproved / $countSalesAproved, 2, ',', '.');
                 }
             }
@@ -233,7 +234,7 @@ class ReportsApiController extends Controller
                 'boletoConvert' => $boletoConvert ?? 0,
                 'pixConvert' => $pixConvert ?? 0,
                 'plans' => $plans ?? 0,
-                'ticketMedio' => $ticketMedio ?? number_format(0,2, ',', '.)'),
+                'ticketMedio' => $ticketMedio ?? number_format(0, 2, ',', '.)'),
             ]);
         } catch (Exception $e) {
             report($e);
@@ -243,7 +244,7 @@ class ReportsApiController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse|AnonymousResourceCollection
      */
     public function getSalesByOrigin(Request $request)
@@ -257,7 +258,7 @@ class ReportsApiController extends Controller
                     ['project_id', $request->project_id],
                 ])->first();
 
-                $orders = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$request->origin.' as origin'))
+                $orders = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.' . $request->origin . ' as origin'))
                     ->leftJoin('transactions as transaction', function ($join) use ($userId) {
                         $join->on('transaction.sale_id', '=', 'sales.id');
                         $join->where('transaction.user_id', $userId);
@@ -268,10 +269,10 @@ class ReportsApiController extends Controller
                     ->where('sales.project_id', hashids_decode($request->project_id))
                     ->where('sales.status', Sale::STATUS_APPROVED)
                     ->whereBetween('start_date',
-                        [$request->start_date, date('Y-m-d', strtotime($request->end_date.' + 1 day'))])
-                    ->whereNotIn('checkout.'.$request->origin, ['', 'null'])
-                    ->whereNotNull('checkout.'.$request->origin)
-                    ->groupBy('checkout.'.$request->origin)
+                        [$request->start_date, date('Y-m-d', strtotime($request->end_date . ' + 1 day'))])
+                    ->whereNotIn('checkout.' . $request->origin, ['', 'null'])
+                    ->whereNotNull('checkout.' . $request->origin)
+                    ->groupBy('checkout.' . $request->origin)
                     ->orderBy('sales_amount', 'DESC');
                 if (!empty($affiliate)) {
                     $orders->where('sales.affiliate_id', $affiliate->id);
@@ -328,7 +329,7 @@ class ReportsApiController extends Controller
 
                     if (!empty($requestStartDate) && !empty($requestEndDate)) {
                         $itens->whereBetween('checkouts.created_at',
-                            [$requestStartDate, date('Y-m-d', strtotime($requestEndDate.' + 1 day'))]);
+                            [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
                     } else {
                         if (!empty($requestStartDate)) {
                             $itens->whereDate('checkouts.start_date', '>=', $requestStartDate);
@@ -336,7 +337,7 @@ class ReportsApiController extends Controller
 
                         if (!empty($requestEndDate)) {
                             $itens->whereDate('checkouts.start_date', '<',
-                                date('Y-m-d', strtotime($requestEndDate.' + 1 day')));
+                                date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
                         }
                     }
                     if (!empty($affiliate)) {
@@ -348,10 +349,10 @@ class ReportsApiController extends Controller
                     $plans = [];
                     foreach ($itens as $key => $iten) {
                         $plan = $planModel->with('products')->find($iten['plan_id']);
-                        if (!FoxUtils::isEmpty($plan)){
-                            if(!empty($plan->description)){
-                                $plans[$key]['name'] = $plan->name.' - '.$plan->description;
-                            } else{
+                        if (!FoxUtils::isEmpty($plan)) {
+                            if (!empty($plan->description)) {
+                                $plans[$key]['name'] = $plan->name . ' - ' . $plan->description;
+                            } else {
                                 $plans[$key]['name'] = $plan->name;
                             }
                             $plans[$key]['photo'] = $plan->products[0]->photo;
@@ -372,7 +373,7 @@ class ReportsApiController extends Controller
                         ->where('project_id', $projectId);
                     if ($requestStartDate != '' && $requestEndDate != '') {
                         $checkoutsDetails->whereBetween('created_at',
-                            [$requestStartDate, date('Y-m-d', strtotime($requestEndDate.' + 1 day'))]);
+                            [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
                     } else {
                         if (!empty($requestStartDate)) {
                             $checkoutsDetails->whereDate('created_at', '>=', $requestStartDate);
@@ -380,7 +381,7 @@ class ReportsApiController extends Controller
 
                         if (!empty($requestEndDate)) {
                             $checkoutsDetails->whereDate('updated_at', '<',
-                                date('Y-m-d', strtotime($requestEndDate.' + 1 day')));
+                                date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
                         }
                     }
                     if (!empty($affiliate)) {
@@ -412,13 +413,13 @@ class ReportsApiController extends Controller
 
                     $totalCheckouts = $countCheckoutsAcessed + $countCheckoutsAbandoned + $countCheckoutsRecovered + $countCheckoutsFinalized;
                     $accessedPercentage = $totalCheckouts ? number_format(($countCheckoutsAcessed * 100) / $totalCheckouts,
-                            2, ',', '.').'%' : '0,00%';
+                            2, ',', '.') . '%' : '0,00%';
                     $finalizedPercentage = $totalCheckouts ? number_format(($countCheckoutsFinalized * 100) / $totalCheckouts,
-                            2, ',', '.').'%' : '0,00%';
+                            2, ',', '.') . '%' : '0,00%';
                     $recoveredPercentage = $countCheckoutsAbandoned ? number_format(($countCheckoutsRecovered * 100) / $countCheckoutsAbandoned,
-                            2, ',', '.').'%' : '0,00%';
+                            2, ',', '.') . '%' : '0,00%';
                     $abandonedPercentage = $totalCheckouts ? number_format(($countCheckoutsAbandoned * 100) / $totalCheckouts,
-                            2, ',', '.').'%' : '0,00%';
+                            2, ',', '.') . '%' : '0,00%';
                 }
             }
             if (empty($chartData)) {
@@ -458,10 +459,10 @@ class ReportsApiController extends Controller
                 return response()->json('projeto nao encontrado!');
             }
 
-            $checkouts = Checkout::select(\DB::raw('count(*) as qtd_checkout, '.$request->origin.' as origin'));
+            $checkouts = Checkout::select(\DB::raw('count(*) as qtd_checkout, ' . $request->origin . ' as origin'));
             $affiliate = Affiliate::select('id')->where('user_id', auth()->user()->account_owner_id);
 
-            if($request->project_id != "all"){
+            if ($request->project_id != "all") {
                 $checkouts = $checkouts->where('project_id', hashids_decode($request->project_id));
                 $affiliate = $affiliate->where('project_id', hashids_decode($request->project_id));
             }
@@ -472,7 +473,7 @@ class ReportsApiController extends Controller
                 $checkouts = $checkouts->where('affiliate_id', $affiliate->id);
             }
 
-            $checkouts = $checkouts->whereBetween('created_at', [$request->start_date, date('Y-m-d', strtotime($request->end_date.' + 1 day'))])
+            $checkouts = $checkouts->whereBetween('created_at', [$request->start_date, date('Y-m-d', strtotime($request->end_date . ' + 1 day'))])
                 ->whereNotIn($request->origin, ['', 'null'])
                 ->groupBy($request->origin)
                 ->orderBy('qtd_checkout', 'DESC');
@@ -671,7 +672,7 @@ class ReportsApiController extends Controller
             ]));
         }
 
-        return Excel::download(new ReportExport($checkData, $header, 11), 'cloudfox-transacoes.'.$data['format']);
+        return Excel::download(new ReportExport($checkData, $header, 11), 'cloudfox-transacoes.' . $data['format']);
     }
 
     public function coupons(Request $request)
@@ -701,8 +702,8 @@ class ReportsApiController extends Controller
                 'cupom_code'
             ])->whereIn('project_id', $projects->pluck('project_id'))
                 ->whereIn('status', $status)
-                ->where('cupom_code','!=', '')
-                ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                ->where('cupom_code', '!=', '')
+                ->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                 ->groupBy('cupom_code', 'project_id')
                 ->orderByRaw('amount DESC')
                 ->paginate(10);
@@ -745,7 +746,7 @@ class ReportsApiController extends Controller
         }
     }
 
-    public function resumePendingBalance (Request $request)
+    public function resumePendingBalance(Request $request)
     {
         try {
             $saleService = new SaleService();
@@ -800,6 +801,23 @@ class ReportsApiController extends Controller
             report($e);
 
             return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
+        }
+    }
+
+    public function getBlockReasons()
+    {
+        try {
+            $all = BlockReason::select(['id', 'reason'])->get();
+
+            $otherReason = $all->where('id', 7)->first();
+
+            $data = $all->where('id', '!=', 7)
+                ->push($otherReason)
+                ->values();
+
+            return response()->json($data);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Erro ao obter lista de motivos de bloqueio'], 400);
         }
     }
 }

@@ -13,7 +13,7 @@
     <img src="{!! mix('build/global/img/projetos.svg') !!}" width="156px">
     <h1 class="big gray">Você ainda não tem nenhuma loja!</h1>
     <p class="desc gray">Que tal criar uma primeira loja para começar a vender? </p>
-    <a href="/projects/create" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
+    <a href="/projects/" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
         <i class="o-add-1" aria-hidden="true"></i>
     </a>
 </div>
