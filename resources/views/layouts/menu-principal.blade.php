@@ -27,7 +27,12 @@
         </ul>
     </div>
 
-    @if (!auth()->user()->account_is_approved)
+    @php
+        $userModel = new \Modules\Core\Entities\User();
+        $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+    @endphp
+
+    @if(!auth()->user()->account_is_approved && $account_type === 'admin')
         <div class="new-register-navbar-open-modal-container">
             <div class="row no-gutters new-register-open-modal">
                 <!--

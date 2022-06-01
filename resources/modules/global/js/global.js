@@ -214,7 +214,9 @@ $(document).ready(function () {
         setInputRangeOnInput(e.target);
     }
 
-    monthRevenueInput.addEventListener('input', handleInputRangeChange);
+    if (monthRevenueInput) {
+        monthRevenueInput.addEventListener('input', handleInputRangeChange);
+    }
 
     loadNewRegisterSavedData();
 });
