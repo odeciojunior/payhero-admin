@@ -1,32 +1,224 @@
 $(document).ready(function () {
-
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
 
-    $('.redirect-to-accounts').click(function (e) {
-        e.preventDefault()
-        let url_data = $(this).attr('data-url-value')
-        $.ajax({
-            method: 'GET',
-            url: '/send-authenticated',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-                errorAjaxResponse(response);
-            },
-            success: response => {
-                let url = response.url
-                if (url_data)
-                    url = url + url_data
-                window.location.href = url
-            },
-        });
-    })
+    $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
+        e.preventDefault();
 
+        let url_data = $(this).attr('data-url-value');
+
+        redirectToAccounts(url_data);
+    });
+
+    $('.redirect-to-accounts').on('click', function (e) {
+        e.preventDefault();
+
+        let url_data = $(this).attr('data-url-value');
+
+        redirectToAccounts(url_data);
+    });
+
+    setNewRegisterStep('1');
+
+    var newRegisterStepAux;
+
+    changeNewRegisterLayoutOnWindowResize();
+
+    window.onresize = changeNewRegisterLayoutOnWindowResize;
+
+    $('.new-register-open-modal-btn').on('click', function () {
+        $('.new-register-navbar-open-modal-container').fadeOut('slow');
+
+        setStepContainer();
+
+        $('.new-register-overlay').fadeIn();
+    });
+
+    $('.close-modal').on('click', function () {
+        $('.new-register-overlay').fadeOut();
+
+        changeNewRegisterLayoutOnWindowResize();
+    });
+
+    $('#new-register-steps-actions').on('click', '.close-modal', function () {
+        if (getNewRegisterStep() == '4') {
+            $('#new-register-steps-container').fadeOut();
+            $('#new-register-firt-page').fadeIn();
+        } else {
+            $('.new-register-overlay').fadeOut();
+        }
+
+        changeNewRegisterLayoutOnWindowResize();
+    });
+
+    $('#open-steps-btn').on('click', function () {
+        $('#new-register-firt-page').hide();
+
+        $('.modal-top-btn').hide();
+
+        setStepButton(getNewRegisterStep());
+
+        $('#new-register-steps-container').show();
+    });
+
+    $('#new-register-step-container input[type=text]').on('input', function() {
+        setStepButton(getNewRegisterStep());
+    });
+
+    $('#new-register-step-container input[type=checkbox]').change(function() {
+        setStepButton(getNewRegisterStep());
+    });
+
+    $('.step-1-option').on('click', function () {
+        if ($(this).hasClass('option-selected')) {
+            $(this).removeClass('option-selected');
+            $(this).attr('data-step-1-selected', '0');
+        } else {
+            $(this).addClass('option-selected');
+            $(this).attr('data-step-1-selected', '1');
+        }
+
+        setStepButton(getNewRegisterStep());
+    });
+
+    $("input[name='step-2-other-ecommerce-check']").change(function () {
+        let input = $("input[name='step-2-other-ecommerce']");
+
+        if ($(this).is(":checked")) {
+            input.removeAttr('disabled');
+        } else {
+            input.val('');
+            input.attr('disabled', true);
+        }
+    });
+
+    $("input[name='step-2-know-cloudfox-check']").change(function () {
+        let input = $("input[name='step-2-know-cloudfox']");
+
+        if ($(this).is(":checked")) {
+            input.removeAttr('disabled');
+        } else {
+            input.val('');
+            input.attr('disabled', true);
+        }
+    });
+
+    $("input[name='step-3-sales-site-check']").change(function () {
+        let input = $("input[name='step-3-sales-site']");
+
+        if ($(this).is(":checked")) {
+            input.val('');
+            input.attr('disabled', true);
+        } else {
+            input.removeAttr('disabled');
+        }
+    });
+
+    $("input[name='step-3-gateway-check']").change(function () {
+        let input = $("input[name='step-3-gateway']");
+
+        if ($(this).is(":checked")) {
+            input.val('');
+            input.attr('disabled', true);
+        } else {
+            input.removeAttr('disabled');
+        }
+    });
+
+    $('#new-register-previous-step').on('click', function () {
+        let step = parseInt(getNewRegisterStep());
+
+        if (step === 1) {
+            $('#new-register-firt-page').show();
+
+            $('.modal-top-btn').show();
+
+            $('#new-register-steps-container').hide();
+
+            return;
+        }
+
+        $('#new-register-step-' + step + '-container').removeClass('d-flex flex-column');
+
+        step--;
+
+        setNewRegisterStep(step.toString());
+
+        changeProgressBar(step);
+
+        setStepButton(step);
+
+        $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
+    });
+
+    $('#new-register-next-step').on('click', function () {
+        let lastStep = parseInt(getNewRegisterStep());
+
+        let step = lastStep + 1;
+
+        if (step === 4) {
+            saveNewRegisterData();
+
+            return;
+        }
+
+        setNewRegisterStep(step.toString());
+
+        $('#new-register-step-' + lastStep + '-container').removeClass('d-flex flex-column');
+
+        changeProgressBar(step);
+
+        setStepButton(step);
+
+        $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
+    });
+
+    const monthRevenueInput = document.getElementById('new-register-range');
+
+    monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
+
+    function handleInputRangeChange(e) {
+        let target = e.target;
+
+        const minVal = target.min;
+        const maxVal = target.max;
+        let val = target.value;
+
+        target.style.backgroundSize = (val - minVal) * 100 / (maxVal - minVal) + '% 100%';
+
+        val = val * 1000;
+
+        $('#new-register-month-revenue span:first-child').text((val === 5000 ? 'Até ' : val === 1000000 ? 'Acima de ' : '') + 'R$');
+        $('#new-register-month-revenue span:last-child').text(val.toLocaleString('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 }));
+    }
+
+    monthRevenueInput.addEventListener('input', handleInputRangeChange);
 });
+
+function redirectToAccounts(url_data)
+{
+    $.ajax({
+        method: 'GET',
+        url: '/send-authenticated',
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: response => {
+            errorAjaxResponse(response);
+        },
+        success: response => {
+            let url = response.url;
+
+            if (url_data) {
+                url = url + url_data;
+            }
+
+            window.location.href = url;
+        },
+    });
+}
 
 function stringToMoney(string, currency = 'BRL') {
     let value = parseInt(string, 10);
@@ -655,10 +847,10 @@ $('.top-alert-close').on('click', function () {
 
 sessionStorage.removeItem('documentsPending');
 
-function ajaxVerifyDocumentPending() {
+function verifyDocumentPending() {
     $.ajax({
         method: 'GET',
-        url: '/api/core/verifydocuments',
+        url: '/api/core/verify-account/' + $('meta[name="user-id"]').attr('content'),
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
             'Accept': 'application/json',
@@ -667,55 +859,342 @@ function ajaxVerifyDocumentPending() {
             errorAjaxResponse(response);
         },
         success: response => {
-            sessionStorage.setItem('documentsPending', JSON.stringify(response));
-            // if (response.pending) {
-            //     $('#document-pending').show();
-            //     $('#document-pending .top-alert-action').attr('href', response.link);
-            // }
-            $('#accountStatus').val(response.accountStatus);
-            if (response.accountType == 'owner') {
-                if (response.analyzing) {
-                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-amar.svg');
-                    $('.top-alert-message').html('Seu acesso ainda é <strong>restrito</strong> pois sua conta está <strong>em análise</strong>');
-                    $('#document-pending .top-alert-action').hide();
-                    $('#document-pending').show();
-                } else if (response.refused) {
-                    $('.top-alert').removeClass('warning');
-                    $('.top-alert').addClass('top-bar-danger');
-                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-verm.svg');
-                    $('.top-alert-message').addClass('top-alert-danger');
-                    $('.top-alert-message').html('Um de seus documentos foi recusado');
-                    $('#document-pending').show();
-                    $('#document-pending .top-alert-action').attr('data-url-value', response.link);
-                } else if (response.accountStatus == 'account frozen') {
-                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-amar.svg');
-                    $('.top-alert-message').html('Seu acesso é <strong>restrito</strong>, sua conta está <strong>congelada</strong>');
-                    $('#document-pending .top-alert-action').hide();
-                    $('#document-pending').show();
+            if (response.data.account !== 'approved') {
+                let verifyAccount = localStorage.getItem('verifyAccount');
+                if (verifyAccount == null) {
+                    $('.new-register-page-open-modal-container').hide();
+                    $('.new-register-navbar-open-modal-container').hide();
+
+                    setStepContainer();
+
+                    $('.new-register-overlay').fadeIn();
+                }
+
+                localStorage.setItem('verifyAccount', JSON.stringify(response.data));
+
+                if (!response.data.user.informations) {
+                    $('.extra-informations-user').show();
+                } else {
+                    $('.extra-informations-user').hide();
+                }
+
+                var card_company_status = '';
+                var card_company_icon = '';
+                var card_company_title = '';
+                var card_company_description = '';
+                var card_company_button = '';
+                var card_company_link = response.data.company.link;
+
+                if (response.data.company.status == null) {
+                    card_company_status = 'redirect-to-accounts';
+                    card_company_icon = '/build/global/img/icon-company.svg';
+                    card_company_title = 'Cadastre sua empresa';
+                    card_company_description = 'Na Cloudfox você pode ter uma ou mais empresas.';
+                    card_company_button = '';
+                } else {
+                    if (response.data.company.status == 'pending' || response.data.company.status == 'pending') {
+                        card_company_status = 'status-info';
+                        card_company_icon = '/build/global/img/icon-analysing.svg';
+                        card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
+                        card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
+                    } else if (response.data.company.status == 'analyzing' || response.data.company.status == 'analyzing') {
+                        card_company_status = 'status-warning';
+                        card_company_icon = '/build/global/img/icon-analysing.svg';
+                        card_company_title = 'Estamos analisando seus documentos da sua empresa';
+                        card_company_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
+                    } else if (response.data.company.status == 'refused' || response.data.company.status == 'refused') {
+                        card_company_status = 'status-error';
+                        card_company_icon = '/build/global/img/icon-error.svg';
+                        card_company_title = 'Tivemos problemas em verificar sua empresa';
+                        card_company_description = 'Há um problema com seus documentos.';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
+                    } else if (response.data.company.status == 'approved' || response.data.company.status == 'approved') {
+                        card_company_status = 'status-check redirect-to-accounts';
+                        card_company_icon = '/build/global/img/icon-check.svg';
+                        card_company_title = 'A documentação da sua empresa foi recebida e aprovada.';
+                        card_company_description = 'Se você já aprovou seus documentos pessoais, agora é só vender!';
+                        card_company_button = '';
+                    }
+                }
+
+                $('.company-status').html(`
+                    <div class="card ${card_company_status}" data-url-value="${card_company_link}">
+                        <div class="d-flex">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="${card_company_icon}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">${card_company_title}</h1>
+                                <p class="description">${card_company_description}</p>
+                                ${card_company_button}
+                            </div>
+                        </div>
+                    </div>
+                `);
+
+                var card_user_status = '';
+                var card_user_icon = '';
+                var card_user_title = '';
+                var card_user_description = '';
+                var card_user_button = '';
+                var card_user_link = response.data.user.link;
+
+                if (response.data.user.status == 'pending' || response.data.user.status == 'pending') {
+                    card_user_status = 'redirect-to-accounts';
+                    card_user_icon = '/build/global/img/icon-docs.svg';
+                    card_user_title = 'Envie sua documentação pessoal';
+                    card_user_description = 'Precisamos do seu documento oficial com foto e um comprovante de residência.';
+                    card_user_button = '';
+                } else if (response.data.user.status == 'analyzing' || response.data.user.status == 'analyzing') {
+                    card_user_status = 'status-warning redirect-to-accounts';
+                    card_user_icon = '/build/global/img/icon-analysing.svg';
+                    card_user_title = 'Estamos analisando seus documentos';
+                    card_user_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
+                } else if (response.data.user.status == 'refused' || response.data.user.status == 'refused') {
+                    card_user_status = 'status-error';
+                    card_user_icon = '/build/global/img/icon-error.svg';
+                    card_user_title = 'Tivemos um problema com o seu documento';
+                    card_user_description = 'Um ou mais documentos foram reprovados após a análise.';
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
+                } else if (response.data.user.status == 'approved' || response.data.user.status == 'approved') {
+                    card_user_status = 'status-check redirect-to-accounts';
+                    card_user_icon = '/build/global/img/icon-check.svg';
+                    card_user_title = 'Sua documentação foi recebida e aprovada';
+                    card_user_description = 'Se você já aprovou uma empresa com a gente, agora é só vender!';
+                    card_user_button = '';
+                }
+
+                $('.user-status').html(`
+                    <div class="card ${card_user_status}" data-url-value="${card_user_link}">
+                        <div class="d-flex">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="${card_user_icon}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">${card_user_title}</h1>
+                                <p class="description">${card_user_description}</p>
+                                ${card_user_button}
+                            </div>
+                        </div>
+                    </div>
+                `);
+            } else {
+                $('.new-register-navbar-open-modal-container').remove();
+
+                let verifyAccount = JSON.parse(localStorage.getItem('verifyAccount'));
+                if (verifyAccount.account !== 'approved') {
+                    localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
             }
         },
     });
 }
 
-function verifyDocumentPending() {
-    if (window.location.href.includes('/dashboard')) {
-        sessionStorage.removeItem('documentsPending');
-        $('#document-pending').hide();
+function setNewRegisterStep(step) {
+    try {
+        localStorage.setItem('new-register-step', step);
+    } catch (e) {
+        newRegisterStepAux = step;
+    }
+}
+
+function getNewRegisterStep() {
+    let value;
+
+    try {
+        value = localStorage.getItem('new-register-step');
+    } catch (e) {
+        value = newRegisterStepAux;
     }
 
-    if (!window.location.href.includes('/companies') && !window.location.href.includes('/core')) {
-        let documentsPending = sessionStorage.getItem('documentsPending');
-        if (documentsPending === null) {
-            ajaxVerifyDocumentPending();
-        } else {
-            documentsPending = JSON.parse(documentsPending);
-            if (documentsPending.pending) {
-                $('#document-pending').show();
-                $('#document-pending .top-alert-action').attr('href', documentsPending.link);
-            }
+    return value;
+}
+
+function changeProgressBar(step) {
+    switch (parseInt(step)) {
+        case 1:
+            $('#new-register-step-progress-bar-1').css('width', '50%');
+            $('#new-register-step-progress-bar-2').css('width', '0');
+            $(".new-register-step[data-step*='1']").addClass('step-active');
+            $(".new-register-step[data-step*='2']").removeClass('step-active');
+            break;
+        case 2:
+            $('#new-register-step-progress-bar-1').css('width', '100%');
+            $('#new-register-step-progress-bar-2').css('width', '50%');
+            $(".new-register-step[data-step*='1']").addClass('step-active');
+            $(".new-register-step[data-step*='2']").addClass('step-active');
+            $(".new-register-step[data-step*='3']").removeClass('step-active');
+            break;
+        case 3:
+        case 4:
+            $('#new-register-step-progress-bar-1').css('width', '100%');
+            $('#new-register-step-progress-bar-2').css('width', '100%');
+            $(".new-register-step[data-step*='1']").addClass('step-active');
+            $(".new-register-step[data-step*='2']").addClass('step-active');
+            $(".new-register-step[data-step*='3']").addClass('step-active');
+            break;
+    }
+}
+
+function changeNewRegisterLayoutOnWindowResize() {
+    let userNameText = $('.new-register-overlay-title strong').text();
+
+    if (window.innerWidth <= 370) {
+        $('.new-register-overlay-title strong').css({ 'display': 'block', 'padding-top': '8px'});
+    } else if (window.innerWidth > 370 && window.innerWidth <= 470) {
+        $('.new-register-overlay-title strong').css({ 'display': 'block', 'padding-top': '0px'});
+
+        if (userNameText.length > 10) {
+            $('.new-register-overlay-title strong').text(userNameText.substring(0, 9) + '...');
+        }
+    } else if (window.innerWidth > 470 && window.innerWidth <= 665) {
+        $('.new-register-overlay-title strong').css({ 'display': 'unset', 'padding-top': '0px'});
+
+        if (userNameText.length > 14) {
+            $('.new-register-overlay-title strong').text(userNameText.substring(0, 13) + '...');
+        }
+    } else if (window.innerWidth > 665) {
+        $('.new-register-overlay-title strong').css({ 'display': 'unset', 'padding-top': '0px'});
+
+        if (userNameText.length > 20) {
+            $('.new-register-overlay-title strong').text(userNameText.substring(0, 19) + '...');
         }
     }
+
+    if (window.innerWidth >= 847) {
+        $('.new-register-page-open-modal-container').fadeOut();
+        $('.new-register-navbar-open-modal-container').fadeIn();
+    } else {
+        $('.new-register-navbar-open-modal-container').fadeOut();
+        $('.new-register-page-open-modal-container').fadeIn();
+    }
+}
+
+function validateStep(step) {
+    let isValid = false;
+
+    switch (parseInt(step)) {
+        case 1:
+            isValid = $("div[data-step-1-selected*='1']").length > 0;
+            break;
+        case 2:
+            isValid = true;
+            break;
+        case 3:
+            isValid = ($("input[name='step-3-sales-site-check']").is(':checked') || $("input[name='step-3-sales-site']").val()) &&
+                ($("input[name='step-3-gateway-check']").is(':checked') || $("input[name='step-3-gateway']").val());
+            break;
+        default:
+            isValid = true;
+            break;
+    }
+
+    return isValid;
+}
+
+function setStepContainer() {
+    if (!getNewRegisterStep()) {
+        setNewRegisterStep('1');
+    }
+
+    let step = getNewRegisterStep();
+
+    changeProgressBar(step);
+
+    setStepButton(step);
+
+    $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
+}
+
+function setStepButton(step) {
+    let btn = $('#new-register-next-step');
+
+    if (!validateStep(step)) {
+        btn.attr('disabled', true);
+    } else {
+        btn.removeAttr('disabled');
+    }
+
+    btn.attr('data-step-btn', step);
+}
+
+function saveNewRegisterData() {
+    const newRegisterData = {
+        document: JSON.parse(localStorage.getItem('verifyAccount')).user.document,
+        email: JSON.parse(localStorage.getItem('verifyAccount')).user.email,
+        niche: JSON.stringify({
+            others: $("div[data-step-1-value=others]").attr('data-step-1-selected'),
+            classes: $("div[data-step-1-value=classes]").attr('data-step-1-selected'),
+            subscriptions: $("div[data-step-1-value=subscriptions]").attr('data-step-1-selected'),
+            digitalProduct: $("div[data-step-1-value=digital-product]").attr('data-step-1-selected'),
+            physicalProduct: $("div[data-step-1-value=physical-product]").attr('data-step-1-selected'),
+            dropshippingImport: $("div[data-step-1-value=dropshipping-import]").attr('data-step-1-selected'),
+        }),
+        ecommerce: JSON.stringify({
+            wix: +$('#wix').is(':checked'),
+            shopify: +$('#shopify').is(':checked'),
+            pageLand: 0,
+            wooCommerce: +$('#woo-commerce').is(':checked'),
+            otherEcommerce: +$('#other-ecommerce').is(':checked'),
+            integratedStore: +$('#integrated-store').is(':checked'),
+            otherEcommerceName: $('#other-ecommerce-name').val(),
+        }),
+        cloudfox_referer: JSON.stringify({
+            ad: +$('#cloudfox-referer-ad').is(':checked'),
+            email: 0,
+            other: +$('#cloudfox-referer-other').is(':checked'),
+            youtube: +$('#cloudfox-referer-youtube').is(':checked'),
+            facebook: +$('#cloudfox-referer-facebook').is(':checked'),
+            linkedin: +$('#cloudfox-referer-linkedin').is(':checked'),
+            instagram: 0,
+            recomendation: 0,
+        }),
+        website_url: $('#step-3-sales-site').val(),
+        gateway: $('#step-3-gateway').val(),
+        monthly_income: $('#new-register-range').val() * 1000,
+    };
+
+    loadingOnScreen();
+
+    $.ajax({
+        method: "POST",
+        url: "/api/user-informations",
+        data: newRegisterData,
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json'
+        },
+        error: function error(response) {
+            loadingOnScreenRemove();
+
+            alertCustom('error', response.responseJSON.message);
+        },
+        success: function success(response) {
+            verifyDocumentPending();
+
+            setNewRegisterStep('4');
+
+            $('#new-register-step-3-container').removeClass('d-flex flex-column');
+
+            $('#new-register-step-4-container').addClass('d-flex flex-column');
+
+            $('#new-register-steps-actions').removeClass('justify-content-between');
+            $('#new-register-steps-actions').addClass('justify-content-center');
+            $('.extra-informations-user').hide();
+
+            $('#new-register-steps-actions').html('<button type="button" class="btn new-register-btn close-modal">Fechar</button>');
+
+            loadingOnScreenRemove();
+        }
+    });
 }
 
 /* End - Document Pending Alert */

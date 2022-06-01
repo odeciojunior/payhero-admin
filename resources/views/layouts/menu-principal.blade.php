@@ -26,7 +26,18 @@
             </li>
         </ul>
     </div>
-        
+
+    @if (!auth()->user()->account_is_approved)
+        <div class="new-register-navbar-open-modal-container">
+            <div class="row no-gutters new-register-open-modal">
+                <!--
+                <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
+                -->
+                <span class="new-register-open-modal-btn">Clique aqui para começar</span>
+            </div>
+        </div>
+    @endif
+
     <div class="row no-gutters ml-auto">
 
         <!-- CONTAINER DOS ICONES/LINKS DO ANNOUNCEKIT, NOTIFICACOES E USUARIO -->
@@ -37,41 +48,41 @@
             <input type='hidden' id='user_hash' value='{{Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id)}}'>
             <input type='hidden' id='user_name' value='{{auth()->user()->name}}'>
             <input type='hidden' id='user_email' value='{{auth()->user()->email}}'>
-    
+
             <!-- NAVERBAR FILHA DA CONTAINER -->
             <div class="row no-gutters d-flex" id="site-navbar-collapse">
 
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
-                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center"> 
+                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center">
                     <b class="pr-5"> Novidades </b>
                 </div>
 
                 <!-- BOTOES DE NOTIFICAO E USUARIO -->
                 <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-    
+
                     <!-- BOTAO DE NOTIFICACAO -->
                     @hasanyrole('account_owner|admin')
-    
+
                         <li id="notifications_button" class="nav-item dropdown" disabled='true'>
-    
+
                             <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                                 <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Notificacao">
-    
+
                                 @if( count(auth()->user()->unreadNotifications) > 0)
                                     <span class="badge badge-notification" id="notification-amount"></span>
                                 @else
                                     <span class="badge badge-notification-false" id="notification-amount"></span>
                                 @endif
                             </span>
-    
+
                             <!-- MODAL DE NOTIFICACAO -->
                             <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
                                 <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}" style="scrollbar-width:thin;"></div>
                             </div>
-    
+
                         </li>
                     @endhasanyrole
-    
+
                     <!-- BOTAO DE USUARIO -->
                     <li class="nav-item dropdown">
 
@@ -82,10 +93,10 @@
                                 <i></i>
                             </span>
                         </a>
-    
+
                         <!-- BOTOES DE OPCAO DOS USUARIO -->
                         <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
-    
+
                             <!-- BOTAO DE CONFIGURACOES -->
                             @if(foxutils()->isHomolog())
                                 <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
@@ -100,21 +111,21 @@
                                     Configurações
                                 </a>
                             @endif
-    
+
                             <!-- DIV DIVISORA DOS ELEMENTOS -->
                             <div class="dropdown-divider" role="presentation"></div>
-    
+
                             <!-- BOTAO DE LOGOUT (SAIR DO USUARIO)-->
                             <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <img height="24" width="24" src="{{ mix('build/global/img/svg/power_settings_new.svg') }}"/>
                                 Logout
                             </a>
-    
+
                             <form id="logout-form" action="/logout" method="POST" style="display: none;">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             </form>
                         </div>
-    
+
                     </li>
                 </ul>
             </div>
@@ -227,7 +238,7 @@
                 </a>
             </li>
         @endcan
-        <!-- unlessrole('attendance') -->
+        <!-- unlessrole('customer-service') -->
         @can('finances')
         @php
             $user = auth()->user();

@@ -69,6 +69,10 @@ class ContestationService
                 $search_input_date = 'sale_contestations.expiration_date';
             }
 
+            if(request('transaction')){
+                return $query;
+            }
+            
             return $query->whereBetween(
                 $search_input_date,
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']

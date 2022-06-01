@@ -191,8 +191,8 @@
     background: var(--color-blue);
     -webkit-animation: ripple-blue .7s linear infinite;
     animation: ripple-blue .7s linear infinite;
-    -webkit-animation-delay: 3s;
-    animation-delay: 3s;
+    /*-webkit-animation-delay: 3s;
+    animation-delay: 3s;*/
 }
 
 @-webkit-keyframes ripple-blue {

@@ -186,6 +186,7 @@ class SalesApiController extends Controller
             }
 
             return response()->json(['message' => $result['message']], Response::HTTP_OK);
+            
         } catch (Exception $e) {
             report($e);
             return response()->json(

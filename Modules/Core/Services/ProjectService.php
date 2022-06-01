@@ -190,7 +190,6 @@ class ProjectService
     public function delete($projectId)
     {
         try {
-            $projectModel = new Project();
 
             $project = $this->getProjectModel()
                 ->with(
@@ -238,40 +237,15 @@ class ProjectService
                 }
 
                 foreach ($project->domains as $domain) {
-                    $this->getCloudFlareService()->deleteZoneById($domain->cloudflare_domain_id);
-                    //zona deletada
-                    $this->getSendgridService()->deleteLinkBrand($domain->name);
-                    $this->getSendgridService()->deleteZone($domain->name);
+                    try {
+                        $domainService = new DomainService();
+                        $deleteDomain = $domainService->deleteDomain($domain);
 
-                    $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
-                    $domainDeleted = $domain->delete();
-
-                    if (!empty($project->shopify_id)) {
-                        //se for shopify, voltar as integraçoes ao html padrao
-                        try {
-                            foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                                $shopify = $this->getShopifyService(
-                                    $shopifyIntegration->url_store,
-                                    $shopifyIntegration->token
-                                );
-
-                                $shopify->setThemeByRole('main');
-                                if (!empty($shopifyIntegration->theme_html)) {
-                                    $shopify->setTemplateHtml(
-                                        $shopifyIntegration->theme_file,
-                                        $shopifyIntegration->theme_html
-                                    );
-                                }
-                                if (!empty($shopifyIntegration->layout_theme_html)) {
-                                    $shopify->setTemplateHtml(
-                                        'layout/theme.liquid',
-                                        $shopifyIntegration->layout_theme_html
-                                    );
-                                }
-                            }
-                        } catch (Exception $e) {
-                            Log::warning('Erro ao excluir dominio projeto ' . $project->id);
+                        if(!$deleteDomain['success']) {
+                            report(['Erro ao excluir dominio do projetoId: ' . $project->id] . ', domain: ' . $domain->name);
                         }
+                    } catch (Exception $e) {
+                       report(['Erro ao excluir dominio do projetoId: ' . $project->id, $e]);
                     }
                 }
 
@@ -323,8 +297,6 @@ class ProjectService
                 }
                 //end shopify
 
-
-
                 if (!empty($project->notifications) && $project->notifications->isNotEmpty()) {
                     foreach ($project->notifications as $notification) {
                         $notification->delete();
@@ -356,14 +328,14 @@ class ProjectService
                 $projectUpdated = $project->update(
                     [
                         'name' => $project->name . ' (Excluído)',
-                        'status' => $projectModel->present()->getStatus('disabled'),
+                        'status' => (new Project())->present()->getStatus('disabled'),
                     ]
                 );
 
                 if ($projectUpdated) {
                     return true;
                 } else {
-                    Log::warning('Erro ao atualizar nome e status do projeto: id-> (' . $project->id . ')');
+                    report('Erro ao atualizar nome e status do projeto: id-> (' . $project->id . ')');
 
                     return false;
                 }

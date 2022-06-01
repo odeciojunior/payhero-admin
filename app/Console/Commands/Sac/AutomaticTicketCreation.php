@@ -74,7 +74,7 @@ class AutomaticTicketCreation extends Command
                         'sale_id' => $ticket->sale_id,
                         'blocked_reason_id' => BlockReasonSale::BLOCK_REASON_ID_TICKET,
                         'status' => $blockStatus,
-                        'observation' => 'Existe um chamado aberto para essa venda',
+                        'observation' => 'Chamado aberto',
                     ]);
 
                 } catch (\Exception $e) {
