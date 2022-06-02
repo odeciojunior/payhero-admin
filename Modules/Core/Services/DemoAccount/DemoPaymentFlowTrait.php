@@ -19,11 +19,13 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleInformation;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\CacheService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\FoxUtilsFakeService;
 use Modules\Core\Services\InstallmentsService;
+use Modules\Core\Services\DemoAccount\DemoSplitPayment;
 
 trait DemoPaymentFlowTrait
 {
@@ -524,6 +526,27 @@ trait DemoPaymentFlowTrait
             report($e);
             return 0;
         }
+    }
+
+    public function setTranking()
+    {
+        if($this->sale->status == Sale::STATUS_APPROVED)
+        {
+            $productPlanSales = DB::table('products_plans_sales')->select('id','product_id')->where('sale_id',$this->sale->id)->get();
+            foreach($productPlanSales as $item){
+                Tracking::factory()
+                ->count(1)
+                ->for($this->sale)
+                ->create([
+                    'product_plan_sale_id'=>$item->id,
+                    'product_id'=>$item->product_id,
+                    'amount'=>$this->sale->shipment_value*100,
+                    'delivery_id'=>$this->sale->delivery_id,
+                ]);
+            }
+        }
+
+        return $this;
     }
 
     public function keepGoing($maxPossibility = 7)

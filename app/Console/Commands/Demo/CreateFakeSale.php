@@ -61,7 +61,8 @@ class CreateFakeSale extends Command
                 ->calculateValues()
                 ->setSale()
                 ->executePayment()
-                ->setTransactions();
+                ->setTransactions()
+                ->setTranking();
             $counter++;
 
         }while($counter <= $attemps);

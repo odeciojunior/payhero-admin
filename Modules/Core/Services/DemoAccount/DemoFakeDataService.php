@@ -40,13 +40,13 @@ class DemoFakeDataService
                 ->where('sales.gateway_id',Gateway::SAFE2PAY_PRODUCTION_ID)
                 ->where('sales.status',Sale::STATUS_APPROVED)
                 ->inRandomOrder()
-                ->limit(3)
+                ->limit(1)
                 ->get();        
 
         $blockStatus = BlockReasonSale::STATUS_BLOCKED;
         $blockObs = 'Em disputa';
         foreach($sales as $sale){
-            $contestation = SaleContestation::factory()->for($sale)->create();
+            $contestation = SaleContestation::factory(1)->for($sale)->create()->first();
             switch ($contestation->status) {
                 case SaleContestation::STATUS_IN_PROGRESS:
                     $blockStatus = BlockReasonSale::STATUS_BLOCKED;
@@ -68,6 +68,7 @@ class DemoFakeDataService
                 'status'=>$blockStatus,    
                 'observation'=>$blockObs
             ]);
+
         }
     }
 

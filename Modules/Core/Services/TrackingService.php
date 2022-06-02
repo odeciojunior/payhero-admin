@@ -251,7 +251,7 @@ class TrackingService
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         if (!$userId) {
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
         }
 
         $filters['status'] = is_array($filters['status']) ? implode(',', $filters['status']) : $filters['status'];
