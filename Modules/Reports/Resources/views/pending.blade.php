@@ -4,7 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! mix('build/layouts/reports/pending.min.css') !!}"> --}}
+        <link rel="stylesheet" href="{!! mix('build/layouts/reports/pending.min.css') !!}">
         <style>
             @media only screen and (min-width: 768px){
                 .col-md-4.card {
@@ -25,7 +25,7 @@
     @endpush
 
     <div class="page mb-0">
-        <div style="display: none" class="page-header container">
+        <div style="display: none" class="page-header container inner-header">
             
             <header class="top-system">
                 <a href="{!! route('reports.finances') !!}" class="back">
@@ -37,14 +37,14 @@
             </header>       
             
             <div class="row align-items-center justify-content-between top-inner-reports">
-                <div class="col-8 inner-reports-content">
+                <div class="col-8">
                     <h1 class="d-flex title-system">
                         <span class="box-title ico-pending">Pendente</span>
                         Saldo Pendente
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
                 </div>
-                <div class="col-4 inner-reports-content">
+                <div class="col-4">
                     <div class="box-projects">
                         <select id='select_projects' class="form-control input-pad">
                             {{-- JS carrega.. --}}
@@ -55,13 +55,13 @@
         </div>
         <div id="project-not-empty" style="display: none">
             
-            <section class="container box-reports inner-reports-content" id="reports-content">
+            <section class="container box-reports" id="reports-content">
                 <div class="row">
 					<div class="col-12 box-items-finance pending">
-                        <div class="row mb-20">
+                        <div class="row mb-20 pending-blocked">
                         @if(!auth()->user()->hasRole('attendance'))
                             <div class="fianance-items box-inner-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border orange mb-10">
+                                <div class="finance-card border orange mb-10 block-result">
                                     <span class="title">Total pendente</span>
                                     <div class="d-flex">
                                         <span class="detail">R$</span>
@@ -71,7 +71,7 @@
                             </div>
                         
                             <div class="fianance-items box-inner-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border blue mb-10">
+                                <div class="finance-card border blue mb-10 block-result">
                                     <span class="title">Quantidade de vendas</span>
                                     <div class="d-flex">
                                         <strong class="number" id="total_sales">0</strong>

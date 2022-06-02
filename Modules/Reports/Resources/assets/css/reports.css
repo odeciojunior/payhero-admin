@@ -30,7 +30,11 @@
 
 @media( min-width: 1227px ) {
     .container { max-width: 1227px; }
-    .page-header { padding-left: 0; padding-right: 10px; }
+    .page-header { 
+        padding-left: 0; 
+        padding-right: 10px; 
+    }
+    .page-header.inner-header { padding-left: 0; padding-right: 0; }
     .header-reports  { padding-left: 0; }
 }
 
@@ -308,7 +312,7 @@ h4.number{
 }
 
 @media only screen and (min-width: 1227px) {
-    .box-reports { padding: 0px; }
+    .box-reports { padding: 0; }
 }
 
 .container-reports { padding-right: 1.0715rem; }
@@ -865,8 +869,20 @@ h4.number{
 }
 
 @media only screen and (min-width: 1220px) {
-    /* .box-items-finance  { padding-right: 0; } */
-    .pending.box-items-finance { padding-right: 1.0715rem; }
+    .pending.box-items-finance { 
+        padding-right: 1.0715rem;
+        max-width: 1170px;
+        margin: 0 auto;
+    }
+}
+
+@media only screen and (min-width: 1227px) {
+    .pending.box-items-finance { max-width: 1227px; }
+}
+
+@media only screen and (min-width: 1370px) {
+    .pending.box-items-finance { padding: 0; }
+    .block-result { width: 604px; }
 }
 
 .box-items-finance .fianance-items  { 
@@ -882,8 +898,16 @@ h4.number{
     }
 }
 @media only screen and (min-width: 1220px) {
-    .pending.box-items-finance .fianance-items { max-width: 100%; }
-
+    .pending.box-items-finance .fianance-items { 
+        max-width: 604px; 
+        padding: 0;
+    }
+    .pending.box-items-finance .fianance-items + .fianance-items { padding-right: 0 !important; }
+    .pending-blocked {
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+    }
     .box-items-finance .fianance-items {
         width: auto; 
         max-width: 25%;
@@ -893,6 +917,9 @@ h4.number{
         width: calc(1/4*100% - (1 - 1/1)* 30px); 
         max-width: 100%;
     }
+}
+@media only screen and (min-width: 1227px) {
+    .pending-blocked { max-width: 1227px; }
 }
 
 .finance-card { 
@@ -1884,9 +1911,11 @@ h4.number{
     font-size: 30px;
 }
 
-.box-projects { 
-    width: 293px; 
-    margin-left: auto; 
+.box-projects {  margin-left: auto; }
+@media(min-width: 1220px) {
+    .box-projects { 
+        width: 293px;
+    }
 }
 
 .table-vendas thead td,
@@ -2122,15 +2151,14 @@ h4.number{
 .top-inner-reports {
     min-height: 50px;
     margin: 0 auto;
-    width: 1227px;   
 }
+.top-inner-reports .col-8 { padding-left: 0; }
+.top-inner-reports .col-4 { padding-right: 0; }
+
 .box-inner-items { max-width: 604px; }
 
-.inner-reports-content { padding: 0 30px; }
-.top-system { padding: 0 30px 30px 30px; }
-
-@media( min-width: 1024px ){
-    /* .inner-reports-content { padding: 0 !important; } */
+@media( min-width: 1227px ) {
+    .inner-reports-content { padding: 0 !important; }
 }
 
 .btn-light-1 {
