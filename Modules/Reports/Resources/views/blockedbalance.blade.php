@@ -120,6 +120,18 @@
                                 </div>
 
                                 <div class="col-sm-6 col-md-3">
+                                    <label for="reason">Motivo</label>
+                                    <select name="reason" id="reason" class="sirius-select">
+                                        <option value="">Todos</option>
+                                        {{-- loaded via javascript --}}
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-sm-6 col-md-3">
                                     <label for="date_type">Data</label>
                                     <select name='date_type' id="date_type" class="sirius-select">
                                         <option value="start_date">Data do pedido</option>
@@ -127,9 +139,6 @@
                                     </select>
                                 </div>
 
-                            </div>
-
-                            <div class="row">
                                 <div class="col-sm-6 col-md-3">
                                     <div class="form-group form-icons">
                                         <label for="date_range">&nbsp;</label>

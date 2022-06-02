@@ -308,8 +308,9 @@ class WooCommerceApiController extends Controller
         $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
 
         $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+        $syncProducts = $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
 
-        return $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
+        return response()->json(['message' => '', 'status' => $syncProducts]);
 
     }
 
@@ -324,13 +325,13 @@ class WooCommerceApiController extends Controller
             $integration->token_pass = $request->consumer_secret;
             $integration->save();
 
-            return '{"status":true}';
+            return response()->json(['status' => true]);
 
         }catch(Exception $e){
 
             report($e);
 
-            return '{"status":false}';
+            return response()->json(['status' => false]);
         }
 
         return $request;

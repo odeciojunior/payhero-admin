@@ -27,5 +27,7 @@ Route::group(
 
         Route::get('/reports/blockedresume', 'ReportsApiController@resumeBlockedBalance')->middleware('permission:report_blockedbalance');
 
+        Route::get('/reports/block-reasons', 'ReportsApiController@getBlockReasons')->middleware('permission:report_blockedbalance');
+
     }
 );
