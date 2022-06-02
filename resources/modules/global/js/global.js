@@ -19,8 +19,6 @@ $(document).ready(function () {
         redirectToAccounts(url_data);
     });
 
-    setNewRegisterStep('1');
-
     var newRegisterStepAux;
 
     changeNewRegisterLayoutOnWindowResize();
