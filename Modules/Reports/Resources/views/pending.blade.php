@@ -55,7 +55,7 @@
         </div>
         <div id="project-not-empty" style="display: none">
             
-            <section class="container box-reports" id="reports-content">
+            <section class="container box-inner-reports" id="reports-content">
                 <div class="row">
 					<div class="col-12 box-items-finance pending">
                         <div class="row mb-20 pending-blocked">
