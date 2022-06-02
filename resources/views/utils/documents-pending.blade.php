@@ -281,7 +281,7 @@
                             <div id="new-register-step-3-container" class="p-4">
                                 <div class="d-flex flex-column mb-4">
                                     <span class="font-size-16 font-weight-600 mb-4" style="color: #0B1D3D">Qual o seu site de vendas?</span>
-                                    <input type="text" id="step-3-sales-site" name="step-3-sales-site" placeholder="Cole aqui o link para o seu site" class="form-control mb-3" />
+                                    <input type="text" id="step-3-sales-site" name="step-3-sales-site" placeholder="Cole aqui o link para o seu site" class="form-control mb-3 new-register-input-validation" />
                                     <div class="d-flex align-items-center pt-5">
                                         <input type="checkbox" id="step-3-sales-site-check" name="step-3-sales-site-check" />
                                         <span class="font-size-12 font-weight-400" style="color: #636363; margin-left: 10px;">Não tenho um site de vendas</span>
@@ -289,7 +289,7 @@
                                 </div>
                                 <div class="d-flex flex-column mb-4 mt-4">
                                     <span class="font-size-16 font-weight-600 mb-4" style="color: #0B1D3D">Qual gateway você utiliza hoje?</span>
-                                    <input type="text" id="step-3-gateway" name="step-3-gateway" placeholder="Insira aqui o gateway" class="form-control mb-3" />
+                                    <input type="text" id="step-3-gateway" name="step-3-gateway" placeholder="Insira aqui o gateway" class="form-control mb-3 new-register-input-validation" />
                                     <div class="d-flex align-items-center pt-5">
                                         <input type="checkbox" id="step-3-gateway-check" name="step-3-gateway-check" />
                                         <span class="font-size-12 font-weight-400" style="color: #636363; margin-left: 10px;">Não utilizo nenhum gateway</span>

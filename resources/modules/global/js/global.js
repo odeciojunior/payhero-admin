@@ -128,11 +128,13 @@ $(document).ready(function () {
         if ($(this).is(":checked")) {
             input.val('');
             input.attr('disabled', true);
+            input.removeClass('input-invalid input-valid');
 
             setNewRegisterSavedItem($(this).attr('id'), 'true');
             removeNewRegisterSavedItem(input.attr('id'));
         } else {
             input.removeAttr('disabled');
+            input.addClass('input-invalid');
 
             removeNewRegisterSavedItem($(this).attr('id'));
         }
@@ -144,13 +146,25 @@ $(document).ready(function () {
         if ($(this).is(":checked")) {
             input.val('');
             input.attr('disabled', true);
+            input.removeClass('input-invalid input-valid');
 
             setNewRegisterSavedItem($(this).attr('id'), 'true');
             removeNewRegisterSavedItem(input.attr('id'));
         } else {
             input.removeAttr('disabled');
+            input.addClass('input-invalid');
 
             removeNewRegisterSavedItem($(this).attr('id'));
+        }
+    });
+
+    $('.new-register-input-validation').on('blur input', function () {
+        if (!$(this).val()) {
+            $(this).removeClass('input-valid');
+            $(this).addClass('input-invalid');
+        } else {
+            $(this).removeClass('input-invalid');
+            $(this).addClass('input-valid');
         }
     });
 
