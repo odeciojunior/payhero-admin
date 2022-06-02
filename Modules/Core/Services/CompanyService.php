@@ -15,6 +15,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class CompanyService
@@ -211,6 +212,66 @@ class CompanyService
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    public function documentStatus()
+    {
+        $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+        if ($companies->count() == 0) {
+            return [
+                'status' => null,
+                'link' => '/companies'
+            ];
+        } else {
+            foreach ($companies as $company) {
+                if ($company->company_type == Company::JURIDICAL_PERSON) {
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED && $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED) {
+                        return [
+                            'status' => 'approved',
+                            'address_document' => $company->address_document_status,
+                            'contract_document' => $company->contract_document_status,
+                            'link' => '/companies'
+                        ];
+                    }
+
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_PENDING || $company->contract_document_status == Company::DOCUMENT_STATUS_PENDING) {
+                        return [
+                            'status' => 'pending',
+                            'address_document' => $company->address_document_status,
+                            'contract_document' => $company->contract_document_status,
+                            'link' => '/companies/company-detail/'. Hashids::encode($company->id)
+                        ];
+                    }
+
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_ANALYZING || $company->contract_document_status == Company::DOCUMENT_STATUS_ANALYZING) {
+                        return [
+                            'status' => 'analyzing',
+                            'address_document' => $company->address_document_status,
+                            'contract_document' => $company->contract_document_status,
+                            'link' => '/companies/company-detail/'. Hashids::encode($company->id)
+                        ];
+                    }
+
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_REFUSED || $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED) {
+                        return [
+                            'status' => 'refused',
+                            'address_document' => $company->address_document_status,
+                            'contract_document' => $company->contract_document_status,
+                            'link' => '/companies/company-detail/'. Hashids::encode($company->id)
+                        ];
+                    }
+                } else {
+                    return [
+                        'status' => 'approved',
+                        'link' => ''
+                    ];
+                }
+            }
+        }
+
+        return [
+            'status' => null
+        ];
     }
 
     public function companyDocumentRefused()

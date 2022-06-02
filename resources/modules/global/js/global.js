@@ -913,7 +913,7 @@ function verifyDocumentPending() {
 
                 localStorage.setItem('verifyAccount', JSON.stringify(response.data));
 
-                if (!response.data.user.informations) {
+                if (!response.data.user_informations) {
                     $('.extra-informations-user').show();
                 } else {
                     $('.extra-informations-user').hide();
@@ -933,25 +933,29 @@ function verifyDocumentPending() {
                     card_company_description = 'Na Cloudfox você pode ter uma ou mais empresas.';
                     card_company_button = '';
                 } else {
-                    if (response.data.company.status == 'pending' || response.data.company.status == 'pending') {
+                    if (response.data.company.status == 'pending') {
                         card_company_status = 'status-info';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
                         card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.';
                         card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
-                    } else if (response.data.company.status == 'analyzing' || response.data.company.status == 'analyzing') {
+                    } else if (response.data.company.status == 'analyzing') {
                         card_company_status = 'status-warning';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Estamos analisando seus documentos da sua empresa';
                         card_company_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
-                    } else if (response.data.company.status == 'refused' || response.data.company.status == 'refused') {
+                        if (response.data.company.address_document == 'analyzing' && response.data.company.contract_document == 'analyzing') {
+                            card_company_button = '';
+                        } else {
+                            card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
+                        }
+                    } else if (response.data.company.status == 'refused') {
                         card_company_status = 'status-error';
                         card_company_icon = '/build/global/img/icon-error.svg';
                         card_company_title = 'Tivemos problemas em verificar sua empresa';
                         card_company_description = 'Há um problema com seus documentos.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
-                    } else if (response.data.company.status == 'approved' || response.data.company.status == 'approved') {
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Regularizar documentos</button>';
+                    } else if (response.data.company.status == 'approved') {
                         card_company_status = 'status-check redirect-to-accounts';
                         card_company_icon = '/build/global/img/icon-check.svg';
                         card_company_title = 'A documentação da sua empresa foi recebida e aprovada.';
@@ -984,25 +988,29 @@ function verifyDocumentPending() {
                 var card_user_button = '';
                 var card_user_link = response.data.user.link;
 
-                if (response.data.user.status == 'pending' || response.data.user.status == 'pending') {
+                if (response.data.user.status == 'pending') {
                     card_user_status = 'redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-docs.svg';
                     card_user_title = 'Envie sua documentação pessoal';
                     card_user_description = 'Precisamos do seu documento oficial com foto e um comprovante de residência.';
                     card_user_button = '';
-                } else if (response.data.user.status == 'analyzing' || response.data.user.status == 'analyzing') {
+                } else if (response.data.user.status == 'analyzing') {
                     card_user_status = 'status-warning redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-analysing.svg';
                     card_user_title = 'Estamos analisando seus documentos';
                     card_user_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
-                } else if (response.data.user.status == 'refused' || response.data.user.status == 'refused') {
+                    if (response.data.user.address_document == 'analyzing' && response.data.user.personal_document == 'analyzing') {
+                        card_user_button = '';
+                    } else {
+                        card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
+                    }
+                } else if (response.data.user.status == 'refused') {
                     card_user_status = 'status-error';
                     card_user_icon = '/build/global/img/icon-error.svg';
                     card_user_title = 'Tivemos um problema com o seu documento';
                     card_user_description = 'Um ou mais documentos foram reprovados após a análise.';
-                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
-                } else if (response.data.user.status == 'approved' || response.data.user.status == 'approved') {
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Regularizar documentos</button>';
+                } else if (response.data.user.status == 'approved') {
                     card_user_status = 'status-check redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-check.svg';
                     card_user_title = 'Sua documentação foi recebida e aprovada';

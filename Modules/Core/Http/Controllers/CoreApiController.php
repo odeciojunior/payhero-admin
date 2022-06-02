@@ -34,77 +34,15 @@ class CoreApiController extends Controller
         try {
             $userModel = new User();
             $userService = new UserService();
+            $userStatus = $userService->documentStatus();
 
-            $companyModel = new Company();
             $companyService = new CompanyService();
+            $companyStatus = $companyService->documentStatus();
 
             $user = User::find(current(Hashids::decode($id)));
-
             $userInformations = UserInformation::where('document', $user->document)->exists();
 
-            $userStatus = null;
-            $userRedirect = null;
-            if ($userService->haveAnyDocumentPending()) {
-                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
-                $userRedirect = '/personal-info';
-            }
-
-            if ($userService->haveAnyDocumentAnalyzing()) {
-                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_ANALYZING);
-                $userRedirect = '/personal-info';
-            }
-
-            if ($userService->haveAnyDocumentApproved()) {
-                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_APPROVED);
-                $userRedirect = '/personal-info';
-            }
-
-            if ($userService->haveAnyDocumentRefused()) {
-                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_REFUSED);
-                $userRedirect = '/personal-info';
-            }
-
-            $companyStatus = null;
-            $companyRedirect = null;
-
-            $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
-
-            if ($companies->count() == 0) {
-                $companyStatus = null;
-                $companyRedirect = '/companies';
-            } else {
-                $companyApproved = $companyService->companyDocumentApproved();
-                if (!empty($companyApproved)) {
-                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_APPROVED);
-                    $companyRedirect = '/companies';
-                } else {
-                    $companyPending = $companyService->companyDocumentPending();
-                    if (!empty($companyPending)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_PENDING);
-                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyPending->id);
-                    }
-
-                    $companyAnalyzing = $companyService->companyDocumentAnalyzing();
-                    if (!empty($companyAnalyzing)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_ANALYZING);
-                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyAnalyzing->id);
-                    }
-
-                    $companyRefused = $companyService->companyDocumentRefused();
-                    if (!empty($companyRefused)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_REFUSED);
-                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyRefused->id);
-                    }
-                }
-            }
-
-            if (!$user->account_is_approved) {
-                if ($userStatus == 'approved' && $userInformations == true && !empty($companyApproved)) {
-                    $user->update([
-                        'account_is_approved' => 1
-                    ]);
-                }
-            }
+            $this->updateUserStatus($user, $userInformations, $userInformations, $companyStatus);
 
             return response()->json([
                 'data' => [
@@ -112,23 +50,26 @@ class CoreApiController extends Controller
                         'status' => $userModel->present()->getAccountStatus($user->account_is_approved),
                         'type' => $userModel->present()->getAccountType($user->id, $user->account_owner_id)
                     ],
-                    'user' => [
-                        'status' => $userStatus,
-                        'document' => $user->document,
-                        'email' => $user->email,
-                        'informations' => $userInformations,
-                        'link' => $userRedirect,
-                    ],
-                    'company' => [
-                        'status' => $companyStatus,
-                        'link' => $companyRedirect,
-                    ]
+                    'user' => $userStatus,
+                    'user_informations' => $userInformations,
+                    'company' => $companyStatus
                 ]
             ], Response::HTTP_OK);
         } catch(Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function updateUserStatus($user, $userInformations, $userStatus, $companyStatus)
+    {
+        if (!$user->account_is_approved) {
+            if ($userStatus == 'approved' && $companyStatus == 'approved' && $userInformations) {
+                $user->update([
+                    'account_is_approved' => 1
+                ]);
+            }
         }
     }
 
