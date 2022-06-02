@@ -6,9 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\CheckoutConfig;
-use Modules\Core\Entities\CheckoutPlan;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\CustomerCard;
 use Modules\Core\Entities\Delivery;
@@ -19,7 +16,6 @@ use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleInformation;
 use Modules\Core\Entities\Shipping;
@@ -28,7 +24,6 @@ use Modules\Core\Services\CacheService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\FoxUtilsFakeService;
 use Modules\Core\Services\InstallmentsService;
-use Modules\Core\Services\SaleService;
 
 trait DemoPaymentFlowTrait
 {
@@ -69,6 +64,29 @@ trait DemoPaymentFlowTrait
     protected $onlyDigitalProducts = false;
 
     protected $hasOrderBump = false;
+
+    public function resetVars()
+    {        
+        $this->checkout = null;
+        $this->customer = null;
+        $this->delivery = null;
+        $this->plans = null;
+        $this->project = null;
+        $this->checkoutConfig = null;
+        $this->shipping = null;
+        $this->subTotal = 0;
+        $this->totalValue = 0;
+        $this->payment_method = 0;
+        $this->progressiveDiscount = 0;
+        $this->shippingPrice = 0;
+        $this->installment_amount = 0;
+        $this->installmentFreeTaxValue = 0;
+        $this->automaticDiscount = 0;
+        $this->cupomCode = '';
+        $this->onlyDigitalProducts = false;
+        $this->hasOrderBump = false;
+        return $this;
+    }
     
     public function validateCheckoutLogs(){
          
@@ -84,6 +102,7 @@ trait DemoPaymentFlowTrait
 
     public function preparePlans()
     {
+        $this->subTotal = 0;
         $planIds = $this->checkout->checkoutPlans()->pluck('plan_id');
         
         $this->plans = Plan::with(['productsPlans.product'])
@@ -149,16 +168,22 @@ trait DemoPaymentFlowTrait
     }
 
     public function prepareOrderBump()
-    {        
-        if(!$this->keepGoing()){
+    {       
+        $this->hasOrderBump = false;
+
+        if(!$this->keepGoing(10)){            
             return $this;
-        }
+        }        
 
         $rulesArray = $this->getOrderBump();
 
+        if(empty($rulesArray)){
+            return $this;
+        }
+
         $rules = OrderBumpRule::whereIn('id', array_keys($rulesArray))->get();
 
-        $limitOrderBump = rand(1,3);
+        $limitOrderBump = mt_rand(1,3);
         $counterOrderBump = 0;
 
         foreach ($rules as $rule)
@@ -199,11 +224,11 @@ trait DemoPaymentFlowTrait
 
     public function prepareData(){
         $paymentMethods = [Sale::PAYMENT_TYPE_CREDIT_CARD,Sale::PAYMENT_TYPE_BANK_SLIP,Sale::PAYMENT_TYPE_PIX];
-        $this->payment_method = $paymentMethods[Rand(0,2)];        
+        $this->payment_method = $paymentMethods[rand(0,2)];        
         
         $this->installment_amount  = 0;
         if($this->payment_method == Sale::PAYMENT_TYPE_CREDIT_CARD){
-            $this->installment_amount = Rand(1,12);
+            $this->installment_amount = mt_rand(1,12);
         }
 
         return $this;
@@ -234,6 +259,8 @@ trait DemoPaymentFlowTrait
                 }
             break;
         }
+
+        $this->totalValue -= $this->automaticDiscount;        
         
         return $this;
     }
@@ -248,12 +275,10 @@ trait DemoPaymentFlowTrait
     
     public function checkDiscountCoupon()
     {
-        $this->totalValue -= $this->automaticDiscount;
-
-        if(!$this->keepGoing()){
+        if(!$this->keepGoing(8)){
             return $this;
         }
-       
+        
         $discountCoupon = DiscountCoupon::where('project_id', $this->project->id)->where('status',1)->inRandomOrder()->first();
         
         if (!empty($discountCoupon) && $this->totalValue > ($discountCoupon->rule_value ?? 0)) {
@@ -269,11 +294,11 @@ trait DemoPaymentFlowTrait
     {
         $this->progressiveDiscount = 0;
 
-        if(!$this->keepGoing()){
+        if(!$this->keepGoing(6)){
             return $this;
         }
-
-        $this->progressiveDiscount = (Rand(1,30)/100)*$this->subTotal;
+        
+        $this->progressiveDiscount = (mt_rand(1,30)/100)*$this->subTotal;
 
         if($this->progressiveDiscount > 0){
             if($this->totalValue - $this->progressiveDiscount > 500){
@@ -342,8 +367,7 @@ trait DemoPaymentFlowTrait
 
             DB::commit(); 
 
-        } catch (Exception $e) {
-            \Log::info($e->getMessage());
+        } catch (Exception $e) {            
             DB::rollBack();
         } 
 
@@ -464,7 +488,7 @@ trait DemoPaymentFlowTrait
 
         if($this->sale->status == Sale::STATUS_APPROVED){
             $this->sale->update([
-                'end_date'=>now()
+                'end_date'=>Carbon::parse($this->checkout->created_at)->addDays(round(1,3))
             ]);
         }
         return $this;
@@ -479,33 +503,32 @@ trait DemoPaymentFlowTrait
                 if ($discountCoupon->type == 1) {
                     if (($totalValue - $discountCoupon->value) < 500) {
                         return 0;
-                    } else {
-                        return $discountCoupon->value;
                     }
+
+                    return $discountCoupon->value;                    
                 } else {
                     $discount = intval($totalValue * ($discountCoupon->value / 100));
                     if (($totalValue - $discount) < 500) {
                         return 0;
-                    } else {
+                    } 
 
-                        $discount = str_replace('.', '', $discount);
-
-                        return $discount;
-                    }
+                    $discount = str_replace('.', '', $discount);
+                    return $discount;                    
                 }
-            } else {
-                return 0;
-            }
-        } catch (Exception $e) {
-            Log::warning('erro ao aplicar cupom de desconto');
-            report($e);
+            } 
 
+            return 0;
+
+        } catch (Exception $e)
+        {            
+            report($e);
             return 0;
         }
     }
 
-    public function keepGoing(){
-        return rand(1,10) % 2 == 0;
+    public function keepGoing($maxPossibility = 7)
+    {
+        return mt_rand(1,$maxPossibility) === 1;
     }
 
 }

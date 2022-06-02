@@ -51,10 +51,18 @@ class CreateFakeCheckout extends Command
         Config::set('database.default', 'demo');
 
         try{
-            $this->createCheckout()
-            ->createCheckoutPlan();
-        }
-        catch (Exception $e) {
+            $attemps = 50;
+            $counter = 1;
+        
+            do{
+                $this->createCheckout()
+                ->createCheckoutPlan();
+
+                $counter++;
+
+            }while($counter <= $attemps);
+            
+        }catch (Exception $e) {
             report($e);            
         }
     }

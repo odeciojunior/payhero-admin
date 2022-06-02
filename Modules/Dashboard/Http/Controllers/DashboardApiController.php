@@ -198,6 +198,7 @@ class DashboardApiController extends Controller
                 'money_cashback' => $this->getCashbackReceivedValue(),
                 'benefits'       => $benefitService->getUserBenefits($user),
             ];
+            
         } catch (Exception $e) {
             report($e);
 

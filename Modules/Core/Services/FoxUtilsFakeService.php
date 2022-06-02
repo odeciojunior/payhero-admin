@@ -46,7 +46,7 @@ class FoxUtilsFakeService
     }
 
     public static function getRandoFlagCC(){
-        $flags = ['visa','mastercad','aura','discover','hipercard','amex','elo','diners','jcb'];
+        $flags = ['visa','mastercard','aura','discover','hipercard','amex','elo','diners','jcb'];
         return Arr::random($flags);
     }
     

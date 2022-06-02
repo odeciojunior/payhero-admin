@@ -49,16 +49,8 @@ class DemoAccountFakeData extends Command
     {
         Config::set('database.default', 'demo');
 
-        // $gatewayService = new Safe2PayService();
-        // $gatewayService->updateAvailableBalance();
-
-        // $gatewayService->setCompany(company::find(Company::DEMO_ID));
-        // $balance =  $gatewayService->getAvailableBalance();
-        
-        // if($balance>0){
-        //     $gatewayService->existsBankAccountApproved();
-        //     $gatewayService->createWithdrawal(rand(5000,$balance));
-        // }
+        $gatewayService = new Safe2PayService();
+        $gatewayService->updateAvailableBalance();
 
         $demo =  new DemoFakeDataService();
         $demo->createAffiliates();
