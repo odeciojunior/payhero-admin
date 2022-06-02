@@ -50,7 +50,7 @@ $(document).ready(function () {
         changeNewRegisterLayoutOnWindowResize();
     });
 
-    $('#open-steps-btn').on('click', function () {
+    $('.extra-informations-user').on('click', function () {
         $('#new-register-firt-page').hide();
 
         $('.modal-top-btn').hide();
