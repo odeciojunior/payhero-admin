@@ -60,7 +60,7 @@ class PopulateUserInformations extends Command
                         'niche' => '{"others":"1","classes":"0","subscriptions":"0","digitalProduct":"0","physicalProduct":"0","dropshippingImport":"0"}',
                         'website_url' => '',
                         'gateway' => '',
-                        'ecommerce' => '{"wix":0,"shopify":0,"pageLand":0,"wooCommerce":0,"otherEcommerce":0,"integratedStore":0,"otherEcommerceName":""}',
+                        'ecommerce' => '{"wix":0,"shopify":0,"pageLand":0,"wooCommerce":0,"otherEcommerce":1,"integratedStore":0,"otherEcommerceName":""}',
                         'cloudfox_referer' => '{"ad":0,"email":0,"other":1,"youtube":0,"facebook":0,"linkedin":0,"instagram":0,"recomendation":0}',
 
                     ]);
