@@ -43,7 +43,7 @@ class PopulateUserInformations extends Command
     public function handle()
     {
         try {
-            $users = User::whereMonth('created_at', '<', '05')->whereRaw('account_owner_id = id')->get();
+            $users = User::where('created_at', '<', '2022-05-26')->whereRaw('account_owner_id = id')->whereNotNull('document')->get();
 
             $output = new ConsoleOutput();
             $progress = new ProgressBar($output, count($users));
@@ -62,7 +62,6 @@ class PopulateUserInformations extends Command
                         'gateway' => '',
                         'ecommerce' => '{"wix":0,"shopify":0,"pageLand":0,"wooCommerce":0,"otherEcommerce":1,"integratedStore":0,"otherEcommerceName":""}',
                         'cloudfox_referer' => '{"ad":0,"email":0,"other":1,"youtube":0,"facebook":0,"linkedin":0,"instagram":0,"recomendation":0}',
-
                     ]);
                 }
 
@@ -73,7 +72,7 @@ class PopulateUserInformations extends Command
 
             $progress->finish();
         } catch(Exception $e) {
-            report($e);
+            $this->line($e->getMessage());
         }
     }
 }
