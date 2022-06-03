@@ -198,7 +198,7 @@
                                         <div class="step-2-checkbox-option">
                                             <div class="d-flex flex-row">
                                                 <div>
-                                                    <input type="checkbox" id="other-ecommerce-check" name="step-2-other-ecommerce-check" />
+                                                    <input type="checkbox" id="other-ecommerce" name="step-2-other-ecommerce-check" />
                                                 </div>
                                                 <div>
                                                     <span>Outros</span>

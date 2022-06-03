@@ -1276,6 +1276,7 @@ function saveNewRegisterData() {
             ad: +$('#cloudfox-referer-ad').is(':checked'),
             email: 0,
             other: +$('#cloudfox-referer-other').is(':checked'),
+            otherName: $('#know-cloudfox').val(),
             youtube: +$('#cloudfox-referer-youtube').is(':checked'),
             facebook: +$('#cloudfox-referer-facebook').is(':checked'),
             linkedin: +$('#cloudfox-referer-linkedin').is(':checked'),
