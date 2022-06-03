@@ -688,8 +688,8 @@ h4.number{
     .container-devices .box-image-payment { min-width: 117px; }
 }
 
-.bar-payment { max-width: 80px; }
-.percentage-card { max-width: 59px; }
+.bar-payment { max-width: 80px; padding-right: 5px; }
+.percentage-card { max-width: 49px; }
 .ico-pay { max-width: 111px; }
 
 .bar {
