@@ -38,6 +38,7 @@
 }
 
 @media( min-width: 1371px ) {
+    .container { max-width: 1243px; }
     .page-header { 
         padding-left: 0; 
         padding-right: 15px; 
@@ -370,9 +371,9 @@ h4.number{
 }
 
 .ico-finance { background: #fff url('/build/global/img/reports/cash.png') no-repeat center; }
-.ico-sell { background: #fff url('/build/global/img/reports/ico-sell.png') no-repeat center; }
+.ico-sell { background: #fff url('/build/global/img/reports/ico-sell.png') no-repeat 44% 50%; }
 .ico-mkt { background: #fff url('/build/global/img/reports/ico-mkt.png') no-repeat center; }
-.ico-pending { background: #fff url('/build/global/img/reports/pending.png') no-repeat center; }
+.ico-pending { background: #fff url('/build/global/img/reports/pending.png') no-repeat 48% 50%; }
 .ico-blocked { background: #fff url('/build/global/img/reports/blokedbalance.png') no-repeat center; }
 .ico-cupons { background: #fff url('/build/global/img/reports/ico-cupons.png') no-repeat center; }
 
@@ -892,11 +893,20 @@ h4.number{
 }
 
 @media only screen and (min-width: 1227px) {
-    .pending.box-items-finance { max-width: 1227px; }
+    .box-inner-reports { padding: 0 }
+}
+
+@media only screen and (min-width: 1227px) {
+    .pending.box-items-finance { 
+        padding: 0; 
+        max-width: 1227px;
+    }
+}
+@media only screen and (min-width: 1371px) {
+    .pending.box-items-finance { max-width: 1243px; }
 }
 
 @media only screen and (min-width: 1370px) {
-    .pending.box-items-finance { padding: 0; }
     .block-result { width: 604px; }
 }
 
@@ -935,6 +945,10 @@ h4.number{
 }
 @media only screen and (min-width: 1227px) {
     .pending-blocked { max-width: 1227px; }
+}
+
+@media only screen and (min-width: 1341px) {
+    .pending-blocked { max-width: 1243px; }
 }
 
 .finance-card { 
@@ -1046,18 +1060,20 @@ h4.number{
     .distribution { width: 284px;  }
     .commission.mkt { flex: 0 0 65.8%; }
 }
+
+@media only screen and (min-width: 1300px) {
+    .distribution { width: 347px;  }
+}
+
 @media only screen and (min-width: 1370px) {
     .primary { width: 820px; }
     .distribution { width: 394px;  }
 }
 @media only screen and (min-width: 1600px) {
     .distribution.mkt { flex: 0 0 31.75%; }
-    .distribution { width: 378px; }
+    .distribution { width: 398px; }
     /* .primary { width: 915px; } */
 }
-
-
-
 .box-chart-primary .title-graph {
     justify-content: space-between;
     align-items: center;
@@ -1188,7 +1204,13 @@ h4.number{
 .distribution-graph-seller svg {
     transform: translate(-30px, 0);
 }
+@media  (min-width: 1220px) and (max-width: 1299px) {
+    .distribution-graph svg,
+    .distribution-graph-seller svg {
+        transform: translate(-19px, 0);
+    }
 
+}
 @media only screen and (min-width: 1227px) and (max-width : 1600px){
     .distribution-graph, 
     .distribution-graph-seller { width: 159px; }
