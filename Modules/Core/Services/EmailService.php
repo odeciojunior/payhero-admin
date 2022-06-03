@@ -200,7 +200,6 @@ class EmailService
                     'subtotal' => $subTotal,
                     'store_logo' => $project->checkoutConfig->checkout_logo,
                     'discount' => $discount,
-                    'sac_link' => 'https://sac.'.$domain->name,
                     'sale_code' => $saleCode,
                 ];
                 $sendEmail->sendEmail(
