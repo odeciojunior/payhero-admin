@@ -30,8 +30,10 @@ class CheckoutService
     {
         $projectIds = [];
 
+        $ownerId = auth()->user()->getAccountOwnerId();
+
         if (request('project') == 'all') {
-            $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
+            $projectIds = UserProject::where('user_id', $ownerId)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
 
         } else {
             $projects = explode(',', request('project'));
@@ -101,7 +103,7 @@ class CheckoutService
                 }
             );
 
-        $affiliateIds = Affiliate::where('user_id', auth()->user()->account_owner_id)
+        $affiliateIds = Affiliate::where('user_id', $ownerId)
             ->whereIn('project_id', $projectIds)->pluck('id')->toArray();
 
         if (!empty($affiliateIds) && count($affiliateIds) > 0) {

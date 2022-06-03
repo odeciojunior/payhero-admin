@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\NotazzIntegration;
-
 class GenericCommand extends Command
 {
     protected $signature = 'generic';
@@ -13,6 +11,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        
+
     }
 }

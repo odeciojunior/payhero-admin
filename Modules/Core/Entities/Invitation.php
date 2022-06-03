@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,6 +34,7 @@ class Invitation extends Model
     use LogsActivity;
     use PresentableTrait;
     use SoftDeletes;
+    use HasFactory;
 
     public const INVITATION_ACCEPTED = 1;
     public const INVITATION_PENDING = 2;

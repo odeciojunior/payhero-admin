@@ -33,7 +33,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class DomainsApiController extends Controller
 {
     public function index($projectId)
-    {\Log::info('ta caindo aqui');
+    {
         try {
             $projectId = hashids_decode($projectId);
             $project = Project::find($projectId);

@@ -1,27 +1,21 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Demo;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Services\BoletoService;
-use Modules\Core\Services\DemoAccount\DemoFakeDataService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\PixService;
-use Modules\Notazz\Http\Controllers\NotazzController;
-use ParagonIE\Sodium\Compat;
 
-class DemoAccountFakeData extends Command
+class UpdateFinancialFakeData extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'demo-account:fake-data';
+    protected $signature = 'demo:update-financial-fake-data';
 
     /**
      * The console command description.
@@ -49,12 +43,14 @@ class DemoAccountFakeData extends Command
     {
         Config::set('database.default', 'demo');
 
-        $demo =  new DemoFakeDataService();
-        
-        // $demo->createFakeTicket();
+        $gatewayService = new Safe2PayService();
+        $gatewayService->updateAvailableBalance();
 
-        // $demo->verifyAbandonedCarts();
-        
-    }        
+        $boletoService = new BoletoService();
+        $boletoService->changeBoletoPendingToCanceled();
 
+        $pixService = new PixService();
+        $pixService->changePixToCanceled();
+        
+    }
 }

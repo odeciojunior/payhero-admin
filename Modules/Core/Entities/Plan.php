@@ -177,4 +177,10 @@ class Plan extends Model
     {
         return $this->belongsToMany(Product::class, 'products_plans', 'plan_id', 'product_id');
     }
+
+    public function variants()
+    {
+        return $this->hasMany(Product::class, 'shopify_id', 'shopify_id')
+            ->orderBy('description');
+    }
 }

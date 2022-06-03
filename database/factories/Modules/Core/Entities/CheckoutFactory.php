@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Modules\Core\Entities;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
 use Modules\Core\Entities\Checkout;
@@ -54,6 +55,7 @@ class CheckoutFactory extends Factory
             'utm_content' => null,
             'src' => $this->getRandomSrc(),
             'template_type' => 0,
+            'created_at'=>Carbon::now()->subDays(rand(1,30))
         ];
     }    
 

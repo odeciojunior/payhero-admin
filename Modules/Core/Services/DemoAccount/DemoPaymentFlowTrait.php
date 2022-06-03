@@ -1,47 +1,34 @@
 <?php
 
-namespace App\Traits;
+namespace Modules\Core\Services\DemoAccount;
 
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\CheckoutConfig;
-use Modules\Core\Entities\CheckoutPlan;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\CustomerCard;
 use Modules\Core\Entities\Delivery;
+use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\OrderBumpRule;
+use Modules\Core\Entities\PixCharge;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleInformation;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\User;
-use Modules\Core\Services\DemoSplitPayment;
+use Modules\Core\Services\CacheService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\FoxUtilsFakeService;
 use Modules\Core\Services\InstallmentsService;
-use Modules\Core\Services\SaleService;
+use Modules\Core\Services\DemoAccount\DemoSplitPayment;
 
 trait DemoPaymentFlowTrait
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'demo-account:create-sales-fake';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
     protected $company = null;
 
     protected $checkout = null;
@@ -73,56 +60,177 @@ trait DemoPaymentFlowTrait
     protected $installmentFreeTaxValue = 0;
 
     protected $automaticDiscount = 0;
-    
-    public function createCheckout(){
-        try { 
-            $this->project = Project::inRandomOrder()->first();
-            $this->checkoutConfig = CheckoutConfig::where('project_id',$this->project->id)->first();
-            
-            DB::beginTransaction();
-            $this->checkout = Checkout::factory()
-            ->count(1)
-            ->create([                
-                'project_id'=>$this->project->id,
-                'template_type'=>(int)$this->checkoutConfig->checkout_type_enum
-            ])->first();
-            
-            DB::commit();            
 
-        } catch (Exception $e) {
-            \Log::info($e->getMessage());
-            DB::rollBack();
-        }
+    protected $cupomCode = '';
+
+    protected $onlyDigitalProducts = false;
+
+    protected $hasOrderBump = false;
+
+    public function resetVars()
+    {        
+        $this->checkout = null;
+        $this->customer = null;
+        $this->delivery = null;
+        $this->plans = null;
+        $this->project = null;
+        $this->checkoutConfig = null;
+        $this->shipping = null;
+        $this->subTotal = 0;
+        $this->totalValue = 0;
+        $this->payment_method = 0;
+        $this->progressiveDiscount = 0;
+        $this->shippingPrice = 0;
+        $this->installment_amount = 0;
+        $this->installmentFreeTaxValue = 0;
+        $this->automaticDiscount = 0;
+        $this->cupomCode = '';
+        $this->onlyDigitalProducts = false;
+        $this->hasOrderBump = false;
+        return $this;
+    }
+    
+    public function validateCheckoutLogs(){
+         
+        $this->checkout = Checkout::whereIn('status_enum',[
+            Checkout::STATUS_ABANDONED_CART,Checkout::STATUS_ACCESSED
+        ])->inRandomOrder()->first();
+        
+        $this->project = $this->checkout->project;
+        $this->checkoutConfig = $this->project->checkoutConfig;
+          
         return $this;
     }
 
     public function preparePlans()
-    {       
+    {
+        $this->subTotal = 0;
+        $planIds = $this->checkout->checkoutPlans()->pluck('plan_id');
+        
         $this->plans = Plan::with(['productsPlans.product'])
-        ->where('project_id',$this->project->id)
-        ->inRandomOrder()->limit(Rand(1,4))->get();
-
-        $this->checkoutConfig = $this->project->checkoutConfig;
+        ->whereIn('id',$planIds)->get();        
         
         foreach($this->plans as $plan){
-            $this->subTotal += FoxUtils::onlyNumbers($plan->price) * 1;
-            CheckoutPlan::factory()->for($plan)->create([
-                'plan_id'=>$plan->id,
-                'amount'=>1,
-            ]);
+            $this->subTotal += FoxUtils::onlyNumbers($plan->price) * 1;            
         }
+
         $this->totalValue = $this->subTotal;
+
+        return $this;
+    }
+
+    private function getOrderBump()
+    {
+        $currentPlans = $this->plans->pluck('id');
+        
+        $project = $this->project;
+        $applyOnPlansKey = $project->id .'-'. implode('-', $currentPlans->toArray());
+        $rules = CacheService::remember(function () use ($project, $currentPlans) {
+            return OrderBumpRule::where('project_id', $project->id)
+                ->where('active_flag', true)
+                ->where(function ($query) use ($currentPlans) {
+                    foreach ($currentPlans as $planId) {
+                        $query->orWhereJsonContains('apply_on_plans', $planId);
+                    }
+                    $query->orWhereJsonContains('apply_on_plans', 'all');
+                })->get();
+        }, CacheService::CHECKOUT_OB_RULES, $applyOnPlansKey);
+        
+        if (!$rules->count()) return null;
+
+        $rulesArray = [];
+        foreach ($rules as $rule) {
+
+            $onlyDigitalProducts = $this->onlyDigitalProducts;
+            $plans = CacheService::remember(function () use ($onlyDigitalProducts, $rule) {
+                $plansQuery = Plan::with([
+                    'productsPlans.product',
+                    'variants'
+                ])->whereIn('id', $rule->offer_plans);
+                if ($onlyDigitalProducts) {
+                    $plansQuery->whereDoesntHave('products', function ($query) {
+                        $query->where('type_enum', Product::TYPE_PHYSICAL);
+                    });
+                }
+                return $plansQuery->get();
+            }, CacheService::CHECKOUT_OB_RULE_PLANS, $rule->id);
+
+            if (!$plans->count()) continue;
+
+            foreach ($plans as $plan) {
+
+                if (empty($rulesArray[$rule->id])) {
+                    $rulesArray[$rule->id] = [];
+                }
+                $rulesArray[$rule->id][] = $plan->id;
+            }
+        }
+       
+        return $rulesArray;
+    }
+
+    public function prepareOrderBump()
+    {       
+        $this->hasOrderBump = false;
+
+        if(!$this->keepGoing(10)){            
+            return $this;
+        }        
+
+        $rulesArray = $this->getOrderBump();
+
+        if(empty($rulesArray)){
+            return $this;
+        }
+
+        $rules = OrderBumpRule::whereIn('id', array_keys($rulesArray))->get();
+
+        $limitOrderBump = mt_rand(1,3);
+        $counterOrderBump = 0;
+
+        foreach ($rules as $rule)
+        {
+            $selectedPlans = $rulesArray[$rule->id];
+            $plansOb = Plan::whereIn('id', $selectedPlans)->get();
+
+            foreach ($plansOb as $planOb) {
+                $alreadyInArray = false;
+
+                foreach ($this->plans as $plan) {
+                    if ($planOb->id === $plan->id) {
+                        $alreadyInArray = true;
+                        break;
+                    }
+                }
+
+                if (!$alreadyInArray && $counterOrderBump < $limitOrderBump) {
+                    $this->plans[] = $plan;                                        
+                    $price = number_format(
+                        floatval($plan->price) - (floatval($plan->price) * $rule->discount / 100),
+                        2
+                    );
+                    $this->subTotal += FoxUtils::onlyNumbers($price);
+
+                    $counterOrderBump++;
+                }
+            }
+        }
+
+        if ($rules->count()) {
+            $this->hasOrderBump = true;
+            $this->totalValue = $this->subTotal;
+        }
 
         return $this;
     }
 
     public function prepareData(){
         $paymentMethods = [Sale::PAYMENT_TYPE_CREDIT_CARD,Sale::PAYMENT_TYPE_BANK_SLIP,Sale::PAYMENT_TYPE_PIX];
-        $this->payment_method = $paymentMethods[Rand(0,2)];        
+        $this->payment_method = $paymentMethods[rand(0,2)];        
         
         $this->installment_amount  = 0;
         if($this->payment_method == Sale::PAYMENT_TYPE_CREDIT_CARD){
-            $this->installment_amount = Rand(1,12);
+            $this->installment_amount = mt_rand(1,12);
         }
 
         return $this;
@@ -153,6 +261,8 @@ trait DemoPaymentFlowTrait
                 }
             break;
         }
+
+        $this->totalValue -= $this->automaticDiscount;        
         
         return $this;
     }
@@ -163,23 +273,42 @@ trait DemoPaymentFlowTrait
         $this->shippingPrice = FoxUtils::onlyNumbers($this->shipping->value);
         $this->totalValue+= $this->shippingPrice;
         return $this;
-    }    
+    } 
+    
+    public function checkDiscountCoupon()
+    {
+        if(!$this->keepGoing(8)){
+            return $this;
+        }
+        
+        $discountCoupon = DiscountCoupon::where('project_id', $this->project->id)->where('status',1)->inRandomOrder()->first();
+        
+        if (!empty($discountCoupon) && $this->totalValue > ($discountCoupon->rule_value ?? 0)) {
+            $this->cupomCode = $discountCoupon->code;
+            $discountValue = $this->applyDiscount($discountCoupon, $this->subTotal);
+            $this->totalValue -= $discountValue;
+        }       
 
-    public function checkProgressiveDiscount(){
+        return $this;
+    }
+
+    public function checkProgressiveDiscount()
+    {
         $this->progressiveDiscount = 0;
 
-        if(Rand(0,1))
-        {
-            $this->progressiveDiscount = (Rand(1,30)/100)*$this->subTotal;
-    
-            if($this->progressiveDiscount > 0){
-                if($this->totalValue - $this->progressiveDiscount > 500){
-                    $this->totalValue -= $this->progressiveDiscount;
-                }else{
-                    $this->progressiveDiscount = 0;
-                }
-            }
+        if(!$this->keepGoing(6)){
+            return $this;
         }
+        
+        $this->progressiveDiscount = (mt_rand(1,30)/100)*$this->subTotal;
+
+        if($this->progressiveDiscount > 0){
+            if($this->totalValue - $this->progressiveDiscount > 500){
+                $this->totalValue -= $this->progressiveDiscount;
+            }else{
+                $this->progressiveDiscount = 0;
+            }
+        }        
 
         return $this;
     }
@@ -240,8 +369,7 @@ trait DemoPaymentFlowTrait
 
             DB::commit(); 
 
-        } catch (Exception $e) {
-            \Log::info($e->getMessage());
+        } catch (Exception $e) {            
             DB::rollBack();
         } 
 
@@ -260,12 +388,12 @@ trait DemoPaymentFlowTrait
                 'checkout_id' => $this->checkout ? $this->checkout->id : null,
                 'affiliate_id' => $this->project ? FoxUtils::getCookieAffiliate($this->project->id) : null,
                 'payment_method' => $this->payment_method,
-                'total_paid_value' => FoxUtils::floatFormat($this->totalValue),
+                'total_paid_value' => intval($this->totalValue)/100,
                 'original_total_paid_value' => $this->totalValue,
                 'sub_total' => FoxUtils::floatFormat($this->subTotal),
                 'shipment_value' => FoxUtils::floatFormat($this->shippingPrice),
-                'cupom_code' => '',
-                'start_date' => Carbon::now(),
+                'cupom_code' => $this->cupomCode,
+                'start_date' => $this->checkout->created_at,
                 'gateway_transaction_id' => '',                
                 'installments_amount' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT ? $this->installment_amount : null,
                 'installments_value' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT
@@ -277,7 +405,7 @@ trait DemoPaymentFlowTrait
                 'upsell_id' => null,
                 'automatic_discount' => $this->automaticDiscount,
                 'interest_total_value' => $this->totalInterestValue ?? 0,
-                'has_order_bump' => 0,                     
+                'has_order_bump' => $this->hasOrderBump,                     
                 'status'=>FoxUtilsFakeService::getRandomStatus($this->payment_method)
             ]            
         );
@@ -315,8 +443,10 @@ trait DemoPaymentFlowTrait
         return $this;
     }
 
-    public function executePayment(){
-        switch($this->payment_method){
+    public function executePayment()
+    {
+        switch($this->payment_method)
+        {
             case Sale::PAYMENT_TYPE_CREDIT_CARD:
                 $card = CustomerCard::factory()
                     ->for($this->customer)
@@ -343,6 +473,12 @@ trait DemoPaymentFlowTrait
                 break;
             case Sale::PAYMENT_TYPE_PIX:
                 SaleInformation::factory()->for($this->sale)->create();
+
+                $pixCharge = PixCharge::factory()->for($this->sale)->create();
+                $pixCharge->update([
+                    'status'=>$this->sale->status ==Sale::STATUS_APPROVED ? 'RECEBIDO' : 'ATIVA'
+                ]);
+
             break;
         }
         return $this;
@@ -354,10 +490,68 @@ trait DemoPaymentFlowTrait
 
         if($this->sale->status == Sale::STATUS_APPROVED){
             $this->sale->update([
-                'end_date'=>now()
+                'end_date'=>Carbon::parse($this->checkout->created_at)->addDays(round(1,3))
             ]);
         }
         return $this;
+    }
+
+    public function applyDiscount(DiscountCoupon $discountCoupon, $totalValue)
+    {
+
+        try {$totalValue = intval($totalValue);
+            if (!empty($discountCoupon)) {
+                
+                if ($discountCoupon->type == 1) {
+                    if (($totalValue - $discountCoupon->value) < 500) {
+                        return 0;
+                    }
+
+                    return $discountCoupon->value;                    
+                } else {
+                    $discount = intval($totalValue * ($discountCoupon->value / 100));
+                    if (($totalValue - $discount) < 500) {
+                        return 0;
+                    } 
+
+                    $discount = str_replace('.', '', $discount);
+                    return $discount;                    
+                }
+            } 
+
+            return 0;
+
+        } catch (Exception $e)
+        {            
+            report($e);
+            return 0;
+        }
+    }
+
+    public function setTranking()
+    {
+        if($this->sale->status == Sale::STATUS_APPROVED)
+        {
+            $productPlanSales = DB::table('products_plans_sales')->select('id','product_id')->where('sale_id',$this->sale->id)->get();
+            foreach($productPlanSales as $item){
+                Tracking::factory()
+                ->count(1)
+                ->for($this->sale)
+                ->create([
+                    'product_plan_sale_id'=>$item->id,
+                    'product_id'=>$item->product_id,
+                    'amount'=>$this->sale->shipment_value*100,
+                    'delivery_id'=>$this->sale->delivery_id,
+                ]);
+            }
+        }
+
+        return $this;
+    }
+
+    public function keepGoing($maxPossibility = 7)
+    {
+        return mt_rand(1,$maxPossibility) === 1;
     }
 
 }

@@ -22,25 +22,5 @@ use Modules\Core\Entities\User;
 
 class AppsApiDemoController extends AppsApiController
 {
-    public function index(): JsonResponse
-    {
-        $accountOwnerId = User::DEMO_ID;
-        
-        return response()->json([
-            'hotzappIntegrations' => HotzappIntegration::where('user_id', $accountOwnerId)->count(),
-            'shopifyIntegrations' => ShopifyIntegration::where('user_id', $accountOwnerId)->count(),
-            'notazzIntegrations' => NotazzIntegration::where('user_id', $accountOwnerId)->count(),
-            'convertaxIntegrations' => ConvertaxIntegration::where('user_id', $accountOwnerId)->count(),
-            'activecampaignIntegrations' => ActivecampaignIntegration::where('user_id', $accountOwnerId)->count(),
-            'digitalmanagerIntegrations' => DigitalmanagerIntegration::where('user_id', $accountOwnerId)->count(),
-            'whatsapp2Integrations' => Whatsapp2Integration::where('user_id', $accountOwnerId)->count(),
-            'reportanaIntegrations' => ReportanaIntegration::where('user_id', $accountOwnerId)->count(),
-            'unicodropIntegrations' => UnicodropIntegration::where('user_id', $accountOwnerId)->count(),
-            'smartfunnelIntegrations' => SmartfunnelIntegration::where('user_id', $accountOwnerId)->count(),
-            'woocommerceIntegrations' => WooCommerceIntegration::where('user_id', $accountOwnerId)->count(),
-            'astronmembersIntegrations' => AstronMembersIntegration::where('user_id', $accountOwnerId)->count(),
-            'hotbilletIntegrations' => HotbilletIntegration::where('user_id', $accountOwnerId)->count(),
-            'melhorenvioIntegrations' => MelhorenvioIntegration::where('user_id', $accountOwnerId)->count(),
-        ]);
-    }
+
 }

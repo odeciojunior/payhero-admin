@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use Modules\Core\Entities\Company;
 
 class DemoAccount
 {
@@ -26,7 +27,7 @@ class DemoAccount
         {
             $user = Auth::user();
 
-            if($user->company_default == 1)
+            if($user->company_default == Company::DEMO_ID)
             {
                 Config::set('database.default', 'demo');
                 

@@ -235,7 +235,7 @@ class AffiliatesApiController extends Controller
         try {
             $userProjectModel = new UserProject();
             $affiliateModel   = new Affiliate();
-            $userId           = auth()->user()->account_owner_id;
+            $userId           = auth()->user()->getAccountOwnerId();
             $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
             $affiliates = $affiliateModel->with('user', 'company', 'project.checkoutConfig');

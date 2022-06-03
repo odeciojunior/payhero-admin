@@ -42,27 +42,20 @@ class PixExpiredSendEmailListener implements ShouldQueue
         try {
             $sale = $event->sale;
             if ($sale->api_flag) {
-                return;
+                return false;
             }
 
-            $projectModel = new Project();
-            $domainModel = new Domain();
-            $checkoutModel = new Checkout();
             $projectNotificationModel = new ProjectNotification();
             $saleService = new SaleService();
             $sendGridService = new SendgridService();
             $projectNotificationService = new ProjectNotificationService();
-            $domainPresent = $domainModel->present();
+            $domainPresent = (new Domain())->present();
 
-            $project = $projectModel->with('checkoutConfig')->find($event->sale->project_id);
+            $project = Project::with('checkoutConfig')->find($event->sale->project_id);
             $checkoutConfig = $project->checkoutConfig;
-            $checkout = $checkoutModel->find($event->sale->checkout_id);
-            $domain = $domainModel->where('project_id', $project->id)
+            $checkout = Checkout::find($event->sale->checkout_id);
+            $domain = Domain::where('project_id', $project->id)
                 ->where('status', $domainPresent->getStatus('approved'))->first();
-
-            if (empty($domain)) {
-                return false;
-            }
 
             $customer = $event->sale->customer;
             if (stristr($customer->email, 'invalido') !== false) {
@@ -100,7 +93,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
             }
 
-            if(FoxUtils::isProduction()) {
+            if (FoxUtils::isProduction()) {
                 $link = 'https://checkout.' . $domain->name;
             } else {
                 $link = env('APP_URL', 'http://dev.checkout.com.br');
@@ -154,11 +147,11 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 "title" => $titleMessage,
                 "content" => $contentMessage,
                 'discount' => $discount,
-                'sac_link' => "https://sac." . $domain->name,
             ];
 
+            $fromEmail = 'noreply@' . ($domain ? $domain->name : 'cloudfox.net');
             $sendGridService->sendEmail(
-                'noreply@' . $domain['name'],
+                $fromEmail,
                 $project['name'],
                 $customer['email'],
                 $customer['name'],
