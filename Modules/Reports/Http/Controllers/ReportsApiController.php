@@ -38,7 +38,7 @@ class ReportsApiController extends Controller
     public function index(request $request): JsonResponse
     {
         try {
-            
+
             $accountOwnerId = auth()->user()->getAccountOwnerId();
 
             $userProjectModel = new UserProject();
@@ -679,6 +679,8 @@ class ReportsApiController extends Controller
     {
         try {
             $projectId = $request->input('project');
+            $companyId = $request->input('company_id');
+
             $projects = UserProject::where('user_id', auth()->user()->account_owner_id)
                 ->with('project')
                 ->where('type', 'producer');
@@ -686,6 +688,9 @@ class ReportsApiController extends Controller
             if (!empty($projectId)) {
                 $projects = $projects->where('project_id', Hashids::decode($projectId));
             }
+            // else(){
+            //     $projects = $projects
+            // }
             $projects = $projects->get();
 
             if (empty($request->input('status'))) {

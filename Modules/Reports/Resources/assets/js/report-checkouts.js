@@ -1,44 +1,48 @@
 $(function () {
-    loadingOnScreen();
 
-    $.ajax({
-        method: "GET",
-        url: '/api/projects?select=true&company='+ sessionStorage.getItem('company_default'),
-        dataType: "json",
-        headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
-        },
-        error: function error(response) {
-            $("#modal-content").hide();
+    getProjects();
 
-            loadingOnScreenRemove();
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            if (!isEmpty(response.data)) {
-                $("#project-empty").hide();
-                $("#project-not-empty").show();
-                $("#export-excel").show()
+    function getProjects(){
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true&company='+ sessionStorage.getItem('company_default'),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                $("#modal-content").hide();
 
-                $.each(response.data, function (i, project) {
-                    $("#select_projects").append($('<option>', {
-                        value: project.id,
-                        text: project.name
-                    }));
-                });
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel").show()
 
-                updateReports();
+                    $.each(response.data, function (i, project) {
+                        $("#select_projects").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
+                    });
 
-            } else {
-                $("#export-excel").hide()
-                $("#project-not-empty").hide();
-                $("#project-empty").show();
+                    updateReports();
+
+                } else {
+                    $("#export-excel").hide()
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
+                loadingOnScreenRemove();
             }
-
-            loadingOnScreenRemove();
-        }
-    });
+        });
+    }
 
     $("#select_projects").on('change', function () {
         updateReports();

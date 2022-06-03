@@ -58,6 +58,7 @@ $(document).ready(function () {
             'project': $("#projeto").val(),
             'status': $("#status").val(),
             'date_range': $("#date_range").val(),
+            'company_id': sessionStorage.getItem('company_default'),
         };
 
         if (urlParams) {

@@ -626,7 +626,7 @@ $(document).ready(function () {
                             })
                         );
                     });
-
+                    $("#projeto option:first").attr('selected','selected');
                     atualizar();
                 } else {
                     $("#export-excel > div >").hide();
