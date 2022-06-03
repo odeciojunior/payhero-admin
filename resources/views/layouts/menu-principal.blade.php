@@ -34,10 +34,7 @@
 
     @if(!auth()->user()->account_is_approved && $account_type === 'admin')
         <div class="new-register-navbar-open-modal-container">
-            <div class="row no-gutters new-register-open-modal">
-                <!--
-                <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
-                -->
+            <div class="row new-register-open-modal">
                 <span class="new-register-open-modal-btn">Clique aqui para começar</span>
             </div>
         </div>

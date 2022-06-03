@@ -2191,7 +2191,9 @@ tbody td{
 .new-register-navbar-open-modal-container {
     display: flex;
     justify-content: center;
-    flex-grow: 1;
+    position: fixed;
+    left: 65px;
+    right: 20px;
     font-size: 16px;
 }
 @media screen and (max-width: 920px) {
