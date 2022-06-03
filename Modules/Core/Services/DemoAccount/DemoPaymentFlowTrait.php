@@ -16,6 +16,7 @@ use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Entities\ProjectUpsellRule;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleInformation;
 use Modules\Core\Entities\Shipping;
@@ -67,6 +68,15 @@ trait DemoPaymentFlowTrait
 
     protected $hasOrderBump = false;
 
+    protected $upsellPreviousSaleId = 0;
+
+    protected $isUpsell = false;
+
+    public $nextIsUpsell = false;
+
+
+    public $sale = null;
+
     public function resetVars()
     {        
         $this->checkout = null;
@@ -86,7 +96,9 @@ trait DemoPaymentFlowTrait
         $this->automaticDiscount = 0;
         $this->cupomCode = '';
         $this->onlyDigitalProducts = false;
-        $this->hasOrderBump = false;
+        $this->hasOrderBump = false; 
+        $this->sale = null;
+
         return $this;
     }
     
@@ -111,12 +123,35 @@ trait DemoPaymentFlowTrait
         ->whereIn('id',$planIds)->get();        
         
         foreach($this->plans as $plan){
-            $this->subTotal += FoxUtils::onlyNumbers($plan->price) * 1;            
+            $this->subTotal += FoxUtils::onlyNumbers($plan->price) * 1;     
+            
+            //desconto do upsell
+            if ($this->isUpsell)
+            {
+                $upsellRule = $this->getUpsellRule($plan->id);
+
+                if (!empty($upsellRule)) {
+                    if (is_numeric($upsellRule->discount) && $upsellRule->discount <= 100) {
+                        $this->subTotal -= intval($this->subTotal * $upsellRule->discount / 100);
+                    }
+                }
+            }
+
         }
 
         $this->totalValue = $this->subTotal;
 
         return $this;
+    }
+
+    private function getUpsellRule($currentPlan)
+    {
+        return ProjectUpsellRule::where('project_id', $this->project->id)
+                ->where('active_flag', true)
+                ->where(function ($query) use ($currentPlan) {
+                   $query->whereJsonContains('apply_on_plans', $currentPlan)
+                   ->orWhereJsonContains('apply_on_plans', 'all');
+                })->first();
     }
 
     private function getOrderBump()
@@ -173,7 +208,7 @@ trait DemoPaymentFlowTrait
     {       
         $this->hasOrderBump = false;
 
-        if(!$this->keepGoing(10)){            
+        if(!$this->keepGoing(10) || $this->nextIsUpsell){            
             return $this;
         }        
 
@@ -226,7 +261,7 @@ trait DemoPaymentFlowTrait
 
     public function prepareData(){
         $paymentMethods = [Sale::PAYMENT_TYPE_CREDIT_CARD,Sale::PAYMENT_TYPE_BANK_SLIP,Sale::PAYMENT_TYPE_PIX];
-        $this->payment_method = $paymentMethods[rand(0,2)];        
+        $this->payment_method = $paymentMethods[ $this->nextIsUpsell ? 0 : rand(0,2) ];        
         
         $this->installment_amount  = 0;
         if($this->payment_method == Sale::PAYMENT_TYPE_CREDIT_CARD){
@@ -393,7 +428,7 @@ trait DemoPaymentFlowTrait
                 'sub_total' => FoxUtils::floatFormat($this->subTotal),
                 'shipment_value' => FoxUtils::floatFormat($this->shippingPrice),
                 'cupom_code' => $this->cupomCode,
-                'start_date' => $this->checkout->created_at,
+                'start_date' => $this->checkout->created_at,//now() - mudar para now() em produção
                 'gateway_transaction_id' => '',                
                 'installments_amount' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT ? $this->installment_amount : null,
                 'installments_value' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT
@@ -405,8 +440,8 @@ trait DemoPaymentFlowTrait
                 'upsell_id' => null,
                 'automatic_discount' => $this->automaticDiscount,
                 'interest_total_value' => $this->totalInterestValue ?? 0,
-                'has_order_bump' => $this->hasOrderBump,                     
-                'status'=>FoxUtilsFakeService::getRandomStatus($this->payment_method)
+                'has_order_bump' => $this->hasOrderBump,                
+                'status'=>$this->nextIsUpsell || $this->isUpsell ? Sale::STATUS_APPROVED : FoxUtilsFakeService::getRandomSaleStatus($this->payment_method)
             ]            
         );
 
@@ -460,7 +495,8 @@ trait DemoPaymentFlowTrait
                 ]);
 
                 $this->sale->update([
-                    'flag'=>FoxUtilsFakeService::getRandoFlagCC()
+                    'flag'=>FoxUtilsFakeService::getRandoFlagCC(),
+                    'upsell_id'=> $this->isUpsell && $this->sale->status==Sale::STATUS_APPROVED ? $this->upsellPreviousSaleId:null,
                 ]);
             break;
             case Sale::PAYMENT_TYPE_BANK_SLIP:

@@ -48,8 +48,12 @@ class CreateFakeCheckout extends Command
      */
     public function handle()
     {
-        Config::set('database.default', 'demo');
+        /* WARNING
+        APÓS ENTRAR EM PRODUÇÃO SÓ DEVE GERAR 1 POR VEZ
+        */
 
+        Config::set('database.default', 'demo');
+        
         try{
             $attemps = 50;
             $counter = 1;
@@ -57,7 +61,7 @@ class CreateFakeCheckout extends Command
             do{
                 $this->createCheckout()
                 ->createCheckoutPlan();
-
+                $this->line($counter.'/'.$attemps);
                 $counter++;
 
             }while($counter <= $attemps);

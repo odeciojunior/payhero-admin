@@ -40,9 +40,11 @@ class Kernel extends ConsoleKernel
         setlocale(LC_ALL, 'pt_BR');
 
         $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
+        $schedule->command('demo:create-fake-checkout')->everyMinute()->withoutOverlapping();
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
+        $schedule->command('demo:create-fake-sale')->withoutOverlapping()->everyFiveMinutes();
 
         $schedule->command('check:systems')->everyTenMinutes();
 
@@ -55,6 +57,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:pendingdomains')->hourly();
 
         $schedule->command('command:checkUpdateCompanyGetnet')->sundays()->at('05:00');
+        $schedule->command('demo:create-fake-withdrawal')->sundays()->at('05:20');
         $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('06:30');
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('06:25');
         $schedule->command('getnet:check-withdrawals-released-cloudfox')->mondays()->at('22:00');
@@ -80,22 +83,32 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:UpdateListsFoxActiveCampaign')->dailyAt('05:10');
         $schedule->command('change:boletopendingtocanceled')->dailyAt('05:20');
         $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('05:30');
+        $schedule->command('demo:change-status-checkout')->dailyAt('05:35');
         $schedule->command('check:gateway-tax-company-after-month')->dailyAt('05:40');
         $schedule->command('getnet:get-all-statement-chargebacks')->dailyAt('05:45');
+
         $schedule->command('available-balance:update')->dailyAt('06:15');
+        $schedule->command('demo:update-financial-fake-data')->dailyAt('06:20');
         $schedule->command('user:benefits:update')->dailyAt('06:30');
         $schedule->command('achievements:update')->dailyAt('06:40');
         $schedule->command('account-health:update')->dailyAt('06:50');
+        
         $schedule->command('command:update-user-level')->dailyAt('07:00');
         $schedule->command('updateTransactionsReleaseDate')->dailyAt('07:15');
         $schedule->command('update:currencyquotation')->dailyAt('07:20');
         $schedule->command('verify:tickets') ->dailyAt('07:30');
         $schedule->command('notify:mediation')->dailyAt('08:30');
 
+        $schedule->command('demo:create-fake-ticket')->dailyAt('08:50');
+        $schedule->command('demo:create-fake-contestation')->dailyAt('09:00');
         $schedule->command('verify:boletowaitingpayment')->dailyAt('09:30');
+
         $schedule->command('verify:boletoexpiring')->dailyAt('11:00');
         $schedule->command('verify:boleto2')->dailyAt('11:15');
         $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
+
+        $schedule->command('demo:create-fake-ticket')->dailyAt('16:50');
+        $schedule->command('demo:create-fake-contestation')->dailyAt('17:00');
 
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');
         $schedule->command('safe2pay:manual-anticipation')->dailyAt('18:40');
@@ -110,7 +123,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
         $schedule->command('verify:promotional-tax')->dailyAt('23:45');
-
+        
+        $schedule->command('demo:create-fake-invite')->weekly();
+        
         // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
     }
 

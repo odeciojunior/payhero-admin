@@ -194,7 +194,7 @@ class ContestationService
 
         $totalSaleApproved = Sale::where('payment_method', 1)
             ->whereIn('status', [1, 4, 7, 24])
-            ->where('sales.owner_id', \Auth::user()->account_owner_id);
+            ->where('sales.owner_id', \Auth::user()->getAccountOwnerId());
 
         $totalSaleApproved->whereBetween(
             'sales.start_date',

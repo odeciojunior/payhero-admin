@@ -39,7 +39,7 @@
         <div id='modal-contestationFiles' class="modal-content p-20 " style="min-width: 300px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
-                    <div class="col-lg-10 text-left"><h4 class="font-weight-bold">Arquivos para contestaçãoxxx</h4>
+                    <div class="col-lg-10 text-left"><h4 class="font-weight-bold">Arquivos para contestação</h4>
                         <strong id="sale_hash"></strong>
                     </div>
 

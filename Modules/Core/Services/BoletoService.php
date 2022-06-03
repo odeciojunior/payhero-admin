@@ -838,8 +838,7 @@ class BoletoService
         $todayDate = Carbon::now()->toDateString();
 
         try {
-            $boletos = Sale::with(['customer'])
-                ->where(
+            $boletos = Sale::where(
                     [
                         ['payment_method', Sale::BOLETO_PAYMENT],
                         ['status', Sale::STATUS_PENDING],
@@ -886,7 +885,7 @@ class BoletoService
                     );
                 }
 
-                if (!$boleto->api_flag) {
+                if (!$boleto->api_flag && $boleto->owner_id > User::DEMO_ID) {
                     event(new BilletExpiredEvent($boleto));
                 }
             }
