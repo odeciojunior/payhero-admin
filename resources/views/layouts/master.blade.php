@@ -46,6 +46,24 @@
             })(window,document,'script','dataLayer','GTM-TDM6SV5');</script>
         <!-- End Google Tag Manager -->
         <script src="{{ mix('build/layouts/master/master.min.js') }}"></script>
+
+        <!-- Meta Pixel Code -->
+        <script>
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js%27);
+            fbq('init', '568190524313935');
+            fbq('track', 'PageView');
+        </script>
+        <noscript><img height="1" width="1" style="display:none"
+                    src="https://www.facebook.com/tr?id=568190524313935&ev=PageView&noscript=1"
+        /></noscript>
+
         <script>
             Breakpoints();
         </script>
