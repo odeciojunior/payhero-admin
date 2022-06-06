@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ApiToken;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\FoxUtils;
 use Modules\Integrations\Transformers\ApiTokenCollection;
 use Modules\Integrations\Transformers\ApiTokenResource;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,15 +26,15 @@ class IntegrationsApiController extends Controller
      * Display a listing of the resource.
      * @return AnonymousResourceCollection|ApiTokenCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $apiTokenModel = new ApiToken();
             $tokens        = $apiTokenModel->newQuery()
                                             ->where('user_id', auth()->user()->getAccountOwnerId())
+                                            ->where('company_id', current(Hashids::decode($request->company_id)) )
                                             ->latest()
                                             ->paginate();
-
             return new ApiTokenCollection($tokens);
         } catch (Exception $ex) {
             Log::debug($ex);
@@ -59,13 +60,13 @@ class IntegrationsApiController extends Controller
             if (empty($tokenTypeEnum)) {
                 return response()->json(['message' => 'O Tipo de Integração é obrigatório!'], Response::HTTP_BAD_REQUEST);
             }
-            
+
             if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API) {
                 $company = Company::find(current(hashids()->decode($request->get('company_id'))));
                 if (!$company) {
                     return response()->json(['message' => 'O campo Empresa é obrigatório para a integração Checkout API'], Response::HTTP_BAD_REQUEST);
                 }
-                
+
                 $postback = $request->get('postback');
                 if (empty($postback)) {
                     return response()->json(['message' => 'O campo Postback é obrigatório!'], Response::HTTP_BAD_REQUEST);
@@ -75,7 +76,7 @@ class IntegrationsApiController extends Controller
             /** @var User $user */
             $apiTokenModel     = new ApiToken();
             $apiTokenPresenter = $apiTokenModel->present();
-            
+
             $scopes = $apiTokenPresenter->getTokenScope($tokenTypeEnum);
             if (empty($scopes)) {
                 return response()->json(['message' => 'Tipo do token inválido!'], Response::HTTP_BAD_REQUEST);
@@ -126,7 +127,7 @@ class IntegrationsApiController extends Controller
             return redirect()->back()->with('error', 'Ocorreu um erro ao excluir.');
         }
     }
-    
+
     /**
      * Remove the specified resource from storage.
      * @param string $encodedId
@@ -147,14 +148,14 @@ class IntegrationsApiController extends Controller
                 return response()->json(['message' => 'O campo Descrição é obrigatório!'], Response::HTTP_BAD_REQUEST);
             }
 
-            $tokenTypeEnum = $request->get('token_type_enum');            
+            $tokenTypeEnum = $request->get('token_type_enum');
             if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API) {
-                $postback = $request->get('postback');                
+                $postback = $request->get('postback');
                 if (empty($postback)) {
                     return response()->json(['message' => 'O campo Postback é obrigatório!'], Response::HTTP_BAD_REQUEST);
                 }
             }
-            
+
             $apiToken->update([
                 'description' => $description,
                 'postback' => $postback ?? null,

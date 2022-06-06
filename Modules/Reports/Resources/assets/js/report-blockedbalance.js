@@ -9,9 +9,9 @@ function atualizar(link = null) {
     loadOnTable('#dados_tabela', '#tabela_vendas');
 
     if (link == null) {
-        link = '/api/reports/blockedbalance?' + getFilters(true).substr(1);
+        link = '/api/reports/blockedbalance?' + getFilters(true).substr(1) + "&company_id="+sessionStorage.getItem('company_default');
     } else {
-        link = '/api/reports/blockedbalance' + link + getFilters(true);
+        link = '/api/reports/blockedbalance' + link + getFilters(true) + "&company_id="+sessionStorage.getItem('company_default');
         updateResume = false;
     }
 
@@ -311,7 +311,7 @@ $(document).ready(function () {
                             text: project.name
                         }));
                     });
-
+console.log('getprojects ok')
                     atualizar();
 
                 } else {

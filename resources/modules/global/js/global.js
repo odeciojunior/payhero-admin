@@ -1628,6 +1628,8 @@ function updateProjectsOptions(){
 
     // corrige lojas em Finanças
 
+
+
     // corrige lojas em Relatorios Vendas
     else if(pathname == '/reports/sales'){
         $("#select_projects").find('option').remove();
@@ -1683,6 +1685,15 @@ function updateProjectsOptions(){
         $("#project_id").find('option').remove();
         $.getScript( "/build/layouts/hotzapp/index.min.js", function( data, textStatus, jqxhr ) {
             index();
+        });
+    }
+
+    // corrige lojas em Apps API Sirius
+    else if(pathname == '/integrations'){
+        $("#project_id").find('option').remove();
+        $.getScript( "/build/layouts/integrations/index.min.js", function( data, textStatus, jqxhr ) {
+            console.log(sessionStorage.getItem('company_default')+' ----------------------- ')
+            refreshIntegrations();
         });
     }
 }

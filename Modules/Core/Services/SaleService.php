@@ -43,10 +43,10 @@ class SaleService
         try {
             $companyModel = new Company();
             $customerModel = new Customer();
-            $transactionModel = new Transaction();            
+            $transactionModel = new Transaction();
 
-            if (!$userId) {                
-                $userId = auth()->user()->getAccountOwnerId();     
+            if (!$userId) {
+                $userId = auth()->user()->getAccountOwnerId();
             }
 
             if (empty($filters["company"])) {
@@ -824,7 +824,7 @@ class SaleService
                     'blockReasonSale' => $blockReasonQuery,
                 ]
             )
-                ->where('user_id', auth()->user()->getAccountOwnerId())                
+                ->where('user_id', auth()->user()->getAccountOwnerId())
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereHas('blockReasonSale', $blockReasonQuery);
 
@@ -889,6 +889,14 @@ class SaleService
                 //->whereIn('sales.status', $status)
                 ->selectRaw('transactions.*, sales.start_date')
                 ->orderByDesc('sales.start_date');
+
+            // $companyId = current(Hashids::decode($filters["plan"]));
+            // $transactions->whereHas(
+            //     'sale.plansSales',
+            //     function ($query) use ($planId) {
+            //         $query->where('plan_id', $planId);
+            //     }
+            // );
 
             return $transactions;
 
