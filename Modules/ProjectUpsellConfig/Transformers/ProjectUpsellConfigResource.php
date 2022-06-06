@@ -20,8 +20,7 @@ class ProjectUpsellConfigResource extends JsonResource
      */
     public function toArray($request)
     {
-        $projectUpsellModel = new ProjectUpsellRule();
-        $projectUpsell      = $projectUpsellModel->where('project_id', $this->project_id)->first();
+        $projectUpsell      = ProjectUpsellRule::where('project_id', $this->project_id)->exists();
 
         return [
             'id'             => Hashids::encode($this->id),

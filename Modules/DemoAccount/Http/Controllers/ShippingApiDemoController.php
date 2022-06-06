@@ -3,6 +3,7 @@
 namespace Modules\DemoAccount\Http\Controllers;
 
 use Exception;
+use Google\Service\AnalyticsReporting\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -35,6 +36,32 @@ class ShippingApiDemoController extends ShippingApiController
             return response()->json([
                 'message' => 'Erro ao listar dados de frete',
             ], 400);
+        }
+    }
+
+    public function show($projectId, $id)
+    {
+        try {
+            if (isset($projectId) && isset($id)) {
+                $shippingModel = new Shipping();
+                
+                $shipping = $shippingModel->find(current(Hashids::decode($id)));
+                
+                if ($shipping) {
+                    $shipping->makeHidden(['id', 'project_id', 'campaing_id']);
+                    $shipping->rule_value = number_format($shipping->rule_value / 100, 2, ',', '.');
+
+                    return response()->json($shipping, 200);
+                } 
+
+                return response()->json(['message' => 'Erro ao tentar visualizar frete!'], 400);                                
+            }
+
+            return response()->json(['message' => 'Erro ao tentar visualizar frete!'], 400);
+
+        } catch (Exception $e) {            
+            report($e);
+            return response()->json(['message' => 'Erro ao tentar visualizar frete!'], 400);
         }
     }
 }

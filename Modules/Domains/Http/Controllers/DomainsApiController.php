@@ -208,7 +208,7 @@ class DomainsApiController extends Controller
 
             DB::rollBack();
 
-            dd($e);
+            report($e);
             $message = CloudflareErrorsService::formatErrorException($e);
 
             return response()->json(['message' => $message], 400);

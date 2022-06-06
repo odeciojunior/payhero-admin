@@ -551,32 +551,28 @@ class PlansApiController extends Controller
             if ($projectId) {
                 $plans->where('project_id', $projectId);
             } else {
-                $userId = auth()->user()->account_owner_id;
+                $userId = auth()->user()->getAccountOwnerId();
                 $projects = UserProject::where('user_id', $userId)->pluck('project_id');
                 $plans->whereIn('project_id', $projects);
             }
 
             if(!empty($data['total'])){
                 $result = DB::select("SELECT count(*) as total FROM plans where deleted_at is null and project_id = $projectId and status = 1");
-                //$thumbnails = DB::select("SELECT photo FROM products where project_id = $projectId and deleted_at is null limit 8");
                 $thumbnails = Plan::where('project_id', $projectId)->with('products')->limit(8)->get();
                 
                 $return['thumbnails'] = $thumbnails;
                 $return['total'] = $result[0]->total;
                 return $return;
             }
-
             
-            
-            
-            
-
             if (!empty($data['search'])) {
                 $plans->where('name', 'like', '%' . $data['search'] . '%');
             }
+
             if (!empty($data['search2'])) {
                 $plans->where('description', 'like', '%' . $data['search2'] . '%');
             }
+
             $itemsNotIn = [];
             if(!empty($data['items_saved']) && is_array($data['items_saved'])){
                 foreach($data['items_saved'] as $items){
@@ -584,8 +580,6 @@ class PlansApiController extends Controller
                 }
             }
             
-            //if(empty($data['search']) && empty($data['search2'])) $itemsNotIn = [];
-
             if(!empty($data['most_sales'])){
                 
                 $plans->select('id', 'name', 'description',
@@ -595,9 +589,7 @@ class PlansApiController extends Controller
                 $plans = $plans->orderBy('sales', 'desc')->paginate(16);
                 
                 return PlansSelectResource::collection($plans);
-
             }
-
 
             $groupByVariants = boolval($data['variants'] ?? 1);
 
