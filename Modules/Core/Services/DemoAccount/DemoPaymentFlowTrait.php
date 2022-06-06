@@ -428,7 +428,7 @@ trait DemoPaymentFlowTrait
                 'sub_total' => FoxUtils::floatFormat($this->subTotal),
                 'shipment_value' => FoxUtils::floatFormat($this->shippingPrice),
                 'cupom_code' => $this->cupomCode,
-                'start_date' => $this->checkout->created_at,//now() - mudar para now() em produção
+                'start_date' => now(),
                 'gateway_transaction_id' => '',                
                 'installments_amount' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT ? $this->installment_amount : null,
                 'installments_value' => $this->payment_method == Sale::CREDIT_CARD_PAYMENT

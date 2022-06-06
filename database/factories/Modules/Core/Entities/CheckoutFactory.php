@@ -55,7 +55,7 @@ class CheckoutFactory extends Factory
             'utm_content' => null,
             'src' => $this->getRandomSrc(),
             'template_type' => 0,
-            'created_at'=>Carbon::now()->subDays(rand(1,30))
+            'created_at'=>now()//Carbon::now()->subDays(rand(1,30))
         ];
     }    
 

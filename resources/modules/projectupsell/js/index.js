@@ -136,7 +136,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             }, error: function (response) {
-
+                errorAjaxResponse(response);
             }, success: function (response) {
                 let upsell = response.data;
                 $('#edit_description_upsell').val(`${upsell.description}`);

@@ -32,20 +32,18 @@ class ProjectUpsellConfigApiController extends Controller
     {
         try {
             $projectId = current(Hashids::decode($projectId));
-            if ($projectId) {
-                $projectUpsellConfig = new ProjectUpsellConfig();
-                $upsellConfig        = $projectUpsellConfig->where('project_id', $projectId)->first();
+
+            if ($projectId) {                
+                $upsellConfig = ProjectUpsellConfig::where('project_id', $projectId)->first();
 
                 return new ProjectUpsellConfigResource($upsellConfig);
-            } else {
-                return response()->json([
-                                            'message' => 'Projeto não encontrado',
-                                        ], 400);
             }
-        } catch (Exception $e) {
-            return response()->json([
-                                        'message' => 'Projeto não encontrado',
-                                    ], 400);
+
+            return response()->json(['message' => 'Projeto não encontrado'], 400);
+            
+        } catch (Exception $e){
+
+            return response()->json(['message' => 'Projeto não encontrado'], 400);
         }
     }
 

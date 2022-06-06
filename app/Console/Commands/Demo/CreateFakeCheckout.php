@@ -55,7 +55,7 @@ class CreateFakeCheckout extends Command
         Config::set('database.default', 'demo');
         
         try{
-            $attemps = 50;
+            $attemps = 1;
             $counter = 1;
         
             do{

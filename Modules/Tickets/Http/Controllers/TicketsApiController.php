@@ -231,7 +231,7 @@ class TicketsApiController extends Controller
         try {
             $ticketsModel = new Ticket();
             $data = $request->all();
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
 
             $ticketPresenter = $ticketsModel->present();
             $ticket = $ticketsModel->selectRaw('count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('open') . ' then 1 end) as openCount,

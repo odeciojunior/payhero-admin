@@ -16,6 +16,7 @@ Route::group([
     Route::group([],function(){
         Route::get('/project/{projectId}/couponsdiscounts', 'DiscountCouponsApiDemoController@index');
         Route::get('/project/{projectId}/couponsdiscounts/{id}', 'DiscountCouponsApiDemoController@show');
+        Route::get('/project/{projectId}/couponsdiscounts/{id}/edit', 'DiscountCouponsApiDemoController@edit');
     });
 
     //ProjectReviews
@@ -31,9 +32,10 @@ Route::group([
 
     //Pixels
     Route::group([],function(){
-        Route::get("/projects/{projectId}/pixels/configs", 'PixelsApiDemoController@getPixelConfigs')->name('pixels.getconfig');        
         Route::get('/project/{projectId}/pixels', 'PixelsApiDemoController@index');
+        Route::get("/projects/{projectId}/pixels/configs", 'PixelsApiDemoController@getPixelConfigs')->name('pixels.getconfig');        
         Route::get('/project/{projectId}/pixels/{id}', 'PixelsApiDemoController@show');
+        Route::get('/project/{projectId}/pixels/{id}/edit', 'PixelsApiDemoController@edit');
     });
 
     //ProjectNotification
@@ -220,19 +222,27 @@ Route::group([
     //Plans
     Route::group([],function(){
         Route::get('/project/{projectId}/plans', 'PlansApiDemoController@index');
+        Route::get('/project/{projectId}/plans/{planId}', 'PlansApiDemoController@show');
+
+        Route::get('/plans/user-plans', 'PlansApiDemoController@getPlans');
     });
 
     //ProjectUpsellRule
     Route::group([],function(){
         Route::get('/projectupsellrule', 'ProjectUpsellRuleApiDemoController@index');
         Route::get('/projectupsellrule/{id}', 'ProjectUpsellRuleApiDemoController@show');
+        Route::get('/projectupsellrule/{id}/edit', 'ProjectUpsellRuleApiDemoController@edit');
+    });
+
+    Route::group([],function(){
+        Route::get('/projectreviews/{id}/edit', 'ProjectReviewsApiDemoController@edit');
     });
 
     //ProjectReviewsConfig
     Route::group([],function(){
         Route::get('/projectreviewsconfig', 'ProjectReviewsConfigApiDemoController@index');
         Route::get('/projectreviewsconfig/{id}', 'ProjectReviewsConfigApiDemoController@show');
-        Route::get('/projectreviewsconfig/{id}/edit', 'ProjectReviewsConfigApiDemoController@edit');
+        Route::get('/projectreviewsconfig/{id}/edit', 'ProjectReviewsConfigApiDemoController@edit');        
     });
 
     //ProjectUpsellConfig
