@@ -353,31 +353,39 @@ class ShopifyService
         $strPos = strpos($html, '</body>');
 
         $scriptFox = "<!-- start cloudfox utm script -->
-        <div id='foxScriptUtm'>
-        <script>
+                        <div id='foxScriptUtm'>
+                            <script>
 
-            var url_string = window.location.href;
-            var url = new URL(url_string);
-            var src = url.searchParams.get('src');
-            var utm_source = url.searchParams.get('utm_source');
-            var utm_medium = url.searchParams.get('utm_medium');
-            var utm_campaign = url.searchParams.get('utm_campaign');
-            var utm_term = url.searchParams.get('utm_term');
-            var utm_content = url.searchParams.get('utm_content');
+                                var url_string = window.location.href;
+                                var url = new URL(url_string);
+                                var utmParams = {
+                                    src: url.searchParams.get('src'),
+                                    utm_source: url.searchParams.get('utm_source'),
+                                    utm_medium: url.searchParams.get('utm_medium'),
+                                    utm_campaign: url.searchParams.get('utm_campaign'),
+                                    utm_term: url.searchParams.get('utm_term'),
+                                    utm_content: url.searchParams.get('utm_content')
+                                }
+                                var cookieValue = '';
+                                Object.keys(utmParams).forEach(function(key) {
+                                    if(utmParams[key]){
+                                        if(cookieValue) {
+                                            cookieValue += '|';
+                                        }
+                                        cookieValue += key + '=' + utmParams[key];
+                                    }
+                                });
 
-            if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campaign != null) || (utm_term != null) || (utm_content != null) )
-            {
-                var cookieName = '_sirius_track';
-                var cookieValue = 'src='+src+'|'+'utm_source='+utm_source+'|'+'utm_medium='+utm_medium+'|'+'utm_campaign='+utm_campaign+'|'+'utm_term='+utm_term+'|'+'utm_content='+utm_content;
-                var myDate = new Date();
-                myDate.setMonth(myDate.getMonth() + 12);
+                                if(cookieValue) {
+                                    var cookieName = '_sirius_track';
+                                    var myDate = new Date();
+                                    myDate.setMonth(myDate.getMonth() + 12);
 
-                document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate.toUTCString();
-            }
-
-        </script>
-        </div>
-        <!-- end cloudfox utm script -->";
+                                    document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate.toUTCString();
+                                }
+                            </script>
+                        </div>
+                    <!-- end cloudfox utm script -->";
 
         $html = substr_replace($html, $scriptFox, $strPos, 0);
 
