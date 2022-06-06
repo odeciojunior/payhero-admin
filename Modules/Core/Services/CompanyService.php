@@ -511,19 +511,30 @@ class CompanyService
     {
         $blockedBalance = $gatewayService->getBlockedBalance();
 
-        if($blockedBalance <= $availableBalance) {
-            $availableBalance -= $blockedBalance;
-            return;
-        }
+        if($availableBalance > 0) {
+            if($blockedBalance <= $availableBalance) {
+                $availableBalance -= $blockedBalance;
+                return;
+            }
 
-        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
-            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
-            $availableBalance = 0;
-            return;
-        }
+            if($blockedBalance <= ($availableBalance + $pendingBalance)) {
+                $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
+                $availableBalance = 0;
+                return;
+            }
 
-        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $pendingBalance = 0;
+            $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
+            $pendingBalance = 0;
+        }
+        else {
+            if($blockedBalance <= $pendingBalance) {
+                $pendingBalance -= $blockedBalance;
+            }
+            if($blockedBalance > $pendingBalance) {
+                $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
+                $pendingBalance = 0;
+            }
+        }
     }
 
 }

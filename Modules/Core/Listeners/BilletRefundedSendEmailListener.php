@@ -35,22 +35,16 @@ class BilletRefundedSendEmailListener implements ShouldQueue
         try {
             $sale = $event->sale;
             if ($sale->api) {
-                return;
+                return false;
             }
 
             $emailService = new SendgridService();
             $saleService = new SaleService();
-            $projectModel = new Project();
-            $domainModel = new Domain();
-            $domainPresent = $domainModel->present();
+            $domainPresent = (new Domain())->present();
 
-            $project = $projectModel->find($sale->project_id);
-            $domain = $domainModel->where('project_id', $project->id)
+            $project = Project::find($sale->project_id);
+            $domain = Domain::where('project_id', $project->id)
                 ->where('status', $domainPresent->getStatus('approved'))->first();
-
-            if (empty($domain)) {
-                return false;
-            }
 
             $sale->setRelation('customer', $event->sale->customer);
             $customer = $sale->customer;
@@ -96,11 +90,11 @@ class BilletRefundedSendEmailListener implements ShouldQueue
                 "shipment_value" => $sale->shipment_value,
                 "subtotal" => strval($subTotal),
                 'discount' => $discount,
-                "sac_link" => "https://sac." . $domain->name,
             ];
 
+            $fromEmail = 'noreply@' . ($domain ? $domain->name : 'cloudfox.net');
             $emailService->sendEmail(
-                'noreply@' . $domain['name'],
+                $fromEmail,
                 $project['name'],
                 $customer['email'],
                 $customer['name'],

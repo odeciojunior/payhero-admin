@@ -198,7 +198,8 @@ class CoreApiController extends Controller
 
             $availableBalance = $safe2payService->getAvailableBalance();
             $pendingBalance = $safe2payService->getPendingBalance();
-            $safe2payService->applyBlockedBalance($availableBalance, $pendingBalance);
+
+            (new CompanyService)->applyBlockedBalance($safe2payService, $availableBalance, $pendingBalance);
 
             $transaction = Transaction::where('sale_id', $sale->id)->where('company_id', $company->id)->first();
 

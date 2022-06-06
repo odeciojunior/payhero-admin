@@ -49,7 +49,7 @@ class NotifyMediation extends Command
 
         $query = Ticket::with([
             'sale.customer',
-            'sale.project.domains'
+            'sale.project'
         ])->where('ticket_status_enum', Ticket::STATUS_OPEN)
             ->where('ticket_category_enum', Ticket::CATEGORY_COMPLAINT)
             ->where('mediation_notified', 0)
@@ -64,8 +64,6 @@ class NotifyMediation extends Command
                 try {
                     $project = $ticket->sale->project;
                     $projectName = $project->name;
-                    $domain = $project->domains->first();
-                    $link = 'https://sac.' . ($domain ? $domain->name : 'cloudfox.net');
 
                     $customer = $ticket->sale->customer;
                     $customerName = current(explode(' ', $customer->name));
@@ -75,12 +73,11 @@ class NotifyMediation extends Command
                         $data = [
                             'name' => $customerName,
                             'project' => $projectName,
-                            'link' => $link,
                         ];
 
                         $sendGridService->sendEmail("noreply@cloudox.net", 'CloudFox', $customerEmail, $customerName, 'd-efa4d00c04334ad58fb3d419ddb3176c', $data);
                     } else {
-                        $smsService->sendSms($customer->telephone, "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse {$link} e solicite mediação.");
+                        $smsService->sendSms($customer->telephone, "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.cloudfox.net e solicite mediação.");
                     }
 
                     $ticket->mediation_notified = 1;

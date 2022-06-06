@@ -124,8 +124,8 @@ class BoletoService
                             $sale->boleto_due_date = Carbon::parse($sale->boleto_due_date)->format('d/m/y');
 
                             $domain = Domain::select('name')->where('project_id', $sale->project_id)->where('status', 3)->first();
-                            $domainName = $domain->name??'cloudfox.net';    
-                            $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto"; 
+                            $domainName = $domain->name??'cloudfox.net';
+                            $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
 
                             $saleData = (object)[
                                 'id' => $sale->id,
@@ -195,7 +195,6 @@ class BoletoService
                                             "title" => $titleMessage,
                                             "content" => $contentMessage,
                                             "products" => $products,
-                                            'sac_link' => "https://sac." . $sale->domain,
                                         ];
                                         $dataEmail = [
                                             'domainName' => $sale->domain,
@@ -304,7 +303,7 @@ class BoletoService
                             $domain = $domainModel->where('project_id', $project->id)
                                 ->where('status', $domainPresent->getStatus('approved'))
                                 ->first();
-                            $domainName = $domain->name??'cloudfox.net'; 
+                            $domainName = $domain->name??'cloudfox.net';
                             $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($boleto->id)."/download-boleto";
 
                             $subTotal = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
@@ -398,14 +397,12 @@ class BoletoService
                                             "title" => $titleMessage,
                                             "content" => $contentMessage,
                                             "products" => $products,
-                                            'sac_link' => "https://sac." . $domain->name,
                                         ];
                                         $dataEmail = [
                                             'domainName' => $domain['name'],
                                             'projectName' => $project['name'] ?? '',
                                             'clientEmail' => $clientEmail,
                                             'clientName' => $clientNameExploded[0] ?? '',
-                                            //'templateId'  => 'd-957fe3c5ecc6402dbd74e707b3d37a9b',
                                             'templateId' => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
                                             'bodyEmail' => $data,
                                             'checkout_id' => $checkout->id,
@@ -572,14 +569,12 @@ class BoletoService
                                                     "title" => $titleMessage,
                                                     "content" => $contentMessage,
                                                     "products" => $products,
-                                                    'sac_link' => "https://sac." . $domain->name,
                                                 ];
                                                 $dataEmail = [
                                                     'domainName' => $domain['name'],
                                                     'projectName' => $project['name'] ?? '',
                                                     'clientEmail' => $clientEmail,
                                                     'clientName' => $clientNameExploded[0] ?? '',
-                                                    //'templateId'  => 'd-59dab7e71d4045e294cb6a14577da236',
                                                     'templateId' => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
                                                     'bodyEmail' => $data,
                                                     'checkout_id' => $checkout->id,
@@ -748,14 +743,12 @@ class BoletoService
                                                 "title" => $titleMessage,
                                                 "content" => $contentMessage,
                                                 "products" => $products,
-                                                'sac_link' => "https://sac." . $domain->name,
                                             ];
                                             $dataEmail = [
                                                 'domainName' => $domain['name'],
                                                 'projectName' => $project['name'] ?? '',
                                                 'clientEmail' => $clientEmail,
                                                 'clientName' => $clientNameExploded[0] ?? '',
-                                                //'templateId'  => 'd-690a6140f72643c1af280b079d5e84c5',
                                                 'templateId' => 'd-792f7ecb932e40e09403149653e013e1',
                                                 'bodyEmail' => $data,
                                                 'checkout_id' => $checkout->id,
@@ -866,7 +859,7 @@ class BoletoService
                     $bankSlipCompensationDate = $bankSlipCompensationDate->nextWeekday();
                 }
                 $dueDate = $bankSlipCompensationDate->toDateString();
-                
+
                 if ($dueDate >= $todayDate) continue;
 
                 $boleto->update(
