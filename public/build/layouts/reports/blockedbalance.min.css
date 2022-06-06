@@ -30,7 +30,7 @@
 
 @media( min-width: 1227px ) {
     .container { max-width: 1227px; }
-    .page-header { padding-right: 48px; }
+    .page-header { padding-right: 30px; padding-left: 15px; }
     .page-header.inner-header { padding-left: 0; padding-right: 0; }
     .header-reports  { padding-left: 0; }
 }
