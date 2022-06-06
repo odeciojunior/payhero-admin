@@ -109,7 +109,7 @@ class CheckoutService
         if (!empty($affiliateIds) && count($affiliateIds) > 0) {
             $abandonedCarts->whereIn('affiliate_id', $affiliateIds);
         }
-
+\Log::info(str_replace_array('?',$abandonedCarts->getBindings(),$abandonedCarts->toSql()));
         return $abandonedCarts->orderBy('id', 'DESC')->paginate(10);
     }
 

@@ -40,7 +40,7 @@ class SaleContestationFactory extends Factory
             'is_contested'=>0,
             'file_user_completed'=>0,
             'expiration_date'=>Carbon::now()->addDays(10)->format('Y-m-d'),
-            'status'=>rand(0,2)+1,
+            'status'=>mt_rand(1,2),
         ];
     }
 

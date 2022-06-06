@@ -122,7 +122,7 @@ class SalesRecoveryService
 
         } else {
             $userProjects = $userProjectsModel->where([
-                ['user_id', auth()->user()->account_owner_id],
+                ['user_id', auth()->user()->getAccountOwnerId()],
                 [
                     'type_enum',
                     $userProjectsModel->present()

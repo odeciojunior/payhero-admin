@@ -50,11 +50,11 @@ class FoxUtilsFakeService
         return Arr::random($flags);
     }
     
-    public static function getRandomStatus($paymentMethod){
+    public static function getRandomSaleStatus($paymentMethod){
         
-        $status = [Sale::STATUS_PENDING, Sale::STATUS_APPROVED];//Sale::STATUS_CANCELED
+        $status = [Sale::STATUS_PENDING, Sale::STATUS_APPROVED];
         if($paymentMethod == Sale::CREDIT_CARD_PAYMENT){
-            $status = [Sale::STATUS_APPROVED];//,Sale::STATUS_CANCELED_ANTIFRAUD, Sale::STATUS_IN_REVIEW,sale::STATUS_REFUSED
+            $status = [Sale::STATUS_APPROVED,Sale::STATUS_CANCELED_ANTIFRAUD,sale::STATUS_REFUSED];
         }
         return Arr::random($status);
     }

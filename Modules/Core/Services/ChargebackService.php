@@ -27,7 +27,7 @@ class ChargebackService
                 'sale.contestations',
                 'company',
             ]
-        )->where('user_id', $user->account_owner_id);
+        )->where('user_id', $user->getAccountOwnerId());
 
         if(request()->has('from_contestation') || request('date_type') == 'expiration_date') {
 

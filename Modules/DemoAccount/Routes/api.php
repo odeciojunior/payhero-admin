@@ -25,8 +25,8 @@ Route::group([
     });
 
     //ChekoutEditor
-    Route::group([],function(){        
-        Route::get('/checkouteditor/{id}', 'CheckoutEditorApiDemoController@show');
+    Route::group([],function(){                
+        Route::get('/checkouteditor/{id}', 'CheckoutEditorApiDemoController@show');        
     });
 
     //Pixels
@@ -60,7 +60,8 @@ Route::group([
             'as'   => 'sales.resume',
             'uses' => 'SalesApiDemoController@resume',
         ]);
-        
+        Route::get('/sales/user-plans', 'SalesApiDemoController@getPlans');
+
         Route::get('/sales', 'SalesApiDemoController@index');
         Route::get('/sales/{id}', 'SalesApiDemoController@show');
     });
@@ -103,10 +104,12 @@ Route::group([
 
     //Chargebacks
     Route::group([],function(){
-        Route::get('/getcontestations', 'ContestationsApiDemoController@getContestations')->name('contestations.getchargebacks');
-        Route::get('/gettotalvalues', 'ContestationsApiDemoController@getTotalValues')->name('contestations.gettotalvalues');
-        Route::get('/get-contestation-files/{salecontestation}', 'ContestationsApiDemoController@getContestationFiles')
+        Route::get('/contestations/getcontestations', 'ContestationsApiDemoController@getContestations')->name('contestations.getchargebacks');
+        Route::get('/contestations/gettotalvalues', 'ContestationsApiDemoController@getTotalValues')->name('contestations.gettotalvalues');
+        Route::get('/contestations/get-contestation-files/{salecontestation}', 'ContestationsApiDemoController@getContestationFiles')
             ->name('contestations.getContestationFiles');
+        Route::get('/contestations/{contestation_id}/contestation', 'ContestationsApiDemoController@show')
+        ->name('contestations.show')->middleware('permission:contestations_manage');
     });
 
     //Checkout

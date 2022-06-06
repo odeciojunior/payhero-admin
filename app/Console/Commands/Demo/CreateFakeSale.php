@@ -41,14 +41,17 @@ class CreateFakeSale extends Command
      */
     public function handle()
     {
+        /* WARNING
+        APÓS ENTRAR EM PRODUÇÃO SÓ DEVE GERAR 1 POR VEZ
+        */
+        
         Config::set('database.default', 'demo');
 
         $this->company = Company::find(Company::DEMO_ID);
-        $attemps = 30;
-        $counter = 1;
-        
+                
+        $this->nextIsUpsell = mt_rand(1,10)==7;
         do{
-            $this->resetVars()
+            $this->resetVars()                
                 ->validateCheckoutLogs()                
                 ->preparePlans()        
                 ->prepareOrderBump()
@@ -63,8 +66,15 @@ class CreateFakeSale extends Command
                 ->executePayment()
                 ->setTransactions()
                 ->setTranking();
-            $counter++;
+            
+            $this->upsellPreviousSaleId = $this->sale->id;
 
-        }while($counter <= $attemps);
+            if($this->isUpsell){
+                $this->isUpsell = false;
+            }else{
+                $this->isUpsell = $this->nextIsUpsell;          
+            }
+
+        }while($this->isUpsell);
     }
 }

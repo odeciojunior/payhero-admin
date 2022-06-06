@@ -4,16 +4,16 @@ namespace App\Console\Commands\Demo;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
-use Modules\Core\Services\DemoAccount\DemoFakeDataService; 
+use Modules\Core\Services\DemoAccount\DemoFakeDataService;
 
-class CreateFakeContestation extends Command
+class CreateFakeTicket extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'demo:create-fake-contestation';
+    protected $signature = 'demo:create-fake-ticket';
 
     /**
      * The console command description.
@@ -41,8 +41,7 @@ class CreateFakeContestation extends Command
     {
         Config::set('database.default', 'demo');
 
-        $demo =  new DemoFakeDataService();        
-        $demo->createFakeContestation();
-        $demo->createChargeback();
+        $demo =  new DemoFakeDataService();
+        $demo->createFakeTicket();
     }
 }

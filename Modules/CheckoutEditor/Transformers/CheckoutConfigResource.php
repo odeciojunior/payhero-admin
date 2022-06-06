@@ -23,17 +23,13 @@ class CheckoutConfigResource extends JsonResource
             'address_document_status',
             'bank_document_status',
             'contract_document_status'
-        ])->where('user_id', auth()->user()->account_owner_id)
+        ])->where('user_id', auth()->user()->getAccountOwnerId())
             ->where('active_flag', true)
             ->get()
             ->map(function ($company) {
-                if($company->type === Company::PHYSICAL_PERSON) {
-                    $status = 'approved';
-                    // $company->bank_document_status === 3
-                    //     ? 'approved'
-                    //     : 'pending';
-                } else {
-                    //$company->bank_document_status === 3 && 
+                $status = 'approved';                    
+                if($company->type === Company::JURIDICAL_PERSON)
+                {                
                     $status = $company->address_document_status === 3 && $company->contract_document_status === 3
                         ? 'approved'
                         : 'pending';
