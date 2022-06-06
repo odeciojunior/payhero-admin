@@ -38,7 +38,7 @@
 /* ========= CONFIGURATIONS MULTIPLE SELECT 2 BOX ========= */
 .select2-dropdown--below{
     border: 1px solid #b3d4fc !important;;
-    border-top: none !important;
+    border-top: none !important;     
 }
 
 .select2-container--default .select2-selection--multiple{
