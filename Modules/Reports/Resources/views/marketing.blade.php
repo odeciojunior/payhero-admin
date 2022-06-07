@@ -80,15 +80,15 @@
 
                                 <h6>Selecione quais:</h6>
                                 <div class="d-flex">
-                                    <div class=""><input type="checkbox"><label for="">Vendas</label></div>
-                                    <div class=""><input type="checkbox"><label for="">Financeiro</label></div>
-                                    <div class=""><input type="checkbox"><label for="">Marketing</label></div>
+                                    <div class="align-middle-input"><input type="checkbox"><label for="">Vendas</label></div>
+                                    <div class="align-middle-input"><input type="checkbox"><label for="">Financeiro</label></div>
+                                    <div class="align-middle-input"><input type="checkbox"><label for="">Marketing</label></div>
                                 </div>
 
                                 <h6>Escolha o formato que irá receber</h6>
                                 <div class="d-flex">
-                                    <div><input type="radio" name="format" value="csv"><label for="">.csv</label></div>
-                                    <div><input type="radio" name="format" value="xls"><label for="">.xls</label></div>
+                                    <div class="align-middle-input"><input type="radio" name="format" value="csv"><label for="">.csv</label></div>
+                                    <div class="align-middle-input"><input type="radio" name="format" value="xls"><label for="">.xls</label></div>
                                 </div>
 
                                 <div class="d-flex modal-buttons">

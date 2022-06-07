@@ -190,6 +190,9 @@ h4.number{
     font-weight: 400;
     font-size: 16px;
     padding: 0 15px 0 5px;
+    margin: 0;
+    line-height: 19px;
+    height: 21px;
 }
 
 .modal-buttons {
@@ -2215,6 +2218,11 @@ h4.number{
 .btn-primary-1 {
     background-color: #2E85EC;
     color: #FFF;
+}
+
+.align-middle-input {
+    display: flex;
+    align-items: center;
 }
 .page-holder {
     font-family: 'Muli', sans-serif;
