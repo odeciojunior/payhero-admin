@@ -1501,7 +1501,6 @@ function removeMoneyCurrency(string) {
 
 function selectCompanies() {
     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
-    $('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
         if (sessionStorage.getItem('company_default') === parseSessionStorageCompanies[i].id)
             itemSelected = 'selected="selected"'
@@ -1523,6 +1522,7 @@ function selectCompanies() {
             $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
         }
     }
+    $('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     $('#company-select').addClass('d-sm-flex');
 }
 
