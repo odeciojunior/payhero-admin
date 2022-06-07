@@ -46,6 +46,9 @@ Route::group([
 
     //Products
     Route::group([],function(){
+        Route::post('/products/topselling', 'ProductsApiDemoController@getTopSellingProducts')
+        ->name('api.products.topselling');
+        
         Route::get('/products', 'ProductsApiDemoController@index');
         Route::get('/products/{id}', 'ProductsApiDemoController@show');
         Route::get('/products/{id}/edit', 'ProductsApiDemoController@edit');

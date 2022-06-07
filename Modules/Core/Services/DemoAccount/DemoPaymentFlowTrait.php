@@ -10,6 +10,7 @@ use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\CustomerCard;
 use Modules\Core\Entities\Delivery;
 use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\OrderBumpRule;
 use Modules\Core\Entities\PixCharge;
 use Modules\Core\Entities\Plan;
@@ -411,12 +412,27 @@ trait DemoPaymentFlowTrait
         return $this;
     }
 
+    public function getUserInvitation()
+    {
+        $withInvite = true;// $this->keepGoing(6);
+        $userId = User::DEMO_ID;
+
+        if($withInvite){
+            $invite = Invitation::select('id')->where('invite', $userId)
+            ->where('status', Invitation::STATUS_ACTIVE)->inRandomOrder()->first();
+            if(!empty($invite)){
+                $userId = $invite->id;                
+            }
+        }
+        return $userId;
+    }
+
     public function setSale()
     {        
         $this->sale = Sale::factory()->create(
             [
                 'progressive_discount' => $this->progressiveDiscount,
-                'owner_id' => User::DEMO_ID,
+                'owner_id' => $this->getUserInvitation(),
                 'customer_id' => $this->customer->id,
                 'project_id' => $this->project ? $this->project->id : null,
                 'shipping_id' => $this->shipping->id,
