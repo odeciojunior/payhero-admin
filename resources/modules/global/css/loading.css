@@ -238,16 +238,16 @@
     left: 0;
     z-index: 1101;
     text-align: center;
-    -webkit-animation: 2.1s infinite linear;
+    /* -webkit-animation: 2.1s infinite linear;
     animation: 2.1s infinite linear;
-    animation-delay: 0.5s;
+    animation-delay: 0.5s; */
 }
 
 .sirius-loading img {
     position: relative;
     top: 37%;
-    -webkit-animation: sirius-loading 2s infinite;
-    animation: sirius-loading 2s infinite;
+    /* -webkit-animation: sirius-loading 2s infinite;
+    animation: sirius-loading 2s infinite; */
 }
 
 @-webkit-keyframes sirius-loading {
