@@ -7,6 +7,7 @@ use LogicException;
 use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\PendingDebt;
@@ -21,6 +22,43 @@ use Modules\Core\Events\UpdateCompanyGetnetEvent;
  */
 class CompanyService
 {
+    public function haveAnyDocumentApproved()
+    {
+        $user = User::find(auth()->user()->account_owner_id);
+
+        $checkCompany =  Company::where('user_id', $user->id)
+        ->where(function ($query) {
+            $query->where('address_document_status', CompanyDocument::STATUS_APPROVED)->orWhere('contract_document_status', CompanyDocument::STATUS_APPROVED);
+        })->exists();
+
+        return $checkCompany;
+    }
+
+    public function haveAnyDocumentAnalyzing()
+    {
+        $user = User::find(auth()->user()->account_owner_id);
+
+        $checkCompany =  Company::where('user_id', $user->id)
+        ->where(function ($query) {
+            $query->where('address_document_status', CompanyDocument::STATUS_ANALYZING)->orWhere('contract_document_status', CompanyDocument::STATUS_ANALYZING);
+        })->exists();
+
+        return $checkCompany;
+    }
+
+    public function haveAnyDocumentRefused()
+    {
+        $user = User::find(auth()->user()->account_owner_id);
+
+        $checkCompany =  Company::where('user_id', $user->id)
+        ->where(function ($query) {
+            $query->where('address_document_status', CompanyDocument::STATUS_REFUSED)->orWhere('contract_document_status', CompanyDocument::STATUS_REFUSED);
+        })->exists();
+
+        return $checkCompany;
+    }
+
+
     public static function getSubsellerId(Company $company)
     {
         if (FoxUtils::isProduction()) {
@@ -180,16 +218,46 @@ class CompanyService
         $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
         foreach ($companies as $company) {
             if ($company->company_type == Company::JURIDICAL_PERSON){
-                //$company->bank_document_status == Company::DOCUMENT_STATUS_REFUSED &&
-                if( $company->address_document_status == Company::DOCUMENT_STATUS_REFUSED &&
-                    $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED){
+                if($company->address_document_status == Company::DOCUMENT_STATUS_REFUSED || $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED) {
                     return $company;
                 }
-            } else{
-                //if ($company->bank_document_status == Company::DOCUMENT_STATUS_REFUSED)
+            } else {
                 return $company;
             }
         }
+
+        return null;
+    }
+
+    public function companyDocumentPending()
+    {
+        $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+        foreach ($companies as $company) {
+            if ($company->company_type == Company::JURIDICAL_PERSON) {
+                if ($company->address_document_status == Company::DOCUMENT_STATUS_PENDING || $company->contract_document_status == Company::DOCUMENT_STATUS_PENDING) {
+                    return $company;
+                }
+            } else{
+                return $company;
+            }
+        }
+
+        return null;
+    }
+
+    public function companyDocumentAnalyzing()
+    {
+        $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+        foreach ($companies as $company) {
+            if ($company->company_type == Company::JURIDICAL_PERSON) {
+                if ($company->address_document_status == Company::DOCUMENT_STATUS_ANALYZING || $company->contract_document_status == Company::DOCUMENT_STATUS_ANALYZING) {
+                    return $company;
+                }
+            } else{
+                return $company;
+            }
+        }
+
         return null;
     }
 
@@ -198,18 +266,14 @@ class CompanyService
         $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
         foreach ($companies as $company) {
             if ($company->company_type == Company::JURIDICAL_PERSON) {
-                if (
-                    //$company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED ||
-                    $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED ||
-                    $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED
-                ) {
+                if ($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED && $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED) {
                     return $company;
                 }
             } else{
-                //if ($company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED)
                 return $company;
             }
         }
+
         return null;
     }
 
@@ -340,7 +404,7 @@ class CompanyService
         $company = Company::find($companyId);
         if (!empty($company)) {
             if($company->company_type == Company::JURIDICAL_PERSON){
-                return 
+                return
                     //$company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED &&
                     $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED &&
                     $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED;
@@ -386,19 +450,30 @@ class CompanyService
     {
         $blockedBalance = $gatewayService->getBlockedBalance();
 
-        if($blockedBalance <= $availableBalance) {
-            $availableBalance -= $blockedBalance;
-            return;
-        }
+        if($availableBalance > 0) {
+            if($blockedBalance <= $availableBalance) {
+                $availableBalance -= $blockedBalance;
+                return;
+            }
 
-        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
-            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
-            $availableBalance = 0;
-            return;
-        }
+            if($blockedBalance <= ($availableBalance + $pendingBalance)) {
+                $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
+                $availableBalance = 0;
+                return;
+            }
 
-        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $pendingBalance = 0;
+            $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
+            $pendingBalance = 0;
+        }
+        else {
+            if($blockedBalance <= $pendingBalance) {
+                $pendingBalance -= $blockedBalance;
+            }
+            if($blockedBalance > $pendingBalance) {
+                $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
+                $pendingBalance = 0;
+            }
+        }
     }
 
 }

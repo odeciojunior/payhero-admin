@@ -60,7 +60,7 @@ class SaleService
                 $userCompanies = [];
                 $companies = explode(',', $filters["company"]);
 
-                foreach($companies as $company){
+                foreach ($companies as $company) {
                     array_push($userCompanies, current(Hashids::decode($company)));
                 }
             }
@@ -94,10 +94,10 @@ class SaleService
             }
 
             if (!empty($filters["project"])) {
-                $projectIds =[];
+                $projectIds = [];
                 $projects = explode(',', $filters["project"]);
 
-                foreach($projects as $project){
+                foreach ($projects as $project) {
                     array_push($projectIds, current(Hashids::decode($project)));
                 }
 
@@ -230,7 +230,7 @@ class SaleService
                 $planIds = [];
                 $plans = explode(',', $filters["plan"]);
 
-                foreach($plans as $plan){
+                foreach ($plans as $plan) {
                     array_push($planIds, current(Hashids::decode($plan)));
                 }
                 // $planId = current(Hashids::decode($filters["plan"]));
@@ -250,7 +250,7 @@ class SaleService
                 $status = in_array(7, $status) ? array_merge($status, [22]) : $status;
             }
 
-            if(!empty($status)) {
+            if (!empty($status)) {
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($status) {
@@ -391,12 +391,12 @@ class SaleService
         $total -= $sale->automatic_discount;
 
         //valor do produtor
-        $value = $userTransaction->value??0;
+        $value = $userTransaction->value ?? 0;
         $cashbackValue = $sale->cashback->value ?? 0;
         $progressiveDiscount = $sale->progressive_discount ?? 0;
         $total -= $progressiveDiscount;
 
-        $comission = 'R$ ' . number_format($value/100, 2, ',', '.');
+        $comission = 'R$ ' . number_format($value / 100, 2, ',', '.');
 
         //valor do afiliado
         $affiliateComission = '';
@@ -564,7 +564,7 @@ class SaleService
 
     public function checkPendingDebt($sale, $company, $transactionRefundAmount)
     {
-        if(!in_array($sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])) {
+        if (!in_array($sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])) {
             return;
         }
 
@@ -615,10 +615,10 @@ class SaleService
         }
     }
 
-    public function getSaleTax($sale,$cashbackValue)
+    public function getSaleTax($sale, $cashbackValue)
     {
-        $foxValue = $sale->transactions->whereNull('company_id')->first()->value??0;
-        $inviteValue = $sale->transactions->whereNotNull('company_id')->where('type',3)->first()->value??0;
+        $foxValue = $sale->transactions->whereNull('company_id')->first()->value ?? 0;
+        $inviteValue = $sale->transactions->whereNotNull('company_id')->where('type', 3)->first()->value ?? 0;
 
         $saleTax = $foxValue + $cashbackValue + $inviteValue;
 
@@ -633,9 +633,9 @@ class SaleService
         return $saleTax;
     }
 
-    public function getSaleTaxRefund($sale,$cashbackValue)
+    public function getSaleTaxRefund($sale, $cashbackValue)
     {
-        $saleTax = $this->getSaleTax($sale,$cashbackValue);
+        $saleTax = $this->getSaleTax($sale, $cashbackValue);
 
         if (!empty(foxutils()->onlyNumbers($sale->installment_tax_value))) {
             $saleTax += foxutils()->onlyNumbers($sale->installment_tax_value);
@@ -644,7 +644,8 @@ class SaleService
         return $saleTax;
     }
 
-    public function getSaleTotalValue($sale){
+    public function getSaleTotalValue($sale)
+    {
         $total = foxutils()->onlyNumbers($sale->sub_total);
 
         if (!empty(foxutils()->onlyNumbers($sale->shipment_value))) {
@@ -666,7 +667,7 @@ class SaleService
         $safe2payBalance = 0;
         foreach ($sale->transactions as $transaction) {
 
-            if(empty($transaction->company_id)) {
+            if (empty($transaction->company_id)) {
                 $transaction->update([
                     'status_enum' => Transaction::STATUS_BILLET_REFUNDED,
                     'status' => 'billet_refunded',
@@ -676,7 +677,7 @@ class SaleService
 
             $safe2payBalance = $transaction->company->safe2pay_balance;
 
-            if($transaction->status_enum == Transaction::STATUS_PAID) {
+            if ($transaction->status_enum == Transaction::STATUS_PAID) {
 
                 Transfer::create(
                     [
@@ -690,16 +691,16 @@ class SaleService
                     ]
                 );
 
-                $safe2payBalance+= $transaction->value;
+                $safe2payBalance += $transaction->value;
                 $transaction->company->update([
-                    'safe2pay_balance' =>  $safe2payBalance
+                    'safe2pay_balance' => $safe2payBalance
                 ]);
             }
 
             $refundValue = $transaction->value;
 
             if ($transaction->type == Transaction::TYPE_PRODUCER) {
-                $refundValue = (int) foxutils()->onlyNumbers($sale->total_paid_value);
+                $refundValue = (int)foxutils()->onlyNumbers($sale->total_paid_value);
             }
 
             Transfer::create([
@@ -735,8 +736,8 @@ class SaleService
         ]);
 
         $transactionUser = Transaction::where('sale_id', $sale->id)
-                                        ->where('type', Transaction::TYPE_PRODUCER)
-                                        ->first();
+            ->where('type', Transaction::TYPE_PRODUCER)
+            ->first();
 
         Transfer::create([
             'transaction_id' => $transactionUser->id,
@@ -764,9 +765,9 @@ class SaleService
         $filters['invite'] = 1;
         $transactions = $this->getSalesBlockedBalance($filters);
         $transactionStatus = implode(',',
-            [                
+            [
                 Transaction::STATUS_TRANSFERRED,
-                Transaction::STATUS_PAID                
+                Transaction::STATUS_PAID
             ]
         );
 
@@ -803,7 +804,14 @@ class SaleService
         try {
             $customerModel = new Customer();
             $transactionModel = new Transaction();
-            
+
+            $blockReasonQuery = function ($blocked) use ($filters) {
+                $blocked->where('status', BlockReasonSale::STATUS_BLOCKED);
+                if (!empty($filters['reason'])) {
+                    $blocked->where('blocked_reason_id', intval($filters['reason']));
+                }
+            };
+
             $transactions = $transactionModel->with(
                 [
                     'sale.project',
@@ -814,19 +822,12 @@ class SaleService
                     'sale.affiliate' => function ($funtionTrash) {
                         $funtionTrash->withTrashed()->with('user');
                     },
-                    'blockReasonSale' => function ($blocked) {
-                        $blocked->where('status', BlockReasonSale::STATUS_BLOCKED);
-                    },
+                    'blockReasonSale' => $blockReasonQuery,
                 ]
             )
-                ->where('user_id', auth()->user()->account_owner_id)                
+                ->where('user_id', auth()->user()->account_owner_id)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereHas(
-                    'blockReasonSale',
-                    function ($blocked){
-                        $blocked->where('status', BlockReasonSale::STATUS_BLOCKED);
-                    }
-                );
+                ->whereHas('blockReasonSale', $blockReasonQuery);
 
             if (empty($filters["invite"])) {
                 $transactions->whereNull('invitation_id');
@@ -869,7 +870,6 @@ class SaleService
                 $transactions->where('sales.payment_method', $filters["payment_method"]);
             }
 
-            
             if (!empty($filters["plan"])) {
                 $planId = current(Hashids::decode($filters["plan"]));
                 $transactions->whereHas(
@@ -887,10 +887,10 @@ class SaleService
                 'sales.' . $filters["date_type"],
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
             )
-            //->whereIn('sales.status', $status)
-            ->selectRaw('transactions.*, sales.start_date')
-            ->orderByDesc('sales.start_date');
-           
+                //->whereIn('sales.status', $status)
+                ->selectRaw('transactions.*, sales.start_date')
+                ->orderByDesc('sales.start_date');
+
             return $transactions;
 
         } catch (Exception $e) {
@@ -957,57 +957,56 @@ class SaleService
             }
 
             $transactions->whereNull('withdrawal_id');
-            if(!empty($filters['acquirer']))
-            {
+            if (!empty($filters['acquirer'])) {
                 $gatewayIds = $this->getGatewayIdsByFilter($filters['acquirer']);
-                if($filters['acquirer']<> 'Cielo'){
+                if ($filters['acquirer'] <> 'Cielo') {
                     $transactions->whereIn('transactions.gateway_id', $gatewayIds);
                 }
 
-                switch($filters['acquirer']){
+                switch ($filters['acquirer']) {
                     case 'Asaas';
                         $transactions->where('transactions.created_at', '>', '2021-09-20');
-                    break;
+                        break;
                     case 'Getnet':
                     case 'Gerencianet':
                         $transactions->where('is_waiting_withdrawal', 0);
                         break;
                     case 'Cielo':
-                        if(auth()->user()->show_old_finances){
-                            $transactions->where(function($query) use($gatewayIds) {
+                        if (auth()->user()->show_old_finances) {
+                            $transactions->where(function ($query) use ($gatewayIds) {
                                 $query->whereIn('transactions.gateway_id', $gatewayIds)
-                                ->orWhere(function($query) {
-                                    $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
-                                });
+                                    ->orWhere(function ($query) {
+                                        $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
+                                    });
                             });
                         }
-                    break;
+                        break;
                 }
-            }else{
-                $transactions->where(function($qr){
-                    $qr->where(function($qr2){
+            } else {
+                $transactions->where(function ($qr) {
+                    $qr->where(function ($qr2) {
                         $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Asaas'))
-                        ->where('transactions.created_at', '>', '2021-09-20');
+                            ->where('transactions.created_at', '>', '2021-09-20');
                     })
-                    ->orWhere(function($qr2){
-                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
-                    })
-                    ->orWhere(function($qr2){
-                        $qr2->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Gerencianet'))
-                            ->where('is_waiting_withdrawal', 0);
-                    })
-                    ->orWhere(function($qr3){
-                        $qr3->where('is_waiting_withdrawal', 0)
-                        ->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Getnet'));
-                    })
-                    ->orWhere(function($qr2){
-                        if(auth()->user()->show_old_finances){
-                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
-                            ->orWhere(function($query) {
-                                $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
-                            });
-                        }
-                    });
+                        ->orWhere(function ($qr2) {
+                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
+                        })
+                        ->orWhere(function ($qr2) {
+                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Gerencianet'))
+                                ->where('is_waiting_withdrawal', 0);
+                        })
+                        ->orWhere(function ($qr3) {
+                            $qr3->where('is_waiting_withdrawal', 0)
+                                ->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Getnet'));
+                        })
+                        ->orWhere(function ($qr2) {
+                            if (auth()->user()->show_old_finances) {
+                                $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
+                                    ->orWhere(function ($query) {
+                                        $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
+                                    });
+                            }
+                        });
                 });
             }
 
@@ -1144,18 +1143,18 @@ class SaleService
     public function getCreditCardApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
     {
         return Sale::where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-                        ->whereIn('status',[
-                                Sale::STATUS_APPROVED,
-                                Sale::STATUS_CHARGEBACK,
-                                Sale::STATUS_REFUNDED,
-                                Sale::STATUS_IN_DISPUTE
-                        ])
-                        ->whereBetween('start_date',[$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59'])
-                        ->where(function ($query) use ($user) {
-                                $query->where('owner_id', $user->id)
-                                    ->orWhere('affiliate_id', $user->id);
-                        })
-                        ->count();
+            ->whereIn('status', [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_CHARGEBACK,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_IN_DISPUTE
+            ])
+            ->whereBetween('start_date', [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59'])
+            ->where(function ($query) use ($user) {
+                $query->where('owner_id', $user->id)
+                    ->orWhere('affiliate_id', $user->id);
+            })
+            ->count();
     }
 
     public function returnBlacklistBySale(Sale $sale): array
@@ -1248,7 +1247,7 @@ class SaleService
             ->where('sale_id', '=', $transaction->sale_id)
             ->first();
 
-        $arr = explode(' ',trim($saleInfo->customer_name));
+        $arr = explode(' ', trim($saleInfo->customer_name));
         $saleInfo->firstname = $arr[0];
 
         $checkoutConfigs = DB::table('checkout_configs')
@@ -1264,6 +1263,6 @@ class SaleService
 
         $refundDate = $transaction->sale->saleLogs()->whereIn('status_enum', [Sale::STATUS_REFUNDED, Sale::STATUS_BILLET_REFUNDED])->first()->created_at;
 
-        return PDF::loadView('sales::refund_receipt', compact('company', 'transaction', 'saleInfo', 'checkoutConfigs','productsPlansSales', 'refundDate'));
+        return PDF::loadView('sales::refund_receipt', compact('company', 'transaction', 'saleInfo', 'checkoutConfigs', 'productsPlansSales', 'refundDate'));
     }
 }

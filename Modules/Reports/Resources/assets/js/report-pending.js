@@ -262,10 +262,10 @@ $(document).ready(function () {
                     if (hasSale) {
                         $("#select-statement-div").show();
                     }
-
-                    getProjects();
-                    getAcquirer();
                 }
+
+                getProjects();
+                getAcquirer();
             }
         });
     }

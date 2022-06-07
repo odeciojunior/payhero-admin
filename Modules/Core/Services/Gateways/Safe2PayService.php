@@ -30,7 +30,7 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 class Safe2PayService implements Statement
 {
     public Company $company;
-    public CompanyBankAccount $companyBankAccount;
+    public $companyBankAccount;
     public $gatewayIds = [];
     public $apiKey;
     public $companyId;
@@ -49,7 +49,8 @@ class Safe2PayService implements Statement
         return $this;
     }
 
-    public function setBankAccount(CompanyBankAccount $companyBankAccount){
+    public function setBankAccount(CompanyBankAccount $companyBankAccount)
+    {
         $this->companyBankAccount = $companyBankAccount;
     }
 
@@ -339,25 +340,6 @@ class Safe2PayService implements Statement
             'pending_debt_balance' => 0,
             'id' => 'BeYEwR3AdgdKykA'
         ];
-    }
-
-    public function applyBlockedBalance(&$availableBalance, &$pendingBalance, &$blockedBalance = null)
-    {
-        $blockedBalance = $this->getBlockedBalance();
-
-        if($blockedBalance <= $availableBalance) {
-            $availableBalance -= $blockedBalance;
-            return;
-        }
-
-        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
-            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
-            $availableBalance = 0;
-            return;
-        }
-
-        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $pendingBalance = 0;
     }
 
     public function getGatewayAvailable()

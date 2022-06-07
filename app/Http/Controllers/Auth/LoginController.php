@@ -209,6 +209,8 @@ class LoginController extends Controller
                             $redirect= $route['0'].'s/'.$route['1'];
                         }
                     }
+
+                    $redirect = $redirect === 'attendance' ? 'customer-service' : $redirect;
                     return response()->redirectTo("/{$redirect}");
                 }
             }

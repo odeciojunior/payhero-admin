@@ -99,9 +99,6 @@ class ProcessGatewayPostbacksCommand extends Command
 
             foreach ($postbacks as $postback)
             {
-                // ProcessPostbacks::dispatch($url, 'POST', ['postback_id' => hashids_encode($postback['id'])])
-                // ->onConnection('redis-horizon-long-running')
-                // ->onQueue('long');
                 $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback['id'])]);
             }
 

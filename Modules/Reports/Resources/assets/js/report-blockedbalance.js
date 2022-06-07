@@ -38,7 +38,6 @@ function atualizar(link = null) {
                 4: 'danger',
                 3: 'danger',
                 2: 'pendente',
-                20: 'antifraude',
                 12: 'success',
                 20: 'antifraude',
                 22: 'danger',
@@ -123,6 +122,7 @@ function getFilters(urlParams = false) {
         'date_type': $("#date_type").val(),
         'date_range': $("#date_range").val(),
         'transaction': $("#transaction").val().replace('#', ''),
+        'reason': $('#reason').val(),
         'plan': $('#plan').val(),
     };
 
@@ -260,6 +260,28 @@ $(document).ready(function () {
 
     // FIM - COMPORTAMENTOS DA JANELA
 
+    getBlockReasons();
+
+    function getBlockReasons() {
+        $.ajax({
+            url: '/api/reports/block-reasons',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+            },
+            error: resp => {
+                errorAjaxResponse(response);
+            },
+            success: resp => {
+                for(const item of resp) {
+                    const option = `<option value="${item.id}" data-toggle="tooltip" title="${item.reason}">
+                                        ${item.reason}
+                                    </option>`;
+                    $('#reason').append(option)
+                }
+            }
+        })
+    }
+
     getProjects();
 
     // Obtem o os campos dos filtros
@@ -307,118 +329,6 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
             }
         });
-    }
-
-    // Obtem lista de vendas
-    atualizar = function (link = null) {
-
-        currentPage = link;
-        let updateResume = true;
-        loadOnTable('#dados_tabela', '#tabela_vendas');
-
-        if (link == null) {
-            link = '/api/reports/blockedbalance?' + getFilters(true).substr(1);
-        } else {
-            link = '/api/reports/blockedbalance' + link + getFilters(true);
-            updateResume = false;
-        }
-
-        $.ajax({
-            method: "GET",
-            url: link,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                $('#dados_tabela').html('');
-                $('#tabela_vendas').addClass('table-striped');
-
-                let statusArray = {
-                    1: 'success',
-                    6: 'primary',
-                    7: 'danger',
-                    8: 'warning',
-                    4: 'danger',
-                    3: 'danger',
-                    2: 'pendente',
-                    20: 'antifraude',
-                    12: 'success',
-                    20: 'antifraude',
-                    22: 'danger',
-                    23: 'warning',
-                    24: 'antifraude',
-                };
-
-                if (!isEmpty(response.data)) {
-                    $.each(response.data, function (index, value) {
-                        let start_date='';
-                        if (value.start_date) {
-                            start_date=value.start_date.split(/\s/g);//data inicial
-                            start_date= "<strong class='bold-mobile'>"+
-                                        start_date[0]
-                                    +" </strong> <br> <small class='gray font-size-12'>"+
-                                        start_date[1]
-                                    +" </small>";
-                        }
-                        let end_date='';
-                        if (value.end_date) {
-                            end_date=value.end_date.split(/\s/g);//data final
-                            end_date= "<strong class='bold-mobile'>"+
-                                        end_date[0]
-                                    +" </strong> <br> <small class='gray font-size-12'>"+
-                                        end_date[1]
-                                    +" </small>";
-                        }
-                        dados = `  <tr>
-                                    <td class='display-sm-none display-m-none display-lg-none text-center text-left font-size-14'>
-                                        ${value.sale_code}
-                                        ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
-                                    </td>
-                                    <td class="text-left font-size-14">${value.project}</td>
-                                    <td class="text-left font-size-14">${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
-                                    <td class='display-sm-none display-m-none display-lg-none text-left font-size-14'>${value.client}</td>
-                                    <td>
-                                        <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
-                                    </td>
-                                    <td>
-                                       <div class="d-flex align-items-center">
-                                            <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
-                                               ${value.is_chargeback_recovered && value.status_translate === 'Aprovado' ? `
-                                                <img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
-                                                : ''}
-                                        </div>
-                                    </td>
-                                    <td class='display-sm-none text-left font-size-14 display-m-none'>${start_date}</td>
-                                    <td class='display-sm-none text-left font-size-14'>${end_date}</td>
-                                    <td style='white-space: nowrap' class="text-left font-size-14"><b>${value.total_paid}</b></td>
-                                    <td class="text-left font-size-14">
-                                        ${value.reason_blocked}
-                                    </td>
-                                </tr>`;
-
-                        $("#dados_tabela").append(dados);
-                    });
-
-                    $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                    $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
-                } else {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#dados_tabela").attr("img-empty") +
-                        "'>Nenhuma venda encontrada</td></tr>");
-                }
-                pagination(response, 'sales', atualizar);
-            }
-        });
-
-        if (updateResume) {
-            blockedResume();
-        }
-
     }
 
     $("#project").on('change', function () {

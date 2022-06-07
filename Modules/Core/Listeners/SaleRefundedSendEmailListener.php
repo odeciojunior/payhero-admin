@@ -35,21 +35,15 @@ class SaleRefundedSendEmailListener implements ShouldQueue
         try {
             $sale = $event->sale;
             if ($sale->api) {
-                return;
+                return false;
             }
 
             $emailService = new SendgridService();
             $saleService = new SaleService();
-            $projectModel = new Project();
-            $domainModel = new Domain();
-            $domainPresent = $domainModel->present();
+            $domainPresent = (new Domain())->present();
 
-            $domain = $domainModel->where('project_id', $sale->project_id)
+            $domain = Domain::where('project_id', $sale->project_id)
                 ->where('status', $domainPresent->getStatus('approved'))->first();
-
-            if (empty($domain)) {
-                return false;
-            }
 
             $sale->setRelation('customer', $event->sale->customer);
             $customer = $sale->customer;
@@ -59,7 +53,7 @@ class SaleRefundedSendEmailListener implements ShouldQueue
             }
 
             $saleCode = Hashids::connection('sale_id')->encode($sale->id);
-            $project = $projectModel->with('checkoutConfig')->find($sale->project_id);
+            $project = Project::with('checkoutConfig')->find($sale->project_id);
             $checkoutConfig = $project->checkoutConfig;
             $products = $saleService->getEmailProducts($sale->id);
 
@@ -96,10 +90,10 @@ class SaleRefundedSendEmailListener implements ShouldQueue
                 'discount' => $discount,
                 'installments_amount' => $sale->installments_amount,
                 'installments_value' => number_format($sale->installments_value, 2, ',', '.'),
-                "sac_link" => "https://sac." . $domain->name,
             ];
+            $fromEmail = 'noreply@' . ($domain ? $domain->name : 'cloudfox.net');
             $emailService->sendEmail(
-                'noreply@' . $domain['name'],
+                $fromEmail,
                 $project['name'],
                 $customer['email'],
                 $customer['name'],

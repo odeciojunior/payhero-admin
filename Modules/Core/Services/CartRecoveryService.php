@@ -107,7 +107,6 @@ class CartRecoveryService
                                     'templateId' => 'd-92937608e68b47b79dbd2641fd20fd0d',
                                     'bodyEmail' => $bodyEmail,
                                     'checkout_id' => $abandonedCart->id,
-                                    'sac_link' => "https://sac." . $domain,
                                 ];
 
                                 event(new SendEmailEvent($dataEmail));

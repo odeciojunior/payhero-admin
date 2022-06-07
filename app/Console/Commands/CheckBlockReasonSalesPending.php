@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 
 class CheckBlockReasonSalesPending extends Command
@@ -53,7 +54,8 @@ class CheckBlockReasonSalesPending extends Command
 
             $availableBalance = $safe2payService->getAvailableBalance();
             $pendingBalance = $safe2payService->getPendingBalance();
-            $safe2payService->applyBlockedBalance($availableBalance, $pendingBalance);
+
+            (new CompanyService)->applyBlockedBalance($safe2payService, $availableBalance, $pendingBalance);
 
             if(($availableBalance + $pendingBalance) >= $transaction->value) {
                 $pendingBlockSale->update(['status' => BlockReasonSale::STATUS_BLOCKED]);

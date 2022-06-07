@@ -38,6 +38,7 @@ class NotifyTicketMediationListener implements ShouldQueue
             $data = [
                 'ticket_id' => Hashids::encode($ticket->id),
                 'sale_id' => Hashids::connection('sale_id')->encode($ticket->sale_id),
+                'is_customer' => false,
             ];
 
             $ownerNameParts = explode(' ', $ticket->owner_name);
@@ -50,6 +51,7 @@ class NotifyTicketMediationListener implements ShouldQueue
                 $customerNameParts = explode(' ', $ticket->customer_name);
                 $customerName = $customerNameParts[0];
                 $data['name'] = $customerName;
+                $data['is_customer'] = true;
 
                 $sendGridService->sendEmail("noreply@cloudox.net", 'CloudFox', $ticket->customer_email, $ticket->customer_name, 'd-7fba4bb29818424e98ace972504d7f2f', $data);
             }

@@ -16,6 +16,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\CloudflareErrorsService;
 use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\DomainService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TaskService;
@@ -69,8 +70,6 @@ class DomainsApiController extends Controller
     public function store(DomainStoreRequest $request): JsonResponse
     {
         try {
-            $domainModel = new Domain();
-            $projectModel = new Project();
             $cloudFlareService = new CloudFlareService();
 
             DB::beginTransaction();
@@ -85,7 +84,7 @@ class DomainsApiController extends Controller
                 return response()->json(['message' => 'Projeto não encontrado.'], 400);
             }
 
-            $project = $projectModel->with(['domains'])->find($projectId);
+            $project = Project::with(['domains'])->find($projectId);
 
 
             if (!Gate::allows('edit', [$project])) {
@@ -110,7 +109,7 @@ class DomainsApiController extends Controller
             $requestData['name'] = 'http://' . $requestData['name'];
             $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
 
-            if ($domainModel->where('name', $requestData['name'])->count() > 0) {
+            if (Domain::where('name', $requestData['name'])->count() > 0) {
                 DB::rollBack();
 
                 return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
@@ -129,12 +128,12 @@ class DomainsApiController extends Controller
                 return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
             }
 
-            $domainCreated = $domainModel->create(
+            $domainCreated = Domain::create(
                 [
                     'project_id' => $projectId,
                     'name' => $requestData['name'],
                     'domain_ip' => $domainIp,
-                    'status' => $domainModel->present()
+                    'status' => (new Domain())->present()
                         ->getStatus('pending'),
                 ]
             );
@@ -208,6 +207,7 @@ class DomainsApiController extends Controller
 
             DB::rollBack();
 
+            report($e);
             $message = CloudflareErrorsService::formatErrorException($e);
 
             return response()->json(['message' => $message], 400);
@@ -315,8 +315,6 @@ class DomainsApiController extends Controller
     public function destroy(DomainDestroyRequest $request): JsonResponse
     {
         try {
-            $sendgridService = new SendgridService();
-            $cloudFlareService = new CloudFlareService();
 
             $requestData = $request->validated();
 
@@ -331,58 +329,18 @@ class DomainsApiController extends Controller
                 return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
             }
 
-            if (empty($domain->cloudflare_domain_id)) {
-                DomainRecord::where('domain_id', $domain->id)->delete();
-                $domainDeleted = $domain->delete();
+            $domainService = new DomainService();
+            $deleteDomain = $domainService->deleteDomain($domain);
 
-                if ($domainDeleted) {
-                    return response()->json(['message' => 'Domínio removido com sucesso!'], 200);
-                }
-                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
+            if($deleteDomain['success']) {
+                return response()->json(['message' => $deleteDomain['message']], 200);
             }
 
-            if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id) || empty($cloudFlareService->getZones($domain->name))) {
-                $sendgridService->deleteLinkBrand($domain->name);
-                $sendgridService->deleteZone($domain->name);
+            return response()->json(['message' => $deleteDomain['message']], 400);
 
-                DomainRecord::where('domain_id', $domain->id)->delete();
-                $domainDeleted = $domain->delete();
-
-                if (empty($domainDeleted)) {
-                    return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
-                }
-
-                if (!empty($domain->project->shopify_id)) {
-                    try {
-                        foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                            $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-
-                            $shopify->setThemeByRole('main');
-                            if (!empty($shopifyIntegration->theme_html)) {
-                                $shopify->setTemplateHtml(
-                                    $shopifyIntegration->theme_file,
-                                    $shopifyIntegration->theme_html
-                                );
-                            }
-                            if (!empty($shopifyIntegration->layout_theme_html)) {
-                                $shopify->setTemplateHtml(
-                                    'layout/theme.liquid',
-                                    $shopifyIntegration->layout_theme_html
-                                );
-                            }
-                        }
-                    } catch (Exception $e) {
-                        return response()->json(['message' => 'Domínio removido com sucesso!'], 200);
-                    }
-                }
-
-                return response()->json(['message' => 'Domínio removido com sucesso'], 200);
-            }
-
-            return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
         } catch (Exception $e) {
-            $message = CloudflareErrorsService::formatErrorException($e);
-            return response()->json(['message' => $message], 400);
+            report($e);
+            return response()->json(['message' => 'Server Error.'], 400);
         }
     }
 

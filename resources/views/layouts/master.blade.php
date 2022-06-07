@@ -29,6 +29,7 @@
         <!-- access token used for api ajax requests -->
         <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
         <meta name="current-url" content="{{ env('APP_URL') }}">
+        <meta name="user-id" content="{{ \Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id) }}">
         <!-- Favicon -->
         <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
@@ -42,7 +43,7 @@
                     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-TDM6SV5');</script>
+            })(window,document,'script','dataLayer','GTM-KDD46QX');</script>
         <!-- End Google Tag Manager -->
         <script src="{{ mix('build/layouts/master/master.min.js') }}"></script>
         <script>
@@ -76,8 +77,31 @@
                 </div>
             </div>
         </div>
+
         <input type="hidden" id="accountStatus">
+
+        @if(!auth()->user()->account_is_approved)
+            <div class="new-register-page-open-modal-container">
+                <div class="page-header container">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-lg-6">
+                            <div class="new-register-page-open-modal">
+                                <!--
+                                <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
+                                -->
+                                <span class="new-register-open-modal-btn">Clique aqui para começar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @yield('content')
+
+        @if(!auth()->user()->account_is_approved)
+            @include('utils.documents-pending');
+        @endif
 
         <!-- Plugins -->
         <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
@@ -134,6 +158,5 @@
         <!-- Announcekiit configuracoes -->
         {{-- resources/modules/global/js/global.js --}}
         <script async src="https://cdn.announcekit.app/widget-v2.js"></script>
-
     </body>
 </html>

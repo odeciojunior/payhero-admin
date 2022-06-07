@@ -10,6 +10,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 
 class AutomaticTicketCreation extends Command
@@ -74,7 +75,7 @@ class AutomaticTicketCreation extends Command
                         'sale_id' => $ticket->sale_id,
                         'blocked_reason_id' => BlockReasonSale::BLOCK_REASON_ID_TICKET,
                         'status' => $blockStatus,
-                        'observation' => 'Existe um chamado aberto para essa venda',
+                        'observation' => 'Chamado aberto',
                     ]);
 
                 } catch (\Exception $e) {
@@ -100,7 +101,7 @@ class AutomaticTicketCreation extends Command
         $safe2payService->setCompany($company);
         $availableBalance = $safe2payService->getAvailableBalance();
         $pendingBalance = $safe2payService->getPendingBalance();
-        $safe2payService->applyBlockedBalance($availableBalance, $pendingBalance);
+        (new CompanyService)->applyBlockedBalance($safe2payService, $availableBalance, $pendingBalance);
 
         return ($availableBalance + $pendingBalance) >= $sale->transaction_value;
     }

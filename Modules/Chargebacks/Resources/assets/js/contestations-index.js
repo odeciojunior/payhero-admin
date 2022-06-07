@@ -35,7 +35,37 @@ $(document).ready(function () {
         null: "badge-primary",
     };
 
-    $('#date_range').val(moment().subtract(29, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY')).dateRangePicker({format: 'DD/MM/YYYY'});
+    $('#date_range').val(moment().subtract(29, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY')).
+    dateRangePicker({
+        format: 'DD/MM/YYYY',
+        endDate: moment().add(30, 'days'),
+        customShortcuts: [
+            {
+                name: 'Hoje',
+                dates: () => [moment().startOf('day').toDate(), new Date()]
+            },
+            {
+                name: '7 dias',
+                dates: () => [moment().subtract(6, 'days').toDate(), new Date()]
+            },
+            {
+                name: '15 dias',
+                dates: () => [moment().subtract(14, 'days').toDate(), new Date()]
+            },
+            {
+                name: 'Último mês',
+                dates: () => [moment().subtract(30, 'days').toDate(), new Date()]
+            },
+            {
+                name: 'Próximo 30 dias',
+                dates: () => [moment().add(30, 'days').toDate(), new Date()]
+            },
+            {
+                name: 'Desde o início',
+                dates: () => [moment('2018-01-01').toDate(), new Date()]
+            }
+        ]
+    });
 
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
@@ -275,7 +305,10 @@ $(document).ready(function () {
                                     </td>`
                                 ;
                             }
-                            //<td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
+                            dados+=`
+                                    <td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
+                                `;
+                                
                             dados +=`
                                 <td class="font-size-12 bold line-overflow" style="white-space: normal;">
                                     ${value.reason}

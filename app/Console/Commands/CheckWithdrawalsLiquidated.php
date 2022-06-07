@@ -30,7 +30,6 @@ class CheckWithdrawalsLiquidated extends Command
                 ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
                 ->where('automatic_liquidation', true)
                 ->whereIn('status', [Withdrawal::STATUS_LIQUIDATING, Withdrawal::STATUS_PARTIALLY_LIQUIDATED])
-                ->where('id', 19791)
                 ->orderBy('id');
 
             $withdrawals->chunk(500, function ($withdrawals) {
