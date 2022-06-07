@@ -31,10 +31,10 @@ $(() => {
                 $("#request_date").html(response.data.request_date)
                 $("#reason").html(response.data.reason)
                 $("#status-file").prop("checked", response.data.is_file_user_completed)
-                
+
                 let createSelect = '<select name="type" class="form-control" id="type">';
                 response.data.files_types.forEach(fItem => {
-                    createSelect+=`<option value="${fItem.id}">${fItem.option}</option>`;                    
+                    createSelect+=`<option value="${fItem.id}">${fItem.option}</option>`;
                 });
                 createSelect += '</select>';
                 $('#type-select').html(createSelect);

@@ -6,7 +6,7 @@ var exportFormat = null;
 // Obtem lista de vendas
 //atualizar = function (link = null) {
 function atualizar(link = null) {
-    loadingOnScreen();
+    //loadingOnScreen();
 
     currentPage = link;
 
@@ -626,7 +626,7 @@ $(document).ready(function () {
                             })
                         );
                     });
-
+                    $("#projeto option:first").attr('selected','selected');
                     atualizar();
                 } else {
                     $("#export-excel > div >").hide();

@@ -2768,3 +2768,15 @@ tbody td{
         box-shadow: 0 0 0 5px rgba(16, 141, 236, 0.3), 0 0 0 15px rgba(16, 141, 236, 0);
     }
 }
+
+#company-navbar + .sirius-select-container, #company-navbar + .sirius-select-text{
+    border: 1px white solid;
+    background-position-x: 92.5%;
+    padding-right: 50px;
+}
+#company-navbar + .active {
+    border: 1px solid #88BFFF;
+}
+#company-navbar + .sirius-select-text{
+    color:#15034C; font-weight: 600
+}

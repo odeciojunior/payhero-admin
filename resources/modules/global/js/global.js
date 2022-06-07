@@ -37,13 +37,17 @@ $(document).ready(function () {
                         company_default = data.company_default;
                         company_default_name = data.company_default_name;
                         if (!isEmpty(companies)) {
-                            sessionStorage.removeItem('company_default')
+                            sessionStorage.removeItem('company_default');
                             sessionStorage.removeItem('company_default_name')
                             sessionStorage.removeItem('companies')
                             sessionStorage.setItem('companies', JSON.stringify(companies));
                             sessionStorage.setItem('company_default', company_default);
                             sessionStorage.setItem('company_default_name', company_default_name);
-                            window.location.href = window.location.href;
+                            // atualiza nome da empresa nos inputs disabilitados: /integrations; /invitations
+                            $('.company_name').val( sessionStorage.getItem('company_default_name') );
+                            // atualiza select de lojas na pagina em exibição
+                            updateProjectsOptions();
+                            loadingOnScreenRemove();
                         } else {
                             $(".content-error").show();
                             $('#company-select, .page-content').hide();
@@ -425,7 +429,7 @@ function loading(elementId, loaderClass) {
 function loadingOnScreen() {
     $('#loadingOnScreen').append(
         `<div class="sirius-loading">
-            <img style="height: 125px; width: 125px" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
+            <img style="height: 125px; width: 125px" src="/build/global/img/logos/2021/svg/icon-secundary.svg"
                  class="img-responsive"/>
         </div>`
     ).fadeIn()
@@ -1504,10 +1508,10 @@ function selectCompanies() {
         else
             itemSelected = ''
 
-        if (parseSessionStorageCompanies[i].active_flag == true)
-            itemDisabled = '';
-        else
+        if (parseSessionStorageCompanies[i].active_flag == false || parseSessionStorageCompanies[i].company_document_status != "approved")
             itemDisabled = 'disabled="disabled"';
+        else
+            itemDisabled = '';
 
         if (parseSessionStorageCompanies[i].company_type == '1') {
             $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
@@ -1546,7 +1550,7 @@ function getCompanies() {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
-            success: function success(data) {
+            success: function success(data) {console.log(data)
                 companies = data.companies;
                 company_default = data.company_default;
                 company_default_name = data.company_default_name;
@@ -1571,3 +1575,125 @@ function getCompanies() {
     }
 }
 
+function updateProjectsOptions(){
+    pathname = window.location.pathname;
+    // corrige lojas em Vendas
+    if(pathname == '/sales'){
+        $("#projeto").find('option').not(':first').remove();
+        $.getScript( "/build/layouts/sales/index.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+    // corrige lojas em Recuperação
+    else if(pathname == '/recovery'){
+        $("#project").find('option').not(':first').remove();
+        $.getScript( "/build/layouts/salesrecovery/index.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+    // corrige lojas em Rastreamentos
+    else if(pathname == '/trackings'){
+        $("#project-select").find('option').not(':first').remove();
+        $.getScript( "/build/layouts/trackings/index.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+    // corrige lojas em Contestações
+    else if(pathname == '/contestations'){
+        $("#project").find('option').not(':first').remove();
+        $("#project-select").next().next().empty();
+        $.getScript( "/build/layouts/chargebacks/contestations-index.min.js", function( data, textStatus, jqxhr ) {
+            atualizar();
+            getTotalValues();
+            getProjects();
+        });
+    }
+    // corrige lojas em Lojas
+    else if(pathname == '/projects'){
+        $("#data-table-projects").empty();
+        $.getScript( "/build/layouts/projects/index.min.js", function( data, textStatus, jqxhr ) {
+            index();
+        });
+    }
+
+    // corrige lojas em Produtos
+
+    // corrige lojas em Atendimento
+    else if(pathname == '/customer-service'){
+        $("#project-select").find('option').not(':first').remove();
+        $.getScript( "/build/layouts/attendance/index.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+
+    // corrige lojas em Finanças
+
+
+
+    // corrige lojas em Relatorios Vendas
+    else if(pathname == '/reports/sales'){
+        $("#select_projects").find('option').remove();
+        $.getScript( "/build/layouts/reports/index.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+    // corrige lojas em Relatorios Acessos
+    else if(pathname == '/reports/checkouts'){
+        $("#select_projects").find('option').remove();
+        $.getScript( "/build/layouts/reports/checkouts.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+    // corrige lojas em Relatorios Cupons
+    else if(pathname == '/reports/coupons'){
+        $("#projeto").find('option').not(':first').remove();
+        $.getScript( "/build/layouts/reports/coupons.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+    // corrige lojas em Relatorios Saldo Pendente
+    else if(pathname == '/reports/pending'){
+        $("#project").find('option').not(':first').remove();
+        $.getScript( "/build/layouts/reports/pending.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+    // corrige lojas em Relatorios Saldo Retido
+    else if(pathname == '/reports/blockedbalance'){
+        $("#project").find('option').not(':first').remove();
+        $.getScript( "/build/layouts/reports/blockedbalance.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+    // corrige lojas em Afiliados
+    else if(pathname == '/affiliates'){
+        $("#project-affiliate, #project-affiliate-request").find('option').not(':first').remove();
+        $.getScript( "/build/layouts/affiliates/projectaffiliates.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+
+    // corrige lojas em Apps
+    else if(pathname == '/apps'){
+        $.getScript( "/build/layouts/apps/index.min.js", function( data, textStatus, jqxhr ) {
+            getProjects();
+        });
+    }
+
+    // corrige lojas em Apps Hotzapp
+    else if(pathname == '/apps/hotzapp'){
+        $("#project_id").find('option').remove();
+        $.getScript( "/build/layouts/hotzapp/index.min.js", function( data, textStatus, jqxhr ) {
+            index();
+        });
+    }
+
+    // corrige lojas em Apps API Sirius
+    else if(pathname == '/integrations'){
+        $("#project_id").find('option').remove();
+        $.getScript( "/build/layouts/integrations/index.min.js", function( data, textStatus, jqxhr ) {
+            console.log(sessionStorage.getItem('company_default')+' ----------------------- ')
+            refreshIntegrations();
+        });
+    }
+}

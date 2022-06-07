@@ -198,7 +198,7 @@ class DashboardApiController extends Controller
                 'money_cashback' => $this->getCashbackReceivedValue(),
                 'benefits'       => $benefitService->getUserBenefits($user),
             ];
-            
+
         } catch (Exception $e) {
             report($e);
 
@@ -474,7 +474,7 @@ class DashboardApiController extends Controller
 
             $user = auth()->user();
 
-            if (!($user->id == $user->getAccountOrderId())) {
+            if (!($user->id == $user->account_owner_id)) {
                 return \response()->json([
                     'message' => 'Usuário não é o dono da conta'
                 ]);

@@ -315,6 +315,7 @@ $(() => {
 
         $("#cancel_button").on("click", function () {
             fillForm(checkout);
+            $('#company-navbar').val( $('#checkout_editor #companies').val() ).change();
             $("#save_changes").fadeOut("slow", "swing");
         });
 
