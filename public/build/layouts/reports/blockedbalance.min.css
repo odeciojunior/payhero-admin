@@ -233,9 +233,7 @@ h4.number{
     line-height: 44px;
     padding-bottom: 30px;
 }
-.box-select {
-    margin: 10px 0;
-}
+.box-select { margin: 10px 0; }
 
 .box-select input {
     margin-left: 0! important;
@@ -645,7 +643,6 @@ h4.number{
 .box-ico {
     width: 36px;
     height: 36px;
-    background: #F5F5FA;
     border-radius: 8px;
     text-align: center;
     margin-right: 10px;
