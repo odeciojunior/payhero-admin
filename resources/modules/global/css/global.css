@@ -2516,6 +2516,10 @@ tbody td{
     transition: all 0.5s ease 0s;
 }
 
+.new-register-transition-slower {
+    transition-delay: 1s;
+}
+
 .new-register-step-btn-container {
     display: flex;
     justify-content: space-between;

@@ -187,7 +187,7 @@ $(document).ready(function () {
 
         setNewRegisterStep(step.toString());
 
-        changeProgressBar(step);
+        changeProgressBar(step, 'prev');
 
         setStepButton(step);
 
@@ -209,7 +209,7 @@ $(document).ready(function () {
 
         $('#new-register-step-' + lastStep + '-container').removeClass('d-flex flex-column');
 
-        changeProgressBar(step);
+        changeProgressBar(step, 'next');
 
         setStepButton(step);
 
@@ -1088,27 +1088,36 @@ function getNewRegisterStep() {
     return value;
 }
 
-function changeProgressBar(step) {
+function changeProgressBar(step, action = 'next') {
     switch (parseInt(step)) {
         case 1:
-            $('#new-register-step-progress-bar-1').css('width', '50%');
-            $('#new-register-step-progress-bar-2').css('width', '0');
             $(".new-register-step[data-step*='1']").addClass('step-active');
+            $('#new-register-step-progress-bar-1').css('transition-delay', action !== 'next' ? '1.5s' : '');
+            $('#new-register-step-progress-bar-1').css('width', '50%');
+            $(".new-register-step[data-step*='2']").css('transition-delay', action !== 'next' ? '1s' : '');
             $(".new-register-step[data-step*='2']").removeClass('step-active');
+            $('#new-register-step-progress-bar-2').css('transition-delay', action !== 'next' ? '0.5s' : '');
+            $('#new-register-step-progress-bar-2').css('width', '0');
             break;
         case 2:
-            $('#new-register-step-progress-bar-1').css('width', '100%');
-            $('#new-register-step-progress-bar-2').css('width', '50%');
             $(".new-register-step[data-step*='1']").addClass('step-active');
+            $('#new-register-step-progress-bar-1').css('transition-delay', '');
+            $('#new-register-step-progress-bar-1').css('width', '100%');
+            $(".new-register-step[data-step*='2']").css('transition-delay', action === 'next' ? '0.5s' : '1.5s');
             $(".new-register-step[data-step*='2']").addClass('step-active');
+            $('#new-register-step-progress-bar-2').css('transition-delay', action === 'next' ? '1s' : '1s');
+            $('#new-register-step-progress-bar-2').css('width', '50%');
+            $(".new-register-step[data-step*='3']").css('transition-delay', action !== 'next' ? '0.5s' : '');
             $(".new-register-step[data-step*='3']").removeClass('step-active');
             break;
         case 3:
         case 4:
-            $('#new-register-step-progress-bar-1').css('width', '100%');
-            $('#new-register-step-progress-bar-2').css('width', '100%');
             $(".new-register-step[data-step*='1']").addClass('step-active');
+            $('#new-register-step-progress-bar-1').css('width', '100%');
             $(".new-register-step[data-step*='2']").addClass('step-active');
+            $('#new-register-step-progress-bar-2').css('transition-delay', action === 'next' ? '0.5s' : '1s');
+            $('#new-register-step-progress-bar-2').css('width', '100%');
+            $(".new-register-step[data-step*='3']").css('transition-delay', action === 'next' ? '1s' : '0.5s');
             $(".new-register-step[data-step*='3']").addClass('step-active');
             break;
     }
