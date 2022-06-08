@@ -108,19 +108,19 @@
 					<div class="col-12 box-items-finance">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card no-ske border blue mb-10 onPreLoad" id="sales-transactions"></div>
+                                <div class="finance-card fc no-ske border blue mb-10 onPreLoad" id="sales-transactions"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card no-ske border orange mb-10 onPreLoad" id="sales-average-ticket"></div>
+                                <div class="finance-card fc no-ske border orange mb-10 onPreLoad" id="sales-average-ticket"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card no-ske border green mb-10 onPreLoad" id="sales-comission"></div>
+                                <div class="finance-card fc no-ske border green mb-10 onPreLoad" id="sales-comission"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card no-ske border pink mb-10 onPreLoad" id="sales-number-chargeback"></div>
+                                <div class="finance-card fc no-ske border pink mb-10 onPreLoad" id="sales-number-chargeback"></div>
                             </div>
                         </div>
 					</div>

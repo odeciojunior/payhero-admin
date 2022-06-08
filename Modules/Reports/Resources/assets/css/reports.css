@@ -954,11 +954,19 @@ h4.number{
 }
 
 .finance-card { 
-    padding: 16px 16px 0 25px;
+    padding: 18px 18px 24px 18px;
     border-radius: 12px;
-    height: 100px;
+    height: 102px;
     display: flex;
     flex-direction: column;
+}
+
+@media(min-width: 1371px) {
+    .finance-card { width: 398px; }
+    .finance-card.fc { 
+        width: 292px; 
+        height: 100px;
+    }
 }
 
 .finance-card .title { 
@@ -1059,12 +1067,12 @@ h4.number{
 
 @media only screen and (min-width: 1220px) {
     .primary { width: 790px; }
-    .distribution { width: 284px;  }
+    .distribution { width: 344px;  }
     .commission.mkt { flex: 0 0 65.8%; }
 }
 
-@media only screen and (min-width: 1300px) {
-    .distribution { width: 347px;  }
+@media only screen and (min-width: 1341px) {
+    .distribution { width: 368px;  }
 }
 
 @media only screen and (min-width: 1370px) {
