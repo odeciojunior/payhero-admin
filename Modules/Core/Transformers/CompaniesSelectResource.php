@@ -4,6 +4,7 @@ namespace Modules\Core\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\CompanyBankAccount;
+use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
@@ -34,6 +35,15 @@ class CompaniesSelectResource extends JsonResource
             $companyIsApproved = true;
         }
 
+        $projects = CheckoutConfig::select('checkout_configs.project_id','projects.name', 'users_projects.order_priority as order_p')
+            ->join('projects','projects.id','=','checkout_configs.project_id')
+            ->join('users_projects', 'users_projects.project_id', '=', 'projects.id')
+            ->where('checkout_configs.company_id',$this->id)
+            ->orderBy('projects.status')
+            ->orderBy('order_p')
+            ->orderBy('projects.id', 'DESC')
+            ->get();
+
         return [
             'id' => Hashids::encode($this->id),
             'country' => $this->country,
@@ -46,7 +56,8 @@ class CompaniesSelectResource extends JsonResource
             'company_type' => $this->present()->getCompanyType($this->company_type),
             'user_address_document_status' => $userAddressDocumentStatus,
             'user_personal_document_status' => $userPersonalDocumentStatus,
-            'company_is_approved' => $companyIsApproved
+            'company_is_approved' => $companyIsApproved,
+            'projects' => $projects
         ];
     }
 }

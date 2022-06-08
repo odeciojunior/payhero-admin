@@ -4,59 +4,32 @@ $(document).ready(function () {
     $('#company-navbar').change(function () {
         let thisPage = new URL(window.location)
         caminho = thisPage.pathname ;
-        if( caminho.match( /\/projects\/[a-zA-Z0-9]*/i ) )
+        if( caminho.match( /\/projects\/[a-zA-Z0-9]*/i ) && !caminho.match( /\/projects\/create/i ) )
             return;
-        loadingOnScreen();
+        var company_id = $(this).val()
+        var company_name = $(this).find('option:selected').text()
         $.ajax({
             method: 'POST',
             url: '/api/core/company-default',
-            data:{company_id:$(this).val()},
+            data:{company_id:company_id},
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
-            success: function success(data1) {
-                $.ajax({
-                    method: "GET",
-                    url: `/api/core/usercompanies`,
-                    dataType: "json",
-                    headers: {
-                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                        'Accept': 'appliation/json',
-                    },
-                    error: function error(response) {
-                        loadingOnScreenRemove();
-                        errorAjaxResponse(response);
-                    },
-                    success: function success(data) {
-                        companies = data.companies;
-                        company_default = data.company_default;
-                        company_default_name = data.company_default_name;
-                        if (!isEmpty(companies)) {
-                            sessionStorage.removeItem('company_default');
-                            sessionStorage.removeItem('company_default_name')
-                            sessionStorage.removeItem('companies')
-                            sessionStorage.setItem('companies', JSON.stringify(companies));
-                            sessionStorage.setItem('company_default', company_default);
-                            sessionStorage.setItem('company_default_name', company_default_name);
-                            // atualiza nome da empresa nos inputs disabilitados: /integrations; /invitations
-                            $('.company_name').val( sessionStorage.getItem('company_default_name') );
-                            // atualiza select de lojas na pagina em exibição
-                            updateProjectsOptions();
-                            loadingOnScreenRemove();
-                        } else {
-                            $(".content-error").show();
-                            $('#company-select, .page-content').hide();
-                            loadingOnScreenRemove();
-                        }
-                    }
-                });
-
-
+            success: function success(data) {
+                sessionStorage.removeItem('company_default');
+                sessionStorage.removeItem('company_default_name')
+                sessionStorage.setItem('company_default', company_id);
+                sessionStorage.setItem('company_default_name', company_name);
+                $('.company_name').val( sessionStorage.getItem('company_default_name') );
+                if ( typeof updateAfterChangeCompany === "function" ) {
+                    updateAfterChangeCompany();
+                }else{
+                    updateProjectsOptions();
+                }
             },
         });
 
@@ -1501,7 +1474,6 @@ function removeMoneyCurrency(string) {
 
 function selectCompanies() {
     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
-    $('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
         if (sessionStorage.getItem('company_default') === parseSessionStorageCompanies[i].id)
             itemSelected = 'selected="selected"'
@@ -1523,6 +1495,7 @@ function selectCompanies() {
             $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
         }
     }
+    $('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     $('#company-select').addClass('d-sm-flex');
 }
 
@@ -1550,7 +1523,7 @@ function getCompanies() {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
-            success: function success(data) {console.log(data)
+            success: function success(data) {
                 companies = data.companies;
                 company_default = data.company_default;
                 company_default_name = data.company_default_name;
@@ -1577,15 +1550,8 @@ function getCompanies() {
 
 function updateProjectsOptions(){
     pathname = window.location.pathname;
-    // corrige lojas em Vendas
-    if(pathname == '/sales'){
-        $("#projeto").find('option').not(':first').remove();
-        $.getScript( "/build/layouts/sales/index.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
     // corrige lojas em Recuperação
-    else if(pathname == '/recovery'){
+    if(pathname == '/recovery'){
         $("#project").find('option').not(':first').remove();
         $.getScript( "/build/layouts/salesrecovery/index.min.js", function( data, textStatus, jqxhr ) {
             getProjects();
@@ -1608,28 +1574,13 @@ function updateProjectsOptions(){
             getProjects();
         });
     }
-    // corrige lojas em Lojas
-    else if(pathname == '/projects'){
-        $("#data-table-projects").empty();
-        $.getScript( "/build/layouts/projects/index.min.js", function( data, textStatus, jqxhr ) {
-            index();
-        });
-    }
-
-    // corrige lojas em Produtos
-
     // corrige lojas em Atendimento
     else if(pathname == '/customer-service'){
-        $("#project-select").find('option').not(':first').remove();
-        $.getScript( "/build/layouts/attendance/index.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
+        // $("#project-select").find('option').not(':first').remove();
+        // $.getScript( "/build/layouts/attendance/index.min.js", function( data, textStatus, jqxhr ) {
+        //     getProjects();
+        // });
     }
-
-    // corrige lojas em Finanças
-
-
-
     // corrige lojas em Relatorios Vendas
     else if(pathname == '/reports/sales'){
         $("#select_projects").find('option').remove();
@@ -1672,14 +1623,12 @@ function updateProjectsOptions(){
             getProjects();
         });
     }
-
     // corrige lojas em Apps
     else if(pathname == '/apps'){
         $.getScript( "/build/layouts/apps/index.min.js", function( data, textStatus, jqxhr ) {
             getProjects();
         });
     }
-
     // corrige lojas em Apps Hotzapp
     else if(pathname == '/apps/hotzapp'){
         $("#project_id").find('option').remove();
@@ -1687,7 +1636,6 @@ function updateProjectsOptions(){
             index();
         });
     }
-
     // corrige lojas em Apps API Sirius
     else if(pathname == '/integrations'){
         $("#project_id").find('option').remove();

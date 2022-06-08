@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Ticket;
@@ -25,7 +26,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class TicketsApiController extends Controller
 {
     public function index(Request $request)
-    {        
+    {
         try {
             $data = (object)$request->all();
             $userId = auth()->user()->getAccountOwnerId();
@@ -43,6 +44,7 @@ class TicketsApiController extends Controller
                     $query->where('type_enum', TicketMessage::TYPE_FROM_ADMIN);
                 }
             ])->join('sales', 'tickets.sale_id', '=', 'sales.id')
+                ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
                 ->join('customers', 'sales.customer_id', '=', 'customers.id');
 
             if ($data->project) {
@@ -109,9 +111,9 @@ class TicketsApiController extends Controller
 
             $tickets = $ticketsQuery
                 ->where('sales.owner_id', $userId)
-                ->orderByDesc('id')
+                ->where('checkout_configs.company_id', hashids_decode($data->company))
+                ->orderByDesc('tickets.id')
                 ->paginate(5);
-
             return TicketResource::collection($tickets);
         } catch (Exception $e) {
             report($e);
@@ -238,14 +240,14 @@ class TicketsApiController extends Controller
                                                      count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('mediation') . ' then 1 end) as mediationCount,
                                                      count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('closed') . ' then 1 end) as closedCount
                                             ')
-                ->whereHas('sale', function ($query) use ($userId, $data) {
-                    $query->where('owner_id', $userId);
-                    if (!empty($data['project'])) {
-                        $projectId = hashids_decode($data['project']);
-                        $query->where('project_id', $projectId);
-                    }
-                });
-
+                ->join('sales', 'tickets.sale_id','=','sales.id')
+                ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
+                ->where('sales.owner_id', $userId)
+                ->where('checkout_configs.company_id', hashids_decode($data['company_id']));
+                if (!empty($data['project'])) {
+                    $projectId = hashids_decode($data['project']);
+                    $ticket->where('sales.project_id', $projectId);
+                }
             $ticket = $ticket->first();
             $totalCount = $ticket->openCount + $ticket->mediationCount + $ticket->closedCount;
 
