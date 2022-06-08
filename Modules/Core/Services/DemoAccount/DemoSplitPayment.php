@@ -4,6 +4,7 @@ namespace Modules\Core\Services\DemoAccount;
 
 
 use Carbon\Carbon;
+use Exception;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Company;
@@ -86,12 +87,57 @@ class DemoSplitPayment
 
     private function checkCashback()
     { 
+        
         $this->cashbackData = [
-            'value' => 0,
-            'percentage' => 0,
+            'value' => $this->getCashbackValue(),
+            'percentage' => $this->getPercentage(),
         ];
 
         return $this;
+    }
+
+    public function getCashbackValue(): int
+    {
+        try {
+            if ($this->sale->payment_method == Sale::BOLETO_PAYMENT || $this->sale->installments_amount == 1) {
+                return 0;
+            }
+
+            if ($this->sale->payment_method == Sale::PIX_PAYMENT || $this->sale->installments_amount == 1) {
+                return 0;
+            }
+
+            $user = $this->sale->user;
+
+            if (empty($user)) {
+                report(new Exception('Usuário não encontrado no calculo do cashback'));
+                return 0;
+            }
+
+            $installmentsAmount = $this->sale->installments_amount - 1;
+
+            $cashbackPercentage = $installmentsAmount * $user->installment_cashback;
+
+            $saleValueWithoutTax = (FoxUtils::onlyNumbers($this->sale->total_paid_value) - FoxUtils::onlyNumbers($this->sale->interest_total_value));
+
+            $cashbackValue = (int)($saleValueWithoutTax / 100 * $cashbackPercentage);
+
+            return $cashbackValue;
+            
+        } catch (Exception $e) {
+            report($e);
+            return 0;
+        }
+    }
+
+    public function getPercentage()
+    {
+        try {
+            return ($this->sale->installments_amount - 1) * $this->sale->user->installment_cashback;
+        } catch (Exception $e) {
+            report($e);
+            return 0;
+        }
     }
 
     private function setCloudfoxValue()

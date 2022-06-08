@@ -123,11 +123,9 @@ class ProjectUpsellRuleApiController extends Controller
             $upsell = $projectUpsellModel->find($upsellId);
 
             return new ProjectsUpsellResource($upsell);
-        } else {
-            return response()->json([
-                                        'message' => 'Erro ao carregar dados do upsell',
-                                    ], 400);
         }
+
+        return response()->json(['message' => 'Erro ao carregar dados do upsell'], 400);        
     }
 
     /**
