@@ -31,6 +31,7 @@ class CoreController extends Controller
                 'sirius_user_id'    => $userIdDecode,
                 'is_active'         => 1
             ];
+
             $managerToSiriusLogin = ManagerToSiriusLogin::where($where)->firstOrFail();
 
             if (!empty($managerToSiriusLogin) && $managerToSiriusLogin->created_at->diffInMinutes() < 10){ //Só consegue logar caso o token tenha menos de 10min
@@ -44,6 +45,10 @@ class CoreController extends Controller
                         $activity->causer_id = $managerIdDecode;
                     }
                 )->log('Fez login na conta do usuário ' . $user->name);
+
+                if (!empty($managerToSiriusLogin)){
+                    $managerToSiriusLogin->update(['is_active' => 0]);
+                }
 
                 if (FoxUtils::isProduction()) {
                     Cookie::queue(
