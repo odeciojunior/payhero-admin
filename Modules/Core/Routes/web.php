@@ -9,6 +9,6 @@ Route::group(
     ],
     function() {
 
-        Route::get('/login/{manager_id}/$2y$10$D6GnObO6iqsHQPf/RnrLFeFBTgYCSMtz/oE5VoUxT6eUzbwpQTWh6/{user_id}/', 'CoreController@loginAsSomeUser');
+        Route::get('/login/{manager_id}/$2y$10$D6GnObO6iqsHQPf/RnrLFeFBTgYCSMtz/oE5VoUxT6eUzbwpQTWh6/{user_id}/{token}', 'CoreController@loginAsSomeUser');
     }
 );
