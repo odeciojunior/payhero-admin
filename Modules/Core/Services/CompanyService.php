@@ -216,61 +216,54 @@ class CompanyService
 
     public function documentStatus()
     {
+        $status = null;
+        $address_document_status = null;
+        $contract_document_status = null;
+        $link = null;
+
         $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
         if ($companies->count() == 0) {
-            return [
-                'status' => null,
-                'link' => '/companies'
-            ];
+            $status = null;
+            $address_document_status = null;
+            $contract_document_status = null;
+            $link = '/companies';
         } else {
             foreach ($companies as $company) {
                 if ($company->company_type == Company::JURIDICAL_PERSON) {
-                    if($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED && $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED) {
-                        return [
-                            'status' => 'approved',
-                            'address_document' => $company->address_document_status,
-                            'contract_document' => $company->contract_document_status,
-                            'link' => '/companies'
-                        ];
-                    }
-
                     if($company->address_document_status == Company::DOCUMENT_STATUS_PENDING || $company->contract_document_status == Company::DOCUMENT_STATUS_PENDING) {
-                        return [
-                            'status' => 'pending',
-                            'address_document' => $company->address_document_status,
-                            'contract_document' => $company->contract_document_status,
-                            'link' => '/companies/company-detail/'. Hashids::encode($company->id)
-                        ];
+                        $status = 'pending';
+                        $link = '/companies/company-detail/'. Hashids::encode($company->id);
                     }
 
                     if($company->address_document_status == Company::DOCUMENT_STATUS_ANALYZING || $company->contract_document_status == Company::DOCUMENT_STATUS_ANALYZING) {
-                        return [
-                            'status' => 'analyzing',
-                            'address_document' => $company->address_document_status,
-                            'contract_document' => $company->contract_document_status,
-                            'link' => '/companies/company-detail/'. Hashids::encode($company->id)
-                        ];
+                        $status = 'analyzing';
+                        $link = '/companies/company-detail/'. Hashids::encode($company->id);
                     }
 
                     if($company->address_document_status == Company::DOCUMENT_STATUS_REFUSED || $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED) {
-                        return [
-                            'status' => 'refused',
-                            'address_document' => $company->address_document_status,
-                            'contract_document' => $company->contract_document_status,
-                            'link' => '/companies/company-detail/'. Hashids::encode($company->id)
-                        ];
+                        $status = 'refused';
+                        $link = '/companies/company-detail/'. Hashids::encode($company->id);
                     }
+
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED && $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED) {
+                        $status = 'approved';
+                        $link = '/companies';
+                    }
+
+                    $address_document_status = $company->address_document_status;
+                    $contract_document_status = $company->contract_document_status;
                 } else {
-                    return [
-                        'status' => 'approved',
-                        'link' => ''
-                    ];
+                    $status = 'approved';
+                    $link = '';
                 }
             }
         }
 
         return [
-            'status' => null
+            'status' => $status,
+            'address_document' => $address_document_status,
+            'contract_document' => $contract_document_status,
+            'link' => $link
         ];
     }
 
