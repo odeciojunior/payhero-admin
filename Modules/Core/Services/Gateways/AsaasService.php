@@ -73,6 +73,15 @@ class AsaasService implements Statement
             ->sum('transactions.value');
     }
 
+    public function getPendingBalanceCount(): int
+    {
+        return Transaction::where('transactions.company_id', $this->company->id)
+            ->where('transactions.status_enum', Transaction::STATUS_PAID)
+            ->whereIn('transactions.gateway_id', $this->gatewayIds)
+            ->where('transactions.created_at', '>', '2021-09-20')
+            ->count();
+    }
+
     public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
