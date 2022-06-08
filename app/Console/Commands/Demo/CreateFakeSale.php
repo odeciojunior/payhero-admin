@@ -41,10 +41,6 @@ class CreateFakeSale extends Command
      */
     public function handle()
     {
-        /* WARNING
-        APÓS ENTRAR EM PRODUÇÃO SÓ DEVE GERAR 1 POR VEZ
-        */
-        
         Config::set('database.default', 'demo');
 
         $this->company = Company::find(Company::DEMO_ID);
