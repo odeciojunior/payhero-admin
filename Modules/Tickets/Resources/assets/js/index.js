@@ -53,9 +53,22 @@ const messageLoader = {
 
 const attachments2send = [];
 
+function updateAfterChangeCompany(){
+    $("#project-select").find('option').not(':first').remove();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+            });
+        }
+    });
+    window.index();
+    window.getResume();
+}
+
 $(() => {
 
-    loadingOnScreen();
 
     //fill the filter if the parameter comes in the url
     const params = new URLSearchParams(window.location.search);
@@ -68,6 +81,7 @@ $(() => {
     getProjects();
 
     function getProjects() {
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true&company='+ sessionStorage.getItem('company_default'),
@@ -85,8 +99,8 @@ $(() => {
                     for (let project of resp.data) {
                         $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
                     }
-                    index();
-                    getResume();
+                    window.index();
+                    window.getResume();
                     $('.page-header').show();
                     $("#project-not-empty").show();
                     $("#project-empty").hide();
@@ -133,14 +147,14 @@ $(() => {
         return Object.entries(filters).map(([key, val]) => `${key}=${val}`).join('&');
     }
 
-    function index(page = 1) {
+    window.index = function(page = 1) {
 
         loadOnAny('.tickets-container', false, ticketLoader);
         clearViews();
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets?' + getFilters(page),
+            url: '/api/tickets?' + getFilters(page) + '&company='+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -295,7 +309,7 @@ $(() => {
         $('.messages-container').html(messageEmpty);
     }
 
-    function getResume() {
+    window.getResume = function() {
 
         $('#ticket-open .detail').html('');
         $('#ticket-mediation .detail').html('');
@@ -305,7 +319,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets/getvalues?project=' + $('#project-select').val(),
+            url: '/api/tickets/getvalues?project=' + $('#project-select').val() + "&company_id="+sessionStorage.getItem('company_default'),
             dataType: "json",
             data: {
                 date: $("#date_range").val(),

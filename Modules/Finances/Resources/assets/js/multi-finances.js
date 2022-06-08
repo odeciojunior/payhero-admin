@@ -1,3 +1,18 @@
+function updateAfterChangeCompany(){
+    $("#extract_company_select").val( sessionStorage.getItem('company_default') );
+    $('#gateway-skeleton').show();
+    $('#container-all-gateways').html('');
+    $('#val-skeleton').show();
+    $('#container_val').css('display','none');
+    $('.skeleton-withdrawal').show();
+    $('#container-withdraw').html('');
+    $('#empty-history').hide();
+    $('.asScrollable').hide();
+    $('.container-history').css('padding-top','42px');
+    window.updateStatements();
+    window.updateWithdrawals();
+}
+
 $(document).ready(function(){
     getProjects();
 

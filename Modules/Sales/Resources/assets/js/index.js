@@ -399,6 +399,25 @@ function hoverBilletPending() {
     }
 }
 
+function updateAfterChangeCompany(){
+    $("#projeto").find('option').not(':first').remove();
+
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#projeto").append(
+                    $("<option>", {
+                        value: project.id,
+                        text: project.name,
+                    })
+                );
+            });
+        }
+    });
+    atualizar();
+}
+
 $(document).ready(function () {
 
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
@@ -552,8 +571,6 @@ $(document).ready(function () {
     // FIM - COMPORTAMENTOS DA JANELA
 
     getProjects();
-    atualizar();
-    //getCompanies();
 
     //Carrega o modal para regerar boleto
     $(document).on("click", ".boleto-pending", function () {
