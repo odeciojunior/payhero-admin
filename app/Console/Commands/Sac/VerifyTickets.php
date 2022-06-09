@@ -45,7 +45,7 @@ class VerifyTickets extends Command
 
         $query = Ticket::where('ticket_status_enum', Ticket::STATUS_OPEN)
             ->where('last_message_date', '<', now()->subDays($daysWithoutUserResponse))
-            ->where('last_message_type_enum', TicketMessage::TYPE_FROM_ADMIN);
+            ->whereIn('last_message_type_enum', [TicketMessage::TYPE_FROM_ADMIN, TicketMessage::TYPE_FROM_SYSTEM]);
 
         $bar = $this->getOutput()->createProgressBar($query->count());
         $bar->start();
