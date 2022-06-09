@@ -40,14 +40,14 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-sm-12 col-lg-4 mb-10 pr-0">
+                        <!-- <div class="col-12 col-sm-12 col-lg-4 mb-10 pr-0">
                             <div class="inner-reports">
                                 <a href="" class="grey lk-export">
                                     <i class="o-download-cloud-1 mr-2"></i>
                                     Exportar relatórios
                                 </a>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 

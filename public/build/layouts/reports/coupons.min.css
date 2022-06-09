@@ -162,6 +162,8 @@ thead {
     }
 }
 
+.card { margin-bottom: 24px; }
+
 @media only screen and (min-width: 768px){
     .col-md-3.card {
         margin-right: 10px;
@@ -1047,7 +1049,7 @@ h4.number{
 }
 
 @media(min-width: 1371px) {
-    .finance-card { width: 398px; }
+    /* .finance-card { width: 398px; } */
     .finance-card.fc { 
         width: 292px; 
         height: 100px;
@@ -1695,7 +1697,10 @@ h4.number{
 }
 
 .title-graph { margin: 15px 10px 0 5px; }
-.title-cash { margin-bottom: 5px; }
+.title-cash { 
+    margin-bottom: 5px; 
+    align-items: start !important;
+}
 
 .box-states > ul { 
     padding: 0; 
@@ -2245,6 +2250,21 @@ h4.number{
 #card-conversion .ske-load {
     position: absolute;
     transform: translate(0, -40%);
+}
+
+#card-devices .ske-load,
+#card-payments .ske-load,
+#card-cashback .ske-load {
+    position: absolute;
+    transform: translate(0, -30%);
+}
+#card-orderbump .ske-load,
+#card-abandoned .ske-load,
+#card-recurrence .ske-load,
+#card-upsell .ske-load,
+#card-most-sales .ske-load {
+    position: absolute;
+    transform: translate(0, -20%);
 }
 
 .sirius-select1 .sirius-select-text.active.on + .sirius-select-options { display: block !important; }
