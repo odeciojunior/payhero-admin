@@ -732,10 +732,10 @@ function barGraph(series, labels, withdraw) {
                     legend: {
                         align: 'center',
                         labels: {
-                            boxWidth: 16,
+                            boxWidth: 10,
                             color: '#636363',
                             usePointStyle: true,
-                            pointStyle: 'rectRounded',
+                            pointStyle: 'circle',
                             font: {
                                 size: '12',
                                 family: "'Muli'"

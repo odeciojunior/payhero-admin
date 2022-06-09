@@ -1547,7 +1547,7 @@ class ReportFinanceService
             date_default_timezone_set('America/Sao_Paulo');
 
             $dateEnd = date('Y-m-d');
-            $dateStart = date('Y-m-d', strtotime($dateEnd . ' -8 month'));
+            $dateStart = date('Y-m-d', strtotime($dateEnd . ' -5 month'));
 
             $companies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
 
