@@ -209,7 +209,7 @@ trait DemoPaymentFlowTrait
     {       
         $this->hasOrderBump = false;
 
-        if(!$this->keepGoing(10) || $this->nextIsUpsell){            
+        if(!$this->keepGoing(10) || $this->isUpsell){            
             return $this;
         }        
 
@@ -260,7 +260,8 @@ trait DemoPaymentFlowTrait
         return $this;
     }
 
-    public function prepareData(){
+    public function prepareData()
+    {
         $paymentMethods = [Sale::PAYMENT_TYPE_CREDIT_CARD,Sale::PAYMENT_TYPE_BANK_SLIP,Sale::PAYMENT_TYPE_PIX];
         $this->payment_method = $paymentMethods[ $this->nextIsUpsell ? 0 : rand(0,2) ];        
         
@@ -274,6 +275,10 @@ trait DemoPaymentFlowTrait
 
     public function checkAutomaticDiscount()
     {
+        if($this->isUpsell){
+            return $this;
+        }
+        
         switch ($this->payment_method) {
             case Sale::PAYMENT_TYPE_CREDIT_CARD:
                 if (!empty($this->checkoutConfig->automatic_discount_credit_card)) {
@@ -313,7 +318,7 @@ trait DemoPaymentFlowTrait
     
     public function checkDiscountCoupon()
     {
-        if(!$this->keepGoing(8)){
+        if(!$this->keepGoing(8) || $this->isUpsell){
             return $this;
         }
         
@@ -332,7 +337,7 @@ trait DemoPaymentFlowTrait
     {
         $this->progressiveDiscount = 0;
 
-        if(!$this->keepGoing(6)){
+        if(!$this->keepGoing(6) || $this->isUpsell){
             return $this;
         }
         
@@ -414,7 +419,12 @@ trait DemoPaymentFlowTrait
 
     public function getUserInvitation()
     {
-        $withInvite = true;// $this->keepGoing(6);
+        if($this->isUpsell){
+            $salePrevious = DB::table('sales')->select('owner_id')->where('id',$this->upsellPreviousSaleId)->first();
+            return $salePrevious->owner_id;
+        }
+
+        $withInvite = $this->keepGoing(6);
         $userId = User::DEMO_ID;
 
         if($withInvite){
@@ -424,6 +434,7 @@ trait DemoPaymentFlowTrait
                 $userId = $invite->id;                
             }
         }
+
         return $userId;
     }
 
@@ -550,7 +561,6 @@ trait DemoPaymentFlowTrait
 
     public function applyDiscount(DiscountCoupon $discountCoupon, $totalValue)
     {
-
         try {$totalValue = intval($totalValue);
             if (!empty($discountCoupon)) {
                 
@@ -573,8 +583,7 @@ trait DemoPaymentFlowTrait
 
             return 0;
 
-        } catch (Exception $e)
-        {            
+        } catch (Exception $e){            
             report($e);
             return 0;
         }

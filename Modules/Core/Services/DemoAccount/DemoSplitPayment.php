@@ -97,7 +97,7 @@ class DemoSplitPayment
     }
 
     public function getCashbackValue(): int
-    {
+    {        
         try {
             if ($this->sale->payment_method == Sale::BOLETO_PAYMENT || $this->sale->installments_amount == 1) {
                 return 0;
@@ -143,7 +143,7 @@ class DemoSplitPayment
     private function setCloudfoxValue()
     { 
         if ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-            $this->cloudfoxValue = (int)(($this->sale->original_total_paid_value - $this->sale->interest_total_value + $this->cashbackData['value']) / 100 * $this->producerCompany->gateway_tax);
+            $this->cloudfoxValue = (int)(($this->sale->original_total_paid_value - $this->sale->interest_total_value + ($this->cashbackData['value']) / 100) * $this->producerCompany->gateway_tax);
 
             $this->cloudfoxValue += FoxUtils::onlyNumbers($this->producerCompany->transaction_rate);
 
