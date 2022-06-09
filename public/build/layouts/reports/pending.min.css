@@ -895,7 +895,7 @@ h4.number{
 #card-recurrence { height: 233px; }
 
 @media(min-width: 1024px) {
-    #block-withdraw , #draw{ height: 228px; }
+    #block-withdraw , #draw{ height: 237px; }
 }
 
 @media only screen and (min-width: 1220px) {
@@ -1203,7 +1203,6 @@ h4.number{
     .sub-comission {
         flex-direction: row;
     }
-    #card-withdraw { height: 296px; }
 }
 
 
@@ -1374,7 +1373,7 @@ h4.number{
 
 .inner.relative .title-graph.no-withdrawals small { font-size: 14px; }
 
-#financesChart { margin-top: 18px; }
+#financesChart { margin-top: 18px; width: 100% !important; }
 
 .no-info-graph {
     width: 100%;
@@ -1389,7 +1388,7 @@ h4.number{
 }
 
 @media (min-width: 1600px) {
-    #financesChart { height: 256px !important;}
+    /* #financesChart { height: 280px !important;} */
 }
 
 .box-distribution.secondary {
@@ -2135,7 +2134,8 @@ h4.number{
     align-items: center;
 }
 @media (min-width: 1341px) {
-    #card-withdraw { width: 420px; }
+    #card-withdraw { width: 420px; height: 274px; }
+    
 }
 @media (min-width: 1371px) {
     #card-withdraw { width: 483px; }

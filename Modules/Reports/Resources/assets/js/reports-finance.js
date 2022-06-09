@@ -164,7 +164,7 @@ function withdrawals() {
 
             if(chart) {
                 $("#draw").html(graphDraw);
-                $('#block-withdraw').html('<canvas height="228" id="financesChart"></canvas>');
+                $('#block-withdraw').html('<canvas height="260" id="financesChart"></canvas>');
                 let labels = [...chart.labels];
                 let withdraw = [...chart.withdrawal.values];
                 let series = [...chart.income.values];
@@ -755,7 +755,7 @@ function barGraph(series, labels, withdraw) {
                     },
                 },
 
-                responsive: true,
+                responsive: false,
                 scales: {
                     x: {
                         stacked: true,
