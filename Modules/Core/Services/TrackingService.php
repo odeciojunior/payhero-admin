@@ -289,7 +289,9 @@ class TrackingService
             if (!empty($projectsIds) && !in_array('', $projectsIds)) {
                 $join->whereIn('s.project_id', $projectsIds);
             }
-        });
+        })
+        ->join('checkout_configs','s.project_id','=','checkout_configs.project_id')
+        ->where('checkout_configs.company_id',hashids_decode($filters['company']));
 
         //filtro transactions
         if (!empty($filters['transaction_status'])) {

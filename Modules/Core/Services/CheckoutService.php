@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Domain;
@@ -62,7 +63,9 @@ class CheckoutService
 
         }
 
-        $abandonedCarts = Checkout::with(
+        $abandonedCarts = Checkout::
+        join('checkout_configs','checkouts.project_id','=','checkout_configs.project_id')
+        ->with(
             [
                 'project.domains' => function ($query) {
                     $query->where('status', Domain::STATUS_APPROVED);
@@ -72,8 +75,9 @@ class CheckoutService
         )->whereHas('checkoutPlans', function ($query) {
             $query->whereHas('plan');
         })->whereIn('status_enum', $abandonedCartsStatus)
-            ->whereIn('project_id', $projectIds)
-            ->whereBetween('created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+            ->whereIn('checkouts.project_id', $projectIds)
+            ->whereBetween('checkouts.created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+            ->where('checkout_configs.company_id',hashids_decode(request('company')))
             ->when(
                 !empty(request('client')),
                 function ($query) {
@@ -109,8 +113,8 @@ class CheckoutService
         if (!empty($affiliateIds) && count($affiliateIds) > 0) {
             $abandonedCarts->whereIn('affiliate_id', $affiliateIds);
         }
-\Log::info(str_replace_array('?',$abandonedCarts->getBindings(),$abandonedCarts->toSql()));
-        return $abandonedCarts->orderBy('id', 'DESC')->paginate(10);
+        //Log::info(str_replace_array('?',$abandonedCarts->getBindings(),$abandonedCarts->toSql()));
+        return $abandonedCarts->orderBy('checkouts.id', 'DESC')->paginate(10);
     }
 
     /**
@@ -223,18 +227,7 @@ class CheckoutService
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
             if (!empty($response->status) && !empty($response->response->status) && $response->status == 'success' && $response->response->status == 'success') {
-                // $saleModel  = new Sale();
                 $dataUpdate = (array)$response->response;
-                // if (!empty($dataUpdate['gateway_received_date'])) {
-                //     unset($dataUpdate['gateway_received_date']);
-                // }
-                // $check = $saleModel->where('id', $saleIdDecode)
-                //                    ->update(array_merge($dataUpdate,
-                //                                         [
-                //                                             'start_date'       => Carbon::now(),
-                //                                             'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
-                //                                         ]));
-                // if ($check) {
                 RegeneratedBillet::create(
                     [
                         'sale_id' => $saleIdDecode,
@@ -247,29 +240,11 @@ class CheckoutService
                         'owner_id' => $sale->owner_id,
                     ]
                 );
-
-                // $transactionModel = new Transaction();
-                // $sale             = $saleModel::with('project.domains')
-                //                               ->where('id', $saleIdDecode)
-                //                               ->first();
-                // $transactionModel->where('sale_id', $saleIdDecode)->delete();
-
-                // $splitPaymentService = new SplitPaymentService();
-
-                // $splitPaymentService->splitPayment($totalPaidValue, $sale, $sale->project, $sale->user);
                 $result = [
                     'status' => 'success',
                     'message' => print_r($response->message, true) ?? '',
                     'response' => $response,
                 ];
-                // } else {
-                //     $result = [
-                //         'status'   => 'error',
-                //         'error'    => 'error',
-                //         'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
-                //         'response' => $response,
-                //     ];
-                // }
             } else {
                 $result = [
                     'status' => 'error',

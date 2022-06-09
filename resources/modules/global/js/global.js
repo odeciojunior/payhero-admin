@@ -1550,22 +1550,8 @@ function getCompanies() {
 
 function updateProjectsOptions(){
     pathname = window.location.pathname;
-    // corrige lojas em Recuperação
-    if(pathname == '/recovery'){
-        $("#project").find('option').not(':first').remove();
-        $.getScript( "/build/layouts/salesrecovery/index.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
-    // corrige lojas em Rastreamentos
-    else if(pathname == '/trackings'){
-        $("#project-select").find('option').not(':first').remove();
-        $.getScript( "/build/layouts/trackings/index.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
     // corrige lojas em Contestações
-    else if(pathname == '/contestations'){
+    if(pathname == '/contestations'){
         $("#project").find('option').not(':first').remove();
         $("#project-select").next().next().empty();
         $.getScript( "/build/layouts/chargebacks/contestations-index.min.js", function( data, textStatus, jqxhr ) {
@@ -1573,13 +1559,6 @@ function updateProjectsOptions(){
             getTotalValues();
             getProjects();
         });
-    }
-    // corrige lojas em Atendimento
-    else if(pathname == '/customer-service'){
-        // $("#project-select").find('option').not(':first').remove();
-        // $.getScript( "/build/layouts/attendance/index.min.js", function( data, textStatus, jqxhr ) {
-        //     getProjects();
-        // });
     }
     // corrige lojas em Relatorios Vendas
     else if(pathname == '/reports/sales'){

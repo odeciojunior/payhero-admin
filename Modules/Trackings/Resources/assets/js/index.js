@@ -29,6 +29,25 @@ const systemStatus = {
     '': '',
 }
 
+function updateAfterChangeCompany(){
+    $("#project-select").find('option').not(':first').remove();
+    $("#project-select option:first").attr('selected','selected');
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#project-select").append(
+                    $("<option>", {
+                        value: project.id,
+                        text: project.name,
+                    })
+                );
+            });
+        }
+    });
+    window.loadData();
+}
+
 $(() => {
 
     $('.applySelect2').select2({
@@ -102,7 +121,7 @@ $(() => {
     });
 
     $('#bt_filter').on('click', function () {
-        loadData();
+        window.loadData();
     });
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -156,7 +175,7 @@ $(() => {
         //layout do button block
     }
 
-    function loadData() {
+    window.loadData = function() {
         elementButton = $('#bt_filter');
         if (searchIsLocked(elementButton) != 'true') {
             lockSearch(elementButton);
@@ -175,9 +194,9 @@ $(() => {
             'date_updated': $('#date_updated').val(),
             'sale': $('#sale').val().replace('#', ''),
             'transaction_status': $("#status_commission").val(),
-            'problem': $('#tracking_problem').prop('checked') ? 1 : 0
+            'problem': $('#tracking_problem').prop('checked') ? 1 : 0,
+            'company': sessionStorage.getItem('company_default')
         };
-
         if (urlParams) {
             let params = "";
             for (let param in data) {
@@ -226,7 +245,7 @@ $(() => {
                         });
                     }
 
-                    loadData();
+                    window.loadData();
                 } else {
                     $("#export-excel").hide()
                     $("#project-not-empty").hide();
@@ -751,7 +770,7 @@ $(() => {
 
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
-            loadData();
+            window.loadData();
         }
     });
 
