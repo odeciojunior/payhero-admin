@@ -2028,7 +2028,7 @@ h4.number{
     /* -webkit-mask-repeat:no-repeat; */
     background:linear-gradient(90deg,#ECECEC 40%,#FFFA ,#ECECEC 60%) right/300% 100% ;
     opacity: 0;
-    animation: m 0.6s linear infinite;
+    animation: m 1s linear infinite;
 }
 .skeleton-circle{
     height: 10px;
