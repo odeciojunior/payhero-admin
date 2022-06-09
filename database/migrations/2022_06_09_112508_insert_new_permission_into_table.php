@@ -23,15 +23,6 @@ class InsertNewPermissionIntoTable extends Migration
             'title' => 'Extração de Relatórios',
             'guard' => 'web'
         ]);
-
-        /**
-         * Assign permission to all Manager users
-         */
-        $managerUsers = User::where('email', 'like', '%@cloudfox.net')->get();
-
-        foreach($managerUsers as $user) {
-            $user->givePermissionTo('extract_reports');
-        }
     }
 
     /**
