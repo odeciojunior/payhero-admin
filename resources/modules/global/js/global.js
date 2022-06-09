@@ -913,7 +913,7 @@ function verifyDocumentPending() {
 
                 localStorage.setItem('verifyAccount', JSON.stringify(response.data));
 
-                if (!response.data.user_informations) {
+                if (!response.data.user.informations) {
                     $('.extra-informations-user').show();
                 } else {
                     $('.extra-informations-user').hide();
