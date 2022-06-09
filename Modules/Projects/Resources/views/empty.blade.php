@@ -1,8 +1,7 @@
-{{--<div id="project-empty" class="content-error text-center d-none">--}}
 <div id="project-empty" class="content-error text-center" style="display:none !important;
                                                                 height: 100%;
                                                                 width: 100%;
-                                                                position: relative;
+                                                                position: absolute;
                                                                 display: -webkit-flex;
                                                                 display: flex;
                                                                 -webkit-align-items: center;
