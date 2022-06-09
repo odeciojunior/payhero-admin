@@ -9,6 +9,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
 use Illuminate\Contracts\View\Factory;
 use Modules\Core\Entities\UserProject;
@@ -70,8 +71,10 @@ class SalesRecoveryService
         string $dateEnd = null,
         string $customer = null,
         string $customerDocument = null,
-        array $plans = null
+        array $plans = null,
+        int $company_id = null
     ) {
+
         $salesModel = new Sale();
         $userProjectsModel = new UserProject();
         $customerModel = new Customer();
@@ -85,7 +88,10 @@ class SalesRecoveryService
                 $join->on('sales.checkout_id', '=', 'checkout.id');
             })->leftJoin('customers as customer', function ($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
+            })->leftJoin('checkout_configs as checkout_config', function ($join) {
+                $join->on('sales.project_id', '=', 'checkout_config.project_id');
             })
+            ->where('checkout_config.company_id', $company_id)
             ->whereIn('sales.status', $status)
             ->where('sales.payment_method', $paymentMethod)
             ->with([
@@ -111,12 +117,12 @@ class SalesRecoveryService
             $plansIds = collect($plans)->map(function ($plan) {
                 return current(Hashids::decode($plan));
             })->toArray();
-            
+
             $salesExpired->whereHas('plansSales', function ($query) use ($plansIds) {
                 $query->whereIn('plan_id', $plansIds);
             });
         }
-        
+
         if (!empty($projectIds) && !in_array('all', $projectIds)) {
             $salesExpired->whereIn('sales.project_id', $projectIds);
 
@@ -144,6 +150,7 @@ class SalesRecoveryService
             }
         }
 
+        //Log::info(str_replace_array('?',$salesExpired->getBindings(),$salesExpired->orderBy('sales.id', 'desc')->toSql()));
         return $salesExpired->orderBy('sales.id', 'desc')->paginate(10);
     }
 

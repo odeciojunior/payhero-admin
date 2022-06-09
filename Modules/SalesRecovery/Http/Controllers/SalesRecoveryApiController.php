@@ -198,7 +198,8 @@ class SalesRecoveryApiController extends Controller
             $paymentMethod = (new Sale())->present()->getPaymentType('credit_card');
             $status        = [3];
 
-            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans);
+            $company_id = hashids_decode($data["company"]);
+            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans, $company_id);
 
             return SalesRecoveryCardRefusedResource::collection($sales);
         } catch (Exception $e) {
@@ -260,7 +261,8 @@ class SalesRecoveryApiController extends Controller
         $paymentMethod = (new Sale())->present()->getPaymentType('boleto');
         $status        = [5];
 
-        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans);
+        $company_id = hashids_decode($data["company"]);
+        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans, $company_id);
 
         return SalesRecoveryCardRefusedResource::collection($sales);
     }
@@ -326,38 +328,38 @@ class SalesRecoveryApiController extends Controller
                 ], 400);
             }
 
-            $totalPaidValue = $sale->original_total_paid_value;            
+            $totalPaidValue = $sale->original_total_paid_value;
             if (!empty($request->discountValue)) {
 
                 if ($request->discountType == 'percentage') {
-                    $discount = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));                    
+                    $discount = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));
                     $discount = number_format($discount/100,2,'.',''); //converte para decimal
-                    $totalPaidValue -= $discount*100;                    
+                    $totalPaidValue -= $discount*100;
                 } else {
                     $discount       = (int)(preg_replace("/[^0-9]/", "", $request->discountValue));
                     $totalPaidValue -= $discount;
                     $discount = number_format($discount/100,2,'.','');//converte para decimal
                 }
-                
+
                 $totalPaidValue+=foxutils()->onlyNumbers($sale->shopify_discount);
 
                 $sale->update([
                     'shopify_discount' => $discount,
-                ]);                
-            }            
+                ]);
+            }
 
             $dueDate = $request->input('date');
             if (Carbon::parse($dueDate)->isWeekend()) {
                 $dueDate = Carbon::parse($dueDate)->nextWeekday()->format('Y-m-d');
             }
-            
+
             $checkoutService = new CheckoutService();
-                        
+
             $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
             ->encode($sale->id), $totalPaidValue, $dueDate);
-            
+
             $message = 'Ocorreu um erro tente novamente mais tarde';
-            $status  = 400;                
+            $status  = 400;
             if ($boletoRegenerated['status'] == 'success') {
                 $message = 'Boleto regenerado com sucesso';
                 $status  = 200;
@@ -365,10 +367,10 @@ class SalesRecoveryApiController extends Controller
 
             return response()->json([
                 'message' => $message,
-            ], $status);            
-                            
+            ], $status);
+
         } catch (Exception $e) {
-            report($e);            
+            report($e);
 
             return response()->json([
                 'message' => "Ocorreu um erro, tente novamente mais tarde",
@@ -456,6 +458,7 @@ class SalesRecoveryApiController extends Controller
         $paymentMethod = (new Sale())->present()->getPaymentType('pix');
         $status        = [5];
 
+        $company_id = hashids_decode($data["company"]);
         $sales = $salesRecoveryService->getSaleExpiredOrRefused(
             $paymentMethod,
             $status,
@@ -464,7 +467,8 @@ class SalesRecoveryApiController extends Controller
             $dateEnd,
             $client,
             $clientDocument,
-            $plans
+            $plans,
+            $company_id
         );
 
         return SalesRecoveryCardRefusedResource::collection($sales);

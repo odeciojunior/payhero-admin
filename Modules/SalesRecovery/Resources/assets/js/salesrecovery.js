@@ -1,5 +1,23 @@
 var exportFormat = null;
 
+function updateAfterChangeCompany(){
+    $("#project").find('option').not(':first').remove();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#project").append(
+                    $("<option>", {
+                        value: project.id,
+                        text: project.name,
+                    })
+                );
+            });
+        }
+    });
+    window.updateSalesRecovery();
+}
+
 $(document).ready(function () {
     getProjects();
 
@@ -19,7 +37,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        updateSalesRecovery();
+        window.updateSalesRecovery();
     });
 
     $("#bt_get_csv").on("click", function () {
@@ -143,7 +161,7 @@ $(document).ready(function () {
                         );
                     });
 
-                    updateSalesRecovery();
+                    window.updateSalesRecovery();
                 } else {
                     $("#export-excel").hide();
                     $("#project-not-empty").hide();
@@ -185,6 +203,7 @@ $(document).ready(function () {
 
             &plan=${$("#plan").val()}`;
         }
+        url += "&company="+ sessionStorage.getItem('company_default');
 
         let recoveryTypeSelected = $("#recovery_type option:selected").val();
         if (recoveryTypeSelected == 1) {
@@ -204,7 +223,7 @@ $(document).ready(function () {
      * Atualiza tabela de recuperação de vendas
      * @param link
      */
-    function updateSalesRecovery(link = null) {
+    window.updateSalesRecovery = function (link = null) {
         loadOnTable("#table_data", "#carrinhoAbandonado");
 
         // Formata a url
@@ -243,7 +262,7 @@ $(document).ready(function () {
                 } else {
                     createHTMLTable(response);
                     $("#pagination-salesRecovery").show();
-                    pagination(response, "salesRecovery", updateSalesRecovery);
+                    pagination(response, "salesRecovery", window.updateSalesRecovery);
 
                     $(".copy_link").on("click", function () {
                         var temp = $("<input>");
@@ -868,7 +887,7 @@ $(document).ready(function () {
 
     $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
-            updateSalesRecovery();
+            window.updateSalesRecovery();
         }
     });
 });

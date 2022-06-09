@@ -26,7 +26,7 @@ class CheckoutApiController extends Controller
      * List cart abandoned
      */
     public function index(Request $request)
-    {   
+    {
         try {
             $request->validate(
                 [
@@ -36,12 +36,13 @@ class CheckoutApiController extends Controller
                     'client' => 'nullable|string',
                     'client_document' => 'nullable|string',
                     'plan' => 'nullable|string',
+                    'company'=>'nullable|string'
                 ]
             );
 
             $checkouts = (new CheckoutService())->getAbandonedCart();
             return CheckoutIndexResource::collection($checkouts);
-            
+
         } catch (Exception $e) {
             report($e);
 
