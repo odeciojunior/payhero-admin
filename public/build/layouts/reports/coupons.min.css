@@ -530,6 +530,12 @@ h4.number{
     width: 89.5%;
 }
 
+@media(min-width: 1341px) {
+    .inner-comission.sc { width: 377px; }
+}
+@media(min-width: 1371px) {
+    .inner-comission.sc { width: 398px; }
+}
 .card-payments { height: 210px; }
 .tp-payment { height: 140px; }
 
@@ -621,7 +627,10 @@ h4.number{
 }
 
 @media (min-width: 1300px) {
-    .cards-reports .card { max-width: 393px; }
+    .cards-reports .card { 
+        max-width: 393px; 
+        height: 210px;
+    }
 }
 
 .box-payment-option {
@@ -765,7 +774,7 @@ h4.number{
     .container-devices .box-image-payment { min-width: 117px; }
 }
 
-.bar-payment { max-width: 80px; padding-right: 5px; }
+.bar-payment { max-width: 85px; padding-right: 5px; }
 .percentage-card { max-width: 49px; }
 .ico-pay { max-width: 111px; }
 
@@ -820,10 +829,13 @@ h4.number{
 }
 
 .new-graph-pie {
-    height: 153px;
+    height: 129px;
     justify-content: center;
 }
-
+.graph-pie { 
+    width: 166px; 
+    height: 128px;
+}
 .new-graph-pie,
 .new-graph-pie-mkt { flex: 1; }
 
@@ -1115,8 +1127,10 @@ h4.number{
     .box-chart-primary {
         margin-right: 0;
         margin-left: 0;
-        flex-direction: row;
     }
+}
+@media only screen and (min-width: 1341px) {
+    .box-chart-primary { flex-direction: row; }
 }
 
 .commission, .distribution { border-radius: 8px; }
@@ -1139,8 +1153,8 @@ h4.number{
 }
 
 @media only screen and (min-width: 1220px) {
-    .primary { width: 790px; }
     .distribution { width: 344px;  }
+    .distribution.fc { width: auto;  }
     .commission.mkt { flex: 0 0 65.8%; }
 }
 
@@ -1148,9 +1162,19 @@ h4.number{
     .distribution { width: 368px;  }
 }
 
+@media only screen and (min-width: 1341px) {
+    .primary.fc { width: 795px; }
+    .distribution.fc { width: 345px;  }
+    .inner-comission.flc { width: 350px; }
+}
+
 @media only screen and (min-width: 1370px) {
     .primary { width: 820px; }
+    .primary.fc { width: 863px; }
+
     .distribution { width: 394px;  }
+    .distribution.fc { width: 353px;  }
+
 }
 @media only screen and (min-width: 1600px) {
     .distribution.mkt { flex: 0 0 31.75%; }
@@ -1248,21 +1272,13 @@ h4.number{
     }
 }
 
-@media only screen and (min-width: 1220px) {
+@media only screen and (min-width: 1341px) {
     .sub-comission {
         flex-direction: row;
     }
+    #card-withdraw { height: 296px; }
+}
 
-    .inner-comission {
-        flex: 0 0 50%;
-        max-width: 50%;
-        padding: 0 1.5715rem 0 0;
-    }
-    .inner-comission + .inner-comission { padding: 0 0 0 0.0715rem; }
-}
-@media only screen and (min-width: 1600px) {
-    .inner-comission + .inner-comission { padding: 0 0 0 1.0715rem; }
-}
 
 .sub-distribution {
     flex-direction: column;
@@ -1402,9 +1418,14 @@ h4.number{
 }
 .no-orderbump { color: #2E85EC; }
 
+
+@media( min-width: 1371px ) {
+    .card-fc { width: 356px; }
+}
+
 .cash-box {
     height: 73px;
-    padding: 45px 20px;
+    padding: 0 20px;
 }
 .cash-box.seller { 
     padding: 0 24px; 
@@ -2100,7 +2121,6 @@ h4.number{
     background: linear-gradient(#000 0 0) top/100% 70%,linear-gradient(#000 0 0) bottom right/70% 20%, radial-gradient(circle closest-side,#000 90%,#0000) bottom left/25% 25%;
     /* -webkit-mask-repeat:no-repeat; */
     background:linear-gradient(90deg,#ECECEC 40%,#FFFA ,#ECECEC 60%) right/300% 100% ;
-    opacity: 0;
     animation: m 1s linear infinite;
 }
 .skeleton-circle{
@@ -2167,7 +2187,7 @@ h4.number{
 #card-comission .new-graph,
 #card-pending .new-graph-pending,
 #card-sales .new-graph-sell,
-#card-cashback .new-graph-cashback { height: 118px; }
+#card-cashback .new-graph-cashback { height: 109px; }
 
 #card-regions .new-graph-regions.visible {
     width: 180px;
@@ -2187,11 +2207,13 @@ h4.number{
     justify-content: center;
     align-items: center;
 }
-@media (min-width: 1024px) {
-    #card-withdraw {
-        height: 274px;
-    }
+@media (min-width: 1341px) {
+    #card-withdraw { width: 420px; }
 }
+@media (min-width: 1371px) {
+    #card-withdraw { width: 483px; }
+}
+
 #card-withdraw  .ske-load {
     position: absolute;
     transform: translate(0, -50%);

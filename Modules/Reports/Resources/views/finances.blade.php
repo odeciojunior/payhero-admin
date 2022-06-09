@@ -126,7 +126,7 @@
                 <div class="row">
                     <div class="col-12 d-flex box-chart-primary">
                         <!-- comission -->    
-                        <div class="primary">
+                        <div class="primary fc">
                             <div class="card" id="card-commission">
                                 <section class="container pb-20 graph-principal">
                                     <header class="d-flex title-graph mb-0">
@@ -140,8 +140,8 @@
 
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
-                                    <div class="inner-comission">
-                                        <div class="card inner cash card-cashback" id="card-cashback">
+                                    <div class="inner-comission flc">
+                                        <div class="card inner cash card-cashback card-fc" id="card-cashback">
                                             <header class="d-flex title-graph title-cash">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Cashback</strong>
@@ -151,7 +151,7 @@
                                                 <div class="d-flex align-items onPreLoad" id="block-cash"></div>
                                             </footer>
                                         </div>
-                                        <div class="card">
+                                        <div class="card card-fc">
                                             <div class="d-flex align-items cash-box">
                                                 <div>
                                                     <span class="ico-coin">
@@ -163,7 +163,7 @@
                                                 </div>
                                                 <div>
                                                     <span class="txt-cash">
-                                                        O cashback por venda varia de acordo com o número de parcelas escolhidas pelo cliente.
+                                                        O cashback por venda varia de acordo com o <strong>número de parcelas</strong> escolhidas pelo cliente.
                                                     </span>
                                                 </div>
                                             </div>
@@ -188,7 +188,7 @@
                         <!-- /comission -->
                         
                         <!-- distribtion -->
-                        <div class="distribution">
+                        <div class="distribution fc">
                             <div class="card inner distribution-content" id="card-distribution">
                                 <header class="d-flex title-graph mb-0">
                                     <h5 class="grey font-size-16">

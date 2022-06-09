@@ -129,7 +129,7 @@
                 <div class="row">
                     <div class="col-12 d-flex box-chart-primary">
                         <!-- comission -->
-                        <div class="primary">
+                        <div class="primary fc">
                             <div class="card" id="card-status">
                                 <section class="container pb-20 graph-principal">
                                     <header class="d-flex title-graph title-graph-sales">
@@ -157,8 +157,8 @@
 
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
-                                    <div class="inner-comission">
-                                        <div class="card inner card-payments" id="card-payments">
+                                    <div class="inner-comission sc">
+                                        <div class="card inner card-payments sc" id="card-payments">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Meios de pagamento</strong>
@@ -166,7 +166,7 @@
                                             </header>
                                             <div class="onPreLoad" id="block-payments"></div>
                                         </div>
-                                        <div class="card" id="card-info">
+                                        <div class="card card-info" id="card-info">
                                             <div class="d-flex align-items cash-box seller onPreLoad no-ske" id="block-info-card">
                                             </div>
                                         </div>
@@ -179,7 +179,7 @@
                                             <div class="custom-table onPreLoad" id="block-conversion"></div>
                                         </div>
                                     </div>
-                                    <div class="inner-comission">
+                                    <div class="inner-comission sc">
 
                                         <div class="card inner card-devices" id="card-devices">
                                             <header class="d-flex title-graph">
@@ -225,7 +225,7 @@
                         <!-- /comission -->
 
                         <!-- distribtion -->
-                        <div class="distribution">
+                        <div class="distribution fc">
                             <div class="card inner distribution-content sales" id="card-distribution">
                                 <header class="d-flex title-graph title-distribution">
                                     <h5 class="grey font-size-16">
