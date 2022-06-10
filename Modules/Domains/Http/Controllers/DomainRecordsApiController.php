@@ -257,7 +257,7 @@ class DomainRecordsApiController extends Controller
         }
     }
 
-    public function update(Request $request, $project, $domain, $domainRecord): JsonResponse
+    public function update(Request $request, $domain, $domainRecord): JsonResponse
     {
         try {
             $domain = Domain::find(hashids_decode($domain));
