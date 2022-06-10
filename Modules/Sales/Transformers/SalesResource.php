@@ -135,7 +135,7 @@ class SalesResource extends JsonResource
         }
 
         $data['has_shopify_integration'] = null;
-        if (count($shopifyIntegrations) > 0)
+        if (count($shopifyIntegrations) > 0 && foxutils()->isProduction())
         {
             $data['has_shopify_integration'] = true;
         }

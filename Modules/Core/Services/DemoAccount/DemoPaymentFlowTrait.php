@@ -116,7 +116,7 @@ trait DemoPaymentFlowTrait
     }
 
     public function preparePlans()
-    {
+    {        
         $this->subTotal = 0;
         $planIds = $this->checkout->checkoutPlans()->pluck('plan_id');
         
@@ -206,7 +206,7 @@ trait DemoPaymentFlowTrait
     }
 
     public function prepareOrderBump()
-    {       
+    {              
         $this->hasOrderBump = false;
 
         if(!$this->keepGoing(10) || $this->isUpsell){            
@@ -256,7 +256,7 @@ trait DemoPaymentFlowTrait
             $this->hasOrderBump = true;
             $this->totalValue = $this->subTotal;
         }
-
+        
         return $this;
     }
 
@@ -269,12 +269,12 @@ trait DemoPaymentFlowTrait
         if($this->payment_method == Sale::PAYMENT_TYPE_CREDIT_CARD){
             $this->installment_amount = mt_rand(1,12);
         }
-
+        
         return $this;
     }
 
     public function checkAutomaticDiscount()
-    {
+    {        
         if($this->isUpsell){
             return $this;
         }
@@ -313,6 +313,7 @@ trait DemoPaymentFlowTrait
         $this->shipping = Shipping::select('value')->where('project_id',$this->project->id)->inRandomOrder()->first();
         $this->shippingPrice = FoxUtils::onlyNumbers($this->shipping->value);
         $this->totalValue+= $this->shippingPrice;
+
         return $this;
     } 
     
@@ -327,14 +328,14 @@ trait DemoPaymentFlowTrait
         if (!empty($discountCoupon) && $this->totalValue > ($discountCoupon->rule_value ?? 0)) {
             $this->cupomCode = $discountCoupon->code;
             $discountValue = $this->applyDiscount($discountCoupon, $this->subTotal);
-            $this->totalValue -= $discountValue;
+            $this->totalValue -= $discountValue;            
         }       
-
+        
         return $this;
     }
 
     public function checkProgressiveDiscount()
-    {
+    {        
         $this->progressiveDiscount = 0;
 
         if(!$this->keepGoing(6) || $this->isUpsell){
@@ -350,12 +351,12 @@ trait DemoPaymentFlowTrait
                 $this->progressiveDiscount = 0;
             }
         }        
-
+        
         return $this;
     }
 
     public function calculateValues()
-    {       
+    {    
         if ($this->totalValue < 500) {
             response()->json(['message' => 'Valor mínimo de R$ 5,00'], 400)->send();
             exit;
@@ -403,15 +404,11 @@ trait DemoPaymentFlowTrait
     public function setCustomer()
     {
         try {
-            DB::beginTransaction();
             $this->customer = Customer::factory()->create();        
-
             $this->delivery = Delivery::factory()->for($this->customer)->create();
 
-            DB::commit(); 
-
         } catch (Exception $e) {            
-            DB::rollBack();
+             
         } 
 
         return $this;
@@ -428,10 +425,10 @@ trait DemoPaymentFlowTrait
         $userId = User::DEMO_ID;
 
         if($withInvite){
-            $invite = Invitation::select('id')->where('invite', $userId)
+            $invite = Invitation::select('user_invited')->where('invite', $userId)
             ->where('status', Invitation::STATUS_ACTIVE)->inRandomOrder()->first();
             if(!empty($invite)){
-                $userId = $invite->id;                
+                $userId = $invite->user_invited;                
             }
         }
 
@@ -548,7 +545,7 @@ trait DemoPaymentFlowTrait
     }
 
     public function setTransactions()
-    {
+    {        
         DemoSplitPayment::perform($this->sale);
 
         if($this->sale->status == Sale::STATUS_APPROVED){

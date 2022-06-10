@@ -87,17 +87,16 @@ class DemoSplitPayment
 
     private function checkCashback()
     { 
-        
         $this->cashbackData = [
             'value' => $this->getCashbackValue(),
             'percentage' => $this->getPercentage(),
         ];
-
+        
         return $this;
     }
 
     public function getCashbackValue(): int
-    {        
+    {   
         try {
             if ($this->sale->payment_method == Sale::BOLETO_PAYMENT || $this->sale->installments_amount == 1) {
                 return 0;
@@ -121,7 +120,7 @@ class DemoSplitPayment
             $saleValueWithoutTax = (FoxUtils::onlyNumbers($this->sale->total_paid_value) - FoxUtils::onlyNumbers($this->sale->interest_total_value));
 
             $cashbackValue = (int)($saleValueWithoutTax / 100 * $cashbackPercentage);
-
+           
             return $cashbackValue;
             
         } catch (Exception $e) {
@@ -143,7 +142,9 @@ class DemoSplitPayment
     private function setCloudfoxValue()
     { 
         if ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-            $this->cloudfoxValue = (int)(($this->sale->original_total_paid_value - $this->sale->interest_total_value + ($this->cashbackData['value']) / 100) * $this->producerCompany->gateway_tax);
+            $total = $this->sale->original_total_paid_value - $this->sale->interest_total_value + $this->cashbackData['value'];
+            
+            $this->cloudfoxValue = (int)(($total/100) * $this->producerCompany->gateway_tax);
 
             $this->cloudfoxValue += FoxUtils::onlyNumbers($this->producerCompany->transaction_rate);
 
@@ -159,14 +160,14 @@ class DemoSplitPayment
 
             $this->cloudfoxValue += FoxUtils::onlyNumbers($transactionRate);
         }
-
+        
         return $this;
     }
 
     private function setProducerValue()
     { 
         $this->producerValue = (int)$this->sale->original_total_paid_value - $this->cloudfoxValue;
-
+        
         return $this;
     }
 
@@ -181,7 +182,7 @@ class DemoSplitPayment
                 $this->producerValue -= $affiliateValue;
 
                 $transactionData = $this->getTransactionData($affiliate->company);
-
+                
                 Transaction::create([
                     'sale_id' => $this->sale->id,
                     'gateway_id' => $this->sale->gateway_id,
@@ -201,12 +202,12 @@ class DemoSplitPayment
     }
 
     private function checkInstallmentsFreeTax()
-    { 
+    {  
         if ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
             $this->producerValue -= $this->sale->installment_tax_value;
             $this->cloudfoxValue += $this->sale->installment_tax_value;
         }
-
+        
         return $this;
     }
 
@@ -216,15 +217,15 @@ class DemoSplitPayment
     }
 
     private function checkProducerInvitation()
-    { 
+    {
         $invite = Invitation::with('company')
             ->where([
-                ['user_invited', $this->sale->user->id],
+                ['user_invited', $this->sale->owner_id],
                 ['status', Invitation::STATUS_ACTIVE],
             ])->first();
 
         if (!empty($invite) && !empty($invite->company_id)) {
-            if (in_array($this->sale->gateway->name, ['getnet_sandbox', 'getnet_production'])
+            if (in_array($this->sale->gateway_id, [Sale::GETNET_PRODUCTION_ID,Sale::GETNET_SANDBOX_ID])
                 && $invite->company->getGatewayStatus(Gateway::GETNET_PRODUCTION_ID) != GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED
             ) {
                 return $this;
@@ -246,7 +247,7 @@ class DemoSplitPayment
                 'tracking_required' => $this->sale->user->get_faster ? false : true,
             ]);
 
-            $this->cloudfoxValue -= $inviteValue;
+            $this->cloudfoxValue -= $inviteValue;            
         }
 
         return $this;

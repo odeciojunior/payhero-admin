@@ -12,7 +12,7 @@
         {{-- <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
         <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100"> --}}
         <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
-        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" width="100">
+        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 1rem;">
     </div>
 
     <!-- BOTAO HAMBURGUER NO DESKTOP-->
