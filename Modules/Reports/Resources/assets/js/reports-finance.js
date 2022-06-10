@@ -327,7 +327,7 @@ function onCommission() {
                 $('.new-finance-graph').html('<canvas id=comission-graph></canvas>');
                 let labels = [...chart.labels];
                 let series = [...chart.values];
-                graphComission(series, labels);
+                graphComission(series, labels, variation.value);
             } else {
                 infoComission = `
                     <div class="finances-values">
@@ -584,7 +584,7 @@ function updateStorage(v){
     sessionStorage.setItem('info', JSON.stringify(existing));
 }
 
-function graphComission(series, labels) {
+function graphComission(series, labels, variant) {
     const legendMargin = {
          id: 'legendMargin',
          beforeInit(chart, legend, options) {
@@ -660,7 +660,7 @@ function graphComission(series, labels) {
                 },
             },
             pointBackgroundColor:"#1BE4A8",
-            radius: 3,
+            radius: (variant != '0%') ? 3 : 0,
             interaction: {
               intersect: false,
               mode: "index",

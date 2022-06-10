@@ -1401,6 +1401,7 @@ h4.number{
     display: flex;
     justify-content: space-between;
 }
+.distribution-area { padding-bottom: 8px; }
 
 .box-distribution.secondary .item {
     height: 30px;
@@ -1443,10 +1444,17 @@ h4.number{
     background-color: #636363;
     border-radius: 20px;
     cursor: pointer;
-    /* border: 3px solid #636363; */
   }
 
 .scroll-212 .box-payment-option { margin-bottom: 20px; }
+
+.sirius-select-container .sirius-select-options::-webkit-scrollbar { width: 6px; }
+.sirius-select-container .sirius-select-options::-webkit-scrollbar-track { background: #E0E0E0; }
+.sirius-select-container .sirius-select-options::-webkit-scrollbar-thumb {
+    background-color: #636363;
+    border-radius: 20px;
+    cursor: pointer;
+  }
 
 /* marketing */
 .box-resume { 
@@ -2206,9 +2214,15 @@ h4.number{
 }
 
 .sirius-select1 .sirius-select-text {
-    width: 175px;
-    padding: 5px 35px 5px 16px;
+    width: 152px;
+    padding: 0;
     float: right;
+    line-height: 28px;
+    height: 29px;
+    border: 1px solid #E0E7EE !important;
+    padding-left: 9px;
+    min-height: 28px;
+    font-size: 14px;
 }
 .sirius-select1 .sirius-select-options { 
     right: 0;

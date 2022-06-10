@@ -1455,7 +1455,7 @@ function salesStatus(st) {
                 $('.new-sell-graph').html('<canvas id=sales-graph></canvas>');
                 let labels = [...chart.labels];
                 let series = [...chart.values];
-                newSellGraph(series, labels);
+                newSellGraph(series, labels, variation.value);
             } else {
                 statusHtml = `
                     <div class="finances-values" style="visibility: hidden;">
@@ -1479,7 +1479,7 @@ function salesStatus(st) {
     });
 }
 
-function newSellGraph(data, labels) {
+function newSellGraph(data, labels, variant) {
     const legendMargin = {
         id: 'legendMargin',
         beforeInit(chart, legend, options) {
@@ -1558,7 +1558,7 @@ function newSellGraph(data, labels) {
                },
            },
            pointBackgroundColor:"#1BE4A8",
-           radius: 3,
+           radius: (variant != '0%') ? 3 : 0,
            interaction: {
              intersect: false,
              mode: "index",
