@@ -3,6 +3,13 @@ $(function () {
     distributionGraphSeller();
     getInfo();
 
+    $('.sirius-select1').each(function () {
+        $(this).siriusSelect();
+    });
+    $('.sirius-select1').on('click', function() {
+        $('.sirius-select1 .sirius-select-text').toggleClass('on');
+    });    
+
     let resumeUrl = '/api/reports/resume';
     
     if(sessionStorage.info) {

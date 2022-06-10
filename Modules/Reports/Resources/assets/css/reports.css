@@ -1454,7 +1454,9 @@ h4.number{
     background-color: #636363;
     border-radius: 20px;
     cursor: pointer;
-  }
+}
+
+.max-100 .sirius-select-options { max-height: 100px !important; }
 
 /* marketing */
 .box-resume { 
