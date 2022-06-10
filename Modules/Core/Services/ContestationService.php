@@ -42,7 +42,7 @@ class ContestationService
     function getQuery($filters)
     {
         $account_owner_id = auth()->user()->getAccountOwnerId();
-        
+
         $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name',
         'sales.total_paid_value','sales.sub_total','sales.shipment_value',\DB::Raw("CAST(sales.shopify_discount as DECIMAL) AS shopify_discount"))
             ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '". Carbon::now()->addDay(2)->endOfDay()."' THEN 1 ELSE 0 END) as custom_expired"))
@@ -53,6 +53,8 @@ class ContestationService
                  ->where('transactions.type', '=', 2);
              })
             ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
+            ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
+            ->where('checkout_configs.company_id', hashids_decode(request('company')))
             ->where('sales.owner_id', $account_owner_id);
 
 
@@ -77,7 +79,7 @@ class ContestationService
             if(request('transaction')){
                 return $query;
             }
-            
+
             return $query->whereBetween(
                 $search_input_date,
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']

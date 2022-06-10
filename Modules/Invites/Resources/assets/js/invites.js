@@ -13,6 +13,16 @@ var statusDocumentUser = {
 
 let disabledCompany = false;
 let companyVerification = true;
+
+function updateAfterChangeCompany() {
+    //$("#card-invitation-data").css('display','block !important');
+    $("#card-table-invite").hide();
+    $("#content-error").hide();
+    //window.updateInvites()
+    window.getInvitationData();
+    window.updateInvitesAfterChangeCompany();
+}
+
 $(document).ready(function () {
     updateInvites();
     var currentPage = 1;
@@ -43,9 +53,12 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
+                    // $("#card-table-invite").hide();
+                    // $("#table_invites").hide();
                     $("#content-error").show();
                 } else {
                     $("#content-error").hide();
+                    // $("#table_invites").show();
                     $("#card-table-invite").css('display', 'block');
                     $("#card-invitation-data").css('display', 'block');
 
@@ -82,7 +95,8 @@ $(document).ready(function () {
 
                     pagination(response, 'invites');
                 }
-                getInvitationData();
+
+                window.getInvitationData();
 
                 // Reenviar convite
                 $(".resend-invitation").unbind('click');
@@ -145,6 +159,69 @@ $(document).ready(function () {
                 });
 
                 loadingOnScreenRemove()
+            }
+        });
+    }
+
+    window.updateInvitesAfterChangeCompany = function () {
+        loadOnTable('#table-body-invites', '#table_invites');
+        var cont = 0;
+        $.ajax({
+            method: "GET",
+            url: '/api/invitations?company='+ sessionStorage.getItem('company_default'),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                if (isEmpty(response.data)) {
+                    $("#card-table-invite").hide();
+                    $("#table_invites").hide();
+                    $("#content-error").show();
+                } else {
+                    $("#content-error").hide();
+                    $("#table_invites").show();
+                    $("#card-table-invite").css('display', 'block');
+                    $("#card-invitation-data").css('display', 'block');
+
+                    // $("#text-info").css('display', 'block');
+                    $("#card-table-invite").css('display', 'block');
+                    $("#table-body-invites").html('');
+
+                    $.each(response.data, function (index, value) {
+                        dados = '';
+                        dados += '<tr>';
+                        if (index != 9) {
+                            dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (currentPage - 1) + (cont += 1) + '</button></td>';
+                        } else {
+                            dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + response.meta.to + '</button></td>';
+                        }
+                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + '</td>';
+                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.company_name + '</td>';
+                        dados += '<td class="text-center" style="vertical-align: middle;">';
+                        dados += '<span class="badge badge-' + statusInvite[value.status] + ' text-center">' + value.status_translated + '</span>';
+                        dados += '</td>';
+                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
+                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
+                        if (value.status != '2' || verifyAccountFrozen()) {
+                            dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-reload-1'></span></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-bin-1'></span></button></td>";
+
+                        } else {
+                            dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "'><span class='o-reload-1'></span></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "'><span class='o-bin-1'></span></button></td>";
+                        }
+                        dados += '</tr>';
+                        $("#table-body-invites").append(dados);
+                    });
+
+                    pagination(response, 'invites');
+                }
             }
         });
     }
@@ -296,7 +373,20 @@ $(document).ready(function () {
         });
     }
 
-    function getInvitationData() {
+    window.getInvitationData = function () {
+        loadOnAny(".number", false, {
+            styles: {
+                container: {
+                    minHeight: "47px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
         $.ajax({
             method: "GET",
             url: '/api/invitations/getinvitationdata' + '?company='+ sessionStorage.getItem('company_default'),
@@ -309,6 +399,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response)
             },
             success: (response) => {
+                loadOnAny(".number", true);
+                $("#invitations_accepted, #invitations_sent, #commission_paid, #commission_pending").html("");
                 $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '');
                 $("#invitations_sent").html('' + response.data.invitation_sent_count + '');
                 var commission_paid = response.data.commission_paid.split(/\s/g);

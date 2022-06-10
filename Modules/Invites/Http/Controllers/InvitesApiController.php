@@ -236,7 +236,7 @@ class InvitesApiController extends Controller
                     ]
                 ]
             )->count();
-            
+
             $invitationSentCount = $invitationModel->where('invite', $accountOwnerId)
                 ->where('company_id', Hashids::decode($request->company))
                 ->count();

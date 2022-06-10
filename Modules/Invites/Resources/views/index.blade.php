@@ -64,27 +64,27 @@
                     <div class="col-md-3 col-sm-6 col-xs-12 card">
                         <div class="card-body">
                             <h5 class="font-size-14 gray-600">Convites enviados</h5>
-                            <h4 id='invitations_sent' class="font-size-30 bold"></h4>
+                            <h4 id='invitations_sent' class="font-size-30 bold number"></h4>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12 card">
                         <div class="card-body">
                             <h5 class="font-size-14 gray-600">Convites ativos</h5>
-                            <h4 id='invitations_accepted' class="font-size-30 bold"></i>
+                            <h4 id='invitations_accepted' class="font-size-30 bold number"></i>
                             </h4>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12 card">
                         <div class="card-body">
                             <h5 class="font-size-14 gray-600">Comissão pendente</h5>
-                            <h4 id='commission_pending'></h4>
+                            <h4 id='commission_pending' class="number"></h4>
                         </div>
                         <div class="s-border-right yellow"></div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12 card">
                         <div class="card-body">
                             <h5 class="font-size-14 gray-600">Comissão paga </h5>
-                            <h4 id='commission_paid'></h4>
+                            <h4 id='commission_paid' class="number"></h4>
                         </div>
                         <div class="s-border-right red"></div>
                     </div>
@@ -101,7 +101,7 @@
 
             <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none; padding-bottom: 5px'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
-                    <table class="table table-striped unify">
+                    <table class="table table-striped unify" id="table_invites">
                         <thead class="text-center">
                             <td class="table-title text-left">Convite</td>
                             <td class="table-title text-center">Email convidado</td>

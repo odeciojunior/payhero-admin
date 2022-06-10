@@ -1550,18 +1550,8 @@ function getCompanies() {
 
 function updateProjectsOptions(){
     pathname = window.location.pathname;
-    // corrige lojas em Contestações
-    if(pathname == '/contestations'){
-        $("#project").find('option').not(':first').remove();
-        $("#project-select").next().next().empty();
-        $.getScript( "/build/layouts/chargebacks/contestations-index.min.js", function( data, textStatus, jqxhr ) {
-            atualizar();
-            getTotalValues();
-            getProjects();
-        });
-    }
     // corrige lojas em Relatorios Vendas
-    else if(pathname == '/reports/sales'){
+    if(pathname == '/reports/sales'){
         $("#select_projects").find('option').remove();
         $.getScript( "/build/layouts/reports/index.min.js", function( data, textStatus, jqxhr ) {
             getProjects();
@@ -1613,14 +1603,6 @@ function updateProjectsOptions(){
         $("#project_id").find('option').remove();
         $.getScript( "/build/layouts/hotzapp/index.min.js", function( data, textStatus, jqxhr ) {
             index();
-        });
-    }
-    // corrige lojas em Apps API Sirius
-    else if(pathname == '/integrations'){
-        $("#project_id").find('option').remove();
-        $.getScript( "/build/layouts/integrations/index.min.js", function( data, textStatus, jqxhr ) {
-            console.log(sessionStorage.getItem('company_default')+' ----------------------- ')
-            refreshIntegrations();
         });
     }
 }

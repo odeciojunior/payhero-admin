@@ -1,3 +1,24 @@
+function updateAfterChangeCompany(){
+    $("#project").find('option').not(':first').remove();
+    //$("#project option:first").attr('selected','selected');
+    //$("#project-select").next().next().empty();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#project").append(
+                    $("<option>", {
+                        value: project.id,
+                        text: project.name,
+                    })
+                );
+            });
+        }
+    });
+    window.atualizar();
+    window.getTotalValues();
+}
+
 $(document).ready(function () {
     let statusObject = {
         1: "Aprovada",
@@ -83,6 +104,7 @@ $(document).ready(function () {
             is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
             sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
+            company: sessionStorage.getItem('company_default')
         };
         if (urlParams) {
             let params = "";
@@ -117,7 +139,7 @@ $(document).ready(function () {
         }
 
         $("#primeira_pagina").on("click", function () {
-            atualizar("?page=1");
+            window.atualizar("?page=1");
         });
 
         for (x = 3; x > 0; x--) {
@@ -136,7 +158,7 @@ $(document).ready(function () {
             $("#pagina_" + (response.meta.current_page - x)).on(
                 "click",
                 function () {
-                    atualizar("?page=" + $(this).html());
+                    window.atualizar("?page=" + $(this).html());
                 }
             );
         }
@@ -172,7 +194,7 @@ $(document).ready(function () {
             $("#pagina_" + (response.meta.current_page + x)).on(
                 "click",
                 function () {
-                    atualizar("?page=" + $(this).html());
+                    window.atualizar("?page=" + $(this).html());
                 }
             );
         }
@@ -192,7 +214,7 @@ $(document).ready(function () {
             }
 
             $("#ultima_pagina").on("click", function () {
-                atualizar("?page=" + response.meta.last_page);
+                window.atualizar("?page=" + response.meta.last_page);
             });
         }
     }
@@ -227,7 +249,7 @@ $(document).ready(function () {
         });
     }
 
-    function atualizar(link = null) {
+    window.atualizar = function(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
 
         if (link == null) {
@@ -308,7 +330,7 @@ $(document).ready(function () {
                             dados+=`
                                     <td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
                                 `;
-                                
+
                             dados +=`
                                 <td class="font-size-12 bold line-overflow" style="white-space: normal;">
                                     ${value.reason}
@@ -422,7 +444,7 @@ $(document).ready(function () {
         });
     }
 
-    function getTotalValues() {
+    window.getTotalValues = function() {
         loadOnAny(".total-number", false, {
             styles: {
                 container: {
@@ -493,7 +515,7 @@ $(document).ready(function () {
                         );
                     });
 
-                    atualizar();
+                    window.atualizar();
                 } else {
                     // $("#export-excel").hide();
                     $("#project-not-empty").hide();
@@ -507,8 +529,8 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
-        getTotalValues();
+        window.atualizar();
+        window.getTotalValues();
     });
 
     $('#transaction').on('change paste keyup select', function () {
@@ -580,14 +602,14 @@ $(document).ready(function () {
 
     $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
-            atualizar();
-            getTotalValues();
+            window.atualizar();
+            window.getTotalValues();
         }
     });
 
     $("#pagination").css({ marginBottom: "100px" });
 
-    atualizar();
-    getTotalValues();
+    //window.atualizar();
+    window.getTotalValues();
     getProjects();
 });

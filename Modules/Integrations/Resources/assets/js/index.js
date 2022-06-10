@@ -1,4 +1,49 @@
+function updateAfterChangeCompany() {
+    window.onlyData();
+}
+
 $(document).ready(function () {
+
+    window.onlyData = function(){
+        $("#content-error").css('display','none');
+        $("#content-script").css('display','none');
+        $("#card-table-integrate").css('display','none');
+        $("#pagination-integrates").css('display','none');
+        $.ajax({
+            method: "GET",
+            url: "/api/integrations?resume=true&page=1&company_id="+sessionStorage.getItem('company_default'),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                if (isEmpty(response.data)) {
+                    $(".page-header").find('.store-integrate').css('display', 'none');
+                    $("#content-error").find('.store-integrate').css('display', 'block');
+
+                    $("#content-error").css('display', 'block');
+                    $("#content-script").css('display', 'none');
+                    $("#card-table-integrate").css('display', 'none');
+                    $("#card-integration-data").css('display', 'none');
+                } else {
+                    $(".page-header").find('.store-integrate').css('display', 'block');
+                    $("#content-error").find('.store-integrate').css('display', 'none');
+                    $("#content-error").hide();
+                    updateIntegrationTableData(response);
+                    pagination(response, 'integrates');
+                }
+
+                getIntegration();
+                refreshToken();
+                deleteIntegration();
+            }
+        });
+    }
+
     let integrationTypeEnum = {
         external: 'Integração externa',
         checkout_api: 'Checkout API'
