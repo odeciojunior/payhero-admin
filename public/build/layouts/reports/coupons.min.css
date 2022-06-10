@@ -1601,6 +1601,19 @@ h4.number{
     background: url('/build/global/img/reports/ico-select.png') 123px center no-repeat !important;
 }
 
+.origin-sel .sirius-select-text {
+    width: 152px;
+    padding: 0;
+    float: right;
+    line-height: 28px;
+    height: 29px;
+    border: 1px solid #E0E7EE !important;
+    padding-left: 9px;
+    min-height: 28px;
+    font-size: 14px;
+}
+.origin-sel .sirius-select-options { top: 35px; }
+
 .tt-data {
     color: #636363;
     font-size: 16px;
@@ -2272,7 +2285,7 @@ h4.number{
 #card-abandoned .ske-load,
 #card-recurrence .ske-load,
 #card-upsell .ske-load,
-#card-most-sales .ske-load {
+.sales .card-most-sales .ske-load {
     position: absolute;
     transform: translate(0, -20%);
 }
@@ -2301,8 +2314,8 @@ h4.number{
 }
 .sirius-select1 .sirius-select-options { 
     right: 0;
-    top: 44px;
-    width: 175px;
+    top: 35px;
+    width: 151px;
  }
 
  .new-sell-graph { height: 278px; padding-bottom: 10px; } 
