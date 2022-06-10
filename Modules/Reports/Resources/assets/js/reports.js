@@ -122,14 +122,14 @@ $(function () {
                         <div class="new-graph-pending graph"></div>
                     `;
                     $("#block-pending").html(pendHtml);
-                    $('.new-graph-pending').width($('#block-pending').width() + 8);
+                    $('.new-graph-pending').width($('#block-pending').width() + 6);
                     $('.new-graph-pending').html('<canvas id=graph-pending></canvas>')
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     newGraphPending(series,labels);
 
                     $(window).on("resize", function() {
-                        $('.new-graph-pending').width($('#block-pending').width() + 8);
+                        $('.new-graph-pending').width($('#block-pending').width() + 6);
                     });
                     
                 } else {
@@ -1144,7 +1144,7 @@ $(function () {
         };
 
         const ctx = document.getElementById('graph-sell').getContext('2d');
-        var gradient = ctx.createLinearGradient(0, 0, 0, 450);
+        var gradient = ctx.createLinearGradient(0, 0, 0, 150);
         gradient.addColorStop(0, 'rgba(76, 152,242, 0.23)');
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
@@ -1227,9 +1227,10 @@ $(function () {
         };
 
         const ctx = document.getElementById('graph-cashback').getContext('2d');
-        var gradient = ctx.createLinearGradient(0, 0, 0, 450);
-        gradient.addColorStop(0, 'rgba(54,216,119, 0.23)');
-        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 150);        
+
+        gradient.addColorStop(0, 'rgba(54,216,119,0.23)');
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
             const myChart = new Chart(ctx, {
                 plugins: [legendMargin],
@@ -1309,7 +1310,7 @@ $(function () {
         };
 
         const ctx = document.getElementById('graph-pending').getContext('2d');
-        var gradient = ctx.createLinearGradient(0, 0, 0, 450);
+        var gradient = ctx.createLinearGradient(0, 0, 0, 130);
         gradient.addColorStop(0, 'rgba(255,121,0, 0.23)');
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
@@ -1408,8 +1409,8 @@ $(function () {
         };
 
         const ctx = document.getElementById('comission-graph').getContext('2d');
-        var gradient = ctx.createLinearGradient(0, 0, 0, 450);
-        gradient.addColorStop(0, 'rgba(76, 152,242, 0.23)');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 150);
+        gradient.addColorStop(0, 'rgba(76, 152,242, 0.2)');
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
             const myChart = new Chart(ctx, {

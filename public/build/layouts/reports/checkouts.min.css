@@ -479,7 +479,7 @@ h4.number{
     position: absolute;
     width: 100%;
     z-index: 4;
-    top: 50%;
+    top: 55%;
     left: 0;
     transform: translate(0, -50%);
 }
@@ -2055,7 +2055,6 @@ h4.number{
 /* skeleton loading */
 .content-info {
     height: 100%;
-    min-height: 198px;
 }
 .graph-comission,
 .graph-pending,
@@ -2122,8 +2121,9 @@ h4.number{
 #graph-pending,
 #graph-sell,
 #graph-cashback { 
-    margin: 0px 0 -8px -8px; 
+    margin: 0px 0 0 -8px; 
     display: none;
+    height: 109px !important;
 } 
 #comission-graph.invisible,
 #graph-pending.invisible,
