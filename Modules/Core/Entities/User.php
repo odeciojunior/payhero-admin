@@ -370,6 +370,14 @@ class User extends Authenticable
     }
 
     /**
+     * @return HasOne
+     */
+    public function userInformations()
+    {
+        return $this->belongsTo(UserInformation::class, 'document', 'document');
+    }
+
+    /**
      * @return HasMany
      */
     public function userDevices()

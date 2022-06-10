@@ -19,9 +19,15 @@
         </a>
     @else
         @if(Request::is('projects'))
-            <a href="{{ env('ACCOUNT_FRONT_URL', 'https://accounts.cloudfox.net/') }}/personal-info" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
-                <i class="o-add-1" aria-hidden="true"></i>
-            </a>
+            @if (auth()->user()->address_document_status == 3 && auth()->user()->personal_document_status == 3)
+                <button type="button" class="new-register-open-modal-btn btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
+                    <i class="o-add-1" aria-hidden="true"></i>
+                </button>
+            @else
+                <a href="{{ env('ACCOUNT_FRONT_URL', 'https://accounts.cloudfox.net/') }}/personal-info" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
+                    <i class="o-add-1" aria-hidden="true"></i>
+                </a>
+            @endif
         @else
             <a href="/projects" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
                 <i class="o-add-1" aria-hidden="true"></i>
