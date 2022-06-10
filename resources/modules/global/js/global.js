@@ -944,7 +944,7 @@ function verifyDocumentPending() {
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Estamos analisando seus documentos da sua empresa';
                         card_company_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                        if (response.data.company.address_document == 'analyzing' && response.data.company.contract_document == 'analyzing') {
+                        if (response.data.company.address_document !== 'pending' && response.data.company.contract_document !== 'pending') {
                             card_company_button = '';
                         } else {
                             card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
@@ -999,7 +999,7 @@ function verifyDocumentPending() {
                     card_user_icon = '/build/global/img/icon-analysing.svg';
                     card_user_title = 'Estamos analisando seus documentos';
                     card_user_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                    if (response.data.user.address_document == 'analyzing' && response.data.user.personal_document == 'analyzing') {
+                    if (response.data.user.address_document !== 'pending' && response.data.user.personal_document !== 'pending') {
                         card_user_button = '';
                     } else {
                         card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';

@@ -43,6 +43,8 @@ class CoreApiController extends Controller
             $userInformations = UserInformation::where('document', $user->document)->exists();
 
             $userStatus = null;
+            $userAddressDocument = $userModel->present()->getAddressDocumentStatus($user->address_document_status);
+            $userPersonaltDocument = $userModel->present()->getPersonalDocumentStatus($user->personal_document_status);
             $userRedirect = null;
             if ($userService->haveAnyDocumentPending()) {
                 $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
@@ -77,38 +79,38 @@ class CoreApiController extends Controller
             } else {
                 $companyApproved = $companyService->companyDocumentApproved();
                 if (!empty($companyApproved)) {
-                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_APPROVED);
-                    $companyAddressDocument = $companyApproved->address_document_status;
-                    $companyContractDocument = $companyApproved->contract_document_status;
+                    $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_APPROVED);
+                    $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyApproved->address_document_status);
+                    $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyApproved->contract_document_status);
                     $companyRedirect = '/companies';
                 } else {
                     $companyPending = $companyService->companyDocumentPending();
                     if (!empty($companyPending)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_PENDING);
-                        $companyAddressDocument = $companyPending->address_document_status;
-                        $companyContractDocument = $companyPending->contract_document_status;
+                        $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_PENDING);
+                        $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyPending->address_document_status);
+                        $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyPending->contract_document_status);
                         $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyPending->id);
                     }
 
                     $companyAnalyzing = $companyService->companyDocumentAnalyzing();
                     if (!empty($companyAnalyzing)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_ANALYZING);
-                        $companyAddressDocument = $companyAnalyzing->address_document_status;
-                        $companyContractDocument = $companyAnalyzing->contract_document_status;
+                        $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_ANALYZING);
+                        $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyAnalyzing->address_document_status);
+                        $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyAnalyzing->contract_document_status);
                         $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyAnalyzing->id);
                     }
 
                     $companyRefused = $companyService->companyDocumentRefused();
                     if (!empty($companyRefused)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_REFUSED);
-                        $companyAddressDocument = $companyRefused->address_document_status;
-                        $companyContractDocument = $companyRefused->contract_document_status;
+                        $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_REFUSED);
+                        $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyRefused->address_document_status);
+                        $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyRefused->contract_document_status);
                         $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyRefused->id);
                     }
                 }
             }
 
-            $this->updateUserStatus($user, $userInformations, $userInformations, $companyStatus);
+            $this->updateUserStatus($user, $userInformations, $userStatus, $companyStatus);
 
             return response()->json([
                 'data' => [
@@ -118,6 +120,8 @@ class CoreApiController extends Controller
                     ],
                     'user' => [
                         'status' => $userStatus,
+                        'address_document' => $userAddressDocument,
+                        'personal_document' => $userPersonaltDocument,
                         'document' => $user->document,
                         'email' => $user->email,
                         'informations' => $userInformations,
