@@ -14,13 +14,19 @@
     <p class="desc gray">Que tal criar uma primeira loja para começar a vender? </p>
 
     @if (auth()->user()->account_is_approved && auth()->user()->address_document_status == 3 && auth()->user()->personal_document_status == 3)
-    <a href="/projects/create" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
-        <i class="o-add-1" aria-hidden="true"></i>
-    </a>
-    @else
-        <a href="{{ env('ACCOUNT_FRONT_URL', 'https://accounts.cloudfox.net/') }}/personal-info" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
+        <a href="/projects/create" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
             <i class="o-add-1" aria-hidden="true"></i>
         </a>
+    @else
+        @if(Request::is('projects'))
+            <a href="{{ env('ACCOUNT_FRONT_URL', 'https://accounts.cloudfox.net/') }}/personal-info" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
+                <i class="o-add-1" aria-hidden="true"></i>
+            </a>
+        @else
+            <a href="/projects" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
+                <i class="o-add-1" aria-hidden="true"></i>
+            </a>
+        @endif
     @endif
 
 </div>
