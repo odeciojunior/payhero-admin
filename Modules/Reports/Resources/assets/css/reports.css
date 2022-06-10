@@ -2181,7 +2181,7 @@ h4.number{
 
 #card-devices .ske-load,
 #card-payments .ske-load,
-#card-cashback .ske-load {
+#card-cashback.card-fc .ske-load {
     position: absolute;
     transform: translate(0, -30%);
 }
@@ -2240,6 +2240,17 @@ h4.number{
     transform: translate(-50%, -50%);
     text-align: center;
 }
+.noone-data {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: #757575;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-51%, -79%);
+}
+
 .origin-report img { height: 129px; }
 .origin-report td { padding: 0 18px; }
 
