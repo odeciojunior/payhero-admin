@@ -21,8 +21,6 @@ $(document).ready(function () {
 
     var newRegisterStepAux;
 
-    changeNewRegisterLayoutOnWindowResize();
-
     window.onresize = changeNewRegisterLayoutOnWindowResize;
 
     $('.new-register-open-modal-btn').on('click', function () {
@@ -903,12 +901,14 @@ function verifyDocumentPending() {
             if (response.data.account.status !== 'approved') {
                 let verifyAccount = localStorage.getItem('verifyAccount');
                 if (verifyAccount == null) {
-                    $('.new-register-page-open-modal-container').hide();
-                    $('.new-register-navbar-open-modal-container').hide();
+                    $('.new-register-page-open-modal-container').fadeOut();
+                    $('.new-register-navbar-open-modal-container').fadeOut();
 
                     setStepContainer();
 
                     $('.new-register-overlay').fadeIn();
+                } else {
+                    changeNewRegisterLayoutOnWindowResize();
                 }
 
                 localStorage.setItem('verifyAccount', JSON.stringify(response.data));

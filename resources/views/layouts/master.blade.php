@@ -86,7 +86,7 @@
         @endphp
 
         @if(!auth()->user()->account_is_approved && $account_type === 'admin')
-            <div class="new-register-page-open-modal-container">
+            <div class="new-register-page-open-modal-container" style="display: none;">
                 <div class="page-header container">
                     <div class="row align-items-center justify-content-between">
                         <div class="col-lg-6">
