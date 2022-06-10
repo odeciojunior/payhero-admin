@@ -263,68 +263,35 @@ class DomainsController extends Controller
      * @param DomainDestroyRequest $request
      * @return JsonResponse
      */
-    public function destroy(DomainDestroyRequest $request)
+    public function destroy(DomainDestroyRequest $request): JsonResponse
     {
         try {
-            $domainModel       = new Domain();
-            $domainRecordModel = new DomainRecord();
-            $sendgridService   = new SendgridService();
-            $cloudFlareService = new CloudFlareService();
 
             $requestData = $request->validated();
 
-            $domainId = current(Hashids::decode($requestData['id']));
+            $domain = Domain::with('domainsRecords', 'project', 'project.shopifyIntegrations')
+                ->find(hashids_decode($requestData['domain']));
 
-            $domain = $domainModel->with('domainsRecords', 'project', 'project.shopifyIntegrations')
-                                  ->find($domainId);
-
-            if (Gate::allows('edit', [$domain->project])) {
-
-                if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id) || empty($cloudFlareService->getZones($domain->name))) {
-                    //zona deletada
-                    $sendgridService->deleteLinkBrand($domain->name);
-                    $sendgridService->deleteZone($domain->name);
-
-                    $recordsDeleted = $domainRecordModel->where('domain_id', $domain->id)->delete();
-                    $domainDeleted  = $domain->delete();
-
-                    if ($domainDeleted) {
-
-                        if (!empty($domain->project->shopify_id)) {
-                            //se for shopify, voltar as integraçoes ao html padrao
-                            try {
-
-                                foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                                    $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-
-                                    $shopify->setThemeByRole('main');
-                                    if (!empty($shopifyIntegration->theme_html)) {
-                                        $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
-                                    }
-                                    if (!empty($shopifyIntegration->layout_theme_html)) {
-                                        $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
-                                    }
-                                }
-                            } catch (Exception $e) {
-                                //throwl
-
-                            }
-                        }
-
-                        return response()->json(['message' => 'Domínio removido com sucesso'], 200);
-                    } else {
-                        return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
-                    }
-                } else {
-                    //erro ao deletar zona
-                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
-                }
-            } else {
-                return response()->json(['message' => 'Sem permissão para deletar domínio'], 400);
+            if (empty($domain)) {
+                return response()->json(['message' => 'Projeto não encontrado!'], 400);
             }
+
+            if (empty($domain->project) && !Gate::allows('edit', [$domain->project])) {
+                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
+            }
+
+            $domainService = new DomainService();
+            $deleteDomain = $domainService->deleteDomain($domain);
+
+            if($deleteDomain['success']) {
+                return response()->json(['message' => $deleteDomain['message']], 200);
+            }
+
+            return response()->json(['message' => $deleteDomain['message']], 400);
+
         } catch (Exception $e) {
-            Log::warning('DomainsController destroy - erro ao deletar domínio');
             report($e);
+            return response()->json(['message' => 'Server Error.'], 400);
         }
     }
 

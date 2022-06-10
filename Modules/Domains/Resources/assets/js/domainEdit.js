@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    //alert('Aqui');
     let projectId = $(window.location.pathname.split('/')).get(-1);
     let btnAddDomain = $(".add-domain");
     let btnDeleteDomain = $("#btn-delete-domain");
@@ -6,7 +7,7 @@ $(document).ready(function () {
 
     let infoDomain = $(".info-domain");
 
-    $("#previewimage").imgAreaSelect({remove: true});
+    $("#previewimage").imgAreaSelect({ remove: true });
     updateDomains();
 
     /**
@@ -106,14 +107,14 @@ $(document).ready(function () {
      * @param domain
      */
     function deleteDomain(domain) {
-        $(".btn-delete-modal-domain").css('opacity',1);
+        $(".btn-delete-modal-domain").css('opacity', 1);
         $("#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain").show();
 
         $("#modal-delete-domain").modal("show");
 
         btnDeleteDomain.unbind('click');
         btnDeleteDomain.on('click', function () {
-            $(".btn-delete-modal-domain").css('opacity',0);
+            $(".btn-delete-modal-domain").css('opacity', 0);
 
             loadOnAny('#modal-delete-domain-body', false, {
                 styles: {
@@ -166,15 +167,15 @@ $(document).ready(function () {
     function tableDomains(value) {
         var dados = '';
         dados += '<tr>';
-            dados += '<td class="text-center">' + value.domain + '</td>';
-            dados += '<td class="text-center"><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
-            dados += "<td style='text-align:center;'>"
-                dados += "<div class='d-flex justify-content-end align-items-center'>";
-                    dados += "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><span class='o-eye-1'></span> </a>"
-                    dados += "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><span class='o-edit-1'></span> </a>"
-                    dados += "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><span class='o-bin-1'></span> </a>";
-                dados += "</div>";
-            dados += "</td>";
+        dados += '<td class="text-center">' + value.domain + '</td>';
+        dados += '<td class="text-center"><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
+        dados += "<td style='text-align:center;'>"
+        dados += "<div class='d-flex justify-content-end align-items-center'>";
+        dados += "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><span class='o-eye-1'></span> </a>"
+        dados += "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><span class='o-edit-1'></span> </a>"
+        dados += "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><span class='o-bin-1'></span> </a>";
+        dados += "</div>";
+        dados += "</td>";
         dados += '</tr>';
         $("#domain-table-body").append(dados);
     }
@@ -182,8 +183,8 @@ $(document).ready(function () {
     /**
      * Verifica dados e exibi modal para adicionar novo dominio
      */
-     $('.add-domain').unbind('click');
-     $(document).on('click', '.add-domain', function () {
+    $('.add-domain').off('click');
+    $(document).on('click', '.add-domain', function () {
         $("#btn-modal-add-input").show();
         $("#loaderModal").remove();
 
@@ -198,17 +199,17 @@ $(document).ready(function () {
 
         $("#modal-add-domain").modal('show');
 
-        $('#btn-modal-add-domain').unbind('click');
-        $(document).on('click', '#btn-modal-add-domain', function () {
+    });
 
-            if ($.trim($(".name-domain").val()).length === 0) {
-                infoDomain.addClass('text-danger').html('Preencha corretamente o domínio').show();
-            } else {
-                $(".info-domain").html('');
-                addNewDomain();
-            }
+    $('#btn-modal-add-domain').off('click');
+    $(document).on('click', '#btn-modal-add-domain', function () {
 
-        });
+        if ($.trim($(".name-domain").val()).length === 0) {
+            infoDomain.addClass('text-danger').html('Preencha corretamente o domínio').show();
+        } else {
+            $(".info-domain").html('');
+            addNewDomain();
+        }
     });
 
     /**
