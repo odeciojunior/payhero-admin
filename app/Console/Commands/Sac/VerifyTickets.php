@@ -45,7 +45,7 @@ class VerifyTickets extends Command
 
         $query = Ticket::where('ticket_status_enum', Ticket::STATUS_OPEN)
             ->where('last_message_date', '<', now()->subDays($daysWithoutUserResponse))
-            ->where('last_message_type_enum', TicketMessage::TYPE_FROM_ADMIN);
+            ->whereIn('last_message_type_enum', [TicketMessage::TYPE_FROM_ADMIN, TicketMessage::TYPE_FROM_SYSTEM]);
 
         $bar = $this->getOutput()->createProgressBar($query->count());
         $bar->start();
@@ -54,14 +54,18 @@ class VerifyTickets extends Command
 
             foreach ($tickets as $ticket) {
                 try {
+                    $now = now()->toDateTimeString();
+
                     TicketMessage::updateOrCreate([
                         'ticket_id' => $ticket->id,
                         'type_enum' => TicketMessage::TYPE_FROM_SYSTEM,
                     ], [
                         'message' => $systemMessage,
-                        'created_at' => now()->toDateTimeString()
+                        'created_at' => $now
                     ]);
 
+                    $ticket->last_message_type_enum = TicketMessage::TYPE_FROM_SYSTEM;
+                    $ticket->last_message_date = $now;
                     $ticket->ticket_status_enum = Ticket::STATUS_CLOSED;
                     $tickets->mediation_notified = 0;
                     $ticket->save();
