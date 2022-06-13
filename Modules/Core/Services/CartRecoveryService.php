@@ -40,7 +40,7 @@ class CartRecoveryService
                 'cc.checkout_logo as logo',
                 DB::raw("(select message from project_notifications where notification_enum = {$smsNotificationEnum} and status = {$notificationActive} and project_id = p2.id limit 1) as sms_message"),
                 DB::raw("(select message from project_notifications where notification_enum = {$emailNotificationEnum} and status = {$notificationActive} and project_id = p2.id limit 1) as email_message"),
-                DB::raw("(select d.name from domains as d where d.project_id = p2.id and d.status = {$domainApproved} limit 1) as domain"),
+                DB::raw("(select d.name from domains as d where d.project_id = p2.id and d.status = {$domainApproved} and d.deleted_at is null limit 1) as domain"),
                 DB::raw("cast(concat('[', group_concat(json_object('id', p.id , 'name', p.name, 'photo', p.photo, 'amount', pp.amount)), ']') as json) as products"),
                 DB::raw("(select json_object('name', l.name, 'email', l.email, 'phone', l.telephone) from logs l where l.checkout_id = checkouts.id order by l.id desc limit 1) as customer"),
             ])->join('checkout_plans as cp', 'checkouts.id', '=', 'cp.checkout_id')
