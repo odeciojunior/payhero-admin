@@ -231,7 +231,7 @@
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
                                     </h5>
-                                    <h6 class="font-size-14">Hoje</h6>
+                                    <!-- <h6 class="font-size-14">Hoje</h6> -->
                                 </header>
                                 <div class="onPreLoad" id="block-distribution"></div>
                             </div>
