@@ -29,14 +29,15 @@ class DomainRecordsService
                 return (new DomainService())->deleteDomain($this->domain);
             }
 
-            if (!$this->cloudflareService->deleteRecord($record->cloudflare_record_id)) {
-                return [
-                    'message' => 'Ocorreu um erro ao tentar deletar a entrada!',
-                    'success' => false,
-                ];
-            }
+            $this->cloudflareService->deleteRecord($record->cloudflare_record_id);
 
-            return $this->deleteRecord($record);
+            $record->delete();
+
+            return [
+                'message' => 'DNS removido com sucesso!',
+                'success' => true,
+            ];
+
         } catch (\Exception $e) {
             report($e);
 
@@ -64,32 +65,6 @@ class DomainRecordsService
             report($e);
 
             return false;
-        }
-    }
-
-    public function deleteRecord(DomainRecord $record)
-    {
-        try {
-            $recordsFind = $this->domainRecordModel->where('id', $record->id)->first();
-            $recordsDeleted = $recordsFind->delete();
-
-            if ($recordsDeleted) {
-                return [
-                    'message' => 'DNS removido com sucesso!',
-                    'success' => true,
-                ];
-            }
-
-            return [
-                'message' => 'Ocorreu um erro ao tentar remover entrada!',
-                'success' => false,
-            ];
-        } catch (\Exception $e) {
-            report($e);
-            return [
-                'message' => 'Ocorreu um erro ao tentar remover entrada!',
-                'success' => false,
-            ];
         }
     }
 }
