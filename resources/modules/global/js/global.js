@@ -954,7 +954,7 @@ function verifyDocumentPending() {
                         card_company_icon = '/build/global/img/icon-error.svg';
                         card_company_title = 'Tivemos problemas em verificar sua empresa';
                         card_company_description = 'Há um problema com seus documentos.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Regularizar documentos</button>';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Reenviar documentos</button>';
                     } else if (response.data.company.status == 'approved') {
                         card_company_status = 'status-check redirect-to-accounts';
                         card_company_icon = '/build/global/img/icon-check.svg';
