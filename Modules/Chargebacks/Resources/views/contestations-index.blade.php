@@ -242,7 +242,7 @@
                                     <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
                                     <td class="table-title">Compra</td>
                                     <td class="table-title text-center" style="min-width: 100px;">Status</td>
-                                    {{--<td class="table-title">Situação</td>--}}
+                                    <td class="table-title">Prazo</td>
                                     <td class="table-title">Motivo</td>
                                     {{--                            <td class="table-title">Valor</td>--}}
                                     <td class="table-title" style="min-width: 100px;"></td>
