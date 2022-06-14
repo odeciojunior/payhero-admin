@@ -89,7 +89,6 @@ class CompanyService
 
         $check_PJ =  Company::where([
             'user_id' => $user->id,
-            // 'bank_document_status' => Company::DOCUMENT_STATUS_APPROVED,
             'address_document_status' => Company::DOCUMENT_STATUS_APPROVED,
             'contract_document_status' => Company::DOCUMENT_STATUS_APPROVED,
         ])->exists();
@@ -97,7 +96,6 @@ class CompanyService
         $check_PF = Company::where([
             'user_id' => $user->id,
             'document' => $user->document,
-            // 'bank_document_status' => Company::DOCUMENT_STATUS_APPROVED,
         ])->exists();
 
         return $check_PJ || $check_PF;
@@ -134,7 +132,6 @@ class CompanyService
         $company = Company::where(
             [
                 ['document', foxutils()->onlyNumbers($cnpj)],
-                // ['bank_document_status', Company::DOCUMENT_STATUS_APPROVED],
                 ['address_document_status', Company::DOCUMENT_STATUS_APPROVED],
                 ['contract_document_status', Company::DOCUMENT_STATUS_APPROVED],
             ]
@@ -459,11 +456,10 @@ class CompanyService
         if (!empty($company)) {
             if($company->company_type == Company::JURIDICAL_PERSON){
                 return
-                    //$company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED &&
                     $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED &&
                     $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED;
             }
-            return true; //$company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED;
+            return true;
         }
         return false;
     }
