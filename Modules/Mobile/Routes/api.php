@@ -18,4 +18,5 @@ Route::group(['prefix' => 'mobile'], function() {
     Route::get('/companies', 'MobileController@companies')->name('mobile.companies');
     Route::get('/balances', 'MobileController@balances')->name('mobile.balances');
     Route::get('/sales', 'MobileController@sales')->name('mobile.sales');
+    Route::get('/withdrawals', 'MobileController@withdrawals')->name('mobile.withdrawals');
 });
