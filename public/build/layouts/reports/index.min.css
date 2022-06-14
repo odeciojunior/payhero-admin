@@ -1318,6 +1318,13 @@ h4.number{
     display: flex;
     align-items: center;
 }
+.ico-cart { 
+    background: #F5F5FA; 
+    width: 36px; 
+    height: 36px; 
+    border-radius: 8px; 
+    display: flex;
+}
 
 .box-ico-cash {
     display: flex;
