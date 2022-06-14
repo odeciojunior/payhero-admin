@@ -324,7 +324,7 @@ function onCommission() {
             $("#block-commission").html(infoComission);
 
             if( removeMoneyCurrency(total) !== '0,00' ) {
-                $('.new-finance-graph').html('<canvas id=comission-graph></canvas>');
+                $('.new-finance-graph').html('<canvas id=comission-graph-finance></canvas>');
                 let labels = [...chart.labels];
                 let series = [...chart.values];
                 graphComission(series, labels, variation.value);
@@ -545,7 +545,7 @@ function updateReports() {
                 $("#export-excel").show();
 
                 $.each(response.data, function (i, project) {
-                    $("#select_projects").append(
+                    $("#select_projects").html(
                         $("<option>", {
                             value: project.id,
                             text: project.name,
@@ -595,7 +595,7 @@ function graphComission(series, labels, variant) {
              }
          }
     };
-    const ctx = document.getElementById('comission-graph').getContext('2d');
+    const ctx = document.getElementById('comission-graph-finance').getContext('2d');
     var gradient = ctx.createLinearGradient(0, 0, 0, 450);
     gradient.addColorStop(0, 'rgba(54,216,119, 0.23)');
     gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');

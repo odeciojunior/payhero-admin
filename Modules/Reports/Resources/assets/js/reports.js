@@ -1227,7 +1227,7 @@ $(function () {
         };
 
         const ctx = document.getElementById('graph-cashback').getContext('2d');
-        var gradient = ctx.createLinearGradient(0, 0, 0, 150);        
+        var gradient = ctx.createLinearGradient(0, 0, 0, 100);        
 
         gradient.addColorStop(0, 'rgba(54,216,119,0.23)');
         gradient.addColorStop(1, 'rgba(255,255,255,0)');

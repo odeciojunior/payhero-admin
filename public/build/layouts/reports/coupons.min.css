@@ -776,7 +776,7 @@ h4.number{
     .container-devices .box-image-payment { min-width: 117px; }
 }
 
-.bar-payment { max-width: 85px; padding-right: 5px; }
+.bar-payment { max-width: 100px; padding-right: 5px; }
 .percentage-card { max-width: 49px; }
 .ico-pay { max-width: 111px; }
 

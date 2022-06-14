@@ -1341,7 +1341,7 @@ function updateReports() {
                 $("#export-excel").show();
 
                 $.each(response.data, function (i, project) {
-                    $("#select_projects").append(
+                    $("#select_projects").html(
                         $("<option>", {
                             value: project.id,
                             text: project.name,
