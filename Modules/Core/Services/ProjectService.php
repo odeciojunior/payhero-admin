@@ -232,10 +232,6 @@ class ProjectService
                     }
                 }
 
-                if (!empty($project->checkoutConfig)) {
-                    $project->checkoutConfig->delete();
-                }
-
                 foreach ($project->domains as $domain) {
                     try {
                         $domainService = new DomainService();

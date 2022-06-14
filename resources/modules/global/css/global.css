@@ -994,10 +994,10 @@ img.border-icon{
     margin-left: 0;
 }
 .modal-new-layout .modal-header .close {
-    line-height: 28px;
+    line-height: 18px;
 }
 .modal-new-layout .modal-body {
-    padding: 24px !important;
+    padding: 24px;
 }
 .modal-new-layout .modal-footer {
     justify-content: center;
@@ -1009,7 +1009,7 @@ img.border-icon{
 .modal-new-layout .modal-header,
 .modal-new-layout .modal-body,
 .modal-new-layout .modal-footer {
-    padding: 20px 30px !important;
+    padding: 20px;
 }
 .modal-new-layout .modal-footer.border-on {
     border-top: 1px solid #e4eaec;
