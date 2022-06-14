@@ -1,1 +1,25 @@
-.o-arrow-right-1::before{transform:rotate(180deg)}.gray,.gray:hover{color:#a1a1a1!important}.btn-authorize{background:#f41c1c;color:#fff;padding:2px 5px;font-size:10px;text-align:center;margin-top:-30px;cursor:pointer}.btn-authorize:hover{background:#b41c1c}.page-title>a,.page-title>a>span{color:#707070}
+.o-arrow-right-1::before {
+    transform: rotate(180deg);
+}
+
+.gray,
+.gray:hover {
+    color: #a1a1a1 !important;
+}
+
+.btn-authorize {
+    background: #F41C1C;
+    color: white;
+    padding: 2px 5px;
+    font-size: 10px;
+    text-align: center;
+    margin-top: -30px;
+    cursor: pointer;
+}
+
+.btn-authorize:hover {
+    background: #B41c1c;
+}
+
+/* Page titles */
+.page-title > a, .page-title > a > span { color: #707070 }
