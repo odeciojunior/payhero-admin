@@ -987,7 +987,9 @@ mix.styles([
     'resources/modules/global/adminremark/global/fonts/orion-icons/iconfont.css',
     // New CSS
     'resources/modules/global/css/new-site.css',
-    'resources/modules/global/css/global.css',
+    // Bonus Balance Donut Progress
+    'resources/modules/global/css/mk_charts.css',
+    'resources/modules/global/css/global.css',    
     'resources/modules/global/adminremark/global/vendor/asscrollable/asScrollable.css',
 ],'public/build/layouts/master/master.min.css');
 
@@ -1015,7 +1017,8 @@ mix.babel([
     'resources/modules/global/js/global.js',
     'resources/modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js',
     'resources/modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js',
-    'resources/modules/global/js/announcekit-global.js'
+    'resources/modules/global/js/announcekit-global.js',
+    'resources/modules/global/js/mk_charts.js',
 ],'public/build/layouts/master/plugins.min.js')
 mix.babel([
     'resources/modules/global/js-extra/pusher.min.js',
