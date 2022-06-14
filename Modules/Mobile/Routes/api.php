@@ -20,4 +20,5 @@ Route::group(['prefix' => 'mobile'], function() {
     Route::get('/sales', 'MobileController@sales')->name('mobile.sales');
     Route::get('/withdrawals', 'MobileController@withdrawals')->name('mobile.withdrawals');
     Route::post('/withdrawals', 'MobileController@withdrawalsStore')->name('mobile.withdrawals.store');
+    Route::get('/statements-resume', 'MobileController@statementsResume')->name('mobile.statements-resume');
 });

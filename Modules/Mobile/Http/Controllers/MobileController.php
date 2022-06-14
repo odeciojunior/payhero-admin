@@ -205,7 +205,7 @@ class MobileController extends Controller
     }
 
     /**
-     * Returns the user's withdrawals.
+     * Store a withdrawal request.
      *
      * @return JsonResponse
      */
@@ -291,6 +291,38 @@ class MobileController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Ocorreu um erro, tente novamente mais tarde!'
+            ], 400);
+        }
+    }
+
+    /**
+     * Returns the summary of financial data.
+     *
+     * @return JsonResponse
+     */
+    public function statementsResume(Request $request)
+    {
+        try {
+            $companyId = hashids_decode($request->company);
+            $company = Company::find($companyId);
+            $companyService = new CompanyBalanceService($company);
+            $statementResumes = $companyService->getResumes();
+
+            foreach($statementResumes as &$statementResume) {
+                if(!is_array($statementResume) || empty($statementResume)) {
+                    continue;
+                }
+                foreach($statementResume as &$data) {
+                    $data = is_int($data) ? foxutils()->formatMoney($data / 100) : $data;
+                }
+            }
+
+            return response()->json($statementResumes, 200);
+        }
+        catch(Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erro ao buscar dados'
             ], 400);
         }
     }
