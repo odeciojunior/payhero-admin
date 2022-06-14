@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
@@ -15,6 +16,9 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\CompanyBalanceService;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\UserService;
+use Modules\Withdrawals\Services\WithdrawalService;
 
 class MobileController extends Controller
 {
@@ -177,6 +181,13 @@ class MobileController extends Controller
                 ], 400);
             }
 
+            if(!Gate::allows('edit', [$company])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Sem permissão para visualizar saques'
+                ], 403);
+            }
+
             $withdrawals = Withdrawal::select('id', 'value', 'status', 'created_at')
                 ->where('company_id', $company->id)
                 ->where('gateway_id', $gateway->id)
@@ -189,6 +200,97 @@ class MobileController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Erro ao buscar dados'
+            ], 400);
+        }
+    }
+
+    /**
+     * Returns the user's withdrawals.
+     *
+     * @return JsonResponse
+     */
+    public function withdrawalsStore(Request $request)
+    {
+        try {
+            $companyId = hashids_decode($request->company);
+            $gatewayId = hashids_decode($request->gateway);
+
+            $company = Company::find($companyId);
+            $gateway = Gateway::find($gatewayId);
+
+            $settingsWithdrawalRequest = settings()->group('withdrawal_request')->get('withdrawal_request', null, true);
+
+            if($settingsWithdrawalRequest != null && $settingsWithdrawalRequest == false) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tente novamente em alguns minutos'
+                ], 400);
+            }
+
+            if((new UserService())->userWithdrawalBlocked(auth()->user())) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Sem permissão para realizar saques'
+                ], 403);
+            }
+
+            if(empty($company)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Empresa não encontrada'
+                ], 400);
+            }
+
+            if(!Gate::allows('edit', [$company])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Sem permissão para realizar saques'
+                ], 403);
+            }
+
+            if(!(new WithdrawalService)->companyCanWithdraw($company->id, $gateway->id)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Você só pode fazer 3 pedidos de saque por dia'
+                ], 403);
+            }
+
+            $gatewayService = Gateway::getServiceById($gateway->id)->setCompany($company);
+
+            $withdrawalValue = (int) FoxUtils::onlyNumbers($request->withdrawal_value);
+
+            if(!$gatewayService->withdrawalValueIsValid($withdrawalValue)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Valor informado inválido'
+                ], 400);
+            }
+
+            if(!$gatewayService->existsBankAccountApproved()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Cadastre um meio de recebimento para solicitar saques'
+                ], 400);
+            }
+
+            $responseCreateWithdrawal = $gatewayService->createWithdrawal($withdrawalValue);
+
+            if($responseCreateWithdrawal) {
+                return response()->json([
+                    'message' => 'Saque em processamento'
+                ], 200);
+            }
+            else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!'
+                ], 403);
+            }
+        }
+        catch(Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ocorreu um erro, tente novamente mais tarde!'
             ], 400);
         }
     }
