@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/mobile', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'mobile'], function() {
+    Route::get('/user', 'MobileController@user')->name('mobile.user');
+    Route::get('/companies', 'MobileController@companies')->name('mobile.companies');
+    Route::get('/balances', 'MobileController@balances')->name('mobile.balances');
+    Route::get('/sales', 'MobileController@sales')->name('mobile.sales');
 });

@@ -11,6 +11,6 @@
 |
 */
 
-Route::prefix('mobile')->group(function() {
-    Route::get('/', 'MobileController@index');
-});
+// Route::prefix('mobile')->group(function() {
+//     Route::get('/', 'MobileController@index');
+// });
