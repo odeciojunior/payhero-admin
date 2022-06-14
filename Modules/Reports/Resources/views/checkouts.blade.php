@@ -45,25 +45,25 @@
                                     <div class="col-md-3 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <h6 class="font-size-14 gray-600"> Total </h6>
-                                            <h4 id='qtd-total-checkouts' class="font-size-30 bold"></h4>
+                                            <h4 id='qtd-total-checkouts' class="font-size-30 bold number"></h4>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <h6 class="font-size-14 gray-600"> Abandonos </h6>
-                                            <h4 id='qtd-abandoned'></h4>
+                                            <h4 id='qtd-abandoned' class='number'></h4>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <h6 class="font-size-14 gray-600"> Recuperados </h6>
-                                            <h4 id='qtd-recovered'></h4>
+                                            <h4 id='qtd-recovered' class='number'></h4>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <h6 class="font-size-14 gray-600"> Venda Finalizada </h6>
-                                            <h4 id='qtd-finalized'></h4>
+                                            <h4 id='qtd-finalized' class='number'></h4>
                                         </div>
                                     </div>
                                 </div>

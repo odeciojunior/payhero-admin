@@ -1,3 +1,19 @@
+function updateAfterChangeCompany(){
+    $("#select_projects").find('option').remove();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#select_projects").append($('<option>', {
+                    value: project.id,
+                    text: project.name
+                }));
+            });
+        }
+    });
+    window.updateReports();
+}
+
 $(function () {
 
     getProjects();
@@ -31,7 +47,7 @@ $(function () {
                         }));
                     });
 
-                    updateReports();
+                    window.updateReports();
 
                 } else {
                     $("#export-excel").hide()
@@ -45,7 +61,7 @@ $(function () {
     }
 
     $("#select_projects").on('change', function () {
-        updateReports();
+        window.updateReports();
     });
 
     $("#origin").on('change', function () {
@@ -55,12 +71,25 @@ $(function () {
 
     var current_currency = '';
 
-    function updateReports() {
+    window.updateReports = function() {
         var date_range = $('#date_range_requests').val();
 
         $('#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled' + '#percent-credit-card, #percent-values-boleto, #credit-card-value, #boleto-value, #percent-boleto-convert' + '#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio, #qtd-canceled').html("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable('#origins-table-itens', '.table-vendas-itens');
 
+        loadOnAny(".number", false, {
+            styles: {
+                container: {
+                    minHeight: "47px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
         $.ajax({
             url: '/api/reports/checkouts',
             type: 'GET',
@@ -78,6 +107,7 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadOnAny(".number", true);
                 $("#qtd-abandoned").html('<span class="font-size-30 bold">'+response.contAbandoned + '</span> <span style="color:#959595">(' + response.percentAbandoned +')</span>');
                 $("#qtd-recovered").html('<span class="font-size-30 bold">'+response.contRecovered + '</span> <span style="color:#959595">(' + response.percentRecovered +')</span>');
                 $("#qtd-finalized").html('<span class="font-size-30 bold">'+response.contFinalized + '</span> <span style="color:#959595">(' + response.percentFinalized +')</span>');
@@ -280,7 +310,7 @@ $(function () {
     }, function (start, end) {
         startDate = start.format('YYYY-MM-DD');
         endDate = end.format('YYYY-MM-DD');
-        updateReports();
+        window.updateReports();
     });
 
 });

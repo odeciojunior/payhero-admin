@@ -1,3 +1,19 @@
+function updateAfterChangeCompany(){
+    $("#projeto").find('option').not(':first').remove();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#projeto").append($('<option>', {
+                    value: project.id,
+                    text: project.name
+                }));
+            });
+        }
+    });
+    window.atualizar();
+}
+
 var currentPage = null;
 var atualizar = null;
 
@@ -13,7 +29,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
+        window.atualizar();
     });
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -58,7 +74,7 @@ $(document).ready(function () {
             'project': $("#projeto").val(),
             'status': $("#status").val(),
             'date_range': $("#date_range").val(),
-            'company_id': sessionStorage.getItem('company_default'),
+            'company': sessionStorage.getItem('company_default'),
         };
 
         if (urlParams) {
@@ -102,7 +118,7 @@ $(document).ready(function () {
                         }));
                     });
 
-                    atualizar();
+                    window.atualizar();
 
                 } else {
                     $("#export-excel").hide()
@@ -115,7 +131,7 @@ $(document).ready(function () {
         });
     }
 
-    atualizar = function (link = null) {
+    window.atualizar = function (link = null) {
 
         currentPage = link;
 
@@ -145,7 +161,6 @@ $(document).ready(function () {
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
-
                         dados = `  <tr>
                                     <td>${value.cupom_code}</td>
                                     <td>${value.project}</td>
@@ -169,7 +184,7 @@ $(document).ready(function () {
 
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
-            atualizar();
+            window.atualizar();
         }
     });
 });

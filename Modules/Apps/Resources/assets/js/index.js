@@ -1,3 +1,8 @@
+function updateAfterChangeCompany(){
+    loadOnAny('.page-content');
+    window.updateUsedApps();
+}
+
 $(document).ready(function () {
 
     loadingOnScreen();
@@ -28,7 +33,7 @@ $(document).ready(function () {
 
                 if (response.data.length) {
                     $("#project-empty").hide();
-                    updateUsedApps();
+                    window.updateUsedApps();
                 } else {
                     loadingOnScreenRemove();
                 }
@@ -36,7 +41,7 @@ $(document).ready(function () {
         });
     }
 
-    function updateUsedApps() {
+    window.updateUsedApps = function () {
         $.ajax({
             method: 'GET',
             url: '/api/apps',
@@ -184,7 +189,7 @@ $(document).ready(function () {
                     $('#menv-bt').removeClass('added');
                     $('#menv-icon').removeClass('o-checkmark-1').addClass('o-add-1');
                 }
-
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
             }
         });

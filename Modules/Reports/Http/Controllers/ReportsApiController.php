@@ -32,6 +32,7 @@ use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Services\SaleService;
 use Modules\Reports\Transformers\TransactionBlockedResource;
 use ParagonIE\Sodium\Compat;
+use Modules\Core\Http\Controllers\CoreApiController;
 
 class ReportsApiController extends Controller
 {
@@ -679,19 +680,33 @@ class ReportsApiController extends Controller
     {
         try {
             $projectId = $request->input('project');
-            $companyId = $request->input('company_id');
 
-            $projects = UserProject::where('user_id', auth()->user()->getAccountOwnerId())
-                ->with('project')
-                ->where('type', 'producer');
+            $companiesAndProjects = new CoreApiController;
+            $cons = $companiesAndProjects->getCompanies();
+            $companies = json_decode(json_encode($cons['companies']), true);
+            foreach($companies as $item){
+                if($item['id'] == $request->input('company'))
+                    $projects = $item['projects'];
+            }
 
             if (!empty($projectId)) {
-                $projects = $projects->where('project_id', Hashids::decode($projectId));
+                foreach($projects as $item){
+                    if($item['id'] == $projectId){
+                        $projectsUnico['id'] = $item['id'];
+                        $projectsUnico['name'] = $item['name'];
+                        $projectsUnico['order_p'] = $item['order_p'];
+                    }
+                }
+                $projects = array($projectsUnico);
             }
-            // else(){
-            //     $projects = $projects
-            // }
-            $projects = $projects->get();
+            $projects = collect($projects)->map(function($item) {
+                $id=Hashids::decode($item['id']);
+                return [
+                    'id'=>$id[0],
+                    'name'=>$item['name'],
+                    'order_p'=>$item['order_p']
+                ];
+            });
 
             if (empty($request->input('status'))) {
                 $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
@@ -705,7 +720,7 @@ class ReportsApiController extends Controller
                 DB::raw('COUNT(id) as amount'),
                 'project_id',
                 'cupom_code'
-            ])->whereIn('project_id', $projects->pluck('project_id'))
+            ])->whereIn('project_id', $projects->pluck('id'))
                 ->whereIn('status', $status)
                 ->where('cupom_code', '!=', '')
                 ->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])

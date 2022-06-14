@@ -1550,29 +1550,9 @@ function getCompanies() {
 
 function updateProjectsOptions(){
     pathname = window.location.pathname;
-    // corrige lojas em Relatorios Vendas
-    if(pathname == '/reports/sales'){
-        $("#select_projects").find('option').remove();
-        $.getScript( "/build/layouts/reports/index.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
-    // corrige lojas em Relatorios Acessos
-    else if(pathname == '/reports/checkouts'){
-        $("#select_projects").find('option').remove();
-        $.getScript( "/build/layouts/reports/checkouts.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
-    // corrige lojas em Relatorios Cupons
-    else if(pathname == '/reports/coupons'){
-        $("#projeto").find('option').not(':first').remove();
-        $.getScript( "/build/layouts/reports/coupons.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
+
     // corrige lojas em Relatorios Saldo Pendente
-    else if(pathname == '/reports/pending'){
+    if(pathname == '/reports/pending'){
         $("#project").find('option').not(':first').remove();
         $.getScript( "/build/layouts/reports/pending.min.js", function( data, textStatus, jqxhr ) {
             getProjects();
@@ -1589,12 +1569,6 @@ function updateProjectsOptions(){
     else if(pathname == '/affiliates'){
         $("#project-affiliate, #project-affiliate-request").find('option').not(':first').remove();
         $.getScript( "/build/layouts/affiliates/projectaffiliates.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
-    // corrige lojas em Apps
-    else if(pathname == '/apps'){
-        $.getScript( "/build/layouts/apps/index.min.js", function( data, textStatus, jqxhr ) {
             getProjects();
         });
     }

@@ -1,3 +1,19 @@
+function updateAfterChangeCompany(){
+    $("#select_projects").find('option').remove();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#select_projects").append($('<option>', {
+                    value: project.id,
+                    text: project.name
+                }));
+            });
+        }
+    });
+    window.updateReports();
+}
+
 $(function () {
 
     getProjects();
@@ -32,7 +48,7 @@ $(function () {
                         );
                     });
 
-                    updateReports();
+                    window.updateReports();
                 } else {
                     $("#export-excel").hide();
                     $("#project-not-empty").hide();
@@ -45,7 +61,7 @@ $(function () {
     }
 
     $("#select_projects").on("change", function () {
-        updateReports();
+        window.updateReports();
     });
 
     $("#origin").on("change", function () {
@@ -55,7 +71,7 @@ $(function () {
 
     var current_currency = "";
 
-    function updateReports() {
+    window.updateReports = function() {
         var date_range = $("#date_range_requests").val();
 
         $(
@@ -498,7 +514,7 @@ $(function () {
         function (start, end) {
             startDate = start.format("YYYY-MM-DD");
             endDate = end.format("YYYY-MM-DD");
-            updateReports();
+            window.updateReports();
         }
     );
 });
