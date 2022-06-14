@@ -64,24 +64,24 @@
 </div>
 
 <!-- Create -->
-<div id="modal-create-shipping" class="modal fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content p-10">
-            <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="modal-title" id="modal-title">Cadastrar frete</h4>
-                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                    <i class="material-icons md-16">close</i>
-                </a>
+<div id="modal-create-shipping" class="modal fade modal-new-layout" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title bold" id="modal-title">Cadastrar frete</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons md-22">close</i>
+                </button>
             </div>
-            <div class="modal-body" style='min-height: 100px'>
+            <div class="modal-body py-0">
                 @include('shipping::create')
             </div>
             <div class="modal-footer">
-                <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                <button type="button" id="btn-mobile-modal-close" class="btn btn-lg btn-default mr-3" data-dismiss="modal">
                     Fechar
-                </a>
-                <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-save" data-dismiss="modal">
-                    <i class="material-icons btn-fix"> save </i> Salvar
+                </button>
+                <button type="button" class="btn btn-lg btn-primary btn-save" data-dismiss="modal">
+                    Salvar
                 </button>
             </div>
         </div>
@@ -89,24 +89,24 @@
 </div>
 
 <!-- Edit -->
-<div id="modal-edit-shipping" class="modal fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content p-10">
-            <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="modal-title" id="modal-title">Editar frete</h4>
-                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                    <i class="material-icons md-16">close</i>
-                </a>
+<div id="modal-edit-shipping" class="modal fade modal-new-layout" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title bold" id="modal-title">Editar frete</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons md-22">close</i>
+                </button>
             </div>
-            <div class="modal-body" style='min-height: 100px'>
+            <div class="modal-body py-0">
                 @include('shipping::edit')
             </div>
             <div class="modal-footer">
-                <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                <button type="button" id="btn-mobile-modal-close" class="btn btn-lg btn-default mr-3" data-dismiss="modal">
                     Fechar
-                </a>
-                <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-update" data-dismiss="modal">
-                    <i class="material-icons btn-fix"> save </i> Atualizar
+                </button>
+                <button type="button" class="btn btn-lg btn-primary btn-update" data-dismiss="modal">
+                    Salvar
                 </button>
             </div>
         </div>
@@ -141,47 +141,3 @@
         </div>
     </div>
 </div>
-
-<!-- Modal -->
-{{--<div class='modal fade modal-slide-bottom example-modal-lg' id='modal-content-shipping' tabindex='-1' role='dialog' aria-labelledby='TituloModal' aria-hidden='true'>--}}
-{{--    <div class='modal-dialog modal-simple'>--}}
-{{--        <div class='modal-content'>--}}
-{{--            <div class='modal-header'>--}}
-{{--                <h5 class='modal-title' id='TituloModal'>Configuração Frete</h5>--}}
-{{--                <button type='button' class='close' data-dismiss='modal' aria-label='Fechar'>--}}
-{{--                    <span aria-hidden='true'>&times;</span>--}}
-{{--                </button>--}}
-{{--            </div>--}}
-{{--            <div class='modal-body form-group col-12'>--}}
-{{--                <div class='row ' id='modal-data-shipping'>--}}
-{{--                    <form id='form-config-shipping' class='row'>--}}
-{{--                        <div class='form-group col-xl-6 col-lg-6'>--}}
-{{--                            <label for='shipping_project'>Possui Frete</label>--}}
-{{--                            <select name='shipment' class='form-control' id='shippement'>--}}
-{{--                                <option value='1' {{$project->shippement == '1' ? 'selected': ''}}>Sim</option>--}}
-{{--                                <option value='0' {{$project->shippement == '0' ? 'selected': ''}}>Não</option>--}}
-{{--                            </select>--}}
-{{--                        </div>--}}
-{{--                        <div id='div-carrier' class='form-group col-xl-6 col-lg-6' style='{{$project->frete? 'display:block;' : ''}}'>--}}
-{{--                            <label for='carrier-transport'>Transportadora</label>--}}
-{{--                            <select name='carrier' type='text' class='form-control' id='carrier-transport' required>--}}
-{{--                                <option value='2' selected>Despacho próprio</option>--}}
-{{--                            </select>--}}
-{{--                        </div>--}}
-{{--                        <div id='div-shipment-responsible' class='form-group col-xl-6 col-lg-6' style='{{$project->frete? 'display:block;' : ''}}'>--}}
-{{--                            <label for='shipment_responsible'>Responsável pelo frete</label>--}}
-{{--                            <select name='shipment_responsible' type='text' class='form-control' id='shipment_responsible'>--}}
-{{--                                <option value='owner' {{$project->shipment_responsible == 'owner'?'selected':''}}>Proprietário</option>--}}
-{{--                                <option value='partners' disabled {{$project->shipment_responsible == 'partners'? 'selected':''}}>Proprietário + parceiros (Em Breve)</option>--}}
-{{--                            </select>--}}
-{{--                        </div>--}}
-{{--                    </form>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <div class='modal-footer'>--}}
-{{--                <button type='button' class='btn btn-danger' data-dismiss='modal'>Fechar</button>--}}
-{{--                <button type='button' id='bt-add-shipping-config' class='btn btn-success' data-dismiss="modal">Confirmar</button>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--</div>--}}
