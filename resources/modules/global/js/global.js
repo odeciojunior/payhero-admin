@@ -1324,12 +1324,12 @@ function saveNewRegisterData() {
 
             $('#new-register-steps-actions').removeClass('justify-content-between');
             $('#new-register-steps-actions').addClass('justify-content-center');
+
             $('.extra-informations-user').hide();
 
             $('#new-register-steps-actions').html('<button type="button" class="btn new-register-btn close-modal">Fechar</button>');
 
             localStorage.removeItem('newRegisterData');
-            localStorage.removeItem('new-register-step');
 
             loadingOnScreenRemove();
         }
