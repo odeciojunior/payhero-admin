@@ -937,13 +937,13 @@ function verifyDocumentPending() {
                     card_company_button = '';
                 } else {
                     if (response.data.company.status == 'pending') {
-                        card_company_status = 'status-info redirect-to-accounts';
+                        card_company_status = 'status-info';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
                         card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.';
                         card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
                     } else if (response.data.company.status == 'analyzing') {
-                        card_company_status = 'status-warning';
+                        card_company_status = 'status-warning redirect-to-accounts';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Estamos analisando seus documentos da sua empresa';
                         card_company_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
