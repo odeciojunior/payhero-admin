@@ -32,20 +32,23 @@ $(document).ready(function () {
     });
 
     $('.close-modal').on('click', function () {
-        $('.new-register-overlay').fadeOut();
-
-        changeNewRegisterLayoutOnWindowResize();
+        $('.new-register-overlay').fadeOut(400, function () {
+            changeNewRegisterLayoutOnWindowResize();
+        });
     });
 
     $('#new-register-steps-actions').on('click', '.close-modal', function () {
         if (getNewRegisterStep() == '4') {
-            $('#new-register-steps-container').fadeOut();
+            $('#new-register-steps-container').fadeOut(400, function () {
+                changeNewRegisterLayoutOnWindowResize();
+            });
+
             $('#new-register-firt-page').fadeIn();
         } else {
-            $('.new-register-overlay').fadeOut();
+            $('.new-register-overlay').fadeOut(400, function () {
+                changeNewRegisterLayoutOnWindowResize();
+            });
         }
-
-        changeNewRegisterLayoutOnWindowResize();
     });
 
     $('.extra-informations-user').on('click', function () {
@@ -1146,6 +1149,10 @@ function changeNewRegisterLayoutOnWindowResize() {
         if (userNameText.length > 20) {
             $('.new-register-overlay-title strong').text(userNameText.substring(0, 19) + '...');
         }
+    }
+
+    if ($('.new-register-overlay').css('display') !== 'none') {
+        return;
     }
 
     if (window.innerWidth >= 847) {
