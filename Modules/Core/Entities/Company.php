@@ -139,6 +139,7 @@ class Company extends Model
         'safe2pay_balance',
         'address_document_status',
         'contract_document_status',
+        'date_last_document_notification',
         'company_type',
         'order_priority',
         //'account_type',

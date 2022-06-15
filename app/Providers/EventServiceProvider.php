@@ -31,6 +31,7 @@ use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use Modules\Core\Events\Sac\TicketMessageEvent;
+use Modules\Core\Events\SendEmailPendingDocumentEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Events\TrackingsExportedEvent;
 use Modules\Core\Events\TrackingsImportedEvent;
@@ -81,6 +82,7 @@ use Modules\Core\Listeners\SendEmailRegisteredListener;
 use Modules\Core\Listeners\SendSmsListener;
 use Modules\Core\Listeners\SetApprovedShopifyOrderListener;
 use Modules\Core\Listeners\Sac\TicketMessageSendEmailListener;
+use Modules\Core\Listeners\SendEmailPedingDocumentoListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
@@ -162,6 +164,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         SendEmailEvent::class => [
             SendEmailListener::class,
+        ],
+        SendEmailPendingDocumentEvent::class=>[
+            SendEmailPedingDocumentoListener::class
         ],
         SendSmsEvent::class => [
             SendSmsListener::class,

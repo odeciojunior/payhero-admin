@@ -66,41 +66,36 @@ $(document).ready(function () {
             $('.shipping-value1-edit').trigger('focus');
         }
     })
-    
+
     $(document).on('change', '#shipping-type', function () {
         // altera campo value dependendo do tipo do frete
         let selected = $(this).val();
-        
+
         if (selected === 'static') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').show();
             $('.zip-code-origin-shipping-row').hide();
-            $('.options-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'Frete grátis');
-            
+
         } else if (selected === 'pac') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').hide();
             $('.zip-code-origin-shipping-row').show();
-            $('.options-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'PAC');
         } else if (selected === 'sedex') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').hide();
             $('.zip-code-origin-shipping-row').show();
-            $('.options-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'SEDEX');
         } else if (selected.includes('melhorenvio')) {
             $('.information-shipping-row').hide();
             $('.value-shipping-row').hide();
             $('.zip-code-origin-shipping-row').show();
-            $('.options-shipping-row').show();
             $('.shipping-description').attr('placeholder', 'Melhor Envio');
         }
     });
 
-    $('.shipping-money-format').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: 'R$'}).attr('placeholder', 'R$');
-    
+    $('.shipping-money-format').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: 'R$ '}).attr('placeholder', 'R$ 0,00');
 
     $('.rule-shipping-value').on('blur', function () {
         if ($(this).val().length == 1) {
@@ -238,12 +233,12 @@ $(document).ready(function () {
             }, success: function success(response) {
 
                 $('#modal-edit-shipping .shipping-id').val(response.id_code).change();
-                
-                
+
+
                 $('.shipping-regions-edit').prop('checked', true);
                 $('#shipping-multiple-value-edit').hide();
                 $('#shipping-single-value-edit').show();
-                
+
                 switch (response.type) {
                     case 'static':
                         $('#modal-edit-shipping #shipping-type').prop("selectedIndex", 0).change();
@@ -336,15 +331,15 @@ $(document).ready(function () {
     //cria novo frete
     $("#modal-create-shipping .btn-save").click(function () {
         if($('.shipping-regions').is(':visible')==true && $('.shipping-regions').is(':checked')==false){
-            
+
             var regions_values = []
             var regions = ['NORTE', 'NORDESTE', 'CENTRO-OESTE', 'SUDESTE', 'SUL']
             for(i in regions){
                 var ii = i
                 ii++
                 regions_values.push( { name: regions[i], value:$('.shipping-value'+ii).val() } );
-            }   
-            
+            }
+
             for(i=1;i<=5;i++){
                 //if(isNaN(parseInt($('.shipping-value'+i).val()))) $('.shipping-value'+i).val(0);
                 if(!$('.shipping-value'+i).val()){
@@ -358,12 +353,12 @@ $(document).ready(function () {
         }
         if($('.shipping-regions').is(':visible')==true && $('.shipping-regions').is(':checked')==true){
             //if(isNaN(parseInt($('#shipping-single-value > input').val()))) $('#shipping-single-value > input').val(0);
-            
+
             $('#regions_values').val('')
 
         }
 
-        
+
 
         let formData = new FormData(document.getElementById('form-add-shipping'));
 
@@ -392,7 +387,7 @@ $(document).ready(function () {
 
     //atualizar frete
     $("#modal-edit-shipping .btn-update").on('click', function () {
-        
+
         if($('.shipping-regions-edit').is(':visible')==true && $('.shipping-regions-edit').is(':checked')==false){
             var regions_values = []
             var regions = ['NORTE', 'NORDESTE', 'CENTRO-OESTE', 'SUDESTE', 'SUL']
@@ -400,8 +395,8 @@ $(document).ready(function () {
                 var ii = i
                 ii++
                 regions_values.push( { name: regions[i], value:$('.shipping-value'+ii+'-edit').val() } );
-            }   
-            
+            }
+
             for(i=1;i<=5;i++){
                 //if(isNaN(parseInt($('.shipping-value'+i+'-edit').val()))) $('.shipping-value'+i+'-edit').val(0);
                 if(!$('.shipping-value'+i+'-edit').val()){
@@ -415,7 +410,7 @@ $(document).ready(function () {
 
         }
         if($('.shipping-regions-edit').is(':visible')==true && $('.shipping-regions-edit').is(':checked')==true){
-            
+
             $('.regions_values').val('')
         }
 
@@ -426,7 +421,7 @@ $(document).ready(function () {
         formData.set('own_hand', $('#modal-edit-shipping .shipping-ownhand').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
 
-        
+
 
         $.ajax({
             method: "POST",
