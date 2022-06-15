@@ -635,7 +635,7 @@
                             </div>
                             
                             <div class="card inner pad-bottom-0 origin">
-                                <header class="d-flex title-graph">
+                                <header class="d-flex title-graph sirius-select-origin">
                                     <h5 class="grey font-size-16">
                                         <strong>Origem</strong>
                                     </h5>

@@ -1365,15 +1365,14 @@ $(document).ready(function () {
         renderSiriusSelect(this);
     });
 
-    $(document).on('click', '.sirius-select-text', function () {
-        $('.sirius-select-text').removeClass('active');
-        $('.sirius-select-options').fadeOut();
-
+    $('.sirius-select-text').each(function() {
         let $target = $(this);
-        $target.toggleClass('active');
         let $wrapper = $target.parent();
         let $options = $wrapper.find('.sirius-select-options');
-        $target.hasClass('active') ? $options.fadeIn() : $options.fadeOut();
+        $target.on('click', function() {
+            $target.hasClass('active') ? $target.removeClass('active') : $target.addClass('active');
+            $target.hasClass('active') ? $options.fadeIn() : $options.fadeOut();
+        });
     });
 
     $(document).on('click', '.sirius-select-options div', function () {

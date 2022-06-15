@@ -137,8 +137,8 @@
                                             <strong>Quantidade</strong>
                                         </h5>
                                         <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects">
-                                            <div class="sirius-select-container">
-                                                <select name="status" id="status-graph" class="sirius-select1">
+                                            <div class="sirius-select-container sirius-select-inside">
+                                                <select name="status" id="status-graph" class="sirius-select">
                                                     <option value="">Todos os status</option>
                                                     <option value="approved">Aprovadas</option>
                                                     <option value="pending">Pendentes</option>
