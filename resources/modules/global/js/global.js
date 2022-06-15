@@ -937,7 +937,7 @@ function verifyDocumentPending() {
                     card_company_button = '';
                 } else {
                     if (response.data.company.status == 'pending') {
-                        card_company_status = 'status-info';
+                        card_company_status = 'status-info redirect-to-accounts';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
                         card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.';
