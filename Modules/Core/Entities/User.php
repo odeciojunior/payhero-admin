@@ -147,6 +147,7 @@ class User extends Authenticable
         'date_birth',
         'address_document_status',
         'personal_document_status',
+        'date_last_document_notification',
         'invites_amount',
         'last_login',
         'account_owner_id',
@@ -367,6 +368,14 @@ class User extends Authenticable
     public function userNotification()
     {
         return $this->hasOne(UserNotification::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function userInformations()
+    {
+        return $this->belongsTo(UserInformation::class, 'document', 'document');
     }
 
     /**
