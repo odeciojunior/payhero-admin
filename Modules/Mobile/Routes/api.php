@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'mobile'], function() {
+//Route::group(['prefix' => 'mobile'], function() {
+Route::group(['middleware' => ['auth:api'], 'prefix' => 'mobile'], function() {
     Route::get('/user', 'MobileController@user')->name('mobile.user');
     Route::get('/companies', 'MobileController@companies')->name('mobile.companies');
     Route::get('/balances', 'MobileController@balances')->name('mobile.balances');

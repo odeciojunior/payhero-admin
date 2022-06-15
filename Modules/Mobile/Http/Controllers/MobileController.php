@@ -30,7 +30,9 @@ class MobileController extends Controller
     public function user()
     {
         try {
-            $user = User::select('id', 'name', 'photo', 'level', 'document', 'email', 'cellphone')->where('id', auth()->user()->id)->first();
+            $user = User::select('id', 'name', 'photo', 'level', 'document', 'email', 'cellphone')
+                ->where('id', auth()->user()->id)
+                ->first();
 
             if($user) {
                 return response()->json($user, 200);
