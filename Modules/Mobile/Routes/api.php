@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Core\Http\Controllers\CoreApiController;
+use Modules\Dashboard\Http\Controllers\DashboardApiController;
+use Modules\Finances\Http\Controllers\FinancesApiController;
+use Modules\Withdrawals\Http\Controllers\WithdrawalsApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,13 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::group(['prefix' => 'mobile'], function() {
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'mobile'], function() {
-    Route::get('/user', 'MobileController@user')->name('mobile.user');
-    Route::get('/companies', 'MobileController@companies')->name('mobile.companies');
-    Route::get('/balances', 'MobileController@balances')->name('mobile.balances');
-    Route::get('/sales', 'MobileController@sales')->name('mobile.sales');
-    Route::get('/withdrawals', 'MobileController@withdrawals')->name('mobile.withdrawals');
-    Route::post('/withdrawals', 'MobileController@withdrawalsStore')->name('mobile.withdrawals.store');
-    Route::get('/statements-resume', 'MobileController@statementsResume')->name('mobile.statements-resume');
+    Route::get('/companies', [CoreApiController::class, 'companies'])->name('mobile.companies');
+    Route::get('/balances', [DashboardApiController::class, 'getValues'])->name('mobile.balances');
+    //Route::get('/sales', 'MobileController@sales')->name('mobile.sales');
+    Route::get('/withdrawals', [WithdrawalsApiController::class, 'index'])->name('mobile.withdrawals');
+    Route::post('/withdrawals', [WithdrawalsApiController::class, 'store'])->name('mobile.withdrawals.store');
+    Route::get('/statements-resume', [FinancesApiController::class, 'getStatementResume'])->name('mobile.statements-resume');
 });
