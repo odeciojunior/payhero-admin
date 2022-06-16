@@ -54,7 +54,6 @@ class CreateAccountSafe2Pay extends Command
         try {
 
             $companies = Company::where('contract_document_status', Company::STATUS_APPROVED)
-                //->where('bank_document_status', Company::STATUS_APPROVED)
                 ->where('address_document_status', Company::STATUS_APPROVED)
                 ->get();
 
@@ -95,7 +94,7 @@ class CreateAccountSafe2Pay extends Command
                 "TechIdentity" => "02901053076",
                 "TechEmail" => "julioleichtweis@cloudfox.net",
                 "TechPhone" => "55996931098",
-                'IsPanelRestricted' => true,                
+                'IsPanelRestricted' => true,
                 "Address" => [
                     "ZipCode" => $company->zip_code,
                     "Street" => $company->street,
@@ -110,7 +109,7 @@ class CreateAccountSafe2Pay extends Command
 
             $bankAccounts = $company->getDefaultBankAccount();
             if(!empty($bankAccounts) && $bankAccounts->transfer_type=='TED'){
-                $data['BankData'] = [ 
+                $data['BankData'] = [
                     "Bank" => [
                         "Code" => $bankAccounts->bank,
                     ],

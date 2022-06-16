@@ -48,4 +48,9 @@ class UserInformation extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function userInformations()
+    {
+        return $this->belongsTo(User::class, 'document', 'document');
+    }
 }

@@ -15,6 +15,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class CompanyService
@@ -88,7 +89,6 @@ class CompanyService
 
         $check_PJ =  Company::where([
             'user_id' => $user->id,
-            // 'bank_document_status' => Company::DOCUMENT_STATUS_APPROVED,
             'address_document_status' => Company::DOCUMENT_STATUS_APPROVED,
             'contract_document_status' => Company::DOCUMENT_STATUS_APPROVED,
         ])->exists();
@@ -96,7 +96,6 @@ class CompanyService
         $check_PF = Company::where([
             'user_id' => $user->id,
             'document' => $user->document,
-            // 'bank_document_status' => Company::DOCUMENT_STATUS_APPROVED,
         ])->exists();
 
         return $check_PJ || $check_PF;
@@ -133,7 +132,6 @@ class CompanyService
         $company = Company::where(
             [
                 ['document', foxutils()->onlyNumbers($cnpj)],
-                // ['bank_document_status', Company::DOCUMENT_STATUS_APPROVED],
                 ['address_document_status', Company::DOCUMENT_STATUS_APPROVED],
                 ['contract_document_status', Company::DOCUMENT_STATUS_APPROVED],
             ]
@@ -211,6 +209,59 @@ class CompanyService
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    public function documentStatus()
+    {
+        $status = null;
+        $address_document_status = null;
+        $contract_document_status = null;
+        $link = null;
+
+        $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
+        if ($companies->count() == 0) {
+            $status = null;
+            $address_document_status = null;
+            $contract_document_status = null;
+            $link = '/companies';
+        } else {
+            foreach ($companies as $company) {
+                if ($company->company_type == Company::JURIDICAL_PERSON) {
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_PENDING || $company->contract_document_status == Company::DOCUMENT_STATUS_PENDING) {
+                        $status = 'pending';
+                        $link = '/companies/company-detail/'. Hashids::encode($company->id);
+                    }
+
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_ANALYZING || $company->contract_document_status == Company::DOCUMENT_STATUS_ANALYZING) {
+                        $status = 'analyzing';
+                        $link = '/companies/company-detail/'. Hashids::encode($company->id);
+                    }
+
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_REFUSED || $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED) {
+                        $status = 'refused';
+                        $link = '/companies/company-detail/'. Hashids::encode($company->id);
+                    }
+
+                    if($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED && $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED) {
+                        $status = 'approved';
+                        $link = '/companies';
+                    }
+
+                    $address_document_status = $company->address_document_status;
+                    $contract_document_status = $company->contract_document_status;
+                } else {
+                    $status = 'approved';
+                    $link = '';
+                }
+            }
+        }
+
+        return [
+            'status' => $status,
+            'address_document' => $address_document_status,
+            'contract_document' => $contract_document_status,
+            'link' => $link
+        ];
     }
 
     public function companyDocumentRefused()
@@ -405,11 +456,10 @@ class CompanyService
         if (!empty($company)) {
             if($company->company_type == Company::JURIDICAL_PERSON){
                 return
-                    //$company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED &&
                     $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED &&
                     $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED;
             }
-            return true; //$company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED;
+            return true;
         }
         return false;
     }
