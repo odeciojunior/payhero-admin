@@ -859,10 +859,17 @@ mix.babel([
 ],'public/build/layouts/salesrecovery/index.min.js')
 
 /**
+ * Modules/Shipping/Resources/views/create.blade.php
+ */
+mix.styles([
+    'Modules/Shipping/Resources/assets/css/create.css'
+],'public/build/layouts/shipping/create.min.css')
+
+/**
  * Modules/Shipping/Resources/views/edit.blade.php
  */
  mix.styles([
-    'Modules/Shipping/Resources/assets/css/shipping-edit.css'
+    'Modules/Shipping/Resources/assets/css/edit.css'
 ],'public/build/layouts/shipping/edit.min.css')
 
 /**

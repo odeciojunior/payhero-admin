@@ -291,7 +291,9 @@ class CloudFlareService
 
             return json_decode($response->getBody())->success;
         } catch (Exception $e) {
-            report($e);
+            if($e->getMessage() != 'This record type cannot be proxied.') {
+                report($e);
+            }
 
             return false;
         }
@@ -304,19 +306,10 @@ class CloudFlareService
     public function deleteRecord(string $recordId)
     {
         try {
-            $user = $this->adapter->delete('zones/' . $this->zoneID . '/dns_records/' . $recordId);
 
-            $body = json_decode($user->getBody());
+            $this->adapter->delete('zones/' . $this->zoneID . '/dns_records/' . $recordId);
 
-            if (isset($body->result->id)) {
-                return true;
-            }
-
-            return false;
         } catch (Exception $e) {
-            report($e);
-
-            return false;
         }
     }
 
@@ -967,18 +960,15 @@ class CloudFlareService
 
     public function removeDomain($domain)
     {
-        $this->setZone($domain->name);
+        try {
+            $this->setZone($domain->name);
+        } catch (Exception $e) {
+            return ;
+        }
 
         $domain->load('domainsRecords');
         foreach ($domain->domainsRecords as $domainsRecord) {
             $this->deleteRecord($domainsRecord->cloudflare_record_id);
-        }
-
-        try {
-            $this->getSendgridService()->deleteLinkBrand($domain->name);
-            $this->getSendgridService()->deleteZone($domain->name);
-        } catch (Exception $e) {
-            //$this->deleteZone($domain->name);
         }
 
         if(!foxutils()->isEmpty($domain->cloudflare_domain_id)) {
@@ -987,6 +977,11 @@ class CloudFlareService
             $this->deleteZone($domain->name);
         }
 
+        try {
+            $this->getSendgridService()->deleteLinkBrand($domain->name);
+            $this->getSendgridService()->deleteZone($domain->name);
+        } catch (Exception $e) {
+        }
     }
 
     public function setSecurityLevel(string $zoneId, string $level): bool

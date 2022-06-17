@@ -37,11 +37,7 @@ $(document).ready(function () {
         redirectToAccounts(url_data);
     });
 
-    setNewRegisterStep('1');
-
     var newRegisterStepAux;
-
-    changeNewRegisterLayoutOnWindowResize();
 
     window.onresize = changeNewRegisterLayoutOnWindowResize;
 
@@ -54,23 +50,26 @@ $(document).ready(function () {
     });
 
     $('.close-modal').on('click', function () {
-        $('.new-register-overlay').fadeOut();
-
-        changeNewRegisterLayoutOnWindowResize();
+        $('.new-register-overlay').fadeOut(400, function () {
+            changeNewRegisterLayoutOnWindowResize();
+        });
     });
 
     $('#new-register-steps-actions').on('click', '.close-modal', function () {
         if (getNewRegisterStep() == '4') {
-            $('#new-register-steps-container').fadeOut();
+            $('#new-register-steps-container').fadeOut(400, function () {
+                changeNewRegisterLayoutOnWindowResize();
+            });
+
             $('#new-register-firt-page').fadeIn();
         } else {
-            $('.new-register-overlay').fadeOut();
+            $('.new-register-overlay').fadeOut(400, function () {
+                changeNewRegisterLayoutOnWindowResize();
+            });
         }
-
-        changeNewRegisterLayoutOnWindowResize();
     });
 
-    $('#open-steps-btn').on('click', function () {
+    $('.extra-informations-user').on('click', function () {
         $('#new-register-firt-page').hide();
 
         $('.modal-top-btn').hide();
@@ -82,6 +81,12 @@ $(document).ready(function () {
 
     $('#new-register-step-container input[type=text]').on('input', function() {
         setStepButton(getNewRegisterStep());
+
+        if ($(this).val()) {
+            setNewRegisterSavedItem($(this).attr('id'), $(this).val());
+        } else {
+            removeNewRegisterSavedItem($(this).attr('id'));
+        }
     });
 
     $('#new-register-step-container input[type=checkbox]').change(function() {
@@ -92,33 +97,47 @@ $(document).ready(function () {
         if ($(this).hasClass('option-selected')) {
             $(this).removeClass('option-selected');
             $(this).attr('data-step-1-selected', '0');
+
+            removeNewRegisterSavedItem($(this).attr('id'));
         } else {
             $(this).addClass('option-selected');
             $(this).attr('data-step-1-selected', '1');
+
+            setNewRegisterSavedItem($(this).attr('id'), 'true');
         }
 
         setStepButton(getNewRegisterStep());
     });
 
-    $("input[name='step-2-other-ecommerce-check']").change(function () {
-        let input = $("input[name='step-2-other-ecommerce']");
-
+    $(".step-2-checkbox-option input[type='checkbox']").on('click', function () {
         if ($(this).is(":checked")) {
-            input.removeAttr('disabled');
+            setNewRegisterSavedItem($(this).attr('id'), 'true');
         } else {
-            input.val('');
-            input.attr('disabled', true);
+            removeNewRegisterSavedItem($(this).attr('id'));
         }
     });
 
-    $("input[name='step-2-know-cloudfox-check']").change(function () {
-        let input = $("input[name='step-2-know-cloudfox']");
+    $("input[name='step-2-other-ecommerce-check']").on('change', function () {
+        step2CheckboxOnChange($(this), $("input[name='step-2-other-ecommerce']"));
+    });
 
-        if ($(this).is(":checked")) {
-            input.removeAttr('disabled');
+    $("input[name='step-2-know-cloudfox-check']").on('change', function () {
+        step2CheckboxOnChange($(this), $("input[name='step-2-know-cloudfox']"));
+    });
+
+    $("input[name='step-2-other-ecommerce']").on('input', function () {
+        if (!$(this).val()) {
+            removeNewRegisterSavedItem($(this).attr('id'));
         } else {
-            input.val('');
-            input.attr('disabled', true);
+            setNewRegisterSavedItem($(this).attr('id'), $(this).val());
+        }
+    });
+
+    $("input[name='step-2-know-cloudfox']").on('input', function () {
+        if (!$(this).val()) {
+            removeNewRegisterSavedItem($(this).attr('id'));
+        } else {
+            setNewRegisterSavedItem($(this).attr('id'), $(this).val());
         }
     });
 
@@ -128,8 +147,15 @@ $(document).ready(function () {
         if ($(this).is(":checked")) {
             input.val('');
             input.attr('disabled', true);
+            input.removeClass('input-invalid input-valid');
+
+            setNewRegisterSavedItem($(this).attr('id'), 'true');
+            removeNewRegisterSavedItem(input.attr('id'));
         } else {
             input.removeAttr('disabled');
+            input.addClass('input-invalid');
+
+            removeNewRegisterSavedItem($(this).attr('id'));
         }
     });
 
@@ -139,8 +165,25 @@ $(document).ready(function () {
         if ($(this).is(":checked")) {
             input.val('');
             input.attr('disabled', true);
+            input.removeClass('input-invalid input-valid');
+
+            setNewRegisterSavedItem($(this).attr('id'), 'true');
+            removeNewRegisterSavedItem(input.attr('id'));
         } else {
             input.removeAttr('disabled');
+            input.addClass('input-invalid');
+
+            removeNewRegisterSavedItem($(this).attr('id'));
+        }
+    });
+
+    $('.new-register-input-validation').on('blur input', function () {
+        if (!$(this).val()) {
+            $(this).removeClass('input-valid');
+            $(this).addClass('input-invalid');
+        } else {
+            $(this).removeClass('input-invalid');
+            $(this).addClass('input-valid');
         }
     });
 
@@ -163,7 +206,7 @@ $(document).ready(function () {
 
         setNewRegisterStep(step.toString());
 
-        changeProgressBar(step);
+        changeProgressBar(step, 'prev');
 
         setStepButton(step);
 
@@ -185,7 +228,7 @@ $(document).ready(function () {
 
         $('#new-register-step-' + lastStep + '-container').removeClass('d-flex flex-column');
 
-        changeProgressBar(step);
+        changeProgressBar(step, 'next');
 
         setStepButton(step);
 
@@ -194,24 +237,19 @@ $(document).ready(function () {
 
     const monthRevenueInput = document.getElementById('new-register-range');
 
-    monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
-
-    function handleInputRangeChange(e) {
-        let target = e.target;
-
-        const minVal = target.min;
-        const maxVal = target.max;
-        let val = target.value;
-
-        target.style.backgroundSize = (val - minVal) * 100 / (maxVal - minVal) + '% 100%';
-
-        val = val * 1000;
-
-        $('#new-register-month-revenue span:first-child').text((val === 5000 ? 'Até ' : val === 1000000 ? 'Acima de ' : '') + 'R$');
-        $('#new-register-month-revenue span:last-child').text(val.toLocaleString('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 }));
+    if (monthRevenueInput) {
+        monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
     }
 
-    monthRevenueInput.addEventListener('input', handleInputRangeChange);
+    function handleInputRangeChange(e) {
+        setInputRangeOnInput(e.target);
+    }
+
+    if (monthRevenueInput) {
+        monthRevenueInput.addEventListener('input', handleInputRangeChange);
+    }
+
+    loadNewRegisterSavedData();
 });
 
 function redirectToAccounts(url_data)
@@ -877,15 +915,21 @@ function verifyDocumentPending() {
             errorAjaxResponse(response);
         },
         success: response => {
-            if (response.data.account !== 'approved') {
+            if (response.data.account.type === 'collaborator') {
+                return;
+            }
+
+            if (response.data.account.status !== 'approved') {
                 let verifyAccount = localStorage.getItem('verifyAccount');
                 if (verifyAccount == null) {
-                    $('.new-register-page-open-modal-container').hide();
-                    $('.new-register-navbar-open-modal-container').hide();
+                    $('.new-register-page-open-modal-container').fadeOut();
+                    $('.new-register-navbar-open-modal-container').fadeOut();
 
                     setStepContainer();
 
                     $('.new-register-overlay').fadeIn();
+                } else {
+                    changeNewRegisterLayoutOnWindowResize();
                 }
 
                 localStorage.setItem('verifyAccount', JSON.stringify(response.data));
@@ -910,25 +954,29 @@ function verifyDocumentPending() {
                     card_company_description = 'Na Cloudfox você pode ter uma ou mais empresas.';
                     card_company_button = '';
                 } else {
-                    if (response.data.company.status == 'pending' || response.data.company.status == 'pending') {
+                    if (response.data.company.status == 'pending') {
                         card_company_status = 'status-info';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
                         card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.';
                         card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
-                    } else if (response.data.company.status == 'analyzing' || response.data.company.status == 'analyzing') {
-                        card_company_status = 'status-warning';
+                    } else if (response.data.company.status == 'analyzing') {
+                        card_company_status = 'status-warning redirect-to-accounts';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Estamos analisando seus documentos da sua empresa';
                         card_company_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
-                    } else if (response.data.company.status == 'refused' || response.data.company.status == 'refused') {
+                        if (response.data.company.address_document !== 'pending' && response.data.company.contract_document !== 'pending') {
+                            card_company_button = '';
+                        } else {
+                            card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
+                        }
+                    } else if (response.data.company.status == 'refused') {
                         card_company_status = 'status-error';
                         card_company_icon = '/build/global/img/icon-error.svg';
                         card_company_title = 'Tivemos problemas em verificar sua empresa';
                         card_company_description = 'Há um problema com seus documentos.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
-                    } else if (response.data.company.status == 'approved' || response.data.company.status == 'approved') {
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Reenviar documentos</button>';
+                    } else if (response.data.company.status == 'approved') {
                         card_company_status = 'status-check redirect-to-accounts';
                         card_company_icon = '/build/global/img/icon-check.svg';
                         card_company_title = 'A documentação da sua empresa foi recebida e aprovada.';
@@ -961,25 +1009,29 @@ function verifyDocumentPending() {
                 var card_user_button = '';
                 var card_user_link = response.data.user.link;
 
-                if (response.data.user.status == 'pending' || response.data.user.status == 'pending') {
+                if (response.data.user.status == 'pending') {
                     card_user_status = 'redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-docs.svg';
                     card_user_title = 'Envie sua documentação pessoal';
                     card_user_description = 'Precisamos do seu documento oficial com foto e um comprovante de residência.';
                     card_user_button = '';
-                } else if (response.data.user.status == 'analyzing' || response.data.user.status == 'analyzing') {
+                } else if (response.data.user.status == 'analyzing') {
                     card_user_status = 'status-warning redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-analysing.svg';
                     card_user_title = 'Estamos analisando seus documentos';
                     card_user_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
-                } else if (response.data.user.status == 'refused' || response.data.user.status == 'refused') {
+                    if (response.data.user.address_document !== 'pending' && response.data.user.personal_document !== 'pending') {
+                        card_user_button = '';
+                    } else {
+                        card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
+                    }
+                } else if (response.data.user.status == 'refused') {
                     card_user_status = 'status-error';
                     card_user_icon = '/build/global/img/icon-error.svg';
                     card_user_title = 'Tivemos um problema com o seu documento';
                     card_user_description = 'Um ou mais documentos foram reprovados após a análise.';
-                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
-                } else if (response.data.user.status == 'approved' || response.data.user.status == 'approved') {
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Regularizar documentos</button>';
+                } else if (response.data.user.status == 'approved') {
                     card_user_status = 'status-check redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-check.svg';
                     card_user_title = 'Sua documentação foi recebida e aprovada';
@@ -1007,12 +1059,34 @@ function verifyDocumentPending() {
                 $('.new-register-navbar-open-modal-container').remove();
 
                 let verifyAccount = JSON.parse(localStorage.getItem('verifyAccount'));
-                if (verifyAccount.account !== 'approved') {
+                if (verifyAccount.account.status !== 'approved') {
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
             }
         },
     });
+}
+
+function setNewRegisterSavedItem(item, value) {
+    if (!localStorage.getItem('newRegisterData')) {
+        localStorage.setItem('newRegisterData', JSON.stringify({}));
+    }
+
+    if (item) {
+        let obj = JSON.parse(localStorage.getItem('newRegisterData'));
+        obj[item] = value;
+
+        localStorage.setItem('newRegisterData', JSON.stringify(obj));
+    }
+}
+
+function removeNewRegisterSavedItem(item) {
+    if (localStorage.getItem('newRegisterData')) {
+        let obj = JSON.parse(localStorage.getItem('newRegisterData'));
+        delete obj[item];
+
+        localStorage.setItem('newRegisterData', JSON.stringify(obj));
+    }
 }
 
 function setNewRegisterStep(step) {
@@ -1035,27 +1109,36 @@ function getNewRegisterStep() {
     return value;
 }
 
-function changeProgressBar(step) {
+function changeProgressBar(step, action = 'next') {
     switch (parseInt(step)) {
         case 1:
-            $('#new-register-step-progress-bar-1').css('width', '50%');
-            $('#new-register-step-progress-bar-2').css('width', '0');
             $(".new-register-step[data-step*='1']").addClass('step-active');
+            $('#new-register-step-progress-bar-1').css('transition-delay', action !== 'next' ? '1.5s' : '');
+            $('#new-register-step-progress-bar-1').css('width', '50%');
+            $(".new-register-step[data-step*='2']").css('transition-delay', action !== 'next' ? '1s' : '');
             $(".new-register-step[data-step*='2']").removeClass('step-active');
+            $('#new-register-step-progress-bar-2').css('transition-delay', action !== 'next' ? '0.5s' : '');
+            $('#new-register-step-progress-bar-2').css('width', '0');
             break;
         case 2:
-            $('#new-register-step-progress-bar-1').css('width', '100%');
-            $('#new-register-step-progress-bar-2').css('width', '50%');
             $(".new-register-step[data-step*='1']").addClass('step-active');
+            $('#new-register-step-progress-bar-1').css('transition-delay', '');
+            $('#new-register-step-progress-bar-1').css('width', '100%');
+            $(".new-register-step[data-step*='2']").css('transition-delay', action === 'next' ? '0.5s' : '1.5s');
             $(".new-register-step[data-step*='2']").addClass('step-active');
+            $('#new-register-step-progress-bar-2').css('transition-delay', action === 'next' ? '1s' : '1s');
+            $('#new-register-step-progress-bar-2').css('width', '50%');
+            $(".new-register-step[data-step*='3']").css('transition-delay', action !== 'next' ? '0.5s' : '');
             $(".new-register-step[data-step*='3']").removeClass('step-active');
             break;
         case 3:
         case 4:
-            $('#new-register-step-progress-bar-1').css('width', '100%');
-            $('#new-register-step-progress-bar-2').css('width', '100%');
             $(".new-register-step[data-step*='1']").addClass('step-active');
+            $('#new-register-step-progress-bar-1').css('width', '100%');
             $(".new-register-step[data-step*='2']").addClass('step-active');
+            $('#new-register-step-progress-bar-2').css('transition-delay', action === 'next' ? '0.5s' : '1s');
+            $('#new-register-step-progress-bar-2').css('width', '100%');
+            $(".new-register-step[data-step*='3']").css('transition-delay', action === 'next' ? '1s' : '0.5s');
             $(".new-register-step[data-step*='3']").addClass('step-active');
             break;
     }
@@ -1084,6 +1167,10 @@ function changeNewRegisterLayoutOnWindowResize() {
         if (userNameText.length > 20) {
             $('.new-register-overlay-title strong').text(userNameText.substring(0, 19) + '...');
         }
+    }
+
+    if ($('.new-register-overlay').css('display') !== 'none') {
+        return;
     }
 
     if (window.innerWidth >= 847) {
@@ -1143,6 +1230,61 @@ function setStepButton(step) {
     btn.attr('data-step-btn', step);
 }
 
+function step2CheckboxOnChange(checkbox, inputText) {
+    if (checkbox.is(":checked")) {
+        inputText.removeAttr('disabled');
+    } else {
+        inputText.val('');
+        inputText.attr('disabled', true);
+
+        removeNewRegisterSavedItem(inputText.attr('id'));
+    }
+}
+
+function setInputRangeOnInput(target) {
+    const minVal = target.min;
+    const maxVal = target.max;
+    let val = target.value;
+
+    target.style.backgroundSize = (val - minVal) * 100 / (maxVal - minVal) + '% 100%';
+
+    val = val * 1000;
+
+    $('#new-register-month-revenue span:first-child').text((val === 5000 ? 'Até ' : val === 1000000 ? 'Acima de ' : '') + 'R$');
+    $('#new-register-month-revenue span:last-child').text(val.toLocaleString('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 }));
+
+    setNewRegisterSavedItem(target.id, target.value);
+}
+
+function loadNewRegisterSavedData() {
+    if (localStorage.getItem('newRegisterData')) {
+        let obj = JSON.parse(localStorage.getItem('newRegisterData'));
+
+        for (const prop in obj) {
+            const element = $('#' + prop);
+
+            if (element.prop('nodeName') === 'DIV') {
+                element.addClass('option-selected')
+                    .attr('data-step-1-selected', 1);
+            }
+
+            if (element.prop('nodeName') === 'INPUT' && element.attr('type') === 'checkbox') {
+                element.prop("checked", true);
+                element.trigger('change');
+            }
+
+            if (element.prop('nodeName') === 'INPUT' && element.attr('type') === 'text') {
+                element.val(obj[prop]);
+            }
+
+            if (element.prop('nodeName') === 'INPUT' && element.attr('type') === 'range') {
+                element.val(obj[prop]);
+                setInputRangeOnInput(document.getElementById('new-register-range'));
+            }
+        }
+    }
+}
+
 function saveNewRegisterData() {
     const newRegisterData = {
         document: JSON.parse(localStorage.getItem('verifyAccount')).user.document,
@@ -1168,6 +1310,7 @@ function saveNewRegisterData() {
             ad: +$('#cloudfox-referer-ad').is(':checked'),
             email: 0,
             other: +$('#cloudfox-referer-other').is(':checked'),
+            otherName: $('#know-cloudfox').val(),
             youtube: +$('#cloudfox-referer-youtube').is(':checked'),
             facebook: +$('#cloudfox-referer-facebook').is(':checked'),
             linkedin: +$('#cloudfox-referer-linkedin').is(':checked'),
@@ -1206,9 +1349,12 @@ function saveNewRegisterData() {
 
             $('#new-register-steps-actions').removeClass('justify-content-between');
             $('#new-register-steps-actions').addClass('justify-content-center');
+
             $('.extra-informations-user').hide();
 
             $('#new-register-steps-actions').html('<button type="button" class="btn new-register-btn close-modal">Fechar</button>');
+
+            localStorage.removeItem('newRegisterData');
 
             loadingOnScreenRemove();
         }

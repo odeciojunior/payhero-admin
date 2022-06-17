@@ -9,6 +9,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PromotionalTax;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserDocument;
+use Modules\Core\Entities\UserInformation;
 
 class UserService
 {
@@ -73,6 +74,59 @@ class UserService
         }
 
         return false;
+    }
+
+    public function documentStatus()
+    {
+        $userModel = new User();
+        $user = $userModel->find(auth()->user()->account_owner_id);
+        if($user->address_document_status == User::DOCUMENT_STATUS_APPROVED && $user->personal_document_status == User::DOCUMENT_STATUS_APPROVED) {
+            return [
+                'status' => 'approved',
+                'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
+                'personal_document' => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
+                'document' => $user->document,
+                'email' => $user->email,
+                'link' => '/personal-info'
+            ];
+        } else {
+            if($user->address_document_status == User::DOCUMENT_STATUS_PENDING || $user->personal_document_status == User::DOCUMENT_STATUS_PENDING) {
+                return [
+                    'status' => 'pending',
+                    'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
+                    'personal_document' => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
+                    'document' => $user->document,
+                    'email' => $user->email,
+                    'link' => '/personal-info'
+                ];
+            }
+
+            if($user->address_document_status == User::DOCUMENT_STATUS_ANALYZING || $user->personal_document_status == User::DOCUMENT_STATUS_ANALYZING) {
+                return [
+                    'status' => 'analyzing',
+                    'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
+                    'personal_document' => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
+                    'document' => $user->document,
+                    'email' => $user->email,
+                    'link' => '/personal-info'
+                ];
+            }
+
+            if($user->address_document_status == User::DOCUMENT_STATUS_REFUSED || $user->personal_document_status == User::DOCUMENT_STATUS_REFUSED) {
+                return [
+                    'status' => 'refused',
+                    'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
+                    'personal_document' => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
+                    'document' => $user->document,
+                    'email' => $user->email,
+                    'link' => '/personal-info'
+                ];
+            }
+        }
+
+        return [
+            'status' => null
+        ];
     }
 
     public function getRefusedDocuments()
