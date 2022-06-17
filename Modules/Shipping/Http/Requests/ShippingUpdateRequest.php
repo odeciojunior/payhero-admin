@@ -24,8 +24,6 @@ class ShippingUpdateRequest extends FormRequest
             "zip_code_origin"    => $isStatic ? "" : "required|min:9",
             "status"             => "nullable",
             "pre_selected"       => "nullable",
-            'receipt'            => 'nullable',
-            'own_hand'           => 'nullable',
             "rule_value"         => "nullable",
             "regions_values"     => "nullable",
             "apply_on_plans"     => "required|array",
