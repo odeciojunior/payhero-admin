@@ -2884,6 +2884,7 @@ tbody td{
 }
 
 .bonus-balance-button {
+    display: flex;
     width: fit-content;
     height: 30px;
 
@@ -2905,11 +2906,18 @@ tbody td{
     -ms-transition: all .6s;
     -o-transition: all .6s;
     transition: all .6s;
+
+    animation: fade-in 2s forwards;
 }
 
 .bonus-balance-button:hover {
     box-shadow: 4px 4px 20px rgba(65, 220, 143, 0.2);
 }
+
+.bonus-balance-button.mobile {
+    display: none;
+}    
+
 
 .bonus-balance-content,
 .bonus-balance-history {
@@ -3040,6 +3048,23 @@ tbody td{
 .mkc_info {
     color: #59BF75 !important;
     font: bold 30px;
+}
+
+@media (max-width: 768px) {
+    .bonus-balance-button.desktop {
+        display: none;
+    }    
+
+    .bonus-balance-button.mobile {
+        display: flex;
+    }    
+
+
+    .bonus-balance-container {
+        width: 100%;
+        bottom: 0;
+    }
+    
 }
 
 
