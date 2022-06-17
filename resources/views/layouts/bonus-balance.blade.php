@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 
-                <div class="skeleton skeleton-p" style="width: 60%;""></div>
+                <div class="skeleton skeleton-p" style="width: 60%; margin-top: 10px"></div>
             </div>
         </div>
     </div>

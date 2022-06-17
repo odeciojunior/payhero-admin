@@ -2957,8 +2957,21 @@ tbody td{
 }
 
 .bonus-circle-chart {
+    position: relative;
     width: 100px;
     height: 100px;
+}
+
+.bonus-percent-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+
+    font-weight: 900;
+    font-size: 23.32px;
 }
 
 .bonus-number-title {

@@ -1473,6 +1473,25 @@ function loadBonusData(display) {
         var remainValue = '99.999,99';
         var expireDate = '26 de dez.';
         var percent = 100;
+        var chartColor = ''
+        var chartColorSecondary = '';
+
+        if(percent < 25) {
+            var chartColor = '#59BF75'
+            var chartColorSecondary = '#CCF5D5';
+        }else if(percent >= 25 && percent < 50 ) {
+            var chartColor = '#2E85EC'
+            var chartColorSecondary = '#CCDAF5';
+        }else if(percent >= 50 && percent < 75 ) {
+            var chartColor = '#F6BE2A'
+            var chartColorSecondary = '#F4E9DB';
+        }else if(percent >= 75 && percent < 100 ) {
+            var chartColor = '#FF9900'
+            var chartColorSecondary = '#F5E2CC';
+        }else {
+            var chartColor = '#E81414'
+            var chartColorSecondary = '#E81414';
+        }
 
         content = `
             <div class="bonus-balance-content">
@@ -1509,7 +1528,8 @@ function loadBonusData(display) {
 
                 <div class="d-flex align-items-center">
                     <div class="bonus-circle-chart d-flex justify-content-center align-items-center">
-                        <div class="mkCharts" data-percent="${percent}" data-size="95" data-stroke="4" data-color="#59BF75"></div>
+                        <div class="mkCharts" data-percent="${percent}" data-size="95" data-stroke="4" data-color="${chartColor}" data-border="${chartColorSecondary}"></div>
+                        <span class="bonus-percent-label" style="color: ${chartColor}">${percent}%</span>
                     </div>
 
                     <div class="bonus-numbers d-flex align-items-start ml-5">
@@ -1692,6 +1712,6 @@ const loadSkeletonBonus = `
                     </div>
                 </div>
                 
-                <div class="skeleton skeleton-p" style="width: 60%;""></div>
+                <div class="skeleton skeleton-p" style="width: 60%; margin-top: 10px"></div>
             </div>
             `;
