@@ -814,15 +814,17 @@ mix.babel([
  */
 mix.styles([
     'Modules/Reports/Resources/assets/css/reports.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
     'resources/modules/global/css/empty.css',
     'resources/modules/global/css/new-dashboard.css',
     'resources/modules/global/css/switch.css'
 ], 'public/build/layouts/reports/pending.min.css');
 mix.babel([
+    'Modules/Reports/Resources/assets/js/moment.min.js',
+    //'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
+    // 'Modules/Reports/Resources/assets/js/reports.js',
     'Modules/Reports/Resources/assets/js/report-pending.js',
-    'resources/modules/global/js-extra/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
-    'Modules/Reports/Resources/assets/js/reports.js',
 ], 'public/build/layouts/reports/pending.min.js');
 
 /**

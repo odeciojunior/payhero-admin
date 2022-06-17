@@ -2,6 +2,9 @@ var currentPage = null;
 //var atualizar = null;
 let hasSale = false;
 
+$(function() {
+    changeCalendar();
+});
 
 function atualizar (link = null) {
 
@@ -199,40 +202,40 @@ $(document).ready(function () {
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
-    $('#date_range').daterangepicker({
-        startDate: moment('2018-01-01 00:00:00'),
-        endDate: moment(),
-        opens: 'center',
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
-        },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
-        }
-    }, function (start, end) {
-        startDate = start.format('YYYY-MM-DD');
-        endDate = end.format('YYYY-MM-DD');
-    });
+    // $('#date_range').daterangepicker({
+    //     startDate: moment('2018-01-01 00:00:00'),
+    //     endDate: moment(),
+    //     opens: 'center',
+    //     maxDate: moment().endOf("day"),
+    //     alwaysShowCalendar: true,
+    //     showCustomRangeLabel: 'Customizado',
+    //     autoUpdateInput: true,
+    //     locale: {
+    //         locale: 'pt-br',
+    //         format: 'DD/MM/YYYY',
+    //         applyLabel: "Aplicar",
+    //         cancelLabel: "Limpar",
+    //         fromLabel: 'De',
+    //         toLabel: 'Até',
+    //         customRangeLabel: 'Customizado',
+    //         weekLabel: 'W',
+    //         daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    //         monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    //         firstDay: 0
+    //     },
+    //     ranges: {
+    //         'Hoje': [moment(), moment()],
+    //         'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+    //         'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+    //         'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+    //         'Este mês': [moment().startOf('month'), moment().endOf('month')],
+    //         'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+    //         'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+    //     }
+    // }, function (start, end) {
+    //     startDate = start.format('YYYY-MM-DD');
+    //     endDate = end.format('YYYY-MM-DD');
+    // });
 
     getCompanies();
 
@@ -487,3 +490,36 @@ $(document).ready(function () {
         }
     });
 });
+
+
+function changeCalendar() {
+    var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
+    var endDate = moment().format("DD/MM/YYYY");
+
+    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+    $('input[name="daterange"]').dateRangePicker({
+        setValue: function (s) {
+            if (s) {
+                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                $(this).html(s).data('value', normalize);
+                $('input[name="daterange"]').attr('value', normalize);
+                $('input[name="daterange"]').val(normalize);
+            } else {
+                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+            }
+        }
+    })
+    .on('datepicker-change', function () {
+        
+    })
+    .on('datepicker-open', function () {
+        $('.filter-badge-input').removeClass('show');
+    })
+    .on('datepicker-close', function () {
+        $(this).removeClass('focused');
+        if ($(this).data('value')) {
+            $(this).addClass('active');
+        }
+    });
+}
