@@ -3,12 +3,18 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
 
+    
+    showBonusBalance();
 
-    loadBonusBalanceTotal();
-
-    $('#bonus-balance').on('click', function() {
+    // if ($(window).width() <= 768) {
+    //     $('.bonus-balance-button.mobile').show();
+    // }else {
+    //     $('.bonus-balance-button.desktop').show();
+    // }
+        
+    
+    $('.bonus-balance-button').on('click', function() {
         $('body').addClass('bonus-modal-opened');
-
         $('#bonus-balance-modal').fadeToggle('slow', 'linear', function() {
             loadBonusData( $('#bonus-balance-modal').css('display') );
         });
@@ -1781,6 +1787,25 @@ const toggleBonusContent = function() {
     $('.bonus-balance-history').fadeToggle();
 };
 
+
+function showBonusBalance() {
+    console.log('teste');
+    $.ajax({
+        method: 'GET',
+        url: '/api/core/check-bonus-balance',
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: response => {
+            errorAjaxResponse(response);
+        },
+        success: response => {
+            console.log(response);
+        },
+    });
+
+}
 
 const loadSkeletonBonus = `
             <div class="bonus-balance-content">

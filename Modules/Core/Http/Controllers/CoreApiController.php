@@ -322,7 +322,8 @@ class CoreApiController extends Controller
                                             ->exists();
 
         return response()->json([
-            'has_bonus_balance' => $hasBonusBalance
+            // 'has_bonus_balance' => $hasBonusBalance
+            'has_bonus_balance' => true
         ]);
     }
 }
