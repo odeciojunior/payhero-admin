@@ -243,6 +243,7 @@ class Safe2PayService implements Statement
             }
 
             foreach ($transactions->cursor() as $transaction) {
+
                 $company = $transaction->company;
 
                 Transfer::create(
@@ -266,13 +267,12 @@ class Safe2PayService implements Statement
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
                 ]);
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-                if($transaction->type_enum != Transaction::TYPE_PRODUCER) {
+                if($transaction->type != Transaction::TYPE_PRODUCER) {
                     continue;
                 }
 
                 $bonusBalance = BonusBalance::where('user_id', $company->user_id)
-                    ->where('expires_at', '<=', today())
+                    ->where('expires_at', '>=', today())
                     ->where('current_value', '>', 0)
                     ->first();
 
@@ -307,7 +307,7 @@ class Safe2PayService implements Statement
                         'type_enum' => Transfer::TYPE_IN,
                         'value' => $taxValue,
                         'type' => 'in',
-                        'reason' => 'Saldo bônus da transação #' . hashids_encode($transaction->sale_id, 'sale_id'),
+                        'reason' => 'Saldo bônus da transação ',
                         'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID,
                     ]
                 );
@@ -315,7 +315,6 @@ class Safe2PayService implements Statement
                 $company->update([
                     'safe2pay_balance' => $company->safe2pay_balance + $taxValue
                 ]);
-
             }
 
             DB::commit();
