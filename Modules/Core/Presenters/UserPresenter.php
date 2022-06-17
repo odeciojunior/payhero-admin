@@ -197,4 +197,13 @@ class UserPresenter extends Presenter
         }
             return '';
     }
+
+    public function getAccountType($user_id, $account_owner_id)
+    {
+        if ($user_id !== $account_owner_id) {
+            return 'collaborator';
+        }
+
+        return 'admin';
+    }
 }

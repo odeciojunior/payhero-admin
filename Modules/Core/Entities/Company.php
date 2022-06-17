@@ -41,7 +41,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $asaas_balance
  * @property int $safe2pay_balance
  * @property int $company_type
- * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
  * @property int $boleto_release_money
@@ -64,8 +63,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property Transfer[] $transfers
  * @property UserProject[] $usersProjects
  * @property Withdrawal[] $withdrawals
- * @property string $bank_document_status_value
- * @property string $bank_document_status_badge
  * @property json $id_wall_result
  * @method CompanyPresenter present()
  * @property int $order_priority
@@ -134,17 +131,17 @@ class Company extends Model
         'city',
         'street',
         'complement',
-        'neighborhood',        
-        'number',        
+        'neighborhood',
+        'number',
         //'support_email',
         //'support_telephone',
         'cielo_balance',
         'asaas_balance',
         'safe2pay_balance',
-        //'bank_document_status',
         'address_document_status',
         'contract_document_status',
-        'company_type',        
+        'date_last_document_notification',
+        'company_type',
         'order_priority',
         //'account_type',
         //'extra_document',
@@ -276,10 +273,10 @@ class Company extends Model
     }
 
     public function getDefaultBankAccount(){
-        return $this->companyBankAccounts->where('is_default',true)->where('status','VERIFIED')->first()??null;    
+        return $this->companyBankAccounts->where('is_default',true)->where('status','VERIFIED')->first()??null;
     }
 
     public function getBankAccountTED(){
-        return $this->companyBankAccounts->where('transfer_type','TED')->where('status','VERIFIED')->first()??null;    
+        return $this->companyBankAccounts->where('transfer_type','TED')->where('status','VERIFIED')->first()??null;
     }
 }

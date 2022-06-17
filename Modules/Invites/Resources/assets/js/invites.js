@@ -262,7 +262,7 @@ $(document).ready(function () {
                             contCompanies++;
                             if (companyIsApproved(company)) {
                                 if (company.type_company === 'physical person') {
-                                    if (statusDocumentUser[company.user_address_document_status] !== 'Aprovado' || statusDocumentUser[company.user_personal_document_status] !== 'Aprovado' || company.bank_document_translate !== 'Aprovado') {
+                                    if (statusDocumentUser[company.user_address_document_status] !== 'Aprovado' || statusDocumentUser[company.user_personal_document_status] !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
                                         selCompany += `<option value=${company.id_code} disabled> ${company.fantasy_name}  </option>`;
@@ -272,7 +272,7 @@ $(document).ready(function () {
                                     }
 
                                 } else if (company.type_company === 'juridical person') {
-                                    if (company.address_document_translate !== 'Aprovado' || company.bank_document_translate !== 'Aprovado' || company.contract_document_translate !== 'Aprovado' || statusDocumentUser[company.user_address_document_status] !== 'Aprovado' || statusDocumentUser[company.user_personal_document_status] !== 'Aprovado') {
+                                    if (company.address_document_translate !== 'Aprovado' || company.contract_document_translate !== 'Aprovado' || statusDocumentUser[company.user_address_document_status] !== 'Aprovado' || statusDocumentUser[company.user_personal_document_status] !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
                                         selCompany += `<option value=${company.id_code} disabled> ${company.fantasy_name}  </option>`;

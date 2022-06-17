@@ -80,32 +80,25 @@ $(document).ready(function () {
         } else if (selected === 'pac') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').hide();
+            $('.shipping-value').val('');
             $('.zip-code-origin-shipping-row').show();
             $('.shipping-description').attr('placeholder', 'PAC');
         } else if (selected === 'sedex') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').hide();
+            $('.shipping-value').val('');
             $('.zip-code-origin-shipping-row').show();
             $('.shipping-description').attr('placeholder', 'SEDEX');
         } else if (selected.includes('melhorenvio')) {
             $('.information-shipping-row').hide();
             $('.value-shipping-row').hide();
+            $('.shipping-value').val('');
             $('.zip-code-origin-shipping-row').show();
             $('.shipping-description').attr('placeholder', 'Melhor Envio');
         }
     });
 
-    $('.shipping-money-format').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: 'R$ '}).attr('placeholder', 'R$ 0,00');
-
-    $('.rule-shipping-value').on('blur', function () {
-        if ($(this).val().length == 1) {
-            let val = '0,0' + $(this).val();
-            $('.rule-shipping-value').val(val);
-        } else if ($(this).val().length == 2) {
-            let val = '0,' + $(this).val();
-            $('.rule-shipping-value').val(val);
-        }
-    });
+    $('.shipping-money-format').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: 'R$ '});
 
     setSelect2Plugin('#shipping-plans-add', '.shipping-plans-add-container')
     setSelect2Plugin('#shipping-plans-edit', '.shipping-plans-edit-container')
@@ -272,8 +265,6 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
                 $('#modal-edit-shipping .shipping-status').prop('checked', !!response.status).change();
                 $('#modal-edit-shipping .shipping-pre-selected').prop('checked', !!response.pre_selected).change();
-                $('#modal-edit-shipping .shipping-receipt').prop('checked', !!response.receipt).change();
-                $('#modal-edit-shipping .shipping-ownhand').prop('checked', !!response.own_hand).change();
 
                 // Seleciona a opção do select de acordo com o que vem do banco
                 var applyOnPlansEl = $('#modal-edit-shipping .shipping-plans-edit')
@@ -417,8 +408,6 @@ $(document).ready(function () {
         let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
         formData.set('status', $('#modal-edit-shipping .shipping-status').is(':checked') ? 1 : 0);
         formData.set('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
-        formData.set('receipt', $('#modal-edit-shipping .shipping-receipt').is(':checked') ? 1 : 0);
-        formData.set('own_hand', $('#modal-edit-shipping .shipping-ownhand').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
 
 

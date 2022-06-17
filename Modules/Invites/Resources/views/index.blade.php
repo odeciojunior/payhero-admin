@@ -190,7 +190,7 @@
                             <h3 align='center'>Você não cadastrou nenhuma empresa</h3>
                             <h5 align='center'>
                                 Deseja cadastrar uma empresa?
-                                <a class='red pointer' href='/companies'>Clique aqui</a>
+                                <a class='red pointer' href='{{ env('ACCOUNT_FRONT_URL') }}/redirect/{{ \Vinkla\Hashids\Facades\Hashids::connection('login')->encode(auth()->user()->id) }}/{{ (string) \Vinkla\Hashids\Facades\Hashids::encode(\Carbon\Carbon::now()->addMinute()->unix()) }}/companies'>Clique aqui</a>
                             </h5>
                         </div>
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
