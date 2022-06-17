@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -324,6 +325,28 @@ class CoreApiController extends Controller
         return response()->json([
             // 'has_bonus_balance' => $hasBonusBalance
             'has_bonus_balance' => true
+        ]);
+    }
+
+    public function getBonusBalance()
+    {
+        $bonusBalance = BonusBalance::where('user_id', auth()->user()->account_owner_id)
+                                    ->where('expires_at', '>=', today())
+                                    ->where('current_value', '>', 0)
+                                    ->first();
+
+        if(empty($bonusBalance)) {
+            return response()->json([
+                'error' => 'bonus balance not found'
+            ], 400);
+        }
+
+        return response()->json([
+            'total_bonus' => foxutils()->formatMoney($bonusBalance->total_value / 100),
+            'current_bonus' => foxutils()->formatMoney($bonusBalance->current_value / 100),
+            'used_bonus' => foxutils()->formatMoney(($bonusBalance->total_value - $bonusBalance->current_value) / 100),
+            'expires_at' => Carbon::parse($bonusBalance->created_at)->format('d/m/Y'),
+            'used_percentage' => number_format($bonusBalance->current_value * 100 / $bonusBalance->total_value, 1, '.', '')
         ]);
     }
 }

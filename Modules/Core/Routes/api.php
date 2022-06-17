@@ -20,6 +20,7 @@ Route::group(
         ->middleware('permission:sales|finances|report_pending|apps|invitations');
 
         Route::get('/core/check-bonus-balance', 'CoreApiController@hasBonusBalance');
+        Route::get('/core/get-bonus-balance', 'CoreApiController@getBonusBalance');
     }
 );
 
