@@ -94,7 +94,12 @@ class PixExpiredSendEmailListener implements ShouldQueue
             }
 
             if (FoxUtils::isProduction()) {
-                $link = 'https://checkout.' . $domain->name;
+                if(!foxutils()->isEmpty($domain->name)) {
+                    $link = 'https://checkout.' . $domain->name;
+                } else {
+                    $link = 'https://checkout.cloudfox.net';
+                }
+
             } else {
                 $link = env('APP_URL', 'http://dev.checkout.com.br');
             }

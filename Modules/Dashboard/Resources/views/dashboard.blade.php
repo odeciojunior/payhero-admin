@@ -14,7 +14,7 @@
         <div style="display: none" class="page-header container mb-15 mb-sm-0">
 
             <div class="row align-items-center justify-content-between" style="min-height:50px">
-                
+
                 <div class="col-lg-6 mb-25">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
@@ -176,9 +176,7 @@
                 </div>
             </div>
         </div>
-        {{-- Quando não tem loja cadastrado  --}}
         @include('projects::empty')
-        {{-- FIM loja nao existem lojas--}}
     </div>
 
     @push('scripts')
