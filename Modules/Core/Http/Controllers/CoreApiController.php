@@ -325,7 +325,7 @@ class CoreApiController extends Controller
         if(empty($bonusBalance)) {
             return response()->json([
                 'bonus_balance' => 0
-            ], 400);
+            ]);
         }
 
         return response()->json([
