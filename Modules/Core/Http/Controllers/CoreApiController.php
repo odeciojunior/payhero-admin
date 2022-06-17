@@ -5,6 +5,7 @@ namespace Modules\Core\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\BonusBalance;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
 use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
@@ -23,10 +24,6 @@ use Modules\Core\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class CoreApiController
- * @package Modules\Core\Http\Controllers
- */
 class CoreApiController extends Controller
 {
     public function verifyAccount($id)
@@ -218,7 +215,6 @@ class CoreApiController extends Controller
         }
     }
 
-
     public function companies(Request $request)
     {
         try {
@@ -241,7 +237,6 @@ class CoreApiController extends Controller
             );
         }
     }
-
 
     public function getCompanies()
     {
@@ -317,5 +312,17 @@ class CoreApiController extends Controller
             report($e);
             return response()->json(['message' => 'Erro ao notificar alteração no chamado!'], 400);
         }
+    }
+
+    public function hasBonusBalance()
+    {
+        $hasBonusBalance = BonusBalance::where('user_id', auth()->user()->account_owner_id)
+                                            ->where('expires_at', '>=', today())
+                                            ->where('current_value', '>', 0)
+                                            ->exists();
+
+        return response()->json([
+            'has_bonus_balance' => $hasBonusBalance
+        ]);
     }
 }

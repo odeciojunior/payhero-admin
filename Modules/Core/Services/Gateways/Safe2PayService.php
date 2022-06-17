@@ -9,6 +9,7 @@ use Modules\Core\Services\TaskService;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
+use Modules\Core\Entities\BonusBalance;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
@@ -264,6 +265,57 @@ class Safe2PayService implements Statement
                     'status' => 'transfered',
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
                 ]);
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+                if($transaction->type_enum != Transaction::TYPE_PRODUCER) {
+                    continue;
+                }
+
+                $bonusBalance = BonusBalance::where('user_id', $company->user_id)
+                    ->where('expires_at', '<=', today())
+                    ->where('current_value', '>', 0)
+                    ->first();
+
+                if(empty($bonusBalance)) {
+                    continue;
+                }
+
+                $cloudfoxTransaction = Transaction::where('sale_id', $transaction->sale_id)
+                                                    ->whereNull('company_id')
+                                                    ->first();
+
+                $taxValue = $cloudfoxTransaction->value - $transaction->sale->interest_total_value;
+
+                if($bonusBalance->current_value >= $taxValue) {
+                    $bonusBalance->update([
+                        'current_value' => $bonusBalance->current_value - $taxValue
+                    ]);
+                }
+                else {
+                    $taxValue = $bonusBalance->current_value;
+
+                    $bonusBalance->update([
+                        'current_value' => 0
+                    ]);
+                }
+
+                Transfer::create(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $company->user_id,
+                        'company_id' => $company->id,
+                        'type_enum' => Transfer::TYPE_IN,
+                        'value' => $taxValue,
+                        'type' => 'in',
+                        'reason' => 'Saldo bônus da transação #' . hashids_encode($transaction->sale_id, 'sale_id'),
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID,
+                    ]
+                );
+
+                $company->update([
+                    'safe2pay_balance' => $company->safe2pay_balance + $taxValue
+                ]);
+
             }
 
             DB::commit();
