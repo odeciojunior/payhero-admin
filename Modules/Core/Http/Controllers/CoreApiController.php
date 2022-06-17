@@ -317,13 +317,19 @@ class CoreApiController extends Controller
 
     public function hasBonusBalance()
     {
-        $hasBonusBalance = BonusBalance::where('user_id', auth()->user()->account_owner_id)
-                                            ->where('expires_at', '>=', today())
-                                            ->where('current_value', '>', 0)
-                                            ->exists();
+        $bonusBalance = BonusBalance::where('user_id', auth()->user()->account_owner_id)
+                                    ->where('expires_at', '>=', today())
+                                    ->where('current_value', '>', 0)
+                                    ->first();
+
+        if(empty($bonusBalance)) {
+            return response()->json([
+                'bonus_balance' => 0
+            ], 400);
+        }
 
         return response()->json([
-            'has_bonus_balance' => $hasBonusBalance
+            'bonus_balance' => foxutils()->formatMoney($bonusBalance->current_value)
         ]);
     }
 
