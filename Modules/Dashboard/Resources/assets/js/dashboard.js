@@ -11,7 +11,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-chart-data`,
             dataType: "json",
             data: {
-                company: $('#company-navbar').val(),
+                company: sessionStorage.getItem('company_default'),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -184,7 +184,9 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {company: $('#company-navbar').val()},
+            data: {
+                company: sessionStorage.getItem('company_default')
+            },
             error: function error(response) {
                 loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();

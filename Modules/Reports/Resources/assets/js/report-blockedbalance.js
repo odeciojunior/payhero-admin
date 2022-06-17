@@ -1,6 +1,43 @@
 var currentPage = null;
 //var atualizar = null;
 
+function updateAfterChangeCompany(){
+    // $("#project").find('option').not(':first').remove();
+    // let companies = JSON.parse(sessionStorage.getItem('companies'));
+    // $.each(companies, function (c, company) {
+    //     if( sessionStorage.getItem('company_default') == company.id){
+    //         $.each(company.projects, function (i, project) {
+    //             $("#project").append(
+    //                 $("<option>", {
+    //                     value: project.id,
+    //                     text: project.name,
+    //                 })
+    //             );
+    //         });
+    //     }
+    // });
+
+    window.fillHtmlSelect();
+    window.atualizar();
+}
+
+function fillHtmlSelect(){
+    $("#project").find('option').not(':first').remove();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#project").append(
+                    $("<option>", {
+                        value: project.id,
+                        text: project.name,
+                    })
+                );
+            });
+        }
+    });
+}
+
 function atualizar(link = null) {
 
     currentPage = link;
@@ -8,10 +45,24 @@ function atualizar(link = null) {
 
     loadOnTable('#dados_tabela', '#tabela_vendas');
 
+    loadOnAny('.number', false, {
+        styles: {
+            container: {
+                minHeight: '32px',
+                height: 'auto'
+            },
+            loader: {
+                width: '20px',
+                height: '20px',
+                borderWidth: '4px'
+            },
+        }
+    });
+
     if (link == null) {
-        link = '/api/reports/blockedbalance?' + getFilters(true).substr(1) + "&company_id="+sessionStorage.getItem('company_default');
+        link = '/api/reports/blockedbalance?' + getFilters(true).substr(1);
     } else {
-        link = '/api/reports/blockedbalance' + link + getFilters(true) + "&company_id="+sessionStorage.getItem('company_default');
+        link = '/api/reports/blockedbalance' + link + getFilters(true);
         updateResume = false;
     }
 
@@ -114,6 +165,7 @@ function atualizar(link = null) {
 
 function getFilters(urlParams = false) {
     let data = {
+        'company': sessionStorage.getItem('company_default'),
         'project': $("#project").val(),
         'payment_method': $("#payment_method").val(),
         'status': $("#status").val(),
@@ -125,7 +177,6 @@ function getFilters(urlParams = false) {
         'reason': $('#reason').val(),
         'plan': $('#plan').val(),
     };
-
     if (urlParams) {
         let params = "";
         for (let param in data) {
@@ -285,6 +336,16 @@ $(document).ready(function () {
     getProjects();
 
     // Obtem o os campos dos filtros
+    function getProjectsV2() {
+        loadingOnScreen();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel").show()
+        fillHtmlSelect();
+        atualizar();
+        loadingOnScreenRemove();
+    }
+
     function getProjects() {
         loadingOnScreen();
         $.ajax({
@@ -311,7 +372,7 @@ $(document).ready(function () {
                             text: project.name
                         }));
                     });
-console.log('getprojects ok')
+
                     atualizar();
 
                 } else {

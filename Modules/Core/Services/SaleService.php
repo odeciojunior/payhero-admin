@@ -49,22 +49,6 @@ class SaleService
                 $userId = auth()->user()->getAccountOwnerId();
             }
 
-            if (empty($filters["company"])) {
-                $userCompanies = $companyModel->where('user_id', $userId)
-                    ->get()
-                    ->pluck('id')
-                    ->toArray();
-
-            } else {
-                $userCompanies = [];
-                $companies = explode(',', $filters["company"]);
-
-                foreach ($companies as $company) {
-                    array_push($userCompanies, current(Hashids::decode($company)));
-                }
-
-            }
-
             $relationsArray = [
                 'sale',
                 'sale.project',
@@ -84,7 +68,7 @@ class SaleService
             }
 
             $transactions = $transactionModel->with($relationsArray)
-                ->whereIn('company_id', $userCompanies)
+                ->where('company_id', current(Hashids::decode($filters["company"])))
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id');
 
@@ -824,6 +808,7 @@ class SaleService
                     'blockReasonSale' => $blockReasonQuery,
                 ]
             )
+                ->where('company_id', current(Hashids::decode($filters["company"])))
                 ->where('user_id', auth()->user()->getAccountOwnerId())
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereHas('blockReasonSale', $blockReasonQuery);

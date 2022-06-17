@@ -2,8 +2,25 @@ var currentPage = null;
 //var atualizar = null;
 let hasSale = false;
 
+function updateAfterChangeCompany(){
+    $("#project").find('option').not(':first').remove();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {
+                $("#project").append(
+                    $("<option>", {
+                        value: project.id,
+                        text: project.name,
+                    })
+                );
+            });
+        }
+    });
+    window.atualizar();
+}
 
-function atualizar (link = null) {
+window.atualizar = function(link = null) {
 
     currentPage = link;
     let updateResume = true;
@@ -88,7 +105,7 @@ function atualizar (link = null) {
                     $("#body-table-pending").attr("img-empty") +
                     "'> Nenhuma venda encontrada </td></tr>");
             }
-            pagination(response, 'pending', atualizar);
+            pagination(response, 'pending', window.atualizar);
         }
     });
 
@@ -312,7 +329,7 @@ $(document).ready(function () {
     function getAcquirer() {
         $.ajax({
             method: "GET",
-            url: '/api/finances/acquirers/'+$('#company-navbar').val(),
+            url: '/api/finances/acquirers/'+sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

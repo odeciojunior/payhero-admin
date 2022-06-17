@@ -23,7 +23,7 @@
             <!-- CABECALHO -->
             <div style="display: none" class="page-header container">
                 <div class="row align-items-center justify-content-between" style="min-height:50px">
-    
+
                     <!-- TITULO DA PAGINA -->
                     <div class="col-12 col-sm-7 col-md-6 mb-10 mb-sm-0">
                         <h1 class="page-title">Minhas Lojas</h1>
@@ -32,24 +32,24 @@
 
                     <!-- BOTOES DO CABECALHO -->
                     <div class="col-12 col-sm-5 col-md-6">
-                        
+
                         <!-- 1.BOTAO TOGGLE / 2.BOTAO ADICIONAR -->
                         <div class="row no-gutters align-items-center justify-content-sm-end justify-content-between">
 
                             <!-- BOTAO EXIBIR/ESCONDER EXCLUIDOS -->
-                            <div id="button_toggle" class="d-flex mr-30">
+                            <div id="button_toggle" class="d-flex mr-60">
                                 <label class="switch mr-3">
                                     <input type="checkbox" class='check' value='{{auth()->user()->deleted_project_filter}}' name="deleted_project_filter" id="deleted_project_filter">
                                     <span class="slider round"></span>
                                 </label>
-                                <div for='deleted_project_filter' class="mt-3"><b>Ver excluídas</b></div>
+                                <div for='deleted_project_filter' class="mt-3"><b>Exibir lojas excluídas nos filtros</b></div>
                             </div>
-                            
+
                             <!-- BOTAO ADICIONAR LOJA -->
                             <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none;" data-toggle="tooltip" data-placement="bottom" title="Adicionar Loja">
                                 <span style="color: white; font-size: 35px" class='o-add-1'></span>
                             </a>
-    
+
                         </div>
                     </div>
 
@@ -71,7 +71,7 @@
             <img src="build/layouts/projects/img/dragItem.svg" class="ml-5"/>
         </div>
     </div>
-    
+
     @push('scripts')
         <script src="{{ mix('build/layouts/projects/index.min.js') }}"></script>
     @endpush

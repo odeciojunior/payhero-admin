@@ -147,21 +147,20 @@
                                     <div class="col-md-4 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <h6 class="font-size-14 gray-600">Quantidade de vendas</h6>
-                                            <h4 id="total_sales" class="font-size-30 bold"></h4>
+                                            <h4 id="total_sales" class="font-size-30 bold number"></h4>
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <h6 class="font-size-14 gray-600">Comissão</h6>
-                                            <h4 id="commission_pending"></h4>
+                                            <h4 id="commission_pending" class="number"></h4>
                                         </div>
                                         <div class="s-border-right yellow"></div>
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 card">
                                         <div class="card-body">
                                             <h6 class="font-size-14 gray-600">Valor Total</h6>
-                                            <h4 id="total">
-                                            </h4>
+                                            <h4 id="total" class="number"></h4>
                                         </div>
                                         <div class="s-border-right red"></div>
                                     </div>

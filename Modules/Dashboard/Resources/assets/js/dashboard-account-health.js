@@ -102,7 +102,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-health`,
             dataType: "json",
             data: {
-                company: $('#company-navbar').val(),
+                company: sessionStorage.getItem('company_default'),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -281,7 +281,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-chargeback`,
             dataType: "json",
             data: {
-                company: $('#company-navbar').val(),
+                company: sessionStorage.getItem('company_default'),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -410,7 +410,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-attendance`,
             dataType: "json",
             data: {
-                company: $('#company-navbar').val(),
+                company: sessionStorage.getItem('company_default'),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -487,7 +487,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-tracking`,
             dataType: "json",
             data: {
-                company: $('#company-navbar').val(),
+                company: sessionStorage.getItem('company_default'),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

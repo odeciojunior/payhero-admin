@@ -67,13 +67,23 @@ class ProjectsApiController extends Controller
                     )->log('Visualizou tela todos os projetos');
                 }
 
-                $projectStatus = [$projectModel->present()->getStatus('active')];
-
-                if ($user->deleted_project_filter) {
+                if($request->input('status')){
+                    if($request->input('status') == 'all')
                     $projectStatus = [
                         $projectModel->present()->getStatus('active'),
                         $projectModel->present()->getStatus('disabled'),
                     ];
+                    else
+                        $projectStatus = [$projectModel->present()->getStatus( $request->input('status') )];
+                }
+                else{
+                    $projectStatus = [$projectModel->present()->getStatus('active')];
+                    if ($user->deleted_project_filter) {
+                        $projectStatus = [
+                            $projectModel->present()->getStatus('active'),
+                            $projectModel->present()->getStatus('disabled'),
+                        ];
+                    }
                 }
 
                 if(!empty($request->input('company'))){

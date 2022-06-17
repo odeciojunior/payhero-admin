@@ -1,3 +1,8 @@
+function updateAfterChangeCompany(){
+    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    $('.company_id').val( sessionStorage.getItem('company_default') );
+}
+
 $(document).ready(function () {
 
     $('.company_name').val( sessionStorage.getItem('company_default_name') );
@@ -105,7 +110,7 @@ $(document).ready(function () {
                 },
                 success: (response) => {
                     loadingOnScreenRemove();
-                    alertCustom('success', 'Loja salvo com sucesso!');
+                    alertCustom('success', 'Loja salva com sucesso!');
                     window.location = "/projects"
                 }
             });

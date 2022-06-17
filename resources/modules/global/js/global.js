@@ -2,12 +2,12 @@ $(document).ready(function () {
     getCompanies();
 
     $('#company-navbar').change(function () {
-        let thisPage = new URL(window.location)
-        caminho = thisPage.pathname ;
-        if( caminho.match( /\/projects\/[a-zA-Z0-9]*/i ) && !caminho.match( /\/projects\/create/i ) )
-            return;
         var company_id = $(this).val()
         var company_name = $(this).find('option:selected').text()
+
+        if(company_id ==sessionStorage.getItem('company_default'))
+            return;
+
         $.ajax({
             method: 'POST',
             url: '/api/core/company-default',
@@ -230,6 +230,7 @@ $(document).ready(function () {
     }
 
     monthRevenueInput.addEventListener('input', handleInputRangeChange);
+
 });
 
 function redirectToAccounts(url_data)
@@ -1500,7 +1501,7 @@ function selectCompanies() {
 }
 
 function getCompanies() {
-    let thisPage = window.location.hostname
+    let thisPage = window.location.hostname;
     var lastPage = new URL(document.referrer).hostname
     if (thisPage != lastPage) {
         sessionStorage.removeItem('companies')
@@ -1552,21 +1553,23 @@ function updateProjectsOptions(){
     pathname = window.location.pathname;
 
     // corrige lojas em Relatorios Saldo Pendente
-    if(pathname == '/reports/pending'){
-        $("#project").find('option').not(':first').remove();
-        $.getScript( "/build/layouts/reports/pending.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
+    // if(pathname == '/reports/pending'){
+    //     $("#project").find('option').not(':first').remove();
+    //     $.getScript( "/build/layouts/reports/pending.min.js", function( data, textStatus, jqxhr ) {
+    //         getProjects();
+    //     });
+    // }
     // corrige lojas em Relatorios Saldo Retido
-    else if(pathname == '/reports/blockedbalance'){
-        $("#project").find('option').not(':first').remove();
-        $.getScript( "/build/layouts/reports/blockedbalance.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
-    // corrige lojas em Afiliados
-    else if(pathname == '/affiliates'){
+    // else
+    // if(pathname == '/reports/blockedbalance'){
+    //     $("#project").find('option').not(':first').remove();
+    //     $.getScript( "/build/layouts/reports/blockedbalance.min.js", function( data, textStatus, jqxhr ) {
+    //         getProjects();
+    //     });
+    // }
+    // // corrige lojas em Afiliados
+    // else
+    if(pathname == '/affiliates'){
         $("#project-affiliate, #project-affiliate-request").find('option').not(':first').remove();
         $.getScript( "/build/layouts/affiliates/projectaffiliates.min.js", function( data, textStatus, jqxhr ) {
             getProjects();

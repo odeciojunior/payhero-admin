@@ -1,5 +1,16 @@
+function updateAfterChangeCompany(){
+    window.location.href = "/projects";
+}
+
 $(() => {
+    // let path =  window.location.pathname
+    // if( path.match( /\/projects\/[a-zA-Z0-9]*/i ) && !path.match( /\/projects\/create/i ) ){
+        $('.site-navbar .sirius-select-container').addClass('disabled');
+    // }
+
     loadingOnScreen();
+
+    //$('.site-navbar .sirius-select-container').addClass('disabled');
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
     $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});

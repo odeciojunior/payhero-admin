@@ -18,7 +18,9 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: {company: $('#company-navbar').val()},
+            data: {
+                company: sessionStorage.getItem('company_default')
+            },
             error: function () {
                 //
             },

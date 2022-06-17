@@ -65,11 +65,11 @@ $(document).ready(function () {
 
     function nextPerformance(data) {
         setTimeout(function () {
-            loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');
+            loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');//loadOnAny('.sirius-performance > .card',true);//
         }, 500);
         $(".sirius-performance .card-indicators > .active").on("click", function () {
             $('.sirius-performance > .card').html('');
-            loadingOnAccountsHealth('.sirius-performance > .card');
+            loadingOnAccountsHealth('.sirius-performance > .card');//loadOnAny('.sirius-performance > .card');//
             let card = $(this).data('slide-to');
             switch (card) {
                 case 1:
@@ -89,7 +89,7 @@ $(document).ready(function () {
 
     window.updatePerformance = function () {
 
-        loadingOnAccountsHealth('.sirius-performance > .card');
+        loadingOnAccountsHealth('.sirius-performance > .card');//loadOnAny('.sirius-performance > .card');//
 
         $.ajax({
             method: "GET",
@@ -100,10 +100,10 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             data: {
-                company: $('#company-navbar').val(),
+                company: sessionStorage.getItem('company_default'),
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');
+                loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');//loadOnAny('.sirius-performance > .card',true);//
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -257,7 +257,7 @@ $(document).ready(function () {
     }
 
     function updatePerformanceCard2(data) {
-        loadingOnAccountsHealth('.sirius-performance > .card');
+        loadingOnAccountsHealth('.sirius-performance > .card');//loadOnAny('.sirius-performance > .card');//
         let currentLevel = levelInfo[data.level];
 
         let item = `
@@ -395,7 +395,7 @@ $(document).ready(function () {
     }
 
     function updatePerformanceCard3(data) {
-        loadingOnAccountsHealth('.sirius-performance > .card');
+        loadingOnAccountsHealth('.sirius-performance > .card');//loadOnAny('.sirius-performance > .card');//
         let currentLevel = levelInfo[data.level];
 
         let item = `

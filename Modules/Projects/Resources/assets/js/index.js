@@ -1,5 +1,6 @@
 function updateAfterChangeCompany(){
     $("#data-table-projects").empty();
+    loadOnAny('#data-table-projects');
     window.index('n');
 }
 
@@ -14,7 +15,7 @@ $(function () {
             url: "/api/projects",
             data: {
                 company: sessionStorage.getItem('company_default'),
-                status: "active",
+                status: "all",
             },
             dataType: "json",
             headers: {
@@ -27,6 +28,7 @@ $(function () {
                 loadingOnScreenRemove();
             },
             success: (response) => {
+                loadOnAny("#data-table-projects", true);
                 let deleteProjectsShowOrHidde = $("#deleted_project_filter");
                 if(deleteProjectsShowOrHidde.val() === '1'){
                     $("#deleted_project_filter").prop("checked", true)
@@ -186,8 +188,8 @@ $(function () {
             },
             success: (response) => {
                 $("#modal_config").modal("hide");
-                location.reload(true);
-                window.index();
+                //location.reload(true);
+                //window.index();
                 alertCustom("success", response.message);
             },
         });
