@@ -973,8 +973,12 @@ img.border-icon{
     }
 }
 
+.modal-new-layout .mCSB_scrollTools {
+    right: 25px;
+}
 .modal-new-layout .modal-content {
     border-radius: 12px;
+    overflow: hidden;
 }
 .modal-new-layout .form-control {
     font-size: 16px;
