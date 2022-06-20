@@ -617,24 +617,7 @@
                         
                         <!-- distribtion -->
                         <div class="distribution mkt">
-                            <div class="d-flex sub-distribution">
-                                <div class="card inner card-most-sales" id="card-most-sales">
-                                    <header class="d-flex title-graph">
-                                        <h5 class="grey font-size-16">
-                                            <strong>Vendas mais frequentes</strong>
-                                        </h5>
-                                    </header>
-                                    <div  class="custom-table scrollbar pb-0 pt-0">
-                                        <div class="row">
-                                            <div class="container">
-                                                <div class="data-holder b-bottom scroll-212 onPreLoad block-sales-mkt" id="block-sales"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="card inner pad-bottom-0 origin">
+                        <div class="card inner pad-bottom-0 origin">
                                 <header class="d-flex title-graph sirius-select-origin">
                                     <h5 class="grey font-size-16">
                                         <strong>Origem</strong>
@@ -670,6 +653,23 @@
                                         </div>
                                         {{-- <div class="row">
                                         </div> --}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex sub-distribution">
+                                <div class="card inner card-most-sales" id="card-most-sales">
+                                    <header class="d-flex title-graph">
+                                        <h5 class="grey font-size-16">
+                                            <strong>Vendas mais frequentes</strong>
+                                        </h5>
+                                    </header>
+                                    <div  class="custom-table scrollbar pb-0 pt-0">
+                                        <div class="row">
+                                            <div class="container">
+                                                <div class="data-holder b-bottom scroll-212 onPreLoad block-sales-mkt" id="block-sales"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
