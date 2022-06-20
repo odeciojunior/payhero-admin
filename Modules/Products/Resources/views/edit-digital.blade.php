@@ -69,15 +69,16 @@
                     </div>
                 </div>
 
-                <div class="form-buttons">
-                    <div>
+                <div class="form-buttons" style="display: block; text-align: right">
+                    <div style="float: left">
                         <a class="btn btn-lg btn-excluir delete-product" data-toggle="modal" data-target="#modal-delete" href="#"><span class="o-bin-1 mr-2"></span>Excluir produto</a>
                     </div>
 
-                    <div>
+                    <div style="float: right">
                         <a class="btn btn-lg btn-cancelar" href="/products">Cancelar</a>
                         <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Salvar</button>
                     </div>
+                    <div style="clear:both"></div>
                 </div>
             </form>
 
