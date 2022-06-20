@@ -245,6 +245,7 @@ h4.number{
 .box-select input:focus-visible { outline: 1px solid #2bb2ff; }
 .date-picker-wrapper {
     border: 1px solid #2bb2ff !important;
+    transform: translate(-1%, 0);
 }
 
 @media only screen and (min-width: 480px) {
@@ -2328,3 +2329,4 @@ h4.number{
     display: flex;
     align-items: center;
 }
+/* .date-picker-wrapper { right: 0; } */
