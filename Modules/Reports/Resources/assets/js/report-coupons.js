@@ -2,6 +2,7 @@ var currentPage = null;
 var atualizar = null;
 
 $(document).ready(function () {
+    changeCalendar();
 
     $("#filtros").on("click", function () {
         if ($("#div_filtros").is(":visible")) {
@@ -172,3 +173,35 @@ $(document).ready(function () {
         }
     });
 });
+
+function changeCalendar() {
+    var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
+    var endDate = moment().format("DD/MM/YYYY");
+
+    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+    $('input[name="daterange"]').dateRangePicker({
+        setValue: function (s) {
+            if (s) {
+                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                $(this).html(s).data('value', normalize);
+                $('input[name="daterange"]').attr('value', normalize);
+                $('input[name="daterange"]').val(normalize);
+            } else {
+                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+            }
+        }
+    })
+    .on('datepicker-change', function () {
+        
+    })
+    .on('datepicker-open', function () {
+        $('.filter-badge-input').removeClass('show');
+    })
+    .on('datepicker-close', function () {
+        $(this).removeClass('focused');
+        if ($(this).data('value')) {
+            $(this).addClass('active');
+        }
+    });
+}

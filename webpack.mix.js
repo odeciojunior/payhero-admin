@@ -736,12 +736,13 @@ mix.styles([
     'resources/modules/global/css/table.css',
     'Modules/Reports/Resources/assets/css/coupons.css',
     'Modules/Reports/Resources/assets/css/reports.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
     'resources/modules/global/css/empty.css'
 ], 'public/build/layouts/reports/coupons.min.css');
 mix.babel([
     'Modules/Reports/Resources/assets/js/report-coupons.js',
     'resources/modules/global/js-extra/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
 ], 'public/build/layouts/reports/coupons.min.js');
 
 /**
