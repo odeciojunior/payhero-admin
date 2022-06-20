@@ -80,13 +80,18 @@
 
         <input type="hidden" id="accountStatus">
 
+        @php
+            $userModel = new \Modules\Core\Entities\User();
+            $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+        @endphp
+
         @if(!auth()->user()->account_is_approved)
             @include('utils.new-register-link');
         @endif
 
         @yield('content')
 
-        @if(!auth()->user()->account_is_approved)
+        @if(!auth()->user()->account_is_approved && $account_type === 'admin')
             @include('utils.documents-pending');
         @endif
 
