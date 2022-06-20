@@ -450,8 +450,8 @@ function loadingOnScreen() {
 
 function loadingOnChart(target) {
     $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading">
-            <img style="height: 125px; width: 125px;" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading bg-white">
+            <img style="height: 125px; width: 125px;" src="/build/global/img/logos/2021/svg/icon-secundary.svg"
                  class="img-responsive"/>
         </div>`
     )
@@ -459,8 +459,8 @@ function loadingOnChart(target) {
 
 function loadingOnAccountsHealth(target) {
     $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
-            <img style="height: 125px; width: 125px; top: auto;" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center bg-white">
+            <img style="height: 125px; width: 125px; top: auto;" src="/build/global/img/logos/2021/svg/icon-secundary.svg"
                  class="img-responsive"/>
         </div>`
     )
