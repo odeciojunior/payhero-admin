@@ -136,9 +136,9 @@
                                     <table class="table-coupons table table-striped" style="width:100%;margin: auto;">
                                         <thead>
                                         <tr>
-                                            <td class="table-title">Código cupom</td>
-                                            <td class="table-title">Loja</td>
-                                            <td class="table-title">Quantidade utilizada</td>
+                                            <td class="table-title">Cupom</td>
+                                            <td class="table-title">Projeto</td>
+                                            <td class="table-title">Utilizados</td>
                                         </tr>
                                         </thead>
                                         <tbody id="body-table-coupons"  img-empty="{!! mix('build/global/img/geral-1.svg')!!}">
