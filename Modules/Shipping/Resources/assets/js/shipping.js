@@ -127,13 +127,9 @@ $(document).ready(function () {
         $('.shipping-value').val('');
         $('.shipping-zipcode').val('');
         $('.rule-shipping-value').val('');
-        $('#shipping-plans-add').html('');
+        $('.shipping-use-variants').val(1).prop('checked', true)
+        $('#shipping-plans-add').html('<option value="all">Qualquer plano</option>').val('all').trigger('change')
         $('#shipping-not-apply-plans-add').html('');
-
-        var elem = $('#shipping-plans-add')
-        elem.html('')
-        elem.append('<option value="all">Qualquer plano</option>');
-        elem.val('all').trigger('change')
     }
 
     clearFields()
@@ -163,6 +159,37 @@ $(document).ready(function () {
         } else {
             $(this).parent().children("#shipping-value-error").html("");
         }
+    });
+
+    $('.shipping-use-variants').on('change', function () {
+        const slider = $(this);
+        const form = slider.closest('form');
+
+        const offerContainer = form.find('.shipping-plans-add-container, .shipping-plans-edit-container');
+        const notOfferContainer = form.find('.shipping-not-apply-plans-add-container, .shipping-not-apply-plans-edit-container');
+
+        const offerLabel = offerContainer.find('label');
+        const notOfferLabel = notOfferContainer.find('label');
+
+        const offerSelect = offerContainer.find('select');
+        const notOfferSelect = notOfferContainer.find('select');
+
+        let targetName = '';
+        if(slider.prop('checked')) {
+            offerLabel.text('Oferecer o frete para os planos:');
+            notOfferLabel.text('Não oferecer o frete para os planos:');
+            targetName = 'plano';
+        } else {
+            offerLabel.text('Oferecer o frete para os produtos:');
+            notOfferLabel.text('Não oferecer o frete para os produtos:');
+            targetName = 'produto';
+        }
+
+        offerSelect.html(`<option value="all">Qualquer ${targetName}</option>`).val('all').trigger('change');
+        notOfferSelect.html('').val('').trigger('change');
+
+        setSelect2Plugin(offerSelect, offerContainer)
+        setSelect2Plugin(notOfferSelect, notOfferContainer)
     });
 
     // carregar modal de detalhes
@@ -272,6 +299,7 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
                 $('#modal-edit-shipping .shipping-status').prop('checked', !!response.status).change();
                 $('#modal-edit-shipping .shipping-pre-selected').prop('checked', !!response.pre_selected).change();
+                $('#modal-edit-shipping .shipping-use-variants').prop('checked', !!response.use_variants).change();
                 $('#modal-edit-shipping .shipping-receipt').prop('checked', !!response.receipt).change();
                 $('#modal-edit-shipping .shipping-ownhand').prop('checked', !!response.own_hand).change();
 
@@ -537,20 +565,24 @@ $(document).ready(function () {
     }
 
     function setSelect2Plugin(el, dropdownParent) {
-        el = $(el)
+        el = $(el);
+
+        const useVariants = el.closest('form').find('.shipping-use-variants').prop('checked') ? 1 : 0;
+        const targetName = useVariants ? 'plano' : 'produto';
+
         el.select2({
-            placeholder: 'Nome do plano',
+            placeholder: `Nome do ${targetName}`,
             multiple: true,
             dropdownParent: $(dropdownParent),
             language: {
                 noResults: function () {
-                    return 'Nenhum plano encontrado';
+                    return `Nenhum ${targetName} encontrado`;
                 },
                 searching: function () {
                     return 'Procurando...';
                 },
                 loadingMore: function () {
-                    return 'Carregando mais planos...';
+                    return `Carregando mais ${targetName}s...`;
                 },
             },
             ajax: {
@@ -559,11 +591,12 @@ $(document).ready(function () {
                         list: 'plan',
                         search: params.term,
                         project_id: projectId,
-                        page: params.page || 1
+                        page: params.page || 1,
+                        variants: useVariants,
                     };
                 },
                 method: "GET",
-                url: "/api/plans/user-plans",
+                url: "/api/plans/user-plans?variants=",
                 delay: 300,
                 dataType: 'json',
                 headers: {
@@ -575,7 +608,7 @@ $(document).ready(function () {
                     if ((elemId === 'shipping-plans-add' || elemId === 'shipping-plans-edit') && res.meta.current_page === 1) {
                         let allObject = {
                             id: 'all',
-                            name: 'Qualquer plano',
+                            name: `Qualquer ${targetName}`,
                             description: ''
                         };
                         res.data.unshift(allObject);
