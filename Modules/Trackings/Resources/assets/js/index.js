@@ -31,7 +31,6 @@ const systemStatus = {
 
 function updateAfterChangeCompany(){
     $("#project-select").find('option').not(':first').remove();
-    $("#project-select option:first").attr('selected','selected');
     let companies = JSON.parse(sessionStorage.getItem('companies'));
     $.each(companies, function (c, company) {
         if( sessionStorage.getItem('company_default') == company.id){
@@ -45,6 +44,7 @@ function updateAfterChangeCompany(){
             });
         }
     });
+    $("#project-select").val($("#project-select option:first").val());
     window.loadData();
 }
 

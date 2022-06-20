@@ -51,6 +51,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },

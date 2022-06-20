@@ -1,3 +1,9 @@
+function updateAfterChangeCompany(){
+    $("#project-affiliate").find('option').not(':first').remove();
+    $("#project-affiliate-request").find('option').not(':first').remove();
+    window.getProjects('n');
+}
+
 $(document).ready(function () {
     var badgeAffiliateRequest = {
         1: "primary",
@@ -18,10 +24,13 @@ $(document).ready(function () {
         getAffiliatesRequest();
     });
 
-    getProjects();
+    window.getProjects = function(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('.page-content');
 
-    function getProjects() {
-        loadingOnScreen();
+        $('#tab-affiliates').trigger('click');
 
         $.ajax({
             method: "GET",
@@ -32,6 +41,7 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -74,11 +84,13 @@ $(document).ready(function () {
                         })
                     );
                 }
-
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
             },
         });
     }
+
+    window.getProjects();
 
     function getAffiliates() {
         var link =

@@ -1618,33 +1618,6 @@ function removeMoneyCurrency(string) {
     return string.substring(3);
 }
 
-function selectCompanies() {
-    let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
-    for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
-        if (sessionStorage.getItem('company_default') === parseSessionStorageCompanies[i].id)
-            itemSelected = 'selected="selected"'
-        else
-            itemSelected = ''
-
-        if (parseSessionStorageCompanies[i].active_flag == false || parseSessionStorageCompanies[i].company_document_status != "approved")
-            itemDisabled = 'disabled="disabled"';
-        else
-            itemDisabled = '';
-
-        if (parseSessionStorageCompanies[i].company_type == '1') {
-            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
-        } else {
-            if(parseSessionStorageCompanies[i].name.length>20)
-                companyName = parseSessionStorageCompanies[i].name.substring(0,20)+'...';
-            else
-                companyName = parseSessionStorageCompanies[i].name;
-            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
-        }
-    }
-    $('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
-    $('#company-select').addClass('d-sm-flex');
-}
-
 function getCompanies() {
     let thisPage = window.location.hostname;
     var lastPage = new URL(document.referrer).hostname
@@ -1670,6 +1643,12 @@ function getCompanies() {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
+                data.companies.push({
+                    "id":"v2RmA83EbZPVpYB",
+                    "name":"Empresa Demo",
+                    "company_document_status": "approved",
+                    "active_flag": 1
+                });
                 companies = data.companies;
                 company_default = data.company_default;
                 company_default_name = data.company_default_name;
@@ -1694,34 +1673,40 @@ function getCompanies() {
     }
 }
 
+function selectCompanies() {
+    let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
+    for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
+        if (sessionStorage.getItem('company_default') === parseSessionStorageCompanies[i].id)
+            itemSelected = 'selected="selected"'
+        else
+            itemSelected = ''
+
+        if (parseSessionStorageCompanies[i].active_flag == false || parseSessionStorageCompanies[i].company_document_status != "approved")
+            itemDisabled = 'disabled="disabled"';
+        else
+            itemDisabled = '';
+
+        if (parseSessionStorageCompanies[i].company_type == '1') {
+            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
+        } else {
+            if(parseSessionStorageCompanies[i].name.length>20)
+                companyName = parseSessionStorageCompanies[i].name.substring(0,20)+'...';
+            else
+                companyName = parseSessionStorageCompanies[i].name;
+            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
+        }
+    }
+    //$('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
+    $('#company-select').addClass('d-sm-flex');
+}
+
+
 function updateProjectsOptions(){
     pathname = window.location.pathname;
 
-    // corrige lojas em Relatorios Saldo Pendente
-    // if(pathname == '/reports/pending'){
-    //     $("#project").find('option').not(':first').remove();
-    //     $.getScript( "/build/layouts/reports/pending.min.js", function( data, textStatus, jqxhr ) {
-    //         getProjects();
-    //     });
-    // }
-    // corrige lojas em Relatorios Saldo Retido
-    // else
-    // if(pathname == '/reports/blockedbalance'){
-    //     $("#project").find('option').not(':first').remove();
-    //     $.getScript( "/build/layouts/reports/blockedbalance.min.js", function( data, textStatus, jqxhr ) {
-    //         getProjects();
-    //     });
-    // }
-    // // corrige lojas em Afiliados
-    // else
-    if(pathname == '/affiliates'){
-        $("#project-affiliate, #project-affiliate-request").find('option').not(':first').remove();
-        $.getScript( "/build/layouts/affiliates/projectaffiliates.min.js", function( data, textStatus, jqxhr ) {
-            getProjects();
-        });
-    }
+
     // corrige lojas em Apps Hotzapp
-    else if(pathname == '/apps/hotzapp'){
+    if(pathname == '/apps/hotzapp'){
         $("#project_id").find('option').remove();
         $.getScript( "/build/layouts/hotzapp/index.min.js", function( data, textStatus, jqxhr ) {
             index();

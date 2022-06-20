@@ -261,11 +261,45 @@ class CoreApiController extends Controller
             $companyModel = new Company();
             $companies = $companyModel->newQuery()
                 ->where('user_id', $user->account_owner_id)
-                ->orderBy('order_priority')->get();
+                ->orderBy('order_priority');
 
-            $company_default_name = 'Empresa Demo';
-            if($user->company_default > Company::DEMO_ID)
-            {
+            # se empresa default for null, torna default a primeira empresa válida ou, em ultimo caso, a empresa demo
+            if($user->company_default == null){
+                $id_code = '';
+                $fantasy_name = '';
+                $newCompanyDefault = $companies
+                    ->where('active_flag', true)
+                    ->get();
+                $companyService = new CompanyService();
+                foreach($newCompanyDefault as $item){
+                    if($companyService->isDocumentValidated($item->id)){
+                        $id_code = $item->id_code;
+                        $fantasy_name = $item->fantasy_name;
+                        break;
+                    }
+                }
+                if(empty($id_code)){
+                    $id_code = Hashids::encode(1);
+                    $fantasy_name = 'Empresa Demo';
+                }
+                $request = new Request(['company_id' => $id_code]);
+                $this->updateCompanyDefault($request);
+                $return = array(
+                    'companies'=>CompaniesSelectResource::collection($companies->get()),
+                    'company_default'=>$id_code,
+                    'company_default_name'=>$fantasy_name
+                );
+            }
+            # se company default for empresa demo
+            else if($user->company_default == Company::DEMO_ID){
+                $return = array(
+                    'companies'=>CompaniesSelectResource::collection($companies->get()),
+                    'company_default'=>Hashids::encode(1),
+                    'company_default_name'=>'Empresa Demo'
+                );
+            }
+            # se company default for qq outra empresa
+            else if($user->company_default > Company::DEMO_ID){
                 $companyDefault = Company::select('company_type','fantasy_name')
                     ->where('id', $user->company_default)
                     ->first();
@@ -273,13 +307,13 @@ class CoreApiController extends Controller
                         $companyDefault->fantasy_name,
                         20
                     ) ?? '';
+                $return = array(
+                    'companies'=>CompaniesSelectResource::collection($companies->get()),
+                    'company_default'=>Hashids::encode($user->company_default),
+                    'company_default_name'=>$company_default_name
+                );
             }
 
-            $return = array(
-                'companies'=>CompaniesSelectResource::collection($companies),
-                'company_default'=>Hashids::encode($user->company_default),
-                'company_default_name'=>$company_default_name
-            );
 
             return $return;
         } catch (Exception $e) {

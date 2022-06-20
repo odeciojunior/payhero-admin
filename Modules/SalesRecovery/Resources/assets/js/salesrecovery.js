@@ -15,6 +15,7 @@ function updateAfterChangeCompany(){
             });
         }
     });
+    $("#project").val($("#project option:first").val());
     window.updateSalesRecovery();
 }
 

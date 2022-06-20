@@ -1,4 +1,5 @@
 function updateAfterChangeCompany() {
+    loadOnAny('#page-integrates');
     window.onlyData();
 }
 
@@ -19,6 +20,7 @@ $(document).ready(function () {
             },
             error: (response) => {
                 errorAjaxResponse(response);
+                loadOnAny('#page-integrates',true);
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
@@ -40,6 +42,7 @@ $(document).ready(function () {
                 getIntegration();
                 refreshToken();
                 deleteIntegration();
+                loadOnAny('#page-integrates',true);
             }
         });
     }

@@ -414,6 +414,7 @@ function updateAfterChangeCompany(){
             });
         }
     });
+    $("#projeto").val($("#projeto option:first").val());
     atualizar();
 }
 
