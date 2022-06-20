@@ -43,11 +43,8 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    public function getBankDocumentStatus($bankStatus = null)
+    public function getBankDocumentStatus($status = null)
     {
-        /** @var Company $company */
-        $company = $this->entity;
-        $status = $bankStatus ?? $company->bank_document_status;
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
@@ -75,7 +72,7 @@ class CompanyPresenter extends Presenter
         }
 
         return '';
-        
+
     }
 
     public function getContractDocumentStatus($contractDocumentStatus = null)
@@ -107,15 +104,13 @@ class CompanyPresenter extends Presenter
                 return 4;
         }
 
-        return '';        
+        return '';
     }
 
     public function getDocumentType($type)
     {
         if (is_numeric($type)) {
             switch ($type) {
-                // case 1:
-                //     return 'bank_document_status';
                 case 2:
                     return 'address_document_status';
                 case 3:
@@ -123,11 +118,9 @@ class CompanyPresenter extends Presenter
             }
 
             return '';
-        } 
-        
+        }
+
         switch ($type) {
-            // case 'bank_document_status':
-            //     return 1;
             case 'address_document_status':
                 return 2;
             case 'contract_document_status':
@@ -135,7 +128,7 @@ class CompanyPresenter extends Presenter
         }
 
         return '';
-        
+
     }
 
     public function getStatus($status)
@@ -166,7 +159,7 @@ class CompanyPresenter extends Presenter
                 return 4;
         }
 
-        return '';        
+        return '';
     }
 
     public function getCompanyType($status)
@@ -190,41 +183,13 @@ class CompanyPresenter extends Presenter
         }
 
         return '';
-        
+
     }
 
     public function allStatusPending()
     {
-        return $this->entity->bank_document_status == 3 &&
-            $this->entity->address_document_status == 3 &&
-            $this->entity->contract_document_status == 3;
+        return $this->entity->address_document_status == 3 && $this->entity->contract_document_status == 3;
     }
-
-    /*
-    public function getAccountType($type = null)
-    {
-        $company = $this->entity;
-        $status = $type ?? $company->account_type;
-        if (is_numeric($status)) {
-            switch ($status) {
-                case 1:
-                    return 'C';
-                case 2:
-                    return 'P';
-            }
-
-            return '';
-        } 
-
-        switch ($status) {
-            case 'C':
-                return 1;
-            case 'P':
-                return 2;
-        }
-
-        return '';        
-    }*/
 
     public function getStatusGetnet($status = null)
     {
@@ -248,7 +213,7 @@ class CompanyPresenter extends Presenter
 
             return '';
         }
-        
+
         switch ($status) {
             case 'approved':
                 return 1;
@@ -265,7 +230,7 @@ class CompanyPresenter extends Presenter
         }
 
         return '';
-        
+
     }
 
 }

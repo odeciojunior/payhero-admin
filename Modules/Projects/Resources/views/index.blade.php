@@ -14,16 +14,13 @@
 
     <!-- PAGINA INTEIRA -->
     <div class="page">
-        @include('projects::empty')
-        @include('projects::empty-company')
-
         <!-- CONTAINER DO CONTEUDO DA PAGINA -->
         <div class="page-content container pr-5" style="padding-top: 0">
 
             <!-- CABECALHO -->
             <div style="display: none" class="page-header container">
                 <div class="row align-items-center justify-content-between" style="min-height:50px">
-    
+
                     <!-- TITULO DA PAGINA -->
                     <div class="col-12 col-sm-7 col-md-6 mb-10 mb-sm-0">
                         <h1 class="page-title">Minhas Lojas</h1>
@@ -32,7 +29,7 @@
 
                     <!-- BOTOES DO CABECALHO -->
                     <div class="col-12 col-sm-5 col-md-6">
-                        
+
                         <!-- 1.BOTAO TOGGLE / 2.BOTAO ADICIONAR -->
                         <div class="row no-gutters align-items-center justify-content-sm-end justify-content-between">
 
@@ -44,12 +41,12 @@
                                 </label>
                                 <div for='deleted_project_filter' class="mt-3"><b>Ver excluídas</b></div>
                             </div>
-                            
+
                             <!-- BOTAO ADICIONAR LOJA -->
                             <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none;" data-toggle="tooltip" data-placement="bottom" title="Adicionar Loja">
                                 <span style="color: white; font-size: 35px" class='o-add-1'></span>
                             </a>
-    
+
                         </div>
                     </div>
 
@@ -60,8 +57,10 @@
             <div id="data-table-projects" class="row page-header container pl-40 mt-10 mt-sm-0 pr-0 pt-15 pb-0">
                 {{-- GERADO POR JAVASCRIPT --}}
             </div>
-
         </div>
+
+        @include('projects::empty')
+        @include('projects::empty-company')
     </div>
 
     <!-- LEGENDA DRAG DROP -->
@@ -71,7 +70,7 @@
             <img src="build/layouts/projects/img/dragItem.svg" class="ml-5"/>
         </div>
     </div>
-    
+
     @push('scripts')
         <script src="{{ mix('build/layouts/projects/index.min.js') }}"></script>
     @endpush
