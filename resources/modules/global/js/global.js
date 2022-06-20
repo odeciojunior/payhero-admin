@@ -1041,7 +1041,7 @@ function verifyDocumentPending() {
                 $('.new-register-navbar-open-modal-container').remove();
 
                 let verifyAccount = JSON.parse(localStorage.getItem('verifyAccount'));
-                if (verifyAccount.account.status !== 'approved') {
+                if (verifyAccount && verifyAccount.account.status !== 'approved') {
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
             }
