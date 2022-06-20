@@ -24,6 +24,7 @@ class ProjectsSelectResource extends JsonResource
             'name'    => $this->name,
             'shopify' => ($this->shopify_id != null ? 1 : 0),
             'status'  => $this->status,
+            'woocommerce' => ($this->woocommerce_id != null ? 1 : 0),
         ];
     }
 }
