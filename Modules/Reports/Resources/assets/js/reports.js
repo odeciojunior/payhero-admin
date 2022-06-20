@@ -15,6 +15,9 @@ $(function () {
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
+    } 
+    if( JSON.parse(localStorage.verifyAccount).company.status !== 'approved') {
+        $("#box-projects").hide();
     }
 
     function getCashback() {

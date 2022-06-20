@@ -869,6 +869,7 @@ function setCustomMapCss(selector, maxValue, value) {
 }
 
 function appendStateDataToStateList(data, index) {
+    console.log(data);
     let stateData = `
             <li class="states-list">
                 <div class="d-flex container">
