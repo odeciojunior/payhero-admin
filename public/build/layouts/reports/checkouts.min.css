@@ -1231,7 +1231,7 @@ h4.number{
 
 .distribution-graph svg,
 .distribution-graph-seller svg {
-    transform: translate(-30px, 0);
+    transform: translate(-30px, 4px);
 }
 @media  (min-width: 1220px) and (max-width: 1299px) {
     .distribution-graph svg,
