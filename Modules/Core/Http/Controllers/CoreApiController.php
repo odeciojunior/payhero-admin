@@ -315,24 +315,6 @@ class CoreApiController extends Controller
         }
     }
 
-    public function hasBonusBalance()
-    {
-        $bonusBalance = BonusBalance::where('user_id', auth()->user()->account_owner_id)
-                                    ->where('expires_at', '>=', today())
-                                    ->where('current_value', '>', 0)
-                                    ->first();
-
-        if(empty($bonusBalance)) {
-            return response()->json([
-                'bonus_balance' => 0
-            ]);
-        }
-
-        return response()->json([
-            'bonus_balance' => foxutils()->formatMoney($bonusBalance->current_value)
-        ]);
-    }
-
     public function getBonusBalance()
     {
         $bonusBalance = BonusBalance::where('user_id', auth()->user()->account_owner_id)
@@ -343,15 +325,16 @@ class CoreApiController extends Controller
         if(empty($bonusBalance)) {
             return response()->json([
                 'error' => 'bonus balance not found'
-            ], 400);
+            ]);
         }
 
         return response()->json([
+            'user_name' => auth()->user()->present()->firstName(),
             'total_bonus' => foxutils()->formatMoney($bonusBalance->total_value / 100),
             'current_bonus' => foxutils()->formatMoney($bonusBalance->current_value / 100),
             'used_bonus' => foxutils()->formatMoney(($bonusBalance->total_value - $bonusBalance->current_value) / 100),
             'expires_at' => Carbon::parse($bonusBalance->created_at)->format('d/m/Y'),
-            'used_percentage' => number_format($bonusBalance->current_value * 100 / $bonusBalance->total_value, 1, '.', '')
+            'used_percentage' => number_format(100 - ($bonusBalance->current_value * 100 / $bonusBalance->total_value), 0, '.', '')
         ]);
     }
 }

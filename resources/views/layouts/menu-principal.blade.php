@@ -75,7 +75,7 @@
                 </div>
 
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
-                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center">
+                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center justify-content-center">
                     <b class="pr-5"> Novidades </b>
                 </div>
 

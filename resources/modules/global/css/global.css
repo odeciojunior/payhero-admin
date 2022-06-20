@@ -3045,6 +3045,11 @@ tbody td{
     color: #FF4E05;
 }
 
+.modal-bonus-close {
+    cursor: pointer;
+    z-index: 5;
+}
+
 .mkc_info {
     color: #59BF75 !important;
     font: bold 30px;
@@ -3059,10 +3064,29 @@ tbody td{
         display: flex;
     }    
 
-
     .bonus-balance-container {
         width: 100%;
         bottom: 0;
+    }
+
+    .bonus-numbers {
+        flex-direction: column;
+    }
+    
+    .bonus-balance-background {
+        padding: 10px;
+    }
+
+    .bonus-slogan {
+        font-size: 10px;
+    }
+
+    .bonus-percent-label {
+        font-size: 26.32px;
+    }
+
+    .bonus-infos {
+        justify-content: space-between;
     }
     
 }
