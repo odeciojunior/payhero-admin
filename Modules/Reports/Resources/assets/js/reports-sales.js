@@ -688,7 +688,14 @@ function loadFrequenteSales() {
                             <div class="d-flex align-items list-sales">
                                 <div class="d-flex align-items">
                                     <div>
-                                        <figure class="box-ico figure-ico">
+                                        <figure 
+                                            class="box-ico figure-ico"
+                                            data-container="body" 
+                                            data-viewport=".container" 
+                                            data-placement="top" 
+                                            data-toggle="tooltip"
+                                            title="${item.name}"
+                                        >
                                             <img class="photo" width="34px" height="34px" src="${item.photo}" alt="${item.description}">
                                         </figure>
                                     </div>
@@ -706,6 +713,9 @@ function loadFrequenteSales() {
                     $("#block-sales").append(salesBlock);
                     $('.photo').on('error', function() {
                         $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
+                    });
+                    $('[data-toggle="tooltip"]').tooltip({
+                        container: '#block-sales'
                     });
                 });
             } else {

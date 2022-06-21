@@ -296,7 +296,14 @@ function loadFrequenteSales() {
                     <div class="box-payment-option pad-0">
                         <div class="d-flex justify-content-between align-items list-sales">
                             <div class="d-flex justify-content-between  align-items">
-                                <div class="box-ico figure-ico">
+                                <div 
+                                    class="box-ico figure-ico"
+                                    data-container="body" 
+                                    data-viewport=".container" 
+                                    data-placement="top" 
+                                    data-toggle="tooltip"
+                                    title="${item.name}"
+                                >
                                     <img width="37px" height="37px" onerror=this.src='https://cloudfox-files.s3.amazonaws.com/produto.svg' src="${item.photo}" alt="${item.description}">
                                 </div>
                                 <div>
@@ -311,6 +318,9 @@ function loadFrequenteSales() {
                     </div>
                 `;
                 $("#block-sales").append(salesBlock);
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: '#block-sales'
+                });
             });
             
         }
@@ -873,7 +883,6 @@ function setCustomMapCss(selector, maxValue, value) {
 }
 
 function appendStateDataToStateList(data, index) {
-    console.log(data);
     let stateData = `
             <li class="states-list">
                 <div class="d-flex container">
