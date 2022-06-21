@@ -380,6 +380,9 @@ $(document).ready(function () {
 
 
         let formData = new FormData(document.getElementById('form-add-shipping'));
+        formData.set('status', $('#form-add-shipping .shipping-status').is(':checked') ? 1 : 0);
+        formData.set('pre_selected', $('#form-add-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
+        formData.set('use_variants', $('#form-add-shipping .shipping-use-variants').is(':checked') ? 1 : 0);
 
         $.ajax({
             method: "POST",
@@ -436,6 +439,7 @@ $(document).ready(function () {
         let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
         formData.set('status', $('#modal-edit-shipping .shipping-status').is(':checked') ? 1 : 0);
         formData.set('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
+        formData.set('use_variants', $('#modal-edit-shipping .shipping-use-variants').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
 
 
