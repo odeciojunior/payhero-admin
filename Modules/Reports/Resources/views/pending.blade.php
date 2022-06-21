@@ -141,7 +141,7 @@
                                             </select>
                                         </div>
                                         <div class="col-sm-6 col-md-3 form-icons">
-                                            <label for="date_range">‏‏‎ ‎</label>
+                                            <label style="margin-bottom: 0.19rem;" for="date_range">‏‏‎ ‎</label>
                                             <div class="col-12 mb-10 date-report">
                                                 <div class="row align-items-center form-icons box-select">
                                                     <input id="date-filter" type="text" name="daterange" class="font-size-14" value="" readonly>

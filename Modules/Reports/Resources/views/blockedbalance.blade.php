@@ -191,10 +191,12 @@
                                 </div>
 
                                 <div class="col-sm-6 col-md-3">
-                                    <div class="form-group form-icons">
-                                        <label for="date_range">&nbsp;</label>
-                                        <i style="right: 27px;top: 42px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-19"></i>
-                                        <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly >
+                                    <label style="margin-bottom: 0.19rem;" for="date_range">‏‏‎ ‎</label>
+                                    <div class="col-12 mb-10 date-report">
+                                        <div class="row align-items-center form-icons box-select">
+                                            <input id="date-filter" type="text" name="daterange" class="font-size-14" value="" readonly>
+                                            <i style="right:16px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -206,13 +208,24 @@
                                      data-target="#bt_collapse"
                                      aria-expanded="false"
                                      aria-controls="bt_collapse">
-                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
+                                     <img 
+                                        style="visibility:hidden" 
+                                        id="icon-filtro" 
+                                        class="hidden-xs-down" 
+                                        src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "
+                                    />
                                     <span id="text-filtro">Filtros avançados</span>
+                                    <img 
+                                        style="visibility:hidden" 
+                                        id="icon-filtro" 
+                                        class="hidden-xs-down" 
+                                        src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "
+                                    />
                                 </div>
                             </div>
                             <div class="col-6 col-xl-3 mt-20">
                                 <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
+                                    <!-- <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/> -->
                                     Aplicar filtros
                                 </div>
                             </div>
