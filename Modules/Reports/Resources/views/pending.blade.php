@@ -40,7 +40,7 @@
                 <div class="col-8">
                     <h1 class="d-flex title-system">
                         <span class="box-title ico-pending">Pendente</span>
-                        Saldo Pendente
+                        Saldo pendente
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
                 </div>
