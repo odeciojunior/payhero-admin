@@ -86,13 +86,13 @@
         @endphp
 
         @if(!auth()->user()->account_is_approved)
-            @include('utils.new-register-link');
+            @include('utils.new-register-link')
         @endif
 
         @yield('content')
 
         @if(!auth()->user()->account_is_approved && $account_type === 'admin')
-            @include('utils.documents-pending');
+            @include('utils.documents-pending')
         @endif
 
         <!-- Plugins -->
