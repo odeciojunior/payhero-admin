@@ -2,6 +2,21 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
+  
+    
+    showBonusBalance()
+    
+    $('.bonus-balance-button').on('click', function() {
+        $('body').addClass('bonus-modal-opened');
+        $('#bonus-balance-modal').fadeToggle('slow', 'linear');
+    })
+
+    $('.close-bonus-modal, .modal-bonus-close').on('click', function() {
+        $('body').removeClass('bonus-modal-opened');
+        $('#bonus-balance-modal').fadeToggle('slow', 'linear');
+        // $('.bonus-balance-container').html(loadSkeletonBonus);
+    })
+    
 
     $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
         e.preventDefault();
@@ -1041,7 +1056,7 @@ function verifyDocumentPending() {
                 $('.new-register-navbar-open-modal-container').remove();
 
                 let verifyAccount = JSON.parse(localStorage.getItem('verifyAccount'));
-                if (verifyAccount.account.status !== 'approved') {
+                if (verifyAccount && verifyAccount.account.status !== 'approved') {
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
             }
@@ -1346,13 +1361,13 @@ function saveNewRegisterData() {
 /* End - Document Pending Alert */
 
 /* Cookies */
-function setCookie(name, exdays, object) {
+function setCookie(name, hours, object) {
 
     var expires;
     var date;
     var value;
     date = new Date(); // criando cookie com a data atual
-    date.setTime(date.getTime() + (exdays * 3600 * 1000));
+    date.setTime(date.getTime() + (hours * 3600 * 1000));
     expires = date.toUTCString();
     value = JSON.stringify(object);
 
@@ -1581,3 +1596,303 @@ function removeMoneyCurrency(string) {
     }
     return string.substring(3);
 }
+
+function buildModalBonusBalance(bonusObject) {
+    var userName = bonusObject.user_name;
+    var totalBalance = bonusObject.total_bonus;
+    var alreadyUsed = bonusObject.used_bonus;
+    var remainValue = bonusObject.current_bonus;
+    var expireDate = bonusObject.expires_at
+    var percent = bonusObject.used_percentage;
+    var chartColor = ''
+    var chartColorSecondary = '';
+    var chartSize = 95;
+
+    if(percent < 25) {
+        var chartColor = '#59BF75'
+        var chartColorSecondary = '#CCF5D5';
+    }else if(percent >= 25 && percent < 50 ) {
+        var chartColor = '#2E85EC'
+        var chartColorSecondary = '#CCDAF5';
+    }else if(percent >= 50 && percent < 75 ) {
+        var chartColor = '#F6BE2A'
+        var chartColorSecondary = '#F4E9DB';
+    }else if(percent >= 75 && percent < 100 ) {
+        var chartColor = '#FF9900'
+        var chartColorSecondary = '#F5E2CC';
+    }else {
+        var chartColor = '#E81414'
+        var chartColorSecondary = '#E81414';
+    }
+
+    if ($(window).width() <= 768) {
+        chartSize = 140;
+    }
+
+    content = `
+        <div class="bonus-balance-content">
+            <img class="bonus-illustration-1" src="../../../../../../build/global/img/svg/bonus-illustration-1.svg" alt=""/>
+            <img class="bonus-illustration-2" src="../../../../../../build/global/img/svg/bonus-illustration-2.svg" alt=""/>
+
+            <div class="bonus-text">
+                <div class="d-flex justify-content-between align-items-center">
+                    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: 10px 0;">
+                        <path d="M15.125 0C17.3687 0 19.1875 1.81884 19.1875 4.0625C19.1875 4.86819 18.953 5.6191 18.5484 6.25068L21.6875 6.25C22.5504 6.25 23.25 6.94955 23.25 7.8125V12.1875C23.25 12.943 22.7138 13.5733 22.0012 13.7185L22 20.9375C22 23.1038 20.3044 24.8741 18.168 24.9936L17.9375 25H6.0625C3.89621 25 2.12594 23.3044 2.00643 21.168L2 20.9375L2.00006 13.7188C1.28683 13.574 0.75 12.9434 0.75 12.1875V7.8125C0.75 6.94955 1.44956 6.25 2.3125 6.25L5.45157 6.25068C5.04704 5.6191 4.8125 4.86819 4.8125 4.0625C4.8125 1.81884 6.63134 0 8.875 0C10.1319 0 11.2555 0.57083 12.0007 1.46739C12.7445 0.57083 13.8681 0 15.125 0ZM11.0625 13.7487H3.875V20.9375C3.875 22.0852 4.75889 23.0265 5.88309 23.1178L6.0625 23.125H11.0625V13.7487ZM20.125 13.7487H12.9375V23.125H17.9375C19.0852 23.125 20.0265 22.2411 20.1178 21.1169L20.125 20.9375V13.7487ZM11.0625 8.125H2.625V11.875L11.0625 11.8737V8.125ZM21.375 11.875V8.125H12.9375V11.8737L21.375 11.875ZM15.125 1.875C13.9169 1.875 12.9375 2.85438 12.9375 4.0625V6.24875H15.155L15.3044 6.24275C16.4286 6.15149 17.3125 5.21022 17.3125 4.0625C17.3125 2.85438 16.3331 1.875 15.125 1.875ZM8.875 1.875C7.66688 1.875 6.6875 2.85438 6.6875 4.0625C6.6875 5.21022 7.57139 6.15149 8.69559 6.24275L8.845 6.24875H11.0625V4.0625L11.0552 3.88309C10.964 2.75889 10.0227 1.875 8.875 1.875Z" fill="#FF4E05"/>
+                    </svg>
+
+                    <span id="modal-bonus-close" class="modal-bonus-close">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#464646">
+                            <g data-name="Layer 2"><g data-name="close"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/></g></g>
+                        </svg>
+                    </span>
+                </div>
+                
+
+                <h3 class="bonus-title"><span id="bonus-username">${userName || 'Olá!'}</span>, aqui está seu <b>desconto!</b></h3>
+
+                <p>
+                    Você tentou sua sorte e conseguiu <span id="total-bonus-balance" class="bold">${totalBalance}</span> em
+                    desconto nas taxas de suas vendas. Obrigado pela 
+                    sua visita no nosso estande no Afiliados Brasil. 
+                    Que esse seja o início de uma lucrativa parceria! 
+                </p>
+
+
+                <div class="d-flex align-items-center justify-content-between">
+                    <h4 class="bonus-subtitle bold">
+                        Acompanhe seu consumo
+                    </h4>
+                </div>
+
+            </div>
+
+            <div class="bonus-infos d-flex align-items-center">
+                <div class="bonus-circle-chart d-flex justify-content-center align-items-center" style="width: ${chartSize}px; height: ${chartSize}px">
+                    <div class="mkCharts" data-percent="${percent}" data-size="${chartSize}" data-stroke="4" data-color="${chartColor}" data-border="${chartColorSecondary}"></div>
+                    <span class="bonus-percent-label" style="color: ${chartColor}">${percent}%</span>
+                </div>
+
+                <div class="bonus-numbers d-flex align-items-start ml-5">
+
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">    
+                        <div>
+                            <h4 class="bonus-number-title">
+                                Você ganhou
+                            </h4>
+                            <span class="bonus-number">
+                                ${totalBalance}
+                            </span>
+                        </div>
+
+                        <div>
+                            <h4 class="bonus-number-title">
+                                Restam mais
+                            </h4>
+                            <span class="bonus-number" style="color: ${chartColor}">
+                                ${remainValue}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">    
+                        <div>
+                            </div>
+                                <h4 class="bonus-number-title">
+                                    Você já utilizou
+                                </h4>
+                                <span class="bonus-number">
+                                    ${alreadyUsed}
+                                </span>
+                            <div>
+                                <h4 class="bonus-number-title">
+                                    Vence em
+                                </h4>
+                                <span class="bonus-number">
+                                    ${expireDate}
+                                </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <span class="bonus-slogan">O seu sucesso é o <b>nosso combustível!</b>🚀</span>
+        </div>
+        `;
+
+
+        // FUTURP HISTÓRICO DE BONUS
+        // <button class="orange-link" onclick="toggleBonusContent()">
+        //     Ver histórico
+        // </button>
+        // +
+        // `
+        // <div class="bonus-balance-history">
+        //     <button class="orange-link back-button" onclick="toggleBonusContent()">
+        //         <i class="material-icons">arrow_back</i> Voltar
+        //     </button>    
+        //     <div class="d-flex">
+        //         <h3 class="bonus-title d-flex align-items-center">
+        //             <i class="material-icons">history</i> Histórico de descontos
+        //         </h3>
+        //     </div>
+        //     <p>
+        //         Aqui você controla todos os descontos que já recebeu
+        //     </p>
+        //     <div class="bonus-table-container scroller">
+        //         <table class="bonus-history-table">
+        //             <tr>
+        //                 <th>Motivo</th>
+        //                 <th>Valor</th>
+        //                 <th>Período</th>
+        //             </tr>
+        //             <tr>
+        //                 <td>Afiliados Brasil</td>
+        //                 <td>R$ 5 mil</td>
+        //                 <td>24/04 - 05/05/22</td>
+        //             </tr>
+        //         </table>
+        //     </div>
+        // </div>
+        // `;
+
+    
+    
+    $('.bonus-balance-container').html(content);
+    mkChartRender();
+}
+
+const toggleBonusContent = function() {
+    $('.bonus-balance-content').fadeToggle();
+    $('.bonus-balance-history').fadeToggle();
+};
+
+
+function showBonusBalance() {
+    var totalBalance  = null;
+
+    if(getCookie('bonus_balance')) {        
+        var bonus_balance = JSON.parse(getCookie('bonus_balance').replace(" \ ",''));
+        
+        $('#total-bonus-balance').html(bonus_balance.current_bonus);
+
+        buildModalBonusBalance(bonus_balance);
+
+        if ($(window).width() <= 768) {
+            $('.bonus-balance-button.mobile').show();
+        }else {
+            $('.bonus-balance-button.desktop').show();
+        }
+    }else {
+        $.ajax({
+            method: 'GET',
+            url: '/api/core/get-bonus-balance',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                
+            },
+            success: response => {
+                
+                if(response.error) {
+                    return;
+                }
+
+                setCookie('bonus_balance', 0.5, response);
+
+                $('#total-bonus-balance').html(response.current_bonus)
+
+                buildModalBonusBalance(response);
+
+                if (totalBalance && $(window).width() <= 768) {
+                    $('.bonus-balance-button.mobile').show();
+                }else {
+                    $('.bonus-balance-button.desktop').show();
+                }
+            },
+        });
+    }
+
+}
+
+const loadSkeletonBonus = `
+            <div class="bonus-balance-content">
+                <img class="bonus-illustration-1" src="../../../../../../build/global/img/svg/bonus-illustration-1.svg" alt=""/>
+
+                <div class="bonus-text">
+                    <div class="skeleton skeleton-circle" style="width: 25px; height: 25px; margin-bottom: 10px;"> </div>
+
+                    <h3 class="bonus-title"><div class="skeleton skeleton-text" style="width: 70%;"></div></h3>
+
+
+                    <p>
+                        <div class="skeleton skeleton-p"></div>
+                        <div class="skeleton skeleton-p"></div>
+                        <div class="skeleton skeleton-p"></div>
+                        <div class="skeleton skeleton-p" style="width: 70%"></div>
+                    </p>
+
+
+                    <h4 class="bonus-subtitle bold">
+                        <div class="skeleton skeleton-p" style="width: 50%; height: 25px;"></div>
+                    </h4>
+
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <div class="bonus-circle-chart">
+                        <div class="skeleton skeleton-circle" style="width: 100px; height: 100px;"> 
+                        </div>
+                    </div>
+
+                    <div class="bonus-numbers d-flex flex-column">
+
+                        <div class="d-flex justify-content-between">    
+                            <div style="margin-right: 15px; width: 90px">
+                                <h4 class="bonus-number-title">
+                                    <div class="skeleton skeleton-p" style="width: 60px; height: 15px;"></div>
+                                </h4>
+                                <span class="bonus-number">
+                                    <div class="skeleton skeleton-p" style="width: 80px; height: 20px;"></div>
+                                </span>
+                            </div>
+
+                            <div style="width: 90px">
+                                <h4 class="bonus-number-title">
+                                    <div class="skeleton skeleton-p" style="width: 60px; height: 15px;"></div>
+                                </h4>
+                                <span class="bonus-number">
+                                    <div class="skeleton skeleton-p" style="width: 80px; height: 20px;"></div>
+                                </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">    
+                            <div style="margin-right: 15px; width: 90px">
+                                <h4 class="bonus-number-title">
+                                    <div class="skeleton skeleton-p" style="width: 60px; height: 15px;"></div>
+                                </h4>
+                                <span class="bonus-number">
+                                    <div class="skeleton skeleton-p" style="width: 80px; height: 20px;"></div>
+                                </span>
+                            </div>
+
+                            <div  style="width: 90px">
+                                <h4 class="bonus-number-title">
+                                    <div class="skeleton skeleton-p" style="width: 60px; height: 15px;"></div>
+                                </h4>
+                                <span class="bonus-number">
+                                    <div class="skeleton skeleton-p" style="width: 80px; height: 20px;"></div>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <div class="skeleton skeleton-p" style="width: 60%; margin-top: 10px"></div>
+            </div>
+            `;

@@ -32,6 +32,67 @@
                 <input name="zip_code_origin" type="text" class="input-pad shipping-zipcode" data-mask="00000-000"
                        value="" placeholder="12345-678">
             </div>
+            <div class="value-shipping-row">
+                <div class="switch-holder">
+                    <label>Valor único para todas as regiões</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" checked class="check shipping-regions" value="1">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="form-group" id="shipping-single-value">
+                    <label for="value">Valor do Frete</label>
+                    <input name="value" type="text" class="input-pad shipping-value shipping-money-format" value=""
+                           placeholder="R$ 0,00" maxlength="8">
+                    <span id="shipping-value-error" class="text-danger"></span>
+                </div>
+                <div id="shipping-multiple-value" style="display:none">
+                    <div class="row">
+                        <div class="form-group col-6" id="shipping-region-">
+                            <label for="value">Valor para o Norte</label>
+                            <input name="value1" type="text" class="input-pad shipping-value1 shipping-money-format"
+                                   value="" placeholder="R$ 0,00" maxlength="8">
+                            <span id="shipping-value-error" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-6" id="shipping-region-">
+                            <label for="value">Valor para o Nordeste</label>
+                            <input name="value2" type="text" class="input-pad shipping-value2 shipping-money-format"
+                                   value="" placeholder="R$ 0,00" maxlength="8">
+                            <span id="shipping-value-error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6" id="shipping-region-">
+                            <label for="value3">Valor para o Centro-Oeste</label>
+                            <input name="value3" type="text" class="input-pad shipping-value3 shipping-money-format"
+                                   value="" placeholder="R$ 0,00" maxlength="8">
+                            <span id="shipping-value-error" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-6" id="shipping-region-">
+                            <label for="value">Valor para o Sudeste</label>
+                            <input name="value4" type="text" class="input-pad shipping-value4 shipping-money-format"
+                                   value="" placeholder="R$ 0,00" maxlength="8">
+                            <span id="shipping-value-error" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6" id="shipping-region-">
+                            <label for="value5">Valor para o Sul</label>
+                            <input name="value5" type="text" class="input-pad shipping-value5 shipping-money-format"
+                                   value="" placeholder="R$ 0,00" maxlength="8">
+                            <span id="shipping-value-error" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Disponível para compras acima de: </label>
+                <input name="rule_value" type="text" class="input-pad rule-shipping-value shipping-money-format"
+                       value="" placeholder="R$ 0,00">
+            </div>
             <div class="d-flex">
                 <div class="switch-holder w-full">
                     <label for="cartao">Ativo</label>
@@ -62,65 +123,6 @@
                         class="form-control shipping-not-apply-plans-add"
                         style="width:100%"
                         data-plugin="select2" multiple="multiple"></select>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>Disponível para compras acima de: </label>
-                <input name="rule_value" type="text" class="input-pad rule-shipping-value shipping-money-format"
-                       value="0,00" placeholder="0,00">
-            </div>
-            <div class="switch-holder">
-                <label>Valor único para todas as regiões</label>
-                <br>
-                <label class="switch">
-                    <input type="checkbox" checked class="check shipping-regions" value="1">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="form-group" id="shipping-single-value">
-                <label for="value">Valor do Frete</label>
-                <input name="value" type="text" class="input-pad shipping-value shipping-money-format" value=""
-                       placeholder="0" maxlength="7">
-                <span id="shipping-value-error" class="text-danger"></span>
-            </div>
-            <div id="shipping-multiple-value" style="display:none">
-                <div class="row">
-                    <div class="form-group col-6" id="shipping-region-">
-                        <label for="value">Valor para o Norte</label>
-                        <input name="value1" type="text" class="input-pad shipping-value1 shipping-money-format"
-                               value="" placeholder="0" maxlength="7">
-                        <span id="shipping-value-error" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-6" id="shipping-region-">
-                        <label for="value">Valor para o Nordeste</label>
-                        <input name="value2" type="text" class="input-pad shipping-value2 shipping-money-format"
-                               value="" placeholder="0" maxlength="7">
-                        <span id="shipping-value-error" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-6" id="shipping-region-">
-                        <label for="value3">Valor para o Centro-Oeste</label>
-                        <input name="value3" type="text" class="input-pad shipping-value3 shipping-money-format"
-                               value="" placeholder="0" maxlength="7">
-                        <span id="shipping-value-error" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-6" id="shipping-region-">
-                        <label for="value">Valor para o Sudeste</label>
-                        <input name="value4" type="text" class="input-pad shipping-value4 shipping-money-format"
-                               value="" placeholder="0" maxlength="7">
-                        <span id="shipping-value-error" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-6" id="shipping-region-">
-                        <label for="value5">Valor para o Sul</label>
-                        <input name="value5" type="text" class="input-pad shipping-value5 shipping-money-format"
-                               value="" placeholder="0" maxlength="7">
-                        <span id="shipping-value-error" class="text-danger"></span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
