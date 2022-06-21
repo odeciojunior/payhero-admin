@@ -867,7 +867,7 @@ class PlansApiController extends Controller
                 }
             }
         } else {
-            $productPlans = ProductPlan::where('id', current(Hashids::decode($request->product_id)))->get();
+            $productPlans = ProductPlan::where('plan_id', current(Hashids::decode($request->plan)))->where('product_id', current(Hashids::decode($request->product_id)))->get();
             foreach ($productPlans as $productPlan) {
                 $productPlan->custom_config = [];
                 $productPlan->is_custom = !empty($request->is_custom[$productPlan->id]) ? 1 : 0;
