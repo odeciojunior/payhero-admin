@@ -54,6 +54,36 @@ class CompanyBalanceService
         return $gatewaysBalances;
     }
 
+    public function getResumeTotals()
+    {
+        $gatewaysBalances = [];
+        $totalAvailable = 0;
+        $totalBalance = 0;
+
+        foreach($this->defaultGateways as $gatewayClass)
+        {
+            $gatewayService = app()->make($gatewayClass);
+            $gatewayService->setCompany($this->company);
+
+            $gatewayResume = $gatewayService->getResume();
+
+            if(!empty($gatewayResume))
+            {
+                $gatewaysBalances[] = $gatewayResume;
+                $totalAvailable += intval($gatewayResume['total_available']);
+                $totalBalance += intval($gatewayResume['total_balance']);
+            }
+        }
+
+        return [
+            'data' => [
+                'gateways_balances' => $gatewaysBalances,
+                'total_gateways_available' => $totalAvailable,
+                'total_balance' => $totalBalance
+            ]
+        ];
+    }
+
     public function getAcquirers()
     {
         $gatewayIds = [];

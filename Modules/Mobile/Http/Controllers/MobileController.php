@@ -6,8 +6,11 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Mobile\Transformers\SalesResource;
+use Modules\Mobile\Transformers\StatementsResource;
 
 class MobileController extends Controller
 {
@@ -47,5 +50,20 @@ class MobileController extends Controller
             report($e);
             return response()->json(['message' => 'Erro ao carregar vendas'], 400);
         }
+    }
+
+    /**
+     * Returns the financial values ​​of each gateway.
+     *
+     * @return JsonResponse
+     */
+    public function statementsResume(Request $request)
+    {
+        $companyId = hashids_decode($request->company_id);
+        $company = Company::find($companyId);
+        $companyService = new CompanyBalanceService($company);
+        $statementResumes = $companyService->getResumeTotals();
+
+        return StatementsResource::collection($statementResumes);
     }
 }
