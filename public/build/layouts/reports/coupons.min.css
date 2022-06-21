@@ -1780,6 +1780,8 @@ h4.number{
 }
 .item-state { flex-grow: 1; }
 
+.item-state + .item-state { width: 155px; }
+
 .item-state dl {
     display: flex;
     align-items: center;
@@ -1804,6 +1806,10 @@ h4.number{
     width: 32px;
     height: 32px;
     font-weight: bold;
+}
+.state-name {
+    width: 140px;
+    justify-content: flex-start !important;
 }
 /* mapa brasil */
 #svg-map { height: 303px; }

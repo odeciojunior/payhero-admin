@@ -883,6 +883,36 @@ function setCustomMapCss(selector, maxValue, value) {
 }
 
 function appendStateDataToStateList(data, index) {
+    const statesName = {
+        "AC": "Acre",
+        "AL": "Alagoas",
+        "AP": "Amapá",
+        "AM": "Amazonas",
+        "BA": "Bahia",
+        "CE": "Ceará",
+        "DF": "Distrito Federal",
+        "ES": "Espírito Santo",
+        "GO": "Goiás",
+        "MA": "Maranhão",
+        "MT": "Mato Grosso",
+        "MS": "Mato Grosso do Sul",
+        "MG": "Minas Gerais",
+        "PA": "Pará",
+        "PB": "Paraíba",
+        "PR": "Paraná",
+        "PE": "Pernambuco",
+        "PI": "Piauí",
+        "RR": "Roraima",
+        "RO": "Rondônia",
+        "RJ": "Rio de Janeiro",
+        "SP": "São Paulo",
+        "SC": "Santa Catarina",
+        "RN": "Rio Grande do Norte",
+        "RS": "Rio Grande do Sul",
+        "SE": "Sergipe",
+        "TO": "Tocantins"
+    }     
+        
     let stateData = `
             <li class="states-list">
                 <div class="d-flex container">
@@ -891,6 +921,7 @@ function appendStateDataToStateList(data, index) {
                             <dl class="d-flex">
                                 <dd id="state-${data.state}-position">${index}°</dd>
                                 <dd class="dd-state">${data.state}</dd>
+                                <dd class="state-name">${statesName[data.state]}</dd>
                             </dl>
                         </li>
                         <li class="item-state">
