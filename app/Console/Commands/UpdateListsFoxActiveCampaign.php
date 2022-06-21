@@ -89,9 +89,7 @@ class UpdateListsFoxActiveCampaign extends Command
     private function listNoSales($listId)
     {
         try {
-            /**  
-             *  nova regra de negocio: bank_document_status, não é mais necessario estar aprovado para vender
-            */
+            // nova regra de negocio: bank_document_status, não é mais necessario estar aprovado para vender
 
             $users = User::doesntHave('sales')->with('roles')->whereHas('roles', function ($query) {
                 $query->where('name', 'account_owner');
@@ -99,13 +97,11 @@ class UpdateListsFoxActiveCampaign extends Command
                 $query->where(function ($queryCompany) {
                     $queryCompany->where(function ($companyJuridical) {
                         $companyJuridical->where('address_document_status', Company::DOCUMENT_STATUS_APPROVED)
-                            // ->where('bank_document_status', Company::DOCUMENT_STATUS_APPROVED)
                             ->where('contract_document_status', Company::DOCUMENT_STATUS_APPROVED)
                             ->where('company_type', Company::JURIDICAL_PERSON);
                     })
                         ->orWhere(function ($companyPhysical) {
                             $companyPhysical
-                            // ->where('bank_document_status', Company::DOCUMENT_STATUS_APPROVED)
                             ->where('company_type', Company::PHYSICAL_PERSON);
                         });
                 });
@@ -143,13 +139,11 @@ class UpdateListsFoxActiveCampaign extends Command
                 $query->where(function ($queryCompany) {
                     $queryCompany->where(function ($companyJuridical) {
                         $companyJuridical->where('address_document_status', Company::DOCUMENT_STATUS_APPROVED)
-                            // ->where('bank_document_status', Company::DOCUMENT_STATUS_APPROVED)
                             ->where('contract_document_status', Company::DOCUMENT_STATUS_APPROVED)
                             ->where('company_type', Company::JURIDICAL_PERSON);
                     })
                         ->orWhere(function ($companyPhysical) {
                             $companyPhysical
-                            // ->where('bank_document_status', Company::DOCUMENT_STATUS_APPROVED)
                             ->where('company_type', Company::PHYSICAL_PERSON);
                         });
                 });

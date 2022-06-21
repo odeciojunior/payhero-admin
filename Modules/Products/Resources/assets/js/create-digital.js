@@ -87,6 +87,7 @@ $(document).ready(function () {
                     loadOnAny('.page', true);
 
                     alertCustom('success', response.message);
+                    localStorage.removeItem('page')
                     window.location = "/products";
                 }
             });

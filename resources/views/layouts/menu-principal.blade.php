@@ -27,12 +27,22 @@
         </ul>
     </div>
 
-    @if (!auth()->user()->account_is_approved)
-        <div class="new-register-navbar-open-modal-container">
-            <div class="row no-gutters new-register-open-modal">
-                <!--
-                <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
-                -->
+    <div class="bonus-balance-menu d-flex justify-content-center align-items-center">
+        <button id="bonus-balance" class="bonus-balance-button mobile justify-content-center align-items-center" style="display: none">
+            <svg width="15" height="16" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                <path d="M4 0C4.59735 0 5.13353 0.261878 5.5 0.677088C5.86647 0.261878 6.40265 0 7 0C8.10457 0 9 0.89543 9 2C9 2.36429 8.90261 2.70583 8.73244 3H10C10.5523 3 11 3.44772 11 4V6C11 6.55229 10.5523 7 10 7L9.99978 10C9.99978 11.1046 9.10435 12 7.99978 12H2.99978C1.89521 12 0.999783 11.1046 0.999783 10V7C0.447598 6.99988 0 6.55221 0 6V4C0 3.44772 0.447715 3 1 3H2.26756C2.09739 2.70583 2 2.36429 2 2C2 0.89543 2.89543 0 4 0ZM3 2C3 2.55228 3.44772 3 4 3H5V2C5 1.44772 4.55228 1 4 1C3.44772 1 3 1.44772 3 2ZM6 4L5.99961 6H10V4H6ZM4.99961 4H1V6H1.49978C1.49971 6 1.49986 6 1.49978 6H4.99961V4ZM1.99978 7V10C1.99978 10.5523 2.4475 11 2.99978 11H4.99961V7H1.99978ZM5.99961 11H7.99978C8.55207 11 8.99978 10.5523 8.99978 10V7H5.99961V11ZM8 2C8 1.44772 7.55228 1 7 1C6.44772 1 6 1.44772 6 2V3H7C7.55228 3 8 2.55228 8 2Z" fill="white"/>
+            </svg>
+        </button>
+    </div>
+
+    @php
+        $userModel = new \Modules\Core\Entities\User();
+        $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+    @endphp
+
+    @if(!auth()->user()->account_is_approved && $account_type === 'admin')
+        <div class="new-register-navbar-open-modal-container" style="display: none;">
+            <div class="row new-register-open-modal">
                 <span class="new-register-open-modal-btn">Clique aqui para começar</span>
             </div>
         </div>
@@ -52,8 +62,20 @@
             <!-- NAVERBAR FILHA DA CONTAINER -->
             <div class="row no-gutters d-flex" id="site-navbar-collapse">
 
+
+                <div class="bonus-balance-menu d-flex justify-content-center align-items-center">
+                    <button id="bonus-balance" class="bonus-balance-button desktop justify-content-center align-items-center" style="display: none">
+                        <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px">
+                            <path d="M4 0C4.59735 0 5.13353 0.261878 5.5 0.677088C5.86647 0.261878 6.40265 0 7 0C8.10457 0 9 0.89543 9 2C9 2.36429 8.90261 2.70583 8.73244 3H10C10.5523 3 11 3.44772 11 4V6C11 6.55229 10.5523 7 10 7L9.99978 10C9.99978 11.1046 9.10435 12 7.99978 12H2.99978C1.89521 12 0.999783 11.1046 0.999783 10V7C0.447598 6.99988 0 6.55221 0 6V4C0 3.44772 0.447715 3 1 3H2.26756C2.09739 2.70583 2 2.36429 2 2C2 0.89543 2.89543 0 4 0ZM3 2C3 2.55228 3.44772 3 4 3H5V2C5 1.44772 4.55228 1 4 1C3.44772 1 3 1.44772 3 2ZM6 4L5.99961 6H10V4H6ZM4.99961 4H1V6H1.49978C1.49971 6 1.49986 6 1.49978 6H4.99961V4ZM1.99978 7V10C1.99978 10.5523 2.4475 11 2.99978 11H4.99961V7H1.99978ZM5.99961 11H7.99978C8.55207 11 8.99978 10.5523 8.99978 10V7H5.99961V11ZM8 2C8 1.44772 7.55228 1 7 1C6.44772 1 6 1.44772 6 2V3H7C7.55228 3 8 2.55228 8 2Z" fill="white"/>
+                        </svg>
+                        <span id="total-bonus-balance">
+                            <div class="skeleton skeleton-p" style="width: 80px; height: 20px; margin-top: 2px"></div>
+                        </span>
+                    </button>
+                </div>
+
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
-                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center">
+                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center justify-content-center">
                     <b class="pr-5"> Novidades </b>
                 </div>
 
@@ -131,8 +153,9 @@
             </div>
         </div>
     </div>
-</nav>
 
+    
+</nav>
 {{--SIDE BAR--}}
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">

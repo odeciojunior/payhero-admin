@@ -2192,7 +2192,9 @@ tbody td{
 .new-register-navbar-open-modal-container {
     display: flex;
     justify-content: center;
-    flex-grow: 1;
+    position: fixed;
+    left: 65px;
+    right: 20px;
     font-size: 16px;
 }
 @media screen and (max-width: 920px) {
@@ -2365,6 +2367,16 @@ tbody td{
     padding: 12px 18px;
     margin-top: 12px;
 }
+@media (max-width: 475px) {
+    .new-register-overlay-body .card button {
+        width: 100%;
+    }
+}
+@media (max-width: 352px) {
+    .new-register-overlay-body .card button {
+        font-size: 12px;
+    }
+}
 .new-register-overlay-body .card.status-check .icon {
     background: #59BF75;
 }
@@ -2504,6 +2516,10 @@ tbody td{
     transition: all 0.5s ease 0s;
 }
 
+.new-register-transition-slower {
+    transition-delay: 1s;
+}
+
 .new-register-step-btn-container {
     display: flex;
     justify-content: space-between;
@@ -2599,8 +2615,7 @@ tbody td{
     color: #0B1D3D;
 }
 .step-2-checkbox-option input[type="checkbox"] {
-    -webkit-margin: 3px 0 0 0 !important;
-    margin: 0 !important;
+    margin: 3px 0 0 0 !important;
 }
 .step-2-checkbox-option span {
     margin-left: 12px;
@@ -2628,6 +2643,28 @@ tbody td{
 #open-steps-btn:not(:disabled):not(.disabled).active:focus,
 #open-steps-btn:not(:disabled):not(.disabled):active:focus {
     box-shadow: none;
+}
+
+#new-register-step-3-container input[type="text"]:hover,
+#new-register-step-3-container input[type="text"]:focus {
+    outline: none!important;
+    border: 1px solid #e4eaec;
+}
+
+.input-valid {
+    border: 1px solid #59BF75;
+}
+.input-valid:hover,
+.input-valid:focus {
+    border: 1px solid #59BF75!important;
+}
+
+.input-invalid {
+    border: 1px solid #E81414;
+}
+.input-invalid:hover,
+.input-invalid:focus {
+    border: 1px solid #E81414!important;
 }
 
 #new-register-range {
@@ -2768,3 +2805,382 @@ tbody td{
         box-shadow: 0 0 0 5px rgba(16, 141, 236, 0.3), 0 0 0 15px rgba(16, 141, 236, 0);
     }
 }
+
+
+@-webkit-keyframes fade-in {
+    0% { opacity: 0; }
+
+    100% { opacity: 1; }
+}
+
+@keyframes fade-in {
+    0% { opacity: 0; }
+
+    100% { opacity: 1; }
+}
+
+
+/* BONUS BALANCE */
+.bonus-balance-container .orange-link {
+    font-weight: 500 !important;
+    font-size: 12px;
+    color: #FF4E05 !important;
+    cursor: pointer;
+
+    background: transparent;
+    border: none;
+    outline: unset;
+}
+
+.orange-link i {
+    font-size: 15px;
+}
+
+#bonus-balance-modal {
+    position: absolute;
+    width: 100%;
+    height: 999%;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+}
+
+.bonus-balance-container {
+    position: sticky;
+    width: 360px;
+    height: auto;
+    min-height: 360px;
+    background-color: #1BE4A8;
+
+    top: 20px;
+    right: 0px;
+    margin-left: auto;
+    margin-right: 30px;
+
+    background: #fff;
+    box-shadow: 0px 0px 40px rgba(21, 3, 76, 0.15);
+    border-radius: 12px;
+
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.bonus-balance-background {
+    position: sticky;
+    z-index: 9998;
+
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.close-bonus-modal {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.bonus-balance-button {
+    display: flex;
+    width: fit-content;
+    height: 30px;
+
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+
+    margin:  0 10px;
+    padding: 7px 15px;
+
+    border-radius: 25px;
+    border: none;
+    background: #41DC8F;
+    cursor: pointer;
+    outline: unset !important;
+
+    -webkit-transition: all .6s;
+    -moz-transition: all .6s;
+    -ms-transition: all .6s;
+    -o-transition: all .6s;
+    transition: all .6s;
+
+    animation: fade-in 2s forwards;
+}
+
+.bonus-balance-button:hover {
+    box-shadow: 4px 4px 20px rgba(65, 220, 143, 0.2);
+}
+
+.bonus-balance-button.mobile {
+    display: none;
+}    
+
+
+.bonus-balance-content,
+.bonus-balance-history {
+    padding: 25px;
+    opacity: 0;
+    animation: fade-in 2s forwards;
+    width: 100%;
+    height: 100%;
+}
+
+.bonus-balance-history {
+    display: none;
+    position: absolute;
+}
+
+.back-button {
+    margin-bottom: 20px !important;
+}
+
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.bonus-balance-container p {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 124%;
+    color: #81859B;
+
+    text-align: justify;
+};
+
+
+.bonus-text {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+}
+
+.bonus-title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #313C52;
+}
+
+.bonus-subtitle {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.bonus-title b{
+    font-weight: 600;
+}
+
+.bonus-title i {
+    margin-right: 10px;
+}
+
+.bonus-illustration-1 {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.bonus-illustration-2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.bonus-numbers {
+    display: flex;
+    align-items: center;
+}
+
+.bonus-circle-chart {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.bonus-percent-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+
+    font-weight: 900;
+    font-size: 23.32px;
+}
+
+.bonus-number-title {
+    margin: 0;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 124%;    
+    color: #81859B;
+}
+
+.bonus-number {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 124%;
+    color: #313C52;
+}
+
+.bonus-slogan {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    color: #313C52;
+}
+
+.bonus-slogan b {
+    color: #FF4E05;
+}
+
+.modal-bonus-close {
+    cursor: pointer;
+    z-index: 5;
+}
+
+.mkc_info {
+    color: #59BF75 !important;
+    font: bold 30px;
+}
+
+@media (max-width: 768px) {
+    .bonus-balance-button.desktop {
+        display: none;
+    }    
+
+    .bonus-balance-button.mobile {
+        display: flex;
+    }    
+
+    .bonus-balance-container {
+        width: 100%;
+        bottom: 0;
+    }
+
+    .bonus-numbers {
+        flex-direction: column;
+    }
+    
+    .bonus-balance-background {
+        padding: 10px;
+    }
+
+    .bonus-slogan {
+        font-size: 10px;
+    }
+
+    .bonus-percent-label {
+        font-size: 26.32px;
+    }
+
+    .bonus-infos {
+        justify-content: space-between;
+    }
+    
+}
+
+
+.skeleton{
+    opacity: .7;
+    /* linear-gradient(#000 0 0) top/100% 70%,
+    linear-gradient(#000 0 0) bottom right/70% 20%,
+    radial-gradient(circle closest-side,#000 90%,#0000) bottom left/25% 25%; */
+    -webkit-mask-repeat:no-repeat;
+    background:linear-gradient(90deg,#ECECEC 40%,#FFFA ,#ECECEC 60%) right/300% 100% ;
+    animation: skeleton 1s linear infinite;
+}
+.skeleton-circle{
+    height: 10px;
+    width: 10px;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+.skeleton-text{
+    height: 30px;
+    margin-bottom: 15px;
+    border-radius: 20px;
+}
+
+.skeleton-p {
+    height: 14px;
+    margin-bottom: 3px;
+    border-radius: 20px;
+}
+
+.bonus-table-container {
+    width: 100%;
+    height: 210px;
+    overflow-y: scroll;
+}
+
+.bonus-history-table {
+    width: 100%;
+}
+
+.bonus-history-table th {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 30px;
+    color: #81859B;
+}
+
+.bonus-history-table td {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    color: #313C52;
+}
+
+.bonus-history-table tr {
+    height: 30px;
+}
+
+.bonus-modal-opened {
+    overflow: hidden !important;
+}
+
+@-webkit-keyframes skeleton {
+    to {background-position:left;}
+}
+@keyframes skeleton {
+    to {background-position:left;}
+}
+
+
+* {
+    scrollbar-color: #9e9e9e d5d5d5; /* thumb and track color */
+    scrollbar-width: thin;
+}
+
+/* width */
+* ::-webkit-scrollbar {
+    width: 2px;
+}
+
+/* Track */
+* ::-webkit-scrollbar-track {
+    background: #d5d5d5;
+}
+
+/* Handle */
+* ::-webkit-scrollbar-thumb {
+    background: #9e9e9e;
+}
+
+/* Handle on hover */
+* ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+

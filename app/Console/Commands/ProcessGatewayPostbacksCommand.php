@@ -92,7 +92,7 @@ class ProcessGatewayPostbacksCommand extends Command
                         ->where('processed_flag', false)
                         ->where('gateway_id', 21)
                         ->orderBy('id', 'asc')
-                        ->limit(250)
+                        ->limit(100)
                         ->get()->toArray();
 
             $url = getenv('CHECKOUT_URL') . '/api/postback/process/safe2pay';

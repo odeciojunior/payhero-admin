@@ -6,7 +6,6 @@
 
 @section('content')
 
-<!-- Page -->
 <div class="page" style="margin-bottom: 0 !important">
     <div style="display: none" class="page-header container">
         <div class="row align-items-center" style="min-height:4rem">
@@ -30,7 +29,6 @@
                             <label for="type-products">Tipo</label>
                             <select class="sirius-select" id='type-products'>
                                 <option value="0">Meus Produtos</option>
-                                <option value="1">Produtos Shopify</option>
                             </select>
                         </div>
                     </div>
@@ -42,10 +40,18 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div id="projects-list" class="mb-10 d-none">
-                            <label id="select-projects-label" for="select-projects">Lojas</label>
-                            <select id='select-projects' class="sirius-select" disabled>
-                                <option>Carregando...</option>
-                            </select>
+                            <div class="box-projects" id="box-projects-1">
+                                <label id="select-projects-label-1" for="select-projects-1">Loja</label>
+                                <select id="select-projects-1" class="sirius-select" disabled>
+                                    {{-- <option class='opcao-vazia'></option> --}}
+                                </select>
+                            </div>
+                            <div class="box-projects" id="box-projects-2">
+                                <label id="select-projects-label-2" for="select-projects-2">Loja</label>
+                                <select id="select-projects-2" class="sirius-select" disabled>
+                                    {{-- <option class='opcao-vazia'></option> --}}
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mt-auto">
@@ -68,10 +74,6 @@
                 <div class="content-error text-center pt-0">
                     <img src="{!! mix('build/global/img/produtos.svg') !!}" width="156px">
                     <h1 class="big gray">Zero produtos por aqui!</h1>
-                    {{-- <div class='product-is-empty-cla'>--}}
-                    {{-- <p class="gray"> Vamos adicionar seu primeiro produto? </p>--}}
-                    {{-- <a href="/products/create" class="btn btn-primary">Novo Produto</a>--}}
-                    {{-- </div>--}}
                 </div>
             </div>
         </div>
@@ -135,9 +137,8 @@
         </div>
     </div>
 
-    {{-- Quando não tem loja cadastrado  --}}
     @include('projects::empty')
-    {{-- FIM loja nao existem lojas--}}
+
 </div>
 
 @push('scripts')

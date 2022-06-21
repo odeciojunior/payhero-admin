@@ -108,7 +108,7 @@
                                                 <div class="tab-example">
                                                     <div class="row-flex">
                                                         <img class="sirius-icon"
-                                                            src="{{ mix('build/layouts/checkouteditor/img/svg/icon-sirius.svg') }}">
+                                                            src="build/layouts/checkouteditor/img/svg/icon-sirius.svg">
                                                         <p>Sirius</p>
                                                     </div>
                                                     <p>x</p>

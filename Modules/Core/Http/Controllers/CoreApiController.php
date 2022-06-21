@@ -2,9 +2,11 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\BonusBalance;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
 use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
@@ -23,10 +25,6 @@ use Modules\Core\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class CoreApiController
- * @package Modules\Core\Http\Controllers
- */
 class CoreApiController extends Controller
 {
     public function verifyAccount($id)
@@ -43,6 +41,8 @@ class CoreApiController extends Controller
             $userInformations = UserInformation::where('document', $user->document)->exists();
 
             $userStatus = null;
+            $userAddressDocument = $userModel->present()->getAddressDocumentStatus($user->address_document_status);
+            $userPersonaltDocument = $userModel->present()->getPersonalDocumentStatus($user->personal_document_status);
             $userRedirect = null;
             if ($userService->haveAnyDocumentPending()) {
                 $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
@@ -65,6 +65,8 @@ class CoreApiController extends Controller
             }
 
             $companyStatus = null;
+            $companyAddressDocument = null;
+            $companyContractDocument = null;
             $companyRedirect = null;
 
             $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
@@ -75,42 +77,49 @@ class CoreApiController extends Controller
             } else {
                 $companyApproved = $companyService->companyDocumentApproved();
                 if (!empty($companyApproved)) {
-                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_APPROVED);
+                    $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_APPROVED);
+                    $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyApproved->address_document_status);
+                    $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyApproved->contract_document_status);
                     $companyRedirect = '/companies';
                 } else {
                     $companyPending = $companyService->companyDocumentPending();
                     if (!empty($companyPending)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_PENDING);
+                        $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_PENDING);
+                        $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyPending->address_document_status);
+                        $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyPending->contract_document_status);
                         $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyPending->id);
                     }
 
                     $companyAnalyzing = $companyService->companyDocumentAnalyzing();
                     if (!empty($companyAnalyzing)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_ANALYZING);
+                        $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_ANALYZING);
+                        $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyAnalyzing->address_document_status);
+                        $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyAnalyzing->contract_document_status);
                         $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyAnalyzing->id);
                     }
 
                     $companyRefused = $companyService->companyDocumentRefused();
                     if (!empty($companyRefused)) {
-                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_REFUSED);
+                        $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_REFUSED);
+                        $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyRefused->address_document_status);
+                        $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyRefused->contract_document_status);
                         $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyRefused->id);
                     }
                 }
             }
 
-            if (!$user->account_is_approved) {
-                if ($userStatus == 'approved' && $userInformations == true && !empty($companyApproved)) {
-                    $user->update([
-                        'account_is_approved' => 1
-                    ]);
-                }
-            }
+            $this->updateUserStatus($user, $userInformations, $userStatus, $companyStatus);
 
             return response()->json([
                 'data' => [
-                    'account' => $userModel->present()->getAccountStatus($user->account_is_approved),
+                    'account' => [
+                        'status' => $userModel->present()->getAccountStatus($user->account_is_approved),
+                        'type' => $userModel->present()->getAccountType($user->id, $user->account_owner_id),
+                    ],
                     'user' => [
                         'status' => $userStatus,
+                        'address_document' => $userAddressDocument,
+                        'personal_document' => $userPersonaltDocument,
                         'document' => $user->document,
                         'email' => $user->email,
                         'informations' => $userInformations,
@@ -118,6 +127,8 @@ class CoreApiController extends Controller
                     ],
                     'company' => [
                         'status' => $companyStatus,
+                        'address_document' => $companyAddressDocument,
+                        'contract_document' => $companyContractDocument,
                         'link' => $companyRedirect,
                     ]
                 ]
@@ -126,6 +137,17 @@ class CoreApiController extends Controller
             return response()->json([
                 'message' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function updateUserStatus($user, $userInformations, $userStatus, $companyStatus)
+    {
+        if (!$user->account_is_approved) {
+            if ($userStatus == 'approved' && $companyStatus == 'approved' && $userInformations) {
+                $user->update([
+                    'account_is_approved' => 1
+                ]);
+            }
         }
     }
 
@@ -194,7 +216,6 @@ class CoreApiController extends Controller
         }
     }
 
-
     public function companies(Request $request)
     {
         try {
@@ -217,7 +238,6 @@ class CoreApiController extends Controller
             );
         }
     }
-
 
     public function getCompanies()
     {
@@ -293,5 +313,28 @@ class CoreApiController extends Controller
             report($e);
             return response()->json(['message' => 'Erro ao notificar alteração no chamado!'], 400);
         }
+    }
+
+    public function getBonusBalance()
+    {
+        $bonusBalance = BonusBalance::where('user_id', auth()->user()->account_owner_id)
+                                    ->where('expires_at', '>=', today())
+                                    ->where('current_value', '>', 0)
+                                    ->first();
+
+        if(empty($bonusBalance)) {
+            return response()->json([
+                'error' => 'bonus balance not found'
+            ]);
+        }
+
+        return response()->json([
+            'user_name' => auth()->user()->present()->firstName(),
+            'total_bonus' => foxutils()->formatMoney($bonusBalance->total_value / 100),
+            'current_bonus' => foxutils()->formatMoney($bonusBalance->current_value / 100),
+            'used_bonus' => foxutils()->formatMoney(($bonusBalance->total_value - $bonusBalance->current_value) / 100),
+            'expires_at' => Carbon::parse($bonusBalance->created_at)->format('d/m/Y'),
+            'used_percentage' => number_format(100 - ($bonusBalance->current_value * 100 / $bonusBalance->total_value), 0, '.', '')
+        ]);
     }
 }
