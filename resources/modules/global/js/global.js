@@ -1771,8 +1771,8 @@ const toggleBonusContent = function() {
 function showBonusBalance() {
     var totalBalance  = null;
 
-    if(getCookie('bonus_balance')) {        
-        var bonus_balance = JSON.parse(getCookie('bonus_balance').replace(" \ ",''));
+    if(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance')) {        
+        var bonus_balance = JSON.parse(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance'));
         
         $('#total-bonus-balance').html(bonus_balance.current_bonus);
 
@@ -1799,8 +1799,8 @@ function showBonusBalance() {
                 if(response.error) {
                     return;
                 }
-
-                setCookie('bonus_balance', 0.5, response);
+                setCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance', 0.5, response);
+                
 
                 $('#total-bonus-balance').html(response.current_bonus)
 
