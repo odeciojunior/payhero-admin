@@ -67,14 +67,14 @@
             <div class="row align-items-center justify-content-between top-inner-reports">
                 <div class="col-8">
                     <h1 class="d-flex title-system">
-                        <span class="box-title ico-pending">bloqueado</span>
+                        <span class="box-title ico-blocked">bloqueado</span>
                         Saldo bloqueado
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
                 </div>
                 <div class="col-4">
                     <div class="box-projects">
-                        <select id='select_projects' class="form-control input-pad">
+                        <select id='select_projects' class="sirius-select">
                             {{-- JS carrega.. --}}
                         </select>
                     </div>
