@@ -974,6 +974,9 @@ img.border-icon{
 }
 
 .modal-new-layout .mCSB_scrollTools {
+    right: 0px;
+}
+.modal-plans .box-products.customizations .mCSB_scrollTools {
     right: 25px;
 }
 .modal-new-layout .modal-content {
@@ -1788,7 +1791,7 @@ input[type="checkbox"], input[type="radio"] {
 }
 
 .mCSB_inside > .mCSB_container {
-    margin-right: 12px !important;
+    margin-right: 0px !important;
 }
 .mCSB_scrollTools {
     width: 4px !important;
@@ -1808,14 +1811,18 @@ input[type="checkbox"], input[type="radio"] {
     padding: 0 !important;
 }
 .modal-body.mCustomScrollbar .mCSB_inside > .mCSB_container {
-    margin-right: 0 !important;
+    margin-right: 0px !important;
+}
+.box-products.mCustomScrollbar .mCSB_inside > .mCSB_container,
+.box-plans.mCustomScrollbar .mCSB_inside > .mCSB_container {
+    margin-right: 15px !important;
 }
 .modal-body.mCustomScrollbar .height-auto {
-    padding: 0 30px 20px !important;
+    padding: 0 20px 20px !important;
 }
 
 .box-products.customizations .mCustomScrollBox {
-    width: calc(100% - 15px);
+    width: 100%;
 }
 
 .scrollbox {

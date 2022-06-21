@@ -826,7 +826,6 @@ class PlansApiController extends Controller
         }
 
         $planId = current(Hashids::decode($request->plan));
-        $plan = Plan::find($planId);
 
         $allow_change_in_block = false;
         if (!empty($request->allow_change_in_block) && boolval($request->allow_change_in_block) === true) {

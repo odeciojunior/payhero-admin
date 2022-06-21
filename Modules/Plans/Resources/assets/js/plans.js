@@ -403,6 +403,7 @@ $(function () {
                     $.ajax({
                         method: "GET",
                         url: "/api/product/" + product.id,
+                        async: false,
                         data: {
                             plan_id: plan
                         },
@@ -515,7 +516,7 @@ $(function () {
                                                     <input type="checkbox" id="check-values" name="check-values" class="check" value="0">
                                                     <span class="slider round"></span>
                                                 </label>
-                                                <label for="product_amount_selector" style="margin: 0;">Todos os produtos têm o mesmo custo</label>
+                                                <label for="product_amount_selector" style="margin: 0;">Todos os produtos têm a mesma qtd, custo e moeda</label>
                                             </div>`
                                         ).css({'margin-top': '25px'});
                                     } else {
@@ -2569,6 +2570,7 @@ $(function () {
         $('#check-custom').hide();
         if ($('#cost_currency_type_all_plans').val() == 1) {
             $('#check-custom').find('.switch').trigger('click');
+            $('#cost_currency_type_all_plans').val(0);
         }
 
         $(modal).find('#cost_plan').val('');
