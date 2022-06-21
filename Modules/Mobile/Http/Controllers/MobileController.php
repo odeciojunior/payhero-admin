@@ -62,7 +62,7 @@ class MobileController extends Controller
         $companyId = hashids_decode($request->company_id);
         $company = Company::find($companyId);
         $companyService = new CompanyBalanceService($company);
-        $statementResumes = $companyService->getResumeTotals();
+        $statementResumes = $companyService->getResumeTotals($request);
 
         return StatementsResource::collection($statementResumes);
     }

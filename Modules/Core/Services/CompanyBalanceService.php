@@ -54,25 +54,39 @@ class CompanyBalanceService
         return $gatewaysBalances;
     }
 
-    public function getResumeTotals()
+    public function getResumeTotals($request)
     {
         $gatewaysBalances = [];
         $totalAvailable = 0;
         $totalBalance = 0;
 
-        foreach($this->defaultGateways as $gatewayClass)
-        {
+        foreach ($this->defaultGateways as $gatewayClass) {
             $gatewayService = app()->make($gatewayClass);
             $gatewayService->setCompany($this->company);
-
             $gatewayResume = $gatewayService->getResume();
 
-            if(!empty($gatewayResume))
-            {
+            if(!empty($gatewayResume)) {
                 $gatewaysBalances[] = $gatewayResume;
                 $totalAvailable += intval($gatewayResume['total_available']);
                 $totalBalance += intval($gatewayResume['total_balance']);
             }
+        }
+
+        // Checks if the request has the 'isMobile' parameter
+        if (!$request->has('isMobile')) {
+
+            // Formats gateway values
+            foreach ($gatewaysBalances as &$gatewayBalance) {
+                foreach ($gatewayBalance as &$data) {
+                    $data = is_int($data) ? foxutils()->formatMoney($data / 100) : $data;
+                }
+            }
+
+            // Formats the total available
+            $totalAvailable = is_int($totalAvailable) ? foxutils()->formatMoney($totalAvailable / 100) : $totalAvailable;
+
+            // Formats the total balance
+            $totalBalance = is_int($totalBalance) ? foxutils()->formatMoney($totalBalance / 100) : $totalBalance;
         }
 
         return [
