@@ -1,6 +1,11 @@
 var currentPage = null;
 //var atualizar = null;
 
+$(function() {
+    changeCalendar();
+    changeCompany();
+});
+
 function atualizar(link = null) {
 
     currentPage = link;
@@ -317,6 +322,10 @@ $(document).ready(function () {
                             })
                         );
                     });
+                    if(sessionStorage.info) {
+                        $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                        $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                    }
 
                     atualizar();
 
@@ -426,3 +435,49 @@ $(document).ready(function () {
         });
     }
 });
+
+function changeCalendar() {
+    var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
+    var endDate = moment().format("DD/MM/YYYY");
+
+    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+    $('input[name="daterange"]').dateRangePicker({
+        setValue: function (s) {
+            if (s) {
+                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                $(this).html(s).data('value', normalize);
+                $('input[name="daterange"]').attr('value', normalize);
+                $('input[name="daterange"]').val(normalize);
+            } else {
+                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+            }
+        }
+    })
+    .on('datepicker-change', function () {
+        
+    })
+    .on('datepicker-open', function () {
+        $('.filter-badge-input').removeClass('show');
+    })
+    .on('datepicker-close', function () {
+        $(this).removeClass('focused');
+        if ($(this).data('value')) {
+            $(this).addClass('active');
+        }
+    });
+}
+function changeCompany() {
+    $("#select_projects").on("change", function () {
+        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+    });
+}
+
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
+}

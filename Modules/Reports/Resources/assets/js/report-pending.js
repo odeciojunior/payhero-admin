@@ -4,6 +4,7 @@ let hasSale = false;
 
 $(function() {
     changeCalendar();
+    changeCompany();
 });
 
 function atualizar (link = null) {
@@ -304,6 +305,10 @@ $(document).ready(function () {
                             })
                         );
                     });
+                    if(sessionStorage.info) {
+                        $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                        $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                    }
 
                     atualizar();
                 } else {
@@ -522,4 +527,18 @@ function changeCalendar() {
             $(this).addClass('active');
         }
     });
+}
+function changeCompany() {
+    $("#select_projects").on("change", function () {
+        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+    });
+}
+
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
 }

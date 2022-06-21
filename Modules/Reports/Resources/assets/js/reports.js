@@ -15,6 +15,7 @@ $(function () {
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
+        
     } 
     if( JSON.parse(localStorage.verifyAccount).company.status !== 'approved') {
         $("#box-projects").hide();
@@ -738,7 +739,7 @@ $(function () {
 
     $("#select_projects").on("change", function () {
         $.ajaxQ.abortAll();
-        updateStorage({company: $(this).val()})
+        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()})
         resume();
         $(".data-pie ul li").remove();
     });
@@ -1581,10 +1582,12 @@ $(function () {
         $('.box-link').on('click', function(e) {
             let calendar = $('input[name=daterange]').val();
             let company = $('#select_projects').val();
+            let companyName = $('#select_projects').find('option:selected').text();
 
             let obj = {
                 calendar,
-                company
+                company,
+                companyName
             }
             sessionStorage.setItem('info', JSON.stringify(obj));
         });

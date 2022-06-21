@@ -514,7 +514,7 @@ function changeCompany() {
         $('.onPreLoad *').remove();
         $('.onPreLoad').html(skeLoad);
         $.ajaxQ.abortAll();
-        updateStorage({company: $(this).val()})
+        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
         updateReports();
     });
 }
@@ -545,15 +545,17 @@ function updateReports() {
                 $("#export-excel").show();
 
                 $.each(response.data, function (i, project) {
-                    $("#select_projects").html(
+                    $("#select_projects").append(
                         $("<option>", {
                             value: project.id,
                             text: project.name,
                         })
                     );
+                    removeDuplcateItem("#select_projects option");
                 });
                 if(sessionStorage.info) {
                     $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
                 }
             } else {
                 $("#export-excel").hide();
@@ -872,6 +874,20 @@ const formatCash = n => {
     if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
     if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
 };
+
+function removeDuplcateItem(item) {
+    for (i = 0; i < $(item).length; i++) {
+        text = $(item).get(i);
+        for (j = i + 1; j < $(item).length; j++) {
+          text_to_compare = $(item).get(j);
+          if (text.innerHTML == text_to_compare.innerHTML) {
+            $(text_to_compare).remove();
+            j--;
+            maxlength = $(item).length;
+          }
+        }
+    }
+}
 
 // abort all ajax
 $.ajaxQ = (function(){
