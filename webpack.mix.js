@@ -701,6 +701,7 @@ mix.styles([
  */
 mix.styles([
     'Modules/Reports/Resources/assets/css/reports.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
     'resources/modules/global/css/empty.css',
     'resources/modules/global/css/switch.css',
     'resources/modules/global/css/new-dashboard.css',
@@ -709,7 +710,7 @@ mix.styles([
 mix.babel([
     'Modules/Reports/Resources/assets/js/report-blockedbalance.js',
     'resources/modules/global/js-extra/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
     'resources/cdn/select2.min.js'
 ], 'public/build/layouts/reports/blockedbalance.min.js');
 /**
