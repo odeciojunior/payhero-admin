@@ -2329,6 +2329,12 @@ h4.number{
     display: flex;
     align-items: center;
 }
+
+
+.table-coupons.table thead > tr > td:first-child { 
+    padding-left: 18px !important; 
+    padding-right: 18px !important; 
+}
 .date-picker {
   width: 170px;
   height: 25px;

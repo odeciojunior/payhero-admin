@@ -2331,6 +2331,12 @@ h4.number{
     display: flex;
     align-items: center;
 }
+
+
+.table-coupons.table thead > tr > td:first-child { 
+    padding-left: 18px !important; 
+    padding-right: 18px !important; 
+}
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;
