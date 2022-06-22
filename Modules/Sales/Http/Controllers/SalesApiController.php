@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
@@ -14,7 +15,6 @@ use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\EmailService;
@@ -413,8 +413,7 @@ class SalesApiController extends Controller
         try {
             $data = $request->all();
             $planModel = new Plan();
-            $userProjectModel = new UserProject();
-            //$checkoutConfigModel = new CheckoutConfig();
+            //$userProjectModel = new UserProject();
 
             $projectIds = [current(Hashids::decode($data['project_id']))];
 
@@ -425,32 +424,61 @@ class SalesApiController extends Controller
                 };
             }
 
+            $userId = auth()->user()->account_owner_id;
+            $plans = null;
+
             if (current($projectIds)) {
 
-                $plans = null;
-
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $projectIds)->get();
+                    $plans = $planModel
+                        ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
+                        ->join('companies as c', 'c.id', '=', 'cc.company_id')
+                        ->where('plans.name', 'like', '%' . $data['search'] . '%')
+                        ->where('cc.company_id', hashids_decode($request->company))
+                        ->where('c.user_id', $userId)
+                        ->whereIn('plans.project_id', $projectIds)
+                        ->limit(30)
+                        ->get();
 
                 } else {
-                    $plans = $planModel->whereIn('project_id', $projectIds)->limit(30)->get();
+                    $plans = $planModel
+                        ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
+                        ->join('companies as c', 'c.id', '=', 'cc.company_id')
+                        ->where('cc.company_id', hashids_decode($request->company))
+                        ->where('c.user_id', $userId)
+                        ->whereIn('plans.project_id', $projectIds)
+                        ->limit(30)
+                        ->get();
 
                 }
                 return PlansSelectResource::collection($plans);
 
             } else {
-                $userId = auth()->user()->account_owner_id;
-                $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
-                //$checkoutConfig = $checkoutConfigModel->where('company_id',$data['search']);
+                //$userId = auth()->user()->account_owner_id;
+                // $userProjects = $userProjectModel
+                //     ->where('user_id', $userId)
+                //     ->pluck('project_id');
 
-                $plans = null;
+                //$plans = null;
 
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $userProjects)->get();
+                    $plans = $planModel
+                        ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
+                        ->join('companies as c', 'c.id', '=', 'cc.company_id')
+                        ->where('plans.name', 'like', '%' . $data['search'] . '%')
+                        ->where('cc.company_id', hashids_decode($request->company))
+                        ->where('c.user_id', $userId)
+                        ->limit(30)
+                        ->get();
 
                 } else {
-                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(30)->get();
-
+                    $plans = $planModel
+                        ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
+                        ->join('companies as c', 'c.id', '=', 'cc.company_id')
+                        ->where('cc.company_id', hashids_decode($request->company))
+                        ->where('c.user_id', $userId)
+                        ->limit(30)
+                        ->get();
                 }
                 return PlansSelectResource::collection($plans);
             }

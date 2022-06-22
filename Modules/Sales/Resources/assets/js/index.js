@@ -837,6 +837,7 @@ $(document).ready(function () {
                     list: "plan",
                     search: params.term,
                     project_id: $("#projeto").val(),
+                    company: $("#company-navbar").val()
                 };
             },
             method: "GET",
