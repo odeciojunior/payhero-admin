@@ -31,7 +31,7 @@ class TrackingFactory extends Factory
             'delivery_id'=>null,
             'tracking_code'=>'L'.$this->faker->isbn10(),
             'tracking_status_enum'=>$this->getRandomStatus(),
-            'system_status_enum'=>$this->getRandomSystemStatus(),
+            'system_status_enum'=>Tracking::SYSTEM_STATUS_VALID, 
         ];
     }
 
