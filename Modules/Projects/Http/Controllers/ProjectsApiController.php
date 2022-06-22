@@ -47,7 +47,7 @@ class ProjectsApiController extends Controller
         try {
 
             $user = auth()->user();
-            $hasCompany = Company::where('user_id', $user->account_owner_id)->exists();
+            $hasCompany = Company::where('user_id', $user->getAccountOwnerId())->exists();
 
             if ($hasCompany) {
                 $projectModel = new Project();
@@ -120,7 +120,7 @@ class ProjectsApiController extends Controller
             )->log('Visualizou tela criar projeto');
 
             $user = auth()->user();
-            $companies = Company::where('user_id',$user->account_owner_id)->where('active_flag', true)->get();
+            $companies = Company::where('user_id',$user->getAccountOwnerId())->where('active_flag', true)->get();
 
             return response()->json(CompaniesSelectResource::collection($companies));
         } catch (Exception $e) {

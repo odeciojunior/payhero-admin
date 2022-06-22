@@ -571,7 +571,6 @@ class PlansApiController extends Controller
                 $return['total'] = $result[0]->total;
                 return $return;
             }
-
             if (!empty($data['search'])) {
                 $plans->where('name', 'like', '%' . $data['search'] . '%');
             }

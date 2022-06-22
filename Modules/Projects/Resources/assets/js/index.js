@@ -37,6 +37,7 @@ $(function () {
                 if (response.data.length) {
                     $("#project-empty").hide();
                     $("#company-empty").hide();
+                    $("#data-table-projects").css({visibility: "visible"});
 
                     $.each(response.data, (key, project) => {
                         if (verifyAccountFrozen()) {
