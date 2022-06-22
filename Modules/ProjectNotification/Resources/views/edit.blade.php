@@ -30,7 +30,7 @@
     <div class="row">
         <div class="form-group col-xl-6">
             <label for="code">Tempo</label>
-            <input value="" name="time" type="text" class="form-control project-notification-time" placeholder="Tempo" disabled style="height: 50px !important; border-radius: 8px;">
+            <input value="" name="time" type="text" class="form-control project-notification-time" placeholder="Tempo" disabled style="height: 43.14px !important; border-radius: 8px;">
         </div>
         <div class="form-group col-xl-6">
             <label for="status">Status</label>

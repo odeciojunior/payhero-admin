@@ -52,6 +52,20 @@ class SendEmailPedingDocumentoListener implements ShouldQueue
             $url = "https://accounts{$sufixHomolog}.cloudfox.net/companies/company-detail/".Hashids::encode($data['companyId']);
         }
 
+        $company = null;
+        if (! empty($data['companyId'])) {
+            $company = Company::find($data['companyId']);            
+        }
+
+        $user = null;
+        if(! empty($data['userId'])){
+            $user = User::find($data['userId']);            
+        }
+
+        if(empty($company) && empty($user)){
+            return;
+        }
+
         try {
             $emailReturn = $this->emailService->sendEmail(
                                 'noreply@cloudfox.net',
@@ -65,16 +79,20 @@ class SendEmailPedingDocumentoListener implements ShouldQueue
                                 ]
                             );
                             
-            if ($emailReturn) {
-                if (! empty($data['companyId'])) {
-                    Company::find($data['companyId'])->update([
+            if ($emailReturn)
+            {
+                if ( !empty($company) )
+                {
+                    $company->update([
                         'date_last_document_notification'=>now()
-                    ]);
+                    ]);                    
                 }
-                if(! empty($data['userId'])){
-                    User::find($data['userId'])->update([
+
+                if( !empty($user) )
+                {                    
+                    $user->update([
                         'date_last_document_notification'=>now()
-                    ]);
+                    ]);                    
                 }
             }
 
@@ -85,6 +103,6 @@ class SendEmailPedingDocumentoListener implements ShouldQueue
 
     public function tags()
     {
-        return ['listener:' . static::class, 'SendEmailListener'];
+        return ['listener:' . static::class, 'SendEmailPedingDocumentoListener'];
     }
 }
