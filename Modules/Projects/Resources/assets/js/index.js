@@ -15,7 +15,7 @@ $(function () {
             url: "/api/projects",
             data: {
                 company: sessionStorage.getItem('company_default'),
-                status: "all",
+                status: 'active',
             },
             dataType: "json",
             headers: {

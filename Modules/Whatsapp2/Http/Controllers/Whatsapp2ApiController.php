@@ -20,7 +20,7 @@ class Whatsapp2ApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
@@ -31,9 +31,11 @@ class Whatsapp2ApiController extends Controller
 
             $accountOwnerId = auth()->user()->getAccountOwnerId();
 
-            $whatsapp2Integrations = Whatsapp2Integration::where('user_id', $accountOwnerId)
-                ->with('project')
-                ->get();
+            $whatsapp2Integrations = Whatsapp2Integration::
+                join('checkout_configs as cc', 'cc.project_id', '=', 'whatsapp2_integrations.project_id')
+                ->where('cc.company_id', hashids_decode($request->company))
+                ->where('user_id', $accountOwnerId)
+                ->with('project')->get();
 
             $projects = collect();
             $userProjects = UserProject::with([
@@ -47,7 +49,7 @@ class Whatsapp2ApiController extends Controller
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->join('domains',
+                        ->leftjoin('domains',
                             function ($join) {
                                 $join->on('domains.project_id', '=', 'projects.id')
                                     ->where('domains.status', 3)

@@ -1,3 +1,8 @@
+function updateAfterChangeCompany(){
+    loadOnAny('.page-content');
+    window.getProjects('n');
+}
+
 jQuery(function () {
     let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
     let lastPage = document.referrer;
@@ -30,8 +35,9 @@ jQuery(function () {
         }
     }
 
-    function getProjects() {
-        loadingOnScreen();
+    window.getProjects = function(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
         $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -44,6 +50,7 @@ jQuery(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -109,6 +116,7 @@ jQuery(function () {
                     $("#project-not-empty").hide();
                     $("#div-create").hide();
                 }
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
             },
         });
@@ -377,5 +385,5 @@ jQuery(function () {
         updateProducts();
     });
 
-    getProjects();
+    window.getProjects();
 });

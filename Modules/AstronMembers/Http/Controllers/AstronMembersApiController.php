@@ -24,7 +24,7 @@ class AstronMembersApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $astronMembersIntegration = new AstronMembersIntegration();
@@ -32,8 +32,11 @@ class AstronMembersApiController extends Controller
             $projectModel       = new Project();
 
             $user = auth()->user();
-            $astronMembersIntegrations = $astronMembersIntegration->where('user_id', $user->getAccountOwnerId())
-                                                      ->with('project')->get();
+            $astronMembersIntegrations = $astronMembersIntegration
+                ->join('checkout_configs as cc', 'cc.project_id', '=', 'astron_members_integrations.project_id')
+                ->where('cc.company_id', hashids_decode($request->company))
+                ->where('user_id', $user->getAccountOwnerId())
+                ->with('project')->get();
 
             $projects     = collect();
             $userProjects = $userProjectModel->where([[
@@ -45,7 +48,7 @@ class AstronMembersApiController extends Controller
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->join('domains',
+                        ->leftjoin('domains',
                             function ($join) {
                                 $join->on('domains.project_id', '=', 'projects.id')
                                     ->where('domains.status', 3)

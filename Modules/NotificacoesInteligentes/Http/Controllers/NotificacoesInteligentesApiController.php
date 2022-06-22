@@ -24,15 +24,18 @@ class NotificacoesInteligentesApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $notificacoesInteligentesIntegration = new NotificacoesInteligentesIntegration();
             $userProjectModel   = new UserProject();
             $projectModel       = new Project();
 
-            $notificacoesInteligentesIntegrations = $notificacoesInteligentesIntegration->where('user_id', auth()->user()->account_owner_id)
-                                                      ->with('project')->get();
+            $notificacoesInteligentesIntegrations = $notificacoesInteligentesIntegration
+                ->join('checkout_configs as cc', 'cc.project_id', '=', 'notificacoes_inteligentes_integrations.project_id')
+                ->where('cc.company_id', hashids_decode($request->company))
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->with('project')->get();
 
             $projects     = collect();
             $userProjects = $userProjectModel->where([[

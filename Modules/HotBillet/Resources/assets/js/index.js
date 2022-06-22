@@ -1,16 +1,25 @@
+function updateAfterChangeCompany(){
+    window.index('n');
+}
+
 $(document).ready(function () {
-    index();
-    function index() {
-        loadingOnScreen();
+
+    window.index = function(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/hotbillet",
+            url: "/api/apps/hotbillet?company="+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: (response) => {
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -44,10 +53,13 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#integration-actions").show();
                 }
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
             },
         });
     }
+
+    window.index();
 
     //checkbox
     $(".check").on("click", function () {

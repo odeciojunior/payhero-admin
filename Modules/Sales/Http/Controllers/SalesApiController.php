@@ -14,6 +14,7 @@ use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\EmailService;
@@ -186,7 +187,7 @@ class SalesApiController extends Controller
             }
 
             return response()->json(['message' => $result['message']], Response::HTTP_OK);
-            
+
         } catch (Exception $e) {
             report($e);
             return response()->json(
@@ -413,6 +414,7 @@ class SalesApiController extends Controller
             $data = $request->all();
             $planModel = new Plan();
             $userProjectModel = new UserProject();
+            //$checkoutConfigModel = new CheckoutConfig();
 
             $projectIds = [current(Hashids::decode($data['project_id']))];
 
@@ -439,6 +441,8 @@ class SalesApiController extends Controller
             } else {
                 $userId = auth()->user()->account_owner_id;
                 $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
+                //$checkoutConfig = $checkoutConfigModel->where('company_id',$data['search']);
+
                 $plans = null;
 
                 if (!empty($data['search'])) {

@@ -27,8 +27,6 @@ $(document).ready(function () {
                 $('.company_name').val( sessionStorage.getItem('company_default_name') );
                 if ( typeof updateAfterChangeCompany === "function" ) {
                     updateAfterChangeCompany();
-                }else{
-                    updateProjectsOptions();
                 }
             },
         });
@@ -1698,18 +1696,4 @@ function selectCompanies() {
     }
     //$('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     $('#company-select').addClass('d-sm-flex');
-}
-
-
-function updateProjectsOptions(){
-    pathname = window.location.pathname;
-
-
-    // corrige lojas em Apps Hotzapp
-    if(pathname == '/apps/hotzapp'){
-        $("#project_id").find('option').remove();
-        $.getScript( "/build/layouts/hotzapp/index.min.js", function( data, textStatus, jqxhr ) {
-            index();
-        });
-    }
 }

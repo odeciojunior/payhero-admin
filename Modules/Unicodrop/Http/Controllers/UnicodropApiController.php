@@ -23,11 +23,15 @@ class UnicodropApiController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
-            $unicodropIntegrations = UnicodropIntegration::where('user_id', $user->account_owner_id)->with('project')->get();
+            $unicodropIntegrations = UnicodropIntegration::
+            join('checkout_configs as cc', 'cc.project_id', '=', 'unicodrop_integrations.project_id')
+            ->where('cc.company_id', hashids_decode($request->company))
+            ->where('user_id', $user->account_owner_id)
+            ->with('project')->get();
             $projects = collect();
             $userProjects = UserProject::where([[
                 'user_id', $user->account_owner_id],[
@@ -37,7 +41,7 @@ class UnicodropApiController extends Controller
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->join('domains',
+                        ->leftjoin('domains',
                             function ($join) {
                                 $join->on('domains.project_id', '=', 'projects.id')
                                     ->where('domains.status', 3)

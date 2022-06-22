@@ -24,11 +24,16 @@ class HotBilletApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
-            $hotBilletIntegrations = HotbilletIntegration::where('user_id', $user->account_owner_id)->with('project')->get();
+            $hotBilletIntegrations = HotbilletIntegration::
+            join('checkout_configs as cc', 'cc.project_id', '=', 'hotbillet_integrations.project_id')
+            ->where('cc.company_id', hashids_decode($request->company))
+            ->where('user_id', auth()->user()->getAccountOwnerId())
+            ->with('project')->get();
+
             $projects = collect();
             $userProjects = UserProject::where([[
                 'user_id', $user->account_owner_id],[
@@ -38,7 +43,7 @@ class HotBilletApiController extends Controller
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->join('domains',
+                        ->leftjoin('domains',
                             function ($join) {
                                 $join->on('domains.project_id', '=', 'projects.id')
                                     ->where('domains.status', 3)

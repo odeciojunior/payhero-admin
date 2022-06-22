@@ -19,7 +19,7 @@ class ConvertaXApiController extends Controller
      * Return resource of integrations.
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
 
         try {
@@ -29,8 +29,11 @@ class ConvertaXApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações do ConvertaX');
 
-            $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->getAccountOwnerId())
-                                                          ->with('project')->get();
+            $convertaxIntegrations = $convertaxIntegration
+                ->join('checkout_configs as cc', 'cc.project_id', '=', 'convertax_integrations.project_id')
+                ->where('cc.company_id', hashids_decode($request->company))
+                ->where('user_id', auth()->user()->getAccountOwnerId())
+                ->with('project')->get();
 
             return ConvertaxResource::collection($convertaxIntegrations);
         } catch (Exception $e) {

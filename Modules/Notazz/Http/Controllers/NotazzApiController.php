@@ -27,18 +27,16 @@ class NotazzApiController extends Controller
     /**
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $notazzIntegrationModel = new NotazzIntegration();
 
-            $notazzIntegrations = $notazzIntegrationModel->with(['project', 'project.usersProjects'])
-                ->whereHas(
-                    'project.usersProjects',
-                    function ($query) {
-                        $query->where('user_id', auth()->user()->getAccountOwnerId());
-                    }
-                )->get();
+            $notazzIntegrations = $notazzIntegrationModel
+                ->join('checkout_configs as cc', 'cc.project_id', '=', 'notazz_integrations.project_id')
+                ->where('cc.company_id', hashids_decode($request->company))
+                ->where('user_id', auth()->user()->getAccountOwnerId())
+                ->with('project')->get();
 
             return NotazzResource::collection($notazzIntegrations);
         } catch (Exception $e) {

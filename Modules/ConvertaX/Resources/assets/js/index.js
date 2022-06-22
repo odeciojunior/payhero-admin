@@ -1,15 +1,39 @@
+function updateAfterChangeCompany(){
+    $("#select_projects, #select_projects_edit").find('option').remove();
+    let companies = JSON.parse(sessionStorage.getItem('companies'));
+    $.each(companies, function (c, company) {
+        if( sessionStorage.getItem('company_default') == company.id){
+            $.each(company.projects, function (i, project) {console.log(project)
+                if(project.status == 1){
+                    $("#select_projects, #select_projects_edit").append($('<option>', {
+                        value: project.id,
+                        text: project.name
+                    }));
+                }
+            });
+        }
+    });
+    window.index('n')
+}
+
 $(document).ready(function () {
     create();
 
-    function index() {
+    window.index = function(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/convertax",
+            url: "/api/apps/convertax?company="+ sessionStorage.getItem('company_default'),
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
+                loadOnAny('#content',true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -17,6 +41,7 @@ $(document).ready(function () {
                 if (Object.keys(response.data).length === 0) {
                     $("#no-integration-found").show();
                 } else {
+                    $("#no-integration-found").hide();
                     $(response.data).each(function (index, data) {
                         $("#content").append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
@@ -240,7 +265,7 @@ $(document).ready(function () {
                                                     success: function success(
                                                         response
                                                     ) {
-                                                        index();
+                                                        window.index();
                                                         alertCustom(
                                                             "success",
                                                             response.message
@@ -309,12 +334,13 @@ $(document).ready(function () {
                                     errorAjaxResponse(response);
                                 },
                                 success: function success(response) {
-                                    index();
+                                    window.index();
                                     alertCustom("success", response.message);
                                 },
                             });
                         }
                     );
+                    loadOnAny('#content',true);
                 }
             },
         });
@@ -333,10 +359,12 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
 
                 if (isEmpty(response.data)) {
@@ -422,7 +450,7 @@ $(document).ready(function () {
                         },
                         success: function success(response) {
                             $("#no-integration-found").hide();
-                            index();
+                            window.index();
                             alertCustom("success", response.message);
                         },
                     });
@@ -431,7 +459,7 @@ $(document).ready(function () {
                 $("#project-empty").hide();
                 $("#integration-actions").show();
 
-                index();
+                window.index();
             },
         });
     }

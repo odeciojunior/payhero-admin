@@ -1,21 +1,31 @@
+function updateAfterChangeCompany(){
+    $("#no-integration-found").hide();
+    window.index('n')
+}
+
 $(document).ready(function () {
 
-    index();
-    function index() {
-        loadingOnScreen();
+    window.index = function(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/activecampaign",
+            url: "/api/apps/activecampaign?company="+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
+                $("#content").html("");
                 if (isEmpty(response.projects)) {
                     $('#project-empty').show();
                     $('#integration-actions').hide();
@@ -24,12 +34,17 @@ $(document).ready(function () {
                     let projects = response.projects;
                     for (let i = 0; i < projects.length; i++) {
                         if(projects[i].status === 1){
-                            $('#project_id, #select_projects_edit').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
+                            $('#project_id, #select_projects_edit').append(
+                                '<option value="' +
+                                projects[i].id +
+                                '">' +
+                                projects[i].name +
+                                '</option>'
+                            );
                         }
                     }
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
-                        $('#content').html("");
                     } else {
                         $('#content').html("");
                         let integrations = response.integrations;
@@ -41,11 +56,13 @@ $(document).ready(function () {
                     $('#project-empty').hide();
                     $('#integration-actions').show();
                 }
-
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
             }
         });
     }
+
+    window.index();
 
     //checkbox
     $('.check').on('click', function () {
@@ -161,7 +178,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                index();
+                window.index();
                 alertCustom('success', response.message);
             }
         });
@@ -192,7 +209,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                index();
+                window.index();
                 alertCustom('success', response.message);
             }
         });
@@ -216,7 +233,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                index();
+                window.index();
                 alertCustom("success", response.message);
             }
         });

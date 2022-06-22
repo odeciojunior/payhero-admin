@@ -37,7 +37,7 @@ class CompaniesSelectResource extends JsonResource
             $companyIsApproved = true;
         }
 
-        $projects = CheckoutConfig::select('checkout_configs.project_id as id','projects.name', 'users_projects.order_priority as order_p')
+        $projects = CheckoutConfig::select('checkout_configs.project_id as id','projects.name', 'users_projects.order_priority as order_p', 'projects.status')
             ->join('projects','projects.id','=','checkout_configs.project_id')
             ->join('users_projects', 'users_projects.project_id', '=', 'projects.id')
             ->where('checkout_configs.company_id',$this->id)
@@ -50,6 +50,7 @@ class CompaniesSelectResource extends JsonResource
                     'id' => hashids_encode($project->id),
                     'name'=>$project->name,
                     'order_p'=>$project->order_p,
+                    'status'=>$project->status,
                 ];
             });
 
