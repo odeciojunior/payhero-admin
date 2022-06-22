@@ -723,6 +723,10 @@ $(function () {
                         })
                     );
                 });
+                if(sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                }
                 resume();
             } else {
                 $("#export-excel").hide();
@@ -735,6 +739,8 @@ $(function () {
     });
 
     $("#select_projects").on("change", function () {
+        $("#card-origin .ske-load").show();
+        $('.origin-report').hide();
         $.ajaxQ.abortAll();
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()})
         resume();
@@ -785,6 +791,8 @@ $(function () {
     }
 
     function updateSalesByOrigin() {
+        
+        
         var link =
             arguments.length > 0 && arguments[0] !== undefined
                 ? arguments[0]
@@ -844,9 +852,11 @@ $(function () {
 
 
                 if (response.data == '') {
+                    $("#card-origin .ske-load").hide();
                     $("#origins-table").html(td);
                     $("#pagination").html("");
                     $("#pagination-origins").hide();
+                    $(".origin-report").show();
                 } else {
                     var table_data = "";
 
@@ -864,9 +874,9 @@ $(function () {
                     $(".table-vendas").addClass("table-striped");
 
                     pagination(response, "origins", updateSalesByOrigin);
-                }
-                $("#card-origin .ske-load").hide();
-                $(".origin-report").show();
+                    $(".origin-report").show();
+                }               
+                
             },
         });
     }
@@ -1119,6 +1129,8 @@ $(function () {
         }
     })
     .on('datepicker-change', function () {
+        $("#card-origin .ske-load").show();
+        $('.origin-report').hide();
         $.ajaxQ.abortAll();
         updateStorage({calendar: $(this).val()});
         resume();
