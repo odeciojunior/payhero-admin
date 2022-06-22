@@ -1381,6 +1381,7 @@ h4.number{
 }
 .cash-box.seller .ske-load { margin-top: 15px; }
 
+
 .inner.relative { 
     position: relative; 
     margin-bottom: 0;
@@ -2230,7 +2231,9 @@ h4.number{
 
 #card-devices .ske-load,
 #card-payments .ske-load,
-#card-cashback.card-fc .ske-load {
+#card-cashback.card-fc .ske-load,
+#card-coupon .ske-load,
+#container-operational-systems .ske-load {
     position: absolute;
     transform: translate(0, -30%);
 }

@@ -167,7 +167,7 @@
                                             <div class="onPreLoad" id="block-payments"></div>
                                         </div>
                                         <div class="card card-info" id="card-info">
-                                            <div class="d-flex align-items cash-box seller onPreLoad no-ske" id="block-info-card">
+                                            <div class="d-flex align-items cash-box seller onPreLoad no-ske pad-0" id="block-info-card">
                                             </div>
                                         </div>
                                         <div class="card inner pad-bottom-0 card-conversion" id="card-conversion">
