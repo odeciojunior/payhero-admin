@@ -10,14 +10,14 @@ $(function() {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
     }
-    $('.sirius-select1').each(function () {
-        $(this).siriusSelect();
-    });
-    $('.sirius-select1').on('click', function() {
-        $('.sirius-select1 .sirius-select-text').toggleClass('on');
-    });
+    // $('.sirius-select1').each(function () {
+    //     $(this).siriusSelect();
+    // });
+    // $('.sirius-select1').on('click', function() {
+    //     $('.sirius-select1 .sirius-select-text').toggleClass('on');
+    // });
 
-    $('.sirius-select1').on('change', function() {
+    $('.sirius-select').on('change', function() {
         salesStatus($(this).find('option:selected').val())
     });
 });
