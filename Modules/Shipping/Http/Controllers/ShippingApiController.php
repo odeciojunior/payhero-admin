@@ -80,7 +80,7 @@ class ShippingApiController extends Controller
 
             $shippingValidated = $request->validated();
 
-            
+
             if ($shippingValidated) {
                 $shippingValidated['project_id'] = current(Hashids::decode($projectId));
 
@@ -312,6 +312,9 @@ class ShippingApiController extends Controller
 
                     $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum($requestValidated['type']);
 
+                    $oldApplyOnPlans = json_decode($shipping->apply_on_plans);
+                    $oldNotApplyOnPlans = json_decode($shipping->not_apply_on_plans);
+
                     $shippingUpdated = $shipping->update($requestValidated);
 
                     if (!$requestValidated['pre_selected'] && !$shipping->pre_selected) {
@@ -341,6 +344,16 @@ class ShippingApiController extends Controller
                             $mensagem = 'É obrigatório deixar um frete ativado';
                         }
 
+                        foreach ($oldApplyOnPlans as $plan) {
+                            if($plan !== 'all') {
+                                CacheService::forget(CacheService::SHIPPING_PLAN, $plan);
+                                CacheService::forget(CacheService::SHIPPING_PLAN_VARIANTS, $plan);
+                            }
+                        }
+                        foreach ($oldNotApplyOnPlans as $plan) {
+                            CacheService::forget(CacheService::SHIPPING_PLAN, $plan);
+                            CacheService::forget(CacheService::SHIPPING_PLAN_VARIANTS, $plan);
+                        }
                         CacheService::forgetContainsUnique(CacheService::SHIPPING_RULES, $shipping->project_id);
 
                         return response()->json([
