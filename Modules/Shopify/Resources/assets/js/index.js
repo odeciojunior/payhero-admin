@@ -1,11 +1,19 @@
+function updateAfterChangeCompany(){
+    window.getCompanies('n');
+}
+
 $(document).ready(function () {
 
     $("#company-navbar-value").val( sessionStorage.getItem('company_default') )
     $('.company_name').val( sessionStorage.getItem('company_default_name') );
 
-    getCompanies();
 
-    function getCompanies() {
+    window.getCompanies = function(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
             url: "/api/core/companies?select=true",
@@ -16,6 +24,8 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
+                loadOnAny('#content',true);
+                loadingOnScreenRemove();
             },
             success: function success(response) {
                 verifyCompanies(response.data);
@@ -23,6 +33,8 @@ $(document).ready(function () {
             },
         });
     }
+
+    window.getCompanies();
 
     function verifyCompanies(companies) {
         if (isEmpty(companies)) {
@@ -57,7 +69,7 @@ $(document).ready(function () {
     function getShopifyIntegrations() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/shopify",
+            url: "/api/apps/shopify?company="+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -166,9 +178,11 @@ $(document).ready(function () {
         $(".modal-title").html("Adicionar nova integração com Shopify");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
+        loadOnAny('#content',true);
     }
 
     function htmlHasIntegrationShopify() {
+        $("#no-integration-found").hide();
         $(".modal-title").html("Adicionar nova integração com Shopify");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
@@ -177,6 +191,7 @@ $(document).ready(function () {
             .show()
             .addClass("d-flex")
             .css("display", "flex");
+        loadOnAny('#content',true);
     }
 
     $("#btn-integration-model").on("click", function () {
@@ -217,13 +232,15 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function error(response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 alertCustom("success", response.message);
-                getCompanies();
+                window.getCompanies();
             },
         });
     }
@@ -511,10 +528,12 @@ $(document).ready(function () {
                 project_id: projectId,
             },
             error: function (response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function (response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
             }

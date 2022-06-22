@@ -24,7 +24,7 @@ class HotZappApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $hotzappIntegration = new HotzappIntegration();
@@ -33,8 +33,11 @@ class HotZappApiController extends Controller
 
             $user = auth()->user();
 
-            $hotzappIntegrations = $hotzappIntegration->where('user_id', $user->getAccountOwnerId())
-                                                      ->with('project')->get();
+            $hotzappIntegrations = $hotzappIntegration
+                ->join('checkout_configs as cc', 'cc.project_id', '=', 'hotzapp_integrations.project_id')
+                ->where('cc.company_id', hashids_decode($request->company))
+                ->where('user_id', $user->getAccountOwnerId())
+                ->with('project')->get();
 
             $projects     = collect();
             $userProjects = $userProjectModel->where([[
@@ -45,7 +48,7 @@ class HotZappApiController extends Controller
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->join('domains',
+                        ->leftjoin('domains',
                             function ($join) {
                                 $join->on('domains.project_id', '=', 'projects.id')
                                     ->where('domains.status', 3)

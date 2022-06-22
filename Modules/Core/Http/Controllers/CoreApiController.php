@@ -3,35 +3,30 @@
 namespace Modules\Core\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Modules\Core\Entities\BonusBalance;
-use Modules\Core\Entities\Ticket;
-use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
-use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
-use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
-use Modules\Core\Transformers\CompaniesSelectResource;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\CompanyDocument;
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserDocument;
-use Modules\Core\Entities\UserInformation;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\Gateways\Safe2PayService;
-use Modules\Core\Services\UserService;
-use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\Ticket;
+use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\UserService;
+use Modules\Core\Entities\BonusBalance;
+use Modules\Core\Entities\UserDocument;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\UserInformation;
+use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
+use Modules\Core\Transformers\CompaniesSelectResource;
+use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
 
-
-/**
- * Class CoreApiController
- * @package Modules\Core\Http\Controllers
- */
 class CoreApiController extends Controller
 {
     public function verifyAccount($id)

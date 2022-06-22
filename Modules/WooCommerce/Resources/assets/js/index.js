@@ -1,3 +1,7 @@
+function updateAfterChangeCompany(){
+    window.location.reload();
+}
+
 $(document).ready(function () {
     let allCompanyNotApproved = false;
     let companyNotFound = false;
@@ -52,7 +56,7 @@ $(document).ready(function () {
     function index() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/woocommerce",
+            url: "/api/apps/woocommerce?company="+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

@@ -1,5 +1,8 @@
+function updateAfterChangeCompany(){
+    window.index('n');
+}
+
 $(document).ready(function () {
-    index();
 
     //checkbox
     $(".check").on("click", function () {
@@ -10,19 +13,22 @@ $(document).ready(function () {
         }
     });
 
-    function index() {
-
-        loadingOnScreen();
+    window.index = function(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/notazz",
+            url: "/api/apps/notazz?company="+ sessionStorage.getItem('company_default'),
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             dataType: "json",
             error: function error(response) {
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
                 alertCustom("error", "Ocorreu algum erro");
             },
@@ -154,7 +160,7 @@ $(document).ready(function () {
                                     }
                                 }),
                                 success: function success(response) {
-                                    index();
+                                    window.index();
                                     alertCustom("success", response.message);
                                 },
                             });
@@ -340,7 +346,7 @@ $(document).ready(function () {
                                                     success: function success(
                                                         response
                                                     ) {
-                                                        index();
+                                                        window.index();
                                                         alertCustom(
                                                             "success",
                                                             response.message
@@ -355,10 +361,14 @@ $(document).ready(function () {
                         });
                     });
                 }
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
             },
         });
     }
+
+    window.index();
+
     function create() {
         clearForm();
         $.ajax({
@@ -497,7 +507,7 @@ $(document).ready(function () {
                                         },
                                         success: function success(response) {
                                             $("#no-integration-found").hide();
-                                            index();
+                                            window.index();
                                             alertCustom(
                                                 "success",
                                                 response.message
@@ -551,7 +561,7 @@ $(document).ready(function () {
                                 },
                                 success: function success(response) {
                                     $("#no-integration-found").hide();
-                                    index();
+                                    window.index();
                                     alertCustom("success", response.message);
                                 },
                             });
@@ -561,6 +571,7 @@ $(document).ready(function () {
             },
         });
     }
+
     //reset the intergation modal
     function clearForm() {
         $("#integration_id").val("");
@@ -573,6 +584,7 @@ $(document).ready(function () {
         $("#select_invoice_type_create").prop("selectedIndex", 0).change();
         $("#select_pending_days_create").prop("selectedIndex", 0).change();
     }
+
     $("#btn-add-integration").on("click", function () {
         create();
     });

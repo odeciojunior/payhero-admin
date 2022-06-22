@@ -25,7 +25,7 @@ class ActiveCampaignApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
@@ -34,7 +34,12 @@ class ActiveCampaignApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todas as integrações do ActiveCampaign');
 
-            $activecampaignIntegrations = ActivecampaignIntegration::where('user_id', $user->account_owner_id)->with('project')->get();
+            $activecampaignIntegrations = ActivecampaignIntegration::
+                join('checkout_configs as cc', 'cc.project_id', '=', 'activecampaign_integrations.project_id')
+                ->where('cc.company_id', hashids_decode($request->company))
+                ->where('user_id', $user->account_owner_id)
+                ->with('project')->get();
+
             $projects = collect();
             $userProjects = UserProject::where([[
                 'user_id', $user->account_owner_id],[
@@ -44,7 +49,7 @@ class ActiveCampaignApiController extends Controller
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->join('domains',
+                        ->leftjoin('domains',
                             function ($join) {
                                 $join->on('domains.project_id', '=', 'projects.id')
                                     ->where('domains.status', 3)

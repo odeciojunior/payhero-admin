@@ -32,7 +32,7 @@ class WooCommerceApiController extends Controller
     /**
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $projectModel = new Project();
@@ -42,10 +42,13 @@ class WooCommerceApiController extends Controller
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela todos as integrações com o woocommerce');
-            $woocommerceIntegrations = $woocommerceIntegrationModel->where(
-                'user_id',
-                auth()->user()->getAccountOwnerId()
-            )->get();
+
+            $woocommerceIntegrations = $woocommerceIntegrationModel
+            ->join('checkout_configs as cc', 'cc.project_id', '=', 'woo_commerce_integrations.project_id')
+            ->where('cc.company_id', hashids_decode($request->company))
+            ->where('user_id',auth()->user()->getAccountOwnerId())
+            ->get();
+
             $projects = [];
             foreach ($woocommerceIntegrations as $woocommerceIntegration) {
                 $project = $projectModel->where('id', $woocommerceIntegration->project_id)

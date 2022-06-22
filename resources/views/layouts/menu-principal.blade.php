@@ -12,7 +12,7 @@
         {{-- <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
         <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100"> --}}
         <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
-        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 2rem 0px 1rem;">
+        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 1rem 0px 1rem;">
     </div>
 
     <!-- BOTAO HAMBURGUER NO DESKTOP-->
@@ -75,13 +75,6 @@
 
                 <div style=" background-color: #f4f4f4; width:2px; margin:15px 15px 15px 0"></div>
 
-                <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
-                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center" style="width: 50px;">
-                    {{-- <b class="pr-5"> Novidades </b> --}}
-                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button"><!--  style='cursor:pointer; padding-right: .0rem' -->
-                        <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Novidades">
-                    </span>
-
                 <div class="bonus-balance-menu d-flex justify-content-center align-items-center">
                     <button id="bonus-balance" class="bonus-balance-button desktop justify-content-center align-items-center" style="display: none">
                         <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px">
@@ -95,34 +88,13 @@
 
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
                 <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center justify-content-center">
-                    <b class="pr-5"> Novidades </b>
+                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button"><!--  style='cursor:pointer; padding-right: .0rem' -->
+                        <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Novidades">
+                    </span>
                 </div>
 
                 <!-- BOTOES DE NOTIFICAO E USUARIO -->
                 <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-
-                    <!-- BOTAO DE NOTIFICACAO -->
-                    {{-- @hasanyrole('account_owner|admin')
-
-                        <li id="notifications_button" class="nav-item dropdown" disabled='true'>
-
-                            <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
-                                <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Notificacao">
-
-                                @if( count(auth()->user()->unreadNotifications) > 0)
-                                    <span class="badge badge-notification" id="notification-amount"></span>
-                                @else
-                                    <span class="badge badge-notification-false" id="notification-amount"></span>
-                                @endif
-                            </span>
-
-                            <!-- MODAL DE NOTIFICACAO -->
-                            <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
-                                <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}" style="scrollbar-width:thin;"></div>
-                            </div>
-
-                        </li>
-                    @endhasanyrole --}}
 
                     <!-- BOTAO DE USUARIO -->
                     <li class="nav-item dropdown">
@@ -173,7 +145,7 @@
         </div>
     </div>
 
-    
+
 </nav>
 {{--SIDE BAR--}}
 <div class="site-menubar">

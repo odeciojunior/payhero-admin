@@ -1,17 +1,25 @@
-$(document).ready(function () {
-    index();
+function updateAfterChangeCompany(){
+    window.index('n');
+}
 
-    function index() {
-        loadingOnScreen();
+$(document).ready(function () {
+
+    window.index = function(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/whatsapp2",
+            url: "/api/apps/whatsapp2?company="+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: (response) => {
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -41,10 +49,13 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#integration-actions").show();
                 }
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
             },
         });
     }
+
+    window.index();
 
     $("#btnCopyTokenWhats2").on("click", function () {
         var copyText = document.getElementById("inputTokenWhats2");
@@ -211,7 +222,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                index();
+                window.index();
                 alertCustom("success", response.message);
             },
         });
@@ -240,7 +251,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                index();
+                window.index();
                 alertCustom("success", response.message);
             },
         });
@@ -284,7 +295,7 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    index();
+                    window.index();
                     alertCustom("success", response.message);
                 },
             });

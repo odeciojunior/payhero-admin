@@ -15,7 +15,7 @@ $(function () {
             url: "/api/projects",
             data: {
                 company: sessionStorage.getItem('company_default'),
-                status: "all",
+                status: 'active',
             },
             dataType: "json",
             headers: {
@@ -37,6 +37,7 @@ $(function () {
                 if (response.data.length) {
                     $("#project-empty").hide();
                     $("#company-empty").hide();
+                    $("#data-table-projects").css({visibility: "visible"});
 
                     $.each(response.data, (key, project) => {
                         if (verifyAccountFrozen()) {

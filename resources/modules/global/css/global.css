@@ -2940,7 +2940,7 @@ tbody td{
 
 .bonus-balance-button.mobile {
     display: none;
-}    
+}
 
 
 .bonus-balance-content,
@@ -3047,7 +3047,7 @@ tbody td{
     margin: 0;
     font-weight: 500;
     font-size: 12px;
-    line-height: 124%;    
+    line-height: 124%;
     color: #81859B;
 }
 
@@ -3082,11 +3082,11 @@ tbody td{
 @media (max-width: 768px) {
     .bonus-balance-button.desktop {
         display: none;
-    }    
+    }
 
     .bonus-balance-button.mobile {
         display: flex;
-    }    
+    }
 
     .bonus-balance-container {
         width: 100%;
@@ -3096,7 +3096,7 @@ tbody td{
     .bonus-numbers {
         flex-direction: column;
     }
-    
+
     .bonus-balance-background {
         padding: 10px;
     }
@@ -3112,7 +3112,7 @@ tbody td{
     .bonus-infos {
         justify-content: space-between;
     }
-    
+
 }
 
 
