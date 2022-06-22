@@ -11,6 +11,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-
+        dd(number_format(450020 * 100 / 500000, 1, '.', ''));
     }
 }

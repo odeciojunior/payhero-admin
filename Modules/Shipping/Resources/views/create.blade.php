@@ -32,44 +32,6 @@
                 <input name="zip_code_origin" type="text" class="input-pad shipping-zipcode" data-mask="00000-000"
                        value="" placeholder="12345-678">
             </div>
-            <div class="d-flex">
-                <div class="switch-holder w-full">
-                    <label for="cartao">Ativo</label>
-                    <br>
-                    <label class="switch">
-                        <input name="status" value="1" class="check shipping-status" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <div class="switch-holder w-full">
-                    <label for="cartao">Pré-selecionado</label>
-                    <br>
-                    <label class="switch">
-                        <input name="pre_selected" value="1" class="check shipping-pre-selected" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group shipping-plans-add-container">
-                <label for="shipping-plans-add">Oferecer o frete para os planos: </label>
-                <select name="apply_on_plans[]" id="shipping-plans-add" class="form-control shipping-plans-add"
-                        style="width:100%"
-                        data-plugin="select2" multiple="multiple"> </select>
-            </div>
-            <div class="form-group shipping-not-apply-plans-add-container">
-                <label for="shipping-not-apply-plans-add">Não oferecer o frete para os planos: </label>
-                <select name="not_apply_on_plans[]" id="shipping-not-apply-plans-add"
-                        class="form-control shipping-not-apply-plans-add"
-                        style="width:100%"
-                        data-plugin="select2" multiple="multiple"></select>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>Disponível para compras acima de: </label>
-                <input name="rule_value" type="text" class="input-pad rule-shipping-value shipping-money-format"
-                       value="" placeholder="R$ 0,00">
-            </div>
             <div class="value-shipping-row">
                 <div class="switch-holder">
                     <label>Valor único para todas as regiões</label>
@@ -123,6 +85,44 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Disponível para compras acima de: </label>
+                <input name="rule_value" type="text" class="input-pad rule-shipping-value shipping-money-format"
+                       value="" placeholder="R$ 0,00">
+            </div>
+            <div class="d-flex">
+                <div class="switch-holder w-full">
+                    <label for="cartao">Ativo</label>
+                    <br>
+                    <label class="switch">
+                        <input name="status" value="1" class="check shipping-status" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="switch-holder w-full">
+                    <label for="cartao">Pré-selecionado</label>
+                    <br>
+                    <label class="switch">
+                        <input name="pre_selected" value="1" class="check shipping-pre-selected" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group shipping-plans-add-container">
+                <label for="shipping-plans-add">Oferecer o frete para os planos: </label>
+                <select name="apply_on_plans[]" id="shipping-plans-add" class="form-control shipping-plans-add"
+                        style="width:100%"
+                        data-plugin="select2" multiple="multiple"> </select>
+            </div>
+            <div class="form-group shipping-not-apply-plans-add-container">
+                <label for="shipping-not-apply-plans-add">Não oferecer o frete para os planos: </label>
+                <select name="not_apply_on_plans[]" id="shipping-not-apply-plans-add"
+                        class="form-control shipping-not-apply-plans-add"
+                        style="width:100%"
+                        data-plugin="select2" multiple="multiple"></select>
             </div>
         </div>
     </div>

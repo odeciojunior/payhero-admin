@@ -2,41 +2,31 @@
 
 namespace Modules\Core\Http\Controllers;
 
-use Composer\Config;
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Maatwebsite\Excel\Concerns\ToArray;
-use Modules\Companies\Http\Requests\CompanyCreateRequest;
-use Modules\Companies\Http\Requests\CompanyUpdateRequest;
-use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
-use Modules\Core\Entities\Ticket;
-use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
-use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
-use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
-use Modules\Core\Transformers\CompaniesSelectResource;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\CompanyDocument;
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserDocument;
-use Modules\Core\Entities\UserInformation;
+use Illuminate\Http\Request;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\Gateways\Safe2PayService;
-use Modules\Core\Services\UserService;
-use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\Ticket;
+use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\UserService;
+use Modules\Core\Entities\BonusBalance;
+use Modules\Core\Entities\UserDocument;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\UserInformation;
+use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
+use Modules\Core\Transformers\CompaniesSelectResource;
+use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
 
-
-/**
- * Class CoreApiController
- * @package Modules\Core\Http\Controllers
- */
 class CoreApiController extends Controller
 {
     public function verifyAccount($id)
@@ -228,7 +218,6 @@ class CoreApiController extends Controller
         }
     }
 
-
     public function companies(Request $request)
     {
         try {
@@ -251,7 +240,6 @@ class CoreApiController extends Controller
             );
         }
     }
-
 
     public function getCompanies()
     {
@@ -419,5 +407,28 @@ class CoreApiController extends Controller
             report($e);
             return response()->json(['message' => 'Erro ao notificar alteração no chamado!'], 400);
         }
+    }
+
+    public function getBonusBalance()
+    {
+        $bonusBalance = BonusBalance::where('user_id', auth()->user()->account_owner_id)
+                                    ->where('expires_at', '>=', today())
+                                    ->where('current_value', '>', 0)
+                                    ->first();
+
+        if(empty($bonusBalance)) {
+            return response()->json([
+                'error' => 'bonus balance not found'
+            ]);
+        }
+
+        return response()->json([
+            'user_name' => auth()->user()->present()->firstName(),
+            'total_bonus' => foxutils()->formatMoney($bonusBalance->total_value / 100),
+            'current_bonus' => foxutils()->formatMoney($bonusBalance->current_value / 100),
+            'used_bonus' => foxutils()->formatMoney(($bonusBalance->total_value - $bonusBalance->current_value) / 100),
+            'expires_at' => Carbon::parse($bonusBalance->expires_at)->format('d/m/Y'),
+            'used_percentage' => number_format(100 - ($bonusBalance->current_value * 100 / $bonusBalance->total_value), 0, '.', '')
+        ]);
     }
 }
