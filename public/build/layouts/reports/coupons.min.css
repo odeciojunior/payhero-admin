@@ -1540,10 +1540,10 @@ h4.number{
 
 .scroll-212 .box-payment-option { margin-bottom: 20px; }
 
-.sirius-select-container .sirius-select-options::-webkit-scrollbar { width: 6px; }
-.sirius-select-container .sirius-select-options::-webkit-scrollbar-track { background: #E0E0E0; }
+/* .sirius-select-container .sirius-select-options::-webkit-scrollbar { width: 6px; } */
+/* .sirius-select-container .sirius-select-options::-webkit-scrollbar-track { background: red; } */
 .sirius-select-container .sirius-select-options::-webkit-scrollbar-thumb {
-    background-color: #636363;
+    /* background-color: pink; */
     border-radius: 20px;
     cursor: pointer;
 }
@@ -2330,7 +2330,7 @@ h4.number{
     padding: 0 0 0px 16px;
 }
 
-.sirius-select-origin .sirius-select-container { width: 110px; }
+/* .sirius-select-origin .sirius-select-container { width: 110px; } */
 .sirius-select-origin .sirius-select-options { top: 36px; }
 .sirius-select-origin .sirius-select-text {
     width: 110px;
@@ -2338,6 +2338,7 @@ h4.number{
     font-size: 14px;
     line-height: 28px;
     padding: 0 0 0px 16px;
+    float: right;
 }
 
 .new-sell-graph { height: 278px; padding-bottom: 10px; } 
