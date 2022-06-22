@@ -564,21 +564,8 @@
                                             </header>
                                             <div class="custom-table pb-0 pt-0 onPreLoad block-devices-mkt" id="block-devices"></div>
                                         </div>
-                                        <div class="card">
-                                            <div class="d-flex align-items cash-box">
-                                                <div>
-                                                    <span class="ico-coin mkt">
-                                                        <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M4.5 15.7143C4.08579 15.7143 3.75 16.0341 3.75 16.4286C3.75 16.8231 4.08579 17.1429 4.5 17.1429H7.5C7.91421 17.1429 8.25 16.8231 8.25 16.4286C8.25 16.0341 7.91421 15.7143 7.5 15.7143H4.5ZM2.625 0C1.17525 0 0 1.11929 0 2.5V17.5C0 18.8807 1.17525 20 2.625 20H9.375C10.8247 20 12 18.8807 12 17.5V2.5C12 1.11929 10.8247 0 9.375 0H2.625ZM1.5 2.5C1.5 1.90827 2.00368 1.42857 2.625 1.42857H9.375C9.99632 1.42857 10.5 1.90827 10.5 2.5V17.5C10.5 18.0917 9.99632 18.5714 9.375 18.5714H2.625C2.00368 18.5714 1.5 18.0917 1.5 17.5V2.5Z" fill="#2E85EC"/>
-                                                        </svg>
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span class="mkt-msg-conversion">
-                                                        Smartphones com Android são os dispositivos mais usados e representam <strong>72% das suas conversões.</strong>
-                                                    </span>
-                                                </div>
-                                            </div>
+                                        <div class="card" id="card-info-conversion">
+                                            <div class="d-flex align-items cash-box seller onPreLoad no-ske pad-0" id="block-info-card-conversion"></div>
                                         </div>
                                     </div>
                                     <div class="inner-comission sc">

@@ -1,7 +1,7 @@
 $(function () {
     loadingOnScreen();
-    distributionGraphSeller();
     getInfo();
+    verifyUserHasStore()    
 
     $('.sirius-select1').each(function () {
         $(this).siriusSelect();
@@ -16,10 +16,7 @@ $(function () {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
         
-    } 
-    if( JSON.parse(localStorage.verifyAccount).company.status !== 'approved') {
-        $("#box-projects").hide();
-    }
+    }    
 
     function getCashback() {
         let cashHtml = '';
@@ -1385,22 +1382,7 @@ $(function () {
                   },
             });
 
-    }
-
-    function distributionGraphSeller() {
-        new Chartist.Pie('.distribution-graph-seller', {
-            series: [10, 20, 30, 15, 80, 70]
-          }, {
-            donut: true,
-            donutWidth: 30,
-            donutSolid: true,
-            startAngle: 270,
-            showLabel: false,
-            chartPadding: 0,
-            labelOffset: 0,
-            height: 123
-          });
-    }   
+    }    
     
     function graphComission(series, labels) {
        const titleTooltip = (tooltipItems) => {
@@ -1602,6 +1584,25 @@ $(function () {
         sessionStorage.setItem('info', JSON.stringify(existing));
     }
 
+    function verifyUserHasStore() {
+        $.ajax({
+            method: 'GET',
+            url: '/api/core/verify-account/' + $('meta[name="user-id"]').attr('content'),
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                if (response.data.account.status !== 'approved') {
+                    $("#box-projects").hide();
+                }
+            },
+        });
+    }
+
     // abort all ajax
     $.ajaxQ = (function(){
         var id = 0, Q = {};
@@ -1626,6 +1627,7 @@ $(function () {
         };
       
       })();
+
 });
 
 let skeLoad = `

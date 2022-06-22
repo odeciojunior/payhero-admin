@@ -1158,7 +1158,8 @@ h4.number{
 @media only screen and (min-width: 1220px) {
     .distribution { width: 344px;  }
     .distribution.fc { width: auto;  }
-    .commission.mkt { flex: 0 0 65.8%; }
+    /* .commission.mkt { flex: 0 0 65.8%; } */
+    .commission.mkt { width: 820px; }
 }
 
 @media only screen and (min-width: 1341px) {
@@ -1173,14 +1174,14 @@ h4.number{
 
 @media only screen and (min-width: 1370px) {
     .primary { width: 820px; }
-    .primary.fc { width: 863px; }
+    .primary.fc { width: 820px; }
 
     .distribution { width: 394px;  }
-    .distribution.fc { width: 353px;  }
+    .distribution.fc { width: 398px;  }
 
 }
 @media only screen and (min-width: 1600px) {
-    .distribution.mkt { flex: 0 0 31.75%; }
+    /* .distribution.mkt { flex: 0 0 31.75%; } */
     .distribution { width: 398px; }
     /* .primary { width: 915px; } */
 }
@@ -1780,7 +1781,7 @@ h4.number{
 }
 .item-state { flex-grow: 1; }
 
-.item-state + .item-state { width: 155px; }
+.item-state + .item-state { flex-grow: 6; }
 
 .item-state dl {
     display: flex;
@@ -1808,8 +1809,9 @@ h4.number{
     font-weight: bold;
 }
 .state-name {
-    width: 140px;
+    width: 114px;
     justify-content: flex-start !important;
+    margin-right: 0!important;
 }
 /* mapa brasil */
 #svg-map { height: 303px; }
