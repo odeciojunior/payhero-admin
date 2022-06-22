@@ -57,6 +57,8 @@
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
 
+        @include("layouts.bonus-balance")
+
         @include("layouts.loading")
 
         @include("layouts.menu-principal")
