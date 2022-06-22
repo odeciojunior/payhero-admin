@@ -1799,7 +1799,7 @@ function showBonusBalance() {
                 if(response.error) {
                     return;
                 }
-                setCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance', 0.5, response);
+                setCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance', 0.083, response);
                 
 
                 $('#total-bonus-balance').html(response.current_bonus)
