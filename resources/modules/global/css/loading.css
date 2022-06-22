@@ -250,7 +250,7 @@
     animation: sirius-loading 2s infinite; */
 }
 
-@-webkit-keyframes sirius-loading {
+/* @-webkit-keyframes sirius-loading {
     0% { opacity: 0.3; }
     50% { opacity: 1; }
     100% { opacity: 0.3; }
@@ -260,4 +260,4 @@
     0% { opacity: 0.3; }
     50% { opacity: 1; }
     100% { opacity: 0.3; }
-}
+} */
