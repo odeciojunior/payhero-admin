@@ -12,14 +12,14 @@
         {{-- <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
         <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100"> --}}
         <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
-        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 1rem 0px 1rem;">
+        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 2rem 0px 1rem;">
     </div>
 
     <!-- BOTAO HAMBURGUER NO DESKTOP-->
     <div>
         <ul class="nav navbar-toolbar">
             <li class="nav-item hidden-float" id="toggleMenubar">
-                <a class="nav-link" data-toggle="menubar" href="#" role="button">
+                <a class="nav-link" data-toggle="menubar" href="#" role="button" onclick=" if($(this).hasClass('hided')) $('#logoSirius').css('margin-right','2rem'); else $('#logoSirius').css('margin-right','1rem') ">
                     <i class="icon hamburger hamburger-arrow-left">
                         <span class="sr-only">Toggle menubar</span>
                         <span class="hamburger-bar"></span>

@@ -1,5 +1,11 @@
 function updateAfterChangeCompany(){
-    loadOnAny('.page-content');
+    $("#type-products").find('option').not(':first').remove();
+    renderSiriusSelect("#type-products");
+    $("#select-projects-1").find('option').remove();
+    $("#select-projects-2").find('option').remove();
+    $("#projects-list select").prop("disabled", true).addClass("disabled");
+    $("#projects-list, .box-projects").addClass("d-none");
+    localStorage.removeItem('filtersApplied')
     window.getProjects('n');
 }
 
@@ -38,9 +44,12 @@ jQuery(function () {
     window.getProjects = function(loading='y') {
         if(loading=='y')
             loadingOnScreen();
+        else
+            loadOnAny('.page-content');
+
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true",
+            url: "/api/projects?select=true&status=active&company="+ sessionStorage.getItem('company_default'),
             data: {
                 status: "active",
             },
@@ -115,8 +124,8 @@ jQuery(function () {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                     $("#div-create").hide();
+                    loadOnAny('.page-content',true);
                 }
-                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
             },
         });
@@ -307,6 +316,7 @@ jQuery(function () {
                 setTimeout(() => {
                     loadOnAny(".page-content", true);
                 }, 2000);
+                loadOnAny('.page-content',true);
             },
         });
     }
