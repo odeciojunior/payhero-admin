@@ -1632,7 +1632,7 @@ function removeMoneyCurrency(string) {
 
 function getCompanies() {
     let thisPage = window.location.hostname;
-    var lastPage = (new URL(document.referrer))?.hostname;
+    var lastPage = document.referrer ? (new URL(document.referrer)).hostname:'';
     if (thisPage != lastPage) {
         sessionStorage.removeItem('companies')
         sessionStorage.removeItem('company_default')
