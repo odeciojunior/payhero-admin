@@ -7,10 +7,8 @@
         <span class="hamburger-bar"></span>
     </button>
 
-    <!-- SIRIUS LOGO -->
+    <!-- CLOUDFOX LOGO -->
     <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu" style="background-color: #0e0233">
-        {{-- <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
-        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100"> --}}
         <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
         <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 2rem 0px 1rem;">
     </div>
@@ -88,7 +86,7 @@
 
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
                 <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center justify-content-center">
-                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button"><!--  style='cursor:pointer; padding-right: .0rem' -->
+                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='padding-right: 0rem'><!--  style='cursor:pointer; padding-right: .0rem' -->
                         <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Novidades">
                     </span>
                 </div>
@@ -100,7 +98,7 @@
                     <li class="nav-item dropdown">
 
                         <!-- FOTO DO USUARIO -->
-                        <a class="nav-link navbar-avatar pr-10 pr-sm-25" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
+                        <a class="nav-link navbar-avatar pr-10 pr-sm-25" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button" style='padding-left: 1.8rem'>
                             <span class="avatar avatar-online">
                                 <img class='img-user-menu-principal' src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}" onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'" alt="">
                                 <i></i>
