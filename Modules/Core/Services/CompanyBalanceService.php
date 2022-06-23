@@ -72,8 +72,8 @@ class CompanyBalanceService
             }
         }
 
-        // Checks if the request has the 'isMobile' parameter
-        if (!$request->has('isMobile')) {
+        // Checks if the request has the 'is_mobile' parameter
+        if (!$request->has('is_mobile')) {
 
             // Formats gateway values
             foreach ($gatewaysBalances as &$gatewayBalance) {
