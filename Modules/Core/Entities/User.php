@@ -433,5 +433,9 @@ class User extends Authenticable
     {
         return $this->company_default == Company::DEMO_ID ? self::DEMO_ID : $this->account_owner_id;        
     }    
-        
+       
+    public function getAccountIsApproved()
+    {        
+        return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;        
+    }
 }
