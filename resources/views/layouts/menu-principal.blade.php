@@ -86,7 +86,7 @@
 
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
                 <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center justify-content-center">
-                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button"><!--  style='cursor:pointer; padding-right: .0rem' -->
+                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='padding-right: 0rem'><!--  style='cursor:pointer; padding-right: .0rem' -->
                         <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Novidades">
                     </span>
                 </div>
@@ -98,7 +98,7 @@
                     <li class="nav-item dropdown">
 
                         <!-- FOTO DO USUARIO -->
-                        <a class="nav-link navbar-avatar pr-10 pr-sm-25" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
+                        <a class="nav-link navbar-avatar pr-10 pr-sm-25" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button" style='padding-left: 1.8rem'>
                             <span class="avatar avatar-online">
                                 <img class='img-user-menu-principal' src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}" onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'" alt="">
                                 <i></i>
