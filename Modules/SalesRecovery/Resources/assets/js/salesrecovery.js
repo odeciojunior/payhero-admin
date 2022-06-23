@@ -2,6 +2,7 @@ var exportFormat = null;
 
 function updateAfterChangeCompany(){
     $("#project").find('option').not(':first').remove();
+    $("#plan").find('option').not(':first').remove();
     let companies = JSON.parse(sessionStorage.getItem('companies'));
     $.each(companies, function (c, company) {
         if( sessionStorage.getItem('company_default') == company.id){
@@ -16,6 +17,7 @@ function updateAfterChangeCompany(){
         }
     });
     $("#project").val($("#project option:first").val());
+    $("#plan").val($("#plan option:first").val());
     window.updateSalesRecovery();
 }
 
