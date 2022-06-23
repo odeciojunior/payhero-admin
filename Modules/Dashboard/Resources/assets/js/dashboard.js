@@ -1,8 +1,13 @@
+function updateAfterChangeCompany(){
+    window.updateValues();
+    window.updateChart();
+}
+
 $(document).ready(function () {
 
     let userAccepted = true;
 
-    function updateChart() {
+    window.updateChart = function() {
         $('#scoreLineToMonth').html('')
         loadingOnChart('#chart-loading');
 
@@ -139,8 +144,8 @@ $(document).ready(function () {
             },
             success: function success(data) {
                 if (!isEmpty(data.companies)) {
-                    updateValues();
-                    updateChart();
+                    window.updateValues();
+                    window.updateChart();
                     updatePerformance();
                     updateAccountHealth();
                     setTimeout(verifyPixOnboarding, 1600);
@@ -153,7 +158,7 @@ $(document).ready(function () {
         });
     }
 
-    function updateValues() {
+    window.updateValues = function() {
 
         loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
             styles: {
@@ -212,170 +217,18 @@ $(document).ready(function () {
 
                 $('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
 
-                //--updateTrackings(data.trackings);
-                //--updateChargeback(data.chargeback_tax);
-                //--updateTickets(data.tickets);
-
                 loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
-                //loadingOnScreenRemove();
             }
         });
     }
 
-    // function updateTrackings(trackings) {
-    //     $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));
-    //     $('#oldest_sale').html(trackings.oldest_sale + ' dia' + (trackings.oldest_sale === 1 ? '' : 's'));
-    //     $('#problem').html(trackings.problem + ' <small>(' + trackings.problem_percentage + '%)</small>');
-    //     $('#unknown').html(trackings.unknown + ' <small>(' + trackings.unknown_percentage + '%)</small>');
-    // }
-    //
-    // function updateTickets(data) {
-    //     $('#open-tickets').text(data.open || 0);
-    //     $('#closed-tickets').text(data.closed || 0);
-    //     $('#mediation-tickets').text(data.mediation || 0);
-    //     $('#total-tickets').text(data.total);
-    // }
-    //
-    // function updateNews(data) {
-    //
-    //     $('#carouselNews .carousel-inner').html('');
-    //     $('#carouselNews .carousel-indicators').html('');
-    //
-    //     if (!isEmpty(data)) {
-    //
-    //         for (let i = 0; i < data.length; i++) {
-    //
-    //             let active = i === 0 ? 'active' : '';
-    //
-    //             let slide = `<div class="carousel-item ${active}">
-    //                              <div class="card shadow news-background">
-    //                                  <div class="card-body p-md-60 d-flex flex-column justify-content-center" style="height: 354px">
-    //                                      <h1 class="news-title">${data[i].title}</h1>
-    //                                      <div class="news-content">${data[i].content}</div>
-    //                                  </div>
-    //                              </div>
-    //                          </div>`;
-    //
-    //             let indicator = `<li data-target="#carouselNews" data-slide-to="${i}" class="${active}"></li>`;
-    //
-    //             $('#carouselNews .carousel-inner').append(slide);
-    //             $('#carouselNews .carousel-indicators').append(indicator);
-    //         }
-    //
-    //         if (data.length === 1) {
-    //             $('#carouselNews .carousel-indicators').hide();
-    //             $('#carouselNews .carousel-control-prev, #carouselNews .carousel-control-next').hide();
-    //         } else {
-    //             $('#carouselNews .carousel-indicators').show();
-    //             $('#carouselNews .carousel-control-prev, #carouselNews .carousel-control-next').show();
-    //         }
-    //
-    //         $('#news-col').show();
-    //     } else {
-    //         $('#news-col').hide();
-    //     }
-    // }
-    //
-    // function updateReleases(data) {
-    //     $('#releases-div').html('');
-    //
-    //     if (!isEmpty(data)) {
-    //         $.each(data, function (index, value) {
-    //             let item = `<div class="d-flex align-items-center my-15">
-    //                             <div class="release-progress" id="${index}">
-    //                                 <strong>${value.progress}%</strong>
-    //                             </div>
-    //                             <span class="ml-2">${value.release}</span>
-    //                         </div>`;
-    //             $('#releases-div').append(item);
-    //
-    //             updateReleasesProgress(index, value.progress);
-    //         });
-    //
-    //         $('#releases-col').show();
-    //     } else {
-    //         $('#releases-col').hide();
-    //     }
-    // }
-
-    // function verifyPendingData() {
-    //     $.ajax({
-    //         method: "GET",
-    //         url: "/api/dashboard/verifypendingdata",
-    //         dataType: "json",
-    //         headers: {
-    //             'Authorization': $('meta[name="access-token"]').attr('content'),
-    //             'Accept': 'application/json',
-    //         },
-    //         data: {company: $('#company').val()},
-    //         error: function error(response) {
-    //             errorAjaxResponse(response);
-    //         },
-    //         success: function success(response) {
-    //             let companies = response.companies;
-    //             if ((!isEmpty(companies)) || response.pending_user_data) {
-    //                 if (response.pending_user_data) {
-    //                     $('.tr-pending-profile').show();
-    //                 } else {
-    //                     $('.tr-pending-profile').hide();
-    //                 }
-    //                 for (let company of companies) {
-    //                     $('.table-pending-data-body').append(`
-    //                             <tr>
-    //                                 <td style='width:2px;' class='text-center'>
-    //                                 <span class="status status-lg status-away"></span>
-    //                                 </td>
-    //                                 <td class='text-left'>
-    //                                     Empresas > ${company.fantasy_name}
-    //                                 </td>
-    //                                 <td class='text-center'>
-    //                                     <a class='btn' style='color:darkorange;' href='/companies/${company.id_code}/edit?type=${company.type}' target='_blank'><b><i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i>Atualizar</b></a>
-    //                                 </td>
-    //                             </tr>
-    //                         `);
-    //                 }
-    //                 if (!userAccepted) {
-    //                     $('#modal-peding-data').modal('hide');
-    //                 } else {
-    //                     $('#modal-peding-data').modal('show');
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
-    // function updateReleasesProgress(id, value) {
-    //
-    //     let circle = $('#' + id);
-    //
-    //     let color = '';
-    //     switch (true) {
-    //         case value <= 33:
-    //             color = '#FFA040';
-    //             break;
-    //         case value > 33 && value <= 66:
-    //             color = '#FF6F00';
-    //             break;
-    //         default:
-    //             color = '#C43E00';
-    //             break;
-    //     }
-    //
-    //     circle.circleProgress({
-    //         size: 55,
-    //         startAngle: -Math.PI / 2,
-    //         thickness: 6,
-    //         value: value / 100,
-    //         fill: {
-    //             color: color,
-    //         }
-    //     });
-    // }
 
     function getProjects() {
         loadingOnScreen();
+
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true',
+            url: '/api/projects?select=true&company='+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -389,13 +242,7 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-
                     getDataDashboard();
-                    // updateValues();
-                    // updateChart();
-                    // updatePerformance();
-                    // updateAccountHealth();
-                    // setTimeout(verifyPixOnboarding, 1600);
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
@@ -445,36 +292,6 @@ $(document).ready(function () {
             startVelocity: 40
         });
     }
-
-    // function showConfetti() {
-    //
-    //     let velocity = window.innerWidth * 4 / 100;
-    //
-    //     let end = Date.now() + velocity * 20;
-    //
-    //     let common = {
-    //         particleCount: 5,
-    //         spread: velocity,
-    //         zIndex: 1700,
-    //         startVelocity: velocity,
-    //     };
-    //
-    //     (function frame() {
-    //         confetti({
-    //             ...common,
-    //             angle: 60,
-    //             origin: {x: 0},
-    //         });
-    //         confetti({
-    //             ...common,
-    //             angle: 120,
-    //             origin: {x: 1},
-    //         });
-    //         if (Date.now() < end) {
-    //             requestAnimationFrame(frame);
-    //         }
-    //     }());
-    // }
 
     function verifyAchievements() {
         $.ajax({
@@ -777,11 +594,6 @@ $(document).ready(function () {
 
     $("#closeWelcome").click(function () {
         $("#cardWelcome").slideUp("600");
-    });
-
-    $("#company-navbar").on("change", function () {
-        updateValues();
-        updateChart();
     });
 
     getProjects();
