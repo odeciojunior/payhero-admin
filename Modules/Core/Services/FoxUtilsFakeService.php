@@ -54,7 +54,7 @@ class FoxUtilsFakeService
         
         $status = [Sale::STATUS_PENDING, Sale::STATUS_APPROVED];
         if($paymentMethod == Sale::CREDIT_CARD_PAYMENT){
-            $status = [Sale::STATUS_APPROVED,Sale::STATUS_CANCELED_ANTIFRAUD,sale::STATUS_REFUSED];
+            $status = [Sale::STATUS_APPROVED,sale::STATUS_REFUSED];//Sale::STATUS_CANCELED_ANTIFRAUD,
         }
         return Arr::random($status);
     }
