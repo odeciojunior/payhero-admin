@@ -7,10 +7,8 @@
         <span class="hamburger-bar"></span>
     </button>
 
-    <!-- SIRIUS LOGO -->
+    <!-- CLOUDFOX LOGO -->
     <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu" style="background-color: #0e0233">
-        {{-- <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
-        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100"> --}}
         <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
         <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 2rem 0px 1rem;">
     </div>
