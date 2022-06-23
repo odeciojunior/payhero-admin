@@ -87,13 +87,13 @@
             $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
         @endphp
 
-        @if(!auth()->user()->getAccountIsApproved())
+        @if(!auth()->user()->account_is_approved)
             @include('utils.new-register-link')
         @endif
 
         @yield('content')
 
-        @if(!auth()->user()->getAccountIsApproved() && $account_type === 'admin')
+        @if(!auth()->user()->account_is_approved && $account_type === 'admin')
             @include('utils.documents-pending')
         @endif
 
