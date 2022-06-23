@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     getCompanies();
 
     $('#company-navbar').change(function () {
@@ -24,7 +25,7 @@ $(document).ready(function () {
                 sessionStorage.removeItem('company_default_name')
                 sessionStorage.setItem('company_default', company_id);
                 sessionStorage.setItem('company_default_name', company_name);
-                console.log(sessionStorage.getItem('company_default'));
+                
                 $('.company_name').val( sessionStorage.getItem('company_default_name') );
                 if ( typeof updateAfterChangeCompany === "function" ) {
                     updateAfterChangeCompany();
@@ -487,9 +488,6 @@ function loadingOnChartRemove(target) {
 }
 
 function loadingOnAccountsHealthRemove(target) {
-    //$(target).fadeOut(function () {
-    //    $(target).html('');
-    //});
     $(target).remove();
 }
 
@@ -1634,7 +1632,7 @@ function removeMoneyCurrency(string) {
 
 function getCompanies() {
     let thisPage = window.location.hostname;
-    var lastPage = new URL(document.referrer).hostname
+    var lastPage = (new URL(document.referrer))?.hostname;
     if (thisPage != lastPage) {
         sessionStorage.removeItem('companies')
         sessionStorage.removeItem('company_default')
