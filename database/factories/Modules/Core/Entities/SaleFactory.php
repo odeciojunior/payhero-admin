@@ -42,6 +42,7 @@ class SaleFactory extends Factory
             'shipment_value' =>  null,
             'cupom_code' => '',
             'start_date' => Carbon::now(),
+            'end_date' => Carbon::now(),
             'gateway_transaction_id' => '',
             'gateway_status' => '',
             'installments_amount' => null,
