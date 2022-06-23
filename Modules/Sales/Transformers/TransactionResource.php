@@ -103,7 +103,7 @@ class TransactionResource extends JsonResource
 
         $data['cashback_value'] = '0.00';
 
-        if ($sale->owner_id == auth()->user()->account_owner_id) {
+        if ($sale->owner_id == auth()->user()->getAccountOwnerId()) {
             $data['user_sale_type'] = 'producer';
             if (!empty($sale->cashback->value)) {
                 if($sale->payment_method <> 4){

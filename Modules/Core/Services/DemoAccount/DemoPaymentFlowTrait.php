@@ -420,6 +420,7 @@ trait DemoPaymentFlowTrait
             $salePrevious = DB::table('sales')->select('owner_id')->where('id',$this->upsellPreviousSaleId)->first();
             return $salePrevious->owner_id;
         }
+        /*
 
         $withInvite = $this->keepGoing(6);
         $userId = User::DEMO_ID;
@@ -430,9 +431,9 @@ trait DemoPaymentFlowTrait
             if(!empty($invite)){
                 $userId = $invite->user_invited;                
             }
-        }
+        }*/
 
-        return $userId;
+        return User::DEMO_ID;
     }
 
     public function setSale()

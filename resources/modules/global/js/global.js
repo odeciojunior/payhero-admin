@@ -24,6 +24,7 @@ $(document).ready(function () {
                 sessionStorage.removeItem('company_default_name')
                 sessionStorage.setItem('company_default', company_id);
                 sessionStorage.setItem('company_default_name', company_name);
+                console.log(sessionStorage.getItem('company_default'));
                 $('.company_name').val( sessionStorage.getItem('company_default_name') );
                 if ( typeof updateAfterChangeCompany === "function" ) {
                     updateAfterChangeCompany();

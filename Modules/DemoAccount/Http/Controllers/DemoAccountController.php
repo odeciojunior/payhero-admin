@@ -9,6 +9,6 @@ use Illuminate\Routing\Controller;
 class DemoAccountController extends Controller
 {
     public function notAuthorized(){
-        return response(['message'=>'Sem permissão para realizar esta ação.'],403);
+        return response(['message'=>'Operação desabilitada na conta demo.'],403);
     }
 }
