@@ -46,5 +46,7 @@ Route::group(
         Route::get('/reports/marketing/coupons', 'ReportsMarketingApiController@getResumeCoupons');
         Route::get('/reports/marketing/regions', 'ReportsMarketingApiController@getResumeRegions');
         Route::get('/reports/marketing/origins', 'ReportsMarketingApiController@getResumeOrigins');
+
+        Route::get('/reports/coupons', 'ReportsApiController@getDiscountCoupons');
     }
 );

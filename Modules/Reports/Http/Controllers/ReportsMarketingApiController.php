@@ -2,9 +2,11 @@
 
 namespace Modules\Reports\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Services\Reports\ReportMarketingService;
+use Modules\DiscountCoupons\Transformers\DiscountCouponsResource;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
 class ReportsMarketingApiController extends Controller
@@ -113,19 +115,23 @@ class ReportsMarketingApiController extends Controller
 
     public function getResumeCoupons(Request $request)
     {
-        $request->validate([
-            'date_range' => 'required',
-            'project_id' => 'required'
-        ]);
+        try{
+            $request->validate([
+                'date_range' => 'required',
+                'project_id' => 'required'
+            ]);
+    
+            $data = $request->all();
+            $reportService = new ReportMarketingService();
+            $coupons = $reportService->getResumeCoupons($data);
 
-        $data = $request->all();
-
-        $reportService = new ReportMarketingService();
-        $coupons = $reportService->getResumeCoupons($data);
-
-        return response()->json([
-            'data' => $coupons
-        ]);
+            return response()->json([
+                'data' => $coupons
+            ]);
+        }
+        catch(Exception $e) {
+            report($e);
+        }
     }
 
     public function getResumeRegions(Request $request)

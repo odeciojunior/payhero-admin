@@ -21,7 +21,7 @@ use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
 use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
-use Modules\Core\Services\ReportService;
+use Modules\Core\Services\Reports\ReportService;
 use App\Console\Commands\UpdateUserLevel;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\BenefitsService;
