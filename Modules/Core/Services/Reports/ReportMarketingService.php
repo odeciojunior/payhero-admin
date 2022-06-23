@@ -291,11 +291,13 @@ class ReportMarketingService
 
     public function getResumeCoupons($filters)
     {
-        try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+        $projectId = hashids_decode($filters['project_id']);
 
-            $coupons = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
+        $cacheName = 'coupons-resume-' . $projectId . '-' . json_encode($dateRange);
+
+        $coupons = cache()->remember($cacheName, 180, function() use($projectId, $dateRange){
+            return Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
                             ->where('status', Sale::STATUS_APPROVED)
                             ->where('project_id', $projectId)
                             ->where('sales.cupom_code', '<>', '')
@@ -304,32 +306,30 @@ class ReportMarketingService
                             ->orderByDesc('amount')
                             ->limit(4)
                             ->get();
+        });
 
-            $total = 0;
-            foreach($coupons as $coupon)
-            {
-                $total += $coupon->amount;
-            }
-
-            $index = 0;
-            foreach($coupons as $coupon)
-            {
-                $coupon->percentage = round(number_format(($coupon->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
-                $coupon->color = $this->getColors($index);
-                $coupon->hexadecimal = $this->getColors($index, true);
-
-                $index++;
-            }
-
-            $couponsArray = $coupons->toArray();
-
-            return [
-                'coupons' => $couponsArray,
-                'total' => $total
-            ];
-        } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
+        $total = 0;
+        foreach($coupons as $coupon)
+        {
+            $total += $coupon->amount;
         }
+
+        $index = 0;
+        foreach($coupons as $coupon)
+        {
+            $coupon->percentage = round(number_format(($coupon->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
+            $coupon->color = $this->getColors($index);
+            $coupon->hexadecimal = $this->getColors($index, true);
+
+            $index++;
+        }
+
+        $couponsArray = $coupons->toArray();
+
+        return [
+            'coupons' => $couponsArray,
+            'total' => $total
+        ];
     }
 
     public function getResumeRegions($filters)

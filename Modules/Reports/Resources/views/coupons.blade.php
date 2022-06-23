@@ -69,7 +69,6 @@
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                             <label for="projeto">Projeto</label>
                                             <select name='select_project' id="projeto" class="sirius-select">
-                                                <option value="">Todos os projetos</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
