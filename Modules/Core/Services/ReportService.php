@@ -87,7 +87,7 @@ class ReportService
         }
 
         $userCompanies = $companyModel
-            ->where('user_id', auth()->user()->account_owner_id)
+            ->where('user_id', auth()->user()->getAccountOwnerId())
             ->pluck('id')
             ->toArray();
 
@@ -97,7 +97,7 @@ class ReportService
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->whereIn('transaction.company_id', $userCompanies);
             })
-            ->where('sales.owner_id', auth()->user()->account_owner_id)
+            ->where('sales.owner_id', auth()->user()->getAccountOwnerId())
             ->where('sales.project_id', $projectId)
             ->whereDate('sales.start_date', $data['startDate'])
             ->groupBy('hour', 'sales.payment_method')
@@ -161,7 +161,7 @@ class ReportService
                 $dataFormated = $dataFormated->addDays(1);
             }
 
-            $userId          = auth()->user()->account_owner_id;
+            $userId          = auth()->user()->getAccountOwnerId();
             $data['endDate'] = date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'));
 
             $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
@@ -253,7 +253,7 @@ class ReportService
                     break;
                 }
             }
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
 
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
@@ -350,7 +350,7 @@ class ReportService
                     break;
                 }
             }
-            $userId          = auth()->user()->account_owner_id;
+            $userId          = auth()->user()->getAccountOwnerId();
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
             $userCompanies   = $companyModel->where('user_id', $userId)->pluck('id')
                                             ->toArray();
@@ -444,7 +444,7 @@ class ReportService
                     break;
                 }
             }
-            $userId          = auth()->user()->account_owner_id;
+            $userId          = auth()->user()->getAccountOwnerId();
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
@@ -533,7 +533,7 @@ class ReportService
                 $dataFormated = $dataFormated->addMonths(1);
             }
 
-            $userId          = auth()->user()->account_owner_id;
+            $userId          = auth()->user()->getAccountOwnerId();
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
@@ -659,7 +659,7 @@ class ReportService
                     break;
                 }
             }
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
             $affiliate = $affiliateModel->where([
                                                     ['user_id', $userId],
                                                     ['project_id', $projectId],
@@ -722,7 +722,7 @@ class ReportService
                 $dataFormated = $dataFormated->addMonths(1);
             }
 
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
             $affiliate = $affiliateModel->where([
                                                     ['user_id', $userId],
                                                     ['project_id', $projectId],
@@ -789,7 +789,7 @@ class ReportService
                 }
             }
 
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
             $affiliate = $affiliateModel->where([
                                                     ['user_id', $userId],
                                                     ['project_id', $projectId],
@@ -858,7 +858,7 @@ class ReportService
                     break;
                 }
             }
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
             $affiliate = $affiliateModel->where([
                                                     ['user_id', $userId],
                                                     ['project_id', $projectId],
@@ -923,7 +923,7 @@ class ReportService
 
             $data['endDate'] = date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'));
 
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
             $affiliate = $affiliateModel->where([
                                                     ['user_id', $userId],
                                                     ['project_id', $projectId],
@@ -988,7 +988,7 @@ class ReportService
                 '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
             ];
         }
-        $userId = auth()->user()->account_owner_id;
+        $userId = auth()->user()->getAccountOwnerId();
         $affiliate = $affiliateModel->where([
                                                 ['user_id', $userId],
                                                 ['project_id', $projectId],
