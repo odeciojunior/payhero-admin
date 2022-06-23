@@ -2860,7 +2860,7 @@ tbody td{
 
 .bonus-balance-container {
     position: sticky;
-    width: 360px;
+    width: 380px;
     height: auto;
     min-height: 360px;
     background-color: #1BE4A8;
@@ -2985,6 +2985,7 @@ tbody td{
     font-weight: 600;
     font-size: 14px;
     line-height: 17px;
+    color: #313C52;
 }
 
 .bonus-title b{
@@ -3016,6 +3017,7 @@ tbody td{
     position: relative;
     width: 100px;
     height: 100px;
+    margin-right: 10px;
 }
 
 .bonus-percent-label {
@@ -3064,6 +3066,10 @@ tbody td{
 .mkc_info {
     color: #59BF75 !important;
     font: bold 30px;
+}
+
+.bonus-infos {
+    margin-bottom: 9px;
 }
 
 @media (max-width: 768px) {

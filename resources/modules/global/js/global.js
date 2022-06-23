@@ -1668,7 +1668,7 @@ function buildModalBonusBalance(bonusObject) {
 
                 <div class="bonus-numbers d-flex align-items-start ml-5">
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 100px; gap: 8px">    
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">    
                         <div>
                             <h4 class="bonus-number-title">
                                 Você ganhou
@@ -1688,7 +1688,7 @@ function buildModalBonusBalance(bonusObject) {
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 100px; gap: 8px">    
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">    
                         <div>
                             <h4 class="bonus-number-title">
                                 Você já utilizou
