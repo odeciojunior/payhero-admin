@@ -1,9 +1,9 @@
 function createCircleChart(percent, color, secondaryColor, size, stroke) {
     let svg = `<svg class="mkc_circle-chart" viewbox="0 0 36 36" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
-        <path class="mkc_circle-bg" stroke="${secondaryColor || '#eeeee'}" stroke-width="${stroke * 0.9}" fill="none" d="M18 2.0845
+        <path class="mkc_circle-bg"  stroke="${secondaryColor || '#eeeee'}" stroke-width="${stroke * 0.9}" fill="none" d="M18 2.0845
               a 15.9155 15.9155 0 0 1 0 31.831
               a 15.9155 15.9155 0 0 1 0 -31.831"/>
-        <path class="mkc_circle" stroke="${color}" stroke-width="${stroke}" stroke-dasharray="${percent},100" stroke-linecap="round" fill="none"
+        <path class="mkc_circle" stroke="${color}" stroke-width="${stroke}" stroke-dasharray="${percent},100" stroke-linecap="round" fill="none" style=" ${ percent < 1 ? 'display: none' : '' }" 
             d="M18 2.0845
               a 15.9155 15.9155 0 0 1 0 31.831
               a 15.9155 15.9155 0 0 1 0 -31.831" />

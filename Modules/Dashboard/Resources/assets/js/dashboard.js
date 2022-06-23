@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    
+
     let userAccepted = true;
 
     function updateChart() {
@@ -382,7 +382,6 @@ $(document).ready(function () {
     // }
 
     function getProjects() {
-        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
