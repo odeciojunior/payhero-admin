@@ -915,24 +915,19 @@ class SaleService
             ->select(
                 DB::raw(
                     "count(sales.id) as total_sales,
-                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
-                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
+                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
                 )
             )
             ->first()
             ->toArray();
 
         $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
-        $resume['total'] = FoxUtils::formatMoney($resume['total']);
 
         return $resume;
     }
 
     public function getSalesPendingBalance($filters)
     {
-        $customerModel = new Customer();
-        $transactionModel = new Transaction();
-
         try {
             $relationsArray = [
                 'sale',
@@ -940,13 +935,13 @@ class SaleService
                 'sale.customer',
             ];
 
-            $transactions = $transactionModel->with($relationsArray)
+            $transactions = (new Transaction)->with($relationsArray)
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->where(
                     'transactions.status_enum',
                     '=',
-                    $transactionModel->present()->getStatusEnum('paid')
+                    Transaction::STATUS_PAID
                 )
                 ->whereNull('invitation_id');
 
@@ -1050,24 +1045,24 @@ class SaleService
 
             // Nome do Usuário
             if (!empty($filters["client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
+                $customerIds = Customer::where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
                 $transactions->whereHas(
                     'sale',
-                    function ($querySale) use ($customers) {
-                        $querySale->whereIn('customer_id', $customers);
+                    function ($querySale) use ($customerIds) {
+                        $querySale->whereIn('customer_id', $customerIds);
                     }
                 );
             }
 
             // CPF do Usuário
             if (!empty($filters['customer_document'])) {
-                $customers = $customerModel->where(
+                $customers = Customer::where(
                     'document',
                     FoxUtils::onlyNumbers($filters["customer_document"])
                 )->pluck('id');
 
                 if (count($customers) < 1) {
-                    $customers = $customerModel->where('document', $filters["customer_document"])->pluck('id');
+                    $customers = Customer::where('document', $filters["customer_document"])->pluck('id');
                 }
 
                 $transactions->whereHas(

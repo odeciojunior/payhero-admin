@@ -110,7 +110,7 @@ function getFilters(urlParams = false) {
         'payment_method': $("#payment_method").val(),
         'sale_code': $("#sale_code").val().replace('#', ''),
         'date_type': $("#date_type").val(),
-        'date_range': $("#date_range").val(),
+        'date_range': $("#date-filter").val(),
         'statement': hasSale == false ? 'automatic_liquidation' : $("#type_statement").val(),
         'acquirer':$("#acquirer").val(),
         'is_security_reserve': $('#is-security-reserve').is(':checked') ? 1: 0,
@@ -159,14 +159,12 @@ function resumePending() {
         success: function success(response) {
             loadOnAny('.number', true);
             $('#total_sales').text('0');
-            $('#commission_pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+            $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
             if (response.total_sales) {
-                $('#total_sales, #commission_blocked, #total').text('');
+                $('#total_sales, #total-pending, #total').text('');
                 $('#total_sales').text(response.total_sales);
                 var comission=response.commission.split(/\s/g);
-                $('#commission_pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
-                var total=response.total.split(/\s/g);
-                $('#total').html(total[0]+' <span class="font-size-30 bold">'+total[1]+'</span>');
+                $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
             }
         }
     });
@@ -203,7 +201,7 @@ $(document).ready(function () {
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
-    // $('#date_range').daterangepicker({
+    // $('#date-filter').daterangepicker({
     //     startDate: moment('2018-01-01 00:00:00'),
     //     endDate: moment(),
     //     opens: 'center',
@@ -382,12 +380,12 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.number', true);
                 $('#total_sales').text('0');
-                $('#commission_pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+                $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').text(response.total_sales);
                     var comission=response.commission.split(/\s/g);
-                    $('#commission_pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+                    $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
                     var total=response.total.split(/\s/g);
                     $('#total').html(total[0]+' <span class="font-size-30 bold">'+total[1]+'</span>');
                 }

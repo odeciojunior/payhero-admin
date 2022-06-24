@@ -48,5 +48,10 @@ Route::group(
         Route::get('/reports/marketing/origins', 'ReportsMarketingApiController@getResumeOrigins');
 
         Route::get('/reports/coupons', 'ReportsApiController@getDiscountCoupons');
+        Route::get('/reports/pending-balance', 'ReportsApiController@pendingBalance');
+        Route::get('/reports/resume-pending-balance', 'ReportsApiController@resumePendingBalance');
+        Route::get('/reports/blocked-balance', 'ReportsApiController@blockedBalance');
+        Route::get('/reports/resume-blocked-balance', 'ReportsApiController@resumeblockedBalance');
+
     }
 );

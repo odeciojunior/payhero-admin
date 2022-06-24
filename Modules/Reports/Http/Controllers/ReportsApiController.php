@@ -707,10 +707,6 @@ class ReportsApiController extends Controller
     public function pendingBalance(Request $request)
     {
         try {
-            activity()->tap(function (Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela saldo pendente');
-
             $saleService = new SaleService();
 
             $data = $request->all();
@@ -719,9 +715,7 @@ class ReportsApiController extends Controller
 
             return PendingBalanceResource::collection($sales);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar saldo pendente ReportsApiController - pendingBalance');
             report($e);
-
             return response()->json(['message' => 'Erro ao carregar vendas'], 400);
         }
     }
@@ -737,9 +731,7 @@ class ReportsApiController extends Controller
 
             return response()->json($resume);
         } catch (Exception $e) {
-            Log::warning('Erro ao exibir resumo dos saldos pendete ReportsApiController - resumePendingBalance');
             report($e);
-
             return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
         }
     }

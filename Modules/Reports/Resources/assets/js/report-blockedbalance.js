@@ -14,9 +14,9 @@ function atualizar(link = null) {
     loadOnTable('#dados_tabela', '#tabela_vendas');
 
     if (link == null) {
-        link = '/api/reports/blockedbalance?' + getFilters(true).substr(1);
+        link = '/api/reports/blocked-balance?' + getFilters(true).substr(1);
     } else {
-        link = '/api/reports/blockedbalance' + link + getFilters(true);
+        link = '/api/reports/blocked-balance' + link + getFilters(true);
         updateResume = false;
     }
 
@@ -125,7 +125,7 @@ function getFilters(urlParams = false) {
         'client': $("#client").val(),
         'customer_document': $("#customer_document").val(),
         'date_type': $("#date_type").val(),
-        'date_range': $("#date_range").val(),
+        'date_range': $("#date-filter").val(),
         'transaction': $("#transaction").val().replace('#', ''),
         'reason': $('#reason').val(),
         'plan': $('#plan').val(),
@@ -160,7 +160,7 @@ function blockedResume() {
 
     $.ajax({
         method: "GET",
-        url: '/api/reports/blockedresume',
+        url: '/api/reports/resume-blocked-balance',
         data: getFilters(),
         dataType: "json",
         headers: {
