@@ -47,6 +47,12 @@ $(document).ready(function () {
         $('#bonus-balance-modal').fadeToggle('slow', 'linear');
     })
 
+    $('.close-bonus-modal, .modal-bonus-close').on('click', function() {
+        $('body').removeClass('bonus-modal-opened');
+        $('#bonus-balance-modal').fadeToggle('slow', 'linear');
+        // $('.bonus-balance-container').html(loadSkeletonBonus);
+    })
+
 
     $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
         e.preventDefault();
@@ -1782,7 +1788,7 @@ function buildModalBonusBalance(bonusObject) {
 
                 <div class="bonus-numbers d-flex align-items-start ml-5">
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">
                         <div>
                             <h4 class="bonus-number-title">
                                 Você ganhou
@@ -1802,7 +1808,7 @@ function buildModalBonusBalance(bonusObject) {
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">
                         <div>
                             <h4 class="bonus-number-title">
                                 Você já utilizou
