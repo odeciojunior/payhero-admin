@@ -334,7 +334,7 @@ class CoreApiController extends Controller
             'current_bonus' => foxutils()->formatMoney($bonusBalance->current_value / 100),
             'used_bonus' => foxutils()->formatMoney(($bonusBalance->total_value - $bonusBalance->current_value) / 100),
             'expires_at' => Carbon::parse($bonusBalance->expires_at)->format('d/m/Y'),
-            'used_percentage' => number_format(100 - ($bonusBalance->current_value * 100 / $bonusBalance->total_value), 0, '.', '')
+            'used_percentage' => floor(100 - ($bonusBalance->current_value * 100 / $bonusBalance->total_value))
         ]);
     }
 }

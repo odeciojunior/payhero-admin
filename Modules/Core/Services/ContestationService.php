@@ -58,11 +58,11 @@ class ContestationService
             $search_input_date = 'sale_contestations.expiration_date';
 
             if ($search == 'adjustment_date') {
-                $search_input_date = 'sale_contestations.file_date';
+                $search_input_date = 'sale_contestations.request_date';
             }
 
             if ($search == 'transaction_date') {
-                $search_input_date = 'sales.start_date';
+                $search_input_date = 'sale_contestations.transaction_date';
             }
 
             if ($search == 'expiration_date') {
@@ -72,7 +72,7 @@ class ContestationService
             if(request('transaction')){
                 return $query;
             }
-            
+
             return $query->whereBetween(
                 $search_input_date,
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
