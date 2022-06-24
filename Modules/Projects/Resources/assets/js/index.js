@@ -116,13 +116,13 @@ $(function () {
     // Funcao responsavel pelo Arrastar e soltar(DRAG e DROP)
     const sortableElement = $("#data-table-projects");
     sortableElement.sortable({
+        containment: "parent",
         opacity: 1,
         revert: true,
         tolerance: "pointer",
         cursor: "move",
         disabled: "",
         update: function(event, ui){
-            console.log('teste', event, ui);
             let projectOrder = $(this).sortable('toArray', {
                 attribute: "data-id"
             });

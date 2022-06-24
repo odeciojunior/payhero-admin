@@ -13,7 +13,7 @@
     @endpush
 
     <!-- PAGINA INTEIRA -->
-    <div class="page">
+    <div class="page" style="padding-bottom: 0;">
         <!-- CONTAINER DO CONTEUDO DA PAGINA -->
         <div class="page-content container pr-5" style="padding-top: 0">
 
