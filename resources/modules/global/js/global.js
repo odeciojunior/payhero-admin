@@ -47,13 +47,6 @@ $(document).ready(function () {
         $('#bonus-balance-modal').fadeToggle('slow', 'linear');
     })
 
-    $('.close-bonus-modal, .modal-bonus-close').on('click', function() {
-        $('body').removeClass('bonus-modal-opened');
-        $('#bonus-balance-modal').fadeToggle('slow', 'linear');
-        // $('.bonus-balance-container').html(loadSkeletonBonus);
-    })
-
-
     $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
         e.preventDefault();
 
