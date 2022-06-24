@@ -52,6 +52,7 @@ Route::group(
         Route::get('/reports/resume-pending-balance', 'ReportsApiController@resumePendingBalance');
         Route::get('/reports/blocked-balance', 'ReportsApiController@blockedBalance');
         Route::get('/reports/resume-blocked-balance', 'ReportsApiController@resumeblockedBalance');
+        Route::get('/reports/block-reasons', 'ReportsApiController@getBlockReasons');
 
     }
 );
