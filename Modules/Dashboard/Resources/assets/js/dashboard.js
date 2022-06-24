@@ -1,5 +1,6 @@
 function updateAfterChangeCompany(){
     $('.sirius-performance > .card').html('');
+    $('#cashback-container #cashback-container-money').text("")
     window.updateValues();
     window.updateChart();
     window.updatePerformance();
