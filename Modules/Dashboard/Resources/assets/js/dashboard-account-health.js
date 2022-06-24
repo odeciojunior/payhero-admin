@@ -78,7 +78,7 @@ $(document).ready(function () {
             let card = $(this).data('slide-to');
             switch(card) {
                 case 1:
-                    updateAccountHealth();
+                    window.updateAccountHealth();
                     break;
                 case 2:
                     updateChargeback();
@@ -113,10 +113,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-
-
                 if (!data.account_score) {
-                    //alert(data.account_score);
                     updateEmptyScore();
                 }
                 else {

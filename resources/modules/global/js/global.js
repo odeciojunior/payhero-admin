@@ -25,7 +25,7 @@ $(document).ready(function () {
                 sessionStorage.removeItem('company_default_name')
                 sessionStorage.setItem('company_default', company_id);
                 sessionStorage.setItem('company_default_name', company_name);
-                
+
                 $('.company_name').val( sessionStorage.getItem('company_default_name') );
                 if ( typeof updateAfterChangeCompany === "function" ) {
                     updateAfterChangeCompany();
@@ -46,13 +46,6 @@ $(document).ready(function () {
         $('body').addClass('bonus-modal-opened');
         $('#bonus-balance-modal').fadeToggle('slow', 'linear');
     })
-
-    $('.close-bonus-modal, .modal-bonus-close').on('click', function() {
-        $('body').removeClass('bonus-modal-opened');
-        $('#bonus-balance-modal').fadeToggle('slow', 'linear');
-        // $('.bonus-balance-container').html(loadSkeletonBonus);
-    })
-
 
     $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
         e.preventDefault();
@@ -1659,7 +1652,13 @@ function getCompanies() {
                     "id":"v2RmA83EbZPVpYB",
                     "name":"Empresa Demo",
                     "company_document_status": "approved",
-                    "active_flag": 1
+                    "active_flag": 1,
+                    "projects": [{
+                        "id" : "v2RmA83EbZPVpYB",
+                        "name": "CLOUDFOX DEMO LTDA",
+                        "order_p":1,
+                        "status":1
+                    }]
                 });
                 companies = data.companies;
                 company_default = data.company_default;
