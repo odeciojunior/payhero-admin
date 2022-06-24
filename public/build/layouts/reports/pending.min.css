@@ -875,9 +875,8 @@ h4.number{
 #block-commission .ske-load,
 #block-status .ske-load {
     position: absolute;
-    transform: translate(0, -50%);
+    transform: translate(0, -40%);
 }
-#block-status .ske-load { transform: translate(0, -40%); }
 
 .empty-graph {
     height: 100%;
@@ -2348,9 +2347,17 @@ h4.number{
 }
 
 
-.table-coupons.table thead > tr > td:first-child { 
+.table-coupons.table thead > tr > td:first-child,
+.table-coupons.table tbody > tr > td:first-child { 
     padding-left: 18px !important; 
     padding-right: 18px !important; 
+}
+
+.big-card-origin { height: 540px; }
+.big-card-origin .ske-load {
+    transform: translate(0, -50%);
+    top: 50%;
+    position: absolute;
 }
 .date-picker {
   width: 170px;

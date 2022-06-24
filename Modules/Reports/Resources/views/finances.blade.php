@@ -134,7 +134,7 @@
                                             <strong>Comissão</strong>
                                         </h5>
                                     </header>
-                                    <div class="onPreLoad" id="block-commission"></div>
+                                    <div class="onPreLoadBig" id="block-commission"></div>
                                 </section>
                             </div>
 

@@ -93,10 +93,9 @@ function distribution() {
 }
 
 function withdrawals() {
-
     let infoWithdraw, graphDraw = '';
     $('#card-draw .onPreLoad *').remove();
-    $("#draw").prepend(skeLoad);
+    $("#draw").html(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -144,8 +143,7 @@ function withdrawals() {
                 let series = [...chart.income.values];
                 barGraph(series, label, withdraw);
             } else {
-                $('#card-draw .onPreLoad *').remove();
-                $("#card-draw").find('.graph').after(infoWithdraw);
+                $("#draw").html(infoWithdraw);
             }
         }
     });
@@ -259,8 +257,8 @@ function onResume() {
 
 function onCommission() {
     let infoComission = '';
-    $('#card-commission .onPreLoad *').remove();
-    $("#block-commission").prepend(skeLoad);
+    $('#card-commission .onPreLoadBig *').remove();
+    $("#block-commission").html(skeLoadBig);
 
     return $.ajax({
         method: "GET",
@@ -304,7 +302,7 @@ function onCommission() {
                 graphComission(series, labels, variation.value);
             } else {
                 infoComission = `
-                    <div class="finances-values">
+                    <div class="finances-values" style="visibility: hidden; height: 10px;">
                         <span>R$</span>
                         <strong>0</strong>
                     </div>
@@ -448,7 +446,7 @@ function getCashback() {
 }
 
 function changeCalendar() {
-    $('.onPreLoad *').remove();
+    $('.onPreLoad *, .onPreLoadBig *').remove();
 
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
@@ -485,8 +483,9 @@ function changeCalendar() {
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        $('.onPreLoad *').remove();
+        $('.onPreLoad *, .onPreLoadBig *').remove();
         $('.onPreLoad').html(skeLoad);
+        $('.onPreLoadBig').html(skeLoadBig);
         $.ajaxQ.abortAll();
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
         updateReports();
@@ -495,8 +494,9 @@ function changeCompany() {
 
 
 function updateReports() {
-    $('.onPreLoad *').remove();
+    $('.onPreLoad *, .onPreLoadBig *').remove();
     $('.onPreLoad').html(skeLoad);
+    $('.onPreLoadBig').html(skeLoadBig);
 
     $.ajax({
         method: "GET",
@@ -943,4 +943,35 @@ let noWithdrawal = `
 </filter>
 </defs>
 </svg>
+`;
+
+let skeLoadBig = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
 `;

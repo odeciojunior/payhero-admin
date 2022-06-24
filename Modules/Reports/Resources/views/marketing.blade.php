@@ -139,7 +139,7 @@
                                                         <strong>Conversão por estado</strong>
                                                     </h5>
                                                 </header>
-                                                <ul id="list-states" class="onPreLoad p-10 scroll-212">
+                                                <ul id="list-states" class="p-10 scroll-212">
                                                     <!-- js load -->
                                                 </ul>
 
@@ -604,7 +604,7 @@
                         
                         <!-- distribtion -->
                         <div class="distribution mkt">
-                        <div class="card inner pad-bottom-0 origin">
+                            <!-- <div class="card inner pad-bottom-0 origin">
                                 <header class="d-flex title-graph sirius-select-origin">
                                     <h5 class="grey font-size-16">
                                         <strong>Origem</strong>
@@ -640,6 +640,78 @@
                                         </div>
                                         {{-- <div class="row">
                                         </div> --}}
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="card big-card-origin" id="card-origin">
+                                <div class="card-body card-origin">
+                                    <div class="content-info">
+                                        <div class="row">
+                                            <header class="col-6">
+                                                <h6 class="font-size-16 gray-700"> Origens </h6>
+                                            </header>
+                                            
+                                            <div class="col-6 sirius-select-origin">
+                                                <select class="float-right sirius-select max-100" id='origin'>
+                                                    <option selected value="src">SRC</option>
+                                                    <option value="utm_source">UTM Source</option>
+                                                    <option value="utm_medium">UTM Medium</option>
+                                                    <option value="utm_campaign">UTM Campaign</option>
+                                                    <option value="utm_term">UTM Term</option>
+                                                    <option value="utm_content">UTM Content</option>
+                                                </select>
+                                            </div>
+                                            <div class="ske-load">
+                                                <div class="px-20 py-0">
+                                                    <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                                </div>
+                                                <div class="px-20 py-0">
+                                                    <div class="row align-items-center mx-0 py-10">
+                                                        <div class="skeleton skeleton-circle"></div>
+                                                        <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                    </div>
+                                                    <div class="skeleton skeleton-text ske"></div>
+                                                </div>
+
+                                                <div class="px-20 py-0">
+                                                    <div class="row align-items-center mx-0 py-10">
+                                                        <div class="skeleton skeleton-circle"></div>
+                                                        <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                    </div>
+                                                    <div class="skeleton skeleton-text ske"></div>
+                                                </div>
+
+                                                <div class="px-20 py-0">
+                                                    <div class="row align-items-center mx-0 py-10">
+                                                        <div class="skeleton skeleton-circle"></div>
+                                                        <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                    </div>
+                                                    <div class="skeleton skeleton-text ske"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="height: 90%;">
+                                            <div class="data-holder" style="height: 100%;">
+                                                <div class="row" style="height: 100%;">
+                                                    <div class="col-12">
+                                                        <table class="table-vendas table table-striped "style="width:100%;height: 100%; margin: auto;">
+                                                            <tbody id="origins-table"  class="origin-report" img-empty="{!! asset('/build/global/img/reports/img-nodata.svg')!!}">
+                                                                {{-- js carrega... --}}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-11">
+                                                    <ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination"
+                                                        style="margin-top:10px; margin-left: 5%">
+                                                        {{-- js carrega... --}}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

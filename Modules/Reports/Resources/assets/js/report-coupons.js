@@ -3,6 +3,14 @@ var atualizar = null;
 
 $(document).ready(function () {
     changeCalendar();
+    changeCompany();
+
+    if(sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem('info'));
+        $('input[name=daterange]').val(info.calendar);
+        $('#status').val(info.statusCompany);
+        $("#status").find('option:selected').text(info.statusCompanyText);
+    }
 
     $("#filtros").on("click", function () {
         if ($("#div_filtros").is(":visible")) {
@@ -23,6 +31,7 @@ $(document).ready(function () {
             'status': $("#status").val(),
             'date_range': $("#date-filter").val(),
         };
+        updateStorage({statusCompany: data["status"], statusCompanyText: $("#status").find('option:selected').text()});
 
         if (urlParams) {
             let params = "";
@@ -64,6 +73,11 @@ $(document).ready(function () {
                             text: project.name
                         }));
                     });
+
+                    if(sessionStorage.info) {
+                        $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
+                        $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                    }
 
                     atualizar();
 
@@ -156,7 +170,7 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
-        
+        updateStorage({calendar: $(this).val()});
     })
     .on('datepicker-open', function () {
         $('.filter-badge-input').removeClass('show');
@@ -168,3 +182,95 @@ function changeCalendar() {
         }
     });
 }
+
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
+}
+
+function changeCompany() {
+    $("#projeto").on("change", function () {
+        // $('.onPreLoad *, .onPreLoadBig *').remove();
+        // $('.onPreLoad').html(skeLoad);
+        // $('.onPreLoadBig').html(skeLoadBig);
+        $.ajaxQ.abortAll();
+        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+        
+        atualizar();
+    });
+}
+
+// abort all ajax
+$.ajaxQ = (function(){
+    var id = 0, Q = {};
+  
+    $(document).ajaxSend(function(e, jqx){
+      jqx._id = ++id;
+      Q[jqx._id] = jqx;
+    });
+    $(document).ajaxComplete(function(e, jqx){
+      delete Q[jqx._id];
+    });
+  
+    return {
+      abortAll: function(){
+        var r = [];
+        $.each(Q, function(i, jqx){
+          r.push(jqx._id);
+          jqx.abort();
+        });
+        return r;
+      }
+    };
+  
+  })();
+
+let skeLoad = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
+`;
+
+let skeLoadBig = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
+`;

@@ -34,26 +34,20 @@ function reload() {
     loadOrigins();
 }
 
+
 function loadOrigins(link = null) {
+    var link =
+        arguments.length > 0 && arguments[0] !== undefined
+            ? arguments[0]
+            : null;
 
-    $("#origin").off('change');
-    $("#origin").on('change', function(){
-        loadOrigins();
-    });
-    $("#origins-table").html('');
-    $("#origins-table").html(skeLoadOriginTable);
+    // loadOnTable("#origins-table", ".table-vendas");
 
-    let url = '';
-    if(link == null) {
-        url = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
-    }
-    else {
-        url = `${resumeUrl}/origins${link}&date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
-    }
+    link = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
 
-    return $.ajax({
-        method: "GET",
-        url: url,
+    $.ajax({
+        url: link,
+        type: "GET",
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -63,36 +57,24 @@ function loadOrigins(link = null) {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            $("#origins-table").html('');
-
-                let td = `
-                <div class="d-flex" style="justify-content: center; margin: auto;" >
-                <div class="info-graph">
-                    <div class="no-sell -origin">
-                        <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
-                            <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
-                            <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
-                            <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
-                            <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
-                            <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
-                        </svg>
-                        <footer>
-                            <h4>Nada por aqui...</h4>
-                            <p>
-                                Não há dados suficientes
-                                para gerar este relatório.
-                            </p>
-                        </footer>
-                    </div>
-                </div>
-            </div>
-                `;
+            let td = `
+                <td>
+                    ${noWithdrawal}
+                </td>
+                <td>
+                    <p class='no-data-origin'>
+                        <strong>Sem dados, por enquanto...</strong>
+                        Ainda faltam dados suficientes a comparação, continue rodando!
+                    </p>
+                </td>
+                `
 
             if (response.data == '') {
+                $("#card-origin .ske-load").hide();
                 $("#origins-table").html(td);
                 $("#pagination").html("");
                 $("#pagination-origins").hide();
+                $(".origin-report").show();
             } else {
                 var table_data = "";
 
@@ -100,7 +82,8 @@ function loadOrigins(link = null) {
                     table_data += "<tr>";
                     table_data += "<td>" + data.origin + "</td>";
                     table_data += "<td>" + data.sales_amount + "</td>";
-                    table_data += "<td>" + data.value + "</td>";
+                    table_data +=
+                        "<td>" + data.balance + "</td>";
                     table_data += "</tr>";
                 });
 
@@ -108,11 +91,10 @@ function loadOrigins(link = null) {
                 $("#origins-table").append(table_data);
                 $(".table-vendas").addClass("table-striped");
 
-                $("#pagination-origins").show();
-                pagination(response, "origins", loadOrigins);
-            }
-            $("#card-origin .ske-load").hide();
-            $(".origin-report").show();
+                pagination(response, "origins", updateSalesByOrigin);
+                $(".origin-report").show();
+            }               
+            
         },
     });
 }
@@ -383,9 +365,21 @@ function changeCompany() {
     $("#select_projects").on("change", function () {
         $('.onPreLoad *').remove();
         $('.onPreLoad').html(skeLoad);
+        $("#list-states").prepend(skeLoadStatesList);
+        $("#card-origin .ske-load").show();
+        $('.origin-report').hide();
+
         $.ajaxQ.abortAll();
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
         loadStores();
+    });
+
+    $("#origin").on("change", function () {
+        $("#card-origin .ske-load").show();
+        $('.origin-report').hide();
+
+        $("#origin").val($(this).val());
+        loadOrigins();
     });
 }
 
@@ -704,6 +698,9 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
+        $("#card-origin .ske-load").show();
+        $('.origin-report').hide();
+        $.ajaxQ.abortAll();
         updateStorage({calendar: $(this).val()});
         updateReports();
     })
@@ -721,6 +718,7 @@ function changeCalendar() {
 function updateReports() {
     $('.onPreLoad *').remove();
     $('.onPreLoad').html(skeLoad);
+    $("#list-states").prepend(skeLoadStatesList);
 
     $.ajax({
         method: "GET",
@@ -1149,3 +1147,33 @@ $.ajaxQ = (function(){
         }
     }
 }
+
+let noWithdrawal = `
+<svg width="111" height="138" viewBox="0 0 111 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M55.5 132C86.1518 132 111 107.152 111 76.5C111 45.8482 86.1518 21 55.5 21C24.8482 21 0 45.8482 0 76.5C0 107.152 24.8482 132 55.5 132Z" fill="#FAFAFA"/>
+<path d="M87.32 52.8199H23.68C21.6365 52.8199 19.98 54.4765 19.98 56.5199V134.22C19.98 136.263 21.6365 137.92 23.68 137.92H87.32C89.3634 137.92 91.02 136.263 91.02 134.22V56.5199C91.02 54.4765 89.3634 52.8199 87.32 52.8199Z" fill="white"/>
+<path d="M48.0999 63.9199H28.8599C27.6338 63.9199 26.6399 64.9138 26.6399 66.1399C26.6399 67.3659 27.6338 68.3599 28.8599 68.3599H48.0999C49.326 68.3599 50.3199 67.3659 50.3199 66.1399C50.3199 64.9138 49.326 63.9199 48.0999 63.9199Z" fill="#B4DAFF"/>
+<path d="M61.4199 73.5397H28.8599C27.6338 73.5397 26.6399 74.5336 26.6399 75.7597C26.6399 76.9857 27.6338 77.9797 28.8599 77.9797H61.4199C62.646 77.9797 63.6399 76.9857 63.6399 75.7597C63.6399 74.5336 62.646 73.5397 61.4199 73.5397Z" fill="#DFEAFB"/>
+<path d="M48.0999 83.8999H28.8599C27.6338 83.8999 26.6399 84.8938 26.6399 86.1199C26.6399 87.346 27.6338 88.3399 28.8599 88.3399H48.0999C49.326 88.3399 50.3199 87.346 50.3199 86.1199C50.3199 84.8938 49.326 83.8999 48.0999 83.8999Z" fill="#B4DAFF"/>
+<path d="M61.4199 93.5199H28.8599C27.6338 93.5199 26.6399 94.5138 26.6399 95.7399C26.6399 96.966 27.6338 97.9599 28.8599 97.9599H61.4199C62.646 97.9599 63.6399 96.966 63.6399 95.7399C63.6399 94.5138 62.646 93.5199 61.4199 93.5199Z" fill="#DFEAFB"/>
+<path d="M48.0999 103.88H28.8599C27.6338 103.88 26.6399 104.874 26.6399 106.1C26.6399 107.326 27.6338 108.32 28.8599 108.32H48.0999C49.326 108.32 50.3199 107.326 50.3199 106.1C50.3199 104.874 49.326 103.88 48.0999 103.88Z" fill="#B4DAFF"/>
+<path d="M61.4199 113.5H28.8599C27.6338 113.5 26.6399 114.494 26.6399 115.72C26.6399 116.946 27.6338 117.94 28.8599 117.94H61.4199C62.646 117.94 63.6399 116.946 63.6399 115.72C63.6399 114.494 62.646 113.5 61.4199 113.5Z" fill="#DFEAFB"/>
+<g filter="url(#filter0_d_1640_468)">
+<path d="M87.32 15.08H23.68C21.6365 15.08 19.98 16.7365 19.98 18.78V40.98C19.98 43.0235 21.6365 44.68 23.68 44.68H87.32C89.3634 44.68 91.02 43.0235 91.02 40.98V18.78C91.02 16.7365 89.3634 15.08 87.32 15.08Z" fill="#1485FD"/>
+</g>
+<path d="M48.0999 23.2201H28.8599C27.6338 23.2201 26.6399 24.214 26.6399 25.4401C26.6399 26.6661 27.6338 27.6601 28.8599 27.6601H48.0999C49.326 27.6601 50.3199 26.6661 50.3199 25.4401C50.3199 24.214 49.326 23.2201 48.0999 23.2201Z" fill="#B4DAFF"/>
+<path d="M61.4199 32.8401H28.8599C27.6338 32.8401 26.6399 33.834 26.6399 35.0601C26.6399 36.2862 27.6338 37.2801 28.8599 37.2801H61.4199C62.646 37.2801 63.6399 36.2862 63.6399 35.0601C63.6399 33.834 62.646 32.8401 61.4199 32.8401Z" fill="white"/>
+<defs>
+<filter id="filter0_d_1640_468" x="1.78146" y="0.521187" width="107.437" height="65.997" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="3.6397"/>
+<feGaussianBlur stdDeviation="9.09926"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.180392 0 0 0 0 0.521569 0 0 0 0 0.92549 0 0 0 0.17 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1640_468"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1640_468" result="shape"/>
+</filter>
+</defs>
+</svg>
+`;

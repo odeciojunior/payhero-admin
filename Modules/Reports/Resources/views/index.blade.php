@@ -151,7 +151,7 @@
                                             </div>
                                         </div>
                                     </header>
-                                    <div class="onPreLoad" id="block-status"></div>
+                                    <div class="onPreLoadBig" id="block-status"></div>
                                 </section>
                             </div>
 
@@ -210,14 +210,14 @@
                                             </footer>
                                         </div>
 
-                                        <div class="card inner card-upsell no-ske" id="card-upsell">
+                                        <!-- <div class="card inner card-upsell no-ske" id="card-upsell">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Upsell</strong>
                                                 </h5>
                                             </header>
                                             <footer id="block-upsell" class="onPreLoad"></footer>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -233,7 +233,7 @@
                                     </h5>
                                     <!-- <h6 class="font-size-14">Hoje</h6> -->
                                 </header>
-                                <div class="onPreLoad" id="block-distribution"></div>
+                                <div class="onPreLoadBig" id="block-distribution"></div>
                             </div>
                             <div class="">
                                 <div class="d-flex sub-distribution">
@@ -251,13 +251,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card inner" id="card-recurrence">
+                                    <!-- <div class="card inner" id="card-recurrence">
                                         <header class="d-flex title-graph recurrence">
                                             <h5 class="grey font-size-16">
                                                 <strong>Recorrência</strong>
                                             </h5>
                                         </header>
                                         <div class="onPreLoad" id="block-recurrence"></div>
+                                    </div> -->
+                                    <div class="card inner card-upsell no-ske" id="card-upsell">
+                                        <header class="d-flex title-graph">
+                                            <h5 class="grey font-size-16">
+                                                <strong>Upsell</strong>
+                                            </h5>
+                                        </header>
+                                        <footer id="block-upsell" class="onPreLoad"></footer>
                                     </div>
                                 </div>
                             </div>

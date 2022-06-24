@@ -201,8 +201,8 @@ function salesResume() {
 
 function distribution() {
     let distributionHtml = '';
-    $('#card-distribution .onPreLoad *').remove();
-    $("#block-distribution").prepend(skeLoad);
+    $('#card-distribution .onPreLoadBig *').remove();
+    $("#block-distribution").html(skeLoadBig);
 
     return $.ajax({
         method: "GET",
@@ -532,7 +532,7 @@ function typePayments() {
                     <div class="row container-payment tp-payment">
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0">
+                                <div class="box-payment-option pad-0" style="visibility: ${credit_card.percentage == "0%" ? 'hidden': ''}">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             <span class="ico-cart align-items justify-around">
@@ -560,7 +560,7 @@ function typePayments() {
 
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0">
+                                <div class="box-payment-option pad-0" style="visibility: ${pix.percentage == "0%" ? 'hidden': ''}">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             <span class="ico-cart align-items justify-around">
@@ -602,7 +602,7 @@ function typePayments() {
 
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0">
+                                <div class="box-payment-option pad-0" style="visibility: ${boleto.percentage == "0%" ? 'hidden': ''}">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             <span class="ico-cart align-items justify-around">
@@ -1210,6 +1210,12 @@ function infoCard() {
         let { credit_card } = result[0].data;
         let conversionCard = result[1].data;
 
+        if(conversionCard.credit_card.total == "0") {
+            $('#card-info').hide();
+        } else {
+            $('#card-info').show();
+        } 
+
         if(credit_card !== null) {
             cardHtml = `
                 <div style="padding: 0 24px;" class="d-flex align-items">
@@ -1229,7 +1235,7 @@ function infoCard() {
                 </div>
             `;
             $("#block-info-card").html(cardHtml);
-        }
+        } 
     })
     .catch(e => console.log('error =>' + e)); 
 }
@@ -1334,8 +1340,9 @@ function changeCalendar() {
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        //$('.onPreLoad *').remove();
-        //$('.onPreLoad').html(skeLoad);
+        $('.onPreLoad *, .onPreLoadBig *').remove();
+        $('.onPreLoad').html(skeLoad);
+        $('.onPreLoadBig').html(skeLoadBig);
         $.ajaxQ.abortAll();
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
         
@@ -1344,8 +1351,9 @@ function changeCompany() {
 }
 
 function updateReports() {
-    // $('.onPreLoad *').remove();
-    // $('.onPreLoad').html(skeLoad);
+    $('.onPreLoad *, .onPreLoadBig *').remove();
+    $('.onPreLoad').html(skeLoad);
+    $('.onPreLoadBig').html(skeLoadBig);
     
     $.ajax({
         method: "GET",
@@ -1396,7 +1404,7 @@ function updateReports() {
             orderbump();
             upsell();
             infoCard();
-            recurrence();
+            //recurrence();
             salesStatus();
         }
     });
@@ -1444,7 +1452,7 @@ function exportReports() {
 function salesStatus(st) {
     let status = (st == '' || st == undefined) ? $("#status-graph option:selected").val() : st;
     let statusHtml = '';
-    $("#card-status .onPreLoad *" ).remove();
+    $("#card-status .onPreLoadBig *" ).remove();
     $("#block-status").html(skeLoadBig);
 
     return $.ajax({
