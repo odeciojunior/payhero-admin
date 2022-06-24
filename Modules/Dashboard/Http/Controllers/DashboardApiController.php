@@ -458,7 +458,7 @@ class DashboardApiController extends Controller
 
     function getCashbackReceivedValue()
     {
-        return number_format(intval(Cashback::where('user_id', auth()->user()->account_owner_id)->sum('value')) / 100, 2, ',', '.');
+        return number_format(intval(Cashback::where('user_id', auth()->user()->getAccountOwnerId())->sum('value')) / 100, 2, ',', '.');
     }
 
     public function getAchievements()

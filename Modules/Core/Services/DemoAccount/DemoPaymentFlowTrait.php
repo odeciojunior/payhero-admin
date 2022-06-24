@@ -550,7 +550,7 @@ trait DemoPaymentFlowTrait
 
         if($this->sale->status == Sale::STATUS_APPROVED){
             $this->sale->update([
-                'end_date'=>Carbon::parse($this->checkout->created_at)->addDays(round(1,3))
+                'end_date'=>Carbon::now()
             ]);
         }
         return $this;

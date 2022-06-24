@@ -442,4 +442,3 @@
 @push('scripts')
     <script type='text/javascript' src='{{ mix('build/layouts/reports/index.min.js') }}'></script>
 @endpush
-
