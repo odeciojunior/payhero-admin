@@ -291,13 +291,12 @@ class ReportMarketingService
 
     public function getResumeCoupons($filters)
     {
-        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-        $projectId = hashids_decode($filters['project_id']);
+        $cacheName = 'coupons-resume-' . json_encode($filters);
+        return cache()->remember($cacheName, 180, function() use($filters){
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
 
-        $cacheName = 'coupons-resume-' . $projectId . '-' . json_encode($dateRange);
-
-        $coupons = cache()->remember($cacheName, 180, function() use($projectId, $dateRange){
-            return Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
+            $coupons = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
                             ->where('status', Sale::STATUS_APPROVED)
                             ->where('project_id', $projectId)
                             ->where('sales.cupom_code', '<>', '')
@@ -306,65 +305,68 @@ class ReportMarketingService
                             ->orderByDesc('amount')
                             ->limit(4)
                             ->get();
+
+            $total = 0;
+            foreach($coupons as $coupon)
+            {
+                $total += $coupon->amount;
+            }
+    
+            $index = 0;
+            foreach($coupons as $coupon)
+            {
+                $coupon->percentage = round(number_format(($coupon->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
+                $coupon->color = $this->getColors($index);
+                $coupon->hexadecimal = $this->getColors($index, true);    
+                $index++;
+            }
+    
+            $couponsArray = $coupons->toArray();
+    
+            return [
+                'coupons' => $couponsArray,
+                'total' => $total
+            ];
         });
 
-        $total = 0;
-        foreach($coupons as $coupon)
-        {
-            $total += $coupon->amount;
-        }
-
-        $index = 0;
-        foreach($coupons as $coupon)
-        {
-            $coupon->percentage = round(number_format(($coupon->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
-            $coupon->color = $this->getColors($index);
-            $coupon->hexadecimal = $this->getColors($index, true);
-
-            $index++;
-        }
-
-        $couponsArray = $coupons->toArray();
-
-        return [
-            'coupons' => $couponsArray,
-            'total' => $total
-        ];
     }
 
     public function getResumeRegions($filters)
     {
         try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = current(Hashids::decode($filters['project_id']));
+            $cacheName = 'regions-resume-'.json_encode($filters);
+            return cache()->remember($cacheName, 120, function() use ($filters) {
+                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+                $projectId = current(Hashids::decode($filters['project_id']));
 
-            $regions = Checkout::select(
-                DB::raw('
-                    ip_state as region,
-                    COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as access,
-                    COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as conversion
-                ')
-            )
-            ->whereIn('checkouts.status_enum', [ Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED ])
-            ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->where('checkouts.project_id', $projectId)
-            ->groupBy('region')
-            ->get()
-            ->toArray();
+                $regions = Checkout::select(
+                    DB::raw('
+                        ip_state as region,
+                        COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as access,
+                        COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as conversion
+                    ')
+                )
+                ->whereIn('checkouts.status_enum', [ Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED ])
+                ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                ->where('checkouts.project_id', $projectId)
+                ->groupBy('region')
+                ->get()
+                ->toArray();
 
-            $total = 0;
-            foreach($regions as $region)
-            {
-                $total += $region['access'] + $region['conversion'];
-            }
+                $total = 0;
+                foreach($regions as $region)
+                {
+                    $total += $region['access'] + $region['conversion'];
+                }
 
-            foreach($regions as $region)
-            {
-                $region['percentage_access'] = round(number_format(($region['access'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
-                $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
-            }
+                foreach($regions as $region)
+                {
+                    $region['percentage_access'] = round(number_format(($region['access'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+                    $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+                }
 
-            return $regions;
+                return $regions;
+            });
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }

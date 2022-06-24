@@ -164,6 +164,9 @@ class ReportsMarketingApiController extends Controller
         $reportService = new ReportMarketingService();
         $orders = $reportService->getResumeOrigins($data);
 
-        return SalesByOriginResource::collection($orders->paginate(6));
+        $cacheName = 'origins-resume-'.json_encode($data);
+        return cache()->remember($cacheName, 120, function() use ($orders) {
+            return SalesByOriginResource::collection($orders->paginate(6));
+        });
     }
 }

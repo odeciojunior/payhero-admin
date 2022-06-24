@@ -16,48 +16,51 @@ class ReportSaleService
     public function getResumeSales($filters)
     {
        try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $cacheName = 'sales-resume-'.json_encode($filters);
+            return cache()->remember($cacheName, 120, function() use ($filters) {
+                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
-                        ->where('owner_id', auth()->user()->id)
-                        ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+                $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
+                            ->where('owner_id', auth()->user()->id)
+                            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
-            if (!empty($filters['status'])) {
-                $salesModel = new Sale();
-                if ($filters['status'] === 'others') {
-                    $statusNotIn = [
-                        Sale::STATUS_APPROVED,
-                        Sale::STATUS_PENDING,
-                        Sale::STATUS_CANCELED,
-                        Sale::STATUS_REFUSED,
-                        Sale::STATUS_REFUNDED,
-                        Sale::STATUS_CHARGEBACK
-                    ];
-                    $sales->whereNotIn('status', $statusNotIn);
-                } else {
-                    $sales->where('status', $salesModel->present()->getStatus($filters['status']));
+                if (!empty($filters['status'])) {
+                    $salesModel = new Sale();
+                    if ($filters['status'] === 'others') {
+                        $statusNotIn = [
+                            Sale::STATUS_APPROVED,
+                            Sale::STATUS_PENDING,
+                            Sale::STATUS_CANCELED,
+                            Sale::STATUS_REFUSED,
+                            Sale::STATUS_REFUNDED,
+                            Sale::STATUS_CHARGEBACK
+                        ];
+                        $sales->whereNotIn('status', $statusNotIn);
+                    } else {
+                        $sales->where('status', $salesModel->present()->getStatus($filters['status']));
+                    }
                 }
-            }
 
-            if ($dateRange['0'] == $dateRange['1']) {
-                return $this->getResumeSalesByHours($sales, $filters);
-            } elseif ($dateRange['0'] != $dateRange['1']) {
-                $startDate  = Carbon::createFromFormat('Y-m-d', $dateRange['0'], 'America/Sao_Paulo');
-                $endDate    = Carbon::createFromFormat('Y-m-d', $dateRange['1'], 'America/Sao_Paulo');
-                $diffInDays = $endDate->diffInDays($startDate);
+                if ($dateRange['0'] == $dateRange['1']) {
+                    return $this->getResumeSalesByHours($sales, $filters);
+                } elseif ($dateRange['0'] != $dateRange['1']) {
+                    $startDate  = Carbon::createFromFormat('Y-m-d', $dateRange['0'], 'America/Sao_Paulo');
+                    $endDate    = Carbon::createFromFormat('Y-m-d', $dateRange['1'], 'America/Sao_Paulo');
+                    $diffInDays = $endDate->diffInDays($startDate);
 
-                if ($diffInDays <= 20) {
-                    return $this->getResumeSalesByDays($sales, $filters);
-                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getResumeSalesByTwentyDays($sales, $filters);
-                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getResumeSalesByFortyDays($sales, $filters);
-                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getResumeSalesByWeeks($sales, $filters);
-                } elseif ($diffInDays > 140) {
-                    return $this->getResumeSalesByMonths($sales, $filters);
+                    if ($diffInDays <= 20) {
+                        return $this->getResumeSalesByDays($sales, $filters);
+                    } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                        return $this->getResumeSalesByTwentyDays($sales, $filters);
+                    } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                        return $this->getResumeSalesByFortyDays($sales, $filters);
+                    } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                        return $this->getResumeSalesByWeeks($sales, $filters);
+                    } elseif ($diffInDays > 140) {
+                        return $this->getResumeSalesByMonths($sales, $filters);
+                    }
                 }
-            }
+            });
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -84,9 +87,7 @@ class ReportSaleService
             ];
         }
 
-        $resume = $sales
-        ->select(DB::raw('id as sale, HOUR(start_date) as hour'))
-        ->get();
+        $resume = $sales->select(DB::raw('id as sale, HOUR(start_date) as hour'))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
@@ -393,9 +394,7 @@ class ReportSaleService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $resume = $sales
-        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $sales->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
@@ -439,48 +438,50 @@ class ReportSaleService
     public function getResumeTypePayments($filters)
     {
         try {
-            $projectId = hashids_decode($filters['project_id']);
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $cacheName = 'payment-type-resume-'.json_encode($filters);
+            return cache()->remember($cacheName, 120, function() use ($filters) {
+                $projectId = hashids_decode($filters['project_id']);
+                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $saleModel = new Sale();
+                $saleModel = new Sale();
 
-            $query = $saleModel
-            ->where('project_id', $projectId)
-            ->where('status', Sale::STATUS_APPROVED)
-            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->selectRaw('SUM(original_total_paid_value / 100) as total')
-            ->selectRaw('SUM(IF(payment_method = 1, original_total_paid_value / 100, 0)) as total_credit_card')
-            ->selectRaw('SUM(IF(payment_method = 2, original_total_paid_value / 100, 0)) as total_boleto')
-            ->selectRaw('SUM(IF(payment_method = 4, original_total_paid_value / 100, 0)) as total_pix')
-            ->first();
+                $query = $saleModel
+                ->where('project_id', $projectId)
+                ->where('status', Sale::STATUS_APPROVED)
+                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                ->selectRaw('SUM(original_total_paid_value / 100) as total')
+                ->selectRaw('SUM(IF(payment_method = 1, original_total_paid_value / 100, 0)) as total_credit_card')
+                ->selectRaw('SUM(IF(payment_method = 2, original_total_paid_value / 100, 0)) as total_boleto')
+                ->selectRaw('SUM(IF(payment_method = 4, original_total_paid_value / 100, 0)) as total_pix')
+                ->first();
 
-            $total = $query->total;
+                $total = $query->total;
 
-            $totalCreditCard = $query->total_credit_card;
-            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
+                $totalCreditCard = $query->total_credit_card;
+                $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
 
-            $totalBoleto = $query->total_boleto;
-            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
+                $totalBoleto = $query->total_boleto;
+                $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
 
-            $totalPix = $query->total_pix;
-            $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
+                $totalPix = $query->total_pix;
+                $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
 
-            return [
-                'total' => number_format($total, 2, ',', '.'),
-                'credit_card' => [
-                    'value' => number_format($totalCreditCard, 2, ',', '.'),
-                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
-                ],
-                'boleto' => [
-                    'value' => number_format($totalBoleto, 2, ',', '.'),
-                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
-                ],
-                'pix' => [
-                    'value' => number_format($totalPix, 2, ',', '.'),
-                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
-                ]
-            ];
-
+                return [
+                    'total' => number_format($total, 2, ',', '.'),
+                    'credit_card' => [
+                        'value' => number_format($totalCreditCard, 2, ',', '.'),
+                        'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                    ],
+                    'boleto' => [
+                        'value' => number_format($totalBoleto, 2, ',', '.'),
+                        'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
+                    ],
+                    'pix' => [
+                        'value' => number_format($totalPix, 2, ',', '.'),
+                        'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
+                    ]
+                ];
+            });
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -489,44 +490,47 @@ class ReportSaleService
     public function getResumeProducts($filters)
     {
         try {
-            $projectId = hashids_decode($filters['project_id']);
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $cacheName = 'products-resume-'.json_encode($filters);
+            return cache()->remember($cacheName, 120, function() use ($filters) {
+                $projectId = hashids_decode($filters['project_id']);
+                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $query = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
-            ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
-            ->where('sales.status', Sale::STATUS_APPROVED)
-            ->where('sales.project_id', $projectId)
-            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
-            ->groupBy('products.id')
-            ->orderByDesc('amount')
-            ->limit(8)
-            ->get();
+                $query = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
+                ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
+                ->where('sales.status', Sale::STATUS_APPROVED)
+                ->where('sales.project_id', $projectId)
+                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
+                ->groupBy('products.id')
+                ->orderByDesc('amount')
+                ->limit(8)
+                ->get();
 
-            $total = 0;
-            foreach($query as $r)
-            {
-                $total += $r->amount;
-            }
+                $total = 0;
+                foreach($query as $r)
+                {
+                    $total += $r->amount;
+                }
 
-            $index = 0;
-            foreach($query as $result)
-            {
-                $percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+                $index = 0;
+                foreach($query as $result)
+                {
+                    $percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
 
-                $result->image = empty($result->image) ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $result->image;
-                $result->percentage = $percentage < 28 ? '28%' : $percentage.'%';
-                $result->color = $this->getColors($index);
+                    $result->image = empty($result->image) ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $result->image;
+                    $result->percentage = $percentage < 28 ? '28%' : $percentage.'%';
+                    $result->color = $this->getColors($index);
 
-                $index++;
-            }
+                    $index++;
+                }
 
-            $productsArray = $query->toArray();
+                $productsArray = $query->toArray();
 
-            return [
-                'products' => $productsArray,
-                'total' => $total
-            ];
+                return [
+                    'products' => $productsArray,
+                    'total' => $total
+                ];
+            });
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }

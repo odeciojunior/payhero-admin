@@ -21,37 +21,40 @@ class ReportFinanceService
     public function getResumeCommissions($filters)
     {
         try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $cacheName = 'comissions-resume-'.json_encode($filters);
+            return cache()->remember($cacheName, 120, function() use ($filters) {
+                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+                $projectId = hashids_decode($filters['project_id']);
 
-            $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                                        ->where('sales.project_id', $projectId)
-                                        ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                                        ->whereNull('transactions.invitation_id')
-                                        ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ]);
+                $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
+                                            ->where('sales.project_id', $projectId)
+                                            ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                            ->whereNull('transactions.invitation_id')
+                                            ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ]);
 
-            $date['startDate'] = $dateRange[0];
-            $date['endDate'] = $dateRange[1];
+                $date['startDate'] = $dateRange[0];
+                $date['endDate'] = $dateRange[1];
 
-            if ($date['startDate'] == $date['endDate']) {
-                return $this->getResumeCommissionsByHours($transactions, $filters);
-            } elseif ($date['startDate'] != $date['endDate']) {
-                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
-                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
-                $diffInDays = $endDate->diffInDays($startDate);
+                if ($date['startDate'] == $date['endDate']) {
+                    return $this->getResumeCommissionsByHours($transactions, $filters);
+                } elseif ($date['startDate'] != $date['endDate']) {
+                    $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                    $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                    $diffInDays = $endDate->diffInDays($startDate);
 
-                if ($diffInDays <= 20) {
-                    return $this->getResumeCommissionsByDays($transactions, $filters);
-                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getResumeCommissionsByTwentyDays($transactions, $filters);
-                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getResumeCommissionsByFortyDays($transactions, $filters);
-                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getResumeCommissionsByWeeks($transactions, $filters);
-                } elseif ($diffInDays > 140) {
-                    return $this->getResumeCommissionsByMonths($transactions, $filters);
+                    if ($diffInDays <= 20) {
+                        return $this->getResumeCommissionsByDays($transactions, $filters);
+                    } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                        return $this->getResumeCommissionsByTwentyDays($transactions, $filters);
+                    } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                        return $this->getResumeCommissionsByFortyDays($transactions, $filters);
+                    } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                        return $this->getResumeCommissionsByWeeks($transactions, $filters);
+                    } elseif ($diffInDays > 140) {
+                        return $this->getResumeCommissionsByMonths($transactions, $filters);
+                    }
                 }
-            }
+            });
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -398,21 +401,18 @@ class ReportFinanceService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $resume = $transactions
-        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
+                                ->get();
 
         $comissionData = [];
 
         foreach ($labelList as $label) {
             $comissionDataValue = 0;
-
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('m/y') == $label) {
                     $comissionDataValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
                 }
             }
-
             array_push($comissionData, $comissionDataValue);
         }
 
@@ -443,39 +443,41 @@ class ReportFinanceService
         ];
     }
 
-    // ----------------------------------------
     public function getResumePendings($filters)
     {
         try {
-            $projectId = hashids_decode($filters['project_id']);
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $date['startDate'] = $dateRange[0];
-            $date['endDate'] = $dateRange[1];
+            $cacheName = 'pendings-resume-'.json_encode($filters);
+            return cache()->remember($cacheName, 120, function() use ($filters) {
+                $projectId = hashids_decode($filters['project_id']);
+                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+                $date['startDate'] = $dateRange[0];
+                $date['endDate'] = $dateRange[1];
 
-            $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
-                                        ->join('sales', 'sales.id', 'transactions.sale_id')
-                                        ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
-                                        ->where('sales.project_id', $projectId);
+                $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
+                                            ->join('sales', 'sales.id', 'transactions.sale_id')
+                                            ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
+                                            ->where('sales.project_id', $projectId);
 
-            if ($date['startDate'] == $date['endDate']) {
-                return $this->getResumePendingsByHours($transactions, $filters);
-            } elseif ($date['startDate'] != $date['endDate']) {
-                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
-                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
-                $diffInDays = $endDate->diffInDays($startDate);
+                if ($date['startDate'] == $date['endDate']) {
+                    return $this->getResumePendingsByHours($transactions, $filters);
+                } elseif ($date['startDate'] != $date['endDate']) {
+                    $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                    $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                    $diffInDays = $endDate->diffInDays($startDate);
 
-                if ($diffInDays <= 20) {
-                    return $this->getResumePendingsByDays($transactions, $filters);
-                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getResumePendingsByTwentyDays($transactions, $filters);
-                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getResumePendingsByFortyDays($transactions, $filters);
-                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getResumePendingsByWeeks($transactions, $filters);
-                } elseif ($diffInDays > 140) {
-                    return $this->getResumePendingsByMonths($transactions, $filters);
+                    if ($diffInDays <= 20) {
+                        return $this->getResumePendingsByDays($transactions, $filters);
+                    } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                        return $this->getResumePendingsByTwentyDays($transactions, $filters);
+                    } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                        return $this->getResumePendingsByFortyDays($transactions, $filters);
+                    } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                        return $this->getResumePendingsByWeeks($transactions, $filters);
+                    } elseif ($diffInDays > 140) {
+                        return $this->getResumePendingsByMonths($transactions, $filters);
+                    }
                 }
-            }
+            });
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -875,42 +877,44 @@ class ReportFinanceService
         ];
     }
 
-    // -----------------------------------------
     public function getResumeCashbacks($filters)
     {
         try {
-            $projectId = hashids_decode($filters['project_id']);
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $cacheName = 'cashback-resume-'.json_encode($filters);
+            return cache()->remember($cacheName, 120, function() use ($filters) {
+                $projectId = hashids_decode($filters['project_id']);
+                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $cashbacks = Cashback::with('sale')
-                                    ->join('sales', 'sales.id', 'cashbacks.sale_id')
-                                    ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
-                                    ->where('sales.project_id', $projectId);
+                $cashbacks = Cashback::with('sale')
+                                        ->join('sales', 'sales.id', 'cashbacks.sale_id')
+                                        ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
+                                        ->where('sales.project_id', $projectId);
 
-            $date['startDate'] = $dateRange[0];
-            $date['endDate'] = $dateRange[1];
+                $date['startDate'] = $dateRange[0];
+                $date['endDate'] = $dateRange[1];
 
-            $countCashbacks = $cashbacks->count();
+                $countCashbacks = $cashbacks->count();
 
-            if ($date['startDate'] == $date['endDate']) {
-                return $this->getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters);
-            } elseif ($date['startDate'] != $date['endDate']) {
-                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
-                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
-                $diffInDays = $endDate->diffInDays($startDate);
+                if ($date['startDate'] == $date['endDate']) {
+                    return $this->getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters);
+                } elseif ($date['startDate'] != $date['endDate']) {
+                    $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                    $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                    $diffInDays = $endDate->diffInDays($startDate);
 
-                if ($diffInDays <= 20) {
-                    return $this->getResumeCashbacksByDays($cashbacks, $countCashbacks, $filters);
-                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getResumeCashbacksByTwentyDays($cashbacks, $countCashbacks, $filters);
-                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getResumeCashbacksByFortyDays($cashbacks, $countCashbacks, $filters);
-                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getResumeCashbacksByWeeks($cashbacks, $countCashbacks, $filters);
-                } elseif ($diffInDays > 140) {
-                    return $this->getResumeCashbacksByMonths($cashbacks, $countCashbacks, $filters);
+                    if ($diffInDays <= 20) {
+                        return $this->getResumeCashbacksByDays($cashbacks, $countCashbacks, $filters);
+                    } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                        return $this->getResumeCashbacksByTwentyDays($cashbacks, $countCashbacks, $filters);
+                    } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                        return $this->getResumeCashbacksByFortyDays($cashbacks, $countCashbacks, $filters);
+                    } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                        return $this->getResumeCashbacksByWeeks($cashbacks, $countCashbacks, $filters);
+                    } elseif ($diffInDays > 140) {
+                        return $this->getResumeCashbacksByMonths($cashbacks, $countCashbacks, $filters);
+                    }
                 }
-            }
+            });
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
