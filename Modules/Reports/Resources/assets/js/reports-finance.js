@@ -75,7 +75,7 @@ function distribution() {
                             <span class="cube ${blocked.color}">
                                 <i></i>
                             </span>
-                            Bloqueado
+                            Retido
                         </header>
                         <footer class="footer-distribution">
                             <small>R$</small>
