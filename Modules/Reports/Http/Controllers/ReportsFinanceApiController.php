@@ -110,6 +110,7 @@ class ReportsFinanceApiController extends Controller
             'data' => $resume
         ]);
     }
+
     public function getFinancesWithdrawals(Request $request)
     {
         $reportService = new ReportFinanceService();
