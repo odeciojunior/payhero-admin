@@ -2347,7 +2347,8 @@ h4.number{
 }
 
 
-.table-coupons.table thead > tr > td:first-child { 
+.table-coupons.table thead > tr > td:first-child,
+.table-coupons.table tbody > tr > td:first-child { 
     padding-left: 18px !important; 
     padding-right: 18px !important; 
 }
