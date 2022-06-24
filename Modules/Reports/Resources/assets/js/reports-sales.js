@@ -1209,6 +1209,12 @@ function infoCard() {
         let { credit_card } = result[0].data;
         let conversionCard = result[1].data;
 
+        if(conversionCard.credit_card.total == "0") {
+            $('#card-info').hide();
+        } else {
+            $('#card-info').show();
+        } 
+
         if(credit_card !== null) {
             cardHtml = `
                 <div style="padding: 0 24px;" class="d-flex align-items">
@@ -1228,7 +1234,7 @@ function infoCard() {
                 </div>
             `;
             $("#block-info-card").html(cardHtml);
-        }
+        } 
     })
     .catch(e => console.log('error =>' + e)); 
 }
