@@ -46,11 +46,12 @@ class SalesResource extends JsonResource
         if (!empty($domain->name)) {
             if (config('app.env') == 'homolog') {
                 $urlCheckout = "https://checkout-test.cloudfox.net/order/";
-            }
-            if($user->company_default==Company::DEMO_ID){
-                $urlCheckout = "https://demo.cloudfox.net/order/";
-            }
+            }            
             $thankPageUrl = $urlCheckout . Hashids::connection('sale_id')->encode($this->id);
+        }
+        
+        if($user->company_default==Company::DEMO_ID){
+            $urlCheckout = "https://demo.cloudfox.net/order/";
         }
 
         if ($this->payment_method == 4 && $this->status <> Sale::STATUS_APPROVED) {
