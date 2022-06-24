@@ -65,11 +65,11 @@ class ContestationService
             $search_input_date = 'sale_contestations.expiration_date';
 
             if ($search == 'adjustment_date') {
-                $search_input_date = 'sale_contestations.file_date';
+                $search_input_date = 'sale_contestations.request_date';
             }
 
             if ($search == 'transaction_date') {
-                $search_input_date = 'sales.start_date';
+                $search_input_date = 'sale_contestations.transaction_date';
             }
 
             if ($search == 'expiration_date') {

@@ -25,7 +25,7 @@ $(document).ready(function () {
                 sessionStorage.removeItem('company_default_name')
                 sessionStorage.setItem('company_default', company_id);
                 sessionStorage.setItem('company_default_name', company_name);
-                
+
                 $('.company_name').val( sessionStorage.getItem('company_default_name') );
                 if ( typeof updateAfterChangeCompany === "function" ) {
                     updateAfterChangeCompany();
@@ -45,12 +45,6 @@ $(document).ready(function () {
     $('.bonus-balance-button').on('click', function() {
         $('body').addClass('bonus-modal-opened');
         $('#bonus-balance-modal').fadeToggle('slow', 'linear');
-    })
-
-    $('.close-bonus-modal, .modal-bonus-close').on('click', function() {
-        $('body').removeClass('bonus-modal-opened');
-        $('#bonus-balance-modal').fadeToggle('slow', 'linear');
-        // $('.bonus-balance-container').html(loadSkeletonBonus);
     })
 
 
@@ -1720,7 +1714,7 @@ function buildModalBonusBalance(bonusObject) {
     var percent = bonusObject.used_percentage;
     var chartColor = ''
     var chartColorSecondary = '';
-    var chartSize = 95;
+    var chartSize = 106;
 
     if(percent < 25) {
         var chartColor = '#59BF75'
@@ -1788,7 +1782,7 @@ function buildModalBonusBalance(bonusObject) {
 
                 <div class="bonus-numbers d-flex align-items-start ml-5">
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">
                         <div>
                             <h4 class="bonus-number-title">
                                 Você ganhou
@@ -1808,22 +1802,22 @@ function buildModalBonusBalance(bonusObject) {
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">
                         <div>
-                            </div>
-                                <h4 class="bonus-number-title">
-                                    Você já utilizou
-                                </h4>
-                                <span class="bonus-number">
-                                    ${alreadyUsed}
-                                </span>
-                            <div>
-                                <h4 class="bonus-number-title">
-                                    Vence em
-                                </h4>
-                                <span class="bonus-number">
-                                    ${expireDate}
-                                </span>
+                            <h4 class="bonus-number-title">
+                                Você já utilizou
+                            </h4>
+                            <span class="bonus-number">
+                                ${alreadyUsed}
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="bonus-number-title">
+                                Vence em
+                            </h4>
+                            <span class="bonus-number">
+                                ${expireDate}
+                            </span>
                         </div>
                     </div>
 
@@ -1874,6 +1868,12 @@ function buildModalBonusBalance(bonusObject) {
 
     $('.bonus-balance-container').html(content);
     mkChartRender();
+
+    $('.close-bonus-modal, .modal-bonus-close').on('click', function() {
+        $('body').removeClass('bonus-modal-opened');
+        $('#bonus-balance-modal').fadeToggle('slow', 'linear');
+        // $('.bonus-balance-container').html(loadSkeletonBonus);
+    })
 }
 
 const toggleBonusContent = function() {
@@ -1883,7 +1883,6 @@ const toggleBonusContent = function() {
 
 
 function showBonusBalance() {
-    var totalBalance  = null;
 
     if(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance')) {
         var bonus_balance = JSON.parse(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance'));
@@ -1920,7 +1919,7 @@ function showBonusBalance() {
 
                 buildModalBonusBalance(response);
 
-                if (totalBalance && $(window).width() <= 768) {
+                if ($(window).width() <= 768) {
                     $('.bonus-balance-button.mobile').show();
                 }else {
                     $('.bonus-balance-button.desktop').show();
