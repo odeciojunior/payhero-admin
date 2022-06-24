@@ -21,7 +21,7 @@ class SmartfunnelApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
@@ -30,13 +30,14 @@ class SmartfunnelApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações Smart Funnel');
 
-            $user = auth()->user();
-
-            $smartfunnelIntegrations = $smartfunnelIntegration->where('user_id', $user->getAccountOwnerId())
-                                                    ->with('project')->get();
+            $smartfunnelIntegrations = SmartfunnelIntegration::
+                join('checkout_configs as cc', 'cc.project_id', '=', 'smartfunnel_integrations.project_id')
+                ->where('cc.company_id', hashids_decode($request->company))
+                ->where('user_id', $user->getAccountOwnerId())
+                ->with('project')->get();
 
             $projects     = collect();
-            $userProjects = $userProjectModel->where([[
+            $userProjects = UserProject::where([[
                 'user_id', $user->getAccountOwnerId()],[
                 'company_id', $user->company_default
             ]])->get();
@@ -44,7 +45,7 @@ class SmartfunnelApiController extends Controller
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->join('domains',
+                        ->leftjoin('domains',
                             function ($join) {
                                 $join->on('domains.project_id', '=', 'projects.id')
                                     ->where('domains.status', 3)
