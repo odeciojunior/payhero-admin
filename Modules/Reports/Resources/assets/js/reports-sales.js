@@ -201,8 +201,8 @@ function salesResume() {
 
 function distribution() {
     let distributionHtml = '';
-    $('#card-distribution .onPreLoad *').remove();
-    $("#block-distribution").prepend(skeLoad);
+    $('#card-distribution .onPreLoadBig *').remove();
+    $("#block-distribution").html(skeLoadBig);
 
     return $.ajax({
         method: "GET",
@@ -1333,8 +1333,9 @@ function changeCalendar() {
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        //$('.onPreLoad *').remove();
-        //$('.onPreLoad').html(skeLoad);
+        $('.onPreLoad *, .onPreLoadBig *').remove();
+        $('.onPreLoad').html(skeLoad);
+        $('.onPreLoadBig').html(skeLoadBig);
         $.ajaxQ.abortAll();
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
         
@@ -1343,8 +1344,9 @@ function changeCompany() {
 }
 
 function updateReports() {
-    // $('.onPreLoad *').remove();
-    // $('.onPreLoad').html(skeLoad);
+    $('.onPreLoad *, .onPreLoadBig *').remove();
+    $('.onPreLoad').html(skeLoad);
+    $('.onPreLoadBig').html(skeLoadBig);
     
     $.ajax({
         method: "GET",
@@ -1395,7 +1397,7 @@ function updateReports() {
             orderbump();
             upsell();
             infoCard();
-            recurrence();
+            //recurrence();
             salesStatus();
         }
     });
@@ -1443,7 +1445,7 @@ function exportReports() {
 function salesStatus(st) {
     let status = (st == '' || st == undefined) ? $("#status-graph option:selected").val() : st;
     let statusHtml = '';
-    $("#card-status .onPreLoad *" ).remove();
+    $("#card-status .onPreLoadBig *" ).remove();
     $("#block-status").html(skeLoadBig);
 
     return $.ajax({
