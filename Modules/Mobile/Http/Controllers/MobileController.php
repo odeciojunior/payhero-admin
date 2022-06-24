@@ -23,6 +23,7 @@ class MobileController extends Controller
     {
         try {
             $companyId = hashids_decode($request->company_id);
+            $status = ($request->status) ? explode(',', $request->status) : null;
 
             $relations = [
                 'sale',
@@ -40,7 +41,13 @@ class MobileController extends Controller
                 ->where('company_id', $companyId)
                 ->orderByDesc('sales.start_date');
 
-            if($request->has('limit')) {
+            if (!empty($status)) {
+                $sales->whereHas('sale', function ($query) use ($status) {
+                    $query->whereIn('status', $status);
+                });
+            }
+
+            if ($request->has('limit')) {
                 $sales->limit($request->limit);
             }
 

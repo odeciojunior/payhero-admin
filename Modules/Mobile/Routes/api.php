@@ -18,7 +18,7 @@ use Modules\Withdrawals\Http\Controllers\WithdrawalsApiController;
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'mobile'], function() {
     Route::get('/balances', [DashboardApiController::class, 'getValues'])->name('mobile.balances');
-    Route::get('/sales', [MobileController::class, 'sales'])->name('mobile.balances');
+    Route::get('/sales', [MobileController::class, 'sales'])->name('mobile.sales');
     Route::get('/withdrawals', [WithdrawalsApiController::class, 'index'])->name('mobile.withdrawals');
     Route::post('/withdrawals', [WithdrawalsApiController::class, 'store'])->name('mobile.withdrawals.store');
     Route::get('/statements-resume', [MobileController::class, 'statementsResume'])->name('mobile.statements-resume');
