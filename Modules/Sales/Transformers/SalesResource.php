@@ -7,6 +7,7 @@ use Google\Service\ShoppingContent\Amount;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
@@ -41,10 +42,13 @@ class SalesResource extends JsonResource
         $domain = Domain::select('name')->where('project_id', $this->project_id)->where('status', 3)->first();
         $domainName = $domain->name??'cloudfox.net';
 
+        $urlCheckout ="https://checkout.{$domainName}/order/";
         if (!empty($domain->name)) {
-            $urlCheckout = "https://checkout.{$domain->name}/order/";
             if (config('app.env') == 'homolog') {
                 $urlCheckout = "https://checkout-test.cloudfox.net/order/";
+            }
+            if($user->company_default==Company::DEMO_ID){
+                $urlCheckout = "https://demo.cloudfox.net/order/";
             }
             $thankPageUrl = $urlCheckout . Hashids::connection('sale_id')->encode($this->id);
         }
@@ -58,8 +62,8 @@ class SalesResource extends JsonResource
         // }
 
         
-        $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($this->id)."/download-boleto";
-
+        $boletoLink = $urlCheckout.Hashids::connection('sale_id')->encode($this->id)."/download-boleto";
+        
         $data = [
             'id' => hashids_encode($this->id, 'sale_id'),
             'upsell' => hashids_encode($this->upsell_id, 'sale_id'),
