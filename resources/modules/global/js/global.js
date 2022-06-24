@@ -1652,7 +1652,13 @@ function getCompanies() {
                     "id":"v2RmA83EbZPVpYB",
                     "name":"Empresa Demo",
                     "company_document_status": "approved",
-                    "active_flag": 1
+                    "active_flag": 1,
+                    "projects": [{
+                        "id" : "v2RmA83EbZPVpYB",
+                        "name": "CLOUDFOX DEMO LTDA",
+                        "order_p":1,
+                        "status":1
+                    }]
                 });
                 companies = data.companies;
                 company_default = data.company_default;
