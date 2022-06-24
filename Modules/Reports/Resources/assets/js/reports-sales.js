@@ -819,7 +819,7 @@ function orderbump() {
             let { amount, value } = response.data;
             
             if(value !== null) {
-                value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
+                value = removeMoneyCurrency(value);
                 orderbumpBlock = `
                    <div class="d-flex align-items">
                        <div class="balance col-6">
@@ -887,7 +887,8 @@ function upsell() {
             let { value, amount } = response.data;
             
             if( value !== null ) {
-                value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
+                value = removeMoneyCurrency(value);
+
                 upsellBlock = `
                     <div class="d-flex align-items">
                         <div class="balance col-6">

@@ -707,6 +707,8 @@ class ReportSaleService
     public function getOrderBump($filters)
     {
         $cacheName = 'order-bump-'.json_encode($filters);
+        cache()->forget($cacheName);
+
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -718,10 +720,12 @@ class ReportSaleService
                                 ->whereBetween('transactions.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->where('sales.has_order_bump', true)
                                 ->where('sales.project_id', $projectId)
+                                ->where('sales.status', Sale::STATUS_APPROVED)
+                                ->where('user_id', auth()->user()->account_owner_id)
                                 ->first();
 
             return [
-                'value' => $data->value,
+                'value' => foxutils()->formatMoney($data->value / 100),
                 'amount' => $data->amount
             ];
         });
@@ -730,6 +734,7 @@ class ReportSaleService
     public function getUpsell($filters)
     {
         $cacheName = 'upsell-'.json_encode($filters);
+        cache()->forget($cacheName);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -741,10 +746,12 @@ class ReportSaleService
                                 ->whereBetween('transactions.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->whereNotNull('sales.upsell_id')
                                 ->where('sales.project_id', $projectId)
+                                ->where('sales.status', Sale::STATUS_APPROVED)
+                                ->where('user_id', auth()->user()->account_owner_id)
                                 ->first();
 
             return [
-                'value' => $data->value,
+                'value' => foxutils()->formatMoney($data->value / 100),
                 'amount' => $data->amount
             ];
         });
