@@ -10,22 +10,14 @@ $(function() {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
     }
-    // $('.sirius-select1').each(function () {
-    //     $(this).siriusSelect();
-    // });
-    // $('.sirius-select1').on('click', function() {
-    //     $('.sirius-select1 .sirius-select-text').toggleClass('on');
-    // });
 
-    $('.sirius-select').on('change', function() {
-        salesStatus($(this).find('option:selected').val())
+    $("#status-graph").on('change', function() {
+        salesStatus($(this).find('option:selected').val());
     });
 });
 
 let salesUrl = '/api/reports/sales';
 let mktUrl = '/api/reports/marketing';
-
-
 
 function barGraph(data, labels, total) {
     const titleTooltip = (tooltipItems) => {
@@ -704,7 +696,7 @@ function loadFrequenteSales() {
                                     </div>
                                 </div>
                                 <div class="grey font-size-14">${item.sales_amount}</div>
-                                <div class="grey font-size-14 value"><strong>${newV}</strong></div>
+                                <div class="grey font-size-14 value"><strong>R$ ${newV}</strong></div>
                             </div>
                         </div>
                     `;
@@ -1341,17 +1333,19 @@ function changeCalendar() {
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        $('.onPreLoad *').remove();
-        $('.onPreLoad').html(skeLoad);
+        //$('.onPreLoad *').remove();
+        //$('.onPreLoad').html(skeLoad);
+        $.ajaxQ.abortAll();
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+        
         updateReports();
     });
 }
 
 function updateReports() {
-    $('.onPreLoad *').remove();
-    $('.onPreLoad').html(skeLoad);
-
+    // $('.onPreLoad *').remove();
+    // $('.onPreLoad').html(skeLoad);
+    
     $.ajax({
         method: "GET",
         url: "/api/projects?select=true",
@@ -1450,7 +1444,7 @@ function salesStatus(st) {
     let status = (st == '' || st == undefined) ? $("#status-graph option:selected").val() : st;
     let statusHtml = '';
     $("#card-status .onPreLoad *" ).remove();
-    $("#block-status").prepend(skeLoad);
+    $("#block-status").html(skeLoadBig);
 
     return $.ajax({
         method: "GET",
@@ -1465,6 +1459,7 @@ function salesStatus(st) {
         },
         success: function success(response) {
             let { chart, total, variation } = response.data;
+            
             statusHtml = `
                 <div class="d-flex justify-content-between box-finances-values finances-sales">
                     <div class="finances-values">
@@ -1636,6 +1631,31 @@ function removeDuplcateItem(item) {
     }
 }
 
+// abort all ajax
+$.ajaxQ = (function(){
+    var id = 0, Q = {};
+  
+    $(document).ajaxSend(function(e, jqx){
+      jqx._id = ++id;
+      Q[jqx._id] = jqx;
+    });
+    $(document).ajaxComplete(function(e, jqx){
+      delete Q[jqx._id];
+    });
+  
+    return {
+      abortAll: function(){
+        var r = [];
+        $.each(Q, function(i, jqx){
+          r.push(jqx._id);
+          jqx.abort();
+        });
+        return r;
+      }
+    };
+  
+  })();
+
 let skeLoad = `
     <div class="ske-load">
         <div class="px-20 py-0">
@@ -1686,4 +1706,35 @@ let noData = `
 </linearGradient>
 </defs>
 </svg>
+`;
+
+let skeLoadBig = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
 `;

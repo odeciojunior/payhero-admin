@@ -877,6 +877,8 @@ h4.number{
     position: absolute;
     transform: translate(0, -50%);
 }
+#block-status .ske-load { transform: translate(0, -40%); }
+
 .empty-graph {
     height: 100%;
     align-items: center;
@@ -1920,6 +1922,7 @@ h4.number{
     display: flex;
     height: 150px;
     margin: 0 12px 0 0;
+    padding-right: 12px;
     overflow: auto;
 }
 .list-products {
@@ -1929,6 +1932,7 @@ h4.number{
     flex-wrap: wrap;
     height: 147px;
     position: relative;
+    padding-right: 0;
 }
 .box-list-products {
     display: flex;
@@ -1971,7 +1975,7 @@ h4.number{
 
 .footer-withdrawals {
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-direction: column;
 }
 .data-withdrawals { 
@@ -1980,8 +1984,9 @@ h4.number{
 }
 
 .footer-withdrawals h6 {
-    color: #636363;
-    font-size: 18px;
+    color: #2E85EC;
+    font-size: 16px;
+    font-weight: 700;
 }
 .footer-withdrawals p {
     color: #9A9A9A;

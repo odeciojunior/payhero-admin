@@ -313,7 +313,7 @@ function loadFrequenteSales() {
                             </div>
                             <div class="d-flex justify-content-between align-items" style="min-width: 100px;">
                                 <div class="grey font-size-14">${item.sales_amount}</div>
-                                <div class="grey font-size-14 value"><strong>${newV}</strong></div>
+                                <div class="grey font-size-14 value"><strong>R$ ${newV}</strong></div>
                             </div>
                         </div>
                     </div>

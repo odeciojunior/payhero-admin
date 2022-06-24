@@ -111,41 +111,16 @@ function withdrawals() {
         },
         success: function success(response) {
             let { chart } = response.data;
+            let { withdrawal, income } = chart;
+            let incomeTotal = String(removeMoneyCurrency(income.total).replace(',','.'));
+            let withdrawalTotal = String(removeMoneyCurrency(withdrawal.total).replace(',','.'));
+            const numbers = [incomeTotal, withdrawalTotal].map(Number).reduce((prev, value) => prev + value,0);           
+
             infoWithdraw = `
                 <div class="no-draws">
                     <footer class="d-flex footer-withdrawals">
-                        <div>
-                            <svg width="122" height="151" viewBox="0 0 122 151" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M60.994 144.494C94.68 144.494 121.988 117.186 121.988 83.5C121.988 49.8139 94.68 22.506 60.994 22.506C27.3079 22.506 0 49.8139 0 83.5C0 117.186 27.3079 144.494 60.994 144.494Z" fill="url(#paint0_linear_1185_948)"/>
-                                <path d="M95.9638 57.4758H26.024C23.7783 57.4758 21.9578 59.2964 21.9578 61.5421V146.934C21.9578 149.179 23.7783 151 26.024 151H95.9638C98.2095 151 100.03 149.179 100.03 146.934V61.5421C100.03 59.2964 98.2095 57.4758 95.9638 57.4758Z" fill="white"/>
-                                <path d="M52.8614 69.6746H31.7169C30.3694 69.6746 29.2771 70.7669 29.2771 72.1143C29.2771 73.4618 30.3694 74.5541 31.7169 74.5541H52.8614C54.2089 74.5541 55.3012 73.4618 55.3012 72.1143C55.3012 70.7669 54.2089 69.6746 52.8614 69.6746Z" fill="#B4DAFF"/>
-                                <path d="M67.5 80.2467H31.7169C30.3694 80.2467 29.2771 81.339 29.2771 82.6865C29.2771 84.0339 30.3694 85.1262 31.7169 85.1262H67.5C68.8474 85.1262 69.9398 84.0339 69.9398 82.6865C69.9398 81.339 68.8474 80.2467 67.5 80.2467Z" fill="#DFEAFB"/>
-                                <path d="M52.8614 91.6324H31.7169C30.3694 91.6324 29.2771 92.7248 29.2771 94.0722C29.2771 95.4196 30.3694 96.512 31.7169 96.512H52.8614C54.2089 96.512 55.3012 95.4196 55.3012 94.0722C55.3012 92.7248 54.2089 91.6324 52.8614 91.6324Z" fill="#B4DAFF"/>
-                                <path d="M67.5 102.205H31.7169C30.3694 102.205 29.2771 103.297 29.2771 104.644C29.2771 105.992 30.3694 107.084 31.7169 107.084H67.5C68.8474 107.084 69.9398 105.992 69.9398 104.644C69.9398 103.297 68.8474 102.205 67.5 102.205Z" fill="#DFEAFB"/>
-                                <path d="M52.8614 113.59H31.7169C30.3694 113.59 29.2771 114.683 29.2771 116.03C29.2771 117.378 30.3694 118.47 31.7169 118.47H52.8614C54.2089 118.47 55.3012 117.378 55.3012 116.03C55.3012 114.683 54.2089 113.59 52.8614 113.59Z" fill="#B4DAFF"/>
-                                <path d="M67.5 124.163H31.7169C30.3694 124.163 29.2771 125.255 29.2771 126.602C29.2771 127.95 30.3694 129.042 31.7169 129.042H67.5C68.8474 129.042 69.9398 127.95 69.9398 126.602C69.9398 125.255 68.8474 124.163 67.5 124.163Z" fill="#DFEAFB"/>
-                                <g filter="url(#filter0_d_1185_948)">
-                                    <path d="M95.9638 16H26.024C23.7783 16 21.9578 17.8205 21.9578 20.0663V44.4639C21.9578 46.7096 23.7783 48.5301 26.024 48.5301H95.9638C98.2095 48.5301 100.03 46.7096 100.03 44.4639V20.0663C100.03 17.8205 98.2095 16 95.9638 16Z" fill="#1485FD"/>
-                                </g>
-                                <path d="M52.8614 24.9458H31.7169C30.3694 24.9458 29.2771 26.0381 29.2771 27.3856C29.2771 28.733 30.3694 29.8253 31.7169 29.8253H52.8614C54.2089 29.8253 55.3012 28.733 55.3012 27.3856C55.3012 26.0381 54.2089 24.9458 52.8614 24.9458Z" fill="#B4DAFF"/>
-                                <path d="M67.5 35.5181H31.7169C30.3694 35.5181 29.2771 36.6104 29.2771 37.9578C29.2771 39.3053 30.3694 40.3976 31.7169 40.3976H67.5C68.8474 40.3976 69.9398 39.3053 69.9398 37.9578C69.9398 36.6104 68.8474 35.5181 67.5 35.5181Z" fill="white"/>
-                                <defs>
-                                    <filter id="filter0_d_1185_948" x="1.95776" y="0" width="118.072" height="72.5302" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                    <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                                    <feOffset dy="4"/>
-                                    <feGaussianBlur stdDeviation="10"/>
-                                    <feComposite in2="hardAlpha" operator="out"/>
-                                    <feColorMatrix type="matrix" values="0 0 0 0 0.180392 0 0 0 0 0.521569 0 0 0 0 0.92549 0 0 0 0.17 0"/>
-                                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1185_948"/>
-                                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1185_948" result="shape"/>
-                                    </filter>
-                                    <linearGradient id="paint0_linear_1185_948" x1="60.994" y1="22.506" x2="60.994" y2="144.494" gradientUnits="userSpaceOnUse">
-                                        <stop stop-color="#E3ECFA"/>
-                                        <stop offset="1" stop-color="#DAE7FF"/>
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                        <div>                            
+                            ${noWithdrawal}
                         </div>
 
                         <div class="data-withdrawals">
@@ -161,14 +136,13 @@ function withdrawals() {
 
             graphDraw = `<div id="block-withdraw"></div>`;
 
-
-            if(chart) {
+            if(numbers !== 0) {
                 $("#draw").html(graphDraw);
                 $('#block-withdraw').html('<canvas height="260" id="financesChart"></canvas>');
-                let labels = [...chart.labels];
+                let label = [...chart.labels];
                 let withdraw = [...chart.withdrawal.values];
                 let series = [...chart.income.values];
-                barGraph(series, labels, withdraw);
+                barGraph(series, label, withdraw);
             } else {
                 $('#card-draw .onPreLoad *').remove();
                 $("#card-draw").find('.graph').after(infoWithdraw);
@@ -937,6 +911,36 @@ let bigGraph = `
 <stop stop-color="#F4F6FB"/>
 <stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
 </linearGradient>
+</defs>
+</svg>
+`;
+
+let noWithdrawal = `
+<svg width="111" height="138" viewBox="0 0 111 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M55.5 132C86.1518 132 111 107.152 111 76.5C111 45.8482 86.1518 21 55.5 21C24.8482 21 0 45.8482 0 76.5C0 107.152 24.8482 132 55.5 132Z" fill="#FAFAFA"/>
+<path d="M87.32 52.8199H23.68C21.6365 52.8199 19.98 54.4765 19.98 56.5199V134.22C19.98 136.263 21.6365 137.92 23.68 137.92H87.32C89.3634 137.92 91.02 136.263 91.02 134.22V56.5199C91.02 54.4765 89.3634 52.8199 87.32 52.8199Z" fill="white"/>
+<path d="M48.0999 63.9199H28.8599C27.6338 63.9199 26.6399 64.9138 26.6399 66.1399C26.6399 67.3659 27.6338 68.3599 28.8599 68.3599H48.0999C49.326 68.3599 50.3199 67.3659 50.3199 66.1399C50.3199 64.9138 49.326 63.9199 48.0999 63.9199Z" fill="#B4DAFF"/>
+<path d="M61.4199 73.5397H28.8599C27.6338 73.5397 26.6399 74.5336 26.6399 75.7597C26.6399 76.9857 27.6338 77.9797 28.8599 77.9797H61.4199C62.646 77.9797 63.6399 76.9857 63.6399 75.7597C63.6399 74.5336 62.646 73.5397 61.4199 73.5397Z" fill="#DFEAFB"/>
+<path d="M48.0999 83.8999H28.8599C27.6338 83.8999 26.6399 84.8938 26.6399 86.1199C26.6399 87.346 27.6338 88.3399 28.8599 88.3399H48.0999C49.326 88.3399 50.3199 87.346 50.3199 86.1199C50.3199 84.8938 49.326 83.8999 48.0999 83.8999Z" fill="#B4DAFF"/>
+<path d="M61.4199 93.5199H28.8599C27.6338 93.5199 26.6399 94.5138 26.6399 95.7399C26.6399 96.966 27.6338 97.9599 28.8599 97.9599H61.4199C62.646 97.9599 63.6399 96.966 63.6399 95.7399C63.6399 94.5138 62.646 93.5199 61.4199 93.5199Z" fill="#DFEAFB"/>
+<path d="M48.0999 103.88H28.8599C27.6338 103.88 26.6399 104.874 26.6399 106.1C26.6399 107.326 27.6338 108.32 28.8599 108.32H48.0999C49.326 108.32 50.3199 107.326 50.3199 106.1C50.3199 104.874 49.326 103.88 48.0999 103.88Z" fill="#B4DAFF"/>
+<path d="M61.4199 113.5H28.8599C27.6338 113.5 26.6399 114.494 26.6399 115.72C26.6399 116.946 27.6338 117.94 28.8599 117.94H61.4199C62.646 117.94 63.6399 116.946 63.6399 115.72C63.6399 114.494 62.646 113.5 61.4199 113.5Z" fill="#DFEAFB"/>
+<g filter="url(#filter0_d_1640_468)">
+<path d="M87.32 15.08H23.68C21.6365 15.08 19.98 16.7365 19.98 18.78V40.98C19.98 43.0235 21.6365 44.68 23.68 44.68H87.32C89.3634 44.68 91.02 43.0235 91.02 40.98V18.78C91.02 16.7365 89.3634 15.08 87.32 15.08Z" fill="#1485FD"/>
+</g>
+<path d="M48.0999 23.2201H28.8599C27.6338 23.2201 26.6399 24.214 26.6399 25.4401C26.6399 26.6661 27.6338 27.6601 28.8599 27.6601H48.0999C49.326 27.6601 50.3199 26.6661 50.3199 25.4401C50.3199 24.214 49.326 23.2201 48.0999 23.2201Z" fill="#B4DAFF"/>
+<path d="M61.4199 32.8401H28.8599C27.6338 32.8401 26.6399 33.834 26.6399 35.0601C26.6399 36.2862 27.6338 37.2801 28.8599 37.2801H61.4199C62.646 37.2801 63.6399 36.2862 63.6399 35.0601C63.6399 33.834 62.646 32.8401 61.4199 32.8401Z" fill="white"/>
+<defs>
+<filter id="filter0_d_1640_468" x="1.78146" y="0.521187" width="107.437" height="65.997" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="3.6397"/>
+<feGaussianBlur stdDeviation="9.09926"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.180392 0 0 0 0 0.521569 0 0 0 0 0.92549 0 0 0 0.17 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1640_468"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1640_468" result="shape"/>
+</filter>
 </defs>
 </svg>
 `;
