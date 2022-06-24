@@ -69,7 +69,7 @@ $(document).ready(function () {
         }, 500);
         $(".sirius-performance .card-indicators > .active").on("click", function () {
             $('.sirius-performance > .card').html('');
-            loadingOnAccountsHealth('.sirius-performance > .card');//loadOnAny('.sirius-performance > .card');//
+            loadingOnAccountsHealth('.sirius-performance > .card');
             let card = $(this).data('slide-to');
             switch (card) {
                 case 1:
@@ -89,7 +89,7 @@ $(document).ready(function () {
 
     window.updatePerformance = function () {
 
-        loadingOnAccountsHealth('.sirius-performance > .card');//loadOnAny('.sirius-performance > .card');//
+        loadingOnAccountsHealth('.sirius-performance > .card');
 
         $.ajax({
             method: "GET",

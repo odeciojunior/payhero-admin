@@ -1,6 +1,10 @@
 function updateAfterChangeCompany(){
+    $('.sirius-performance > .card').html('');
+    $('#cashback-container #cashback-container-money').text("")
     window.updateValues();
     window.updateChart();
+    window.updatePerformance();
+    window.updateAccountHealth();
 }
 
 $(document).ready(function () {
@@ -146,8 +150,8 @@ $(document).ready(function () {
                 if (!isEmpty(data.companies)) {
                     window.updateValues();
                     window.updateChart();
-                    updatePerformance();
-                    updateAccountHealth();
+                    window.updatePerformance();
+                    window.updateAccountHealth();
                     setTimeout(verifyPixOnboarding, 1600);
                 } else {
                     $(".content-error").show();
