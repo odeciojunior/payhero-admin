@@ -174,14 +174,14 @@ function blockedResume() {
         success: function success(response) {
             loadOnAny('.number', true);
             $('#total_sales').text('0');
-            $('#commission_blocked, #total').html('R$ <span class="font-size-30 bold">0,00</span>');
+            $('#commission_blocked, #total').html('<small class="font-size-16 small gray-1">R$</small> <span class="font-size-24 bold">0,00</span>');
             if (response.total_sales) {
                 $('#total_sales, #commission_blocked, #total').text('');
                 $('#total_sales').html(response.total_sales);
-                $('#commission_blocked').html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
+                $('#commission_blocked').html(`<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 bold">${response.commission}</strong>`);
                 $('.blocked-balance-icon').attr('title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
                 $('.blocked-balance-icon').attr('data-original-title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
-                $('#total').html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
+                $('#total').html(`R$ <span class="font-size-24 bold">${response.total}</span>`);
             }
         }
     });

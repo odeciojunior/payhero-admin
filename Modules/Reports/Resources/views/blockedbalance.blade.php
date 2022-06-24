@@ -93,7 +93,6 @@
                                 <div class="finance-card border pink mb-10">
                                     <span class="title">Total bloqueado</span>
                                     <div class="d-flex">
-                                        <span class="detail">R$</span>
                                         <strong class="number" id="commission_blocked">0</strong>
                                     </div>
                                 </div>
