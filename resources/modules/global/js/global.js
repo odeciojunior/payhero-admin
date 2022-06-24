@@ -1720,7 +1720,7 @@ function buildModalBonusBalance(bonusObject) {
     var percent = bonusObject.used_percentage;
     var chartColor = ''
     var chartColorSecondary = '';
-    var chartSize = 95;
+    var chartSize = 106;
 
     if(percent < 25) {
         var chartColor = '#59BF75'
@@ -1810,20 +1810,20 @@ function buildModalBonusBalance(bonusObject) {
 
                     <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">
                         <div>
-                            </div>
-                                <h4 class="bonus-number-title">
-                                    Você já utilizou
-                                </h4>
-                                <span class="bonus-number">
-                                    ${alreadyUsed}
-                                </span>
-                            <div>
-                                <h4 class="bonus-number-title">
-                                    Vence em
-                                </h4>
-                                <span class="bonus-number">
-                                    ${expireDate}
-                                </span>
+                            <h4 class="bonus-number-title">
+                                Você já utilizou
+                            </h4>
+                            <span class="bonus-number">
+                                ${alreadyUsed}
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="bonus-number-title">
+                                Vence em
+                            </h4>
+                            <span class="bonus-number">
+                                ${expireDate}
+                            </span>
                         </div>
                     </div>
 
@@ -1874,6 +1874,12 @@ function buildModalBonusBalance(bonusObject) {
 
     $('.bonus-balance-container').html(content);
     mkChartRender();
+
+    $('.close-bonus-modal, .modal-bonus-close').on('click', function() {
+        $('body').removeClass('bonus-modal-opened');
+        $('#bonus-balance-modal').fadeToggle('slow', 'linear');
+        // $('.bonus-balance-container').html(loadSkeletonBonus);
+    })
 }
 
 const toggleBonusContent = function() {
@@ -1883,7 +1889,6 @@ const toggleBonusContent = function() {
 
 
 function showBonusBalance() {
-    var totalBalance  = null;
 
     if(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance')) {
         var bonus_balance = JSON.parse(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance'));
@@ -1920,7 +1925,7 @@ function showBonusBalance() {
 
                 buildModalBonusBalance(response);
 
-                if (totalBalance && $(window).width() <= 768) {
+                if ($(window).width() <= 768) {
                     $('.bonus-balance-button.mobile').show();
                 }else {
                     $('.bonus-balance-button.desktop').show();
