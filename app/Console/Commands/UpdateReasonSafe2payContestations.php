@@ -43,7 +43,7 @@ class UpdateReasonSafe2payContestations extends Command
     public function handle()
     {
         $safe = new Safe2payGateway();
-        
+
         $pageNumber = 1;
         $limit = 100;
         $total = 0;
@@ -56,27 +56,27 @@ class UpdateReasonSafe2payContestations extends Command
         if(count($saleContestations) == 0){
             exit;
         }
-       
+
         do {
             $response = $safe->listChargebacks([
                 'PageNumber'=>$pageNumber,
                 'RowsPerPage'=>$limit,
             ]);
-            
+
             $total = 0;
             if(!empty($response->ResponseDetail)){
                 $total = $response->ResponseDetail->TotalItems;
                 $pageNumber++;
 
                 foreach($response->ResponseDetail->Objects as $row){
-                    
+
                     $this->line($row->IdTransaction);
                     $itens++;
 
                     foreach($saleContestations as $key=>$contestation){
                         if($contestation->gateway_transaction_id == $row->IdTransaction)
                         {
-                            $saleContestation = SaleContestation::find($contestation->id);                            
+                            $saleContestation = SaleContestation::find($contestation->id);
                             $saleContestation->update([
                                 'request_date'=>$row->ChargebackDate,
                                 'reason'=>$row->ReasonMessage,
@@ -86,11 +86,11 @@ class UpdateReasonSafe2payContestations extends Command
                                 'expiration_date'=>$row->DisputeDueDate, //Data final para defesa da contestação.
                             ]);
                             $this->comment('Atualizando sale contestation '.$contestation->id);
-                            
+
                             unset($saleContestations[$key]);
                         }
-                    }    
-                    
+                    }
+
                     if(count($saleContestations) == 0){
                         exit;
                     }
@@ -98,7 +98,7 @@ class UpdateReasonSafe2payContestations extends Command
 
                 $this->line($itens.'/'.$total);
             }
-            
+
         } while ($itens < $total);
     }
 }

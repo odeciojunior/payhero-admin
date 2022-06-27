@@ -23,6 +23,7 @@ class ProjectsSelectResource extends JsonResource
             'id'      => Hashids::encode($this->id),
             'name'    => $this->name,
             'shopify' => ($this->shopify_id != null ? 1 : 0),
+            'woocommerce' => ($this->woocommerce_id != null ? 1 : 0),
         ];
     }
 }
