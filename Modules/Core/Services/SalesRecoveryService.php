@@ -17,6 +17,8 @@ use Modules\Core\Entities\Log as CheckoutLog;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\Company;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -305,22 +307,30 @@ class SalesRecoveryService
         // }
 
         $link = '';
-        if($sale->payment_method === Sale::PIX_PAYMENT) {
-            if(FoxUtils::isProduction()) {
-                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($sale->id) : 'Domínio removido';
-            } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . Hashids::connection('sale_id')->encode($sale->id);
-            }
 
-        }else {
-            if(FoxUtils::isProduction()) {
-                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
-            } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($checkout->id);
-            }
+        $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br');
+        if(FoxUtils::isProduction()) {
+            $link = isset($domain) ? 'https://checkout.' . $domain->name :'';
         }
 
+        $user = Auth::user();
+        if($user->company_default==Company::DEMO_ID){
+            $link = "https://demo.cloudfox.net";
+        }
 
+        if(!empty($link))
+        {
+            if($sale->payment_method === Sale::PIX_PAYMENT)
+            {
+                $link.='/pix/' . Hashids::connection('sale_id')->encode($sale->id);                
+            }else {                
+                $link.= '/recovery/' . Hashids::encode($checkout->id);                
+            }
+
+        }else{
+            $link = 'Domínio removido';
+        }
+        
         $products = $saleService->getProducts($checkout->sale_id);
 
         $customer->document = FoxUtils::getDocument($customer->document);
