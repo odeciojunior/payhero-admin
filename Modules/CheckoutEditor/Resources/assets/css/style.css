@@ -561,7 +561,7 @@ input[type="number"] {
     /* padding: 10px 40px!important; */
 }
 
-#notification-table tr, 
+#notification-table tr,
 #notification-table th,
 #notification-table td {
     height: 95px !important;
@@ -609,7 +609,7 @@ input[type="number"] {
 }
 
 .notification-table-cointainer table tr {
-    height: 70px; 
+    height: 70px;
 }
 
 a:focus,
@@ -804,7 +804,7 @@ textarea:focus {
 
 #checkout_editor .sirius-select-text {
     height: 43px !important;
-    padding: 5px 41px 10px 16px !important;
+    padding: 10px 41px 10px 16px !important;
 }
 
 .quantity-selector-label {
@@ -1091,7 +1091,7 @@ textarea:focus {
     flex-direction: row;
     gap: 10px;
     align-items: center;
-    
+
     -webkit-transition: all 0.7s;
     -moz-transition: all 0.7s;
     -ms-transition: all 0.7s;
