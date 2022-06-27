@@ -321,7 +321,7 @@ function distribution() {
                         </div>
                     </div>
 
-                    <div class="distribution-area" style="display: ${chargeback.percentage == 0 ? 'none': 'flex'}">
+                    <div class="distribution-area" style="display: ${chargeback.value == 0 ? 'none': 'flex'}">
                         <div class="item">
                             <span>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
