@@ -427,7 +427,7 @@ function loadDevices() {
         success: function success(response) {
             let { desktop, mobile } = response.data;
             
-            if(desktop.total == 0 && mobile.total == 0) {
+            if(desktop.total !== 0 && mobile.total !== 0) {
                 deviceBlock = `
                  <div class="row container-payment gadgets">
                     <div class="container container-devices">
