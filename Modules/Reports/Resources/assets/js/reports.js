@@ -844,6 +844,7 @@ $(function () {
 
                     $("#origins-table").html("");
                     $("#origins-table").append(table_data);
+                    $("#card-origin .ske-load").hide();
                     $(".table-vendas").addClass("table-striped");
 
                     pagination(response, "origins", updateSalesByOrigin);
