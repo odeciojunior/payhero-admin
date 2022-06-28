@@ -2451,7 +2451,8 @@ h4.number{
 .table-vendas tbody td:nth-child(3) { font-weight: 700; }
 
 #body-table-pending .ske-load,
-#dados_tabela .ske-load {
+#dados_tabela .ske-load,
+#body-table-coupons .ske-load {
     position: absolute;
     transform: translate(0, -30%);
 }

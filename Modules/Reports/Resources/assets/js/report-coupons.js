@@ -42,7 +42,7 @@ $(document).ready(function () {
         } else {
             return data;
         }
-    }
+    }    
 
     getProjects();
 
@@ -98,6 +98,7 @@ $(document).ready(function () {
 
         let updateResume = true;
         loadOnTable('#body-table-coupons', '.table-coupons');
+        $('#body-table-coupons').html(skeLoad);
 
         if (link == null) {
             link = '/api/reports/coupons?' + getFilters(true).substr(1);
@@ -142,6 +143,11 @@ $(document).ready(function () {
                 pagination(response, 'coupons', atualizar);
             }
         });
+
+        // if(updateResume) {
+        //     resumePending();
+        // }
+        
     }
 
     $(document).on('keypress', function (e) {
@@ -203,6 +209,36 @@ function changeCompany() {
         atualizar();
     });
 }
+
+
+function resumePending() {
+
+    $("#total_sales").html(skeLoadMini);    
+
+    $.ajax({
+        method: "GET",
+        url: '/api/reports/resume-pending-balance',
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            if (response.total_sales) {
+                $('#total_sales, #total-pending, #total').text('');
+                $('#total_sales').text(response.total_sales);
+                var comission=response.commission.split(/\s/g);
+                $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+            } else {
+                $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+            }
+        }
+    });
+}
+
 
 // abort all ajax
 $.ajaxQ = (function(){
@@ -271,6 +307,17 @@ let skeLoadBig = `
                 <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
             </div>
             <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
+`;
+
+let skeLoadMini = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
         </div>
     </div>
 `;
