@@ -206,4 +206,11 @@ class UserPresenter extends Presenter
 
         return 'admin';
     }
+
+    public function firstName()
+    {
+        $name = explode(' ', $this->name);
+
+        return $name[0];
+    }
 }

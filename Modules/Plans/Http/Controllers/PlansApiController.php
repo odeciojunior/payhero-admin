@@ -457,6 +457,13 @@ class PlansApiController extends Controller
                             'cost' => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
                             'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
                         ]);
+                    } else {
+                        $productPlanModel->where('product_id', current(Hashids::decode($product['id'])))
+                        ->update([
+                            'amount'             => $product['amount'] ?? 1,
+                            'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
+                            'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
+                        ]);
                     }
                 }
             } else {
@@ -814,7 +821,6 @@ class PlansApiController extends Controller
         }
 
         $planId = current(Hashids::decode($request->plan));
-        $plan = Plan::find($planId);
 
         $allow_change_in_block = false;
         if (!empty($request->allow_change_in_block) && boolval($request->allow_change_in_block) === true) {
@@ -849,13 +855,14 @@ class PlansApiController extends Controller
                     $productPlan->is_custom = !empty($request->is_custom[$productPlanId]) ? 1 : 0;
                     $productPlan->update();
                     if ($allow_change_in_block === true) {
-                        $this->updateAllConfigCustomProduct($plan->shopify_id, $config, !empty($request->is_custom[$productPlanId]) ? 1 : 0);
+                        $productShopfyId = Product::where('id', current(Hashids::decode($productPlanId)))->first();
+                        $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, $config, !empty($request->is_custom[$productPlanId]) ? 1 : 0);
                     }
                     $idsProductPlans[] = $productPlan->id;
                 }
             }
         } else {
-            $productPlans = ProductPlan::where('id', current(Hashids::decode($request->product_id)))->get();
+            $productPlans = ProductPlan::where('plan_id', current(Hashids::decode($request->plan)))->where('product_id', current(Hashids::decode($request->product_id)))->get();
             foreach ($productPlans as $productPlan) {
                 $productPlan->custom_config = [];
                 $productPlan->is_custom = !empty($request->is_custom[$productPlan->id]) ? 1 : 0;
@@ -863,7 +870,8 @@ class PlansApiController extends Controller
             }
 
             if ($allow_change_in_block === true) {
-                $this->updateAllConfigCustomProduct($plan->shopify_id, [], !empty($request->is_custom[$productPlan->id]) ? 1 : 0);
+                $productShopfyId = Product::where('id', current(Hashids::decode($request->product_id)))->first();
+                $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, [], !empty($request->is_custom[$productPlan->id]) ? 1 : 0);
             }
         }
 
@@ -875,16 +883,13 @@ class PlansApiController extends Controller
     private function updateAllConfigCustomProduct($shopify_id, $config, $is_custom)
     {
         if (!empty($shopify_id)) {
-            $planIds = Plan::select('id')->where('shopify_id', $shopify_id)->get();
-            foreach ($planIds as $plan) {
-                $productPlans = ProductPlan::where('plan_id', $plan->id)->get();
+            $products = Product::where('shopify_id', $shopify_id)->get();
+            foreach ($products as $product) {
+                $productPlans = ProductPlan::where('product_id', $product->id)->get();
                 foreach ($productPlans as $productPlan) {
-                    $product = Product::where('id', $productPlan->product_id)->first();
-                    if ($product->shopify_id == $shopify_id) {
-                        $productPlan->custom_config = $config;
-                        $productPlan->is_custom = $is_custom;
-                        $productPlan->update();
-                    }
+                    $productPlan->custom_config = $config;
+                    $productPlan->is_custom = $is_custom;
+                    $productPlan->update();
                 }
             }
         }

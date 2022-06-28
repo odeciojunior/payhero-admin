@@ -23,10 +23,12 @@ class ReportanaResource extends JsonResource
             'url_api'             => $this->url_api,
             'boleto_generated'    => $this->billet_generated,
             'boleto_paid'         => $this->billet_paid,
+            'boleto_expired'      => $this->billet_expired,
             'credit_card_refused' => $this->credit_card_refused,
             'credit_card_paid'    => $this->credit_card_paid,
             'pix_generated'       => $this->pix_generated,
             'pix_paid'            => $this->pix_paid,
+            'pix_expired'         => $this->pix_expired,
             'abandoned_cart'      => $this->abandoned_cart,
             'created_at'          => $this->created_at->format('d/m/Y'),
         ];
