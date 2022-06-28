@@ -12,6 +12,7 @@ function atualizar(link = null) {
     let updateResume = true;
 
     loadOnTable('#dados_tabela', '#tabela_vendas');
+    $('#dados_tabela').html(skeLoad);
 
     if (link == null) {
         link = '/api/reports/blocked-balance?' + getFilters(true).substr(1);
@@ -143,20 +144,20 @@ function getFilters(urlParams = false) {
 }
 
 function blockedResume() {
-
-    loadOnAny('.number', false, {
-        styles: {
-            container: {
-                minHeight: '32px',
-                height: 'auto'
-            },
-            loader: {
-                width: '20px',
-                height: '20px',
-                borderWidth: '4px'
-            },
-        }
-    });
+    $("#commission_blocked, #total_sales").html(skeLoadMini).width('100%');
+    // loadOnAny('.number', false, {
+    //     styles: {
+    //         container: {
+    //             minHeight: '32px',
+    //             height: 'auto'
+    //         },
+    //         loader: {
+    //             width: '20px',
+    //             height: '20px',
+    //             borderWidth: '4px'
+    //         },
+    //     }
+    // });
 
     $.ajax({
         method: "GET",
@@ -168,13 +169,13 @@ function blockedResume() {
             'Accept': 'application/json',
         },
         error: function error(response) {
-            loadOnAny('.number', true);
+            //loadOnAny('.number', true);
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            loadOnAny('.number', true);
-            $('#total_sales').text('0');
-            $('#commission_blocked, #total').html('<small class="font-size-16 small gray-1">R$</small> <span class="font-size-24 bold">0,00</span>');
+            //loadOnAny('.number', true);
+            //$('#total_sales').text('0');
+            
             if (response.total_sales) {
                 $('#total_sales, #commission_blocked, #total').text('');
                 $('#total_sales').html(response.total_sales);
@@ -182,6 +183,10 @@ function blockedResume() {
                 $('.blocked-balance-icon').attr('title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
                 $('.blocked-balance-icon').attr('data-original-title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
                 $('#total').html(`R$ <span class="font-size-24 bold">${response.total}</span>`);
+            }
+            else {
+                $('#commission_blocked, #total').html('<small class="font-size-16 small gray-1">R$</small> <span class="font-size-24 bold">0,00</span>');
+                $('#total_sales').html('<strong class="font-size-24 orange">0</strong>');
             }
         }
     });
@@ -481,3 +486,29 @@ function updateStorage(v){
    })
     sessionStorage.setItem('info', JSON.stringify(existing));
 }
+
+let skeLoad = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
+`;
+
+let skeLoadMini = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+        </div>
+    </div>
+`;

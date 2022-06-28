@@ -2449,6 +2449,12 @@ h4.number{
 .table-vendas tbody td:nth-child(1) { text-transform: uppercase; }
 .table-vendas tbody td:nth-child(2) { color: #999 !important; }
 .table-vendas tbody td:nth-child(3) { font-weight: 700; }
+
+#body-table-pending .ske-load,
+#dados_tabela .ske-load {
+    position: absolute;
+    transform: translate(0, -30%);
+}
 .date-picker {
   width: 170px;
   height: 25px;

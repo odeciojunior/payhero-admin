@@ -129,19 +129,21 @@ function getFilters(urlParams = false) {
 
 function resumePending() {
 
-    loadOnAny('.number', false, {
-        styles: {
-            container: {
-                minHeight: '32px',
-                height: 'auto'
-            },
-            loader: {
-                width: '20px',
-                height: '20px',
-                borderWidth: '4px'
-            },
-        }
-    });
+    $("#total_sales").html(skeLoadMini);
+
+    // loadOnAny('.number', false, {
+    //     styles: {
+    //         container: {
+    //             minHeight: '32px',
+    //             height: 'auto'
+    //         },
+    //         loader: {
+    //             width: '20px',
+    //             height: '20px',
+    //             borderWidth: '4px'
+    //         },
+    //     }
+    // });
 
     $.ajax({
         method: "GET",
@@ -153,18 +155,20 @@ function resumePending() {
             'Accept': 'application/json',
         },
         error: function error(response) {
-            loadOnAny('.number', true);
+            //loadOnAny('.number', true);
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            loadOnAny('.number', true);
-            $('#total_sales').text('0');
-            $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+            //loadOnAny('.number', true);
+            //$('#total_sales').text('0');
+            
             if (response.total_sales) {
                 $('#total_sales, #total-pending, #total').text('');
                 $('#total_sales').text(response.total_sales);
                 var comission=response.commission.split(/\s/g);
                 $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+            } else {
+                $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
             }
         }
     });
@@ -349,20 +353,20 @@ $(document).ready(function () {
     }
 
     function resumePending() {
-
-        loadOnAny('.number', false, {
-            styles: {
-                container: {
-                    minHeight: '32px',
-                    height: 'auto'
-                },
-                loader: {
-                    width: '20px',
-                    height: '20px',
-                    borderWidth: '4px'
-                },
-            }
-        });
+        $("#total-pending, #total_sales").html(skeLoadMini).width('100%');
+        // loadOnAny('.number', false, {
+        //     styles: {
+        //         container: {
+        //             minHeight: '32px',
+        //             height: 'auto'
+        //         },
+        //         loader: {
+        //             width: '20px',
+        //             height: '20px',
+        //             borderWidth: '4px'
+        //         },
+        //     }
+        // });
 
         $.ajax({
             method: "GET",
@@ -374,13 +378,13 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.number', true);
+                //loadOnAny('.number', true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadOnAny('.number', true);
-                $('#total_sales').text('0');
-                $('#total-pending, #total').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>');
+                //loadOnAny('.number', true);
+                //$('#total_sales').text('0');
+                
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').text(response.total_sales);
@@ -388,6 +392,9 @@ $(document).ready(function () {
                     $('#total-pending').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange bold">'+comission[1]+'</strong>');
                     var total=response.total.split(/\s/g);
                     $('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
+                } else {
+                    $('#total-pending, #total').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>');
+                    $('#total_sales').html('<strong class="font-size-24 orange">0</strong>');
                 }
             }
         });
@@ -399,6 +406,7 @@ $(document).ready(function () {
         let updateResume = true;
 
         loadOnTable('#body-table-pending', '.table-pending');
+        $('#body-table-pending').html(skeLoad);
 
         if (link == null) {
             link = '/api/reports/pending-balance?' + getFilters(true).substr(1);
@@ -540,3 +548,29 @@ function updateStorage(v){
    })
     sessionStorage.setItem('info', JSON.stringify(existing));
 }
+
+let skeLoad = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
+`;
+
+let skeLoadMini = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+        </div>
+    </div>
+`;
