@@ -40,8 +40,8 @@
                                     <div class="finance-card border orange mb-10 block-result">
                                         <span class="title">Total pendente</span>
                                         <div class="d-flex">
-                                            <span class="detail">R$</span>
-                                            <strong class="number">0</strong>
+                                            <span class="detail"></span>
+                                            <strong class="number" id='total-pending'>0</strong>
                                         </div>
                                     </div>
                                 </div>

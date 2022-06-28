@@ -218,6 +218,7 @@ function resumePending() {
     $.ajax({
         method: "GET",
         url: '/api/reports/resume-pending-balance',
+        data: getFilters(),
         dataType: "json",
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
