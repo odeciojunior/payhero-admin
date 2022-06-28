@@ -532,7 +532,7 @@ function typePayments() {
                     <div class="row container-payment tp-payment">
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0" style="visibility: ${credit_card.percentage == "0%" ? 'hidden': ''}">
+                                <div class="box-payment-option pad-0" style="display: ${credit_card.percentage == "0%" ? 'none': ''}">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             <span class="ico-cart align-items justify-around">
@@ -560,7 +560,7 @@ function typePayments() {
 
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0" style="visibility: ${pix.percentage == "0%" ? 'hidden': ''}">
+                                <div class="box-payment-option pad-0" style="display: ${pix.percentage == "0%" ? 'none': ''}">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             <span class="ico-cart align-items justify-around">
@@ -602,7 +602,7 @@ function typePayments() {
 
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0" style="visibility: ${boleto.percentage == "0%" ? 'hidden': ''}">
+                                <div class="box-payment-option pad-0" style="display: ${boleto.percentage == "0%" ? 'none': ''}">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             <span class="ico-cart align-items justify-around">
