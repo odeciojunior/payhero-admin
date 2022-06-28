@@ -1926,7 +1926,7 @@ tbody td{
 /* sirius select */
 .sirius-select-container {
     position: relative;
-    width: 100%;
+    width: 240px;
 }
 
 .sirius-select-container .sirius-select-text {
@@ -2203,11 +2203,11 @@ tbody td{
 }
 
 .new-register-navbar-open-modal-container {
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: left;
     position: fixed;
     left: 65px;
-    right: 20px;
+    right: 20px; */
     font-size: 16px;
 }
 @media screen and (max-width: 920px) {
@@ -2823,6 +2823,7 @@ tbody td{
     border: 1px white solid;
     background-position-x: 92.5%;
     padding-right: 50px;
+    background-color: #f4f4f4;
 }
 #company-navbar + .active {
     border: 1px solid #88BFFF;
