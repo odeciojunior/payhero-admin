@@ -27,6 +27,7 @@ $(document).ready(function () {
                 sessionStorage.setItem('company_default_name', company_name);
 
                 $('.company_name').val( sessionStorage.getItem('company_default_name') );
+                selectCompanies();
                 if ( typeof updateAfterChangeCompany === "function" ) {
                     updateAfterChangeCompany();
                 }
@@ -1655,7 +1656,7 @@ function getCompanies() {
                     "active_flag": 1,
                     "projects": [{
                         "id" : "v2RmA83EbZPVpYB",
-                        "name": "CLOUDFOX DEMO LTDA",
+                        "name": "Cloudfox Demo Ltda",
                         "order_p":1,
                         "status":1
                     }]
@@ -1685,10 +1686,11 @@ function getCompanies() {
 }
 
 function selectCompanies() {
+    $('#company-navbar').html('');
     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
         if (sessionStorage.getItem('company_default') === parseSessionStorageCompanies[i].id)
-            itemSelected = 'selected="selected"'
+            itemSelected = 'selected="selected" style="font-weight:bold"'
         else
             itemSelected = ''
 
@@ -1707,7 +1709,6 @@ function selectCompanies() {
             $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
         }
     }
-    //$('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     $('#company-select').addClass('d-sm-flex');
 }
 function buildModalBonusBalance(bonusObject) {
