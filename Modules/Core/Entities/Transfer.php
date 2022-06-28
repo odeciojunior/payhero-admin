@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TransferPresenter;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -32,7 +33,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Transfer extends Model
 {
-    use FoxModelTrait, PresentableTrait, LogsActivity;
+    use FoxModelTrait, PresentableTrait, LogsActivity, SoftDeletes;
 
     const TYPE_IN = 1;
     const TYPE_OUT = 2;
@@ -70,6 +71,7 @@ class Transfer extends Model
         'is_refund_tax',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
     /**
      * @var bool
