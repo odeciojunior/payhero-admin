@@ -24,7 +24,7 @@ class AffiliateLinksApiController extends Controller
         try {
 
             $projectId = current(Hashids::decode($request->input('projectId')));
-            $userId    = auth()->user()->account_owner_id;
+            $userId    = auth()->user()->getAccountOwnerId();
 
             $links = AffiliateLink::whereHas('affiliate', function($q) use ($userId, $projectId) {
                 $q->where('user_id', $userId)->where('project_id', $projectId);
@@ -67,7 +67,7 @@ class AffiliateLinksApiController extends Controller
                                         $query->where('status', 3);
                                       }])
                                       ->where('id', $affiliateId)
-                                      ->where('user_id', auth()->user()->account_owner_id)
+                                      ->where('user_id', auth()->user()->getAccountOwnerId())
                                       ->first();
 
                 $domain = $affiliate->project->domains->first()->name;
@@ -105,7 +105,7 @@ class AffiliateLinksApiController extends Controller
             $linkId = current(Hashids::decode($id));
             if ($linkId) {
                 $link = AffiliateLink::with('affiliate')->find($linkId);
-                if($link->affiliate->user_id == auth()->user()->account_owner_id) {
+                if($link->affiliate->user_id == auth()->user()->getAccountOwnerId()) {
                     return new AffiliateLinkResource($link);
                 }
             }
@@ -133,7 +133,7 @@ class AffiliateLinksApiController extends Controller
             if (!empty($linkId) && !empty($link)) {
 
                 $linkAffiliate = AffiliateLink::with('affiliate')->find($linkId);
-                if($linkAffiliate->affiliate->user_id == auth()->user()->account_owner_id) {
+                if($linkAffiliate->affiliate->user_id == auth()->user()->getAccountOwnerId()) {
                     $project = Project::with(['domains' => function($query) {
                                         $query->where('status', 3);
                                     }])
@@ -170,7 +170,7 @@ class AffiliateLinksApiController extends Controller
             $linkId        = current(Hashids::decode($id));
             $linkAffiliate = AffiliateLink::with('affiliate')->find($linkId);
 
-            if($linkAffiliate->affiliate->user_id == auth()->user()->account_owner_id) {
+            if($linkAffiliate->affiliate->user_id == auth()->user()->getAccountOwnerId()) {
                 $deleted = $linkAffiliate->delete();
                 if ($deleted) {
                     return response()->json(['message' => 'Link removido com sucesso!'], 200);
@@ -197,7 +197,7 @@ class AffiliateLinksApiController extends Controller
             $linkId = current(Hashids::decode($id));
             if ($linkId) {
                 $link = AffiliateLink::with('affiliate')->find($linkId);
-                if($link->affiliate->user_id == auth()->user()->account_owner_id) {
+                if($link->affiliate->user_id == auth()->user()->getAccountOwnerId()) {
                     return new AffiliateLinkResource($link);
                 }
             }

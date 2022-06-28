@@ -27,14 +27,15 @@ class UnicodropApiController extends Controller
     {
         try {
             $user = auth()->user();
+            $ownerId = $user->getAccountOwnerId();
             $unicodropIntegrations = UnicodropIntegration::
             join('checkout_configs as cc', 'cc.project_id', '=', 'unicodrop_integrations.project_id')
             ->where('cc.company_id', hashids_decode($request->company))
-            ->where('user_id', $user->account_owner_id)
+            ->where('user_id', $ownerId)
             ->with('project')->get();
             $projects = collect();
             $userProjects = UserProject::where([[
-                'user_id', $user->account_owner_id],[
+                'user_id', $ownerId],[
                 'company_id', $user->company_default
             ]])->get();
             if ($userProjects->count() > 0) {

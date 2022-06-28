@@ -31,14 +31,17 @@ $(document).ready(function () {
                 } else {
                     $("#project_id").html("");
                     let projects = response.projects;
-                    for (let i = 0; i < projects.length; i++) {
-                        $("#project_id").append(
-                            '<option value="' +
-                                projects[i].id +
-                                '">' +
-                                projects[i].name +
-                                "</option>"
-                        );
+                    // for (let i = 0; i < projects.length; i++) {
+                    //     $("#project_id").append(
+                    //         '<option value="' +
+                    //             projects[i].id +
+                    //             '">' +
+                    //             projects[i].name +
+                    //             "</option>"
+                    //     );
+                    // }
+                    for (let project of response.projects) {
+                        $("#project_id, #select_projects_edit").append(`<option value="${project.id}">${project.name}</option>`);
                     }
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();

@@ -2,9 +2,9 @@
 
 namespace Modules\DemoAccount\Http\Controllers;
 
-use Modules\Melhorenvio\Http\Controllers\MelhorenvioController;
+use Modules\Melhorenvio\Http\Controllers\MelhorenvioApiController;
 
-class MelhorenvioApiDemoController extends MelhorenvioController
+class MelhorenvioApiDemoController extends MelhorenvioApiController
 {
 
 }

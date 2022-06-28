@@ -2,9 +2,9 @@
 
 namespace Modules\DemoAccount\Http\Controllers;
 
-use Modules\Smartfunnel\Http\Controllers\SmartfunnelController;
+use Modules\Smartfunnel\Http\Controllers\SmartfunnelApiController;
 
-class SmartfunnelApiDemoController extends SmartfunnelController
+class SmartfunnelApiDemoController extends SmartfunnelApiController
 {
     
 }

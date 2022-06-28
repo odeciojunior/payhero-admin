@@ -31,15 +31,16 @@ class NotificacoesInteligentesApiController extends Controller
             $userProjectModel   = new UserProject();
             $projectModel       = new Project();
 
+            $ownerId = auth()->user()->getAccountOwnerId();
             $notificacoesInteligentesIntegrations = $notificacoesInteligentesIntegration
                 ->join('checkout_configs as cc', 'cc.project_id', '=', 'notificacoes_inteligentes_integrations.project_id')
                 ->where('cc.company_id', hashids_decode($request->company))
-                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('user_id', $ownerId)
                 ->with('project')->get();
 
             $projects     = collect();
             $userProjects = $userProjectModel->where([[
-                'user_id', auth()->user()->account_owner_id],[
+                'user_id', $ownerId],[
                 'company_id', auth()->user()->company_default
             ]])->orderBy('id', 'desc')->get();
             if ($userProjects->count() > 0) {

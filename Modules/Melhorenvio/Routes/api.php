@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/apps/melhorenvio/finish', 'MelhorenvioApiController@finishIntegration')
     ->name('melhorenvio.finish');
 
-Route::group(['middleware' => ['auth:api', 'scopes:admin','permission:apps|projects','demo_account'],], function () {
+Route::group(['middleware' => ['auth:api', 'demo_account','scopes:admin','permission:apps|projects'],], function () {
 
     Route::get('/apps/melhorenvio/continue/{id}', 'MelhorenvioApiController@continueIntegration')
         ->name('melhorenvio.continue');
