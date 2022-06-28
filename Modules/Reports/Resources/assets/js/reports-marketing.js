@@ -94,8 +94,8 @@ function loadOrigins(link = null) {
 
                 pagination(response, "origins", updateSalesByOrigin);
                 $(".origin-report").show();
-            }               
-            
+            }
+
         },
     });
 }
@@ -161,7 +161,7 @@ function loadCoupons() {
         },
         success: function success(response) {
             let { coupons, total } = response.data;
-            
+
             if( total != 0 ) {
                 cuponsHtml = `
                     <div class="container d-flex justify-content-between box-donut">
@@ -209,14 +209,14 @@ function loadCoupons() {
                         chartPadding: 0,
                         labelOffset: 0,
                     });
-                
+
             } else {
                 cuponsHtml = `
                     <div class="d-flex align-items justify-around" style="width: 100%;">
                         <div class="no-coupon">${emptyCoupons}</div>
                         <div class="msg-coupon">Nenhum cupom utilizado</div>
                     </div>
-                    
+
                 `;
                 $("#block-coupons").html(cuponsHtml);
             }
@@ -280,11 +280,11 @@ function loadFrequenteSales() {
                     <div class="box-payment-option pad-0">
                         <div class="d-flex justify-content-between align-items list-sales">
                             <div class="d-flex justify-content-between  align-items">
-                                <div 
+                                <div
                                     class="box-ico figure-ico"
-                                    data-container="body" 
-                                    data-viewport=".container" 
-                                    data-placement="top" 
+                                    data-container="body"
+                                    data-viewport=".container"
+                                    data-placement="top"
                                     data-toggle="tooltip"
                                     title="${item.name}"
                                 >
@@ -306,7 +306,7 @@ function loadFrequenteSales() {
                     container: '#block-sales'
                 });
             });
-            
+
         }
     });
 }
@@ -466,7 +466,7 @@ function loadDevices() {
                 deviceBlock = `
                     <div class="empty-products pad-0" style="width: 100%;">
                         ${emptyData}
-                        <p class="noone">Sem dados</p>   
+                        <p class="noone">Sem dados</p>
                     </div>
                 `;
                 $("#block-devices").html(deviceBlock);
@@ -527,7 +527,7 @@ function devicesInfo() {
                     </div>
                     <div>
                         <span class="mkt-msg-conversion">
-                            São iguais ${desktop.percentage} 
+                            São iguais ${desktop.percentage}
                         </span>
                     </div>
                     `;
@@ -549,11 +549,11 @@ function devicesInfo() {
                 `;
         }
         $("#block-info-card-conversion").html(deviceInfoBlock).removeClass('pad-0');
-        
+
     })
     .catch(e => console.log('error =>' + e));
-    
-    
+
+
 }
 
 function loadOperationalSystems() {
@@ -578,7 +578,7 @@ function loadOperationalSystems() {
                 stateNoData = `
                     <div class="empty-products pad-0" style="width: 100%;">
                         ${emptyData}
-                        <p class="noone">Sem dados</p>   
+                        <p class="noone">Sem dados</p>
                     </div>
                 `;
                 $('#container-operational-systems').html(stateNoData);
@@ -818,11 +818,11 @@ $('.state').on('click', function(e){
     $('#state-sales-amount').html(skeLoadStateMetric);
     $('#state-accesses').html(skeLoadStateMetric);
     $('#state-conversion').html(skeLoadStateMetric);
-    
+
 
     $.ajax({
         method: "GET",
-        url: "http://dev.sirius.com/api/reports/marketing/state-details?state=" + $(this).children('text').text() + "&project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: mktUrl + "/state-details?state=" + $(this).children('text').text() + "&project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -888,7 +888,7 @@ function loadBrazilMap() {
                 $("#list-states").append(noData);
                 return;
             }
-            
+
             $('.state path').css({ fill: '#FFFFFF' });
             $('.state text').css({ fill: '#6C757D' });
 
@@ -993,8 +993,8 @@ function appendStateDataToStateList(data, index) {
         "RS": "Rio Grande do Sul",
         "SE": "Sergipe",
         "TO": "Tocantins"
-    }     
-        
+    }
+
     let stateData = `
             <li class="states-list">
                 <div class="d-flex container">
@@ -1070,7 +1070,7 @@ let skeLoadOriginTable = `
     <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
     <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
     <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
-    <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div> 
+    <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
 `;
 
 let skeLoadStateMetric = `
@@ -1114,7 +1114,7 @@ let emptyData = `
 // abort all ajax
 $.ajaxQ = (function(){
     var id = 0, Q = {};
-  
+
     $(document).ajaxSend(function(e, jqx){
       jqx._id = ++id;
       Q[jqx._id] = jqx;
@@ -1122,7 +1122,7 @@ $.ajaxQ = (function(){
     $(document).ajaxComplete(function(e, jqx){
       delete Q[jqx._id];
     });
-  
+
     return {
       abortAll: function(){
         var r = [];
@@ -1133,7 +1133,7 @@ $.ajaxQ = (function(){
         return r;
       }
     };
-  
+
   })();
   function removeDuplcateItem(item) {
     for (i = 0; i < $(item).length; i++) {

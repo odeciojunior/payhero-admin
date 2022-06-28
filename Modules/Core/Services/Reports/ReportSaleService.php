@@ -626,8 +626,7 @@ class ReportSaleService
                     Sale::STATUS_PENDING,
                     Sale::STATUS_CANCELED,
                     Sale::STATUS_REFUSED,
-                    Sale::STATUS_REFUNDED,
-                    Sale::STATUS_CHARGEBACK
+                    Sale::STATUS_REFUNDED
                 ])
                 ->sum('original_total_paid_value');
 
@@ -637,31 +636,31 @@ class ReportSaleService
                     'total' => foxutils()->formatMoney($total / 100),
                     'approved' => [
                         'value' => foxutils()->formatMoney($salesApprovedSum / 100),
-                        'percentage' => round(number_format(($salesApprovedSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                        'percentage' => number_format(($salesApprovedSum * 100) / $total, 2, '.', ',')
                     ],
                     'pending' => [
                         'value' => foxutils()->formatMoney($salesPendingSum / 100),
-                        'percentage' => round(number_format(($salesPendingSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                        'percentage' => number_format(($salesPendingSum * 100) / $total, 2, '.', ',')
                     ],
                     'canceled' => [
                         'value' => foxutils()->formatMoney($salesCanceledSum / 100),
-                        'percentage' => round(number_format(($salesCanceledSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                        'percentage' => number_format(($salesCanceledSum * 100) / $total, 2, '.', ',')
                     ],
                     'refused' => [
                         'value' => foxutils()->formatMoney($salesRefusedSum / 100),
-                        'percentage' => round(number_format(($salesRefusedSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                        'percentage' => number_format(($salesRefusedSum * 100) / $total, 2, '.', ',')
                     ],
                     'refunded' => [
                         'value' => foxutils()->formatMoney($salesRefundedSum / 100),
-                        'percentage' => round(number_format(($salesRefundedSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                        'percentage' => number_format(($salesRefundedSum * 100) / $total, 2, '.', ',')
                     ],
                     'chargeback' => [
                         'value' => foxutils()->formatMoney($salesChargebackSum / 100),
-                        'percentage' => round(number_format(($salesChargebackSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                        'percentage' => number_format(($salesChargebackSum * 100) / $total, 2, '.', ',')
                     ],
                     'other' => [
                         'value' => foxutils()->formatMoney($salesOtherSum / 100),
-                        'percentage' => round(number_format(($salesOtherSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                        'percentage' => number_format(($salesOtherSum * 100) / $total, 2, '.', ',')
                     ]
                 ];
             });
