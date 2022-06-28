@@ -72,13 +72,13 @@
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
                 </div>
-                <div class="col-4">
+                <!-- <div class="col-4">
                     <div class="box-projects">
                         <select id='select_projects' class="sirius-select">
                             {{-- JS carrega.. --}}
                         </select>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -156,12 +156,12 @@
                             <div class="row mt-15">
                                 <div class="col-sm-6 col-md-3">
                                     <label for="transaction">Transação</label>
-                                    <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
+                                    <input name='transaction' id="transaction" class="input-pad" placeholder="Transação">
                                 </div>
 
                                 <div class="col-sm-6 col-md-3">
                                     <label for="client">Nome do cliente</label>
-                                    <input name='client' id="client" class="input-pad" placeholder="cliente">
+                                    <input name='client' id="client" class="input-pad" placeholder="Cliente">
                                 </div>
 
                                 <div class="col-sm-6 col-md-3">

@@ -701,7 +701,10 @@ h4.number{
 @media only screen and (min-width: 1220px) {
     .col-graph { flex: 2; }
     .col-payment { font-size: 14px; }
-    .container-devices .box-image-payment { min-width: 117px; }
+    .container-devices .box-image-payment {
+        min-width: 135px;
+        flex: 1 !important;
+    }
 }
 
 .bar-payment { max-width: 100px; padding-right: 5px; }
@@ -1478,6 +1481,7 @@ h4.number{
 }
 
 .max-100 .sirius-select-options { max-height: 100px !important; }
+.max-118 .sirius-select-options { max-height: 118px !important; }
 
 /* marketing */
 .box-resume {
@@ -2359,3 +2363,16 @@ h4.number{
     top: 50%;
     position: absolute;
 }
+
+.card-origin-report.data-holder {
+    width: 100%;
+}
+
+.table-striped tbody tr:nth-of-type(2n+1) { height: 37px; }
+.table-striped tbody tr:nth-of-type(2n+2) { height: 51px; }
+
+.table-vendas tbody td { color: #636363 !important; }
+
+.table-vendas tbody td:nth-child(1) { text-transform: uppercase; }
+.table-vendas tbody td:nth-child(2) { color: #999 !important; }
+.table-vendas tbody td:nth-child(3) { font-weight: 700; }

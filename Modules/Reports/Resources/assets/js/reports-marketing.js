@@ -26,7 +26,7 @@ let mktUrl = '/api/reports/marketing';
 function reload() {
     loadResume();
     loadCoupons();
-    // loadDevices();
+    loadDevices();
     devicesInfo();
     loadOperationalSystems();
     loadFrequenteSales();
@@ -89,6 +89,7 @@ function loadOrigins(link = null) {
 
                 $("#origins-table").html("");
                 $("#origins-table").append(table_data);
+                $("#card-origin .ske-load").hide();
                 $(".table-vendas").addClass("table-striped");
 
                 pagination(response, "origins", updateSalesByOrigin);
@@ -856,7 +857,7 @@ function loadBrazilMap() {
 
     $.ajax({
         method: "GET",
-        url: "/api/reports/marketing/sales-by-state?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&map_filter="+ $("input[name='brazil_map_filter']:checked").val(),
+        url: mktUrl + "/sales-by-state?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&map_filter="+ $("input[name='brazil_map_filter']:checked").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),

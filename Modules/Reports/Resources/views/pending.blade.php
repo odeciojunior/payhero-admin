@@ -44,13 +44,13 @@
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
                 </div>
-                <div class="col-4">
+                <!-- <div class="col-4">
                     <div class="box-projects">
                         <select id='select_projects' class="sirius-select">
                             {{-- JS carrega.. --}}
                         </select>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div id="project-not-empty" style="display: none">

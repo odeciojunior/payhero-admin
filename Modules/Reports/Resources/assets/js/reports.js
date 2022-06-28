@@ -844,6 +844,7 @@ $(function () {
 
                     $("#origins-table").html("");
                     $("#origins-table").append(table_data);
+                    $("#card-origin .ske-load").hide();
                     $(".table-vendas").addClass("table-striped");
 
                     pagination(response, "origins", updateSalesByOrigin);
@@ -1683,7 +1684,7 @@ let emptyProducts = `
 `;
 
 let noListProducts = `
-<svg width="275" height="122" viewBox="0 0 275 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="200" height="90" viewBox="0 0 275 122" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="48" y="94" width="187" height="25" rx="4" fill="url(#paint0_linear_2696_543)"/>
 <rect x="48" y="5" width="227" height="25" rx="4" fill="url(#paint1_linear_2696_543)"/>
 <rect x="48" y="50" width="227" height="24" rx="4" fill="url(#paint2_linear_2696_543)"/>

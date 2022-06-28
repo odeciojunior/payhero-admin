@@ -652,7 +652,7 @@
                                             </header>
                                             
                                             <div class="col-6 sirius-select-origin">
-                                                <select class="float-right sirius-select max-100" id='origin'>
+                                                <select class="float-right sirius-select max-118" id='origin'>
                                                     <option selected value="src">SRC</option>
                                                     <option value="utm_source">UTM Source</option>
                                                     <option value="utm_medium">UTM Medium</option>
