@@ -27,6 +27,7 @@
         </ul>
     </div>
 
+    <!-- BOTAO BONUS BALANCE NO MOBILE -->
     <div class="bonus-balance-menu d-flex justify-content-center align-items-center">
         <button id="bonus-balance" class="bonus-balance-button mobile justify-content-center align-items-center" style="display: none">
             <svg width="15" height="16" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" >
@@ -35,18 +36,7 @@
         </button>
     </div>
 
-    @php
-        $userModel = new \Modules\Core\Entities\User();
-        $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
-    @endphp
 
-    @if(!auth()->user()->account_is_approved && $account_type === 'admin')
-        <div class="new-register-navbar-open-modal-container" style="display: none;">
-            <div class="row new-register-open-modal">
-                <span class="new-register-open-modal-btn">Clique aqui para começar</span>
-            </div>
-        </div>
-    @endif
 
     <div class="row no-gutters ml-auto">
 
@@ -61,6 +51,22 @@
 
             <!-- NAVERBAR FILHA DA CONTAINER -->
             <div class="row no-gutters d-flex" id="site-navbar-collapse">
+
+                <div style="margin:auto 100px auto auto">
+                <!-- CONVITE PARA INICIAR -->
+                @php
+                    $userModel = new \Modules\Core\Entities\User();
+                    $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+                @endphp
+
+                @if(!auth()->user()->account_is_approved && $account_type === 'admin')
+                    <div class="new-register-navbar-open-modal-container" style="display: none;">
+                        <div class="row new-register-open-modal">
+                            Você está em uma conta demo. <span class="new-register-open-modal-btn">Clique aqui para começar</span>
+                        </div>
+                    </div>
+                @endif
+                </div>
 
                 <!-- EMPRESAS -->
                 <div class="pr-20" id="company-select" style="display:none"><!--d-sm-flex -->

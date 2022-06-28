@@ -90,7 +90,7 @@ $(function () {
                     verifyHasOnlyOne();
                 } else {
                     $("#subtitle_drag_drop").hide();
-                    $("#button_toggle").css({visibility: "hidden"});
+                    //$("#button_toggle").css({visibility: "hidden"});
                     $("#data-table-projects").css({visibility: "hidden"});
                     $("#btn-config").css({visibility: "hidden"});
                     if (response.no_company) {

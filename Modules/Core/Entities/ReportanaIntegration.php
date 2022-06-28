@@ -18,8 +18,12 @@ use Modules\Core\Presenters\ReportanaIntegrationPresenter;
  * @property string $url_api
  * @property boolean $billet_generated
  * @property boolean $billet_paid
+ * @property boolean $billet_expired
  * @property boolean $credit_card_refused
  * @property boolean $credit_card_paid
+ * @property boolean $pix_generated
+ * @property boolean $pix_paid
+ * @property boolean $pix_expired
  * @property boolean $abandoned_cart
  * @property string $deleted_at
  * @property string $created_at
@@ -52,6 +56,8 @@ class ReportanaIntegration extends Model
         'credit_card_paid',
         'pix_generated',
         'pix_paid',
+        'billet_expired',
+        'pix_expired',
         'abandoned_cart',
         'deleted_at',
         'created_at',

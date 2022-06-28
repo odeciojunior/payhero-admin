@@ -113,6 +113,9 @@ class ReportanaApiController extends Controller
                 if (empty($data['boleto_paid'])) {
                     $data['boleto_paid'] = 0;
                 }
+                if (empty($data['boleto_expired'])) {
+                    $data['boleto_expired'] = 0;
+                }
                 if (empty($data['credit_card_paid'])) {
                     $data['credit_card_paid'] = 0;
                 }
@@ -125,6 +128,9 @@ class ReportanaApiController extends Controller
                 if (empty($data['pix_paid'])) {
                     $data['pix_paid'] = 0;
                 }
+                if (empty($data['pix_expired'])) {
+                    $data['pix_expired'] = 0;
+                }
                 if (empty($data['abandoned_cart'])) {
                     $data['abandoned_cart'] = 0;
                 }
@@ -133,10 +139,12 @@ class ReportanaApiController extends Controller
                     'url_api'             => $data['url_api'],
                     'billet_generated'    => $data['boleto_generated'],
                     'billet_paid'         => $data['boleto_paid'],
+                    'billet_expired'      => $data['boleto_expired'],
                     'credit_card_refused' => $data['credit_card_refused'],
                     'credit_card_paid'    => $data['credit_card_paid'],
                     'pix_generated'       => $data['pix_generated'],
                     'pix_paid'            => $data['pix_paid'],
+                    'pix_expired'         => $data['pix_expired'],
                     'abandoned_cart'      => $data['abandoned_cart'],
                     'project_id'          => $projectId,
                     'user_id'             => auth()->user()->account_owner_id,
@@ -239,6 +247,9 @@ class ReportanaApiController extends Controller
             if (empty($data['boleto_paid'])) {
                 $data['boleto_paid'] = 0;
             }
+            if (empty($data['boleto_expired'])) {
+                $data['boleto_expired'] = 0;
+            }
             if (empty($data['credit_card_paid'])) {
                 $data['credit_card_paid'] = 0;
             }
@@ -251,6 +262,9 @@ class ReportanaApiController extends Controller
             if (empty($data['pix_paid'])) {
                 $data['pix_paid'] = 0;
             }
+            if (empty($data['pix_expired'])) {
+                $data['pix_expired'] = 0;
+            }
             if (empty($data['abandoned_cart'])) {
                 $data['abandoned_cart'] = 0;
             }
@@ -259,10 +273,12 @@ class ReportanaApiController extends Controller
                                                                     'url_api'             => $data['url_api'],
                                                                     'billet_generated'    => $data['boleto_generated'],
                                                                     'billet_paid'         => $data['boleto_paid'],
+                                                                    'billet_expired'      => $data['boleto_expired'],
                                                                     'credit_card_refused' => $data['credit_card_refused'],
                                                                     'credit_card_paid'    => $data['credit_card_paid'],
                                                                     'pix_generated'       => $data['pix_generated'],
                                                                     'pix_paid'            => $data['pix_paid'],
+                                                                    'pix_expired'         => $data['pix_expired'],
                                                                     'abandoned_cart'      => $data['abandoned_cart'],
                                                                 ]);
             if ($integrationUpdated) {
