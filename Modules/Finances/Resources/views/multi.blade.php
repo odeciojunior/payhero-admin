@@ -55,7 +55,7 @@
                     </div>
                     <div class="col-9 col-md-6 pointer default-hover order-3" style="display:none;" id="container-return">
                         <div class="d-flex align-items-center h-p100 default-hover">
-                            <i class="o-arrow-right-1 back-button" style="margin-right: 8px"></i> Voltar
+                            <i class="o-arrow-right-1 back-button" style="margin-right: 8px; margin-top: 20px;"></i> Voltar
                         </div>
                     </div>
                     <div class="col-3 col-md-6 d-none d-md-flex justify-content-end align-items-center order-4 pr-0">
