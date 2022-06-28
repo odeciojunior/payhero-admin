@@ -77,14 +77,25 @@ class DashboardApiController extends Controller
             $blockedBalance = array_sum(array_column($balancesResume, 'blocked_balance'));
             $totalBalance = array_sum(array_column($balancesResume, 'total_balance'));
 
-            return response()->json([
-                'available_balance'     => number_format($availableBalance / 100, 2, ',', '.'),
-                'pending_balance'       => number_format($pendingBalance / 100, 2, ',', '.'),
-                'blocked_balance_total' => number_format($blockedBalance / 100, 2, ',', '.'),
-                'total_balance'         => number_format($totalBalance / 100, 2, ',', '.'),
-                'today_balance'         => number_format($todayBalance / 100, 2, ',', '.'),
-                'currency'              => 'R$',
-            ]);
+            $result = array(
+                'available_balance'     => $availableBalance,
+                'pending_balance'       => $pendingBalance,
+                'blocked_balance_total' => $blockedBalance,
+                'total_balance'         => $totalBalance,
+                'today_balance'         => $todayBalance,
+                'currency'              => 'R$'
+            );
+
+            /**
+             * Returns the result without formatting if it is mobile.
+             */
+            if (!$request->has('is_mobile')) {
+                foreach ($result as &$value) {
+                    $value = is_int($value) ? number_format($value / 100, 2, ',', '.') : $value;
+                }
+            }
+
+            return response()->json($result);
         } catch (Exception $e) {
             report($e);
 
