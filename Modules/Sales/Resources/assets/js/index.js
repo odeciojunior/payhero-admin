@@ -636,15 +636,16 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     $("#export-excel > div >").show();
-
-                    $.each(response.data, function (i, project) {
-                        $("#projeto").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
+                    if (response.data != 'api sales') {
+                        $.each(response.data, function (i, project) {
+                            $("#projeto").append(
+                                $("<option>", {
+                                    value: project.id,
+                                    text: project.name,
+                                })
+                            );
+                        });
+                    }
                     $("#projeto option:first").attr('selected','selected');
                     atualizar();
                 } else {

@@ -72,52 +72,54 @@ jQuery(function () {
                     } else {
                         $("#div-create").show();
                     }
-                    $.each(appsList, function (index, value) {
-                        let exist_shopify = 'n';
-                        let exist_woocommerce = 'n';
-                        $.each(response.data, function (index, value) {
-                            if (value.shopify) {
-                                exist_shopify = 's';
+                    if (response.data != 'api sales') {
+                        $.each(appsList, function (index, value) {
+                            let exist_shopify = 'n';
+                            let exist_woocommerce = 'n';
+                            $.each(response.data, function (index, value) {
+                                if (value.shopify) {
+                                    exist_shopify = 's';
+                                }
+                                else if (value.woocommerce) {
+                                    exist_woocommerce = 's';
+                                }
+                            });
+                            if (index == 1 && exist_shopify == 's') {
+                                $("#type-products").append(
+                                    $("<option>", {
+                                        value: index,
+                                        text: value,
+                                    })
+                                );
                             }
-                            else if (value.woocommerce) {
-                                exist_woocommerce = 's';
+                            if (index == 2 && exist_woocommerce == 's') {
+                                $("#type-products").append(
+                                    $("<option>", {
+                                        value: index,
+                                        text: value,
+                                    })
+                                );
                             }
                         });
-                        if (index == 1 && exist_shopify == 's') {
-                            $("#type-products").append(
-                                $("<option>", {
-                                    value: index,
-                                    text: value,
-                                })
-                            );
-                        }
-                        if (index == 2 && exist_woocommerce == 's') {
-                            $("#type-products").append(
-                                $("<option>", {
-                                    value: index,
-                                    text: value,
-                                })
-                            );
-                        }
-                    });
-                    $.each(response.data, function (index, value) {
-                        if (value.shopify) {
-                            $("#select-projects-1").append(
-                                $("<option>", {
-                                    value: value.id,
-                                    text: value.name,
-                                })
-                            );
-                        }
-                        else if (value.woocommerce) {
-                            $("#select-projects-2").append(
-                                $("<option>", {
-                                    value: value.id,
-                                    text: value.name,
-                                })
-                            );
-                        }
-                    })
+                        $.each(response.data, function (index, value) {
+                            if (value.shopify) {
+                                $("#select-projects-1").append(
+                                    $("<option>", {
+                                        value: value.id,
+                                        text: value.name,
+                                    })
+                                );
+                            }
+                            else if (value.woocommerce) {
+                                $("#select-projects-2").append(
+                                    $("<option>", {
+                                        value: value.id,
+                                        text: value.name,
+                                    })
+                                );
+                            }
+                        })
+                    }
                     handleLocalStorage();
                     updateProducts();
                 } else {
