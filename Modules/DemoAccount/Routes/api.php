@@ -55,6 +55,9 @@ Route::group([
         Route::get('/products/{id}/edit', 'ProductsApiDemoController@edit');
         Route::get('/products/saleproducts/{saleId}', 'ProductsApiDemoController@getProductBySale')
         ->name('api.products.saleproducts');
+
+        Route::post('/products/products-variants', 'ProductsApiDemoController@getProductsVariants')
+        ->name('api.products.productsvariants');
     });
 
     //Sales
