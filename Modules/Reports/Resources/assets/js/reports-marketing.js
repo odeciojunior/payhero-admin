@@ -80,10 +80,9 @@ function loadOrigins(link = null) {
 
                 $.each(response.data, function (index, data) {
                     table_data += "<tr>";
-                    table_data += "<td>" + data.origin + "</td>";
-                    table_data += "<td>" + data.sales_amount + "</td>";
-                    table_data +=
-                        "<td>" + data.balance + "</td>";
+                        table_data += "<td>" + data.origin + "</td>";
+                        table_data += "<td>" + data.sales_amount + "</td>";
+                        table_data += "<td style='text-align: right;'>" + data.value + "</td>";
                     table_data += "</tr>";
                 });
 
