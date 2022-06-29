@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class SetCompanyDefaultForUsers extends Migration
 {
@@ -22,7 +24,8 @@ class SetCompanyDefaultForUsers extends Migration
         $companies = DB::table('companies')->select('id','user_id','address_document_status','contract_document_status')
         ->whereNull('deleted_at')->get();
 
-        $bar = $this->output->createProgressBar(count($companies));
+        $output = new ConsoleOutput();
+        $bar = new ProgressBar($output, count($companies));        
         $bar->start();
 
         $companyDefault = 1;
