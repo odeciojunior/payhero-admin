@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Events\ReportanaTrackingEvent;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Product;
+use Modules\Core\Services\TrackingService;
 
 class GenericCommand extends Command
 {
@@ -14,39 +15,45 @@ class GenericCommand extends Command
 
     public function handle()
     {
+        $productsQuery = Product::with([
+            'productsPlans.plan'
+        ])->select('id', 'project_id', 'shopify_id')
+            ->where('shopify', 0)
+            ->whereNotNull('shopify_id')
+            ->where('shopify_id', '!=', '');
+
         $bar = $this->getOutput()->createProgressBar();
+        $bar->start($productsQuery->count());
 
-        $this->info('ENVIANDO ATUALIZAÇÕES DE RASTREIO');
+        $productsQuery->chunk(1000, function ($products) use ($bar) {
+            foreach ($products as $product) {
 
-        $salesForTrackingUpdate = Sale::select('id')
-            ->where('owner_id', 557)
-            ->where('start_date', '<=', now()->subDays(30))
-            ->where('status', Sale::STATUS_APPROVED)
-            ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
-            ->where('has_valid_tracking', 1)
-            ->get();
+                try {
 
-        $bar->start($salesForTrackingUpdate->count());
-        foreach ($salesForTrackingUpdate as $sale) {
-            event(new ReportanaTrackingEvent($sale->id));
-            $bar->advance();
-        }
-        $bar->finish();
+                    if (!stristr($product->shopify_id, '-')) {
+                        $plan = null;
+                        foreach ($product->productsPlans as $pp) {
+                            if ($pp->plan->shopify_id === $product->shopify_id) {
+                                $plan = $pp->plan;
+                                break;
+                            }
+                        }
 
-        $this->info('ENVIANDO VENDAS DE EXPIRADAS');
+                        $newId = $product->shopify_id . '-' . hashids_encode($product->project_id);
+                        $product->shopify_id = $plan->shopify_id = $newId;
 
-        $salesExpired = Sale::select('id')
-            ->where('owner_id', 557)
-            ->where('start_date', '<=', now()->subDays(30))
-            ->where('status', Sale::STATUS_CANCELED)
-            ->whereIn('payment_method', [Sale::PIX_PAYMENT, Sale::PAYMENT_TYPE_BANK_SLIP])
-            ->get();
+                        $product->save();
+                        $plan->save();
+                    } else {
+                        $this->info('já foi');
+                    }
+                } catch (\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $bar->advance();
+            }
+        });
 
-        $bar->start($salesExpired->count());
-        foreach ($salesExpired as $sale) {
-            event(new ReportanaTrackingEvent($sale->id, false));
-            $bar->advance();
-        }
         $bar->finish();
     }
 }
