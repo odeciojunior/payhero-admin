@@ -1871,32 +1871,53 @@ h4.number{
 
 .footer-regions {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    width: 363px;
+    padding-left: 0;
+    position: relative;
 }
-.footer-regions section {
-    flex: 1;
+.footer-regions .states {
+    position: absolute;
+    left: 0;
+    height: 124px;
+    top: 8px;
 }
+.footer-regions dt {
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    height: 24px;
+    line-height: 25px;
+    margin-bottom: 9px;
+    text-align: center;
+    padding-left: 5px;
+    border: 1px solid transparent;
+}
+
+.footer-regions section { flex: 1; }
+
 .conversion-colors {
     margin: 0;
     padding: 0;
-    height: 94%;
+    height: 126px;
     display: flex;
     flex-direction: column;
 }
 .conversion-colors li {
     list-style: none;
-    height: 40px;
+    height: 26px;
     text-align: center;
-    line-height: 40px;
-    margin: 4px 0;
+    line-height: 25px;
+    margin: 0 0 8px 0;
     font-weight: bold;
     font-size: 12px;
+    border: 1px solid transparent;
 }
-.conversion-colors .blue { color: #2E85EC; }
-.conversion-colors .purple { color: #665FE8; }
-.conversion-colors .pink { color: #F43F5E; }
-.conversion-colors .orange { color: #FF7900; }
+.conversion-colors .blue, .conversion-colors li:nth-child(1) { color: #2E85EC; }
+.conversion-colors .purple, .conversion-colors li:nth-child(2) { color: #665FE8; }
+.conversion-colors .pink, .conversion-colors li:nth-child(3) { color: #F43F5E; }
+.conversion-colors .orange, .conversion-colors li:nth-child(4) { color: #FF7900; }
 
 .regions-legend {
     margin: 0;
