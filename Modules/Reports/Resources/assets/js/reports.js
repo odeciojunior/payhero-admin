@@ -1,22 +1,22 @@
 $(function () {
     loadingOnScreen();
     getInfo();
-    verifyUserHasStore()    
+    verifyUserHasStore()
 
     $('.sirius-select1').each(function () {
         $(this).siriusSelect();
     });
     $('.sirius-select1').on('click', function() {
         $('.sirius-select1 .sirius-select-text').toggleClass('on');
-    });    
+    });
 
     let resumeUrl = '/api/reports/resume';
-    
+
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
-        
-    }    
+
+    }
 
     function getCashback() {
         let cashHtml = '';
@@ -37,7 +37,7 @@ $(function () {
             },
             success: function success(response) {
                 let { chart, count, total, variation } = response.data;
-                
+
                 if( count > 0 ) {
                     cashHtml = `
                         <div class="container d-flex value-price">
@@ -61,11 +61,11 @@ $(function () {
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     newGraphCashback(series, labels);
-                    
+
                     $(window).on("resize", function() {
                         $('.new-graph-cashback').width($("#block-cash").width() + 4);
                     });
-                    
+
                 } else {
                     cashHtml = `
                         <div class="container d-flex value-price">
@@ -84,7 +84,7 @@ $(function () {
             }
         });
 
-        
+
     }
 
     function getPending() {
@@ -105,7 +105,7 @@ $(function () {
             },
             success: function success(response) {
                 let { chart, total, variation } = response.data;
-                
+
                 if( total !== "0,00" ) {
                     pendHtml = `
                         <div class="container d-flex value-price">
@@ -132,10 +132,10 @@ $(function () {
                     $(window).on("resize", function() {
                         $('.new-graph-pending').width($('#block-pending').width() + 4);
                     });
-                    
+
                 } else {
                     pendHtml = `
-                        <div class="container d-flex value-price">                            
+                        <div class="container d-flex value-price">
                             <h4 id='pending' class="font-size-24 bold grey">
                                 <span class="currency">R$ </span>
                                 0,00
@@ -170,7 +170,7 @@ $(function () {
             },
             success: function success(response) {
                 let { chart, total, variation } = response.data;
-                
+
                 if( total !== 'R$ 0,00' ) {
                     comissionhtml = `
                         <div class="container d-flex value-price">
@@ -200,7 +200,7 @@ $(function () {
 
                 } else {
                     comissionhtml = `
-                        <div class="container d-flex value-price">                            
+                        <div class="container d-flex value-price">
                             <h4 id='comission' class="font-size-24 bold grey">
                                 <span class="currency">R$ </span>
                                 0,00
@@ -235,7 +235,7 @@ $(function () {
             },
             success: function success(response) {
                 let { chart, total, variation } = response.data;
-                
+
                 if( total !== 0 ) {
                     salesHtml = `
                         <div class="container d-flex value-price">
@@ -300,7 +300,7 @@ $(function () {
             success: function success(response) {
                 let { total, products } = response.data;
                 let spaceTotal = $('#block-products').width();
-                
+
                 if(total) {
                     $("#block-products").prepend(`
                         <footer class="footer-products scroll-212">
@@ -310,16 +310,16 @@ $(function () {
 
                     $.each(products, function (i, product) {
                         let { color, amount, image, name } = product;
-                        
+
                         if(amount) {
                             lista = `
                                 <li>
                                     <div class="box-list-products">
-                                        <figure 
-                                            data-container="body" 
-                                            data-viewport=".container" 
-                                            data-placement="top" 
-                                            data-toggle="tooltip" 
+                                        <figure
+                                            data-container="body"
+                                            data-viewport=".container"
+                                            data-placement="top"
+                                            data-toggle="tooltip"
                                             title="${name}">
                                             <img class="photo" src="${image}" width="16px" height="16px" />
                                         </figure>
@@ -382,7 +382,7 @@ $(function () {
             },
             success: function success(response) {
                 let { coupons, total } = response.data;
-                
+
                 if( total != 0 ) {
                     cuponsHtml = `
                         <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
@@ -434,7 +434,7 @@ $(function () {
                             chartPadding: 0,
                             labelOffset: 0,
                         });
-                    
+
                 } else {
                     cuponsHtml = `
                         <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
@@ -444,7 +444,7 @@ $(function () {
                             <div class="no-coupon">${emptyCoupons}</div>
                             <div class="msg-coupon">Nenhum cupom utilizado</div>
                         </div>
-                        
+
                     `;
                     $("#block-coupons").html(cuponsHtml);
                 }
@@ -487,7 +487,7 @@ $(function () {
                                                 </span>
                                             </div>Cartão
                                         </div>
-                                        
+
                                         <div class="box-payment-option option">
                                             <div class="col-payment grey percentage-card" id='percent-credit-card'>${credit_card.percentage}</div>
                                             <div class="col-payment col-graph bar-payment">
@@ -504,11 +504,11 @@ $(function () {
                                         <div class="col-payment grey box-image-payment ico-pay">
                                             <div class="box-ico">
                                                 <span class="box-ico-report">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" 
-                                                        width="38.867" 
-                                                        height="40.868" 
-                                                        viewBox="0 0 38.867 40.868" 
-                                                        style="width: 24px;" 
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        width="38.867"
+                                                        height="40.868"
+                                                        viewBox="0 0 38.867 40.868"
+                                                        style="width: 24px;"
                                                     >
                                                         <g id="Grupo_61" data-name="Grupo 61" transform="translate(-2948.5 213.743)">
                                                             <g id="g992" transform="translate(2956.673 -190.882)">
@@ -593,7 +593,7 @@ $(function () {
                             ${emptyGraph}
                             <p class="noone-data">Não há dados suficientes</p>
                         </div>
-                        
+
                     `;
                     $("#block-payments").html(paymentsHtml);
                 }
@@ -655,7 +655,7 @@ $(function () {
 
                 } else {
                     regionsHtml = `
-                        <div class="container d-flex value-price">                            
+                        <div class="container d-flex value-price">
                             <h4 id='sales' class="font-size-24 bold grey" style="visibility: hidden; height: 15px;">
                                 0
                             </h4>
@@ -746,13 +746,13 @@ $(function () {
     });
 
     function resume() {
-        // getCommission()
-        // getPending()
-        // getCashback()
-        // getSales()
-        // getTypePayments()
-        // getProducts()
-        // getCoupons()
+        getCommission()
+        getPending()
+        getCashback()
+        getSales()
+        getTypePayments()
+        getProducts()
+        getCoupons()
         getRegions()
         updateSalesByOrigin()
     }
@@ -825,10 +825,9 @@ $(function () {
 
                     $.each(response.data, function (index, data) {
                         table_data += "<tr>";
-                        table_data += "<td>" + data.origin + "</td>";
-                        table_data += "<td>" + data.sales_amount + "</td>";
-                        table_data +=
-                            "<td>" + data.balance + "</td>";
+                            table_data += "<td>" + data.origin + "</td>";
+                            table_data += "<td>" + data.sales_amount + "</td>";
+                            table_data += "<td style='text-align: right;'>" + data.value + "</td>";
                         table_data += "</tr>";
                     });
 
@@ -839,8 +838,8 @@ $(function () {
 
                     pagination(response, "origins", updateSalesByOrigin);
                     $(".origin-report").show();
-                }               
-                
+                }
+
             },
         });
     }
@@ -1210,7 +1209,7 @@ $(function () {
         };
 
         const ctx = document.getElementById('graph-cashback').getContext('2d');
-        var gradient = ctx.createLinearGradient(0, 0, 0, 100);        
+        var gradient = ctx.createLinearGradient(0, 0, 0, 100);
 
         gradient.addColorStop(0, 'rgba(54,216,119,0.23)');
         gradient.addColorStop(1, 'rgba(255,255,255,0)');
@@ -1358,8 +1357,8 @@ $(function () {
                   },
             });
 
-    }    
-    
+    }
+
     function graphComission(series, labels) {
        const titleTooltip = (tooltipItems) => {
             return '';
@@ -1587,7 +1586,7 @@ $(function () {
     // abort all ajax
     $.ajaxQ = (function(){
         var id = 0, Q = {};
-      
+
         $(document).ajaxSend(function(e, jqx){
           jqx._id = ++id;
           Q[jqx._id] = jqx;
@@ -1595,7 +1594,7 @@ $(function () {
         $(document).ajaxComplete(function(e, jqx){
           delete Q[jqx._id];
         });
-      
+
         return {
           abortAll: function(){
             var r = [];
@@ -1606,7 +1605,7 @@ $(function () {
             return r;
           }
         };
-      
+
       })();
 
 });
