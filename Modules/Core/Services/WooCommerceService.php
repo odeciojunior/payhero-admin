@@ -207,6 +207,8 @@ class WooCommerceService
 
         $hashedProjectId = Hashids::encode($projectId);
 
+        if($variationId) $variationId .= '-' . $hashedProjectId;
+
         $planModel = new Plan();
 
         $productModel = new Product();
@@ -696,11 +698,13 @@ class WooCommerceService
                     $id = explode('-', $product->shopify_variant_id);
 
                     if (empty($product->shopify_id)) {
+                        if(stristr($id[0], '-')) $id[0] = explode('-', $id[0])[0];
                         $item = [
                             "product_id" => $id[0],
                             "quantity" => $productsPlanSale->amount
                         ];
                     } else {
+                        if(stristr($product->shopify_id, '-')) $product->shopify_id = explode('-', $product->shopify_id)[0];
                         $item = [
                             "product_id" => $product->shopify_id,
                             "variation_id" => $id[0],

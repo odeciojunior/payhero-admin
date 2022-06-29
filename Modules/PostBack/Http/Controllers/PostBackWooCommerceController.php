@@ -211,7 +211,7 @@ class PostBackWooCommerceController extends Controller
                     $newValues['shopify_variant_id'] = $request['sku'];
                     
                     if(!empty($request['parent_id'])){
-                        $newValues['shopify_id'] = $request['parent_id'];
+                        $newValues['shopify_id'] = $request['parent_id'].'-'.$request->project_id;
                     }
                     
                     $newValues['project_id'] = hashids_decode($request->project_id);
