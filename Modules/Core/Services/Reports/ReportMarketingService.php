@@ -186,7 +186,7 @@ class ReportMarketingService
                 $data['count_mobile_approved'] = 0;
                 $data['percentage_mobile'] = '0%';
             } else {
-                $data['percentage_mobile'] = number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',') . '%';
+                $data['percentage_mobile'] = round(number_format(($data['count_mobile_approved'] * 100) / $data['count_mobile'], 2, '.', ',')) . '%';
             }
 
             if(empty($data['count_desktop'])){
@@ -194,7 +194,7 @@ class ReportMarketingService
                 $data['count_desktop_approved'] = 0;
                 $data['percentage_desktop'] = '0%';
             } else {
-                $data['percentage_desktop'] = number_format(($data['count_desktop'] * 100) / $data['total'], 2, '.', ',') . '%';;
+                $data['percentage_desktop'] = round(number_format(($data['count_desktop_approved'] * 100) / $data['count_desktop'], 2, '.', ',')) . '%';
             }
 
             $data['value_mobile'] = $data['value_mobile'] > 0 ? foxutils()->formatMoney($data['value_mobile'] / 100) : 'R$ 0,00';
@@ -328,18 +328,18 @@ class ReportMarketingService
             {
                 $total += $coupon->amount;
             }
-    
+
             $index = 0;
             foreach($coupons as $coupon)
             {
                 $coupon->percentage = round(number_format(($coupon->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
                 $coupon->color = $this->getColors($index);
-                $coupon->hexadecimal = $this->getColors($index, true);    
+                $coupon->hexadecimal = $this->getColors($index, true);
                 $index++;
             }
-    
+
             $couponsArray = $coupons->toArray();
-    
+
             return [
                 'coupons' => $couponsArray,
                 'total' => $total
