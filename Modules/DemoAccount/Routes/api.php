@@ -42,6 +42,7 @@ Route::group([
     Route::group([],function(){
         Route::get('/project/{projectId}/projectnotification', 'ProjectNotificationApiDemoController@index');
         Route::get('/project/{projectId}/projectnotification/{id}', 'ProjectNotificationApiDemoController@show');
+        Route::get('/project/{projectId}/projectnotification/{id}/edit', 'ProjectNotificationApiDemoController@edit');
     });
 
     //Products
