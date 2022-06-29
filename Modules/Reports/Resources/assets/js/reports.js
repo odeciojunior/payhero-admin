@@ -620,30 +620,40 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                // console.log(response.data);
+                regionsHtml = `
+                    <footer class="container footer-regions">
+                        <dl class="states">
+                            <dt>SP</dt>
+                            <dt>MG</dt>
+                            <dt>RS</dt>
+                            <dt>PR</dt>
+                        </dl>
+                        <section class="new-graph-regions graph">
+                        </section>
+                        <section class="info-regions">
+                            <ul class="conversion-colors"></ul>
+                        </section>
+                        <section class="info-regions">
+                            <ul class="regions-legend">
+                                <li class="access"><span></span>Acessos</li>
+                                <li class="conversion"><span></span>Conversões</li>
+                            </ul>
+                        </section>
+                    </footer>
+                `;                              
+                
+                if(response.data.length > 0){
+                    let labels = ['SP','MG','RS','PR'];
+                    let conversionArr = ['60','42','48','35'];
+                    let access = ['100','58', '58','45'];
+                    
+                    $("#block-regions").html(regionsHtml);
+                    $('.new-graph-regions').html('<canvas id="regionsChart" height="140" width="159"></canvas>');
 
-                // regionsHtml = `
-                //     <footer class="container footer-regions">
-                //         <section class="new-graph-regions graph">
-                //         </section>
-                //         <section class="info-regions">
-                //             <ul class="conversion-colors">
-                //                 <!-- <li class="blue">60%</li>
-                //                 <li class="purple">42%</li>
-                //                 <li class="pink">48%</li>
-                //                 <li class="orange">35%</li> -->
-                //             </ul>
-                //         </section>
-                //         <section class="info-regions">
-                //             <ul class="regions-legend">
-                //                 <!-- <li class="access"><span></span>Acessos</li>
-                //                 <li class="conversion"><span></span>Conversões</li> -->
-                //             </ul>
-                //         </section>
-                //     </footer>
-                // `;
+                    conversionArr.map(v => $(".conversion-colors").append(`<li>${v}%</li>`));                    
+                    graphRegions(labels, conversionArr, access);
 
-                if( response.data.length == 0 ) {
+                } else {
                     regionsHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='sales' class="font-size-24 bold grey" style="visibility: hidden; height: 15px;">
@@ -657,26 +667,6 @@ $(function () {
                     `;
                     $("#block-regions").html(regionsHtml);
                 }
-
-                if(response.data != ''){
-                    $('.new-graph-regions').html('<canvas id=regionsChart></canvas>').addClass('visible');
-                    $(".new-graph-regions").next('.no-graph').remove();
-                    graphRegions();
-
-                    let percentage = `<li class='blue'>60%</li>`;
-                    let legend = `<li class='conversion'><span></span>Conversões</li>`;
-                    $('.conversion-colors').append(percentage);
-                    $('.regions-legend').append(legend);
-
-
-                } else {
-                    $('.info-regions li').remove();
-                    $('#regionsChart').remove();
-                    $(".new-graph-regions").next('.no-graph').remove();
-                    $('.new-graph-regions').after('<div class=no-graph>Não há dados suficientes</div>');
-                    $('.new-graph-regions').removeClass('visible');
-                }
-                $('#card-regions .ske-load').hide();
             }
         });
     }
@@ -1453,81 +1443,86 @@ $(function () {
     }
 
 
-    function graphRegions() {
+    function graphRegions(labels, conversion, access) {
 
         const ctx = document.getElementById('regionsChart').getContext('2d');
-            const myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['SP', 'MG', 'RS', 'PR'],
-                    datasets: [
-                        {
-                            label: '',
-                            data: [60,22,48,35],
-                            color:'#636363',
-                            backgroundColor: [
-                                'rgba(46, 133, 236, 1)',
-                                'rgba(102, 95, 232, 1)',
-                                'rgba(244, 63, 94, 1)',
-                                'rgba(255, 121, 0, 1)',
-                            ],
-                            borderRadius: 4,
-                            barThickness: 30,
-                        },
-                        {
-                            label: '',
-                            data: [100,42,58,45],
-                            color:'#636363',
-                            backgroundColor: [
-                                'rgba(46, 133, 236, .2)',
-                                'rgba(102, 95, 232, .2)',
-                                'rgba(244, 63, 94, .2)',
-                                'rgba(255, 121, 0, .2)',
-                            ],
-                            borderRadius: 4,
-                            barThickness: 30,
-                        }
-                    ]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    plugins: {
-                        legend: {display: false},
-                        title: {display: false},
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: '',
+                        data: conversion,
+                        color:'#636363',
+                        backgroundColor: [
+                            'rgba(46, 133, 236, 1)',
+                            'rgba(102, 95, 232, 1)',
+                            'rgba(244, 63, 94, 1)',
+                            'rgba(255, 121, 0, 1)',
+                        ],
+                        borderRadius: 4,
+                        borderSkipped: false,
+                        barPercentage: 0.9
                     },
+                    {
+                        label: '',
+                        data: access,
+                        color:'#636363',
+                        backgroundColor: [
+                            'rgba(46, 133, 236, .2)',
+                            'rgba(102, 95, 232, .2)',
+                            'rgba(244, 63, 94, .2)',
+                            'rgba(255, 121, 0, .2)',
+                        ],
+                        borderRadius: 4,
+                        borderSkipped: false,
+                        barPercentage: 0.9 
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {display: false},
+                    title: {display: false},
+                },
 
-                    responsive: true,
-                    scales: {
-                        x: {
-                            display: false,
+                responsive: true,
+                scales: {
+                    x: {
+                        display: false,
+                    },
+                    y: {
+                        stacked: true,
+                        grid: {
+                            color: '#ECE9F1',
+                            drawBorder: false,
+                            display: false
                         },
-                        y: {
-                            stacked: true,
-                            grid: {
-                                color: '#ECE9F1',
-                                drawBorder: false,
-                                display: false
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            padding: -4,
+                            mirror: true,
+                            stepSize: 0,
+                            font: {
+                                family: 'Muli',
+                                size: 12,
                             },
-                            beginAtZero: true,
-                            min: 0,
-                            max: 100,
-                            ticks: {
-                                padding: 0,
-                                  stepSize: 100,
-                                font: {
-                                    family: 'Muli',
-                                    size: 12,
-                                },
-                                color: "#636363",
-                                callback: function(value, index){
-                                    return this.getLabelForValue(value);
-                                }
+                            // color: "#ff0000",
+                            callback: function(value, index){
+                                return this.getLabelForValue(value);
                             }
                         }
-                    },
-                }
-            });
+                    }
+                },
+            }
+        });
+        
+            
 
     }
 
