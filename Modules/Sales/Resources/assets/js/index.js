@@ -402,6 +402,7 @@ function hoverBilletPending() {
 function updateAfterChangeCompany(){
     $("#projeto").find('option').not(':first').remove();
     $("#plan").find('option').not(':first').remove();
+
     let companies = JSON.parse(sessionStorage.getItem('companies'));
     $.each(companies, function (c, company) {
         if( sessionStorage.getItem('company_default') == company.id){
@@ -415,6 +416,7 @@ function updateAfterChangeCompany(){
             });
         }
     });
+
     $("#projeto").val($("#projeto option:first").val());
     $("#plan").val($("#plan option:first").val());
     atualizar();
