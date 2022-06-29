@@ -86,22 +86,21 @@ class ProjectsApiController extends Controller
                     }
                 }
 
+                $companyId='';
                 if(!empty($request->input('company'))){
                     $companyId = hashids_decode($request->input('company'));
-                }
-                else{
-                    $companyId='';
                 }
 
                 return $projectService->getUserProjects($pagination, $projectStatus, $affiliation, $companyId);
 
-            } else {
-                return response()->json([
-                    'data' => [],
-                    'no_company' => true,
-                    'message' => 'Nenhuma empresa cadastrada!'
-                ]);
-            }
+            } 
+            
+            return response()->json([
+                'data' => [],
+                'no_company' => true,
+                'message' => 'Nenhuma empresa cadastrada!'
+            ]);
+            
 
         } catch (Exception $e) {
             report($e);

@@ -356,7 +356,7 @@ class ProjectService
      */
     public function getUserProjects(string $pagination, array $status, $affiliate = false, $companyId = '')
     {
-        $userId = auth()->user()->account_owner_id;
+        $userId = auth()->user()->getAccountOwnerId();
 
         if ($affiliate) {
             $projects = Project::leftJoin(
@@ -425,7 +425,7 @@ class ProjectService
         if ($pagination) {
             $projects = $projects->get();
             if(count($projects) == 0) {
-                $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();
+                $apiSale = Sale::where('owner_id', $userId)->exists();
                 if(!empty($apiSale)) {
                     return response()->json(['data' => 'api sales']);
                 }

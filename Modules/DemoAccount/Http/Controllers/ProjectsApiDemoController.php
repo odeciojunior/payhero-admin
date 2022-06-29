@@ -22,27 +22,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ProjectsApiDemoController extends ProjectsApiController
 {
-    public function index(Request $request)
-    {
-        try {
-                        
-            $projects = Project::leftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
-            ->select('projects.*', 'users_projects.order_priority as order_p')
-            ->where('projects.status', Project::STATUS_ACTIVE)
-            ->where('users_projects.user_id', User::DEMO_ID)
-            ->whereNull('users_projects.deleted_at')
-            ->orderBy('projects.status')
-            ->orderBy('order_p')
-            ->orderBy('projects.id', 'DESC');            
 
-            return ProjectsResource::collection($projects->with('domains')->get());
-            
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(['message' => 'Erro ao tentar acessar projetos'], 400);
-        }
-    }
     public function show($id)
     {
         try {

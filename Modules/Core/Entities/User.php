@@ -177,6 +177,7 @@ class User extends Authenticable
         'show_old_finances',//
         'mkt_information',
         'block_attendance_balance',
+        'company_default',
         'created_at',
         'updated_at',
         'deleted_at',
