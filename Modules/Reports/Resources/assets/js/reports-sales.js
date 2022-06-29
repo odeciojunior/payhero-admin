@@ -426,8 +426,8 @@ function loadDevices() {
         },
         success: function success(response) {
             let { desktop, mobile } = response.data;
-            
-            if(desktop.total !== 0 && mobile.total !== 0) {
+
+            if(desktop.total !== 0 || mobile.total !== 0) {
                 deviceBlock = `
                  <div class="row container-payment gadgets">
                     <div class="container container-devices">
@@ -496,7 +496,7 @@ function loadDevices() {
                     </div>
                     <div class="empty-products pad-0">
                         ${noData}
-                        <p class="noone">Sem dados</p>   
+                        <p class="noone">Sem dados</p>
                     </div>
                 `;
                 $("#block-devices").html(deviceBlock);
@@ -526,7 +526,7 @@ function typePayments() {
         },
         success: function success(response) {
             let { credit_card, pix, boleto, total } = response.data;
-            
+
             if( total !== '0,00' ) {
                 paymentsHtml = `
                     <div class="row container-payment tp-payment">
@@ -645,7 +645,7 @@ function typePayments() {
                     </div>
                     <div class="empty-products pad-0">
                         ${noData}
-                        <p class="noone">Sem dados</p>   
+                        <p class="noone">Sem dados</p>
                     </div>
                 `;
                 $("#block-payments").html(paymentsHtml);
@@ -680,11 +680,11 @@ function loadFrequenteSales() {
                             <div class="d-flex align-items list-sales">
                                 <div class="d-flex align-items">
                                     <div>
-                                        <figure 
+                                        <figure
                                             class="box-ico figure-ico"
-                                            data-container="body" 
-                                            data-viewport=".container" 
-                                            data-placement="top" 
+                                            data-container="body"
+                                            data-viewport=".container"
+                                            data-placement="top"
                                             data-toggle="tooltip"
                                             title="${item.name}"
                                         >
@@ -825,7 +825,7 @@ function orderbump() {
         },
         success: function success(response) {
             let { amount, value } = response.data;
-            
+
             if(value !== null) {
                 value = removeMoneyCurrency(value);
                 orderbumpBlock = `
@@ -893,7 +893,7 @@ function upsell() {
         },
         success: function success(response) {
             let { value, amount } = response.data;
-            
+
             if( value !== null ) {
                 value = removeMoneyCurrency(value);
 
@@ -1093,10 +1093,10 @@ function conversion() {
                 });
                 return arr;
             };
-            
+
             var arrJson = SortArr(response.data);
-            
-            
+
+
             if( numbers !== 0 ) {
                 conversionBlock = `
                     <div class="row container-payment block-conversion">
@@ -1108,11 +1108,11 @@ function conversion() {
                                             ${
                                                 arrJson[0].key == 'credit_card' ? card
                                                 : arrJson[0].key == 'pix' ? card_pix
-                                                : arrJson[0].key == 'boleto'? card_boleto : ''                                                
-                                            }                                       
+                                                : arrJson[0].key == 'boleto'? card_boleto : ''
+                                            }
                                         </div>${arrJson[0].key == 'credit_card' ? 'Cartão': arrJson[0].key}
                                     </div>
-    
+
                                     <div class="box-payment-option option">
                                         <div class="col-payment">
                                             <div class="box-payment center">
@@ -1129,7 +1129,7 @@ function conversion() {
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="container">
                             <div class="data-holder b-bottom">
                                 <div class="box-payment-option pad-0">
@@ -1138,7 +1138,7 @@ function conversion() {
                                             ${
                                                 arrJson[1].key == 'credit_card' ? card
                                                 : arrJson[1].key == 'pix' ? card_pix
-                                                : arrJson[1].key == 'boleto'? card_boleto : ''                                                
+                                                : arrJson[1].key == 'boleto'? card_boleto : ''
                                             }
                                         </div> ${arrJson[1].key == 'credit_card' ? 'Cartão': arrJson[1].key}
                                     </div>
@@ -1158,7 +1158,7 @@ function conversion() {
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="container">
                             <div class="data-holder b-bottom">
                                 <div class="box-payment-option pad-0">
@@ -1167,7 +1167,7 @@ function conversion() {
                                         ${
                                             arrJson[2].key == 'credit_card' ? card
                                             : arrJson[2].key == 'pix' ? card_pix
-                                            : arrJson[2].key == 'boleto'? card_boleto : ''                                                
+                                            : arrJson[2].key == 'boleto'? card_boleto : ''
                                         }
                                         </div> ${arrJson[2].key == 'credit_card' ? 'Cartão': arrJson[2].key}
                                     </div>
@@ -1199,7 +1199,7 @@ function conversion() {
                     </div>
                     <div class="empty-products pad-0">
                         ${noData}
-                        <p class="noone">Sem dados</p>   
+                        <p class="noone">Sem dados</p>
                     </div>
                 `;
                 $("#block-conversion").html(conversionBlock);
@@ -1222,7 +1222,7 @@ function infoCard() {
             $('#card-info').hide();
         } else {
             $('#card-info').show();
-        } 
+        }
 
         if(credit_card !== null) {
             cardHtml = `
@@ -1243,9 +1243,9 @@ function infoCard() {
                 </div>
             `;
             $("#block-info-card").html(cardHtml);
-        } 
+        }
     })
-    .catch(e => console.log('error =>' + e)); 
+    .catch(e => console.log('error =>' + e));
 }
 
 function recurrence() {
@@ -1266,7 +1266,7 @@ function recurrence() {
         },
         success: function success(response) {
             let { chart, total } = response.data;
-            
+
             if(chart) {
                 $('#block-recurrence').html('<canvas id="salesChart"></canvas>');
                 let labels = [...chart.labels];
@@ -1301,7 +1301,7 @@ function recurrence() {
         }
     });
 }
-        
+
 const formatCash = n => {
     if (n < 1e3) return n;
     if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
@@ -1353,7 +1353,7 @@ function changeCompany() {
         $('.onPreLoadBig').html(skeLoadBig);
         $.ajaxQ.abortAll();
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
-        
+
         updateReports();
     });
 }
@@ -1362,7 +1362,7 @@ function updateReports() {
     $('.onPreLoad *, .onPreLoadBig *').remove();
     $('.onPreLoad').html(skeLoad);
     $('.onPreLoadBig').html(skeLoadBig);
-    
+
     $.ajax({
         method: "GET",
         url: "/api/projects?select=true",
@@ -1476,7 +1476,7 @@ function salesStatus(st) {
         },
         success: function success(response) {
             let { chart, total, variation } = response.data;
-            
+
             statusHtml = `
                 <div class="d-flex justify-content-between box-finances-values finances-sales">
                     <div class="finances-values">
@@ -1495,7 +1495,7 @@ function salesStatus(st) {
                     </div>
                 </section>
             `;
-           
+
             if( total !== 0 ) {
                 $("#block-status").html(statusHtml);
                 $('.new-sell-graph').html('<canvas id=sales-graph></canvas>');
@@ -1651,7 +1651,7 @@ function removeDuplcateItem(item) {
 // abort all ajax
 $.ajaxQ = (function(){
     var id = 0, Q = {};
-  
+
     $(document).ajaxSend(function(e, jqx){
       jqx._id = ++id;
       Q[jqx._id] = jqx;
@@ -1659,7 +1659,7 @@ $.ajaxQ = (function(){
     $(document).ajaxComplete(function(e, jqx){
       delete Q[jqx._id];
     });
-  
+
     return {
       abortAll: function(){
         var r = [];
@@ -1670,7 +1670,7 @@ $.ajaxQ = (function(){
         return r;
       }
     };
-  
+
   })();
 
 let skeLoad = `
@@ -1756,7 +1756,7 @@ let skeLoadBig = `
     </div>
 `;
 
-let noCart = `  
+let noCart = `
 <svg width="275" height="34" viewBox="0 0 275 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="48" y="4.5144" width="227" height="24" rx="4" fill="url(#paint0_linear_3261_496)"/>
 <path opacity="0.6" d="M29 0.514404C31.2091 0.514404 33 2.30527 33 4.5144L33 28.5144C33 30.7235 31.2091 32.5144 29 32.5144L5 32.5144C2.79086 32.5144 0.999999 30.7235 0.999999 28.5144L1 4.5144C1 2.30526 2.79086 0.514403 5 0.514403L29 0.514404Z" fill="white" stroke="#CCCCCC" stroke-dasharray="2 2"/>
