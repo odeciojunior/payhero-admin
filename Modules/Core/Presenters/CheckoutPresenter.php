@@ -4,6 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Modules\Core\Entities\Domain;
 use Laracasts\Presenter\Presenter;
+use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -70,15 +71,25 @@ class CheckoutPresenter extends Presenter
 
     public function getCheckoutLink($domain)
     {
+        $hashCheckoutId = Hashids::encode($this->id);
 
-        $link = '';
-        if(FoxUtils::isProduction()) {
-            $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($this->id) : 'Domínio não configurado';
-            //$link = isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado';
-        } else {
-            $link = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/recovery/' . Hashids::encode($this->id);
+        $user = Auth()->user();
+        if($user->company_default == Company::DEMO_ID)
+        {
+            return "https://demo.cloudfox.net". '/recovery/' . $hashCheckoutId;            
         }
 
+        $link = 'Domínio não configurado';
+
+        if(isset($domain))
+        {
+            if(FoxUtils::isProduction()) {
+                $link = 'https://checkout.' . $domain->name. '/recovery/' . $hashCheckoutId;                
+            } else {
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/recovery/' . $hashCheckoutId;
+            }
+        }
+        
         return $link;
     }
 

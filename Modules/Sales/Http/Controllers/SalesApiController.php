@@ -424,7 +424,7 @@ class SalesApiController extends Controller
                 };
             }
 
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
             $plans = null;
 
             if (current($projectIds)) {
