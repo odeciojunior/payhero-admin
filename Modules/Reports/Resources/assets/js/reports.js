@@ -641,8 +641,8 @@ $(function () {
                         </section>
                     </footer>
                 `;                              
-
-                if(response.data !== ''){
+                
+                if(response.data.length > 0){
                     let labels = ['SP','MG','RS','PR'];
                     let conversionArr = ['60','42','48','35'];
                     let access = ['100','58', '58','45'];
