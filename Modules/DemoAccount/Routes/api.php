@@ -209,6 +209,11 @@ Route::group([
         Route::get('apps/notazz/{id}/edit', 'NotazzApiDemoController@edit');
     });
 
+    //Notificações Inteligentes
+    Route::get('/apps/notificacoesinteligentes', 'NotificacoesInteligentesApiDemoController@index');
+        Route::get('/apps/notificacoesinteligentes/{id}', 'NotificacoesInteligentesApiDemoController@show');
+        Route::get('/apps/notificacoesinteligentes/{id}/edit', 'NotificacoesInteligentesApiDemoController@edit');
+
     //OrderBump
     Route::group([],function(){
         Route::get('orderbump', 'OrderBumpApiDemoController@index');

@@ -483,6 +483,7 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             error: (response) => {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
+                $("#modal-withdrawal-custom").modal("hide");
             },
             success: (response) => {
                 loadingOnScreenRemove();

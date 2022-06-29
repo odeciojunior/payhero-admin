@@ -39,10 +39,12 @@ $(() => {
                 $('#integration_id').val(project.id);
 
                 loadOnAny('#tab_configuration .card', true);
+                loadingOnScreenRemove();
             },
             error: (response) => {
                 errorAjaxResponse(response);
                 loadOnAny('#tab_configuration .card', true);
+                loadingOnScreenRemove();
             }
         });
     }

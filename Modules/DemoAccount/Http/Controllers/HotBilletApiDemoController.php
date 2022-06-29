@@ -2,9 +2,9 @@
 
 namespace Modules\DemoAccount\Http\Controllers;
 
-use Modules\HotBillet\Http\Controllers\HotBilletController;
+use Modules\HotBillet\Http\Controllers\HotBilletApiController;
 
-class HotBilletApiDemoController extends HotBilletController
+class HotBilletApiDemoController extends HotBilletApiController
 {
     
 }
