@@ -29,16 +29,12 @@ $(document).ready(function () {
                     $("#project-empty").show();
                     $("#integration-actions").hide();
                 } else {
-                    $("#select_projects_edit").html("");
+                    $("#select_projects_edit").html("");                    
+                    $("#select_projects_create").html("");
                     let projects = response.projects;
                     for (let i = 0; i < projects.length; i++) {
-                        $("#select_projects_edit").append(
-                            '<option value="' +
-                                projects[i].id +
-                                '">' +
-                                projects[i].name +
-                                "</option>"
-                        );
+                        $("#select_projects_edit").append(`<option value="${projects[i].id}">${projects[i].name}</option>`);
+                        $("#select_projects_create").append(`<option value="${projects[i].id}">${projects[i].name}</option>`);
                     }
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
@@ -74,7 +70,7 @@ $(document).ready(function () {
     function clearForm() {
         $(":text").val("");
         $(":checkbox").prop("checked", true).val(1);
-        $("#project_id").prop("selectedIndex", 0).change();
+        $("#select_projects_create").prop("selectedIndex", 0).change();
     }
 
     //draw the integration cards
