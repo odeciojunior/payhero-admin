@@ -58,6 +58,9 @@ Route::group([
 
         Route::post('/products/products-variants', 'ProductsApiDemoController@getProductsVariants')
         ->name('api.products.productsvariants');
+
+        Route::get('/product/{id}', 'ProductsApiDemoController@getProductById')
+        ->name('api.products.getproduct');
     });
 
     //Sales

@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        {{-- @include('projects::empty') --}}
+        @include('projects::empty')
     </div>
 
     @push('scripts')
