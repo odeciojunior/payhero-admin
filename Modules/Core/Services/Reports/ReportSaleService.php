@@ -495,7 +495,7 @@ class ReportSaleService
                 $projectId = hashids_decode($filters['project_id']);
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-                $query = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
+                $products = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
                 ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
                 ->where('sales.status', Sale::STATUS_APPROVED)
                 ->where('sales.project_id', $projectId)
@@ -507,24 +507,26 @@ class ReportSaleService
                 ->get();
 
                 $total = 0;
-                foreach($query as $r)
+                foreach($products as $r)
                 {
                     $total += $r->amount;
                 }
 
+                $firstValue = $products[0]['amount'];
+
                 $index = 0;
-                foreach($query as $result)
+                foreach($products as $result)
                 {
-                    $percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+                    $percentage = round(number_format(($result->amount * 100) / $firstValue, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
 
                     $result->image = empty($result->image) ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $result->image;
-                    $result->percentage = $percentage < 28 ? '28%' : $percentage.'%';
+                    $result->percentage = $index == 0 ? '100%' : $percentage.'%';
                     $result->color = $this->getColors($index);
 
                     $index++;
                 }
 
-                $productsArray = $query->toArray();
+                $productsArray = $products->toArray();
 
                 return [
                     'products' => $productsArray,
