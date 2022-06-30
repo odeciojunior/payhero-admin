@@ -424,7 +424,8 @@ class SalesApiController extends Controller
                 };
             }
 
-            $userId = auth()->user()->getAccountOwnerId();
+            $user = auth()->user();
+            $userId = $user->getAccountOwnerId();
             $plans = null;
 
             if (current($projectIds)) {
@@ -434,7 +435,7 @@ class SalesApiController extends Controller
                         ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
                         ->join('companies as c', 'c.id', '=', 'cc.company_id')
                         ->where('plans.name', 'like', '%' . $data['search'] . '%')
-                        ->where('cc.company_id', hashids_decode($request->company))
+                        ->where('cc.company_id', $user->company_default)
                         ->where('c.user_id', $userId)
                         ->whereIn('plans.project_id', $projectIds)
                         ->limit(30)
@@ -444,7 +445,7 @@ class SalesApiController extends Controller
                     $plans = $planModel
                         ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
                         ->join('companies as c', 'c.id', '=', 'cc.company_id')
-                        ->where('cc.company_id', hashids_decode($request->company))
+                        ->where('cc.company_id', $user->company_default)
                         ->where('c.user_id', $userId)
                         ->whereIn('plans.project_id', $projectIds)
                         ->limit(30)
@@ -466,7 +467,7 @@ class SalesApiController extends Controller
                         ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
                         ->join('companies as c', 'c.id', '=', 'cc.company_id')
                         ->where('plans.name', 'like', '%' . $data['search'] . '%')
-                        ->where('cc.company_id', hashids_decode($request->company))
+                        ->where('cc.company_id', $user->company_default)
                         ->where('c.user_id', $userId)
                         ->limit(30)
                         ->get();
@@ -475,7 +476,7 @@ class SalesApiController extends Controller
                     $plans = $planModel
                         ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
                         ->join('companies as c', 'c.id', '=', 'cc.company_id')
-                        ->where('cc.company_id', hashids_decode($request->company))
+                        ->where('cc.company_id', $user->company_default)
                         ->where('c.user_id', $userId)
                         ->limit(30)
                         ->get();
