@@ -595,7 +595,7 @@ function loadOperationalSystems() {
                             <div class="box-payment-option pad-0">
                                 <div class="col-payment grey box-image-payment">
                                     <div class="box-ico">
-                                        <span class="ico-cart align-items justify-around"></span>
+                                        <span class="ico-cart align-items justify-around">
                                             ${getOperationalSystemSvg(data.description)}
                                         </span>
                                     </div> ${data.description}
