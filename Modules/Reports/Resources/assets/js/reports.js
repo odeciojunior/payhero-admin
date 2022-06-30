@@ -299,8 +299,7 @@ $(function () {
             },
             success: function success(response) {
                 let { total, products } = response.data;
-                let spaceTotal = $('#block-products').width();
-
+                
                 if(total) {
                     $("#block-products").prepend(`
                         <footer class="footer-products scroll-212">
@@ -310,7 +309,6 @@ $(function () {
 
                     $.each(products, function (i, product) {
                         let { color, amount, image, name } = product;
-
                         if(amount) {
                             lista = `
                                 <li>
@@ -324,9 +322,9 @@ $(function () {
                                             <img class="photo" src="${image}" width="16px" height="16px" />
                                         </figure>
                                         <div class="bars ${color}" style="width:${product.percentage}">
-                                            <span>${(( 100 * amount ) / spaceTotal) > 6.1 ? amount : ''}</span>
+                                            <span>${Number(product.percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? amount: ''}</span>
                                         </div>
-                                        <span style="color: #636363;">${(( 100 * amount ) / spaceTotal) > 6.1 ? '' : amount}</span>
+                                        <span style="color: #636363;">${Number(product.percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? '': amount}</span>
                                     </div>
                                 </li>
                             `;
