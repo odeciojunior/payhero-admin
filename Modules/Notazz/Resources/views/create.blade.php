@@ -1,4 +1,9 @@
 <input type='hidden' id='integration_id' value=''/>
+<style>
+    .sirius-select-container {    
+        width: 100%;
+    }
+</style>
 <form id='form_add_integration' method="post" action="#">
     @csrf
     <div style="width:100%">

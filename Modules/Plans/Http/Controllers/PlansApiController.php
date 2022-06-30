@@ -803,79 +803,87 @@ class PlansApiController extends Controller
 
     public function saveConfigCustomProducts(Request $request)
     {
-        set_time_limit(0);
-        $rules = [
-            'plan' => 'required',
-        ];
+        try{
+            set_time_limit(0);
+            $rules = [
+                'plan' => 'required',
+            ];
 
-        $messages = [
-            'plan.required' => 'Informe o plano',
-        ];
+            $messages = [
+                'plan.required' => 'Informe o plano',
+            ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json($validator, 400);
-        }
-
-        $planId = current(Hashids::decode($request->plan));
-
-        $allow_change_in_block = false;
-        if (!empty($request->allow_change_in_block) && boolval($request->allow_change_in_block) === true) {
-            $allow_change_in_block = true;
-        }
-
-        if (count($request->input('productsPlan', [])) > 0) {
-            $productsPlanIds = array_unique($request->productsPlan);
-
-            $details = [];
-            foreach ($productsPlanIds as $productPlanId) {
-                $details[$productPlanId]['type'] = !empty($request->type[$productPlanId]) ? $request->type[$productPlanId] : [];
-                $details[$productPlanId]['label'] = !empty($request->label[$productPlanId]) ? $request->label[$productPlanId] : [];
+            if ($validator->fails()) {
+                return response()->json($validator, 400);
             }
 
-            $itens = [];
-            foreach ($details as $productPlanId => $detailL1) {
-                foreach ($detailL1 as $key2 => $detailL2) {
-                    foreach ($detailL2 as $key3 => $detailL3) {
-                        $itens[$productPlanId][$key3][$key2] = $detailL3 ?? '';
+            $planId = current(Hashids::decode($request->plan));
+
+            $allow_change_in_block = false;
+            if (!empty($request->allow_change_in_block) && boolval($request->allow_change_in_block) === true) {
+                $allow_change_in_block = true;
+            }
+
+            if (count($request->input('productsPlan', [])) > 0) {
+                $productsPlanIds = array_unique($request->productsPlan);
+
+                $details = [];
+                foreach ($productsPlanIds as $productPlanId) {
+                    $details[$productPlanId]['type'] = !empty($request->type[$productPlanId]) ? $request->type[$productPlanId] : [];
+                    $details[$productPlanId]['label'] = !empty($request->label[$productPlanId]) ? $request->label[$productPlanId] : [];
+                }
+
+                $itens = [];
+                foreach ($details as $productPlanId => $detailL1) {
+                    foreach ($detailL1 as $key2 => $detailL2) {
+                        foreach ($detailL2 as $key3 => $detailL3) {
+                            $itens[$productPlanId][$key3][$key2] = $detailL3 ?? '';
+                        }
                     }
                 }
-            }
 
-            //atualizando personalização existente
-            $idsProductPlans = [];
-            foreach ($itens as $productPlanId => $config) {
-                $productPlanModel = new ProductPlan();
-                $productPlan = $productPlanModel->where('product_id', current(Hashids::decode($productPlanId)))->where('plan_id', $planId)->first();
-                if (!empty($productPlan)) {
-                    $productPlan->custom_config = $config;
-                    $productPlan->is_custom = !empty($request->is_custom[$productPlanId]) ? 1 : 0;
+                //atualizando personalização existente
+                $idsProductPlans = [];
+                foreach ($itens as $productPlanId => $config) {
+                    $productPlanModel = new ProductPlan();
+                    $productPlan = $productPlanModel->where('product_id', current(Hashids::decode($productPlanId)))->where('plan_id', $planId)->first();
+                    if (!empty($productPlan)) {
+                        $productPlan->custom_config = $config;
+                        $productPlan->is_custom = !empty($request->is_custom[$productPlanId]) ? 1 : 0;
+                        $productPlan->update();
+                        if ($allow_change_in_block === true) {
+                            $productShopfyId = Product::where('id', current(Hashids::decode($productPlanId)))->first();
+                            $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, $config, !empty($request->is_custom[$productPlanId]) ? 1 : 0);
+                        }
+                        $idsProductPlans[] = $productPlan->id;
+                    }
+                }
+            } else {
+                $productPlans = ProductPlan::where('plan_id', current(Hashids::decode($request->plan)))->where('product_id', current(Hashids::decode($request->product_id)))->get();
+                foreach ($productPlans as $productPlan) {
+                    $productPlan->custom_config = [];
+                    $productPlan->is_custom = !empty($request->is_custom[$productPlan->id]) ? 1 : 0;
                     $productPlan->update();
-                    if ($allow_change_in_block === true) {
-                        $productShopfyId = Product::where('id', current(Hashids::decode($productPlanId)))->first();
-                        $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, $config, !empty($request->is_custom[$productPlanId]) ? 1 : 0);
-                    }
-                    $idsProductPlans[] = $productPlan->id;
+                }
+
+                if ($allow_change_in_block === true) {
+                    $productShopfyId = Product::where('id', current(Hashids::decode($request->product_id)))->first();
+                    $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, [], !empty($request->is_custom[$productPlan->id]) ? 1 : 0);
                 }
             }
-        } else {
-            $productPlans = ProductPlan::where('plan_id', current(Hashids::decode($request->plan)))->where('product_id', current(Hashids::decode($request->product_id)))->get();
-            foreach ($productPlans as $productPlan) {
-                $productPlan->custom_config = [];
-                $productPlan->is_custom = !empty($request->is_custom[$productPlan->id]) ? 1 : 0;
-                $productPlan->update();
-            }
 
-            if ($allow_change_in_block === true) {
-                $productShopfyId = Product::where('id', current(Hashids::decode($request->product_id)))->first();
-                $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, [], !empty($request->is_custom[$productPlan->id]) ? 1 : 0);
-            }
+            return response()->json([
+                'message' => 'Configurações atualizadas com sucesso',
+            ], 200);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json([
+                'message' => 'Erro ao atualizar configurações do plano',
+            ], 400);
         }
-
-        return response()->json([
-            'message' => 'Configurações atualizadas com sucesso',
-        ], 200);
     }
 
     private function updateAllConfigCustomProduct($shopify_id, $config, $is_custom)
