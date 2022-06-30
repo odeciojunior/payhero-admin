@@ -21,8 +21,8 @@ class ReportSaleService
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
                 $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
-                            ->where('owner_id', auth()->user()->id)
-                            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+                            ->where('owner_id', auth()->user()->account_owner_id)
+                            ->whereBetween($filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
                 if (!empty($filters['status'])) {
                     $salesModel = new Sale();
@@ -101,8 +101,6 @@ class ReportSaleService
             array_push($saleData, $saleDataValue);
         }
 
-        $total = array_sum($saleData);
-
         $variation = 0;
         if ($saleData[0] > 0) {
             $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
@@ -120,7 +118,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => number_format($total, 0, '.', '.'),
+            'total' => number_format($resume->count(), 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -143,9 +141,8 @@ class ReportSaleService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $resume = $sales
-        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
-        ->get();
+        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $resume = $sales->select(DB::raw("sales.id as sale, DATE(sales.{$dateFilter} as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
@@ -158,8 +155,6 @@ class ReportSaleService
 
             array_push($saleData, $saleDataValue);
         }
-
-        $total = array_sum($saleData);
 
         $variation = 0;
         if ($saleData[0] > 0) {
@@ -178,7 +173,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => number_format($total, 0, '.', '.'),
+            'total' => number_format($sales->count(), 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -207,9 +202,8 @@ class ReportSaleService
             }
         }
 
-        $resume = $sales
-        ->select(DB::raw('id as sale, DATE(start_date) as date'))
-        ->get();
+        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $resume = $sales->select(DB::raw("id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
@@ -222,8 +216,6 @@ class ReportSaleService
 
             array_push($saleData, $saleDataValue);
         }
-
-        $total = array_sum($saleData);
 
         $variation = 0;
         if ($saleData[0] > 0) {
@@ -242,7 +234,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => number_format($total, 0, '.', '.'),
+            'total' => number_format($resume->count(), 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -270,9 +262,8 @@ class ReportSaleService
             }
         }
 
-        $resume = $sales
-        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
-        ->get();
+        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $resume = $sales->select(DB::raw("id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
@@ -287,8 +278,6 @@ class ReportSaleService
 
             array_push($saleData, $saleDataValue);
         }
-
-        $total = array_sum($saleData);
 
         $variation = 0;
         if ($saleData[0] > 0) {
@@ -307,7 +296,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => number_format($total, 0, '.', '.'),
+            'total' => number_format($sales->count(), 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -335,9 +324,8 @@ class ReportSaleService
             }
         }
 
-        $resume = $sales
-        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
-        ->get();
+        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $resume = $sales->select(DB::raw("id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
@@ -352,8 +340,6 @@ class ReportSaleService
 
             array_push($saleData, $saleDataValue);
         }
-
-        $total = array_sum($saleData);
 
         $variation = 0;
         if ($saleData[0] > 0) {
@@ -372,7 +358,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => number_format($total, 0, '.', '.'),
+            'total' => number_format($resume->count(), 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -394,7 +380,8 @@ class ReportSaleService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $resume = $sales->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))->get();
+        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $resume = $sales->select(DB::raw("sales.id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
@@ -407,8 +394,6 @@ class ReportSaleService
 
             array_push($saleData, $saleDataValue);
         }
-
-        $total = array_sum($saleData);
 
         $variation = 0;
         if ($saleData[0] > 0) {
@@ -427,7 +412,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => number_format($total, 0, '.', '.'),
+            'total' => number_format($resume->count(), 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -546,7 +531,8 @@ class ReportSaleService
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
                 $projectId = hashids_decode($filters['project_id']);
 
-                $salesApproved = Sale::whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                $salesApproved = Sale::whereBetween('end_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                ->where('owner_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)
                 ->where('status', Sale::STATUS_APPROVED)
                 ->count();
@@ -593,6 +579,7 @@ class ReportSaleService
                 $projectId = hashids_decode($filters['project_id']);
 
                 $salesApprovedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                ->where('owner_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)
                 ->where('status', Sale::STATUS_APPROVED)
                 ->count();
@@ -629,7 +616,8 @@ class ReportSaleService
                     Sale::STATUS_PENDING,
                     Sale::STATUS_CANCELED,
                     Sale::STATUS_REFUSED,
-                    Sale::STATUS_REFUNDED
+                    Sale::STATUS_REFUNDED,
+                    Sale::STATUS_CHARGEBACK
                 ])
                 ->count();
 
