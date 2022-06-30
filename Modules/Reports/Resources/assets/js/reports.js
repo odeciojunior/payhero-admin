@@ -323,7 +323,7 @@ $(function () {
                                             title="${name}">
                                             <img class="photo" src="${image}" width="16px" height="16px" />
                                         </figure>
-                                        <div class="bars ${color}" style="width:${(( 100 * amount ) / spaceTotal).toFixed(1)}%">
+                                        <div class="bars ${color}" style="width:${product.percentage}">
                                             <span>${(( 100 * amount ) / spaceTotal) > 6.1 ? amount : ''}</span>
                                         </div>
                                         <span style="color: #636363;">${(( 100 * amount ) / spaceTotal) > 6.1 ? '' : amount}</span>
@@ -635,8 +635,8 @@ $(function () {
                             </ul>
                         </section>
                     </footer>
-                `;                              
-                
+                `;
+
                 if(response.data.length > 0){
                     $("#block-regions").html(regionsHtml);
                     $('.new-graph-regions').html('<canvas id="regionsChart" height="140" width="159"></canvas>');
@@ -1484,7 +1484,7 @@ $(function () {
                         ],
                         borderRadius: 4,
                         borderSkipped: false,
-                        barPercentage: 0.9 
+                        barPercentage: 0.9
                     }
                 ]
             },
@@ -1528,8 +1528,8 @@ $(function () {
                 },
             }
         });
-        
-            
+
+
 
     }
 
