@@ -450,7 +450,7 @@ function loadDevices() {
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-16">${mobile.percentage}</strong>
+                                            <strong class="grey font-size-16">${mobile.percentage_approved}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -477,7 +477,7 @@ function loadDevices() {
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-16">${desktop.percentage}</strong>
+                                            <strong class="grey font-size-16">${desktop.percentage_approved}</strong>
                                         </div>
                                     </div>
                                 </div>

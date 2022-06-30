@@ -420,7 +420,7 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span class="silver">${mobile.percentage}</span>
+                                            <span class="silver">${mobile.percentage_total}</span>
                                         </div>
                                     </div>
                                     <div class="col-payment">
@@ -446,7 +446,7 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span class="silver">${desktop.percentage}</span>
+                                            <span class="silver">${desktop.percentage_total}</span>
                                         </div>
                                     </div>
                                     <div class="col-payment">

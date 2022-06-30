@@ -185,16 +185,20 @@ class ReportMarketingService
                 $data['count_mobile'] = 0;
                 $data['count_mobile_approved'] = 0;
                 $data['percentage_mobile'] = '0%';
+                $data['percentage_mobile_total'] = '0%';
             } else {
                 $data['percentage_mobile'] = round(number_format(($data['count_mobile_approved'] * 100) / $data['count_mobile'], 2, '.', ',')) . '%';
+                $data['percentage_mobile_total'] = round(number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',')) . '%';
             }
 
             if(empty($data['count_desktop'])){
                 $data['count_desktop'] = 0;
                 $data['count_desktop_approved'] = 0;
                 $data['percentage_desktop'] = '0%';
+                $data['percentage_desktop_total'] = '0%';
             } else {
                 $data['percentage_desktop'] = round(number_format(($data['count_desktop_approved'] * 100) / $data['count_desktop'], 2, '.', ',')) . '%';
+                $data['percentage_desktop_total'] = round(number_format(($data['count_desktop'] * 100) / $data['total'], 2, '.', ',')) . '%';
             }
 
             $data['value_mobile'] = $data['value_mobile'] > 0 ? foxutils()->formatMoney($data['value_mobile'] / 100) : 'R$ 0,00';
@@ -205,13 +209,15 @@ class ReportMarketingService
                     'total' => $data['count_mobile'],
                     'approved' => $data['count_mobile_approved'],
                     'value' => $data['value_mobile'],
-                    'percentage' => $data['percentage_mobile']
+                    'percentage_approved' => $data['percentage_mobile'],
+                    'percentage_total' => $data['percentage_mobile_total']
                 ],
                 'desktop' => [
                     'total' => $data['count_desktop'],
                     'approved' => $data['count_desktop_approved'],
                     'value' => $data['value_desktop'],
-                    'percentage' => $data['percentage_desktop']
+                    'percentage_approved' => $data['percentage_desktop'],
+                    'percentage_total' => $data['percentage_desktop_total']
                 ]
             ];
         });
