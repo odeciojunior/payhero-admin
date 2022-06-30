@@ -2409,7 +2409,7 @@ h4.number{
     transform: translate(0, -30%);
 }
 
-.margin-store { margin: 0 1.0715rem; }
+.margin-store { margin-right: 1.0715rem !important; }
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;
