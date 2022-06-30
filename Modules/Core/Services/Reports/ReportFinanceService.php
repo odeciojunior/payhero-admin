@@ -140,7 +140,7 @@ class ReportFinanceService
         $endDate      = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
-            array_push($labelList, $dataFormated->format('d-m'));
+            array_push($labelList, $dataFormated->format('d/m'));
             $dataFormated = $dataFormated->addDays(1);
         }
 
@@ -154,7 +154,7 @@ class ReportFinanceService
             $comissionValue = 0;
 
             foreach ($resume as $r) {
-                if (Carbon::parse($r->date)->format('d-m') == $label) {
+                if (Carbon::parse($r->date)->format('d/m') == $label) {
                     $comissionValue += foxutils()->onlyNumbers($r->commission);
                 }
             }
