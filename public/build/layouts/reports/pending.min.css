@@ -2289,8 +2289,11 @@ h4.number{
     padding: 0 0 0px 16px;
 }
 
+<<<<<<< HEAD
 #select_projects +  .sirius-select-text { min-height: 46.14px !important; }
 
+=======
+>>>>>>> 2212cc6372c12e1aa9e9719a75ef221c097c0465
 /* .sirius-select-origin .sirius-select-container { width: 110px; } */
 .sirius-select-origin .sirius-select-options { top: 36px; }
 .sirius-select-origin .sirius-select-text {
@@ -2407,7 +2410,10 @@ h4.number{
     transform: translate(0, -30%);
 }
 
+<<<<<<< HEAD
 .margin-store { margin: 0 1.0715rem; }
+=======
+>>>>>>> 2212cc6372c12e1aa9e9719a75ef221c097c0465
 .date-picker {
   width: 170px;
   height: 25px;

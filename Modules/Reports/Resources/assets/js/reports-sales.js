@@ -231,9 +231,9 @@ function distribution() {
                 distributionHtml = `
                 <div class="d-flex box-graph-dist">
                     <div class="info-graph">
-                        <h6 class="font-size-14 grey">Total em vendas</h6>
+                        <h6 class="font-size-14 grey">Quantidade total de vendas</h6>
                         <em>
-                            <strong class="grey">${removeMoneyCurrency(total)}</strong>
+                            <strong class="grey">${total}</strong>
                         </em>
                     </div>
                 </div>
@@ -248,7 +248,7 @@ function distribution() {
                             <small class="font-size-14">Aprovadas</small>
                         </div>
                         <div class="item right">
-                            <strong class="grey font-size-14">${approved.value}</strong>
+                            <strong class="grey font-size-14">${approved.amount}</strong>
                         </div>
                         <div class="item right"><small class="grey font-size-14">${approved.percentage}%</small></div>
                     </div>
@@ -263,7 +263,7 @@ function distribution() {
                             <small class="font-size-14">Pendentes</small>
                         </div>
                         <div class="item right">
-                            <strong class="grey font-size-14">${pending.value}</strong>
+                            <strong class="grey font-size-14">${pending.amount}</strong>
                         </div>
                         <div class="item right">
                             <small class="grey font-size-14">${pending.percentage}%</small>
@@ -280,7 +280,7 @@ function distribution() {
                             <small class="font-size-14">Canceladas</small>
                         </div>
                         <div class="item right">
-                            <strong class="grey font-size-14">${canceled.value}</strong>
+                            <strong class="grey font-size-14">${canceled.amount}</strong>
                         </div>
                         <div class="item right">
                             <small class="grey font-size-14">${canceled.percentage}%</small>
@@ -297,7 +297,7 @@ function distribution() {
                             <small class="font-size-14">Recusadas</small>
                         </div>
                         <div class="item right">
-                            <strong class="grey font-size-14">${refused.value}</strong>
+                            <strong class="grey font-size-14">${refused.amount}</strong>
                         </div>
                         <div class="item right">
                             <small class="grey font-size-14">${refused.percentage}%</small>
@@ -314,7 +314,7 @@ function distribution() {
                             <small class="font-size-14">Reembolsos</small>
                         </div>
                         <div class="item right">
-                            <strong class="grey font-size-14">${refunded.value}</strong>
+                            <strong class="grey font-size-14">${refunded.amount}</strong>
                         </div>
                         <div class="item right">
                             <small class="grey font-size-14">${refunded.percentage}%</small>
@@ -331,7 +331,7 @@ function distribution() {
                             <small class="font-size-14">Chargebacks</small>
                         </div>
                         <div class="item right">
-                            <strong class="grey font-size-14">${chargeback.value}</strong>
+                            <strong class="grey font-size-14">${chargeback.amount}</strong>
                         </div>
                         <div class="item right">
                             <small class="grey font-size-14">${chargeback.percentage}%</small>
@@ -348,7 +348,7 @@ function distribution() {
                             <small class="font-size-14">Outros</small>
                         </div>
                         <div class="item right">
-                            <strong class="grey font-size-14">${other.value}</strong>
+                            <strong class="grey font-size-14">${other.amount}</strong>
                         </div>
                         <div class="item right">
                             <small class="grey font-size-14">${other.percentage}%</small>
