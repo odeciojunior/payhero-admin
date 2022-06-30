@@ -622,12 +622,7 @@ $(function () {
             success: function success(response) {
                 regionsHtml = `
                     <footer class="container footer-regions">
-                        <dl class="states">
-                            <dt>SP</dt>
-                            <dt>MG</dt>
-                            <dt>RS</dt>
-                            <dt>PR</dt>
-                        </dl>
+                        <dl class="states"></dl>
                         <section class="new-graph-regions graph">
                         </section>
                         <section class="info-regions">
@@ -643,16 +638,27 @@ $(function () {
                 `;                              
                 
                 if(response.data.length > 0){
-                    let { region, access, conversion } = response.data;
-                    let regions         = [...region];
-                    let accessArr       = [...access];
-                    let conversionArr   = [...conversion];
-                    
                     $("#block-regions").html(regionsHtml);
                     $('.new-graph-regions').html('<canvas id="regionsChart" height="140" width="159"></canvas>');
 
-                    conversion.map(v => $(".conversion-colors").append(`<li>${v}%</li>`));
-                    graphRegions(regions, conversionArr, accessArr);
+                    let regionArr       = [];
+                    let conversionArr   = [];
+                    let accessArr       = [];
+                    let statesArr       = [];
+                    
+                    $.each(response.data, function(i, v) {
+                        regionArr.push(v);
+                    });
+                    for(let i = 0; i < regionArr.length; i++) {
+                        conversionArr.push(regionArr[i].conversion);
+                        accessArr.push(regionArr[i].access);
+                        statesArr.push(regionArr[i].region);
+
+                        $(".conversion-colors").append(`<li>${regionArr[i].conversion}%</li>`);
+                        $(".states").append(`<dt>${regionArr[i].region}</dt>`);
+                    }
+                    
+                    graphRegions(statesArr, conversionArr, accessArr);
 
                 } else {
                     regionsHtml = `
