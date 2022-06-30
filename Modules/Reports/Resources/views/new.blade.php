@@ -23,7 +23,7 @@
 
                     <div class="row justify-content-end align-items-center">
 
-                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects" id="box-projects">
+                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects pad-0 margin-store" id="box-projects">
                             <select id='select_projects' class="sirius-select">
                                 {{-- JS carrega.. --}}
                             </select>

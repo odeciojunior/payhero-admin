@@ -2289,6 +2289,8 @@ h4.number{
     padding: 0 0 0px 16px;
 }
 
+#select_projects +  .sirius-select-text { min-height: 46.14px !important; }
+
 /* .sirius-select-origin .sirius-select-container { width: 110px; } */
 .sirius-select-origin .sirius-select-options { top: 36px; }
 .sirius-select-origin .sirius-select-text {
@@ -2404,3 +2406,5 @@ h4.number{
     position: absolute;
     transform: translate(0, -30%);
 }
+
+.margin-store { margin: 0 1.0715rem; }
