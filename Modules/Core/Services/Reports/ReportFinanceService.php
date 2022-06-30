@@ -25,8 +25,11 @@ class ReportFinanceService
             return cache()->remember($cacheName, 300, function() use ($filters) {
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
                 $projectId = hashids_decode($filters['project_id']);
+                $userId = auth()->user()->account_owner_id;
+
 
                 $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
+                                            ->where('user_id', $userId)
                                             ->where('sales.project_id', $projectId)
                                             ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
                                             ->whereNull('transactions.invitation_id')
@@ -137,7 +140,7 @@ class ReportFinanceService
         $endDate      = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
-            array_push($labelList, $dataFormated->format('d-m'));
+            array_push($labelList, $dataFormated->format('d/m'));
             $dataFormated = $dataFormated->addDays(1);
         }
 
@@ -151,7 +154,7 @@ class ReportFinanceService
             $comissionValue = 0;
 
             foreach ($resume as $r) {
-                if (Carbon::parse($r->date)->format('d-m') == $label) {
+                if (Carbon::parse($r->date)->format('d/m') == $label) {
                     $comissionValue += foxutils()->onlyNumbers($r->commission);
                 }
             }
@@ -1334,6 +1337,7 @@ class ReportFinanceService
                                             ->join('sales', 'sales.id', 'transactions.sale_id')
                                             ->where('sales.project_id', $projectId)
                                             ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
                                             ->whereNull('invitation_id');
 
                 $queryCount = $transactions->count();
@@ -1341,9 +1345,8 @@ class ReportFinanceService
                 $queryAverageTicket = $transactions->avg('transactions.value');
 
                 $queryComission = $transactions
-                ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
                 ->where('sales.project_id', $projectId)
-                ->where('sales.status', Sale::STATUS_APPROVED)
+                // ->where('sales.status', Sale::STATUS_APPROVED)
                 ->sum('transactions.value');
 
                 $queryChargeback = Transaction::where('user_id', $userId)

@@ -542,6 +542,7 @@ class ReportSaleService
     {
         try {
             $cacheName = 'sales-balance-resume-'.json_encode($filters);
+            cache()->forget($cacheName);
             return cache()->remember($cacheName, 300, function() use ($filters) {
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
                 $projectId = hashids_decode($filters['project_id']);
@@ -557,6 +558,7 @@ class ReportSaleService
                 ->avg('original_total_paid_value');
 
                 $salesComission = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
+                ->where('user_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)
                 ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                 ->whereNull('invitation_id')

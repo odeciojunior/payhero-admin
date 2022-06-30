@@ -7,6 +7,7 @@ use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\BrazilStatesService;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -30,6 +31,7 @@ class ReportMarketingService
     public function getResumeMarketing($filters)
     {
         $cacheName = 'marketing-resume-'.json_encode($filters);
+        cache()->forget($cacheName);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -49,6 +51,15 @@ class ReportMarketingService
                                 ->where('status', Sale::STATUS_APPROVED)
                                 ->where('project_id', $projectId)
                                 ->sum('original_total_paid_value');
+
+            $salesValue = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->where('user_id', auth()->user()->account_owner_id)
+                                        ->where('project_id', $projectId)
+                                        ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                        ->whereNull('invitation_id')
+                                        ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
+                                        ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                                        ->sum('transactions.value');
 
             return [
                 'checkouts_count' => number_format($checkoutsCount, 0, '.', '.'),
