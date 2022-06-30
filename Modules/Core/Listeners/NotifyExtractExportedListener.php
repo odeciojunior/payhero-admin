@@ -23,7 +23,10 @@ class NotifyExtractExportedListener
             $filename = $event->filename;
             $userEmail = !empty($event->email) ? $event->email : $user->email;
 
-            Notification::send($user, new SalesExportedNotification($user, $filename));
+            if (!str_contains($userEmail, '@cloudfox.net') ) {
+                Notification::send($user, new SalesExportedNotification($user, $filename));
+            }
+
 
             //Envio de e-mail
             $sendGridService = new SendgridService();
