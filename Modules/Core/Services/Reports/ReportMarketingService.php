@@ -31,7 +31,6 @@ class ReportMarketingService
     public function getResumeMarketing($filters)
     {
         $cacheName = 'marketing-resume-'.json_encode($filters);
-        cache()->forget($cacheName);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);

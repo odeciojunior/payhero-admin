@@ -120,7 +120,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => $total,
+            'total' => number_format($total, 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -178,7 +178,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => $total,
+            'total' => number_format($total, 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -242,7 +242,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => $total,
+            'total' => number_format($total, 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -307,7 +307,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => $total,
+            'total' => number_format($total, 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -372,7 +372,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => $total,
+            'total' => number_format($total, 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -427,7 +427,7 @@ class ReportSaleService
                 'labels' => $labelList,
                 'values' => $saleData
             ],
-            'total' => $total,
+            'total' => number_format($total, 0, '.', '.'),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -467,7 +467,7 @@ class ReportSaleService
                 $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
 
                 return [
-                    'total' => number_format($total, 2, ',', '.'),
+                    // 'total' => number_format($total, 2, ',', '.'),
                     'credit_card' => [
                         'value' => number_format($totalCreditCard, 2, ',', '.'),
                         'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
@@ -542,7 +542,6 @@ class ReportSaleService
     {
         try {
             $cacheName = 'sales-balance-resume-'.json_encode($filters);
-            cache()->forget($cacheName);
             return cache()->remember($cacheName, 300, function() use ($filters) {
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
                 $projectId = hashids_decode($filters['project_id']);
@@ -572,7 +571,7 @@ class ReportSaleService
                 ->sum('original_total_paid_value');
 
                 return [
-                    'transactions' => $salesApproved,
+                    'transactions' => number_format($salesApproved, 0, '.', '.'),
                     'average_ticket' => foxutils()->formatMoney($salesAverageTicket / 100),
                     'comission' => foxutils()->formatMoney($salesComission / 100),
                     'chargeback' => foxutils()->formatMoney($salesChargeback /100)
@@ -596,32 +595,32 @@ class ReportSaleService
                 $salesApprovedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->where('project_id', $projectId)
                 ->where('status', Sale::STATUS_APPROVED)
-                ->sum('original_total_paid_value');
+                ->count();
 
                 $salesPendingSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->where('project_id', $projectId)
                 ->where('status', Sale::STATUS_PENDING)
-                ->sum('original_total_paid_value');
+                ->count();
 
                 $salesCanceledSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->where('project_id', $projectId)
                 ->where('status', Sale::STATUS_CANCELED)
-                ->sum('original_total_paid_value');
+                ->count();
 
                 $salesRefusedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->where('project_id', $projectId)
                 ->where('status', Sale::STATUS_REFUSED)
-                ->sum('original_total_paid_value');
+                ->count();
 
                 $salesRefundedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->where('project_id', $projectId)
                 ->where('status', Sale::STATUS_REFUNDED)
-                ->sum('original_total_paid_value');
+                ->count();
 
                 $salesChargebackSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->where('project_id', $projectId)
                 ->where('status', Sale::STATUS_CHARGEBACK)
-                ->sum('original_total_paid_value');
+                ->count();
 
                 $salesOtherSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                 ->where('project_id', $projectId)
@@ -632,38 +631,38 @@ class ReportSaleService
                     Sale::STATUS_REFUSED,
                     Sale::STATUS_REFUNDED
                 ])
-                ->sum('original_total_paid_value');
+                ->count();
 
                 $total = ($salesApprovedSum + $salesPendingSum + $salesCanceledSum + $salesRefusedSum + $salesRefundedSum + $salesChargebackSum + $salesOtherSum);
 
                 return [
-                    'total' => foxutils()->formatMoney($total / 100),
+                    'total' => number_format($total, 0, '.', '.'),
                     'approved' => [
-                        'value' => foxutils()->formatMoney($salesApprovedSum / 100),
+                        'amount' => number_format($salesApprovedSum, 0, '.', '.'),
                         'percentage' => number_format(($salesApprovedSum * 100) / $total, 2, '.', ',')
                     ],
                     'pending' => [
-                        'value' => foxutils()->formatMoney($salesPendingSum / 100),
+                        'amount' => number_format($salesPendingSum, 0, '.', '.'),
                         'percentage' => number_format(($salesPendingSum * 100) / $total, 2, '.', ',')
                     ],
                     'canceled' => [
-                        'value' => foxutils()->formatMoney($salesCanceledSum / 100),
+                        'amount' => number_format($salesCanceledSum, 0, '.', '.'),
                         'percentage' => number_format(($salesCanceledSum * 100) / $total, 2, '.', ',')
                     ],
                     'refused' => [
-                        'value' => foxutils()->formatMoney($salesRefusedSum / 100),
+                        'amount' => number_format($salesRefusedSum, 0, '.', '.'),
                         'percentage' => number_format(($salesRefusedSum * 100) / $total, 2, '.', ',')
                     ],
                     'refunded' => [
-                        'value' => foxutils()->formatMoney($salesRefundedSum / 100),
+                        'amount' => number_format($salesRefundedSum, 0, '.', '.'),
                         'percentage' => number_format(($salesRefundedSum * 100) / $total, 2, '.', ',')
                     ],
                     'chargeback' => [
-                        'value' => foxutils()->formatMoney($salesChargebackSum / 100),
+                        'amount' => number_format($salesChargebackSum, 0, '.', '.'),
                         'percentage' => number_format(($salesChargebackSum * 100) / $total, 2, '.', ',')
                     ],
                     'other' => [
-                        'value' => foxutils()->formatMoney($salesOtherSum / 100),
+                        'amount' => number_format($salesOtherSum, 0, '.', '.'),
                         'percentage' => number_format(($salesOtherSum * 100) / $total, 2, '.', ',')
                     ]
                 ];
@@ -710,8 +709,6 @@ class ReportSaleService
     public function getOrderBump($filters)
     {
         $cacheName = 'order-bump-'.json_encode($filters);
-        cache()->forget($cacheName);
-
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -737,7 +734,6 @@ class ReportSaleService
     public function getUpsell($filters)
     {
         $cacheName = 'upsell-'.json_encode($filters);
-        cache()->forget($cacheName);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
