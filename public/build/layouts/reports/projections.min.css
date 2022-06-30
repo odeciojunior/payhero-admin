@@ -961,6 +961,7 @@ h4.number{
         max-width: 25%;
         margin-right: 0;
     }
+    .box-items-finance .fianance-items:last-child { padding-left: 0.8rem; }
     .box-items-finance.mkt .fianance-items {
         width: calc(1/4*100% - (1 - 1/1)* 30px);
         max-width: 100%;
