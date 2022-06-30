@@ -49,8 +49,9 @@ class SalesResource extends JsonResource
         }
 
         $data = [
+            'id'             => hashids_encode($sale->id, 'sale_id'),
             'product'        => $product,
-            'total_paid'     => 'R$ '.number_format(intval($this->value) / 100, 2, ',', '.'),
+            'total_paid'     => number_format(intval($this->value) / 100, 2, ',', '.'),
             'status'         => Lang::get('definitions.enum.sale.status.' . $sale->present()->getStatus($sale->status)),
             'payment_method' => $paymentMethod,
             'payment_time'   => FoxUtils::calcTime(Carbon::create($sale->start_date))
