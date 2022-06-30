@@ -643,15 +643,16 @@ $(function () {
                 `;                              
                 
                 if(response.data.length > 0){
-                    let labels = ['SP','MG','RS','PR'];
-                    let conversionArr = ['60','42','48','35'];
-                    let access = ['100','58', '58','45'];
+                    let { region, access, conversion } = response.data;
+                    let regions         = [...region];
+                    let accessArr       = [...access];
+                    let conversionArr   = [...conversion];
                     
                     $("#block-regions").html(regionsHtml);
                     $('.new-graph-regions').html('<canvas id="regionsChart" height="140" width="159"></canvas>');
 
-                    conversionArr.map(v => $(".conversion-colors").append(`<li>${v}%</li>`));                    
-                    graphRegions(labels, conversionArr, access);
+                    conversion.map(v => $(".conversion-colors").append(`<li>${v}%</li>`));
+                    graphRegions(regions, conversionArr, accessArr);
 
                 } else {
                     regionsHtml = `
