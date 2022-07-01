@@ -138,7 +138,7 @@ class ReportMarketingService
                                 $join->on('transaction.sale_id', '=', 'sale.id');
                                 $join->where('transaction.user_id', auth()->user()->account_owner_id);
                             })
-                            ->whereBetween('sales.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                            ->whereBetween('sale.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                             ->where('sale.project_id', $projectId)
                             ->where('transaction.user_id', auth()->user()->account_owner_id)
                             ->groupBy('product.id')

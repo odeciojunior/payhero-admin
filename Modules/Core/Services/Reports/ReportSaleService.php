@@ -713,7 +713,7 @@ class ReportSaleService
                                 ->join('sales', function($join) {
                                     $join->on('transactions.sale_id', 'sales.id');
                                 })
-                                ->whereBetween('sales.start', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                ->whereBetween('sales.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->where('sales.has_order_bump', true)
                                 ->where('sales.project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_APPROVED)
@@ -738,7 +738,7 @@ class ReportSaleService
                                 ->join('sales', function($join) {
                                     $join->on('transactions.sale_id', 'sales.id');
                                 })
-                                ->whereBetween('sales.start', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                ->whereBetween('sales.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->whereNotNull('sales.upsell_id')
                                 ->where('sales.project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_APPROVED)

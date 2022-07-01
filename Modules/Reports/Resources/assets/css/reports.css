@@ -2176,7 +2176,7 @@ h4.number{
 #graph-pending,
 #graph-sell,
 #graph-cashback {
-    margin: 0px 0 0 -6px;
+    margin: 0;
     display: none;
     height: 109px !important;
 }

@@ -55,7 +55,7 @@ $(function () {
                         <div class="new-graph-cashback graph"></div>
                     `;
                     $("#block-cash").html(cashHtml);
-                    $('.new-graph-cashback').width($("#block-cash").width() + 4);
+                    $('.new-graph-cashback').width($("#block-cash").width());
 
                     $('.new-graph-cashback').html(`<canvas id="graph-cashback"></canvas>`);
                     let labels = [...chart.labels];
@@ -63,7 +63,7 @@ $(function () {
                     newGraphCashback(series, labels);
 
                     $(window).on("resize", function() {
-                        $('.new-graph-cashback').width($("#block-cash").width() + 4);
+                        $('.new-graph-cashback').width($("#block-cash").width());
                     });
 
                 } else {
@@ -123,14 +123,14 @@ $(function () {
                         <div class="new-graph-pending graph"></div>
                     `;
                     $("#block-pending").html(pendHtml);
-                    $('.new-graph-pending').width($('#block-pending').width() + 4);
+                    $('.new-graph-pending').width($('#block-pending').width());
                     $('.new-graph-pending').html('<canvas id=graph-pending></canvas>')
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     newGraphPending(series,labels);
 
                     $(window).on("resize", function() {
-                        $('.new-graph-pending').width($('#block-pending').width() + 4);
+                        $('.new-graph-pending').width($('#block-pending').width());
                     });
 
                 } else {
@@ -188,14 +188,14 @@ $(function () {
                         <div class="new-graph graph"></div>
                     `;
                     $("#block-comission").html(comissionhtml);
-                    $('.new-graph').width($("#block-comission").width() + 4);
+                    $('.new-graph').width($("#block-comission").width());
                     $('.new-graph').html('<canvas id=comission-graph></canvas>');
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     graphComission(series, labels);
 
                     $(window).on("resize", function() {
-                        $('.new-graph').width($('#block-comission').width() + 4);
+                        $('.new-graph').width($('#block-comission').width());
                     });
 
                 } else {
@@ -252,14 +252,14 @@ $(function () {
                         <div class="new-graph-sell graph"></div>
                     `;
                     $("#block-sales").html(salesHtml);
-                    $('.new-graph-sell').width($('#block-sales').width() + 4);
+                    $('.new-graph-sell').width($('#block-sales').width());
                     $('.new-graph-sell').html('<canvas id=graph-sell></canvas>');
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     newGraphSell(series, labels);
 
                     $(window).on("resize", function() {
-                        $('.new-graph-sell').width($('#block-sales').width() + 4);
+                        $('.new-graph-sell').width($('#block-sales').width());
                     });
 
                 }else {
@@ -299,16 +299,17 @@ $(function () {
             },
             success: function success(response) {
                 let { total, products } = response.data;
-                
+
                 if(total) {
                     $("#block-products").prepend(`
                         <footer class="footer-products scroll-212">
                             <ul class="list-products container"></ul>
                         </footer>
-                    `);
-
+                    `);                    
+                    
                     $.each(products, function (i, product) {
-                        let { color, amount, image, name, description } = product;
+                        let { color, amount, image, name, description, percentage } = product;
+
                         if(amount) {
                             lista = `
                                 <li>
@@ -321,10 +322,10 @@ $(function () {
                                             title="${name} - ${description}">
                                             <img class="photo" src="${image}" width="16px" height="16px" />
                                         </figure>
-                                        <div class="bars ${color}" style="width:${product.percentage}">
-                                            <span>${Number(product.percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? amount: ''}</span>
+                                        <div class="bars ${color}" style="width:${percentage}">
+                                            <span>${Number(percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? amount: ''}</span>
                                         </div>
-                                        <span style="color: #636363;">${Number(product.percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? '': amount}</span>
+                                        <span style="color: #636363;">${Number(percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? '': amount}</span>
                                     </div>
                                 </li>
                             `;
@@ -336,13 +337,13 @@ $(function () {
                             $('.photo').on('error', function() {
                                 $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
                             });
-
-                            if(products.length < 4) {
-                                lista = `<li>${noListProducts}</li>`;
-                                $("#block-products .list-products").append(lista);
-                            }
                         }
                     });
+                    if(products.length < 4) {
+                        lista = `<li>${noListProducts}</li>`;
+                        $("#block-products .list-products").append(lista);
+                    }
+                    
                 }else {
                     lista = `
                         <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
