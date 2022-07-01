@@ -236,7 +236,7 @@ $(function () {
             success: function success(response) {
                 let { chart, total, variation } = response.data;
 
-                if( total !== 0 ) {
+                if( total !== "0" ) {
                     salesHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='sales' class=" font-size-24 bold">
@@ -468,7 +468,11 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let { boleto, credit_card, pix, total } = response.data;
+                let { boleto, credit_card, pix } = response.data;
+                let boletoNumber = Number(boleto.value.replace(',','.'));
+                let creditCardNumber = Number(credit_card.value.replace(',','.'));
+                let pixNumber = Number(pix.value.replace(',','.'));
+                const total = [boletoNumber, creditCardNumber, pixNumber].map(Number).reduce((prev, value) => prev + value,0);
 
                 paymentsHtml = `
                     <div id="payment-type-items" class="custom-table pb-0 pt-0">
@@ -577,7 +581,7 @@ $(function () {
                 `;
 
                 // $('#payment-type-items .bar').addClass('visible');
-                if( total !== "0,00" ) {
+                if( total !== 0 ) {
                     $("#block-payments").html(paymentsHtml);
 
                 } else {
