@@ -86,8 +86,10 @@ $(document).ready(function () {
                         })
                     );
                 }
-                loadOnAny('.page-content',true);
-                loadingOnScreenRemove();
+                if(loading=='y')
+                    loadingOnScreenRemove();
+                else
+                    loadOnAny('.page-content',true);
             },
         });
     }

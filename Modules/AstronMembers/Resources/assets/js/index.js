@@ -56,8 +56,10 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#integration-actions").show();
                 }
-                loadOnAny('#content',true)
-                loadingOnScreenRemove();
+                if(loading=='y')
+                    loadingOnScreenRemove();
+                else
+                    loadOnAny('#content',true);
             },
         });
     }

@@ -29,7 +29,7 @@ $(document).ready(function () {
                     $("#project-empty").show();
                     $("#integration-actions").hide();
                 } else {
-                    $("#select_projects_edit").html("");                    
+                    $("#select_projects_edit").html("");
                     $("#select_projects_create").html("");
                     let projects = response.projects;
                     for (let i = 0; i < projects.length; i++) {
