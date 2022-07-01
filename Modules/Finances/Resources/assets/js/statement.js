@@ -40,7 +40,7 @@ window.updateTransfersTable = function(link = null) {
     }
 
     let data = {
-        company_id: $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //$("#extract_company_select option:selected").val(),
+        company_id: sessionStorage.getItem('company_default'), //$("#extract_company_select option:selected").val(),
         gateway_id: window.gatewayCode,
         date_type: $("#date_type").val(),
         date_range: $("#date_range").val(),
@@ -223,7 +223,7 @@ window.updateAccountStatementData = function() {
 
     let link =
         "/api/transfers?" +
-        "company_id=" + $('#company-navbar').val() + //sessionStorage.getItem('company_default') + //$("#statement_company_select").val() +
+        "company_id=" + sessionStorage.getItem('company_default') + //$("#statement_company_select").val() +
         "&gateway_id=" + window.gatewayCode +
         "&dateRange=" + $("#date_range_statement").val() +
         "&sale=" + encodeURIComponent($("#statement_sale").val()) +
@@ -468,7 +468,7 @@ $(window).on("load", function() {
 
     function getFilters(urlParams = false) {
         let data = {
-            'company': $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //$("#extract_company_select").val(),
+            'company': sessionStorage.getItem('company_default'), //$("#extract_company_select").val(),
             'reason': $("#reason").val(),
             'transaction': $("#transaction").val().replace('#', ''),
             'type': $("#type").val(),

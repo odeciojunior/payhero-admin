@@ -16,7 +16,7 @@ $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
         type: "POST",
         dataType: "json",
         data: {
-            company_id: $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //$("#transfers_company_select").val(),
+            company_id: sessionStorage.getItem('company_default'), //$("#transfers_company_select").val(),
             gateway_id: window.gatewayCode,
             withdrawal_value: $("#custom-input-addon").val(),
         },
@@ -398,7 +398,7 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
             url: "/api/withdrawals",
             type: "POST",
             data: {
-                company_id: $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //$("#transfers_company_select").val(),
+                company_id: sessionStorage.getItem('company_default'), //$("#transfers_company_select").val(),
                 withdrawal_value: $(".value-select").data("value"),
                 gateway_id: window.gatewayCode,
             },

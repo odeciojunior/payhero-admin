@@ -1,21 +1,18 @@
-$('#company-navbar').change(function () {
+function updateAfterChangeCompany(){
     loadOnAny('.page-content');
-    updateCompanyDefault().done( function(){
-        window.updateUsedApps();
-    });
-});
+    window.updateUsedApps();
+}
 
 $(document).ready(function () {
+
     loadingOnScreen();
 
-    getCompaniesNoSession().done( function (data){
-        getProjects();
-    });
+    getProjects();
 
     function getProjects() {
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&status=active&company='+ $('#company-navbar').val(),
+            url: '/api/projects?select=true&status=active&company='+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -47,7 +44,7 @@ $(document).ready(function () {
     window.updateUsedApps = function () {
         $.ajax({
             method: 'GET',
-            url: '/api/apps?company='+ $('#company-navbar').val(),
+            url: '/api/apps',
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
