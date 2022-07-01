@@ -581,7 +581,8 @@ $(() => {
                 error: function (response) {
                     $(".page").removeClass("low-opacity");
                     errorAjaxResponse(response);
-
+                    $(".loader").hide();
+                    $(".final-card").hide();
                 }, success: function (response) {
                     localStorage.setItem("photo_remove",false);
                     updateConfiguracoes();

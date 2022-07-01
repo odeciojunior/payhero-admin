@@ -3,7 +3,9 @@
 namespace Modules\DemoAccount\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Plan;
@@ -40,6 +42,37 @@ class PixelsApiDemoController extends PixelsApiController
             report($e);
 
             return response()->json(['message' => __('controller.error.generic')], 400);
+        }
+    }
+
+    public function show($projectId, $id): JsonResponse
+    {
+        try {
+            if (empty($id) || empty($projectId)) {
+                return response()->json('Pixel nao encontrado', 400);
+            }
+
+            $pixelModel = new Pixel();
+            $projectModel = new Project();
+
+            $pixel = $pixelModel->find(current(Hashids::decode($id)));
+
+            if (empty($pixel)) {
+                return response()->json('Pixel nao encontrado', 400);
+            }
+
+            $project = $projectModel->find(current(Hashids::decode($projectId)));
+            $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
+            $pixel->platform_enum = Lang::get('definitions.enum.pixel.platform.' . $pixel->platform);
+
+            $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
+
+            return response()->json($pixel);
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json('Erro ao buscar pixel', 400);
         }
     }
 

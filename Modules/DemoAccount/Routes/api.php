@@ -42,6 +42,7 @@ Route::group([
     Route::group([],function(){
         Route::get('/project/{projectId}/projectnotification', 'ProjectNotificationApiDemoController@index');
         Route::get('/project/{projectId}/projectnotification/{id}', 'ProjectNotificationApiDemoController@show');
+        Route::get('/project/{projectId}/projectnotification/{id}/edit', 'ProjectNotificationApiDemoController@edit');
     });
 
     //Products
@@ -54,6 +55,12 @@ Route::group([
         Route::get('/products/{id}/edit', 'ProductsApiDemoController@edit');
         Route::get('/products/saleproducts/{saleId}', 'ProductsApiDemoController@getProductBySale')
         ->name('api.products.saleproducts');
+
+        Route::post('/products/products-variants', 'ProductsApiDemoController@getProductsVariants')
+        ->name('api.products.productsvariants');
+
+        Route::get('/product/{id}', 'ProductsApiDemoController@getProductById')
+        ->name('api.products.getproduct');
     });
 
     //Sales

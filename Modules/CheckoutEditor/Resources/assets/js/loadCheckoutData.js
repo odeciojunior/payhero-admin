@@ -257,8 +257,7 @@ $(() => {
                                     $('#save_success').fadeOut('slow', 'linear');
                                 }, 4000)
                             },
-                            error: function (response) {
-                                console.log(response.responseText);
+                            error: function (response){                                
                                 $('.select-type').removeClass('low-opacity')
                                 $('.visual').removeClass('low-opacity')
                                 $('.payment').removeClass('low-opacity')
@@ -267,6 +266,10 @@ $(() => {
 
                                 $('#save_load').fadeOut('slow', 'linear');
                                 $('#save_error').fadeIn('slow', 'linear');
+                                
+                                if(response.responseJSON.message && response.responseJSON.message.search(/demo/) > 0){
+                                    $('#save_error p').html(response.responseJSON.message);
+                                }
 
                                 setTimeout(function() {
                                     $('#save_error').fadeOut('slow', 'linear');

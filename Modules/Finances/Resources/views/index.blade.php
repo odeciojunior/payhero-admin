@@ -61,6 +61,8 @@
 
         @include('sales::details')
 
+        @include('sales::modal_refund_transaction')
+
 
         @push('scripts')
             <script src="{{ mix('build/layouts/finances/index.min.js') }}"></script>
