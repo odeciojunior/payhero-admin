@@ -2176,7 +2176,7 @@ h4.number{
 #graph-pending,
 #graph-sell,
 #graph-cashback {
-    margin: 0px 0 0 -6px;
+    margin: 0;
     display: none;
     height: 109px !important;
 }
@@ -2295,7 +2295,7 @@ h4.number{
 /* .sirius-select-origin .sirius-select-container { width: 110px; } */
 .sirius-select-origin .sirius-select-options { top: 36px; }
 .sirius-select-origin .sirius-select-text {
-    width: 110px;
+    width: 142px;
     min-height: 28px;
     font-size: 14px;
     line-height: 28px;

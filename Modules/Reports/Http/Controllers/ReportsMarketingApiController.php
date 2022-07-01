@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Services\Reports\ReportMarketingService;
-use Modules\DiscountCoupons\Transformers\DiscountCouponsResource;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
 class ReportsMarketingApiController extends Controller

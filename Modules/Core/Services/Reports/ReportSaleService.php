@@ -428,17 +428,16 @@ class ReportSaleService
                 $projectId = hashids_decode($filters['project_id']);
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-                $saleModel = new Sale();
-
-                $query = $saleModel
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_APPROVED)
-                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->selectRaw('SUM(original_total_paid_value / 100) as total')
-                ->selectRaw('SUM(IF(payment_method = 1, original_total_paid_value / 100, 0)) as total_credit_card')
-                ->selectRaw('SUM(IF(payment_method = 2, original_total_paid_value / 100, 0)) as total_boleto')
-                ->selectRaw('SUM(IF(payment_method = 4, original_total_paid_value / 100, 0)) as total_pix')
-                ->first();
+                $query = Sale::join('transactions', 'transactions.sale_id', 'sales.id')
+                                ->where('transactions.user_id', auth()->user()->account_owner_id)
+                                ->where('project_id', $projectId)
+                                ->where('sales.status', Sale::STATUS_APPROVED)
+                                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                ->selectRaw('SUM(transactions.value / 100) as total')
+                                ->selectRaw('SUM(IF(payment_method = 1, transactions.value / 100, 0)) as total_credit_card')
+                                ->selectRaw('SUM(IF(payment_method = 2, transactions.value / 100, 0)) as total_boleto')
+                                ->selectRaw('SUM(IF(payment_method = 4, transactions.value / 100, 0)) as total_pix')
+                                ->first();
 
                 $total = $query->total;
 
@@ -451,12 +450,7 @@ class ReportSaleService
                 $totalPix = $query->total_pix;
                 $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
 
-                return [
-                    // 'total' => number_format($total, 2, ',', '.'),
-                    'credit_card' => [
-                        'value' => number_format($totalCreditCard, 2, ',', '.'),
-                        'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
-                    ],
+                $data = [
                     'boleto' => [
                         'value' => number_format($totalBoleto, 2, ',', '.'),
                         'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
@@ -464,8 +458,21 @@ class ReportSaleService
                     'pix' => [
                         'value' => number_format($totalPix, 2, ',', '.'),
                         'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
-                    ]
+                    ],
+                    'credit_card' => [
+                        'value' => number_format($totalCreditCard, 2, ',', '.'),
+                        'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                    ],
                 ];
+
+                $value = array();
+                foreach($data as $val) {
+                    array_push($value, foxutils()->onlyNumbers($val['value']));
+                }
+                array_multisort($value, SORT_DESC, $data);
+
+                return $data;
+
             });
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -485,7 +492,7 @@ class ReportSaleService
                 ->where('sales.status', Sale::STATUS_APPROVED)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
+                ->select(DB::raw('products.name, products.description, products.photo as image, COUNT(*) as amount'))
                 ->groupBy('products.id')
                 ->orderByDesc('amount')
                 ->limit(8)
@@ -532,29 +539,29 @@ class ReportSaleService
                 $projectId = hashids_decode($filters['project_id']);
 
                 $salesApproved = Sale::whereBetween('end_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->where('owner_id', auth()->user()->account_owner_id)
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_APPROVED)
-                ->count();
+                                        ->where('owner_id', auth()->user()->account_owner_id)
+                                        ->where('project_id', $projectId)
+                                        ->where('status', Sale::STATUS_APPROVED)
+                                        ->count();
 
                 $salesAverageTicket = Sale::whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_APPROVED)
-                ->avg('original_total_paid_value');
+                                            ->where('project_id', $projectId)
+                                            ->where('status', Sale::STATUS_APPROVED)
+                                            ->avg('original_total_paid_value');
 
                 $salesComission = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->where('project_id', $projectId)
-                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->whereNull('invitation_id')
-                ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
-                ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                ->sum('transactions.value');
+                                            ->where('user_id', auth()->user()->account_owner_id)
+                                            ->where('project_id', $projectId)
+                                            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                            ->whereNull('invitation_id')
+                                            ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
+                                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                                            ->sum('transactions.value');
 
                 $salesChargeback = Sale::whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_CHARGEBACK)
-                ->sum('original_total_paid_value');
+                                        ->where('project_id', $projectId)
+                                        ->where('status', Sale::STATUS_CHARGEBACK)
+                                        ->sum('original_total_paid_value');
 
                 return [
                     'transactions' => number_format($salesApproved, 0, '.', '.'),
@@ -564,6 +571,7 @@ class ReportSaleService
                 ];
             });
         } catch(Exception $e) {
+            report($e);
             return response()->json([
                 'message' => $e->getMessage()
             ], 500);
@@ -579,47 +587,47 @@ class ReportSaleService
                 $projectId = hashids_decode($filters['project_id']);
 
                 $salesApprovedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                ->where('owner_id', auth()->user()->account_owner_id)
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_APPROVED)
-                ->count();
+                                        ->where('owner_id', auth()->user()->account_owner_id)
+                                        ->where('project_id', $projectId)
+                                        ->where('status', Sale::STATUS_APPROVED)
+                                        ->count();
 
                 $salesPendingSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_PENDING)
-                ->count();
+                                        ->where('project_id', $projectId)
+                                        ->where('status', Sale::STATUS_PENDING)
+                                        ->count();
 
                 $salesCanceledSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_CANCELED)
-                ->count();
+                                        ->where('project_id', $projectId)
+                                        ->where('status', Sale::STATUS_CANCELED)
+                                        ->count();
 
                 $salesRefusedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_REFUSED)
-                ->count();
+                                        ->where('project_id', $projectId)
+                                        ->where('status', Sale::STATUS_REFUSED)
+                                        ->count();
 
                 $salesRefundedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_REFUNDED)
-                ->count();
+                                        ->where('project_id', $projectId)
+                                        ->where('status', Sale::STATUS_REFUNDED)
+                                        ->count();
 
                 $salesChargebackSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_CHARGEBACK)
-                ->count();
+                                            ->where('project_id', $projectId)
+                                            ->where('status', Sale::STATUS_CHARGEBACK)
+                                            ->count();
 
                 $salesOtherSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                ->where('project_id', $projectId)
-                ->whereNotIn('status', [
-                    Sale::STATUS_APPROVED,
-                    Sale::STATUS_PENDING,
-                    Sale::STATUS_CANCELED,
-                    Sale::STATUS_REFUSED,
-                    Sale::STATUS_REFUNDED,
-                    Sale::STATUS_CHARGEBACK
-                ])
-                ->count();
+                                        ->where('project_id', $projectId)
+                                        ->whereNotIn('status', [
+                                            Sale::STATUS_APPROVED,
+                                            Sale::STATUS_PENDING,
+                                            Sale::STATUS_CANCELED,
+                                            Sale::STATUS_REFUSED,
+                                            Sale::STATUS_REFUNDED,
+                                            Sale::STATUS_CHARGEBACK
+                                        ])
+                                        ->count();
 
                 $total = ($salesApprovedSum + $salesPendingSum + $salesCanceledSum + $salesRefusedSum + $salesRefundedSum + $salesChargebackSum + $salesOtherSum);
 
@@ -705,7 +713,7 @@ class ReportSaleService
                                 ->join('sales', function($join) {
                                     $join->on('transactions.sale_id', 'sales.id');
                                 })
-                                ->whereBetween('transactions.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                ->whereBetween('sales.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->where('sales.has_order_bump', true)
                                 ->where('sales.project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_APPROVED)
@@ -730,7 +738,7 @@ class ReportSaleService
                                 ->join('sales', function($join) {
                                     $join->on('transactions.sale_id', 'sales.id');
                                 })
-                                ->whereBetween('transactions.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                ->whereBetween('sales.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->whereNotNull('sales.upsell_id')
                                 ->where('sales.project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_APPROVED)
