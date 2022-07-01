@@ -299,16 +299,17 @@ $(function () {
             },
             success: function success(response) {
                 let { total, products } = response.data;
-                
+
                 if(total) {
                     $("#block-products").prepend(`
                         <footer class="footer-products scroll-212">
                             <ul class="list-products container"></ul>
                         </footer>
-                    `);
-
+                    `);                    
+                    
                     $.each(products, function (i, product) {
-                        let { color, amount, image, name, description } = product;
+                        let { color, amount, image, name, description, percentage } = product;
+
                         if(amount) {
                             lista = `
                                 <li>
@@ -321,10 +322,10 @@ $(function () {
                                             title="${name} - ${description}">
                                             <img class="photo" src="${image}" width="16px" height="16px" />
                                         </figure>
-                                        <div class="bars ${color}" style="width:${product.percentage}">
-                                            <span>${Number(product.percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? amount: ''}</span>
+                                        <div class="bars ${color}" style="width:${percentage}">
+                                            <span>${Number(percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? amount: ''}</span>
                                         </div>
-                                        <span style="color: #636363;">${Number(product.percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? '': amount}</span>
+                                        <span style="color: #636363;">${Number(percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? '': amount}</span>
                                     </div>
                                 </li>
                             `;
@@ -336,13 +337,13 @@ $(function () {
                             $('.photo').on('error', function() {
                                 $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
                             });
-
-                            if(products.length < 4) {
-                                lista = `<li>${noListProducts}</li>`;
-                                $("#block-products .list-products").append(lista);
-                            }
                         }
                     });
+                    if(products.length < 4) {
+                        lista = `<li>${noListProducts}</li>`;
+                        $("#block-products .list-products").append(lista);
+                    }
+                    
                 }else {
                     lista = `
                         <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">

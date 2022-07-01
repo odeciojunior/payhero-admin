@@ -525,9 +525,13 @@ function typePayments() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let { credit_card, pix, boleto, total } = response.data;
+            let { credit_card, pix, boleto } = response.data;
+            let boletoNumber        = Number(boleto.value.replace(',','.'));
+            let creditCardNumber    = Number(credit_card.value.replace(',','.'));
+            let pixNumber           = Number(pix.value.replace(',','.'));
+            const total             = [boletoNumber, creditCardNumber, pixNumber].map(Number).reduce((prev, value) => prev + value,0);
 
-            if( total !== '0,00' ) {
+            if( total !== 0 ) {
                 paymentsHtml = `
                     <div class="row container-payment tp-payment">
                         <div class="container">
