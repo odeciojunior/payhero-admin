@@ -1296,19 +1296,16 @@ class ReportFinanceService
 
                 $queryAverageTicket = $transactions->avg('transactions.value');
 
-                $queryComission = $transactions
-                ->where('sales.project_id', $projectId)
-                // ->where('sales.status', Sale::STATUS_APPROVED)
-                ->sum('transactions.value');
+                $queryComission = $transactions->sum('transactions.value');
 
                 $queryChargeback = Transaction::where('user_id', $userId)
-                ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->where('sales.project_id', $projectId)
-                ->where('sales.status', Sale::STATUS_CHARGEBACK)
-                ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                ->whereNull('invitation_id')
-                ->where('status_enum', Transaction::STATUS_CHARGEBACK)
-                ->sum('transactions.value');
+                                                ->join('sales', 'sales.id', 'transactions.sale_id')
+                                                ->where('sales.project_id', $projectId)
+                                                ->where('sales.status', Sale::STATUS_CHARGEBACK)
+                                                ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                                ->whereNull('invitation_id')
+                                                ->where('status_enum', Transaction::STATUS_CHARGEBACK)
+                                                ->sum('transactions.value');
 
                 return [
                     'transactions' => $queryCount,
@@ -1359,7 +1356,7 @@ class ReportFinanceService
                     AsaasService::class,
                     GetnetService::class,
                     GerencianetService::class,
-                    CieloService::class,
+                    // CieloService::class,
                 ];
 
                 $balancesPendingValue = [];
@@ -1401,7 +1398,7 @@ class ReportFinanceService
                     AsaasService::class,
                     GetnetService::class,
                     GerencianetService::class,
-                    CieloService::class,
+                    // CieloService::class,
                 ];
 
                 $balancesBlockedValue = [];
@@ -1439,7 +1436,7 @@ class ReportFinanceService
         }
     }
 
-    function getFinancesDistribuitions()
+    public function getFinancesDistribuitions()
     {
         try {
             $cacheName = 'distribuitions-data-';
@@ -1449,7 +1446,7 @@ class ReportFinanceService
                     AsaasService::class,
                     GetnetService::class,
                     GerencianetService::class,
-                    CieloService::class,
+                    // CieloService::class,
                 ];
 
                 $balancesAvailable = [];
@@ -1507,6 +1504,7 @@ class ReportFinanceService
     {
         try {
             $cacheName = 'withdrawals-data-';
+            cache()->forget($cacheName);
             return cache()->remember($cacheName, 300, function() {
                 date_default_timezone_set('America/Sao_Paulo');
 
@@ -1514,17 +1512,15 @@ class ReportFinanceService
                 $dateStart = date('Y-m-d', strtotime($dateEnd . ' -5 month'));
 
                 $companies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
-
-                $withdrawals = Withdrawal::whereIn('company_id', $companies)->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
+                $withdrawals = Withdrawal::whereIn('company_id', $companies)
+                                            ->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ])
+                                            ->where('status', Withdrawal::STATUS_TRANSFERRED);
 
                 $transactions = Transaction::whereIn('transactions.company_id', $companies)
-                ->join('sales', 'transactions.sale_id', 'sales.id')
-                ->whereNotIn('sales.status', [
-                    Sale::STATUS_CANCELED_ANTIFRAUD,
-                    Sale::STATUS_REFUSED,
-                    Sale::STATUS_SYSTEM_ERROR
-                ])
-                ->whereBetween('sales.start_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
+                                            ->where('user_id', auth()->user()->account_owner_id)
+                                            ->join('sales', 'transactions.sale_id', 'sales.id')
+                                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                                            ->whereBetween('sales.start_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
 
                 $dateStart = Carbon::parse($dateStart);
                 $dateEnd = Carbon::parse($dateEnd);
@@ -1535,13 +1531,9 @@ class ReportFinanceService
                     $dateStart = $dateStart->addMonths(1);
                 }
 
-                $resumeWithdrawals = $withdrawals
-                ->select(DB::raw('value, DATE(release_date) as date'))
-                ->get();
+                $resumeWithdrawals = $withdrawals->select(DB::raw('value, DATE(release_date) as date'))->get();
 
-                $resumeTransactions = $transactions
-                ->select(DB::raw('transactions.value, DATE(sales.start_date) as date'))
-                ->get();
+                $resumeTransactions = $transactions->select(DB::raw('transactions.value, DATE(sales.start_date) as date'))->get();
 
                 $withdrawalData = [];
                 $transactionData = [];

@@ -686,7 +686,7 @@ function loadFrequenteSales() {
                                             data-viewport=".container"
                                             data-placement="top"
                                             data-toggle="tooltip"
-                                            title="${item.name}"
+                                            title="${item.name} - ${item.description}"
                                         >
                                             <img class="photo" width="34px" height="34px" src="${item.photo}" alt="${item.description}">
                                         </figure>

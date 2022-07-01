@@ -45,18 +45,11 @@ class ReportMarketingService
                                 ->where('project_id', $projectId)
                                 ->count();
 
-            $salesValue = Sale::where('owner_id', auth()->user()->account_owner_id)
-                                ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                ->where('status', Sale::STATUS_APPROVED)
-                                ->where('project_id', $projectId)
-                                ->sum('original_total_paid_value');
-
             $salesValue = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
                                         ->where('user_id', auth()->user()->account_owner_id)
                                         ->where('project_id', $projectId)
                                         ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                                         ->whereNull('invitation_id')
-                                        ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
                                         ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
                                         ->sum('transactions.value');
 
@@ -145,7 +138,7 @@ class ReportMarketingService
                                 $join->on('transaction.sale_id', '=', 'sale.id');
                                 $join->where('transaction.user_id', auth()->user()->account_owner_id);
                             })
-                            ->whereBetween('products_plans_sales.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                            ->whereBetween('sales.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                             ->where('sale.project_id', $projectId)
                             ->where('transaction.user_id', auth()->user()->account_owner_id)
                             ->groupBy('product.id')
