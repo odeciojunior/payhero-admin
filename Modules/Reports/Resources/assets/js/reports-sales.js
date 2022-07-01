@@ -948,9 +948,9 @@ function upsell() {
         },
         success: function success(response) {
             let { value, amount } = response.data;
+            value = removeMoneyCurrency(value);
 
-            if( value !== null ) {
-                value = removeMoneyCurrency(value);
+            if( value !== '0,00' ) {
 
                 upsellBlock = `
                     <div class="d-flex align-items">
