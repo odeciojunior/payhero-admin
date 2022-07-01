@@ -880,9 +880,9 @@ function orderbump() {
         },
         success: function success(response) {
             let { amount, value } = response.data;
+            value = removeMoneyCurrency(value);
 
-            if(value !== null) {
-                value = removeMoneyCurrency(value);
+            if( value !== '0,00') {
                 orderbumpBlock = `
                    <div class="d-flex align-items">
                        <div class="balance col-6">
