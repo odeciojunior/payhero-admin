@@ -1167,14 +1167,14 @@ $(function () {
                 processData: false,
                 contentType: false,
                 cache: false,
-                error: function (response) {
+                error: function (_error4) {
                     $(modal).find('.modal-footer').find('.btn').prop('disabled', false);
 
                     getProductsPlan();
 
                     getCustom(modal, false);
 
-                    errorAjaxResponse(response);
+                    alertCustom("error", "Erro ao atualizar configurações do plano");
                 },
                 success: function success(data) {
                     $(modal).find('.modal-footer').find('.btn').prop('disabled', false);
