@@ -224,7 +224,7 @@ $(function () {
 
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&status=approved",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -308,7 +308,7 @@ $(function () {
                     `);
 
                     $.each(products, function (i, product) {
-                        let { color, amount, image, name } = product;
+                        let { color, amount, image, name, description } = product;
                         if(amount) {
                             lista = `
                                 <li>
@@ -318,7 +318,7 @@ $(function () {
                                             data-viewport=".container"
                                             data-placement="top"
                                             data-toggle="tooltip"
-                                            title="${name}">
+                                            title="${name} - ${description}">
                                             <img class="photo" src="${image}" width="16px" height="16px" />
                                         </figure>
                                         <div class="bars ${color}" style="width:${product.percentage}">

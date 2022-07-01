@@ -457,6 +457,7 @@ class ReportFinanceService
                 $date['endDate'] = $dateRange[1];
 
                 $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
+                                            ->where('user_id', auth()->user()->account_owner_id)
                                             ->join('sales', 'sales.id', 'transactions.sale_id')
                                             ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
                                             ->where('sales.project_id', $projectId);

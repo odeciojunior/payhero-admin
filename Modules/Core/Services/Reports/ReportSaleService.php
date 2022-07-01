@@ -424,21 +424,21 @@ class ReportSaleService
     {
         try {
             $cacheName = 'payment-type-resume-'.json_encode($filters);
+            cache()->forget($cacheName);
             return cache()->remember($cacheName, 300, function() use ($filters) {
                 $projectId = hashids_decode($filters['project_id']);
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-                $saleModel = new Sale();
-
-                $query = $saleModel
-                ->where('project_id', $projectId)
-                ->where('status', Sale::STATUS_APPROVED)
-                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->selectRaw('SUM(original_total_paid_value / 100) as total')
-                ->selectRaw('SUM(IF(payment_method = 1, original_total_paid_value / 100, 0)) as total_credit_card')
-                ->selectRaw('SUM(IF(payment_method = 2, original_total_paid_value / 100, 0)) as total_boleto')
-                ->selectRaw('SUM(IF(payment_method = 4, original_total_paid_value / 100, 0)) as total_pix')
-                ->first();
+                $query = Sale::join('transactions', 'transactions.sale_id', 'sales.id')
+                                ->where('transactions.user_id', auth()->user()->account_owner_id)
+                                ->where('project_id', $projectId)
+                                ->where('sales.status', Sale::STATUS_APPROVED)
+                                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                ->selectRaw('SUM(transactions.value / 100) as total')
+                                ->selectRaw('SUM(IF(payment_method = 1, transactions.value / 100, 0)) as total_credit_card')
+                                ->selectRaw('SUM(IF(payment_method = 2, transactions.value / 100, 0)) as total_boleto')
+                                ->selectRaw('SUM(IF(payment_method = 4, transactions.value / 100, 0)) as total_pix')
+                                ->first();
 
                 $total = $query->total;
 
@@ -476,6 +476,7 @@ class ReportSaleService
     {
         try {
             $cacheName = 'products-resume-'.json_encode($filters);
+            cache()->forget($cacheName);
             return cache()->remember($cacheName, 300, function() use ($filters) {
                 $projectId = hashids_decode($filters['project_id']);
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
@@ -485,7 +486,7 @@ class ReportSaleService
                 ->where('sales.status', Sale::STATUS_APPROVED)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
+                ->select(DB::raw('products.name, products.description, products.photo as image, COUNT(*) as amount'))
                 ->groupBy('products.id')
                 ->orderByDesc('amount')
                 ->limit(8)
