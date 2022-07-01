@@ -406,7 +406,7 @@ $(document).ready(function () {
         let updateResume = true;
 
         loadOnTable('#body-table-pending', '.table-pending');
-        $('#body-table-pending').html(skeLoad);
+        //$('#body-table-pending').html(skeLoad);
 
         if (link == null) {
             link = '/api/reports/pending-balance?' + getFilters(true).substr(1);

@@ -12,7 +12,7 @@ function atualizar(link = null) {
     let updateResume = true;
 
     loadOnTable('#dados_tabela', '#tabela_vendas');
-    $('#dados_tabela').html(skeLoad);
+    //$('#dados_tabela').html(skeLoad);
 
     if (link == null) {
         link = '/api/reports/blocked-balance?' + getFilters(true).substr(1);
