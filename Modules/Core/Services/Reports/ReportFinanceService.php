@@ -84,12 +84,9 @@ class ReportFinanceService
             ];
         }
 
-        $resume = $transactions
-        ->select(DB::raw('transactions.value as commission, HOUR(sales.start_date) as hour'))
-        ->get();
+        $resume = $transactions->select(DB::raw('transactions.value as commission, HOUR(sales.start_date) as hour'))->get();
 
         $comissionData = [];
-
         foreach ($labelList as $label) {
             $comissionValue = 0;
 
@@ -144,12 +141,9 @@ class ReportFinanceService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $resume = $transactions
-        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
-
         foreach ($labelList as $label) {
             $comissionValue = 0;
 
@@ -158,7 +152,6 @@ class ReportFinanceService
                     $comissionValue += foxutils()->onlyNumbers($r->commission);
                 }
             }
-
             array_push($comissionData, $comissionValue);
         }
 
@@ -211,12 +204,9 @@ class ReportFinanceService
             }
         }
 
-        $resume = $transactions
-        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
-
         foreach ($labelList as $label) {
             $comissionDataValue = 0;
 
@@ -276,9 +266,7 @@ class ReportFinanceService
             }
         }
 
-        $resume = $transactions
-        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
 
@@ -292,7 +280,6 @@ class ReportFinanceService
                     }
                 }
             }
-
             array_push($comissionData, $comissionDataValue);
         }
 
@@ -343,9 +330,7 @@ class ReportFinanceService
             }
         }
 
-        $resume = $transactions
-        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
 
@@ -359,7 +344,6 @@ class ReportFinanceService
                     }
                 }
             }
-
             array_push($comissionData, $comissionDataValue);
         }
 
@@ -404,8 +388,7 @@ class ReportFinanceService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
-                                ->get();
+        $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
 
@@ -508,9 +491,7 @@ class ReportFinanceService
             ];
         }
 
-        $resume = $transactions
-        ->select(DB::raw('transactions.value'))
-        ->get();
+        $resume = $transactions->select(DB::raw('transactions.value'))->get();
 
         $saleData = [];
 
@@ -522,7 +503,6 @@ class ReportFinanceService
                     $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                 }
             }
-
             array_push($saleData, $saleDataValue);
         }
 
@@ -568,9 +548,7 @@ class ReportFinanceService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $resume = $transactions
-        ->select(DB::raw('transactions.value'))
-        ->get();
+        $resume = $transactions->select(DB::raw('transactions.value'))->get();
 
         $saleData = [];
 
@@ -582,7 +560,6 @@ class ReportFinanceService
                     $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                 }
             }
-
             array_push($saleData, $saleDataValue);
         }
 
@@ -637,9 +614,7 @@ class ReportFinanceService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $transactions
-        ->select(DB::raw('DATE(start_date) as date, transactions.value'))
-        ->get();
+        $resume = $transactions->select(DB::raw('DATE(start_date) as date, transactions.value'))->get();
 
         $saleData = [];
 
@@ -651,7 +626,6 @@ class ReportFinanceService
                     $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                 }
             }
-
             array_push($saleData, $saleDataValue);
         }
 
@@ -704,9 +678,7 @@ class ReportFinanceService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $transactions
-        ->select(DB::raw('DATE(start_date) as date, transactions.value'))
-        ->get();
+        $resume = $transactions->select(DB::raw('DATE(start_date) as date, transactions.value'))->get();
 
         $saleData = [];
 
@@ -720,7 +692,6 @@ class ReportFinanceService
                     }
                 }
             }
-
             array_push($saleData, $saleDataValue);
         }
 
@@ -773,9 +744,7 @@ class ReportFinanceService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $transactions
-        ->select(DB::raw('DATE(start_date) as date, transactions.value'))
-        ->get();
+        $resume = $transactions->select(DB::raw('DATE(start_date) as date, transactions.value'))->get();
 
         $saleData = [];
 
@@ -789,7 +758,6 @@ class ReportFinanceService
                     }
                 }
             }
-
             array_push($saleData, $saleDataValue);
         }
 
@@ -836,9 +804,7 @@ class ReportFinanceService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $transactions
-        ->select(DB::raw('DATE(start_date) as date, transactions.value'))
-        ->get();
+        $resume = $transactions->select(DB::raw('DATE(start_date) as date, transactions.value'))->get();
 
         $saleData = [];
 
@@ -850,7 +816,6 @@ class ReportFinanceService
                     $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                 }
             }
-
             array_push($saleData, $saleDataValue);
         }
 
@@ -947,9 +912,7 @@ class ReportFinanceService
 
         $cashbackData = [];
 
-        $resume = $cashbacks
-        ->select(DB::raw('cashbacks.value as cashback, HOUR(sales.start_date) as hour'))
-        ->get();
+        $resume = $cashbacks->select(DB::raw('cashbacks.value as cashback, HOUR(sales.start_date) as hour'))->get();
 
         foreach ($labelList as $label) {
             $cashbackDataValue = 0;
@@ -959,7 +922,6 @@ class ReportFinanceService
                     $cashbackDataValue += intval(preg_replace("/[^0-9]/", "", $r->cashback));
                 }
             }
-
             array_push($cashbackData, $cashbackDataValue);
         }
 
@@ -1006,9 +968,7 @@ class ReportFinanceService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $resume = $cashbacks
-        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $cashbacks->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))->get();
 
         $cashbackData = [];
 
@@ -1020,7 +980,6 @@ class ReportFinanceService
                     $cashbackDataValue += intval(preg_replace("/[^0-9]/", "", $r->cashback));
                 }
             }
-
             array_push($cashbackData, $cashbackDataValue);
         }
 
@@ -1076,9 +1035,7 @@ class ReportFinanceService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $cashbacks
-        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $cashbacks->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))->get();
 
         $cashbackData = [];
 
@@ -1144,9 +1101,7 @@ class ReportFinanceService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $cashbacks
-        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $cashbacks->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))->get();
 
         $cashbackData = [];
 
@@ -1214,9 +1169,7 @@ class ReportFinanceService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $cashbacks
-        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $cashbacks->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))->get();
 
         $cashbackData = [];
 
@@ -1278,9 +1231,7 @@ class ReportFinanceService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $cashbacks
-        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
-        ->get();
+        $resume = $cashbacks->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))->get();
 
         $cashbackData = [];
 
@@ -1324,7 +1275,7 @@ class ReportFinanceService
         ];
     }
 
-    function getFinancesResume($filters)
+    public function getFinancesResume($filters)
     {
         try {
             $cacheName = 'finances-balances-resume-'.json_encode($filters);

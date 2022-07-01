@@ -451,12 +451,7 @@ class ReportSaleService
                 $totalPix = $query->total_pix;
                 $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
 
-                return [
-                    // 'total' => number_format($total, 2, ',', '.'),
-                    'credit_card' => [
-                        'value' => number_format($totalCreditCard, 2, ',', '.'),
-                        'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
-                    ],
+                $data = [
                     'boleto' => [
                         'value' => number_format($totalBoleto, 2, ',', '.'),
                         'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
@@ -464,8 +459,21 @@ class ReportSaleService
                     'pix' => [
                         'value' => number_format($totalPix, 2, ',', '.'),
                         'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
-                    ]
+                    ],
+                    'credit_card' => [
+                        'value' => number_format($totalCreditCard, 2, ',', '.'),
+                        'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                    ],
                 ];
+
+                $value = array();
+                foreach($data as $val) {
+                    array_push($value, foxutils()->onlyNumbers($val['value']));
+                }
+                array_multisort($value, SORT_DESC, $data);
+
+                return $data;
+
             });
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
