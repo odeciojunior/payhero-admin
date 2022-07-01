@@ -3,6 +3,7 @@
 namespace Modules\Apps\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\ActivecampaignIntegration;
 use Modules\Core\Entities\AstronMembersIntegration;
@@ -19,14 +20,15 @@ use Modules\Core\Entities\HotbilletIntegration;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Entities\MelhorenvioIntegration;
 use Modules\Core\Entities\NotificacoesInteligentesIntegration;
+use Vinkla\Hashids\Facades\Hashids;
 
 
 class AppsApiController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $accountOwnerId = auth()->user()->getAccountOwnerId();
-        $company_default = auth()->user()->company_default;
+        $company_default = Hashids::decode($request->company);//auth()->user()->company_default;
         return response()->json([
 
             'hotzappIntegrations' => HotzappIntegration::

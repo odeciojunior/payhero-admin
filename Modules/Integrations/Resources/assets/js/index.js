@@ -1,7 +1,10 @@
-function updateAfterChangeCompany() {
+$('#company-navbar').change(function () {
     loadOnAny('#page-integrates');
-    window.onlyData();
-}
+    updateCompanyDefault().done( function(){
+        $('.company_name').val( $('#company-navbar').find('option:selected').text() );
+        window.onlyData();
+    });
+});
 
 $(document).ready(function () {
 
@@ -12,7 +15,7 @@ $(document).ready(function () {
         $("#pagination-integrates").css('display','none');
         $.ajax({
             method: "GET",
-            url: "/api/integrations?resume=true&page=1&company_id="+sessionStorage.getItem('company_default'),
+            url: "/api/integrations?resume=true&page=1&company_id="+$('#company-navbar').val(),//sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -67,16 +70,16 @@ $(document).ready(function () {
         // 3: 'warning',
     };
 
-    refreshIntegrations();
-    createIntegration();
-    //getCompanies();
+    getCompaniesNoSession().done( function (data){
+        refreshIntegrations();
+        createIntegration();
+    });
 
     function refreshIntegrations(page = 1) {
         loadingOnScreen();
-
         $.ajax({
             method: "GET",
-            url: "/api/integrations?resume=true&page=" + page + "&company_id="+sessionStorage.getItem('company_default'),
+            url: "/api/integrations?resume=true&page=" + page + "&company_id="+$('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -327,7 +330,7 @@ $(document).ready(function () {
                 let description = $("#modal-integrate").find("input[name='description']").val();
                 let tokenTypeEnum = $("#select-enum-list").val();
                 let postback = $("#modal-integrate").find("input[name='postback']").val();
-                let companyHash = sessionStorage.getItem('company_default'); //$("#companies").val();
+                let companyHash = $('#company-navbar').val();//sessionStorage.getItem('company_default'); //$("#companies").val();
                 if (description == '') {
                     alertCustom('error', 'O campo Descrição é obrigatório');
                 } else if (!companyHash && tokenTypeEnum == 4) {
@@ -525,5 +528,5 @@ $(document).ready(function () {
         $('#modal-integrate').modal('show');
     }
 
-    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    $('.company_name').val( $('#company-navbar').find('option:selected').text() );//sessionStorage.getItem('company_default_name')
 });

@@ -1,8 +1,10 @@
 $(() => {
+    getCompaniesNoSession().done( function (data){
     // let path =  window.location.pathname
     // if( path.match( /\/projects\/[a-zA-Z0-9]*/i ) && !path.match( /\/projects\/create/i ) ){
         $('.site-navbar .sirius-select-container').addClass('disabled');
     // }
+    });
 
     loadingOnScreen();
 

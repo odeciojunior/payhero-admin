@@ -202,54 +202,54 @@ $(() => {
 
                                 // inicio: update session storage of company_default and companies/projects
 
-                                $.ajax({
-                                    method: "GET",
-                                    url: `/api/core/usercompanies`,
-                                    dataType: "json",
-                                    headers: {
-                                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                                        'Accept': 'appliation/json',
-                                    },
-                                    error: function error(response) {
-                                        loadingOnScreenRemove();
-                                        errorAjaxResponse(response);
-                                    },
-                                    success: function success(data) {
-                                        data.companies.push({
-                                            "id":"v2RmA83EbZPVpYB",
-                                            "name":"Empresa Demo",
-                                            "company_document_status": "approved",
-                                            "active_flag": 1,
-                                            "projects": [{
-                                                "id" : "v2RmA83EbZPVpYB",
-                                                "name": "CLOUDFOX DEMO LTDA",
-                                                "order_p":1,
-                                                "status":1
-                                            }]
-                                        });
-                                        companies = data.companies;
-                                        company_default = data.company_default;
-                                        company_default_name = data.company_default_name;
-                                        if (!isEmpty(companies)) {
-                                            sessionStorage.removeItem('companies');
-                                            sessionStorage.removeItem('company_default')
-                                            sessionStorage.removeItem('company_default_name')
-                                            sessionStorage.setItem('companies', JSON.stringify(companies));
-                                            sessionStorage.setItem('company_default', company_default);
-                                            sessionStorage.setItem('company_default_name', company_default_name);
+                                // $.ajax({
+                                //     method: "GET",
+                                //     url: `/api/core/usercompanies`,
+                                //     dataType: "json",
+                                //     headers: {
+                                //         'Authorization': $('meta[name="access-token"]').attr('content'),
+                                //         'Accept': 'appliation/json',
+                                //     },
+                                //     error: function error(response) {
+                                //         loadingOnScreenRemove();
+                                //         errorAjaxResponse(response);
+                                //     },
+                                //     success: function success(data) {
+                                //         data.companies.push({
+                                //             "id":"v2RmA83EbZPVpYB",
+                                //             "name":"Empresa Demo",
+                                //             "company_document_status": "approved",
+                                //             "active_flag": 1,
+                                //             "projects": [{
+                                //                 "id" : "v2RmA83EbZPVpYB",
+                                //                 "name": "CLOUDFOX DEMO LTDA",
+                                //                 "order_p":1,
+                                //                 "status":1
+                                //             }]
+                                //         });
+                                //         companies = data.companies;
+                                //         company_default = data.company_default;
+                                //         company_default_name = data.company_default_name;
+                                //         if (!isEmpty(companies)) {
+                                //             sessionStorage.removeItem('companies');
+                                //             sessionStorage.removeItem('company_default')
+                                //             sessionStorage.removeItem('company_default_name')
+                                //             sessionStorage.setItem('companies', JSON.stringify(companies));
+                                //             sessionStorage.setItem('company_default', company_default);
+                                //             sessionStorage.setItem('company_default_name', company_default_name);
 
-                                            $('.company_name').val( company_default_name );
-                                            $('.company_id').val( company_default );
+                                //             $('.company_name').val( company_default_name );
+                                //             $('.company_id').val( company_default );
 
-                                            $(".content-error").hide();
-                                            selectCompanies();
+                                //             $(".content-error").hide();
+                                //             selectCompanies();
 
-                                        } else {
-                                            $(".content-error").show();
-                                            $('#company-select, .page-content').hide();
-                                        }
-                                    }
-                                });
+                                //         } else {
+                                //             $(".content-error").show();
+                                //             $('#company-select, .page-content').hide();
+                                //         }
+                                //     }
+                                // });
 
                                 // fim: update session storage of company_default
 

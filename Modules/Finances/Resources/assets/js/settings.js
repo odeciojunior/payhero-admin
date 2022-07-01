@@ -18,7 +18,7 @@ $(document).ready(function () {
     }
 
     var financesSettingsForm = $('#finances-settings-form')
-    var companySelect = sessionStorage.getItem('company_default') //$('#transfers_company_select')
+    var companySelect = $('#company-navbar').val() //sessionStorage.getItem('company_default') //$('#transfers_company_select')
     var withdrawalByPeriod = $('#withdrawal_by_period')
     var frequencyContainer = $('.frequency-container')
     var frequencyButtons = frequencyContainer.find('.btn')
@@ -54,7 +54,7 @@ $(document).ready(function () {
     window.saveSettings = function (data) {
 
         settingsData = Object.assign(settingsData, {
-            company_id: sessionStorage.getItem('company_default'), //companySelect.val(),
+            company_id: $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //companySelect.val(),
             amount: withdrawalAmount.val(),
         })
 
@@ -166,7 +166,7 @@ $(document).ready(function () {
 
     window.clearSettingsForm = function () {
         settingsData = {
-            company_id: sessionStorage.getItem('company_default'), //companySelect.val(),
+            company_id: $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //companySelect.val(),
             rule: null,
             frequency: null,
             weekday: null,
@@ -292,8 +292,8 @@ $(document).ready(function () {
     withdrawalAmount.maskMoney({thousands: '.', decimal: ',', allowZero: true});
     frequencyButtons.removeClass('active')
 
-    if (!isEmpty(sessionStorage.getItem('company_default'))) { //companySelect.val()
-        getSettings(sessionStorage.getItem('company_default')) //companySelect.val()
+    if (!isEmpty($('#company-navbar').val())) { //sessionStorage.getItem('company_default'))) { //companySelect.val()
+        getSettings($('#company-navbar').val()) //sessionStorage.getItem('company_default')) //companySelect.val()
     } else {
         onWithdrawalByAmountChange()
         onWithdrawalByPeriodChange()

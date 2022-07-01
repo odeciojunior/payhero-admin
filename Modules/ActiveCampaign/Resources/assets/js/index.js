@@ -13,7 +13,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/activecampaign?company="+ sessionStorage.getItem('company_default'),
+            url: "/api/apps/activecampaign?company="+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

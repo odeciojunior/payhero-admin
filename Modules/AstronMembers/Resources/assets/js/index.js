@@ -12,7 +12,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/astronmembers?company="+ sessionStorage.getItem('company_default'),
+            url: "/api/apps/astronmembers?company="+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),

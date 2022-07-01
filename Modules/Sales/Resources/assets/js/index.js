@@ -278,7 +278,7 @@ function getFilters(urlParams = false) {
         'cashback': $("#cashback").val(),
         'plan': $('#plan').val(),
         'coupon': $("#cupom").val(),
-        'company': sessionStorage.getItem('company_default'), //$("#empresa").val(),
+        'company': $('#company-navbar').val(),//sessionStorage.getItem('company_default'), //$("#empresa").val(),
         'value': $("#valor").val().replace(/[^\d]+/g, ''),
         'email_client': $("#email_cliente").val(),
         'upsell': $("#upsell").val(),
@@ -399,28 +399,56 @@ function hoverBilletPending() {
     }
 }
 
-function updateAfterChangeCompany(){
+$('#company-navbar').change(function () {
     $("#projeto").find('option').not(':first').remove();
     $("#plan").find('option').not(':first').remove();
-
-    let companies = JSON.parse(sessionStorage.getItem('companies'));
-    $.each(companies, function (c, company) {
-        if( sessionStorage.getItem('company_default') == company.id){
-            $.each(company.projects, function (i, project) {
-                $("#projeto").append(
-                    $("<option>", {
-                        value: project.id,
-                        text: project.name,
-                    })
-                );
+    updateCompanyDefault().done(function(data1){
+        getCompaniesNoSession().done(function(data2){
+            // console.log(data2)
+            companies=data2.companies;
+            $.each(companies, function (c, company) {
+                if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+            //             console.log(project.name)
+            //             $('#projeto').append('<option value="project.id">'+project.name+'</option>')
+                        $("#projeto").append(
+                                            $("<option>", {
+                                                value: project.id,
+                                                text: project.name,
+                                            })
+                                        );
+                    });
+                }
             });
-        }
-    });
+            $("#projeto").val($("#projeto option:first").val());
+            $("#plan").val($("#plan option:first").val());
+            atualizar();
+        });
+	});
+});
 
-    $("#projeto").val($("#projeto option:first").val());
-    $("#plan").val($("#plan option:first").val());
-    atualizar();
-}
+
+
+// function updateAfterChangeCompany(){
+//     $("#projeto").find('option').not(':first').remove();
+//     $("#plan").find('option').not(':first').remove();
+//     let companies = JSON.parse(sessionStorage.getItem('companies'));
+//     $.each(companies, function (c, company) {
+//         if( sessionStorage.getItem('company_default') == company.id){
+//             $.each(company.projects, function (i, project) {
+//                 $("#projeto").append(
+//                     $("<option>", {
+//                         value: project.id,
+//                         text: project.name,
+//                     })
+//                 );
+//             });
+//         }
+//     });
+//     $("#projeto").val($("#projeto option:first").val());
+//     $("#plan").val($("#plan option:first").val());
+//     atualizar();
+// }
 
 $(document).ready(function () {
 
@@ -573,8 +601,9 @@ $(document).ready(function () {
 
 
     // FIM - COMPORTAMENTOS DA JANELA
-
-    getProjects();
+    getCompaniesNoSession().done( function (data){
+        getProjects();
+    });
 
     //Carrega o modal para regerar boleto
     $(document).on("click", ".boleto-pending", function () {
@@ -623,7 +652,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
+            url: "/api/projects?select=true&company="+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -900,6 +929,6 @@ $(document).ready(function () {
         }
     });
 
-    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    //$('.company_name').val( sessionStorage.getItem('company_default_name') );
 
 });

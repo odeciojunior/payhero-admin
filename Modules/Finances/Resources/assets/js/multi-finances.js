@@ -1,20 +1,39 @@
-function updateAfterChangeCompany(){
-    $("#extract_company_select").val( sessionStorage.getItem('company_default') );
-    $('#gateway-skeleton').show();
-    $('#container-all-gateways').html('');
-    $('#val-skeleton').show();
-    $('#container_val').css('display','none');
-    $('.skeleton-withdrawal').show();
-    $('#container-withdraw').html('');
-    $('#empty-history').hide();
-    $('.asScrollable').hide();
-    $('.container-history').css('padding-top','42px');
-    window.updateStatements();
-    window.updateWithdrawals();
-}
+$('#company-navbar').change(function () {
+    updateCompanyDefault().done( function(){
+        $("#extract_company_select").val( $('#company-navbar').val() );
+        $('#gateway-skeleton').show();
+        $('#container-all-gateways').html('');
+        $('#val-skeleton').show();
+        $('#container_val').css('display','none');
+        $('.skeleton-withdrawal').show();
+        $('#container-withdraw').html('');
+        $('#empty-history').hide();
+        $('.asScrollable').hide();
+        $('.container-history').css('padding-top','42px');
+        window.updateStatements();
+        window.updateWithdrawals();
+    });
+});
+
+// function updateAfterChangeCompany(){
+//     $("#extract_company_select").val( sessionStorage.getItem('company_default') );
+//     $('#gateway-skeleton').show();
+//     $('#container-all-gateways').html('');
+//     $('#val-skeleton').show();
+//     $('#container_val').css('display','none');
+//     $('.skeleton-withdrawal').show();
+//     $('#container-withdraw').html('');
+//     $('#empty-history').hide();
+//     $('.asScrollable').hide();
+//     $('.container-history').css('padding-top','42px');
+//     window.updateStatements();
+//     window.updateWithdrawals();
+// }
 
 $(document).ready(function(){
-    getProjects();
+    getCompaniesNoSession().done( function (data){
+        getProjects();
+    });
 
     function getProjects() {
         loadingOnScreen();
@@ -217,7 +236,7 @@ $(document).ready(function(){
     }
 
     window.updateStatements = function() {
-        let companyId = sessionStorage.getItem('company_default') //$("#transfers_company_select").val()
+        let companyId = $('#company-navbar').val() //sessionStorage.getItem('company_default') //$("#transfers_company_select").val()
         $.ajax({
             url: `/api/finances/get-statement-resumes?company_id=${companyId}`,
             type: "GET",
@@ -417,7 +436,7 @@ $(document).ready(function(){
         });
     }
      window.updateWithdrawals = function() {
-        let companyId = sessionStorage.getItem('company_default') //$("#transfers_company_select").val()
+        let companyId = $('#company-navbar').val() //sessionStorage.getItem('company_default') //$("#transfers_company_select").val()
 
         $.ajax({
             url: `/api/withdrawals/get-resume?company_id=${companyId}`,

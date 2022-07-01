@@ -1,40 +1,41 @@
 $(document).ready(function () {
 
-    getCompanies();
+    //getCompaniesNoSession();//getCompanies();
 
-    $('#company-navbar').change(function () {
-        var company_id = $(this).val()
-        var company_name = $(this).find('option:selected').text()
+    // $('#company-navbar').change(function () {
+    //     var company_id = $(this).val()
+    //     var company_name = $(this).find('option:selected').text()
 
-        if(company_id ==sessionStorage.getItem('company_default'))
-            return;
+    //     if(company_id ==sessionStorage.getItem('company_default'))
+    //         return;
 
-        $.ajax({
-            method: 'POST',
-            url: '/api/core/company-default',
-            data:{company_id:company_id},
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(data) {
-                sessionStorage.removeItem('company_default');
-                sessionStorage.removeItem('company_default_name')
-                sessionStorage.setItem('company_default', company_id);
-                sessionStorage.setItem('company_default_name', company_name);
+    //     $.ajax({
+    //         method: 'POST',
+    //         url: '/api/core/company-default',
+    //         data:{company_id:company_id},
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: function error(response) {
+    //             errorAjaxResponse(response);
+    //         },
+    //         success: function success(data) {
+    //             sessionStorage.removeItem('company_default');
+    //             sessionStorage.removeItem('company_default_name')
+    //             sessionStorage.setItem('company_default', company_id);
+    //             sessionStorage.setItem('company_default_name', company_name);
 
-                $('.company_name').val( sessionStorage.getItem('company_default_name') );
-                selectCompanies();
-                if ( typeof updateAfterChangeCompany === "function" ) {
-                    updateAfterChangeCompany();
-                }
-            },
-        });
+    //             $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    //             selectCompanies();
+    //             if ( typeof updateAfterChangeCompany === "function" ) {
+    //                 updateAfterChangeCompany();
+    //             }
+    //         },
+    //     });
 
-    })
+    // })
+
 
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
@@ -1711,6 +1712,7 @@ function selectCompanies() {
     }
     $('#company-select').addClass('d-sm-flex');
 }
+
 function buildModalBonusBalance(bonusObject) {
     var userName = bonusObject.user_name;
     var totalBalance = bonusObject.total_bonus;
@@ -2015,3 +2017,101 @@ const loadSkeletonBonus = `
                 <div class="skeleton skeleton-p" style="width: 60%; margin-top: 10px"></div>
             </div>
             `;
+
+
+
+function getCompaniesNoSession() {
+    var ajax = $.ajax({
+        method: "GET",
+        url: `/api/core/usercompanies`,
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'appliation/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(data) {
+            data.companies.push({
+                "id":"v2RmA83EbZPVpYB",
+                "name":"Empresa Demo",
+                "company_document_status": "approved",
+                "active_flag": 1,
+                "projects": [{
+                    "id" : "v2RmA83EbZPVpYB",
+                    "name": "Cloudfox Demo Ltda",
+                    "order_p":1,
+                    "status":1
+                }]
+            });
+            companies = data.companies;
+            company_default = data.company_default;
+            company_default_name = data.company_default_name;
+            if (!isEmpty(companies)) {
+
+                $('.company_name').val( company_default_name );
+                $('.company_id').val( company_default );
+                $(".content-error").hide();
+                $('#company-navbar').html('');
+
+                for (let i = 0; i < companies.length; i++) {
+                    if (company_default === companies[i].id)
+                        itemSelected = 'selected="selected" style="font-weight:bold"'
+                    else
+                        itemSelected = ''
+
+                    if (companies[i].active_flag == false || companies[i].company_document_status != "approved")
+                        itemDisabled = 'disabled="disabled"';
+                    else
+                        itemDisabled = '';
+
+                    if (companies[i].company_type == '1') {
+                        $('#company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
+                    } else {
+                        if(companies[i].name.length>20)
+                            companyName = companies[i].name.substring(0,20)+'...';
+                        else
+                            companyName = companies[i].name;
+                        $('#company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
+                    }
+                }
+                $('#company-select').addClass('d-sm-flex');
+                return data;
+
+            } else {
+                $(".content-error").show();
+                $('#company-select, .page-content').hide();
+                loadingOnScreenRemove();
+            }
+        }
+    });
+    return ajax
+}
+
+
+function updateCompanyDefault() {
+    var company_id = $('#company-navbar').val()
+    // var company_name = $('#company-navbar').find('option:selected').text()
+    var ajax = $.ajax({
+        method: 'POST',
+        url: '/api/core/company-default',
+        data:{company_id:company_id},
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(data) {
+            getCompaniesNoSession();
+            return;
+            // $('.company_name').val( company_name );
+            // var all_companies = getCompaniesNoSession();
+            // return all_companies['company_default'];
+        },
+    });
+    return ajax;
+}
+

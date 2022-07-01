@@ -1,13 +1,27 @@
-function updateAfterChangeCompany(){
+$('#company-navbar').change(function () {
     $("#type-products").find('option').not(':first').remove();
-    renderSiriusSelect("#type-products");
-    $("#select-projects-1").find('option').remove();
-    $("#select-projects-2").find('option').remove();
-    $("#projects-list select").prop("disabled", true).addClass("disabled");
-    $("#projects-list, .box-projects").addClass("d-none");
-    localStorage.removeItem('filtersApplied')
-    window.getProjects('n');
-}
+    updateCompanyDefault().done(function(data1){
+        getCompaniesNoSession().done(function(data2){
+            renderSiriusSelect("#type-products");
+            $("#select-projects-1").find('option').remove();
+            $("#select-projects-2").find('option').remove();
+            $("#projects-list select").prop("disabled", true).addClass("disabled");
+            $("#projects-list, .box-projects").addClass("d-none");
+            localStorage.removeItem('filtersApplied')
+            window.getProjects('n');
+        });
+    });
+});
+// function updateAfterChangeCompany(){
+//     $("#type-products").find('option').not(':first').remove();
+//     renderSiriusSelect("#type-products");
+//     $("#select-projects-1").find('option').remove();
+//     $("#select-projects-2").find('option').remove();
+//     $("#projects-list select").prop("disabled", true).addClass("disabled");
+//     $("#projects-list, .box-projects").addClass("d-none");
+//     localStorage.removeItem('filtersApplied')
+//     window.getProjects('n');
+// }
 
 jQuery(function () {
     let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
@@ -49,7 +63,7 @@ jQuery(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&status=active&company="+ sessionStorage.getItem('company_default'),
+            url: "/api/projects?select=true&status=active&company="+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
             data: {
                 status: "active",
             },
@@ -397,5 +411,7 @@ jQuery(function () {
         updateProducts();
     });
 
-    window.getProjects();
+    getCompaniesNoSession().done( function (data){
+        window.getProjects();
+    });
 });

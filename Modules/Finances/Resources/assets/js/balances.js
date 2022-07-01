@@ -36,7 +36,7 @@ window.updateBalances = function(company_code = '') {
 
     loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
 
-    let companyCode = company_code ? company_code :  sessionStorage.getItem('company_default'); //$("#transfers_company_select option:selected").val();
+    let companyCode = company_code ? company_code :  $('#company-navbar').val();//sessionStorage.getItem('company_default'); //$("#transfers_company_select option:selected").val();
     $.ajax({
         url: "/api/finances/getbalances",
         type: "GET",
