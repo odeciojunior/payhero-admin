@@ -1496,7 +1496,7 @@ function salesStatus(st) {
                 </section>
             `;
 
-            if( total !== 0 ) {
+            if( total !== "0" ) {
                 $("#block-status").html(statusHtml);
                 $('.new-sell-graph').html('<canvas id=sales-graph></canvas>');
                 let labels = [...chart.labels];
