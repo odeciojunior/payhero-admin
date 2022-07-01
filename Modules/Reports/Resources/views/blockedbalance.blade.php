@@ -67,8 +67,8 @@
             <div class="row align-items-center justify-content-between top-inner-reports">
                 <div class="col-8">
                     <h1 class="d-flex title-system">
-                        <span class="box-title ico-blocked">bloqueado</span>
-                        Saldo bloqueado
+                        <span class="box-title ico-blocked">retido</span>
+                        Saldo retido
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
                 </div>
@@ -91,7 +91,7 @@
                         @if(!auth()->user()->hasRole('attendance'))
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border pink mb-10">
-                                    <span class="title">Total bloqueado</span>
+                                    <span class="title">Total retido</span>
                                     <div class="d-flex">
                                         <strong class="number" id="commission_blocked">0</strong>
                                     </div>
@@ -268,7 +268,7 @@
                         </div>
                         <div class="col-md-4">
                             <h6 class="text-center orange-gradient">
-                                <i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Saldo bloqueado
+                                <i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Saldo retido
                             </h6>
                             <h4 id="commission_blocked" class="number text-center orange-gradient"></h4>
                         </div>

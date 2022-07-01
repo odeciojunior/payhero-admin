@@ -215,7 +215,7 @@
                                     <div class="card inner secondary-blocks" id="card-blockeds">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
-                                                <strong>Bloqueado</strong>
+                                                <strong>Retido</strong>
                                             </h5>
                                             <a href="{{ route('reports.blockedbalance') }}" class="box-link silver">
                                                 <span>Acessar&nbsp&nbsp</span>
