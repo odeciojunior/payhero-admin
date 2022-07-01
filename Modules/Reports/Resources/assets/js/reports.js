@@ -224,7 +224,7 @@ $(function () {
 
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&status=approved",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
