@@ -98,7 +98,7 @@ $(document).ready(function () {
 
         let updateResume = true;
         loadOnTable('#body-table-coupons', '.table-coupons');
-        $('#body-table-coupons').html(skeLoad);
+        //$('#body-table-coupons').html(skeLoad);
 
         if (link == null) {
             link = '/api/reports/coupons?' + getFilters(true).substr(1);
