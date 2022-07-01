@@ -122,10 +122,10 @@ class ReportFinanceService
                 'values' => $comissionData
             ],
             'total' => foxutils()->formatMoney($total / 100),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -182,10 +182,10 @@ class ReportFinanceService
                 'values' => $comissionData
             ],
             'total' => foxutils()->formatMoney($total / 100),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -249,10 +249,10 @@ class ReportFinanceService
                 'values' => $comissionData
             ],
             'total' => foxutils()->formatMoney($total / 100),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -316,10 +316,10 @@ class ReportFinanceService
                 'values' => $comissionData
             ],
             'total' => foxutils()->formatMoney($total / 100),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -383,10 +383,10 @@ class ReportFinanceService
                 'values' => $comissionData
             ],
             'total' => foxutils()->formatMoney($total / 100),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -439,10 +439,10 @@ class ReportFinanceService
                 'values' => $comissionData
             ],
             'total' => foxutils()->formatMoney($total / 100),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -547,10 +547,10 @@ class ReportFinanceService
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -607,10 +607,10 @@ class ReportFinanceService
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -676,10 +676,10 @@ class ReportFinanceService
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -745,10 +745,10 @@ class ReportFinanceService
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -814,10 +814,10 @@ class ReportFinanceService
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -875,10 +875,10 @@ class ReportFinanceService
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -985,10 +985,10 @@ class ReportFinanceService
             ],
             'total' => $total,
             'count' => $countCashbacks,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -1046,10 +1046,10 @@ class ReportFinanceService
             ],
             'total' => $total,
             'count' => $countCashbacks,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -1116,10 +1116,10 @@ class ReportFinanceService
             ],
             'total' => $total,
             'count' => $countCashbacks,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -1186,10 +1186,10 @@ class ReportFinanceService
             ],
             'total' => $total,
             'count' => $countCashbacks,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -1256,10 +1256,10 @@ class ReportFinanceService
             ],
             'total' => $total,
             'count' => $countCashbacks,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -1318,10 +1318,10 @@ class ReportFinanceService
             ],
             'total' => $total,
             'count' => $countCashbacks,
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 

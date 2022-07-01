@@ -119,10 +119,10 @@ class ReportSaleService
                 'values' => $saleData
             ],
             'total' => number_format($resume->count(), 0, '.', '.'),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -174,10 +174,10 @@ class ReportSaleService
                 'values' => $saleData
             ],
             'total' => number_format($sales->count(), 0, '.', '.'),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -235,10 +235,10 @@ class ReportSaleService
                 'values' => $saleData
             ],
             'total' => number_format($resume->count(), 0, '.', '.'),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -297,10 +297,10 @@ class ReportSaleService
                 'values' => $saleData
             ],
             'total' => number_format($sales->count(), 0, '.', '.'),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -359,10 +359,10 @@ class ReportSaleService
                 'values' => $saleData
             ],
             'total' => number_format($resume->count(), 0, '.', '.'),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 
@@ -413,10 +413,10 @@ class ReportSaleService
                 'values' => $saleData
             ],
             'total' => number_format($resume->count(), 0, '.', '.'),
-            'variation' => [
-                'value' => $variation.'%',
-                'color' => $color
-            ]
+            // 'variation' => [
+            //     'value' => $variation.'%',
+            //     'color' => $color
+            // ]
         ];
     }
 

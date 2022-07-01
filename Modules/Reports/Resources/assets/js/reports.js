@@ -38,6 +38,13 @@ $(function () {
             success: function success(response) {
                 let { chart, count, total, variation } = response.data;
 
+                // <em class="${variation.color} visible">
+                //     <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                //         <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
+                //     </svg>
+                //     ${variation.value}
+                // </em>
+
                 if( count > 0 ) {
                     cashHtml = `
                         <div class="container d-flex value-price">
@@ -45,12 +52,6 @@ $(function () {
                                 <span class="currency">R$ </span>
                                 ${total}
                             </h4>
-                            <em class="${variation.color} visible">
-                                <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
-                                </svg>
-                                ${variation.value}
-                            </em>
                         </div>
                         <div class="new-graph-cashback graph"></div>
                     `;
@@ -106,6 +107,13 @@ $(function () {
             success: function success(response) {
                 let { chart, total, variation } = response.data;
 
+                // <em class="${variation.color} visible">
+                //     <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                //         <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
+                //     </svg>
+                //     ${variation.value}
+                // </em>
+
                 if( total !== "0,00" ) {
                     pendHtml = `
                         <div class="container d-flex value-price">
@@ -113,12 +121,6 @@ $(function () {
                                 <span class="currency">R$ </span>
                                 ${total}
                             </h4>
-                            <em class="${variation.color} visible">
-                                <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
-                                </svg>
-                                ${variation.value}
-                            </em>
                         </div>
                         <div class="new-graph-pending graph"></div>
                     `;
@@ -171,6 +173,13 @@ $(function () {
             success: function success(response) {
                 let { chart, total, variation } = response.data;
 
+                // <em class="${variation.color} visible" style="display: none;">
+                //     <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                //         <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
+                //     </svg>
+                //     ${variation.value}
+                // </em>
+
                 if( total !== 'R$ 0,00' ) {
                     comissionhtml = `
                         <div class="container d-flex value-price">
@@ -178,12 +187,6 @@ $(function () {
                                 <span class="currency">R$ </span>
                                 ${removeMoneyCurrency(total)}
                             </h4>
-                            <em class="${variation.color} visible" style="display: none;">
-                                <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
-                                </svg>
-                                ${variation.value}
-                            </em>
                         </div>
                         <div class="new-graph graph"></div>
                     `;
@@ -236,18 +239,19 @@ $(function () {
             success: function success(response) {
                 let { chart, total, variation } = response.data;
 
+                // <em class="${variation.color} visible">
+                //     <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                //         <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
+                //     </svg>
+                //     ${variation.value}
+                // </em>
+
                 if( total !== 0 ) {
                     salesHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='sales' class=" font-size-24 bold">
                                 ${total}
                             </h4>
-                            <em class="${variation.color} visible">
-                                <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
-                                </svg>
-                                ${variation.value}
-                            </em>
                         </div>
                         <div class="new-graph-sell graph"></div>
                     `;
@@ -299,7 +303,7 @@ $(function () {
             },
             success: function success(response) {
                 let { total, products } = response.data;
-                
+
                 if(total) {
                     $("#block-products").prepend(`
                         <footer class="footer-products scroll-212">
@@ -643,7 +647,7 @@ $(function () {
                     let conversionArr   = [];
                     let accessArr       = [];
                     let statesArr       = [];
-                    
+
                     $.each(response.data, function(i, v) {
                         regionArr.push(v);
                     });
@@ -655,7 +659,7 @@ $(function () {
                         $(".conversion-colors").append(`<li>${regionArr[i].conversion}%</li>`);
                         $(".states").append(`<dt>${regionArr[i].region}</dt>`);
                     }
-                    
+
                     graphRegions(statesArr, conversionArr, accessArr);
 
                 } else {

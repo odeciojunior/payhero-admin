@@ -382,6 +382,7 @@ class ReportMarketingService
                 ->whereIn('checkouts.status_enum', [ Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED ])
                 ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                 ->where('checkouts.project_id', $projectId)
+                ->whereNotNull('checkouts.ip_state')
                 ->groupBy('region')
                 ->get()
                 ->toArray();
