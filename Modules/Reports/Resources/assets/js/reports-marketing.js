@@ -1,11 +1,12 @@
 $(function() {
     loadingOnScreen();
     exportReports();
+    
+    loadStores();
 
     changeCompany();
     changeCalendar();
 
-    loadStores();
 
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
@@ -17,13 +18,14 @@ $(function() {
         loadBrazilMap();
     });
 
-    loadingOnScreenRemove();
+    //loadingOnScreenRemove();
 });
 
 let resumeUrl = '/api/reports/resume';
 let mktUrl = '/api/reports/marketing';
 
 function reload() {
+    loadingOnScreenRemove();
     loadResume();
     loadCoupons();
     loadDevices();
@@ -326,6 +328,7 @@ function loadStores() {
             Accept: "application/json",
         },
         error: function error(response) {
+            loadingOnScreenRemove();
             $("#modal-content").hide();
             errorAjaxResponse(response);
         },
