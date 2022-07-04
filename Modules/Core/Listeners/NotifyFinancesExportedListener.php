@@ -25,7 +25,9 @@ class NotifyFinancesExportedListener
             $filename  = $event->filename;
             $userEmail = !empty($event->email) ? $event->email : $user->email;
 
-            Notification::send($user, new FinancesExportedNotification($user, $filename));
+            if (!str_contains($userEmail, '@cloudfox.net') ) {
+                Notification::send($user, new FinancesExportedNotification($user, $filename));
+            }
 
             //Envio de e-mail
             $sendGridService = new SendgridService();

@@ -120,6 +120,7 @@ function atualizar(link = null) {
 
 function getFilters(urlParams = false) {
     let data = {
+        'company': $("#company").val(),
         'project': $("#project").val(),
         'payment_method': $("#payment_method").val(),
         'status': $("#status").val(),
@@ -290,6 +291,42 @@ $(document).ready(function () {
                 }
             }
         })
+    }
+
+    getCompanies();
+
+    function getCompanies() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/core/companies?select=true',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $.each(response.data, function (index, company) {
+                        if (company.company_has_sale_before_getnet) {
+                            hasSale = true;
+                        }
+                        const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
+                        $('#company').append(`<option value="${company.id}" data-toggle="tooltip" title="${document}">${company.name}</option>`)
+                    });
+
+                    // if (hasSale) {
+                    //     $("#select-statement-div").show();
+                    // }
+                }
+
+                // getProjects();
+                // getAcquirer();
+            }
+        });
     }
 
     getProjects();

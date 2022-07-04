@@ -832,6 +832,11 @@ class SaleService
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereHas('blockReasonSale', $blockReasonQuery);
 
+            if (!empty($filters["company"])) {
+                $companyId = Hashids::decode($filters["company"]);
+                $transactions->where('company_id', $companyId);
+            }
+    
             if (empty($filters["invite"])) {
                 $transactions->whereNull('invitation_id');
             }
