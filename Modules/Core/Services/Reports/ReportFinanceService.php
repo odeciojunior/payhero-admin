@@ -1504,7 +1504,6 @@ class ReportFinanceService
     {
         try {
             $cacheName = 'withdrawals-data-';
-            cache()->forget($cacheName);
             return cache()->remember($cacheName, 300, function() {
                 date_default_timezone_set('America/Sao_Paulo');
 
@@ -1525,9 +1524,24 @@ class ReportFinanceService
                 $dateStart = Carbon::parse($dateStart);
                 $dateEnd = Carbon::parse($dateEnd);
 
+                $portugueseMonths = [
+                    'Jan' => 'Jan',
+                    'Feb' => 'Fev',
+                    'Mar' => 'Mar',
+                    'Apr' => 'Abr',
+                    'May' => 'Mai',
+                    'Jun' => 'Jun',
+                    'Jul' => 'Jul',
+                    'Aug' => 'Ago',
+                    'Sep' => 'Set',
+                    'Oct' => 'Out',
+                    'Nov' => 'Nov',
+                    'Dec' => 'Dez'
+                ];
+
                 $labelList = [];
                 while ($dateStart->lessThanOrEqualTo($dateEnd)) {
-                    array_push($labelList, $dateStart->format('M'));
+                    array_push($labelList, $portugueseMonths[$dateStart->format('M')]);
                     $dateStart = $dateStart->addMonths(1);
                 }
 
