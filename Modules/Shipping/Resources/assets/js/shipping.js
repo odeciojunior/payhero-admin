@@ -589,7 +589,7 @@ $(document).ready(function () {
                     };
                 },
                 method: "GET",
-                url: "/api/plans/user-plans?variants=",
+                url: "/api/plans/user-plans",
                 delay: 300,
                 dataType: 'json',
                 headers: {

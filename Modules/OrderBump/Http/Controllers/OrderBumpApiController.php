@@ -7,11 +7,11 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\OrderBumpRule;
 use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Shipping;
 use Modules\Core\Services\CacheService;
 use Modules\OrderBump\Http\Requests\OrderBumpRequest;
 use Modules\OrderBump\Transformers\OrderBumpResource;
 use Modules\OrderBump\Transformers\OrderBumpShowResource;
-use Vinkla\Hashids\Facades\Hashids;
 
 class OrderBumpApiController extends Controller
 {
@@ -19,14 +19,11 @@ class OrderBumpApiController extends Controller
     public function index(Request $request)
     {
         try {
-
-            $orderBumpModel = new OrderBumpRule();
-
             $data = $request->all();
 
-            $projectId = current(Hashids::decode($data['project_id']));
+            $projectId = hashids_decode($data['project_id']);
 
-            $rules = $orderBumpModel->where('project_id', $projectId)
+            $rules = OrderBumpRule::where('project_id', $projectId)
                 ->orderByDesc('id')
                 ->paginate(5);
 
@@ -40,11 +37,9 @@ class OrderBumpApiController extends Controller
     public function store(OrderBumpRequest $request)
     {
         try {
-            $orderBumpModel = new OrderBumpRule();
-
             $data = $request->getData();
 
-            $orderBumpModel->create($data);
+            OrderBumpRule::create($data);
 
             CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $data['project_id']);
 
@@ -57,13 +52,26 @@ class OrderBumpApiController extends Controller
     public function show($id)
     {
         try {
-            $orderBumpModel = new OrderBumpRule();
-            $plansModel = new Plan();
+            $id = hashids_decode($id);
+            $rule = OrderBumpRule::find($id);
 
-            $id = current(Hashids::decode($id));
-            $rule = $orderBumpModel->find($id);
+            $selectPlans = ['id', 'name', 'description'];
+            if ($rule->use_variants) {
+                $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants');
+                $selectPlans[] = $rawVariants;
+            }
 
-            $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants');
+            if ($rule->apply_on_shipping[0] === 'all') {
+                $rule->apply_on_shipping = collect()->push((object)[
+                    'id' => 'all',
+                    'name' => 'Qualquer frete',
+                    'information' => '',
+                ]);
+            } else {
+                $rule->apply_on_shipping = Shipping::select('id', 'name', 'information')
+                    ->whereIn('id', $rule->apply_on_shipping)
+                    ->get();
+            }
 
             if ($rule->apply_on_plans[0] === 'all') {
                 $rule->apply_on_plans = collect()->push((object)[
@@ -73,11 +81,11 @@ class OrderBumpApiController extends Controller
                     'variants' => 0,
                 ]);
             } else {
-                $rule->apply_on_plans = $plansModel->select('id', 'name', 'description', $rawVariants)
+                $rule->apply_on_plans = Plan::select($selectPlans)
                     ->whereIn('id', $rule->apply_on_plans)
                     ->get();
             }
-            $rule->offer_plans = $plansModel->select('id', 'name', 'description', $rawVariants)
+            $rule->offer_plans = Plan::select($selectPlans)
                 ->whereIn('id', $rule->offer_plans)
                 ->get();
 
@@ -90,12 +98,10 @@ class OrderBumpApiController extends Controller
     public function update($id, OrderBumpRequest $request)
     {
         try {
-            $orderBumpModel = new OrderBumpRule();
-
             $data = $request->getData();
-            $id = current(Hashids::decode($id));
+            $id = hashids_decode($id);
 
-            $rule = $orderBumpModel->find($id);
+            $rule = OrderBumpRule::find($id);
             $rule->update($data);
 
             CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $rule->project_id);
@@ -111,11 +117,9 @@ class OrderBumpApiController extends Controller
     public function destroy($id)
     {
         try {
-            $orderBumpModel = new OrderBumpRule();
+            $id = hashids_decode($id);
 
-            $id = current(Hashids::decode($id));
-
-            $rule = $orderBumpModel->find($id);
+            $rule = OrderBumpRule::find($id);
             $projectId = $rule->project_id;
             $rule->delete();
 

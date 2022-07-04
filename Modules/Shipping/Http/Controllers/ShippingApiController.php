@@ -2,9 +2,9 @@
 
 namespace Modules\Shipping\Http\Controllers;
 
-use Composer\Cache;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -496,6 +496,28 @@ class ShippingApiController extends Controller
         }
 
         return true;
+    }
+
+    public function getShippings(Request $request): JsonResponse
+    {
+        try {
+            $data = (object)$request->all();
+            $projectId = hashids_decode($data->project_id);
+
+            $shippings = Shipping::select(['id', 'name', 'information', 'type'])
+                ->where('status', Shipping::STATUS_ACTIVE)
+                ->where('project_id', $projectId)
+                ->paginate(10);
+
+            foreach ($shippings as &$shipping){
+                $shipping->id = hashids_encode($shipping->id);
+            }
+
+            return response()->json($shippings);
+
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Erro ao listar fretes'], 400);
+        }
     }
 
     private function getDecodedPlanIds(array $encodedIds)
