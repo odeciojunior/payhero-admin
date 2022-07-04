@@ -70,6 +70,7 @@ class ShopifyService
     {
         if (!$this->cacheDir) {
             $cache = '/var/tmp';
+            //$cache = storage_path();
         } else {
             $cache = $this->cacheDir;
         }
