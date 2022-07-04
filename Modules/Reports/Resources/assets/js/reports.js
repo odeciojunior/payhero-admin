@@ -246,7 +246,7 @@ $(function () {
                 //     ${variation.value}
                 // </em>
 
-                if( total !== 0 ) {
+                if( total !== "0" ) {
                     salesHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='sales' class=" font-size-24 bold">
