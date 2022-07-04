@@ -579,6 +579,8 @@ function typePayments() {
             let pixNumber           = Number(pix.value.replace(',',''));
             const total             = [boletoNumber, creditCardNumber, pixNumber].map(Number).reduce((prev, value) => prev + value,0);
             
+            console.log(pixNumber);
+
             var SortArr = function (j) {
                 var arr = [];
                 for (var key in j) {
@@ -603,7 +605,7 @@ function typePayments() {
                     <div class="row container-payment tp-payment">
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0" style="display: ${credit_card.percentage == "0%" ? 'none': ''}">
+                                <div class="box-payment-option pad-0">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             ${
@@ -635,7 +637,7 @@ function typePayments() {
 
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0" style="display: ${pix.percentage == "0%" ? 'none': ''}">
+                                <div class="box-payment-option pad-0">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             ${
@@ -662,7 +664,7 @@ function typePayments() {
 
                         <div class="container">
                             <div class="data-holder b-bottom">
-                                <div class="box-payment-option pad-0" style="display: ${boleto.percentage == "0%" ? 'none': ''}">
+                                <div class="box-payment-option pad-0">
                                     <div class="col-payment grey box-image-payment ico-pay">
                                         <div class="box-ico">
                                             ${
