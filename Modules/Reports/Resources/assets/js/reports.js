@@ -877,7 +877,7 @@ $(function () {
                     </td>
                     `
 
-                if (response.data == '') {
+                if (response.data.length == 0) {
                     $("#card-origin .ske-load").hide();
                     $("#origins-table").html(td);
                     $("#pagination").html("");
