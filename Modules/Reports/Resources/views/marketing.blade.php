@@ -221,15 +221,12 @@
                                             <div class="brazil-map">
                                                 <div class="filter-brazil-map">
                                                     <div id="brazil-map-filter" class="radio-group">
-                                                        <input class="custom-radio-report" id="brazil_map_filter_sells" type="radio" name="brazil_map_filter" value="value" checked style="width: 70px"/>
-                                                        <label for="brazil_map_filter_sells" class="left-label">VENDAS</label>
-
-                                                        <input class="custom-radio-report" id="brazil_map_filter_density" type="radio" name="brazil_map_filter" value="density" style="width: 70px"/>
-                                                        <label for="brazil_map_filter_density" class="right-label">DENSIDADE</label>
+                                                        <input class="custom-radio-report" id="brazil_map_filter_density" type="radio" name="brazil_map_filter" value="density" checked style="width: 70px"/>
+                                                        <label for="brazil_map_filter_density" class="left-label">DENSIDADE</label>
+                                                        <input class="custom-radio-report" id="brazil_map_filter_sells" type="radio" name="brazil_map_filter" value="value" style="width: 70px"/>
+                                                        <label for="brazil_map_filter_sells" class="right-label">VENDAS</label>
                                                     </div>
                                                 </div>
-
-
                                                 <div>
                                                     <svg version="1.1" id="svg-map" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 450 460" enable-background="new 0 0 450 460" xml:space="preserve">
                                                         <g>

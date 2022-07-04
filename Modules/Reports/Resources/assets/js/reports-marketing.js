@@ -12,7 +12,7 @@ $(function() {
         $('input[name=daterange]').val(info.calendar);
     }
 
-    $("#brazil-map-filter").on("change", function(){
+    $("input[name='brazil_map_filter']").on("change", function(){
         $('.back-list').trigger('click');
         loadBrazilMap();
     });
@@ -894,7 +894,7 @@ function loadBrazilMap() {
             let maxValue = null;
             $.each(response.data, function(i, data){
                 if(maxValue == null) {
-                    if($("#map-filter").val() == 'density'){
+                    if($("input[name='brazil_map_filter']:checked").val() == 'density'){
                         maxValue = data.percentage;
                     }
                     else{
@@ -902,7 +902,7 @@ function loadBrazilMap() {
                     }
                 }
 
-                if($("#map-filter").val() == 'density'){
+                if($("input[name='brazil_map_filter']:checked").val() == 'density'){
                     setCustomMapCss('#state-' + data.state, maxValue, data.percentage);
                 }
                 else {
