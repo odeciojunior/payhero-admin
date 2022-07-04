@@ -270,7 +270,7 @@
                                                                 <h6 class="font-size-16 gray-700"> Origens </h6>
                                                             </header>
                                                             
-                                                            <div class="col-6 sirius-select-origin">
+                                                            <div class="col-6 sirius-select-origin" style="padding-right: 11px;">
                                                                 <select class="float-right sirius-select max-118" id='origin'>
                                                                     <option selected value="src">SRC</option>
                                                                     <option value="utm_source">UTM Source</option>

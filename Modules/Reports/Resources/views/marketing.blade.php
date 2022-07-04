@@ -688,10 +688,10 @@
                                             </div>
                                         </div>
                                         <div class="row" style="height: 90%;">
-                                            <div class="data-holder" style="height: 100%;">
+                                            <div class="data-holder" style="height: 100%; width: 100%;">
                                                 <div class="row" style="height: 100%;">
                                                     <div class="col-12">
-                                                        <table class="table-vendas table table-striped "style="width:100%;height: 100%; margin: auto;">
+                                                        <table class="table-vendas table table-striped "style="width:100%;margin: auto;">
                                                             <tbody id="origins-table"  class="origin-report" img-empty="{!! asset('/build/global/img/reports/img-nodata.svg')!!}">
                                                                 {{-- js carrega... --}}
                                                             </tbody>
