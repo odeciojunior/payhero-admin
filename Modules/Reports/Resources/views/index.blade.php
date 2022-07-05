@@ -70,8 +70,8 @@
                             <fieldset>
                                 <div class="form-group form-icons">
                                     <i class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         placeholder="E-mail para enviar os relatórios"
                                         class="modal-email"
                                     >
@@ -158,8 +158,8 @@
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
                                     <div class="inner-comission sc">
-                                        <div class="card inner card-payments sc" id="card-payments">
-                                            <header class="d-flex title-graph">
+                                        <div class="card inner card-payments pad-bottom-0 sc" id="card-payments">
+                                            <header class="d-flex title-graph mt-0">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Meios de pagamento</strong>
                                                 </h5>
@@ -206,7 +206,7 @@
                                                 </h5>
                                             </header>
                                             <footer id="block-orderbump" class="no-ske onPreLoad">
-                                                
+
                                             </footer>
                                         </div>
 

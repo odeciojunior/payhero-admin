@@ -602,7 +602,7 @@ h4.number{
 
 .card-conversion { height: 210px; }
 
-#type-payment.container-payment { height: 161px; }
+#type-payment.container-payment { height: 150px; }
 
 .card-devices { height: 211px; }
 .card-devices-mkt { height: 219px; }
@@ -707,10 +707,10 @@ h4.number{
     }
 }
 
-.bar-payment { max-width: 100px; padding-right: 5px; }
-.percentage-card { max-width: 49px; }
-.ico-pay { 
-    max-width: 111px; 
+.bar-payment { max-width: 90px; padding-right: 5px; }
+.percentage-card { max-width: 45px; }
+.ico-pay {
+    max-width: 111px;
     text-transform: capitalize;
 }
 
