@@ -1695,7 +1695,6 @@ h4.number{
     display: flex;
     height: 284px;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .list-states{
