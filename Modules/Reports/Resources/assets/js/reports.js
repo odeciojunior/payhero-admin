@@ -511,31 +511,34 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let { boleto, credit_card, pix } = response.data;
-                let boletoNumber        = Number(boleto.value.replace(',',''));
-                let creditCardNumber    = Number(credit_card.value.replace(',',''));
-                let pixNumber           = Number(pix.value.replace(',',''));
-                const total             = [boletoNumber, creditCardNumber, pixNumber].map(Number).reduce((prev, value) => prev + value,0);
-
-
-                var SortArr = function (j) {
-                    var arr = [];
-                    for (var key in j) {
-                        arr.push({ key: key, val: j[key] });
-                    }
-                    arr.sort(function (a, b) {
-                        var intA = parseFloat(a.val.value.replace(',','')),
-                            intB = parseFloat(b.val.value.replace(',',''));
-                        if (intA > intB)
-                            return -1;
-                        if (intA < intB)
-                            return 1;
-                        return 0;
-                    });
-                    return arr;
-                };
 
                 if( response.data.length !== 0 ) {
+                    let { boleto, credit_card, pix } = response.data;
+                    let boletoNumber        = Number(boleto.value.replace(',',''));
+                    let creditCardNumber    = Number(credit_card.value.replace(',',''));
+                    let pixNumber           = Number(pix.value.replace(',',''));
+                    const total             = [boletoNumber, creditCardNumber, pixNumber].map(Number).reduce((prev, value) => prev + value,0);
+
+
+                    var SortArr = function (j) {
+                        var arr = [];
+                        for (var key in j) {
+                            arr.push({ key: key, val: j[key] });
+                        }
+                        arr.sort(function (a, b) {
+                            var intA = parseFloat(a.val.value.replace(',','')),
+                                intB = parseFloat(b.val.value.replace(',',''));
+                            if (intA > intB)
+                                return -1;
+                            if (intA < intB)
+                                return 1;
+                            return 0;
+                        });
+                        return arr;
+                    };
+
+                    var arrJson = SortArr(response.data);
+                    
                     var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]);
 
                     paymentsHtml = `<div id="payment-type-items" class="custom-table pb-0 pt-0"><div class="row container-payment" id="type-payment">`;
