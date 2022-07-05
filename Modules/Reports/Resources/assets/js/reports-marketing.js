@@ -585,38 +585,40 @@ function loadOperationalSystems() {
                     </div>
                 `;
                 $('#container-operational-systems').html(stateNoData);
-            }
-
-            $.each(response.data, function(i, data){
-
-                if(data.percentage == '0.0%') {
-                    return true;
-                }
-
-                $('#container-operational-systems').append(`
-                    <div class="container">
-                        <div class="data-holder b-bottom">
-                            <div class="box-payment-option pad-0">
-                                <div class="col-payment grey box-image-payment">
-                                    <div class="box-ico">
-                                        <span class="ico-cart align-items justify-around">
-                                            ${getOperationalSystemSvg(data.description)}
-                                        </span>
-                                    </div> ${data.description}
-                                </div>
-                                <div class="box-payment-option option">
-                                    <div class="col-payment col-graph">
-                                        <div class="bar blue" style="width:${data.percentage || '0$'}">barrinha</div>
+            } else {
+                let systemsHtml = `<div class="contentSystems"></div>`
+                $('#container-operational-systems').html(systemsHtml);
+                $.each(response.data, function(i, data){
+    
+                    if(data.percentage == '0.0%') {
+                        return true;
+                    }
+    
+                    $('.contentSystems').append(`
+                        <div class="container">
+                            <div class="data-holder b-bottom">
+                                <div class="box-payment-option pad-0">
+                                    <div class="col-payment grey box-image-payment">
+                                        <div class="box-ico">
+                                            <span class="ico-cart align-items justify-around">
+                                                ${getOperationalSystemSvg(data.description)}
+                                            </span>
+                                        </div> ${data.description}
                                     </div>
-                                    <div class="col-payment">
-                                        <span class="money-td green bold grey font-size-14 value-percent">${data.percentage}</span>
+                                    <div class="box-payment-option option">
+                                        <div class="col-payment col-graph">
+                                            <div class="bar blue" style="width:${data.percentage || '0$'}">barrinha</div>
+                                        </div>
+                                        <div class="col-payment">
+                                            <span class="money-td green bold grey font-size-14 value-percent">${data.percentage}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `);
-            });
+                    `);
+                });
+            }
 
             function getOperationalSystemSvg(operationalSystem) {
 
