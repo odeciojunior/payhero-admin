@@ -43,9 +43,12 @@
                             </div>
 
                             <!-- BOTAO ADICIONAR LOJA -->
-                            <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none;" data-toggle="tooltip" data-placement="bottom" title="Adicionar Loja">
+{{--                            <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none;" data-toggle="tooltip" data-placement="bottom" title="Adicionar Loja">--}}
+{{--                                <span style="color: white; font-size: 35px" class='o-add-1'></span>--}}
+{{--                            </a>--}}
+                            <button class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none;" data-toggle="tooltip" data-placement="bottom" title="Adicionar Loja">
                                 <span style="color: white; font-size: 35px" class='o-add-1'></span>
-                            </a>
+                            </button>
 
                         </div>
                     </div>
@@ -68,6 +71,43 @@
         <div class="mx-60 px-0">
             Você pode reordenar suas lojas utilizando o arrastar e soltar
             <img src="build/layouts/projects/img/dragItem.svg" class="ml-5"/>
+        </div>
+    </div>
+
+    <div class="modal fade" id="new-project-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" style="width: 350px;max-width: 350px;" role="document">
+            <div class="modal-content s-border-radius">
+                <div class="modal-header simple-border-bottom px-20">
+                    <h4 class="col-12 modal-title text-center" style="color:#787878; font: normal normal bold 20px Muli;">Criar nova loja</h4>
+                    <button type="button" class="close" data-dismiss="modal" style="margin: -10px 0px -15px -5px;" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-20">
+                    <div class="container-fluid">
+                        <div class="row text-center">
+                            <div class="col-6 d-flex flex-column align-items-center">
+                                <a href="/projects/create" class="mb-2 new-product-icon">
+                                    <img src="{{ mix('build/global/img/svg/caixa-fisica.svg') }}" data-value="product_physical" alt="novo produto fisico">
+                                </a>
+                                <p>Landing Page</p>
+                            </div>
+                            <div class="col-6 d-flex flex-column align-items-center">
+                                <a href="//apps/shopify" class="mb-2 new-product-icon">
+                                    <img src="{{ mix('build/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
+                                </a>
+                                <p>Shopify</p>
+                            </div>
+                            <div class="col-6 d-flex flex-column align-items-center">
+                                <a href="/apps/woocommerce" class="mb-2 new-product-icon">
+                                    <img src="{{ mix('build/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
+                                </a>
+                                <p>Woocommerce</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
