@@ -2371,7 +2371,11 @@ h4.number{
     padding: 0 0 0px 16px;
 }
 
-#select_projects +  .sirius-select-text { min-height: 49px !important; }
+#select_projects +  .sirius-select-text { 
+    min-height: 49px !important; 
+    padding-bottom: 0 !important;
+    line-height: 27px !important;
+}
 
 /* .sirius-select-origin .sirius-select-container { width: 110px; } */
 .sirius-select-origin .sirius-select-options { top: 36px; }

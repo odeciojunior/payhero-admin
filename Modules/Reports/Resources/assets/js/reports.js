@@ -513,7 +513,7 @@ $(function () {
             success: function success(response) {
 
                 if( response.data.length !== 0 ) {
-                    var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]);
+                    var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]); 
 
                     paymentsHtml = `<div id="payment-type-items" class="custom-table pb-0 pt-0"><div class="row container-payment" id="type-payment">`;
                         arrJson.forEach(element => {
