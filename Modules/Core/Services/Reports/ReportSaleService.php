@@ -692,8 +692,13 @@ class ReportSaleService
                                     })
                                     ->join('transactions as transaction', function ($join) {
                                         $join->on('sales.id', '=', 'transaction.sale_id');
-                                        $join->where('checkout.status_enum', Checkout::STATUS_RECOVERED);
                                     })
+                                    ->where('sales.project_id', $projectId)
+                                    ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                    ->where('sales.status', Sale::STATUS_APPROVED)
+                                    ->whereIn('transaction.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                                    ->where('transaction.user_id', auth()->user()->account_owner_id)
+                                    ->whereNull('invitation_id')
                                     ->sum('transaction.value');
 
             return [
