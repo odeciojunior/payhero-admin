@@ -6,7 +6,7 @@ use Exception;
 use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\BrazilStatesService;
 use Vinkla\Hashids\Facades\Hashids;
@@ -126,33 +126,35 @@ class ReportMarketingService
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
 
-            $data = ProductPlanSale::select(DB::raw('product.photo, product.name, product.description, count(*) as sales_amount, sum(ifnull(transaction.value, 0)) as value'))
-                            ->join('products as product', function ($join) {
-                                $join->on('products_plans_sales.product_id', '=', 'product.id');
-                            })
-                            ->join('sales as sale', function ($join) {
-                                $join->on('products_plans_sales.sale_id', '=', 'sale.id')
-                                        ->where('sale.status', Sale::STATUS_APPROVED);
-                            })
-                            ->join('transactions as transaction', function ($join) {
-                                $join->on('transaction.sale_id', '=', 'sale.id');
-                                $join->where('transaction.user_id', auth()->user()->account_owner_id);
-                            })
-                            ->whereBetween('sale.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                            ->where('sale.project_id', $projectId)
-                            ->where('transaction.user_id', auth()->user()->account_owner_id)
-                            ->groupBy('product.id')
-                            ->orderBy('value', 'DESC')
-                            ->limit(10)
-                            ->get()
-                            ->toArray();
+            $data = Plan::select(DB::raw('plans.id, plans.name, plans.description, count(*) as sales_amount, cast(sum(plan_sale.plan_value) as unsigned) as value'))
+                        ->with('products')
+                        ->join('plans_sales as plan_sale', function ($join) {
+                            $join->on('plan_sale.plan_id', 'plans.id');
+                        })
+                        ->join('sales as sale', function ($join) {
+                            $join->on('plan_sale.sale_id', 'sale.id');
+                        })
+                        ->join('transactions as transaction', function ($join) {
+                            $join->on('transaction.sale_id', 'sale.id');
+                        })
+                        ->where('sale.status', Sale::STATUS_APPROVED)
+                        ->whereIn('transaction.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                        ->whereBetween('sale.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                        ->where('sale.project_id', $projectId)
+                        ->where('transaction.user_id', auth()->user()->account_owner_id)
+                        ->whereNull('invitation_id')
+                        ->groupBy('plans.id')
+                        ->orderBy('value', 'DESC')
+                        ->limit(10)
+                        ->get();
 
-            foreach($data as &$product) {
-                $product['sales_amount'] = number_format($product['sales_amount'], 0, '.', '.');
-                $product['value'] = foxutils()->formatMoney($product['value'] / 100);
+            foreach($data as &$plan) {
+                $plan->photo = $plan->products()->first()->photo;
+                $plan->sales_amount = number_format($plan->sales_amount, 0, '.', '.');
+                $plan->value = foxutils()->formatMoney($plan->value);
             }
 
-            return $data;
+            return $data->toArray();
         });
     }
 

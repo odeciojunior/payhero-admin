@@ -296,7 +296,7 @@ function loadFrequenteSales() {
                                     <span class="desc-product">${item.name}</span>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between align-items" style="min-width: 100px;">
+                            <div class="d-flex justify-content-between align-items" style="min-width: 123px;">
                                 <div class="grey font-size-14">${item.sales_amount}</div>
                                 <div class="grey font-size-14 value"><strong>R$ ${newV}</strong></div>
                             </div>

@@ -62,6 +62,7 @@ class ReportSaleService
                 }
             });
         } catch(Exception $e) {
+            report($e);
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }
@@ -142,7 +143,7 @@ class ReportSaleService
         }
 
         $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
-        $resume = $sales->select(DB::raw("sales.id as sale, DATE(sales.{$dateFilter} as date"))->get();
+        $resume = $sales->select(DB::raw("sales.id as sale, DATE(sales.{$dateFilter}) as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
@@ -554,7 +555,7 @@ class ReportSaleService
                                             ->where('project_id', $projectId)
                                             ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                                             ->whereNull('invitation_id')
-                                            ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
+                                            ->where('sales.status', Sale::STATUS_APPROVED)
                                             ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
                                             ->sum('transactions.value');
 
@@ -691,8 +692,13 @@ class ReportSaleService
                                     })
                                     ->join('transactions as transaction', function ($join) {
                                         $join->on('sales.id', '=', 'transaction.sale_id');
-                                        $join->where('checkout.status_enum', Checkout::STATUS_RECOVERED);
                                     })
+                                    ->where('sales.project_id', $projectId)
+                                    ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                    ->where('sales.status', Sale::STATUS_APPROVED)
+                                    ->whereIn('transaction.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                                    ->where('transaction.user_id', auth()->user()->account_owner_id)
+                                    ->whereNull('invitation_id')
                                     ->sum('transaction.value');
 
             return [
