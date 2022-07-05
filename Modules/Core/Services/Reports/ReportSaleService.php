@@ -19,10 +19,11 @@ class ReportSaleService
             $cacheName = 'sales-resume-'.json_encode($filters);
             return cache()->remember($cacheName, 300, function() use ($filters) {
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+                $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
 
                 $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
                             ->where('owner_id', auth()->user()->account_owner_id)
-                            ->whereBetween($filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+                            ->whereBetween($dateFilter, [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
                 if (!empty($filters['status'])) {
                     $salesModel = new Sale();
@@ -142,7 +143,7 @@ class ReportSaleService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
         $resume = $sales->select(DB::raw("sales.id as sale, DATE(sales.{$dateFilter}) as date"))->get();
 
         $saleData = [];
@@ -203,14 +204,14 @@ class ReportSaleService
             }
         }
 
-        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
         $resume = $sales->select(DB::raw("id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
             $saleDataValue = 0;
             foreach ($resume as $r) {
-                if ((Carbon::parse($r->date)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
+                if ((Carbon::parse($r->date)->format('d/m') == $label) || (Carbon::parse($r->date)->subdays(1)->format('d/m') == $label)) {
                     $saleDataValue += 1;
                 }
             }
@@ -263,7 +264,7 @@ class ReportSaleService
             }
         }
 
-        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
         $resume = $sales->select(DB::raw("id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
@@ -325,7 +326,7 @@ class ReportSaleService
             }
         }
 
-        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
         $resume = $sales->select(DB::raw("id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
@@ -381,7 +382,7 @@ class ReportSaleService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $dateFilter = $filters['status'] ?? '' == 'approved' ? 'end_date' : 'start_date';
+        $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
         $resume = $sales->select(DB::raw("sales.id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
