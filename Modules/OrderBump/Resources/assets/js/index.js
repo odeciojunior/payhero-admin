@@ -287,11 +287,11 @@ $(() => {
                     'Accept': 'application/json',
                 },
                 processResults: function (res) {
-                    if (res.current_page === 1) {
+                    if (res.meta.current_page === 1) {
                         let allObject = {
                             id: 'all',
                             name: `Qualquer frete`,
-                            description: ''
+                            information: ''
                         };
                         res.data.unshift(allObject);
                     }
@@ -301,7 +301,7 @@ $(() => {
                             return {id: obj.id, text: obj.name + (obj.information ? ' - ' + obj.information : '')};
                         }),
                         pagination: {
-                            'more': res.current_page !== res.last_page
+                            'more': res.meta.current_page !== res.meta.last_page
                         }
                     };
                 },

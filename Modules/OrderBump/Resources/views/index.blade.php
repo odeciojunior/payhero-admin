@@ -117,7 +117,7 @@
                             <label for="store-active-flag-order-bump">Status</label>
                             <br>
                             <label class="switch">
-                                <input type="checkbox" name="active_flag" id="store-active-flag-order-bump" checked>
+                                <input type="checkbox" name="active_flag" id="store-active-flag-order-bump" class="check" value="1" checked>
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -125,7 +125,7 @@
                             <label>Usar variantes</label>
                             <br>
                             <label class="switch">
-                                <input type="checkbox" name="use_variants" class="use-variants-order-bump" checked>
+                                <input type="checkbox" name="use_variants" class="use-variants-order-bump check" value="1" checked>
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -193,7 +193,7 @@
                             <label for="update-active-flag-order-bump">Status</label>
                             <br>
                             <label class="switch">
-                                <input type="checkbox" name="active_flag" id="update-active-flag-order-bump">
+                                <input type="checkbox" name="active_flag" id="update-active-flag-order-bump" class="check">
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -201,7 +201,7 @@
                             <label>Usar variantes</label>
                             <br>
                             <label class="switch">
-                                <input type="checkbox" name="use_variants" class="use-variants-order-bump">
+                                <input type="checkbox" name="use_variants" class="use-variants-order-bump check">
                                 <span class="slider round"></span>
                             </label>
                         </div>

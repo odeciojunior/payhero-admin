@@ -16,6 +16,7 @@ use Modules\Core\Services\CacheService;
 use Modules\Shipping\Http\Requests\ShippingStoreRequest;
 use Modules\Shipping\Http\Requests\ShippingUpdateRequest;
 use Modules\Shipping\Transformers\ShippingResource;
+use Modules\Shipping\Transformers\ShippingSelectResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -498,7 +499,7 @@ class ShippingApiController extends Controller
         return true;
     }
 
-    public function getShippings(Request $request): JsonResponse
+    public function getShippings(Request $request)
     {
         try {
             $data = (object)$request->all();
@@ -509,12 +510,7 @@ class ShippingApiController extends Controller
                 ->where('project_id', $projectId)
                 ->paginate(10);
 
-            foreach ($shippings as &$shipping){
-                $shipping->id = hashids_encode($shipping->id);
-            }
-
-            return response()->json($shippings);
-
+            return ShippingSelectResource::collection($shippings);
         } catch (Exception $e) {
             return response()->json(['message' => 'Erro ao listar fretes'], 400);
         }

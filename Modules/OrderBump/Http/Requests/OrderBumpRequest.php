@@ -39,7 +39,7 @@ class OrderBumpRequest extends FormRequest
 
         $data['project_id'] = hashids_decode($data['project_id']);
 
-        if(isset( $data['apply_on_shipping'])) {
+        if(!isset( $data['apply_on_shipping'])) {
             $data['apply_on_shipping'] = ['all'];
         }
         if (!in_array('all', $data['apply_on_shipping'])) {
