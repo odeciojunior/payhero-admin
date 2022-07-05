@@ -144,9 +144,9 @@
                                                     <option value="pending">Pendentes</option>
                                                     <option value="canceled">Canceladas</option>
                                                     <option value="refused">Recusadas</option>
-                                                    <option value="blacklist">Reembolsos</option>
+                                                    <option value="refunded">Reembolsos</option>
                                                     <option value="charge_back">Chargebacks</option>
-                                                    <option value="">Outros</option>
+                                                    <option value="others">Outros</option>
                                                 </select>
                                             </div>
                                         </div>
