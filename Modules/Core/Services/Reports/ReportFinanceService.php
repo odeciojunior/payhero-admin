@@ -1504,6 +1504,7 @@ class ReportFinanceService
     {
         try {
             $cacheName = 'withdrawals-data-';
+            cache()->forget($cacheName);
             return cache()->remember($cacheName, 300, function() {
                 date_default_timezone_set('America/Sao_Paulo');
 
@@ -1538,16 +1539,17 @@ class ReportFinanceService
                     'Nov' => 'Nov',
                     'Dec' => 'Dez'
                 ];
-
                 $labelList = [];
+                $portugueseLabelList = [];
                 while ($dateStart->lessThanOrEqualTo($dateEnd)) {
-                    array_push($labelList, $portugueseMonths[$dateStart->format('M')]);
+                    array_push($labelList, $dateStart->format('M'));
+                    array_push($portugueseLabelList, $portugueseMonths[$dateStart->format('M')]);
                     $dateStart = $dateStart->addMonths(1);
                 }
 
-                $resumeWithdrawals = $withdrawals->select(DB::raw('value, DATE(release_date) as date'))->get();
+                $withdrawals = $withdrawals->select(DB::raw('value, DATE(release_date) as date'))->get();
 
-                $resumeTransactions = $transactions->select(DB::raw('transactions.value, DATE(sales.start_date) as date'))->get();
+                $transactions = $transactions->select(DB::raw('transactions.value, DATE(sales.start_date) as date'))->get();
 
                 $withdrawalData = [];
                 $transactionData = [];
@@ -1557,15 +1559,15 @@ class ReportFinanceService
                     $withdrawalDataValue = 0;
                     $transactionDataValue = 0;
 
-                    foreach ($resumeWithdrawals as $r) {
-                        if (Carbon::parse($r->date)->format('M') == $label) {
-                            $withdrawalDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
+                    foreach ($withdrawals as $withdrawal) {
+                        if (Carbon::parse($withdrawal->date)->format('M') == $label) {
+                            $withdrawalDataValue += intval(foxutils()->onlyNumbers($withdrawal->value));
                         }
                     }
 
-                    foreach ($resumeTransactions as $r) {
-                        if (Carbon::parse($r->date)->format('M') == $label) {
-                            $transactionDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
+                    foreach ($transactions as $transaction) {
+                        if (Carbon::parse($transaction->date)->format('M') == $label) {
+                            $transactionDataValue += intval(foxutils()->onlyNumbers($transaction->value));
                         }
                     }
 
@@ -1578,7 +1580,7 @@ class ReportFinanceService
 
                 return [
                     'chart' => [
-                        'labels' => $labelList,
+                        'labels' => array_reverse($portugueseLabelList),
                         'withdrawal' => [
                             'values' => $withdrawalData,
                             'total' => foxutils()->formatMoney($totalWithdrawal / 100)
