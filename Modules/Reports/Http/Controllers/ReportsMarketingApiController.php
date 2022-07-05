@@ -119,7 +119,7 @@ class ReportsMarketingApiController extends Controller
                 'date_range' => 'required',
                 'project_id' => 'required'
             ]);
-    
+
             $data = $request->all();
             $reportService = new ReportMarketingService();
             $coupons = $reportService->getResumeCoupons($data);
@@ -153,6 +153,7 @@ class ReportsMarketingApiController extends Controller
     public function getResumeOrigins(Request $request)
     {
         $request->validate([
+            'paginate' => 'required',
             'date_range' => 'required',
             'origin' => 'required',
             'project_id' => 'required',
@@ -164,7 +165,11 @@ class ReportsMarketingApiController extends Controller
         $orders = $reportService->getResumeOrigins($data);
 
         $cacheName = 'origins-resume-'.json_encode($data);
-        return cache()->remember($cacheName, 120, function() use ($orders) {
+        return cache()->remember($cacheName, 120, function() use ($orders, $data) {
+            if ($data['paginate'] === 'false') {
+                return SalesByOriginResource::collection($orders->get());
+            }
+
             return SalesByOriginResource::collection($orders->paginate(6));
         });
     }

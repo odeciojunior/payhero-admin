@@ -841,7 +841,7 @@ $(function () {
 
         // loadOnTable("#origins-table", ".table-vendas");
 
-        link = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
+        link = `${resumeUrl}/origins?paginate=false&date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
 
         $.ajax({
             url: link,
@@ -889,7 +889,7 @@ $(function () {
                     $("#card-origin .ske-load").hide();
                     $(".table-vendas").addClass("table-striped");
 
-                    pagination(response, "origins", updateSalesByOrigin);
+                    //pagination(response, "origins", updateSalesByOrigin);
                     $(".origin-report").show();
                 }
 
