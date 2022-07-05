@@ -535,99 +535,47 @@ $(function () {
                     return arr;
                 };
 
-                var arrJson = SortArr(response.data);
+                if( response.data.length !== 0 ) {
+                    var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]);
 
-                paymentsHtml = `
-                    <div id="payment-type-items" class="custom-table pb-0 pt-0">
-                        <div class="row container-payment" id="type-payment">
-                            <div class="container">
-                                <div class="data-holder b-bottom">
-                                    <div class="box-payment-option">
-                                        <div class="col-payment grey box-image-payment ico-pay">
-                                            <div class="box-ico">
-                                                ${
-                                                    arrJson[0].key == 'credit_card' ? card
-                                                    : arrJson[0].key == 'pix' ? cardPix
-                                                    : arrJson[0].key == 'boleto'? cardBoleto : ''
-                                                }
-                                            </div>${arrJson[0].key == 'credit_card' ? 'Cartão': arrJson[0].key}
-                                        </div>
+                    paymentsHtml = `<div id="payment-type-items" class="custom-table pb-0 pt-0"><div class="row container-payment" id="type-payment">`;
+                        arrJson.forEach(element => {
+                            paymentsHtml += `
+                                <div class="container">
+                                    <div class="data-holder b-bottom">
+                                        <div class="box-payment-option">
+                                            <div class="col-payment grey box-image-payment ico-pay">
+                                                <div class="box-ico">
+                                                    ${
+                                                        element[0] == 'credit_card' ? card
+                                                        : element[0] == 'pix' ? cardPix
+                                                        : element[0] == 'boleto'? cardBoleto : ''
+                                                    }
+                                                </div>${element[0] == 'credit_card' ? 'Cartão': element[0]}
+                                            </div>
 
-                                        <div class="box-payment-option option">
-                                            <div
-                                                class="col-payment grey percentage-card"
-                                                id='percent-credit-card'>
-                                                ${arrJson[0].val.percentage}
-                                            </div>
-                                            <div class="col-payment col-graph bar-payment">
-                                                <div class="bar blue" style="width: ${arrJson[0].val.percentage};">-</div>
-                                            </div>
-                                            <div class="col-payment end">
-                                                <span class="money-td green bold grey" id='credit-card-value'>
-                                                    R$ ${arrJson[0].val.value}
-                                                </span>
+                                            <div class="box-payment-option option">
+                                                <div
+                                                    class="col-payment grey percentage-card"
+                                                    id='percent-credit-card'>
+                                                    ${element[1].percentage}
+                                                </div>
+                                                <div class="col-payment col-graph bar-payment">
+                                                    <div class="bar blue" style="width: ${element[1].percentage};">-</div>
+                                                </div>
+                                                <div class="col-payment end">
+                                                    <span class="money-td green bold grey" id='credit-card-value'>
+                                                        R$ ${element[1].value}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="container">
-                                <div class="data-holder b-bottom">
-                                    <div class="box-payment-option">
-                                        <div class="col-payment grey box-image-payment ico-pay">
-                                            <div class="box-ico">
-                                                ${
-                                                    arrJson[1].key == 'credit_card' ? card
-                                                    : arrJson[1].key == 'pix' ? cardPix
-                                                    : arrJson[1].key == 'boleto'? cardBoleto : ''
-                                                }
-                                            </div> ${arrJson[1].key == 'credit_card' ? 'Cartão': arrJson[1].key}
-                                        </div>
-                                        <div class="box-payment-option option">
-                                            <div class="col-payment grey percentage-card" id='percent-values-pix'>
-                                                ${arrJson[1].val.percentage}
-                                            </div>
-                                            <div class="col-payment col-graph bar-payment">
-                                                <div class="bar pink" style="width: ${arrJson[1].val.percentage};">-</div>
-                                            </div>
-                                            <div class="col-payment end">
-                                                <span class="money-td green grey bold" id='pix-value'>R$ ${arrJson[1].val.value}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="container">
-                                <div class="data-holder b-bottom">
-                                    <div class="box-payment-option">
-                                        <div class="col-payment grey box-image-payment ico-pay">
-                                            <div class="box-ico">
-                                                ${
-                                                    arrJson[2].key == 'credit_card' ? card
-                                                    : arrJson[2].key == 'pix' ? cardPix
-                                                    : arrJson[2].key == 'boleto'? cardBoleto : ''
-                                                }
-                                            </div> ${arrJson[2].key == 'credit_card' ? 'Cartão': arrJson[2].key}
-                                        </div>
-                                        <div class="box-payment-option option">
-                                            <div class="col-payment grey percentage-card" id='percent-values-boleto'>
-                                                ${arrJson[2].val.percentage}
-                                            </div>
-                                            <div class="col-payment col-graph bar-payment">
-                                                <div class="bar purple" style="width: ${arrJson[2].val.percentage};">-</div>
-                                            </div>
-                                            <div class="col-payment end">
-                                                <span class="money-td green bold grey" id='boleto-value'>R$ ${arrJson[2].val.value}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                            `;
+                        });
+                    paymentsHtml += `</div></div>`;
 
-                if( total !== 0 ) {
                     $("#block-payments").html(paymentsHtml);
 
                 } else {
@@ -641,8 +589,8 @@ $(function () {
                             ${emptyGraph}
                             <p class="noone-data">Não há dados suficientes</p>
                         </div>
-
                     `;
+
                     $("#block-payments").html(paymentsHtml);
                 }
             }
