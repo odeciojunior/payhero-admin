@@ -53,6 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:abandonedcarts')->everyFifteenMinutes()->withoutOverlapping();
 
         $schedule->command('verify:pendingdomains')->hourly();
+        $schedule->command('verify:tickets')->withoutOverlapping()->hourly();
 
         $schedule->command('command:checkUpdateCompanyGetnet')->sundays()->at('05:00');
         $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('06:30');
@@ -89,7 +90,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:update-user-level')->dailyAt('07:00');
         $schedule->command('updateTransactionsReleaseDate')->dailyAt('07:15');
         $schedule->command('update:currencyquotation')->dailyAt('07:20');
-        $schedule->command('verify:tickets') ->dailyAt('07:30');
 
         $schedule->command('email:notify-pending-document')->dailyAt('08:00');
         $schedule->command('notify:mediation')->dailyAt('08:30');

@@ -121,24 +121,39 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                $("#select_projects_edit").val(response.data.project_id);
-                $('#integration_id').val(response.data.id);
-                $("#url_api_edit").val(response.data.url_api);
 
-                $("#boleto_generated_edit").val(response.data.boleto_generated);
-                $("#boleto_generated_edit").prop('checked', $("#boleto_generated_edit").val() == '1');
+                const integration = response.data;
 
-                $("#boleto_paid_edit").val(response.data.boleto_paid);
-                $("#boleto_paid_edit").prop('checked', $("#boleto_paid_edit").val() == '1');
+                $("#select_projects_edit").val(integration.project_id);
+                $('#integration_id').val(integration.id);
+                $("#url_api_edit").val(integration.url_api);
 
-                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
-                $("#credit_card_refused_edit").prop('checked', $("#credit_card_refused_edit").val() == '1');
+                $("#boleto_generated_edit").val(integration.boleto_generated)
+                    .prop('checked', integration.boleto_generated === 1);
 
-                $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                $("#credit_card_paid_edit").prop('checked', $("#credit_card_paid_edit").val() == '1');
+                $("#boleto_paid_edit").val(integration.boleto_paid)
+                    .prop('checked', integration.boleto_paid === 1);
 
-                $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                $("#abandoned_cart_edit").prop('checked', $("#abandoned_cart_edit").val() == '1');
+                $("#boleto_expired_edit").val(integration.boleto_expired)
+                    .prop('checked', integration.boleto_expired === 1);
+
+                $("#pix_generated_edit").val(integration.pix_generated)
+                    .prop('checked', integration.pix_generated === 1);
+
+                $("#pix_paid_edit").val(integration.pix_paid)
+                    .prop('checked', integration.pix_paid === 1);
+
+                $("#pix_expired_edit").val(integration.pix_expired)
+                    .prop('checked', integration.pix_expired === 1);
+
+                $("#credit_card_refused_edit").val(integration.credit_card_refused)
+                    .prop('checked', integration.credit_card_refused === 1);
+
+                $("#credit_card_paid_edit").val(integration.credit_card_paid)
+                    .prop('checked', integration.credit_card_paid === 1);
+
+                $("#abandoned_cart_edit").val(integration.abandoned_cart)
+                    .prop('checked', integration.abandoned_cart === 1);
             }
         });
     });

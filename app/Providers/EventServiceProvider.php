@@ -20,6 +20,7 @@ use Modules\Core\Events\NotifyUserAchievementEvent;
 use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Events\PixExpiredEvent;
 use Modules\Core\Events\ReleasedBalanceEvent;
+use Modules\Core\Events\ReportanaTrackingEvent;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
 use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
@@ -69,6 +70,7 @@ use Modules\Core\Listeners\NotifyWithdrawalsExportedListener;
 use Modules\Core\Listeners\PixExpiredSendEmailListener;
 use Modules\Core\Listeners\PixExpiredUnicodropListener;
 use Modules\Core\Listeners\ReleasedBalanceNotifyUserListener;
+use Modules\Core\Listeners\ReportanaSaleListener;
 use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\Sac\NotifyTicketClosedListener;
 use Modules\Core\Listeners\Sac\NotifyTicketMediationListener;
@@ -104,6 +106,7 @@ class EventServiceProvider extends ServiceProvider
         BilletExpiredEvent::class => [
             BilletExpiredWhatsapp2Listener::class,
             IntegrationOrderCancelListener::class,
+            ReportanaSaleListener::class,
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
@@ -217,6 +220,7 @@ class EventServiceProvider extends ServiceProvider
             SakPixExpiredListener::class,
             PixExpiredUnicodropListener::class,
             IntegrationOrderCancelListener::class,
+            ReportanaSaleListener::class,
         ],
         CheckTransactionReleasedEvent::class => [
             CheckTransactionReleasedListener::class,
@@ -226,6 +230,9 @@ class EventServiceProvider extends ServiceProvider
             CreateChargebackDebitListener::class,
             SendChargebackNotificationsListener::class,
             NotifyAntifraudChargebackListener::class,
+        ],
+        ReportanaTrackingEvent::class => [
+            ReportanaSaleListener::class,
         ]
     ];
 
