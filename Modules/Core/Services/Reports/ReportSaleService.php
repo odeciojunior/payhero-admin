@@ -443,6 +443,10 @@ class ReportSaleService
 
                 $total = $query->total;
 
+                if ($total == 0) {
+                    return [];
+                }
+
                 $totalCreditCard = $query->total_credit_card;
                 $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
 

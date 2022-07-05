@@ -167,10 +167,10 @@ class ReportsMarketingApiController extends Controller
         $cacheName = 'origins-resume-'.json_encode($data);
         return cache()->remember($cacheName, 120, function() use ($orders, $data) {
             if ($data['paginate'] === 'false') {
-                return SalesByOriginResource::collection($orders->get());
+                return SalesByOriginResource::collection($orders->limit(10)->get());
             }
 
-            return SalesByOriginResource::collection($orders->paginate(6));
+            return SalesByOriginResource::collection($orders->paginate(10));
         });
     }
 }

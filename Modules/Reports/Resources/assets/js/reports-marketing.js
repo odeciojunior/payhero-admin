@@ -1,7 +1,7 @@
 $(function() {
     loadingOnScreen();
     exportReports();
-    
+
     loadStores();
 
     changeCompany();
@@ -45,7 +45,7 @@ function loadOrigins(link = null) {
 
     // loadOnTable("#origins-table", ".table-vendas");
 
-    link = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
+    link = `${resumeUrl}/origins?paginate=true&date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
 
     $.ajax({
         url: link,
@@ -70,7 +70,7 @@ function loadOrigins(link = null) {
                     </p>
                 </td>
                 `
-            
+
             if (response.data.length == 0) {
                 $('.table-vendas').height('100%');
                 $("#card-origin .ske-load").hide();
@@ -589,11 +589,11 @@ function loadOperationalSystems() {
                 let systemsHtml = `<div class="contentSystems"></div>`
                 $('#container-operational-systems').html(systemsHtml);
                 $.each(response.data, function(i, data){
-    
+
                     if(data.percentage == '0.0%') {
                         return true;
                     }
-    
+
                     $('.contentSystems').append(`
                         <div class="container">
                             <div class="data-holder b-bottom">
