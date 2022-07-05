@@ -1542,6 +1542,12 @@ h4.number{
 }
 .container-devices .container { margin-bottom: 22px; }
 
+.contentSystems { width: 100%; }
+.contentSystems .container {
+    padding: 0;
+    margin-bottom: 12px;
+}
+
 .value-percent {
     width: 100%;
     display: block;
@@ -1687,7 +1693,6 @@ h4.number{
     display: flex;
     height: 284px;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .list-states{
