@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    loadingOnScreenRemove();
 
     // COMPORTAMENTOS DA JANELA
     getIntegrationNotazz();
@@ -24,7 +25,7 @@ $(document).ready(function () {
     });
 
     function getIntegrationNotazz() {
-
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: '/api/apps/notazz/' + extractIdFromPathName(),
@@ -35,9 +36,11 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
+                loadingOnScreenRemove();
             },
             success: function success(response, textStatus, request) {
                 $('#title_integration').html(response.data.project_name);
+                loadingOnScreenRemove();
             }
         });
     }
