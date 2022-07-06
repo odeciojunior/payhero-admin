@@ -593,11 +593,13 @@ $(function () {
             success: function success(response) {
                 regionsHtml = `
                     <footer class="container footer-regions">
-                        <dl class="states"></dl>
-                        <section class="new-graph-regions graph">
-                        </section>
-                        <section class="info-regions">
-                            <ul class="conversion-colors"></ul>
+                        <section class="box-total-region">
+                            <dl class="states"></dl>
+                            <div class="new-graph-regions graph">
+                            </div>
+                            <div class="info-regions">
+                                <ul class="conversion-colors"></ul>
+                            </div>
                         </section>
                         <section class="info-regions">
                             <ul class="regions-legend">
@@ -610,7 +612,6 @@ $(function () {
 
                 if(response.data.length > 0){
                     $("#block-regions").html(regionsHtml);
-                    $('.new-graph-regions').html('<canvas id="regionsChart" height="140" width="159"></canvas>');
 
                     let regionArr       = [];
                     let conversionArr   = [];
@@ -629,9 +630,9 @@ $(function () {
                         $(".states").append(`<dt>${regionArr[i].region}</dt>`);
                     }
 
-                    console.log(statesArr);
-                    console.log(conversionArr);
-                    console.log(accessArr);
+                    $(".new-graph-regions").height($('.states').height());
+                    $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
+                    
                     graphRegions(statesArr, conversionArr, accessArr);
 
                 } else {
@@ -1435,7 +1436,7 @@ $(function () {
                     {
                         label: '',
                         data: conversion,
-                        color:'#636363',
+                        color:'#ffffff',
                         backgroundColor: [
                             'rgba(46, 133, 236, 1)',
                             'rgba(102, 95, 232, 1)',
@@ -1449,7 +1450,7 @@ $(function () {
                     {
                         label: '',
                         data: access,
-                        color:'#636363',
+                        color:'#ffffff',
                         backgroundColor: [
                             'rgba(46, 133, 236, .2)',
                             'rgba(102, 95, 232, .2)',
@@ -1478,7 +1479,7 @@ $(function () {
                     y: {
                         stacked: true,
                         grid: {
-                            color: '#ECE9F1',
+                            color: 'white',
                             drawBorder: false,
                             display: false
                         },
@@ -1486,8 +1487,8 @@ $(function () {
                         min: 0,
                         max: 100,
                         ticks: {
-                            padding: -4,
-                            mirror: true,
+                            padding: -18,
+                            mirror: false,
                             stepSize: 0,
                             font: {
                                 family: 'Muli',
