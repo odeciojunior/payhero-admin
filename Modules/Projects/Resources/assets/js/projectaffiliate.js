@@ -29,13 +29,7 @@ $(() => {
     //carrega detalhes do loja
     function show() {
 
-        loadOnAny('#tab_info_geral .card', false, {
-            styles: {
-                container: {
-                    minHeight: '250px'
-                }
-            }
-        });
+        $(".page").addClass("low-opacity");
 
         $.ajax({
             url: '/api/projects/' + projectId,
@@ -57,9 +51,9 @@ $(() => {
                 }
 
                 if (project.status_affiliate == '1') {
-                    $('#show-status').text('Ativo').addClass('text-white details-text md p-2 pr-4 pl-4 badge-pill badge-success');
-                } else if (project.status_affiliate == '2'){
-                    $('#show-status').text('Desativado').addClass('text-white details-text md p-2 pr-4 pl-4 badge-pill badge-danger');
+                    $('#show-status').text('Ativo').addClass('badge-success');
+                } else {
+                    $('#show-status').text('Desativado').addClass('badge-danger');
                 }
 
                 $('#show-description').text(project.description);
@@ -71,11 +65,15 @@ $(() => {
                 $('#show-producer').text(project.producer);
                 $('#show-commission').text(project.commission_affiliate + '%');
                 $('#show-billet-release').text(project.billet_release_days + ' dias');
-                loadOnAny('#tab_info_geral .card', true);
+
+                $('.page-content').show();
+                $(".page").removeClass("low-opacity");
+                loadingOnScreenRemove();
             },
             error: (response) => {
                 errorAjaxResponse(response);
-                loadOnAny('#tab_info_geral .card', true);
+                $('.page-content').show();
+                $(".page").removeClass("low-opacity");
             }
         });
     }
@@ -98,7 +96,7 @@ $(() => {
                 },
                 error: function (response) {
                     errorAjaxResponse(response);
-                    loadingOnScreenRemove()
+                    loadingOnScreenRemove();
                 },
                 success: function (data) {
                     loadingOnScreenRemove();
