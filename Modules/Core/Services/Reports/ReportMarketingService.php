@@ -363,6 +363,7 @@ class ReportMarketingService
     {
         try {
             $cacheName = 'regions-resume-'.json_encode($filters);
+            cache()->forget($cacheName);
             return cache()->remember($cacheName, 300, function() use ($filters) {
                 $dateRange = foxutils()->validateDateRange($filters["date_range"]);
                 $projectId = current(Hashids::decode($filters['project_id']));
@@ -370,11 +371,10 @@ class ReportMarketingService
                 $regions = Checkout::select(
                     DB::raw('
                         ip_state as region,
-                        COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as access,
-                        COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as conversion
+                        COUNT(DISTINCT CASE WHEN status_enum in (1, 2) then id end) as access,
+                        COUNT(DISTINCT CASE WHEN status_enum in (4, 3) then id end) as conversion
                     ')
                 )
-                ->whereIn('checkouts.status_enum', [ Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED ])
                 ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                 ->where('checkouts.project_id', $projectId)
                 ->whereNotNull('checkouts.ip_state')
@@ -388,7 +388,7 @@ class ReportMarketingService
                     $total += $region['access'] + $region['conversion'];
                 }
 
-                foreach($regions as $region)
+                foreach($regions as &$region)
                 {
                     $region['percentage_access'] = round(number_format(($region['access'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
                     $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
