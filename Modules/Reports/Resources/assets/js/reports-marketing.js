@@ -273,42 +273,46 @@ function loadFrequenteSales() {
 
                 $("#block-sales").append(noData);
                 return;
-            }
-
-            $.each(response.data, function (i, item) {
-                let value = removeMoneyCurrency(item.value);
-                let newV = formatCash(String(parseFloat(value)).replace('.',''));
-                salesBlock = `
-                    <div class="box-payment-option pad-0">
-                        <div class="d-flex justify-content-between align-items list-sales">
-                            <div class="d-flex justify-content-between  align-items">
-                                <div
-                                    class="box-ico figure-ico"
-                                    data-container="body"
-                                    data-viewport=".container"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    title="${item.name}"
-                                >
-                                    <img width="37px" height="37px" onerror=this.src='https://cloudfox-files.s3.amazonaws.com/produto.svg' src="${item.photo}" alt="${item.description}">
+            } else {
+                $.each(response.data, function (i, item) {
+                    let value = removeMoneyCurrency(item.value);
+                    let newV = formatCash(String(parseFloat(value)).replace('.',''));
+                    salesBlock = `
+                        <div class="box-payment-option pad-0">
+                            <div class="d-flex justify-content-between align-items list-sales">
+                                <div class="d-flex justify-content-between  align-items">
+                                    <div
+                                        class="box-ico figure-ico"
+                                        data-container="body"
+                                        data-viewport=".container"
+                                        data-placement="top"
+                                        data-toggle="tooltip"
+                                        title="${item.name}"
+                                    >
+                                        <img width="37px" height="37px" onerror=this.src='https://cloudfox-files.s3.amazonaws.com/produto.svg' src="${item.photo}" alt="${item.description}">
+                                    </div>
+                                    <div>
+                                        <span class="desc-product">${item.name}</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="desc-product">${item.name}</span>
+                                <div class="d-flex justify-content-between align-items" style="min-width: 123px;">
+                                    <div class="grey font-size-14">${item.sales_amount}</div>
+                                    <div class="grey font-size-14 value"><strong>R$ ${newV}</strong></div>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items" style="min-width: 123px;">
-                                <div class="grey font-size-14">${item.sales_amount}</div>
-                                <div class="grey font-size-14 value"><strong>R$ ${newV}</strong></div>
                             </div>
                         </div>
-                    </div>
-                `;
-                $("#block-sales").append(salesBlock);
-                $('[data-toggle="tooltip"]').tooltip({
-                    container: '#block-sales'
+                    `;
+                    $("#block-sales").append(salesBlock);
+                    $('[data-toggle="tooltip"]').tooltip({
+                        container: '#block-sales'
+                    });
                 });
-            });
-
+    
+                if(response.data.length < 4 ) {
+                    salesBlock = `<div>${noListProducts}</div>`;
+                    $("#block-sales").append(salesBlock);
+                }
+            }
         }
     });
 }
@@ -1180,6 +1184,31 @@ let noWithdrawal = `
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1640_468"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1640_468" result="shape"/>
 </filter>
+</defs>
+</svg>
+`;
+
+let noListProducts = `
+<svg width="200" height="90" viewBox="0 0 275 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="48" y="94" width="187" height="25" rx="4" fill="url(#paint0_linear_2696_543)"/>
+<rect x="48" y="5" width="227" height="25" rx="4" fill="url(#paint1_linear_2696_543)"/>
+<rect x="48" y="50" width="227" height="24" rx="4" fill="url(#paint2_linear_2696_543)"/>
+<path opacity="0.6" d="M29 89C31.2091 89 33 90.7909 33 93L33 117C33 119.209 31.2091 121 29 121L5 121C2.79086 121 0.999999 119.209 0.999999 117L1 93C1 90.7909 2.79086 89 5 89L29 89Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<path opacity="0.6" d="M29 1C31.2091 1 33 2.79086 33 5L33 29C33 31.2091 31.2091 33 29 33L5 33C2.79086 33 0.999999 31.2091 0.999999 29L1 5C1 2.79086 2.79086 0.999999 5 0.999999L29 1Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<path opacity="0.6" d="M29 45C31.2091 45 33 46.7909 33 49L33 73C33 75.2091 31.2091 77 29 77L5 77C2.79086 77 0.999999 75.2091 0.999999 73L1 49C1 46.7909 2.79086 45 5 45L29 45Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<defs>
+<linearGradient id="paint0_linear_2696_543" x1="141.5" y1="94" x2="235" y2="94" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint1_linear_2696_543" x1="161.5" y1="5" x2="275" y2="4.99999" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint2_linear_2696_543" x1="75.2025" y1="74" x2="250.612" y2="73.9999" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
 </defs>
 </svg>
 `;
