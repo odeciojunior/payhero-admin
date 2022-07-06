@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services\Reports;
 
-use Exception;
 use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
@@ -361,74 +360,66 @@ class ReportMarketingService
 
     public function getResumeRegions($filters)
     {
-        try {
-            $cacheName = 'regions-resume-'.json_encode($filters);
-            cache()->forget($cacheName);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $projectId = current(Hashids::decode($filters['project_id']));
+        $cacheName = 'regions-resume-'.json_encode($filters);
+        cache()->forget($cacheName);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = current(Hashids::decode($filters['project_id']));
 
-                $regions = Checkout::select(
-                    DB::raw('
-                        ip_state as region,
-                        COUNT(DISTINCT CASE WHEN status_enum in (1, 2) then id end) as access,
-                        COUNT(DISTINCT CASE WHEN status_enum in (4, 3) then id end) as conversion
-                    ')
-                )
-                ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->where('checkouts.project_id', $projectId)
-                ->whereNotNull('checkouts.ip_state')
-                ->groupBy('region')
-                ->get()
-                ->toArray();
+            $regions = Checkout::select(
+                DB::raw('
+                    ip_state as region,
+                    COUNT(*) as access,
+                    COUNT(DISTINCT CASE WHEN status_enum in (4, 3) then id end) as conversion
+                ')
+            )
+            ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            ->where('checkouts.project_id', $projectId)
+            ->whereNotNull('checkouts.ip_state')
+            ->groupBy('region')
+            ->get()
+            ->toArray();
 
-                $total = 0;
-                foreach($regions as $region)
-                {
-                    $total += $region['access'] + $region['conversion'];
-                }
+            $total = 0;
+            foreach($regions as $region)
+            {
+                $total += $region['access'] + $region['conversion'];
+            }
 
-                foreach($regions as &$region)
-                {
-                    $region['percentage_access'] = round(number_format(($region['access'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
-                    $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
-                }
+            foreach($regions as &$region)
+            {
+                $region['percentage_access'] = round(number_format(($region['access'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+                $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+            }
 
-                return $regions;
-            });
-        } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+            return $regions;
+        });
     }
 
     public function getResumeOrigins($filters)
     {
-        try {
-            $projectId = hashids_decode($filters['project_id']);
+        $projectId = hashids_decode($filters['project_id']);
 
-            $userId = auth()->user()->account_owner_id;
-            $status = Sale::STATUS_APPROVED;
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+        $userId = auth()->user()->account_owner_id;
+        $status = Sale::STATUS_APPROVED;
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $originsData = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
-            ->leftJoin('transactions as transaction', function ($join) use ($userId) {
-                $join->on('transaction.sale_id', '=', 'sales.id');
-                $join->where('transaction.user_id', $userId);
-            })
-            ->leftJoin('checkouts as checkout', function ($join) {
-                $join->on('checkout.id', '=', 'sales.checkout_id');
-            })
-            ->where('sales.status', $status)
-            ->where('sales.project_id', $projectId)
-            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-            ->whereNotIn('checkout.'.$filters['origin'], ['', 'null'])
-            ->whereNotNull('checkout.'.$filters['origin'])
-            ->groupBy('checkout.'.$filters['origin'])
-            ->orderBy('sales_amount', 'DESC');
+        $originsData = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
+        ->leftJoin('transactions as transaction', function ($join) use ($userId) {
+            $join->on('transaction.sale_id', '=', 'sales.id');
+            $join->where('transaction.user_id', $userId);
+        })
+        ->leftJoin('checkouts as checkout', function ($join) {
+            $join->on('checkout.id', '=', 'sales.checkout_id');
+        })
+        ->where('sales.status', $status)
+        ->where('sales.project_id', $projectId)
+        ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+        ->whereNotIn('checkout.'.$filters['origin'], ['', 'null'])
+        ->whereNotNull('checkout.'.$filters['origin'])
+        ->groupBy('checkout.'.$filters['origin'])
+        ->orderBy('sales_amount', 'DESC');
 
-            return $originsData;
-        } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+        return $originsData;
     }
 }

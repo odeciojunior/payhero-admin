@@ -2,6 +2,7 @@
 
 namespace Modules\Reports\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Services\Reports\ReportFinanceService;
@@ -10,114 +11,168 @@ class ReportsFinanceApiController extends Controller
 {
     public function getResumeCommissions(Request $request)
     {
-        $request->validate([
-            'date_range' => 'required',
-            'project_id' => 'required'
-        ]);
-
-        $data = $request->all();
-
-        $reportService = new ReportFinanceService();
-        $comission = $reportService->getResumeCommissions($data);
-
-        return response()->json(['data' => $comission]);
+        try {
+            $request->validate([
+                'date_range' => 'required',
+                'project_id' => 'required'
+            ]);
+    
+            $data = $request->all();
+    
+            $reportService = new ReportFinanceService();
+            $comission = $reportService->getResumeCommissions($data);
+    
+            return response()->json(['data' => $comission]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de comissões'], 400);
+        }
     }
 
     public function getResumePendings(Request $request)
     {
-        $request->validate([
-            'date_range' => 'required',
-            'project_id' => 'required'
-        ]);
+        try{
+            $request->validate([
+                'date_range' => 'required',
+                'project_id' => 'required'
+            ]);
 
-        $data = $request->all();
+            $data = $request->all();
 
-        $reportService = new ReportFinanceService();
-        $pending = $reportService->getResumePendings($data);
+            $reportService = new ReportFinanceService();
+            $pending = $reportService->getResumePendings($data);
 
-        return response()->json(['data' => $pending]);
+            return response()->json(['data' => $pending]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de saldo pendente'], 400);
+        }
     }
 
     public function getResumeCashbacks(Request $request)
     {
-        $request->validate([
-            'date_range' => 'required',
-            'project_id' => 'required'
-        ]);
+        try{
+            $request->validate([
+                'date_range' => 'required',
+                'project_id' => 'required'
+            ]);
 
-        $data = $request->all();
+            $data = $request->all();
 
-        $reportService = new ReportFinanceService();
-        $comission = $reportService->getResumeCashbacks($data);
+            $reportService = new ReportFinanceService();
+            $comission = $reportService->getResumeCashbacks($data);
 
-        return response()->json(['data' => $comission]);
+            return response()->json(['data' => $comission]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de cashbacks'], 400);
+        }
     }
 
     public function getFinancesResume(Request $request)
     {
-        $request->validate([ 'date_range' => 'required' ]);
+        try{
+            $request->validate([ 'date_range' => 'required' ]);
 
-        $data = $request->all();
+            $data = $request->all();
 
-        $reportService = new ReportFinanceService();
-        $resume = $reportService->getFinancesResume($data);
+            $reportService = new ReportFinanceService();
+            $resume = $reportService->getFinancesResume($data);
 
-        return response()->json([
-            'data' => $resume
-        ]);
+            return response()->json([
+                'data' => $resume
+            ]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de finanças'], 400);
+        }
     }
 
     public function getFinancesCashbacks(Request $request)
     {
-        $request->validate([ 'date_range' => 'required' ]);
+        try{
+            $request->validate([ 'date_range' => 'required' ]);
 
-        $data = $request->all();
+            $data = $request->all();
 
-        $reportService = new ReportFinanceService();
-        $resume = $reportService->getFinancesCashbacks($data);
+            $reportService = new ReportFinanceService();
+            $resume = $reportService->getFinancesCashbacks($data);
 
-        return response()->json([
-            'data' => $resume
-        ]);
+            return response()->json([
+                'data' => $resume
+            ]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de cashbacks'], 400);
+        }
     }
 
     public function getFinancesPendings(Request $request)
     {
-        $reportService = new ReportFinanceService();
-        $resume = $reportService->getFinancesPendings();
+        try {
+            $reportService = new ReportFinanceService();
+            $resume = $reportService->getFinancesPendings();
 
-        return response()->json([
-            'data' => $resume
-        ]);
+            return response()->json([
+                'data' => $resume
+            ]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de saldo pendente'], 400);
+        }
     }
 
     public function getFinancesBlockeds(Request $request)
     {
-        $reportService = new ReportFinanceService();
-        $resume = $reportService->getFinancesBlockeds();
+        try{
+            $reportService = new ReportFinanceService();
+            $resume = $reportService->getFinancesBlockeds();
 
-        return response()->json([
-            'data' => $resume
-        ]);
+            return response()->json([
+                'data' => $resume
+            ]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de saldo retido'], 400);
+        }
     }
 
     public function getFinancesDistribuitions(Request $request)
     {
-        $reportService = new ReportFinanceService();
-        $resume = $reportService->getFinancesDistribuitions();
+        try {
+            $reportService = new ReportFinanceService();
+            $resume = $reportService->getFinancesDistribuitions();
 
-        return response()->json([
-            'data' => $resume
-        ]);
+            return response()->json([
+                'data' => $resume
+            ]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de comissões'], 400);
+        }
     }
 
     public function getFinancesWithdrawals(Request $request)
     {
-        $reportService = new ReportFinanceService();
-        $resume = $reportService->getFinancesWithdrawals();
+        try {
+            $reportService = new ReportFinanceService();
+            $resume = $reportService->getFinancesWithdrawals();
 
-        return response()->json([
-            'data' => $resume
-        ]);
+            return response()->json([
+                'data' => $resume
+            ]);
+        }
+        catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao obter dados de saques'], 400);
+        }
     }
 }

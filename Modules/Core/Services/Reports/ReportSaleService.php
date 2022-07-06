@@ -3,7 +3,6 @@
 namespace Modules\Core\Services\Reports;
 
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Product;
@@ -15,57 +14,52 @@ class ReportSaleService
 {
     public function getResumeSales($filters)
     {
-       try {
-            $cacheName = 'sales-resume-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
+        $cacheName = 'sales-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
 
-                $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
-                            ->where('owner_id', auth()->user()->account_owner_id)
-                            ->whereBetween($dateFilter, [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+            $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
+                        ->where('owner_id', auth()->user()->account_owner_id)
+                        ->whereBetween($dateFilter, [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
-                if (!empty($filters['status'])) {
-                    $salesModel = new Sale();
-                    if ($filters['status'] === 'others') {
-                        $statusNotIn = [
-                            Sale::STATUS_APPROVED,
-                            Sale::STATUS_PENDING,
-                            Sale::STATUS_CANCELED,
-                            Sale::STATUS_REFUSED,
-                            Sale::STATUS_REFUNDED,
-                            Sale::STATUS_CHARGEBACK
-                        ];
-                        $sales->whereNotIn('status', $statusNotIn);
-                    } else {
-                        $sales->where('status', $salesModel->present()->getStatus($filters['status']));
-                    }
+            if (!empty($filters['status'])) {
+                $salesModel = new Sale();
+                if ($filters['status'] === 'others') {
+                    $statusNotIn = [
+                        Sale::STATUS_APPROVED,
+                        Sale::STATUS_PENDING,
+                        Sale::STATUS_CANCELED,
+                        Sale::STATUS_REFUSED,
+                        Sale::STATUS_REFUNDED,
+                        Sale::STATUS_CHARGEBACK
+                    ];
+                    $sales->whereNotIn('status', $statusNotIn);
+                } else {
+                    $sales->where('status', $salesModel->present()->getStatus($filters['status']));
                 }
+            }
 
-                if ($dateRange['0'] == $dateRange['1']) {
-                    return $this->getResumeSalesByHours($sales, $filters);
-                } elseif ($dateRange['0'] != $dateRange['1']) {
-                    $startDate  = Carbon::createFromFormat('Y-m-d', $dateRange['0'], 'America/Sao_Paulo');
-                    $endDate    = Carbon::createFromFormat('Y-m-d', $dateRange['1'], 'America/Sao_Paulo');
-                    $diffInDays = $endDate->diffInDays($startDate);
+            if ($dateRange['0'] == $dateRange['1']) {
+                return $this->getResumeSalesByHours($sales, $filters);
+            } elseif ($dateRange['0'] != $dateRange['1']) {
+                $startDate  = Carbon::createFromFormat('Y-m-d', $dateRange['0'], 'America/Sao_Paulo');
+                $endDate    = Carbon::createFromFormat('Y-m-d', $dateRange['1'], 'America/Sao_Paulo');
+                $diffInDays = $endDate->diffInDays($startDate);
 
-                    if ($diffInDays <= 20) {
-                        return $this->getResumeSalesByDays($sales, $filters);
-                    } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                        return $this->getResumeSalesByTwentyDays($sales, $filters);
-                    } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                        return $this->getResumeSalesByFortyDays($sales, $filters);
-                    } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                        return $this->getResumeSalesByWeeks($sales, $filters);
-                    } elseif ($diffInDays > 140) {
-                        return $this->getResumeSalesByMonths($sales, $filters);
-                    }
+                if ($diffInDays <= 20) {
+                    return $this->getResumeSalesByDays($sales, $filters);
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                    return $this->getResumeSalesByTwentyDays($sales, $filters);
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getResumeSalesByFortyDays($sales, $filters);
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getResumeSalesByWeeks($sales, $filters);
+                } elseif ($diffInDays > 140) {
+                    return $this->getResumeSalesByMonths($sales, $filters);
                 }
-            });
-        } catch(Exception $e) {
-            report($e);
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+            }
+        });
     }
 
     public function getResumeSalesByHours($sales, $filters)
@@ -424,256 +418,235 @@ class ReportSaleService
 
     public function getResumeTypePayments($filters)
     {
-        try {
-            $cacheName = 'payment-type-resume-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $projectId = hashids_decode($filters['project_id']);
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+        $cacheName = 'payment-type-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $projectId = hashids_decode($filters['project_id']);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-                $query = Sale::join('transactions', 'transactions.sale_id', 'sales.id')
-                                ->where('transactions.user_id', auth()->user()->account_owner_id)
-                                ->where('project_id', $projectId)
-                                ->where('sales.status', Sale::STATUS_APPROVED)
-                                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                                ->selectRaw('SUM(transactions.value / 100) as total')
-                                ->selectRaw('SUM(IF(payment_method = 1, transactions.value / 100, 0)) as total_credit_card')
-                                ->selectRaw('SUM(IF(payment_method = 2, transactions.value / 100, 0)) as total_boleto')
-                                ->selectRaw('SUM(IF(payment_method = 4, transactions.value / 100, 0)) as total_pix')
-                                ->first();
+            $query = Sale::join('transactions', 'transactions.sale_id', 'sales.id')
+                            ->where('transactions.user_id', auth()->user()->account_owner_id)
+                            ->where('project_id', $projectId)
+                            ->where('sales.status', Sale::STATUS_APPROVED)
+                            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                            ->selectRaw('SUM(transactions.value / 100) as total')
+                            ->selectRaw('SUM(IF(payment_method = 1, transactions.value / 100, 0)) as total_credit_card')
+                            ->selectRaw('SUM(IF(payment_method = 2, transactions.value / 100, 0)) as total_boleto')
+                            ->selectRaw('SUM(IF(payment_method = 4, transactions.value / 100, 0)) as total_pix')
+                            ->first();
 
-                $total = $query->total;
+            $total = $query->total;
 
-                if ($total == 0) {
-                    return [];
-                }
+            if ($total == 0) {
+                return [];
+            }
 
-                $totalCreditCard = $query->total_credit_card;
-                $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
+            $totalCreditCard = $query->total_credit_card;
+            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
 
-                $totalBoleto = $query->total_boleto;
-                $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
+            $totalBoleto = $query->total_boleto;
+            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
 
-                $totalPix = $query->total_pix;
-                $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
+            $totalPix = $query->total_pix;
+            $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
 
-                $data = [
-                    'boleto' => [
-                        'value' => number_format($totalBoleto, 2, ',', '.'),
-                        'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
-                    ],
-                    'pix' => [
-                        'value' => number_format($totalPix, 2, ',', '.'),
-                        'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
-                    ],
-                    'credit_card' => [
-                        'value' => number_format($totalCreditCard, 2, ',', '.'),
-                        'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
-                    ],
-                ];
+            $data = [
+                'boleto' => [
+                    'value' => number_format($totalBoleto, 2, ',', '.'),
+                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+                'pix' => [
+                    'value' => number_format($totalPix, 2, ',', '.'),
+                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+                'credit_card' => [
+                    'value' => number_format($totalCreditCard, 2, ',', '.'),
+                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+            ];
 
-                $value = array();
-                foreach($data as $val) {
-                    array_push($value, foxutils()->onlyNumbers($val['value']));
-                }
-                array_multisort($value, SORT_DESC, $data);
+            $value = array();
+            foreach($data as $val) {
+                array_push($value, foxutils()->onlyNumbers($val['value']));
+            }
+            array_multisort($value, SORT_DESC, $data);
 
-                return $data;
-
-            });
-        } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+            return $data;
+        });
     }
 
     public function getResumeProducts($filters)
     {
-        try {
-            $cacheName = 'products-resume-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $projectId = hashids_decode($filters['project_id']);
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+        $cacheName = 'products-resume-'.json_encode($filters);
+        cache()->forget($cacheName);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $projectId = hashids_decode($filters['project_id']);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-                $products = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
-                ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
-                ->where('sales.status', Sale::STATUS_APPROVED)
-                ->where('sales.project_id', $projectId)
-                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                ->select(DB::raw('products.name, products.description, products.photo as image, COUNT(*) as amount'))
-                ->groupBy('products.id')
-                ->orderByDesc('amount')
-                ->limit(8)
-                ->get();
+            $products = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
+            ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
+            ->where('sales.status', Sale::STATUS_APPROVED)
+            ->where('sales.project_id', $projectId)
+            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            ->select(DB::raw('products.name, products.description, products.photo as image, COUNT(*) as amount'))
+            ->groupBy('products.id')
+            ->orderByDesc('amount')
+            ->limit(8)
+            ->get();
 
-                $total = 0;
-                foreach($products as $r)
-                {
-                    $total += $r->amount;
-                }
+            $total = 0;
+            foreach($products as $r)
+            {
+                $total += $r->amount;
+            }
 
-                $firstValue = $products[0]['amount'];
+            $firstValue = $products[0]['amount'];
 
-                $index = 0;
-                foreach($products as $result)
-                {
-                    $percentage = round(number_format(($result->amount * 100) / $firstValue, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+            $index = 0;
+            foreach($products as $result)
+            {
+                $percentage = round(number_format(($result->amount * 100) / $firstValue, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
 
-                    $result->image = empty($result->image) ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $result->image;
-                    $result->percentage = $index == 0 ? '100%' : $percentage.'%';
-                    $result->color = $this->getColors($index);
+                $result->image = empty($result->image) ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $result->image;
+                $result->percentage = $index == 0 ? '100%' : $percentage.'%';
+                $result->color = $this->getColors($index);
 
-                    $index++;
-                }
+                $index++;
+            }
 
-                $productsArray = $products->toArray();
+            $productsArray = $products->toArray();
 
-                return [
-                    'products' => $productsArray,
-                    'total' => $total
-                ];
-            });
-        } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+            return [
+                'products' => $productsArray,
+                'total' => $total
+            ];
+        });
     }
 
     public function getSalesResume($filters)
     {
-        try {
-            $cacheName = 'sales-balance-resume-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $projectId = hashids_decode($filters['project_id']);
+        $cacheName = 'sales-balance-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
 
-                $salesApproved = Sale::whereBetween('end_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                                        ->where('owner_id', auth()->user()->account_owner_id)
+            $salesApproved = Sale::whereBetween('end_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                    ->where('owner_id', auth()->user()->account_owner_id)
+                                    ->where('project_id', $projectId)
+                                    ->where('status', Sale::STATUS_APPROVED)
+                                    ->count();
+
+            $salesAverageTicket = Sale::whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                                         ->where('project_id', $projectId)
                                         ->where('status', Sale::STATUS_APPROVED)
-                                        ->count();
+                                        ->avg('original_total_paid_value');
 
-                $salesAverageTicket = Sale::whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                                            ->where('project_id', $projectId)
-                                            ->where('status', Sale::STATUS_APPROVED)
-                                            ->avg('original_total_paid_value');
-
-                $salesComission = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                                            ->where('user_id', auth()->user()->account_owner_id)
-                                            ->where('project_id', $projectId)
-                                            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                                            ->whereNull('invitation_id')
-                                            ->where('sales.status', Sale::STATUS_APPROVED)
-                                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                                            ->sum('transactions.value');
-
-                $salesChargeback = Sale::whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            $salesComission = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->where('user_id', auth()->user()->account_owner_id)
                                         ->where('project_id', $projectId)
-                                        ->where('status', Sale::STATUS_CHARGEBACK)
-                                        ->sum('original_total_paid_value');
+                                        ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                        ->whereNull('invitation_id')
+                                        ->where('sales.status', Sale::STATUS_APPROVED)
+                                        ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                                        ->sum('transactions.value');
 
-                return [
-                    'transactions' => number_format($salesApproved, 0, '.', '.'),
-                    'average_ticket' => foxutils()->formatMoney($salesAverageTicket / 100),
-                    'comission' => foxutils()->formatMoney($salesComission / 100),
-                    'chargeback' => foxutils()->formatMoney($salesChargeback /100)
-                ];
-            });
-        } catch(Exception $e) {
-            report($e);
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
-        }
+            $salesChargeback = Sale::whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                                    ->where('project_id', $projectId)
+                                    ->where('status', Sale::STATUS_CHARGEBACK)
+                                    ->sum('original_total_paid_value');
+
+            return [
+                'transactions' => number_format($salesApproved, 0, '.', '.'),
+                'average_ticket' => foxutils()->formatMoney($salesAverageTicket / 100),
+                'comission' => foxutils()->formatMoney($salesComission / 100),
+                'chargeback' => foxutils()->formatMoney($salesChargeback /100)
+            ];
+        });
     }
 
     public function getSalesDistribuitions($filters)
     {
-        try {
-            $cacheName = 'sales-distribuition-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $projectId = hashids_decode($filters['project_id']);
+        $cacheName = 'sales-distribuition-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
 
-                $salesApprovedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                        ->where('owner_id', auth()->user()->account_owner_id)
+            $salesApprovedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                    ->where('owner_id', auth()->user()->account_owner_id)
+                                    ->where('project_id', $projectId)
+                                    ->where('status', Sale::STATUS_APPROVED)
+                                    ->count();
+
+            $salesPendingSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                    ->where('project_id', $projectId)
+                                    ->where('status', Sale::STATUS_PENDING)
+                                    ->count();
+
+            $salesCanceledSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                    ->where('project_id', $projectId)
+                                    ->where('status', Sale::STATUS_CANCELED)
+                                    ->count();
+
+            $salesRefusedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                    ->where('project_id', $projectId)
+                                    ->where('status', Sale::STATUS_REFUSED)
+                                    ->count();
+
+            $salesRefundedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                    ->where('project_id', $projectId)
+                                    ->where('status', Sale::STATUS_REFUNDED)
+                                    ->count();
+
+            $salesChargebackSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                         ->where('project_id', $projectId)
-                                        ->where('status', Sale::STATUS_APPROVED)
+                                        ->where('status', Sale::STATUS_CHARGEBACK)
                                         ->count();
 
-                $salesPendingSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                        ->where('project_id', $projectId)
-                                        ->where('status', Sale::STATUS_PENDING)
-                                        ->count();
+            $salesOtherSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                    ->where('project_id', $projectId)
+                                    ->whereNotIn('status', [
+                                        Sale::STATUS_APPROVED,
+                                        Sale::STATUS_PENDING,
+                                        Sale::STATUS_CANCELED,
+                                        Sale::STATUS_REFUSED,
+                                        Sale::STATUS_REFUNDED,
+                                        Sale::STATUS_CHARGEBACK
+                                    ])
+                                    ->count();
 
-                $salesCanceledSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                        ->where('project_id', $projectId)
-                                        ->where('status', Sale::STATUS_CANCELED)
-                                        ->count();
+            $total = ($salesApprovedSum + $salesPendingSum + $salesCanceledSum + $salesRefusedSum + $salesRefundedSum + $salesChargebackSum + $salesOtherSum);
 
-                $salesRefusedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                        ->where('project_id', $projectId)
-                                        ->where('status', Sale::STATUS_REFUSED)
-                                        ->count();
-
-                $salesRefundedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                        ->where('project_id', $projectId)
-                                        ->where('status', Sale::STATUS_REFUNDED)
-                                        ->count();
-
-                $salesChargebackSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                            ->where('project_id', $projectId)
-                                            ->where('status', Sale::STATUS_CHARGEBACK)
-                                            ->count();
-
-                $salesOtherSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                        ->where('project_id', $projectId)
-                                        ->whereNotIn('status', [
-                                            Sale::STATUS_APPROVED,
-                                            Sale::STATUS_PENDING,
-                                            Sale::STATUS_CANCELED,
-                                            Sale::STATUS_REFUSED,
-                                            Sale::STATUS_REFUNDED,
-                                            Sale::STATUS_CHARGEBACK
-                                        ])
-                                        ->count();
-
-                $total = ($salesApprovedSum + $salesPendingSum + $salesCanceledSum + $salesRefusedSum + $salesRefundedSum + $salesChargebackSum + $salesOtherSum);
-
-                return [
-                    'total' => number_format($total, 0, '.', '.'),
-                    'approved' => [
-                        'amount' => number_format($salesApprovedSum, 0, '.', '.'),
-                        'percentage' => number_format(($salesApprovedSum * 100) / $total, 2, '.', ',')
-                    ],
-                    'pending' => [
-                        'amount' => number_format($salesPendingSum, 0, '.', '.'),
-                        'percentage' => number_format(($salesPendingSum * 100) / $total, 2, '.', ',')
-                    ],
-                    'canceled' => [
-                        'amount' => number_format($salesCanceledSum, 0, '.', '.'),
-                        'percentage' => number_format(($salesCanceledSum * 100) / $total, 2, '.', ',')
-                    ],
-                    'refused' => [
-                        'amount' => number_format($salesRefusedSum, 0, '.', '.'),
-                        'percentage' => number_format(($salesRefusedSum * 100) / $total, 2, '.', ',')
-                    ],
-                    'refunded' => [
-                        'amount' => number_format($salesRefundedSum, 0, '.', '.'),
-                        'percentage' => number_format(($salesRefundedSum * 100) / $total, 2, '.', ',')
-                    ],
-                    'chargeback' => [
-                        'amount' => number_format($salesChargebackSum, 0, '.', '.'),
-                        'percentage' => number_format(($salesChargebackSum * 100) / $total, 2, '.', ',')
-                    ],
-                    'other' => [
-                        'amount' => number_format($salesOtherSum, 0, '.', '.'),
-                        'percentage' => number_format(($salesOtherSum * 100) / $total, 2, '.', ',')
-                    ]
-                ];
-            });
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
-        }
+            return [
+                'total' => number_format($total, 0, '.', '.'),
+                'approved' => [
+                    'amount' => number_format($salesApprovedSum, 0, '.', '.'),
+                    'percentage' => empty($total) ? 0 : number_format(($salesApprovedSum * 100) / $total, 2, '.', ',')
+                ],
+                'pending' => [
+                    'amount' => number_format($salesPendingSum, 0, '.', '.'),
+                    'percentage' => empty($total) ? 0 : number_format(($salesPendingSum * 100) / $total, 2, '.', ',')
+                ],
+                'canceled' => [
+                    'amount' => number_format($salesCanceledSum, 0, '.', '.'),
+                    'percentage' => empty($total) ? 0 : number_format(($salesCanceledSum * 100) / $total, 2, '.', ',')
+                ],
+                'refused' => [
+                    'amount' => number_format($salesRefusedSum, 0, '.', '.'),
+                    'percentage' => empty($total) ? 0 : number_format(($salesRefusedSum * 100) / $total, 2, '.', ',')
+                ],
+                'refunded' => [
+                    'amount' => number_format($salesRefundedSum, 0, '.', '.'),
+                    'percentage' => empty($total) ? 0 : number_format(($salesRefundedSum * 100) / $total, 2, '.', ',')
+                ],
+                'chargeback' => [
+                    'amount' => number_format($salesChargebackSum, 0, '.', '.'),
+                    'percentage' => empty($total) ? 0 : number_format(($salesChargebackSum * 100) / $total, 2, '.', ',')
+                ],
+                'other' => [
+                    'amount' => number_format($salesOtherSum, 0, '.', '.'),
+                    'percentage' => empty($total) ? 0 : number_format(($salesOtherSum * 100) / $total, 2, '.', ',')
+                ]
+            ];
+        });
     }
 
     public function getAbandonedCarts($filters)
@@ -765,56 +738,51 @@ class ReportSaleService
 
     public function getConversion($filters)
     {
-        try {
-            $cacheName = 'conversion-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $projectId = hashids_decode($filters['project_id']);
+        $cacheName = 'conversion-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
 
-                $query = Sale::where('project_id', $projectId)
-                                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                                ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 1 THEN 1 ELSE 0 END) AS total_credit_card'))
-                                ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 1 and status = 1 THEN 1 ELSE 0 END) AS total_credit_card_approved'))
-                                ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 2 THEN 1 ELSE 0 END) AS total_boleto'))
-                                ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 2 and status = 1 THEN 1 ELSE 0 END) AS total_boleto_approved'))
-                                ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 THEN 1 ELSE 0 END) AS total_pix'))
-                                ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 and status = 1 THEN 1 ELSE 0 END) AS total_pix_approved'))
-                                ->first();
+            $query = Sale::where('project_id', $projectId)
+                            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 1 THEN 1 ELSE 0 END) AS total_credit_card'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 1 and status = 1 THEN 1 ELSE 0 END) AS total_credit_card_approved'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 2 THEN 1 ELSE 0 END) AS total_boleto'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 2 and status = 1 THEN 1 ELSE 0 END) AS total_boleto_approved'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 THEN 1 ELSE 0 END) AS total_pix'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 and status = 1 THEN 1 ELSE 0 END) AS total_pix_approved'))
+                            ->first();
 
-                $totalCreditCard = $query->total_credit_card;
-                $totalCreditCardApproved = $query->total_credit_card_approved;
-                $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCardApproved * 100) / $totalCreditCard, 2, '.', ',') : 0;
+            $totalCreditCard = $query->total_credit_card;
+            $totalCreditCardApproved = $query->total_credit_card_approved;
+            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCardApproved * 100) / $totalCreditCard, 2, '.', ',') : 0;
 
-                $totalBoleto = $query->total_boleto;
-                $totalBoletoApproved = $query->total_boleto_approved;
-                $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoletoApproved * 100) / $totalBoleto, 2, '.', ',') : 0;
+            $totalBoleto = $query->total_boleto;
+            $totalBoletoApproved = $query->total_boleto_approved;
+            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoletoApproved * 100) / $totalBoleto, 2, '.', ',') : 0;
 
-                $totalPix = $query->total_pix;
-                $totalPixApproved = $query->total_pix_approved;
-                $percentagePix = $totalPix > 0 ? number_format(($totalPixApproved * 100) / $totalPix, 2, '.', ',') : 0;
+            $totalPix = $query->total_pix;
+            $totalPixApproved = $query->total_pix_approved;
+            $percentagePix = $totalPix > 0 ? number_format(($totalPixApproved * 100) / $totalPix, 2, '.', ',') : 0;
 
-                return [
-                    'credit_card' => [
-                        'total' => number_format($totalCreditCard, 0, '.', '.'),
-                        'approved' => number_format($totalCreditCardApproved, 0, '.', '.'),
-                        'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
-                    ],
-                    'boleto' => [
-                        'total' => number_format($totalBoleto, 0, '.', '.'),
-                        'approved' => number_format($totalBoletoApproved, 0, '.', '.'),
-                        'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
-                    ],
-                    'pix' => [
-                        'total' => number_format($totalPix, 0, '.', '.'),
-                        'approved' => number_format($totalPixApproved, 0, '.', '.'),
-                        'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
-                    ]
-                ];
-            });
-        } catch(Exception $e) {
-            report($e);
-            return response()->json(['message' => 'Erro ao carregar dados.'], 400);
-        }
+            return [
+                'credit_card' => [
+                    'total' => number_format($totalCreditCard, 0, '.', '.'),
+                    'approved' => number_format($totalCreditCardApproved, 0, '.', '.'),
+                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+                'boleto' => [
+                    'total' => number_format($totalBoleto, 0, '.', '.'),
+                    'approved' => number_format($totalBoletoApproved, 0, '.', '.'),
+                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+                'pix' => [
+                    'total' => number_format($totalPix, 0, '.', '.'),
+                    'approved' => number_format($totalPixApproved, 0, '.', '.'),
+                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
+                ]
+            ];
+        });
     }
 
     public function getRecurrence($filters)

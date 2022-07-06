@@ -3,7 +3,6 @@
 namespace Modules\Core\Services\Reports;
 
 use Carbon\Carbon;
-use Exception;
 use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
@@ -11,7 +10,6 @@ use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\Gateways\AsaasService;
-use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\Gateways\Safe2PayService;
@@ -20,47 +18,43 @@ class ReportFinanceService
 {
     public function getResumeCommissions($filters)
     {
-        try {
-            $cacheName = 'comissions-resume-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $projectId = hashids_decode($filters['project_id']);
-                $userId = auth()->user()->account_owner_id;
+        $cacheName = 'comissions-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
+            $userId = auth()->user()->account_owner_id;
 
 
-                $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                                            ->where('user_id', $userId)
-                                            ->where('sales.project_id', $projectId)
-                                            ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                                            ->whereNull('transactions.invitation_id')
-                                            ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ]);
+            $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->where('user_id', $userId)
+                                        ->where('sales.project_id', $projectId)
+                                        ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                        ->whereNull('transactions.invitation_id')
+                                        ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ]);
 
-                $date['startDate'] = $dateRange[0];
-                $date['endDate'] = $dateRange[1];
+            $date['startDate'] = $dateRange[0];
+            $date['endDate'] = $dateRange[1];
 
-                if ($date['startDate'] == $date['endDate']) {
-                    return $this->getResumeCommissionsByHours($transactions, $filters);
-                } elseif ($date['startDate'] != $date['endDate']) {
-                    $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
-                    $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
-                    $diffInDays = $endDate->diffInDays($startDate);
+            if ($date['startDate'] == $date['endDate']) {
+                return $this->getResumeCommissionsByHours($transactions, $filters);
+            } elseif ($date['startDate'] != $date['endDate']) {
+                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                $diffInDays = $endDate->diffInDays($startDate);
 
-                    if ($diffInDays <= 20) {
-                        return $this->getResumeCommissionsByDays($transactions, $filters);
-                    } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                        return $this->getResumeCommissionsByTwentyDays($transactions, $filters);
-                    } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                        return $this->getResumeCommissionsByFortyDays($transactions, $filters);
-                    } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                        return $this->getResumeCommissionsByWeeks($transactions, $filters);
-                    } elseif ($diffInDays > 140) {
-                        return $this->getResumeCommissionsByMonths($transactions, $filters);
-                    }
+                if ($diffInDays <= 20) {
+                    return $this->getResumeCommissionsByDays($transactions, $filters);
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                    return $this->getResumeCommissionsByTwentyDays($transactions, $filters);
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getResumeCommissionsByFortyDays($transactions, $filters);
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getResumeCommissionsByWeeks($transactions, $filters);
+                } elseif ($diffInDays > 140) {
+                    return $this->getResumeCommissionsByMonths($transactions, $filters);
                 }
-            });
-        } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+            }
+        });
     }
 
     public function getResumeCommissionsByHours($transactions, $filters)
@@ -431,43 +425,39 @@ class ReportFinanceService
 
     public function getResumePendings($filters)
     {
-        try {
-            $cacheName = 'pendings-resume-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $projectId = hashids_decode($filters['project_id']);
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $date['startDate'] = $dateRange[0];
-                $date['endDate'] = $dateRange[1];
+        $cacheName = 'pendings-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $projectId = hashids_decode($filters['project_id']);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $date['startDate'] = $dateRange[0];
+            $date['endDate'] = $dateRange[1];
 
-                $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
-                                            ->where('user_id', auth()->user()->account_owner_id)
-                                            ->join('sales', 'sales.id', 'transactions.sale_id')
-                                            ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
-                                            ->where('sales.project_id', $projectId);
+            $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
+                                        ->where('user_id', auth()->user()->account_owner_id)
+                                        ->join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
+                                        ->where('sales.project_id', $projectId);
 
-                if ($date['startDate'] == $date['endDate']) {
-                    return $this->getResumePendingsByHours($transactions, $filters);
-                } elseif ($date['startDate'] != $date['endDate']) {
-                    $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
-                    $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
-                    $diffInDays = $endDate->diffInDays($startDate);
+            if ($date['startDate'] == $date['endDate']) {
+                return $this->getResumePendingsByHours($transactions, $filters);
+            } elseif ($date['startDate'] != $date['endDate']) {
+                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                $diffInDays = $endDate->diffInDays($startDate);
 
-                    if ($diffInDays <= 20) {
-                        return $this->getResumePendingsByDays($transactions, $filters);
-                    } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                        return $this->getResumePendingsByTwentyDays($transactions, $filters);
-                    } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                        return $this->getResumePendingsByFortyDays($transactions, $filters);
-                    } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                        return $this->getResumePendingsByWeeks($transactions, $filters);
-                    } elseif ($diffInDays > 140) {
-                        return $this->getResumePendingsByMonths($transactions, $filters);
-                    }
+                if ($diffInDays <= 20) {
+                    return $this->getResumePendingsByDays($transactions, $filters);
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                    return $this->getResumePendingsByTwentyDays($transactions, $filters);
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getResumePendingsByFortyDays($transactions, $filters);
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getResumePendingsByWeeks($transactions, $filters);
+                } elseif ($diffInDays > 140) {
+                    return $this->getResumePendingsByMonths($transactions, $filters);
                 }
-            });
-        } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+            }
+        });
     }
 
     public function getResumePendingsByHours($transactions, $filters)
@@ -848,45 +838,41 @@ class ReportFinanceService
 
     public function getResumeCashbacks($filters)
     {
-        try {
-            $cacheName = 'cashback-resume-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $projectId = hashids_decode($filters['project_id']);
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+        $cacheName = 'cashback-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $projectId = hashids_decode($filters['project_id']);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-                $cashbacks = Cashback::with('sale')
-                                        ->join('sales', 'sales.id', 'cashbacks.sale_id')
-                                        ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
-                                        ->where('sales.project_id', $projectId);
+            $cashbacks = Cashback::with('sale')
+                                    ->join('sales', 'sales.id', 'cashbacks.sale_id')
+                                    ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
+                                    ->where('sales.project_id', $projectId);
 
-                $date['startDate'] = $dateRange[0];
-                $date['endDate'] = $dateRange[1];
+            $date['startDate'] = $dateRange[0];
+            $date['endDate'] = $dateRange[1];
 
-                $countCashbacks = $cashbacks->count();
+            $countCashbacks = $cashbacks->count();
 
-                if ($date['startDate'] == $date['endDate']) {
-                    return $this->getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters);
-                } elseif ($date['startDate'] != $date['endDate']) {
-                    $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
-                    $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
-                    $diffInDays = $endDate->diffInDays($startDate);
+            if ($date['startDate'] == $date['endDate']) {
+                return $this->getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters);
+            } elseif ($date['startDate'] != $date['endDate']) {
+                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                $diffInDays = $endDate->diffInDays($startDate);
 
-                    if ($diffInDays <= 20) {
-                        return $this->getResumeCashbacksByDays($cashbacks, $countCashbacks, $filters);
-                    } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                        return $this->getResumeCashbacksByTwentyDays($cashbacks, $countCashbacks, $filters);
-                    } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                        return $this->getResumeCashbacksByFortyDays($cashbacks, $countCashbacks, $filters);
-                    } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                        return $this->getResumeCashbacksByWeeks($cashbacks, $countCashbacks, $filters);
-                    } elseif ($diffInDays > 140) {
-                        return $this->getResumeCashbacksByMonths($cashbacks, $countCashbacks, $filters);
-                    }
+                if ($diffInDays <= 20) {
+                    return $this->getResumeCashbacksByDays($cashbacks, $countCashbacks, $filters);
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                    return $this->getResumeCashbacksByTwentyDays($cashbacks, $countCashbacks, $filters);
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getResumeCashbacksByFortyDays($cashbacks, $countCashbacks, $filters);
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getResumeCashbacksByWeeks($cashbacks, $countCashbacks, $filters);
+                } elseif ($diffInDays > 140) {
+                    return $this->getResumeCashbacksByMonths($cashbacks, $countCashbacks, $filters);
                 }
-            });
-        } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
+            }
+        });
     }
 
     public function getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters)
@@ -1277,325 +1263,289 @@ class ReportFinanceService
 
     public function getFinancesResume($filters)
     {
-        try {
-            $cacheName = 'finances-balances-resume-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $projectId = hashids_decode($filters['project_id']);
+        $cacheName = 'finances-balances-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
 
-                $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->account_owner_id;
 
-                $transactions = Transaction::where('user_id', $userId)
+            $transactions = Transaction::where('user_id', $userId)
+                                        ->join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->where('sales.project_id', $projectId)
+                                        ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                        ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                                        ->whereNull('invitation_id');
+
+            $queryCount = $transactions->count();
+
+            $queryAverageTicket = $transactions->avg('transactions.value');
+
+            $queryComission = $transactions->sum('transactions.value');
+
+            $queryChargeback = Transaction::where('user_id', $userId)
                                             ->join('sales', 'sales.id', 'transactions.sale_id')
                                             ->where('sales.project_id', $projectId)
-                                            ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                                            ->whereNull('invitation_id');
+                                            ->where('sales.status', Sale::STATUS_CHARGEBACK)
+                                            ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                            ->whereNull('invitation_id')
+                                            ->where('status_enum', Transaction::STATUS_CHARGEBACK)
+                                            ->sum('transactions.value');
 
-                $queryCount = $transactions->count();
-
-                $queryAverageTicket = $transactions->avg('transactions.value');
-
-                $queryComission = $transactions->sum('transactions.value');
-
-                $queryChargeback = Transaction::where('user_id', $userId)
-                                                ->join('sales', 'sales.id', 'transactions.sale_id')
-                                                ->where('sales.project_id', $projectId)
-                                                ->where('sales.status', Sale::STATUS_CHARGEBACK)
-                                                ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                                                ->whereNull('invitation_id')
-                                                ->where('status_enum', Transaction::STATUS_CHARGEBACK)
-                                                ->sum('transactions.value');
-
-                return [
-                    'transactions' => $queryCount,
-                    'average_ticket' => foxutils()->formatMoney($queryAverageTicket / 100),
-                    'comission' => foxutils()->formatMoney($queryComission / 100),
-                    'chargeback' => foxutils()->formatMoney($queryChargeback / 100)
-                ];
-            });
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ]);
-        }
+            return [
+                'transactions' => $queryCount,
+                'average_ticket' => foxutils()->formatMoney($queryAverageTicket / 100),
+                'comission' => foxutils()->formatMoney($queryComission / 100),
+                'chargeback' => foxutils()->formatMoney($queryChargeback / 100)
+            ];
+        });
     }
 
     public function getFinancesCashbacks($filters)
     {
-        try {
-            $cacheName = 'cashback-data-'.json_encode($filters);
-            return cache()->remember($cacheName, 300, function() use ($filters) {
-                $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-                $userId = auth()->user()->account_owner_id;
+        $cacheName = 'cashback-data-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $userId = auth()->user()->account_owner_id;
 
-                $cashbacks = Cashback::where('user_id', $userId)->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+            $cashbacks = Cashback::where('user_id', $userId)->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
 
-                $cashbacksValue = $cashbacks->sum('value');
-                $cashbacksCount = $cashbacks->count();
+            $cashbacksValue = $cashbacks->sum('value');
+            $cashbacksCount = $cashbacks->count();
 
-                return [
-                    'value' => foxutils()->formatMoney($cashbacksValue / 100),
-                    'quantity' => $cashbacksCount
-                ];
-            });
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ]);
-        }
+            return [
+                'value' => foxutils()->formatMoney($cashbacksValue / 100),
+                'quantity' => $cashbacksCount
+            ];
+        });
     }
 
     public function getFinancesPendings()
     {
-        try {
-            $cacheName = 'pending-data-';
-            return cache()->remember($cacheName, 300, function() {
-                $defaultGateways = [
-                    Safe2PayService::class,
-                    AsaasService::class,
-                    GetnetService::class,
-                    GerencianetService::class,
-                    // CieloService::class,
-                ];
+        $cacheName = 'pending-data-';
+        return cache()->remember($cacheName, 300, function() {
+            $defaultGateways = [
+                Safe2PayService::class,
+                AsaasService::class,
+                GetnetService::class,
+                GerencianetService::class,
+                // CieloService::class,
+            ];
 
-                $balancesPendingValue = [];
-                $balancesPendingCount = [];
+            $balancesPendingValue = [];
+            $balancesPendingCount = [];
 
-                $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
-                foreach($companies as $company) {
-                    foreach($defaultGateways as $gatewayClass) {
-                        $gateway = app()->make($gatewayClass);
-                        $gateway->setCompany($company);
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
+            foreach($companies as $company) {
+                foreach($defaultGateways as $gatewayClass) {
+                    $gateway = app()->make($gatewayClass);
+                    $gateway->setCompany($company);
 
-                        $balancesPendingValue[] = $gateway->getPendingBalance();
-                        $balancesPendingCount[] = $gateway->getPendingBalanceCount();
-                    }
+                    $balancesPendingValue[] = $gateway->getPendingBalance();
+                    $balancesPendingCount[] = $gateway->getPendingBalanceCount();
                 }
+            }
 
-                $totalPendingValue = array_sum($balancesPendingValue);
-                $totalPendingCount = array_sum($balancesPendingCount);
+            $totalPendingValue = array_sum($balancesPendingValue);
+            $totalPendingCount = array_sum($balancesPendingCount);
 
-                return [
-                    'value' => foxutils()->formatMoney($totalPendingValue / 100),
-                    'amount' => $totalPendingCount
-                ];
-            });
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ]);
-        }
+            return [
+                'value' => foxutils()->formatMoney($totalPendingValue / 100),
+                'amount' => $totalPendingCount
+            ];
+        });
     }
 
     public function getFinancesBlockeds()
     {
-        try {
-            $cacheName = 'blocked-data-';
-            return cache()->remember($cacheName, 300, function() {
-                $defaultGateways = [
-                    Safe2PayService::class,
-                    AsaasService::class,
-                    GetnetService::class,
-                    GerencianetService::class,
-                    // CieloService::class,
-                ];
+        $cacheName = 'blocked-data-';
+        return cache()->remember($cacheName, 300, function() {
+            $defaultGateways = [
+                Safe2PayService::class,
+                AsaasService::class,
+                GetnetService::class,
+                GerencianetService::class,
+                // CieloService::class,
+            ];
 
-                $balancesBlockedValue = [];
-                $balancesBlockedCount = [];
+            $balancesBlockedValue = [];
+            $balancesBlockedCount = [];
 
-                $balancesBlockedPendingValue = [];
-                $balancesBlockedPendinCount = [];
+            $balancesBlockedPendingValue = [];
+            $balancesBlockedPendinCount = [];
 
-                $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
-                foreach($companies as $company) {
-                    foreach($defaultGateways as $gatewayClass) {
-                        $gateway = app()->make($gatewayClass);
-                        $gateway->setCompany($company);
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
+            foreach($companies as $company) {
+                foreach($defaultGateways as $gatewayClass) {
+                    $gateway = app()->make($gatewayClass);
+                    $gateway->setCompany($company);
 
-                        $balancesBlockedValue[] = $gateway->getBlockedBalance();
-                        $balancesBlockedCount[] = $gateway->getBlockedBalanceCount();
+                    $balancesBlockedValue[] = $gateway->getBlockedBalance();
+                    $balancesBlockedCount[] = $gateway->getBlockedBalanceCount();
 
-                        $balancesBlockedPendingValue[] = $gateway->getBlockedBalancePending();
-                        $balancesBlockedPendinCount[] = $gateway->getBlockedBalancePendingCount();
-                    }
+                    $balancesBlockedPendingValue[] = $gateway->getBlockedBalancePending();
+                    $balancesBlockedPendinCount[] = $gateway->getBlockedBalancePendingCount();
                 }
+            }
 
-                $totalBlockedValue = array_sum($balancesBlockedValue) + array_sum($balancesBlockedPendingValue);
-                $totalBlockedCount = array_sum($balancesBlockedCount) + array_sum($balancesBlockedPendinCount);
+            $totalBlockedValue = array_sum($balancesBlockedValue) + array_sum($balancesBlockedPendingValue);
+            $totalBlockedCount = array_sum($balancesBlockedCount) + array_sum($balancesBlockedPendinCount);
 
-                return [
-                    'value' => foxutils()->formatMoney($totalBlockedValue / 100),
-                    'amount' => $totalBlockedCount
-                ];
-            });
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ]);
-        }
+            return [
+                'value' => foxutils()->formatMoney($totalBlockedValue / 100),
+                'amount' => $totalBlockedCount
+            ];
+        });
     }
 
     public function getFinancesDistribuitions()
     {
-        try {
-            $cacheName = 'distribuitions-data-';
-            return cache()->remember($cacheName, 300, function() {
-                $defaultGateways = [
-                    Safe2PayService::class,
-                    AsaasService::class,
-                    GetnetService::class,
-                    GerencianetService::class,
-                    // CieloService::class,
-                ];
+        $cacheName = 'distribuitions-data-';
+        return cache()->remember($cacheName, 300, function() {
+            $defaultGateways = [
+                Safe2PayService::class,
+                AsaasService::class,
+                GetnetService::class,
+                GerencianetService::class,
+                // CieloService::class,
+            ];
 
-                $balancesAvailable = [];
-                $balancesPending = [];
-                $balancesBlocked = [];
-                $balancesBlockedPending = [];
+            $balancesAvailable = [];
+            $balancesPending = [];
+            $balancesBlocked = [];
+            $balancesBlockedPending = [];
 
-                $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
-                foreach($companies as $company) {
-                    foreach($defaultGateways as $gatewayClass) {
-                        $gateway = app()->make($gatewayClass);
-                        $gateway->setCompany($company);
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
+            foreach($companies as $company) {
+                foreach($defaultGateways as $gatewayClass) {
+                    $gateway = app()->make($gatewayClass);
+                    $gateway->setCompany($company);
 
-                        $balancesAvailable[] = $gateway->getAvailableBalance();
-                        $balancesPending[] = $gateway->getPendingBalance();
-                        $balancesBlocked[] = $gateway->getBlockedBalance();
-                        $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
-                    }
+                    $balancesAvailable[] = $gateway->getAvailableBalance();
+                    $balancesPending[] = $gateway->getPendingBalance();
+                    $balancesBlocked[] = $gateway->getBlockedBalance();
+                    $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
                 }
+            }
 
-                $availableBalance = array_sum($balancesAvailable);
-                $pendingBalance = array_sum($balancesPending);
-                $blockedBalance = array_sum($balancesBlocked);
-                $blockedBalancePending = array_sum($balancesBlockedPending);
+            $availableBalance = array_sum($balancesAvailable);
+            $pendingBalance = array_sum($balancesPending);
+            $blockedBalance = array_sum($balancesBlocked);
+            $blockedBalancePending = array_sum($balancesBlockedPending);
 
-                $totalBalance = ($availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending);
+            $totalBalance = ($availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending);
 
-                return [
-                    'available' => [
-                        'value' => foxutils()->formatMoney($availableBalance / 100),
-                        'percentage' => round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
-                        'color' => 'green'
-                    ],
-                    'pending' => [
-                        'value' => foxutils()->formatMoney($pendingBalance / 100),
-                        'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
-                        'color' => 'yellow'
-                    ],
-                    'blocked' => [
-                        'value' => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
-                        'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
-                        'color' => 'red'
-                    ],
-                    'total' => foxutils()->formatMoney($totalBalance / 100),
-                ];
-            });
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ]);
-        }
+            return [
+                'available' => [
+                    'value' => foxutils()->formatMoney($availableBalance / 100),
+                    'percentage' => round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'color' => 'green'
+                ],
+                'pending' => [
+                    'value' => foxutils()->formatMoney($pendingBalance / 100),
+                    'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'color' => 'yellow'
+                ],
+                'blocked' => [
+                    'value' => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
+                    'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'color' => 'red'
+                ],
+                'total' => foxutils()->formatMoney($totalBalance / 100),
+            ];
+        });
     }
 
     public function getFinancesWithdrawals()
     {
-        try {
-            $cacheName = 'withdrawals-data-';
-            cache()->forget($cacheName);
-            return cache()->remember($cacheName, 300, function() {
-                date_default_timezone_set('America/Sao_Paulo');
+        $cacheName = 'withdrawals-data-';
+        cache()->forget($cacheName);
+        return cache()->remember($cacheName, 300, function() {
+            date_default_timezone_set('America/Sao_Paulo');
 
-                $dateEnd = date('Y-m-d');
-                $dateStart = date('Y-m-d', strtotime($dateEnd . ' -5 month'));
+            $dateEnd = date('Y-m-d');
+            $dateStart = date('Y-m-d', strtotime($dateEnd . ' -5 month'));
 
-                $companies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
-                $withdrawals = Withdrawal::whereIn('company_id', $companies)
-                                            ->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ])
-                                            ->where('status', Withdrawal::STATUS_TRANSFERRED);
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+            $withdrawals = Withdrawal::whereIn('company_id', $companies)
+                                        ->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ])
+                                        ->where('status', Withdrawal::STATUS_TRANSFERRED);
 
-                $transactions = Transaction::whereIn('transactions.company_id', $companies)
-                                            ->where('user_id', auth()->user()->account_owner_id)
-                                            ->join('sales', 'transactions.sale_id', 'sales.id')
-                                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                                            ->whereBetween('sales.start_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
+            $transactions = Transaction::whereIn('transactions.company_id', $companies)
+                                        ->where('user_id', auth()->user()->account_owner_id)
+                                        ->join('sales', 'transactions.sale_id', 'sales.id')
+                                        ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                                        ->whereBetween('sales.start_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
 
-                $dateStart = Carbon::parse($dateStart);
-                $dateEnd = Carbon::parse($dateEnd);
+            $dateStart = Carbon::parse($dateStart);
+            $dateEnd = Carbon::parse($dateEnd);
 
-                $portugueseMonths = [
-                    'Jan' => 'Jan',
-                    'Feb' => 'Fev',
-                    'Mar' => 'Mar',
-                    'Apr' => 'Abr',
-                    'May' => 'Mai',
-                    'Jun' => 'Jun',
-                    'Jul' => 'Jul',
-                    'Aug' => 'Ago',
-                    'Sep' => 'Set',
-                    'Oct' => 'Out',
-                    'Nov' => 'Nov',
-                    'Dec' => 'Dez'
-                ];
-                $labelList = [];
-                $portugueseLabelList = [];
-                while ($dateStart->lessThanOrEqualTo($dateEnd)) {
-                    array_push($labelList, $dateStart->format('M'));
-                    array_push($portugueseLabelList, $portugueseMonths[$dateStart->format('M')]);
-                    $dateStart = $dateStart->addMonths(1);
+            $portugueseMonths = [
+                'Jan' => 'Jan',
+                'Feb' => 'Fev',
+                'Mar' => 'Mar',
+                'Apr' => 'Abr',
+                'May' => 'Mai',
+                'Jun' => 'Jun',
+                'Jul' => 'Jul',
+                'Aug' => 'Ago',
+                'Sep' => 'Set',
+                'Oct' => 'Out',
+                'Nov' => 'Nov',
+                'Dec' => 'Dez'
+            ];
+            $labelList = [];
+            $portugueseLabelList = [];
+            while ($dateStart->lessThanOrEqualTo($dateEnd)) {
+                array_push($labelList, $dateStart->format('M'));
+                array_push($portugueseLabelList, $portugueseMonths[$dateStart->format('M')]);
+                $dateStart = $dateStart->addMonths(1);
+            }
+
+            $withdrawals = $withdrawals->select(DB::raw('value, DATE(release_date) as date'))->get();
+
+            $transactions = $transactions->select(DB::raw('transactions.value, DATE(sales.start_date) as date'))->get();
+
+            $withdrawalData = [];
+            $transactionData = [];
+
+            $labelList = array_reverse($labelList);
+            foreach ($labelList as $label) {
+                $withdrawalDataValue = 0;
+                $transactionDataValue = 0;
+
+                foreach ($withdrawals as $withdrawal) {
+                    if (Carbon::parse($withdrawal->date)->format('M') == $label) {
+                        $withdrawalDataValue += intval(foxutils()->onlyNumbers($withdrawal->value));
+                    }
                 }
 
-                $withdrawals = $withdrawals->select(DB::raw('value, DATE(release_date) as date'))->get();
-
-                $transactions = $transactions->select(DB::raw('transactions.value, DATE(sales.start_date) as date'))->get();
-
-                $withdrawalData = [];
-                $transactionData = [];
-
-                $labelList = array_reverse($labelList);
-                foreach ($labelList as $label) {
-                    $withdrawalDataValue = 0;
-                    $transactionDataValue = 0;
-
-                    foreach ($withdrawals as $withdrawal) {
-                        if (Carbon::parse($withdrawal->date)->format('M') == $label) {
-                            $withdrawalDataValue += intval(foxutils()->onlyNumbers($withdrawal->value));
-                        }
+                foreach ($transactions as $transaction) {
+                    if (Carbon::parse($transaction->date)->format('M') == $label) {
+                        $transactionDataValue += intval(foxutils()->onlyNumbers($transaction->value));
                     }
-
-                    foreach ($transactions as $transaction) {
-                        if (Carbon::parse($transaction->date)->format('M') == $label) {
-                            $transactionDataValue += intval(foxutils()->onlyNumbers($transaction->value));
-                        }
-                    }
-
-                    array_push($withdrawalData, $withdrawalDataValue);
-                    array_push($transactionData, $transactionDataValue);
                 }
 
-                $totalWithdrawal = array_sum($withdrawalData);
-                $totalTransactions = array_sum($transactionData);
+                array_push($withdrawalData, $withdrawalDataValue);
+                array_push($transactionData, $transactionDataValue);
+            }
 
-                return [
-                    'chart' => [
-                        'labels' => array_reverse($portugueseLabelList),
-                        'withdrawal' => [
-                            'values' => $withdrawalData,
-                            'total' => foxutils()->formatMoney($totalWithdrawal / 100)
-                        ],
-                        'income' => [
-                            'values' => $transactionData,
-                            'total' => foxutils()->formatMoney($totalTransactions / 100)
-                        ]
+            $totalWithdrawal = array_sum($withdrawalData);
+            $totalTransactions = array_sum($transactionData);
+
+            return [
+                'chart' => [
+                    'labels' => array_reverse($portugueseLabelList),
+                    'withdrawal' => [
+                        'values' => $withdrawalData,
+                        'total' => foxutils()->formatMoney($totalWithdrawal / 100)
+                    ],
+                    'income' => [
+                        'values' => $transactionData,
+                        'total' => foxutils()->formatMoney($totalTransactions / 100)
                     ]
-                ];
-            });
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ]);
-        }
+                ]
+            ];
+        });
     }
 }
