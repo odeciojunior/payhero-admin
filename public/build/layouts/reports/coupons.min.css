@@ -1994,7 +1994,7 @@ h4.number{
 .conversion-colors li:last-child { margin: 0; }
 
 .box-total-region {
-    height: 152px;
+    height: 150px;
     overflow-x: hidden;
     flex: auto !important;
     position: relative;
