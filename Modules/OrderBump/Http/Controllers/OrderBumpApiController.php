@@ -76,7 +76,7 @@ class OrderBumpApiController extends Controller
             if ($rule->apply_on_plans[0] === 'all') {
                 $rule->apply_on_plans = collect()->push((object)[
                     'id' => 'all',
-                    'name' => 'Qualquer plano',
+                    'name' => ($rule->use_variants ? 'plano' : 'produto'),
                     'description' => '',
                     'variants' => 0,
                 ]);

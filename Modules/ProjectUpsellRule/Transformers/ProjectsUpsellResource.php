@@ -45,7 +45,7 @@ class ProjectsUpsellResource extends JsonResource
         if ($this->apply_on_plans[0] === 'all') {
             $this->apply_on_plans = collect()->push((object)[
                 'id' => 'all',
-                'name' => 'Qualquer plano',
+                'name' => 'Qualquer ' . ($this->use_variants ? 'plano' : 'produto'),
                 'description' => '',
                 'variants' => 0,
             ]);
@@ -64,9 +64,27 @@ class ProjectsUpsellResource extends JsonResource
             'discount' => $this->discount,
             'active_flag' => $this->active_flag,
             'use_variants' => $this->use_variants,
-            'apply_on_shipping' => $this->apply_on_shipping,
-            'apply_on_plans' => $this->apply_on_plans,
-            'offer_on_plans' => $this->offer_on_plans,
+            'apply_on_shipping' => $this->apply_on_shipping->map(function ($shipping) {
+                return [
+                    'id' => $shipping->id === 'all' ? 'all' : Hashids::encode($shipping->id),
+                    'name' => $shipping->name,
+                    'information' => $shipping->information,
+                ];
+            }),
+            'apply_on_plans' => $this->apply_on_plans->map(function ($plan) {
+                return [
+                    'id' => $plan->id === 'all' ? 'all' : Hashids::encode($plan->id),
+                    'name' => $plan->name,
+                    'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
+                ];
+            }),
+            'offer_on_plans' => $this->offer_on_plans->map(function ($plan) {
+                return [
+                    'id' => Hashids::encode($plan->id),
+                    'name' => $plan->name,
+                    'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
+                ];
+            }),
         ];
     }
 }

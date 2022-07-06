@@ -367,16 +367,15 @@ $(document).ready(function () {
 
     //Search plan
     function setPlanSelect2(element) {
-        const $dropdownParent = $('#modal_add_upsell');
         const $element = typeof element === 'string' ? $(element) : element;
 
-        const useVariants = $dropdownParent.find('.use-variants-upsell').prop('checked') ? 1 : 0;
+        const useVariants = $element.closest('form').find('.use-variants-upsell').prop('checked') ? 1 : 0;
         const targetName = useVariants ? 'plano' : 'produto';
 
         let configs = {
             placeholder: `Nome do ${targetName}`,
             multiple: true,
-            dropdownParent: $dropdownParent,
+            dropdownParent: $('#modal_add_upsell'),
             language: {
                 noResults: function () {
                     return `Nenhum ${targetName} encontrado`;

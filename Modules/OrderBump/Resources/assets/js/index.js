@@ -176,7 +176,6 @@ $(() => {
         for (let pair of formData.entries()) {
             data[pair[0]] = pair[1];
         }
-        console.log(data)
 
         $.ajax({
             method: 'POST',
