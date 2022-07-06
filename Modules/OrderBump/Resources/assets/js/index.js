@@ -128,6 +128,12 @@ $(() => {
                 $('#update-description-order-bump').val(rule.description);
                 $('#update-discount-order-bump').val(rule.discount);
 
+                $('#update-active-flag-order-bump').val(rule.active_flag)
+                    .prop('checked', rule.active_flag === 1);
+                $('#modal-update-order-bump .use-variants-order-bump').val(rule.use_variants)
+                    .prop('checked', rule.use_variants === 1)
+                    .trigger('change');
+
                 let applyOnShipping = [];
                 applyOnShippingInput.html('');
                 for (let shipping of rule.apply_on_shipping) {
@@ -152,10 +158,9 @@ $(() => {
                 }
                 offerPlansInput.val(offerPlans);
 
-                $('#update-active-flag-order-bump').val(rule.active_flag)
-                    .prop('checked', rule.active_flag === 1);
-                $('#modal-update-order-bump .use-variants-order-bump').val(rule.use_variants)
-                    .prop('checked', rule.use_variants === 1);
+                setShippingSelect2('#update-apply-on-shipping-order-bump', '#modal-update-order-bump');
+                setPlanSelect2('#update-apply-on-plans-order-bump', '#modal-update-order-bump');
+                setPlanSelect2('#update-offer-plans-order-bump', '#modal-update-order-bump');
 
                 $('#btn-update-order-bump').data('id', id);
                 $('#modal-update-order-bump').modal('show');
@@ -316,6 +321,7 @@ $(() => {
 
     setShippingSelect2('#store-apply-on-shipping-order-bump', '#modal-store-order-bump');
     setShippingSelect2('#update-apply-on-shipping-order-bump', '#modal-update-order-bump');
+    $('#store-apply-on-shipping-order-bump').html(`<option value="all">Qualquer frete</option>`).val('all');
 
     //Search plan
     function setPlanSelect2(element, dropdownParent) {
@@ -412,12 +418,13 @@ $(() => {
         if (slider.prop('checked')) {
             applyLabel.text('Ao comprar os plano:');
             offerLabel.text('Oferecer os planos:');
+            applySelect.html(`<option value="all">Qualquer plano</option>`).val('all').trigger('change');
         } else {
             applyLabel.text('Ao comprar os produtos:');
             offerLabel.text('Oferecer os produtos:');
+            applySelect.html(`<option value="all">Qualquer produto</option>`).val('all').trigger('change');
         }
 
-        applySelect.html('').val('').trigger('change');
         offerSelect.html('').val('').trigger('change');
 
         setPlanSelect2(applySelect, modal)
