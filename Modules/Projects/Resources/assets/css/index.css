@@ -49,3 +49,20 @@
 #data-table-projects{
     scrollbar-width: none;
 }
+
+.new-store-modal-option a {
+    width: 115px;
+    height: 115px;
+    border: 1px solid #2E85EC;
+    border-radius: 8px;
+    background: #F4F6FB;
+}
+.new-store-modal-option a:hover {
+    border: 2px solid #2E85EC;
+    background: #CBE0FA;;
+}
+.new-store-modal-option span {
+    font-weight: 400;
+    color: #5B5B5B;
+    margin-top: 12px;
+}

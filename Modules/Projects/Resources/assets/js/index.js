@@ -204,9 +204,5 @@ $(function () {
         });
     });
 
-    $('#btn-add-project').on('click', function () {
-        $('#new-project-modal').show();
-    });
-
     index();
 });
