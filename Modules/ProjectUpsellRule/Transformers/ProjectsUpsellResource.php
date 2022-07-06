@@ -2,12 +2,12 @@
 
 namespace Modules\ProjectUpsellRule\Transformers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Shipping;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,49 +20,53 @@ class ProjectsUpsellResource extends JsonResource
      */
     public function toArray($request)
     {
-        $applyPlanArray = [];
-        $offerPlanArray = [];
-        $planModel = new Plan();
-        $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants');
+        $this->apply_on_shipping = json_decode($this->apply_on_shipping);
+        $this->apply_on_plans = json_decode($this->apply_on_plans);
+        $this->offer_on_plans = json_decode($this->offer_on_plans);
 
-        if (!empty($this->apply_on_plans)) {
-            $applyPlanDecoded = json_decode($this->apply_on_plans);
-            if (in_array('all', $applyPlanDecoded)) {
-                $applyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano', 'description' => ''];
-            } else {
-                $applyPlans = $planModel->select('id', 'name', $rawVariants)
-                    ->whereIn('id', $applyPlanDecoded)
-                    ->get();
-                foreach ($applyPlans as $plan) {
-                    $applyPlanArray[] = [
-                        'id' => Hashids::encode($plan->id),
-                        'name' => $plan->name,
-                        'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
-                    ];
-                }
-            }
+        $selectPlans = ['id', 'name', 'description'];
+        if ($this->use_variants) {
+            $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants');
+            $selectPlans[] = $rawVariants;
         }
-        if (!empty($this->offer_on_plans)) {
-            $offerPlanDecoded = json_decode($this->offer_on_plans);
-            $offerPlans = $planModel->select('id', 'name', $rawVariants)
-                ->whereIn('id', $offerPlanDecoded)
+
+        if ($this->apply_on_shipping[0] === 'all') {
+            $this->apply_on_shipping = collect()->push((object)[
+                'id' => 'all',
+                'name' => 'Qualquer frete',
+                'information' => '',
+            ]);
+        } else {
+            $this->apply_on_shipping = Shipping::select('id', 'name', 'information')
+                ->whereIn('id', $this->apply_on_shipping)
                 ->get();
-            foreach ($offerPlans as $plan) {
-                $offerPlanArray[] = [
-                    'id' => Hashids::encode($plan->id),
-                    'name' => $plan->name,
-                    'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
-                ];
-            }
         }
+
+        if ($this->apply_on_plans[0] === 'all') {
+            $this->apply_on_plans = collect()->push((object)[
+                'id' => 'all',
+                'name' => 'Qualquer plano',
+                'description' => '',
+                'variants' => 0,
+            ]);
+        } else {
+            $this->apply_on_plans = Plan::select($selectPlans)
+                ->whereIn('id', $this->apply_on_plans)
+                ->get();
+        }
+        $this->offer_on_plans = Plan::select($selectPlans)
+            ->whereIn('id', $this->offer_on_plans)
+            ->get();
 
         return [
             'id' => Hashids::encode($this->id),
             'description' => Str::limit($this->description, 20),
             'discount' => $this->discount,
             'active_flag' => $this->active_flag,
-            'apply_on_plans' => $applyPlanArray,
-            'offer_on_plans' => $offerPlanArray,
+            'use_variants' => $this->use_variants,
+            'apply_on_shipping' => $this->apply_on_shipping,
+            'apply_on_plans' => $this->apply_on_plans,
+            'offer_on_plans' => $this->offer_on_plans,
         ];
     }
 }

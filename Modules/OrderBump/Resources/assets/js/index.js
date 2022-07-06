@@ -410,7 +410,7 @@ $(() => {
         const offerSelect = offerContainer.find('select');
 
         if (slider.prop('checked')) {
-            applyLabel.text('Ao comprar o plano:');
+            applyLabel.text('Ao comprar os plano:');
             offerLabel.text('Oferecer os planos:');
         } else {
             applyLabel.text('Ao comprar os produtos:');
@@ -422,7 +422,7 @@ $(() => {
 
         setPlanSelect2(applySelect, modal)
         setPlanSelect2(offerSelect, modal)
-    });
+    }).trigger('change');
 
     setPlanSelect2('#store-apply-on-plans-order-bump', '#modal-store-order-bump');
     setPlanSelect2('#store-offer-plans-order-bump', '#modal-store-order-bump');
