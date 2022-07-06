@@ -135,6 +135,33 @@ class ReportsMarketingApiController extends Controller
 
     public function getResumeRegions(Request $request)
     {
+
+        return response()->json([
+            "data" => [
+                [
+                  "region" => "RO",
+                  "access" => 1,
+                  "conversion" => 0,
+                  "percentage_access" => 25,
+                  "percentage_conversion" => 0
+                ],
+                [
+                  "region" => "RS",
+                  "access" => 2,
+                  "conversion" => 0,
+                  "percentage_access" => 50.0,
+                  "percentage_conversion" => 0.0
+                ],
+                [
+                  "region" => "SC",
+                  "access" => 0,
+                  "conversion" => 1,
+                  "percentage_access" => 25.0,
+                  "percentage_conversion" => 25.0
+                ],
+              ]
+        ]);
+
         $request->validate([
             'date_range' => 'required',
             'project_id' => 'required'
@@ -144,6 +171,8 @@ class ReportsMarketingApiController extends Controller
 
         $reportService = new ReportMarketingService();
         $regions = $reportService->getResumeRegions($data);
+
+        dd(['data' => $regions]);
 
         return response()->json([
             'data' => $regions

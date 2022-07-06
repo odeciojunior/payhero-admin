@@ -629,6 +629,9 @@ $(function () {
                         $(".states").append(`<dt>${regionArr[i].region}</dt>`);
                     }
 
+                    console.log(statesArr);
+                    console.log(conversionArr);
+                    console.log(accessArr);
                     graphRegions(statesArr, conversionArr, accessArr);
 
                 } else {
