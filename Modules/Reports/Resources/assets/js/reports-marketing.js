@@ -94,7 +94,7 @@ function loadOrigins(link = null) {
                 $("#card-origin .ske-load").hide();
                 $(".table-vendas").addClass("table-striped");
 
-                pagination(response, "origins", updateSalesByOrigin);
+                pagination(response, "origins", loadOrigins);
                 $(".origin-report").show();
             }
 
@@ -307,7 +307,7 @@ function loadFrequenteSales() {
                         container: '#block-sales'
                     });
                 });
-    
+
                 if(response.data.length < 4 ) {
                     salesBlock = `<div>${noListProducts}</div>`;
                     $("#block-sales").append(salesBlock);
