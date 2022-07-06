@@ -140,25 +140,40 @@ class ReportsMarketingApiController extends Controller
             "data" => [
                 [
                   "region" => "RO",
-                  "access" => 1,
+                  "access" => 100,
                   "conversion" => 0,
                   "percentage_access" => 25,
                   "percentage_conversion" => 0
                 ],
                 [
                   "region" => "RS",
-                  "access" => 2,
+                  "access" => 100,
                   "conversion" => 0,
                   "percentage_access" => 50.0,
                   "percentage_conversion" => 0.0
                 ],
                 [
                   "region" => "SC",
-                  "access" => 0,
+                  "access" => 100,
                   "conversion" => 1,
                   "percentage_access" => 25.0,
                   "percentage_conversion" => 25.0
                 ],
+                [
+                    "region" => "SP",
+                    "access" => 100,
+                    "conversion" => 5,
+                    "percentage_access" => 25.0,
+                    "percentage_conversion" => 25.0
+                  ],
+
+                  [
+                    "region" => "AC",
+                    "access" => 100,
+                    "conversion" => 2,
+                    "percentage_access" => 25.0,
+                    "percentage_conversion" => 25.0
+                  ],
               ]
         ]);
 

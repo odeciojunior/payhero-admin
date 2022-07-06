@@ -1887,40 +1887,46 @@ h4.number{
 .footer-regions .states {
     position: absolute;
     left: 0;
-    height: 124px;
     top: 8px;
 }
 .footer-regions dt {
     color: #fff;
     font-weight: 700;
     font-size: 12px;
-    height: 24px;
-    line-height: 25px;
-    margin-bottom: 9px;
+    height: 33px;
+    line-height: 31px;
+    margin-bottom: 15px;
     text-align: center;
     padding-left: 5px;
-    border: 1px solid transparent;
 }
 
 .footer-regions section { flex: 1; }
 
 .conversion-colors {
-    margin: 0;
+    margin: 7px 0 0 0;
     padding: 0;
-    height: 126px;
     display: flex;
     flex-direction: column;
 }
 .conversion-colors li {
     list-style: none;
-    height: 26px;
+    height: 34px;
     text-align: center;
-    line-height: 25px;
-    margin: 0 0 8px 0;
+    line-height: 34px;
+    margin: 0 0 14px 0;
     font-weight: bold;
     font-size: 12px;
     border: 1px solid transparent;
 }
+.conversion-colors li:last-child { margin: 0; }
+
+.box-total-region {
+    height: 152px;
+    overflow-x: hidden;
+    flex: auto !important;
+    position: relative;
+}
+
 .conversion-colors .blue, .conversion-colors li:nth-child(1) { color: #2E85EC; }
 .conversion-colors .purple, .conversion-colors li:nth-child(2) { color: #665FE8; }
 .conversion-colors .pink, .conversion-colors li:nth-child(3) { color: #F43F5E; }
@@ -2208,14 +2214,11 @@ h4.number{
 #card-sales .new-graph-sell,
 #card-cashback .new-graph-cashback { height: 109px; }
 
-#card-regions .new-graph-regions.visible {
-    width: 180px;
-    height: 200px;
+#card-regions .new-graph-regions { 
+    width: 157px; 
+    float: left;
 }
-#card-regions .no-graph {
-    /* height: 215px; */
-    background-position: center;
-}
+
 #card-regions .ske-load,
 #card-origin .ske-load,
 #card-coupons .ske-load { top: 55%; }
