@@ -13,7 +13,7 @@
     @endpush
 
     <!-- PAGINA INTEIRA -->
-    <div class="page">
+    <div class="page" style="padding-bottom: 0;">
         <!-- CONTAINER DO CONTEUDO DA PAGINA -->
         <div class="page-content container pr-5" style="padding-top: 0">
 
@@ -56,22 +56,22 @@
                 </div>
             </div>
 
-            <!-- CONTAINER QUE EXIBI OS CARS -->
-            <div id="data-table-projects" class="row page-header container pl-40 mt-10 mt-sm-0 pr-0 pt-15 pb-0">
+            <!-- CONTAINER QUE EXIBE OS CARS -->
+            <div id="data-table-projects" class="row page-header container mt-10 mt-sm-0 pr-0 pt-15 pb-0">
                 {{-- GERADO POR JAVASCRIPT --}}
+            </div>
+
+            <!-- LEGENDA DRAG DROP -->
+            <div id="subtitle_drag_drop" class="container pl-30 pt-25">
+                <div class="px-0">
+                    Você pode reordenar suas lojas utilizando o arrastar e soltar
+                    <img src="build/layouts/projects/img/dragItem.svg" class="ml-5"/>
+                </div>
             </div>
         </div>
 
         @include('projects::empty')
         @include('projects::empty-company')
-    </div>
-
-    <!-- LEGENDA DRAG DROP -->
-    <div id="subtitle_drag_drop" class="page-content container py-25">
-        <div class="mx-60 px-0">
-            Você pode reordenar suas lojas utilizando o arrastar e soltar
-            <img src="build/layouts/projects/img/dragItem.svg" class="ml-5"/>
-        </div>
     </div>
 
     <div class="modal fade" id="new-project-modal" tabindex="-1" role="dialog">
