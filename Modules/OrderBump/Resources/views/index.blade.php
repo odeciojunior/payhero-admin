@@ -64,6 +64,10 @@
                         <td class="text-left order-bump-discount"></td>
                     </tr>
                     <tr>
+                        <td class="table-title">Ao selecionar os fretes</td>
+                        <td class="text-left order-bump-apply-shipping"></td>
+                    </tr>
+                    <tr>
                         <td class="table-title">Ao comprar planos</td>
                         <td class="text-left order-bump-apply-plans"></td>
                     </tr>

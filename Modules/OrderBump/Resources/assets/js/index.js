@@ -88,6 +88,9 @@ $(() => {
             },
             success: resp => {
                 let rule = resp.data;
+                let applyOnShipping = rule.apply_on_shipping
+                    .map(shipping => shipping.name + (shipping.information ? ` - ${shipping.information}` : ''))
+                    .join(' / ');
                 let applyOnPlans = rule.apply_on_plans
                     .map(plan => plan.name + (plan.description ? ` - ${plan.description}` : ''))
                     .join(' / ');
@@ -96,6 +99,7 @@ $(() => {
                     .join(' / ');
                 $('#order-bump-show-table .order-bump-description').html(rule.description);
                 $('#order-bump-show-table .order-bump-discount').html(rule.discount + '%');
+                $('#order-bump-show-table .order-bump-apply-shipping').html(applyOnShipping);
                 $('#order-bump-show-table .order-bump-apply-plans').html(applyOnPlans);
                 $('#order-bump-show-table .order-bump-offer-plans').html(offerPlans);
                 $('#order-bump-show-table .order-bump-status').html(rule.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`);
