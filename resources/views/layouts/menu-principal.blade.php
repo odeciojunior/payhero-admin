@@ -154,7 +154,7 @@
         </div>
     </div>
 
-    
+
 </nav>
 {{--SIDE BAR--}}
 <div class="site-menubar">
@@ -285,63 +285,12 @@
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
         @if(auth()->user()->hasAnyPermission(['report_sales','report_checkouts','report_coupons','report_pending','report_blockedbalance']))
             <li class="site-menu-item has-sub">
-                <a href="{!! route('reports.new') !!}" id="reports-link">
+                <a href="{!! route('reports.resume') !!}" id="reports-link">
                     <span class="bg-menu">
                         <img src="{{ mix('build/global/img/svg/relatorios.svg') }}" alt="Relatórios">
                     </span>
                     <span class="site-menu-title">Relatórios</span>
-                    <!-- <span class="site-menu-arrow"></span> -->
                 </a>
-                <ul class="site-menu-sub">
-                    <!-- hasanyrole('account_owner|admin|finantial') -->
-                    @can('report_sales')
-                        <!-- <li class="site-menu-item has-sub">
-                            <a href="{!! route('reports.index') !!}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Vendas</span>
-                            </a>
-                        </li> -->
-                    @endcan
-
-                    <!-- hasanyrole('account_owner|admin') -->
-                    @can('report_checkouts')
-                        <!-- <li class="site-menu-item">
-                            <a href="{{ route('reports.checkouts') }}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Acessos</span>
-                            </a>
-                        </li> -->
-                    @endcan
-
-                    <!-- hasanyrole('account_owner|admin|attendance') -->
-                    @can('report_coupons')
-                        <!-- <li class="site-menu-item">
-                            <a href="{{ route('reports.coupons') }}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Cupons de desconto</span>
-                            </a>
-                        </li> -->
-                    @endcan
-
-                    <!-- hasanyrole('account_owner|admin|finantial') -->
-                    @can('report_pending')
-                        <!-- <li class="site-menu-item">
-                            <a href="{{ route('reports.pending') }}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Saldo pendente</span>
-                            </a>
-                        </li> -->
-                    @endcan
-
-                    @can('report_blockedbalance')
-                        <!-- <li class="site-menu-item">
-                            <a href="{{ route('reports.blockedbalance') }}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Saldo retido</span>
-                            </a>
-                        </li> -->
-                    @endcan
-                </ul>
             </li>
         @endhasanyrole
 

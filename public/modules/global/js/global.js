@@ -4,9 +4,9 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
 
     var current_url = window.location.pathname;
-    
+
     if (current_url.includes('reports')) $("#reports-link").addClass('menu-active');
-    
+
     // } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')) {
     //      $("#sales-link").addClass('menu-active');
     // }

@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{{ mix('build/layouts/reports/index.min.css') }}">
     @endpush
 
-    
+
     <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="filter-container row justify-content-between">
@@ -67,8 +67,8 @@
                             <fieldset>
                                 <div class="form-group form-icons">
                                     <i class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         placeholder="E-mail para enviar os relatórios"
                                         class="modal-email"
                                     >
@@ -97,13 +97,13 @@
                 </div>
             </div>
         </div>
-        
+
         <div style="overflow: hidden;" id="project-not-empty" style="display: none">
 
             <section class="container box-reports" id="reports-content">
 				<div class="row">
 					<div class="col-12">
-						<!-- /FINANCE -->	
+						<!-- /FINANCE -->
 						<div class="row">
 							<header class="header-reports container">
 								<h3 class="title-reports">
@@ -128,7 +128,7 @@
                                                         <div class="onPreLoad" id="block-comission"></div>
                                                     </div>
 												</div>
-                                                
+
 											</div>
 											<div class="card" id="card-pending">
 												<div class="card-body data-content">
@@ -142,7 +142,7 @@
 											</div>
                                             <div class="card" id="card-cashback">
 												<div class="card-body data-content">
-                                                    <div class="content-info">    
+                                                    <div class="content-info">
                                                         <header class="container">
                                                             <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
                                                         </header>
@@ -156,7 +156,7 @@
                             </div>
 						</div>
 						<!-- /FINANCE -->
-						
+
 						<!-- SELL -->
 						<div class="row">
 							<header class="header-reports container">
@@ -164,7 +164,7 @@
 									<span class="box-title ico-sell">vendas</span>
 									Vendas
 								</h3>
-                                <a href="{!! route('reports.index') !!}" class="box-link">
+                                <a href="{!! route('reports.sales') !!}" class="box-link">
                                     <span>Acessar&nbsp&nbsp</span>
                                     <i class="o-arrow-right-1 redirect"></i>
                                 </a>
@@ -265,11 +265,11 @@
                                                                     <div class="skeleton skeleton-text"></div>
                                                                 </div>
                                                             </div>
-    
+
                                                             <header class="col-6">
                                                                 <h6 class="font-size-16 gray-700"> Origens </h6>
                                                             </header>
-                                                            
+
                                                             <div class="col-6 sirius-select-origin" style="padding-right: 11px;">
                                                                 <select class="float-right sirius-select max-118" id='origin'>
                                                                     <option selected value="src">SRC</option>
