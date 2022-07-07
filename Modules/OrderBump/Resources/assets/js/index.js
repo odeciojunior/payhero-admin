@@ -401,6 +401,14 @@ $(() => {
         }
     });
 
+    if(!['shopify', 'woocommerce'].includes($('#project_type').val())){
+        $('.use-variants-order-bump')
+            .prop('checked', false)
+            .val(0)
+            .closest('.switch-holder')
+            .hide();
+    }
+
     $('.use-variants-order-bump').on('change', function () {
         const slider = $(this);
         const modal = slider.closest('.modal');

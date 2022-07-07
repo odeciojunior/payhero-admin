@@ -435,6 +435,14 @@ $(document).ready(function () {
     setPlanSelect2('#add_offer_on_plans');
     setPlanSelect2('#edit_offer_on_plans');
 
+    if(!['shopify', 'woocommerce'].includes($('#project_type').val())){
+        $('.use-variants-upsell')
+            .prop('checked', false)
+            .val(0)
+            .closest('.switch-holder')
+            .hide();
+    }
+
     $('.use-variants-upsell').on('change', function () {
         const slider = $(this);
         const form = slider.closest('form');
