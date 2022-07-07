@@ -610,7 +610,7 @@ $(function () {
                     </footer>
                 `;
 
-                if(response.data.length == 0){
+                if(response.data.length > 0){
                     $("#block-regions").html(regionsHtml);
 
                     let regionArr       = [];
