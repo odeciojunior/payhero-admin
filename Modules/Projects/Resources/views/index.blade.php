@@ -71,9 +71,9 @@
         <div class="modal fade" id="new-store-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content rounded">
-                    <div class="modal-header simple-border-bottom px-20">
-                        <h4 class="col-12 modal-title text-center" style="color:#464646; font: normal normal 600 22px Muli;">Criar nova loja</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <div class="d-flex flex-row-reverse simple-border-bottom px-20">
+                        <h4 class="new-store-modal-option-title text-center">Criar nova loja</h4>
+                        <button type="button" class="new-store-modal-option-close-btn" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
