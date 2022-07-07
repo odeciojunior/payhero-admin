@@ -176,7 +176,7 @@
                                                     <strong>Saques</strong>
                                                 </h5>
                                             </header>
-                                            <div class="graph">
+                                            <div class="graph box-withdraw">
                                                 <div class="onPreLoad" id="draw"></div>
                                             </div>
                                         </div>

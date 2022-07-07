@@ -566,6 +566,7 @@ h4.number{
 .cards-reports .card {
     width: 100%;
     border-radius: 8px;
+    height: 210px;
 }
 
 .-origin { height: 370px; }
@@ -2511,8 +2512,13 @@ h4.number{
     transform: translate(0, -30%);
 }
 
-.margin-store { margin-right: 1.0715rem !important; }
+@media(min-width: 992px) {
+    .margin-store { margin-right: 1.0715rem !important; }
+}
 
+.box-withdraw {
+    height: 275px;
+}
 .date-picker {
   width: 170px;
   height: 25px;
