@@ -4,6 +4,7 @@ namespace Modules\Shipping\Transformers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Plan;
 use Vinkla\Hashids\Facades\Hashids;
@@ -20,48 +21,31 @@ class ShippingResource extends JsonResource
      */
     public function toArray($request)
     {
-        $applyPlanArray = [];
-        $notApplyPlanArray = [];
-        $planModel = new Plan();
+        $this->apply_on_plans = json_decode($this->apply_on_plans);
+        $this->not_apply_on_plans = json_decode($this->not_apply_on_plans);
 
-        if (!empty($this->apply_on_plans)) {
-            $applyPlanDecoded = json_decode($this->apply_on_plans);
-            if (in_array('all', $applyPlanDecoded)) {
-                $applyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano', 'description' => ''];
-            } else {
-                foreach ($applyPlanDecoded as $key => $value) {
-                    $plan = $planModel->find($value);
-                    if (!empty($plan)) {
-                        $applyPlanArray[] = [
-                            'id' => Hashids::encode($plan->id),
-                            'name' => $plan->name,
-                            'description' => $plan->description,
-                        ];
-                    }
-                }
-            }
+        $selectPlans = ['id', 'name', 'description'];
+        if ($this->use_variants) {
+            $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants');
+            $selectPlans[] = $rawVariants;
         }
 
-        if (!empty($this->not_apply_on_plans)) {
-            $notApplyPlanDecoded = json_decode($this->not_apply_on_plans);
-            if (in_array('all', $notApplyPlanArray)) {
-                $notApplyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano', 'description' => ''];
-            } else {
-                foreach ($notApplyPlanDecoded as $key => $value) {
-                    $plan = $planModel->find($value);
-                    if (!empty($plan)) {
-                        $notApplyPlanArray[] = [
-                            'id' => Hashids::encode($plan->id),
-                            'name' => $plan->name,
-                            'description' => $plan->description,
-                        ];
-                    }
-                }
-            }
+        if ($this->apply_on_plans[0] === 'all') {
+            $this->apply_on_plans = collect()->push((object)[
+                'id' => 'all',
+                'name' => 'Qualquer ' . ($this->use_variants ? 'plano' : 'produto'),
+                'description' => '',
+                'variants' => 0,
+            ]);
+        } else {
+            $this->apply_on_plans = Plan::select($selectPlans)
+                ->whereIn('id', $this->apply_on_plans)
+                ->get();
         }
-        if($this->regions_values){
-            $this->value = 'Por regiões';
-        }
+
+        $this->not_apply_on_plans = Plan::select($selectPlans)
+            ->whereIn('id', $this->not_apply_on_plans)
+            ->get();
 
         return [
             'id_code' => Hashids::encode($this->id),
@@ -81,8 +65,20 @@ class ShippingResource extends JsonResource
             'pre_selected' => $this->pre_selected,
             'pre_selected_translated' => Lang::get('definitions.enum.shipping.pre_selected.' . $this->present()->getPreSelectedStatus($this->pre_selected)),
             'use_variants' => $this->use_variants,
-            'apply_on_plans' => $applyPlanArray,
-            'not_apply_on_plans' => $notApplyPlanArray,
+            'apply_on_plans' => $this->apply_on_plans->map(function ($plan) {
+                return [
+                    'id' => $plan->id === 'all' ? 'all' : Hashids::encode($plan->id),
+                    'name' => $plan->name,
+                    'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
+                ];
+            }),
+            'not_apply_on_plans' => $this->not_apply_on_plans->map(function ($plan) {
+                return [
+                    'id' => $plan->id === 'all' ? 'all' : Hashids::encode($plan->id),
+                    'name' => $plan->name,
+                    'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
+                ];
+            }),
         ];
     }
 }

@@ -26,7 +26,7 @@ class ProjectsUpsellResource extends JsonResource
 
         $selectPlans = ['id', 'name', 'description'];
         if ($this->use_variants) {
-            $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants');
+            $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants');
             $selectPlans[] = $rawVariants;
         }
 

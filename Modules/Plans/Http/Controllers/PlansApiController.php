@@ -612,7 +612,6 @@ class PlansApiController extends Controller
                 $plans->select('id', 'name', 'description');
             }
 
-
             if (!empty($data['is_config'])) {
                 $plans = $plans->orderBy('name')->take(10)->get();
             } else {
