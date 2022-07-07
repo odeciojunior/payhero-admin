@@ -1880,57 +1880,70 @@ h4.number{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 363px;
-    padding-left: 0;
+    width: 100%;
+    padding-left: 15px;
     position: relative;
 }
+@media only screen and (min-width: 1300px) {
+    .footer-regions {
+        width: 363px;
+        padding-left: 0;
+    }
+}
+
 .footer-regions .states {
     position: absolute;
     left: 0;
-    top: 8px;
+    top: 3px;
 }
 .footer-regions dt {
     color: #fff;
     font-weight: 700;
     font-size: 12px;
-    height: 33px;
-    line-height: 31px;
-    margin-bottom: 15px;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 5px;
     text-align: center;
     padding-left: 5px;
+    border: 1px solid transparent;
 }
 
 .footer-regions section { flex: 1; }
 
 .conversion-colors {
-    margin: 7px 0 0 0;
     padding: 0;
     display: flex;
     flex-direction: column;
 }
 .conversion-colors li {
     list-style: none;
-    height: 34px;
+    height: 30px;
     text-align: center;
-    line-height: 34px;
-    margin: 0 0 14px 0;
+    line-height: 30px;
+    margin: 0 0 6px 0;
     font-weight: bold;
     font-size: 12px;
-    border: 1px solid transparent;
 }
 .conversion-colors li:last-child { margin: 0; }
 
 .box-total-region {
-    height: 150px;
+    height: 142px;
     overflow-x: hidden;
     flex: auto !important;
     position: relative;
 }
+.box-total-region::-webkit-scrollbar { width: 0; }
+.box-total-region::-webkit-scrollbar-track-piece { background-color: transparent; }
 
-.conversion-colors .blue, .conversion-colors li:nth-child(1) { color: #2E85EC; }
-.conversion-colors .purple, .conversion-colors li:nth-child(2) { color: #665FE8; }
-.conversion-colors .pink, .conversion-colors li:nth-child(3) { color: #F43F5E; }
-.conversion-colors .orange, .conversion-colors li:nth-child(4) { color: #FF7900; }
+.conversion-colors .blue { color: #2E85EC; }
+.conversion-colors .purple { color: #665FE8; }
+.conversion-colors .pink { color: #F43F5E; }
+.conversion-colors .orange { color: #FF7900; }
+
+.conversion-colors li:nth-child(4n+1) { color: #2E85EC; }
+.conversion-colors li:nth-child(4n+2) { color: #665FE8; }
+.conversion-colors li:nth-child(4n+3) { color: #F43F5E; }
+.conversion-colors li:nth-child(4n+4) { color: #FF7900; }
 
 .regions-legend {
     margin: 0;

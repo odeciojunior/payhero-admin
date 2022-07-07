@@ -621,6 +621,7 @@ $(function () {
                     $.each(response.data, function(i, v) {
                         regionArr.push(v);
                     });
+                    
                     for(let i = 0; i < regionArr.length; i++) {
                         conversionArr.push(regionArr[i].conversion);
                         accessArr.push(regionArr[i].access);
@@ -630,10 +631,10 @@ $(function () {
                         $(".states").append(`<dt>${regionArr[i].region}</dt>`);
                     }
 
-                    $(".new-graph-regions").height($('.states').height());
+                    $(".new-graph-regions").height($('.conversion-colors').height());
                     $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
                     
-                    graphRegions(statesArr, conversionArr, accessArr);
+                    graphRegions(estados, estadosC, estadosA);
 
                 } else {
                     regionsHtml = `
@@ -1445,7 +1446,7 @@ $(function () {
                         ],
                         borderRadius: 4,
                         borderSkipped: false,
-                        barPercentage: 0.9
+                        barPercentage: 1
                     },
                     {
                         label: '',
@@ -1459,7 +1460,7 @@ $(function () {
                         ],
                         borderRadius: 4,
                         borderSkipped: false,
-                        barPercentage: 0.9
+                        barPercentage: 1
                     }
                 ]
             },
