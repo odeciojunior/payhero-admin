@@ -610,7 +610,7 @@ $(function () {
                     </footer>
                 `;
 
-                if(response.data.length > 0){
+                if(response.data.length == 0){
                     $("#block-regions").html(regionsHtml);
 
                     let regionArr       = [];
@@ -634,7 +634,7 @@ $(function () {
                     $(".new-graph-regions").height($('.conversion-colors').height());
                     $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
                     
-                    graphRegions(estados, estadosC, estadosA);
+                    graphRegions(statesArr, conversionArr, accessArr);
 
                 } else {
                     regionsHtml = `

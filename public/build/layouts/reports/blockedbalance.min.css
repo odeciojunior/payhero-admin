@@ -1931,6 +1931,8 @@ h4.number{
     overflow-x: hidden;
     flex: auto !important;
     position: relative;
+    scrollbar-color: transparent;
+    scrollbar-width: thin;
 }
 .box-total-region::-webkit-scrollbar { width: 0; }
 .box-total-region::-webkit-scrollbar-track-piece { background-color: transparent; }
