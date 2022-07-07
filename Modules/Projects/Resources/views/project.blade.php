@@ -15,6 +15,8 @@
     <!-- Page -->
     <div class="page">
 
+        <input type="hidden" id="project_type">
+
         <div style="display: none" class="page-header container">
             <h1 class="page-title my-10" style="min-height: 28px">
                 <a href="/projects" style="outline: none">

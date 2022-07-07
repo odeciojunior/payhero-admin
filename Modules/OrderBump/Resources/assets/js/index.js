@@ -69,6 +69,14 @@ $(() => {
                 }
             }
         });
+
+        if (!['shopify', 'woocommerce'].includes($('#project_type').val())) {
+            $('.use-variants-order-bump')
+                .prop('checked', false)
+                .val(0)
+                .closest('.switch-holder')
+                .hide();
+        }
     }
 
     $('#tab_order_bump').on('click', function () {
@@ -400,14 +408,6 @@ $(() => {
             selectPlan.val('all').trigger("change");
         }
     });
-
-    if(!['shopify', 'woocommerce'].includes($('#project_type').val())){
-        $('.use-variants-order-bump')
-            .prop('checked', false)
-            .val(0)
-            .closest('.switch-holder')
-            .hide();
-    }
 
     $('.use-variants-order-bump').on('change', function () {
         const slider = $(this);

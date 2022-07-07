@@ -154,14 +154,6 @@ $(document).ready(function () {
         }
     });
 
-    if(!['shopify', 'woocommerce'].includes($('#project_type').val())){
-        $('.shipping-use-variants')
-            .prop('checked', false)
-            .val(0)
-            .closest('.switch-holder')
-            .hide();
-    }
-
     $('.shipping-use-variants').on('change', function () {
         const slider = $(this);
         const form = slider.closest('form');
@@ -563,6 +555,14 @@ $(document).ready(function () {
                 }
             }
         });
+
+        if(!['shopify', 'woocommerce'].includes($('#project_type').val())){
+            $('.shipping-use-variants')
+                .prop('checked', false)
+                .val(0)
+                .closest('.switch-holder')
+                .hide();
+        }
     }
 
     function setSelect2Plugin(el, dropdownParent) {
