@@ -288,16 +288,16 @@ class DashboardApiController extends Controller
             $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackService = new ChargebackService();
-            $totalChargeback = $chargebackService->getTotalChargebacksInPeriod($user, $startDate);
+            $totalContestations = $chargebackService->getTotalContestationsInPeriod($user, $startDate, $endDate);
 
             $saleService = new SaleService();
             $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
-
+            $contestationsRate = round(($totalContestations / $totalApprovedSales) * 100, 2);
             return [
                 'chargeback_score'       => $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
-                'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
+                'chargeback_rate'        => $contestationsRate ?? "0.00%",
                 'total_sales_approved'   => $totalApprovedSales ?? 0,
-                'total_sales_chargeback' => $totalChargeback ?? 0,
+                'total_sales_chargeback' => $totalContestations ?? 0,
             ];
         } catch (Exception $e) {
             report($e);
