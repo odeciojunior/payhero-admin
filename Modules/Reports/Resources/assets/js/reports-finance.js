@@ -37,7 +37,7 @@ function distribution() {
              let { available, blocked, pending, total } = response.data;
              let series = [available.percentage, pending.percentage, blocked.percentage];
 
-             if(removeMoneyCurrency(total) == '0') {
+             if(removeMoneyCurrency(total) !== '0') {
                  distributionHtml = `
                     <div class="d-flex box-graph-dist">
                         <div class="info-graph">
