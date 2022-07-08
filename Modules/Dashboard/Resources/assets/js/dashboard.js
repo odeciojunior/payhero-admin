@@ -1,12 +1,37 @@
-function updateAfterChangeCompany(){
+$('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     $('.sirius-performance > .card').html('');
     $('.sirius-account > .card').html('');
     $('#cashback-container #cashback-container-money').text("")
-    window.updateValues();
-    window.updateChart();
-    window.updatePerformance();
-    window.updateAccountHealth();
-}
+    loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
+        styles: {
+            container: {
+                minHeight: '30px',
+                width: '30px',
+                height: 'auto',
+                margin: 'auto'
+            },
+            loader: {
+                width: '30px',
+                height: '30px',
+                borderWidth: '6px'
+            },
+
+        }
+    });
+    loadingOnAccountsHealth('.sirius-performance > .card');
+    loadingOnAccountsHealth('.sirius-account > .card');
+    loadingOnChart('#chart-loading');
+    $('#scoreLineToMonth').html('')
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            window.updateValues();
+            window.updateChart();
+            window.updatePerformance();
+            window.updateAccountHealth();
+        });
+	});
+});
 
 $(document).ready(function () {
 
@@ -21,7 +46,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-chart-data`,
             dataType: "json",
             data: {
-                company: sessionStorage.getItem('company_default'),
+                company: $('#company-navbar').val(),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -195,7 +220,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             data: {
-                company: sessionStorage.getItem('company_default')
+                company: $('#company-navbar').val()
             },
             error: function error(response) {
                 loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
@@ -233,7 +258,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ sessionStorage.getItem('company_default'),
+            url: '/api/projects?select=true&company='+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -601,5 +626,7 @@ $(document).ready(function () {
         $("#cardWelcome").slideUp("600");
     });
 
-    getProjects();
+    getCompaniesAndProjects().done( function (data){
+        getProjects();
+    });
 });

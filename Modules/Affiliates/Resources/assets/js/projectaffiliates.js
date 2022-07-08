@@ -1,4 +1,5 @@
 $('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     $("#project-affiliate").find('option').not(':first').remove();
     $("#project-affiliate-request").find('option').not(':first').remove();
     updateCompanyDefault().done( function(){
@@ -36,7 +37,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?affiliate=true&status=active&company="+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
+            url: "/api/projects?affiliate=true&status=active&company="+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -47,7 +48,7 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
-            success: function success(response) {console.log(response.data);
+            success: function success(response) {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
@@ -94,7 +95,7 @@ $(document).ready(function () {
         });
     }
 
-    getCompaniesNoSession().done( function (data){
+    getCompaniesAndProjects().done( function (data){
         window.getProjects();
     });
 
@@ -356,7 +357,7 @@ $(document).ready(function () {
                     let formData = new FormData(
                         document.getElementById("form-update-affiliate")
                     );
-                    console.log(formData);
+                    //console.log(formData);
                     // formData.append("integration_id", integrationId);
 
                     let affiliate = $(

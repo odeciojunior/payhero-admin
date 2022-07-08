@@ -1,46 +1,8 @@
 $(document).ready(function () {
 
-    //getCompaniesNoSession();//getCompanies();
-
-    // $('#company-navbar').change(function () {
-    //     var company_id = $(this).val()
-    //     var company_name = $(this).find('option:selected').text()
-
-    //     if(company_id ==sessionStorage.getItem('company_default'))
-    //         return;
-
-    //     $.ajax({
-    //         method: 'POST',
-    //         url: '/api/core/company-default',
-    //         data:{company_id:company_id},
-    //         headers: {
-    //             'Authorization': $('meta[name="access-token"]').attr('content'),
-    //             'Accept': 'application/json',
-    //         },
-    //         error: function error(response) {
-    //             errorAjaxResponse(response);
-    //         },
-    //         success: function success(data) {
-    //             sessionStorage.removeItem('company_default');
-    //             sessionStorage.removeItem('company_default_name')
-    //             sessionStorage.setItem('company_default', company_id);
-    //             sessionStorage.setItem('company_default_name', company_name);
-
-    //             $('.company_name').val( sessionStorage.getItem('company_default_name') );
-    //             selectCompanies();
-    //             if ( typeof updateAfterChangeCompany === "function" ) {
-    //                 updateAfterChangeCompany();
-    //             }
-    //         },
-    //     });
-
-    // })
-
-
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
-
 
     showBonusBalance()
 
@@ -1625,94 +1587,6 @@ function removeMoneyCurrency(string) {
     return string.substring(3);
 }
 
-// function getCompanies() {
-//     let thisPage = window.location.hostname;
-//     var lastPage = document.referrer ? (new URL(document.referrer)).hostname:'';
-//     if (thisPage != lastPage) {
-//         sessionStorage.removeItem('companies')
-//         sessionStorage.removeItem('company_default')
-//     }
-
-//     if (sessionStorage.getItem('companies') != null) {
-//         selectCompanies();
-//     }
-//     else{
-//         $.ajax({
-//             method: "GET",
-//             url: `/api/core/usercompanies`,
-//             dataType: "json",
-//             headers: {
-//                 'Authorization': $('meta[name="access-token"]').attr('content'),
-//                 'Accept': 'appliation/json',
-//             },
-//             error: function error(response) {
-//                 loadingOnScreenRemove();
-//                 errorAjaxResponse(response);
-//             },
-//             success: function success(data) {
-//                 data.companies.push({
-//                     "id":"v2RmA83EbZPVpYB",
-//                     "name":"Empresa Demo",
-//                     "company_document_status": "approved",
-//                     "active_flag": 1,
-//                     "projects": [{
-//                         "id" : "v2RmA83EbZPVpYB",
-//                         "name": "Cloudfox Demo Ltda",
-//                         "order_p":1,
-//                         "status":1
-//                     }]
-//                 });
-//                 companies = data.companies;
-//                 company_default = data.company_default;
-//                 company_default_name = data.company_default_name;
-//                 if (!isEmpty(companies)) {
-//                     sessionStorage.setItem('companies', JSON.stringify(companies));
-//                     sessionStorage.setItem('company_default', company_default);
-//                     sessionStorage.setItem('company_default_name', company_default_name);
-
-//                     $('.company_name').val( company_default_name );
-//                     $('.company_id').val( company_default );
-
-//                     $(".content-error").hide();
-//                     selectCompanies();
-
-//                 } else {
-//                     $(".content-error").show();
-//                     $('#company-select, .page-content').hide();
-//                     loadingOnScreenRemove();
-//                 }
-//             }
-//         });
-//     }
-// }
-
-// function selectCompanies() {
-//     $('#company-navbar').html('');
-//     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
-//     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
-//         if (sessionStorage.getItem('company_default') === parseSessionStorageCompanies[i].id)
-//             itemSelected = 'selected="selected" style="font-weight:bold"'
-//         else
-//             itemSelected = ''
-
-//         if (parseSessionStorageCompanies[i].active_flag == false || parseSessionStorageCompanies[i].company_document_status != "approved")
-//             itemDisabled = 'disabled="disabled"';
-//         else
-//             itemDisabled = '';
-
-//         if (parseSessionStorageCompanies[i].company_type == '1') {
-//             $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
-//         } else {
-//             if(parseSessionStorageCompanies[i].name.length>20)
-//                 companyName = parseSessionStorageCompanies[i].name.substring(0,20)+'...';
-//             else
-//                 companyName = parseSessionStorageCompanies[i].name;
-//             $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
-//         }
-//     }
-//     $('#company-select').addClass('d-sm-flex');
-// }
-
 function buildModalBonusBalance(bonusObject) {
     var userName = bonusObject.user_name;
     var totalBalance = bonusObject.total_bonus;
@@ -2018,9 +1892,7 @@ const loadSkeletonBonus = `
             </div>
             `;
 
-
-
-function getCompaniesNoSession() {
+function getCompaniesAndProjects() {
     var ajax = $.ajax({
         method: "GET",
         url: `/api/core/usercompanies`,
@@ -2045,14 +1917,18 @@ function getCompaniesNoSession() {
                     "status":1
                 }]
             });
+
             companies = data.companies;
             company_default = data.company_default;
             company_default_name = data.company_default_name;
+            $.each(companies, function (c, company) {
+                if( data.company_default == company.id){
+                    data.company_default_projects = company.projects
+                }
+            });
             if (!isEmpty(companies)) {
-
                 $('.company_name').val( company_default_name );
                 $('.company_id').val( company_default );
-                $(".content-error").hide();
                 $('#company-navbar').html('');
 
                 for (let i = 0; i < companies.length; i++) {
@@ -2080,7 +1956,7 @@ function getCompaniesNoSession() {
                 return data;
 
             } else {
-                $(".content-error").show();
+                //$(".content-error").show();
                 $('#company-select, .page-content').hide();
                 loadingOnScreenRemove();
             }
@@ -2089,10 +1965,8 @@ function getCompaniesNoSession() {
     return ajax
 }
 
-
 function updateCompanyDefault() {
     var company_id = $('#company-navbar').val()
-    // var company_name = $('#company-navbar').find('option:selected').text()
     var ajax = $.ajax({
         method: 'POST',
         url: '/api/core/company-default',
@@ -2105,13 +1979,18 @@ function updateCompanyDefault() {
             errorAjaxResponse(response);
         },
         success: function success(data) {
-            getCompaniesNoSession();
+            getCompaniesAndProjects();
             return;
-            // $('.company_name').val( company_name );
-            // var all_companies = getCompaniesNoSession();
-            // return all_companies['company_default'];
         },
     });
     return ajax;
 }
 
+function verifyIfCompanyIsDefault(){
+    if( $('#company-navbar').find('option:selected').css('font-weight')=='700' ){
+        $('.sirius-select-options').css('display','none');
+        return true;
+    }
+    else
+        return false;
+}

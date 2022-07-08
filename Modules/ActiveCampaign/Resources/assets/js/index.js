@@ -1,19 +1,33 @@
-function updateAfterChangeCompany(){
+$('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     $("#no-integration-found").hide();
-    window.index('n')
-}
+    loadOnAny('#content');
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            window.fillProjectsSelect(data2.company_default_projects)
+            window.index('n',data2);
+        });
+	});
+});
 
 $(document).ready(function () {
 
-    window.index = function(loading='y') {
+    window.fillProjectsSelect = function(data){
+        $.each(data, function (i, project) {
+            if(project.status == 1)
+                $("#project_id, #select_projects_edit").append($("<option>", {value: project.id, text: project.name}));
+        });
+    }
+
+    window.index = function(loading='y',data) {
         if(loading=='y')
             loadingOnScreen();
-        else
-            loadOnAny('#content');
+        // else
+        //     loadOnAny('#content');
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/activecampaign?company="+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
+            url: "/api/apps/activecampaign?company="+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -26,23 +40,25 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $("#content").html("");
-                if (isEmpty(response.projects)) {
+                //if (isEmpty(response.projects)) {
+                if (isEmpty(data.company_default_projects)) {
                     $('#project-empty').show();
                     $('#integration-actions').hide();
                 } else {
                     $('#project_id, #select_projects_edit').html("");
-                    let projects = response.projects;
-                    for (let i = 0; i < projects.length; i++) {
-                        if(projects[i].status === 1){
-                            $('#project_id, #select_projects_edit').append(
-                                '<option value="' +
-                                projects[i].id +
-                                '">' +
-                                projects[i].name +
-                                '</option>'
-                            );
-                        }
-                    }
+                    window.fillProjectsSelect(data.company_default_projects)
+                    // let projects = response.projects;
+                    // for (let i = 0; i < projects.length; i++) {
+                    //     if(projects[i].status === 1){
+                    //         $('#project_id, #select_projects_edit').append(
+                    //             '<option value="' +
+                    //             projects[i].id +
+                    //             '">' +
+                    //             projects[i].name +
+                    //             '</option>'
+                    //         );
+                    //     }
+                    // }
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
                     } else {
@@ -64,7 +80,9 @@ $(document).ready(function () {
         });
     }
 
-    window.index();
+    getCompaniesAndProjects().done( function (data){
+        window.index('y',data);
+    });
 
     //checkbox
     $('.check').on('click', function () {

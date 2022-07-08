@@ -1,11 +1,16 @@
-function updateAfterChangeCompany(){
-    window.getCompanies('n');
-}
+$('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            window.getCompanies('n');
+        });
+	});
+});
 
 $(document).ready(function () {
 
-    $("#company-navbar-value").val( sessionStorage.getItem('company_default') )
-    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    $("#company-navbar-value").val( $('#company-navbar').val() );
+    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
 
 
     window.getCompanies = function(loading='y') {
@@ -34,7 +39,9 @@ $(document).ready(function () {
         });
     }
 
-    window.getCompanies();
+    getCompaniesAndProjects().done( function (data){
+        window.getCompanies();
+    });
 
     function verifyCompanies(companies) {
         if (isEmpty(companies)) {
@@ -69,7 +76,7 @@ $(document).ready(function () {
     function getShopifyIntegrations() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/shopify?company="+ sessionStorage.getItem('company_default'),
+            url: "/api/apps/shopify?company="+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -542,7 +549,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#company-navbar-value").val( sessionStorage.getItem('company_default') )
-    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    $("#company-navbar-value").val( $('#company-navbar').val() );
+    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
 
 });

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\UserService;
 use Modules\Core\Entities\BonusBalance;
+use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Entities\CompanyDocument;
@@ -275,7 +276,8 @@ class CoreApiController extends Controller
                 $return = array(
                     'companies'=>CompaniesSelectResource::collection($companies->get()),
                     'company_default'=>$id_code,
-                    'company_default_name'=>$fantasy_name
+                    'company_default_name'=>$fantasy_name,
+                    'company_default_fullname'=>$fantasy_name
                 );
             }
             # se company default for empresa demo
@@ -283,7 +285,8 @@ class CoreApiController extends Controller
                 $return = array(
                     'companies'=>CompaniesSelectResource::collection($companies->get()),
                     'company_default'=>Hashids::encode(1),
-                    'company_default_name'=>'Empresa Demo'
+                    'company_default_name'=>'Empresa Demo',
+                    'company_default_fullname'=>'Empresa Demo'
                 );
             }
             # se company default for qq outra empresa
@@ -298,7 +301,8 @@ class CoreApiController extends Controller
                 $return = array(
                     'companies'=>CompaniesSelectResource::collection($companies->get()),
                     'company_default'=>Hashids::encode($user->company_default),
-                    'company_default_name'=>$company_default_name
+                    'company_default_name'=>$company_default_name,
+                    'company_default_fullname'=>$companyDefault->fantasy_name
                 );
             }
 

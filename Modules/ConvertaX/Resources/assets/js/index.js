@@ -1,23 +1,31 @@
-function updateAfterChangeCompany(){
-    $("#select_projects, #select_projects_edit").find('option').remove();
-    let companies = JSON.parse(sessionStorage.getItem('companies'));
-    $.each(companies, function (c, company) {
-        if( sessionStorage.getItem('company_default') == company.id){
-            $.each(company.projects, function (i, project) {console.log(project)
-                if(project.status == 1){
-                    $("#select_projects, #select_projects_edit").append($('<option>', {
-                        value: project.id,
-                        text: project.name
-                    }));
+$('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
+	$("#select_projects, #select_projects_edit").find('option').remove();
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            companies=data2.companies;
+            $.each(companies, function (c, company) {
+                if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        $("#select_projects, #select_projects_edit").append(
+                                            $("<option>", {
+                                                value: project.id,
+                                                text: project.name,
+                                            })
+                                        );
+                    });
                 }
             });
-        }
-    });
-    window.index('n')
-}
+            window.index('n')
+        });
+	});
+});
 
 $(document).ready(function () {
-    create();
+
+    getCompaniesAndProjects().done( function (data){
+        create();
+    });
 
     window.index = function(loading='y') {
         if(loading=='y')
@@ -27,7 +35,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/convertax?company="+ sessionStorage.getItem('company_default'),
+            url: "/api/apps/convertax?company="+ $('#company-navbar').val(),
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
@@ -350,7 +358,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
+            url: "/api/projects?select=true&company="+ $('#company-navbar').val(),
             data: {
                 status: "active",
             },

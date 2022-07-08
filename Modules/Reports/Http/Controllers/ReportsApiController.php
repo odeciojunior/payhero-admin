@@ -49,6 +49,7 @@ class ReportsApiController extends Controller
 
             $dataSearch = $request->all();
             $projectId = current(Hashids::decode($request->input('project')));
+            $companyId = current(Hashids::decode($request->input('company')));
 
             $requestStartDate = $request->input('startDate');
             $requestEndDate = $request->input('endDate');
@@ -69,7 +70,9 @@ class ReportsApiController extends Controller
                     ->leftJoin('plans_sales as plan_sale', function ($join) {
                         $join->on('plan_sale.sale_id', '=', 'sales.id');
                     })
-                    ->where('sales.status', 1)->where('project_id', $projectId);
+                    ->leftJoin('checkout_configs', 'sales.project_id', 'checkout_configs.project_id')
+                    ->where('checkout_configs.company_id',$companyId)
+                    ->where('sales.status', 1)->where('sales.project_id', $projectId);
 
                 if (!empty($requestStartDate) && !empty($requestEndDate)) {
                     $itens->whereBetween('sales.start_date',
@@ -116,6 +119,8 @@ class ReportsApiController extends Controller
                                                         SUM(CASE WHEN checkout.is_mobile = 1 THEN 1 ELSE 0 END) AS contMobile,
                                                         SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS contDesktop")
                     ->leftJoin('checkouts as checkout', 'sales.checkout_id', '=', 'checkout.id')
+                    ->leftJoin('checkout_configs', 'sales.project_id', 'checkout_configs.project_id')
+                    ->where('checkout_configs.company_id',$companyId)
                     ->where('sales.project_id', $projectId);
                 if (!empty($userProject)) {
                     $salesDetails->where('owner_id', $accountOwnerId);
@@ -159,7 +164,7 @@ class ReportsApiController extends Controller
 
                 $reportService = new ReportService();
 
-                $chartData = $reportService->getChartData($dataSearch, $projectId, $currency);
+                $chartData = $reportService->getChartData($dataSearch, $projectId, $currency, $companyId);
 
                 $cartaoConvert = $contCreditCardAproved . '/' . $contCreditCard;
                 $boletoConvert = $contBoletoAproved . '/' . $contBoleto;
@@ -301,6 +306,7 @@ class ReportsApiController extends Controller
             $dataSearch = $request->all();
 
             $projectId = current(Hashids::decode($request->input('project')));
+            $companyId = current(Hashids::decode($request->input('company')));
 
             $requestStartDate = $request->input('startDate');
             $requestEndDate = $request->input('endDate');
@@ -326,8 +332,9 @@ class ReportsApiController extends Controller
                         ->leftJoin('checkout_plans as plan_checkout', function ($join) {
                             $join->on('plan_checkout.checkout_id', '=', 'checkouts.id');
                         })
-                        ->where('project_id', $projectId);
-
+                        ->leftJoin('checkout_configs', 'checkouts.project_id', 'checkout_configs.project_id')
+                        ->where('checkout_configs.company_id',$companyId)
+                        ->where('checkouts.project_id', $projectId);
                     if (!empty($requestStartDate) && !empty($requestEndDate)) {
                         $itens->whereBetween('checkouts.created_at',
                             [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
@@ -371,17 +378,19 @@ class ReportsApiController extends Controller
                         DB::raw('SUM(CASE WHEN checkouts.is_mobile = 0 THEN 1 ELSE 0 END) AS contCheckoutsDesktop'),
                         DB::raw('SUM(CASE WHEN checkouts.is_mobile = 1 THEN 1 ELSE 0 END) AS contCheckoutsMobile'),
                     ])
-                        ->where('project_id', $projectId);
+                        ->leftJoin('checkout_configs', 'checkouts.project_id', 'checkout_configs.project_id')
+                        ->where('checkout_configs.company_id',$companyId)
+                        ->where('checkouts.project_id', $projectId);
                     if ($requestStartDate != '' && $requestEndDate != '') {
-                        $checkoutsDetails->whereBetween('created_at',
+                        $checkoutsDetails->whereBetween('checkouts.created_at',
                             [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
                     } else {
                         if (!empty($requestStartDate)) {
-                            $checkoutsDetails->whereDate('created_at', '>=', $requestStartDate);
+                            $checkoutsDetails->whereDate('checkouts.created_at', '>=', $requestStartDate);
                         }
 
                         if (!empty($requestEndDate)) {
-                            $checkoutsDetails->whereDate('updated_at', '<',
+                            $checkoutsDetails->whereDate('checkouts.updated_at', '<',
                                 date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
                         }
                     }
@@ -399,7 +408,7 @@ class ReportsApiController extends Controller
 
                     $reportService = new ReportService();
 
-                    $chartData = $reportService->getChartDataCheckouts($dataSearch, $projectId);
+                    $chartData = $reportService->getChartDataCheckouts($dataSearch, $projectId, $companyId);
 
                     $contCheckouts = $contMobile + $contDesktop;
                     if ($contCheckouts > 0) {

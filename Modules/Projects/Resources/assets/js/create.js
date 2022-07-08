@@ -1,22 +1,19 @@
 $('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     updateCompanyDefault().done(function(data1){
-        getCompaniesNoSession().done(function(data2){
+        getCompaniesAndProjects().done(function(data2){
             console.log(data2)
             // $('.company_name').val( data2.company_default_name );// $('.company_name').val( sessionStorage.getItem('company_default_name') );
             // $('.company_id').val( data2.company_default );// $('.company_id').val( sessionStorage.getItem('company_default') );
         });
 	});
 });
-// function updateAfterChangeCompany(){
-//     $('.company_name').val( sessionStorage.getItem('company_default_name') );
-//     $('.company_id').val( sessionStorage.getItem('company_default') );
-// }
 
 $(document).ready(function () {
 
     loadingOnScreen();
-    getCompaniesNoSession().done( function (data){
-         $('.company_name').val( data.company_default_name );//sessionStorage.getItem('company_default_name') );
+    getCompaniesAndProjects().done( function (data){
+         $('.company_name').val( data.company_default_name );
     //     $('.company_id').val( data.company_default );//sessionStorage.getItem('company_default') );
         $('.page').show()
         loadingOnScreenRemove();

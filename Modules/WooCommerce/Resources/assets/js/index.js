@@ -1,6 +1,11 @@
-function updateAfterChangeCompany(){
-    window.location.reload();
-}
+$('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            window.location.reload();
+        })
+    })
+})
 
 $(document).ready(function () {
     let allCompanyNotApproved = false;
@@ -9,8 +14,8 @@ $(document).ready(function () {
 
     loadingOnScreen();
 
-    $("#company-navbar-value").val( sessionStorage.getItem('company_default') )
-    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    $("#company-navbar-value").val( $('#company-navbar').val() )
+    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
 
     $('#btn-integration-model').hide();
 
@@ -56,7 +61,7 @@ $(document).ready(function () {
     function index() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/woocommerce?company="+ sessionStorage.getItem('company_default'),
+            url: "/api/apps/woocommerce?company="+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

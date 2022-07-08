@@ -99,7 +99,7 @@ class FinancesApiController extends Controller
         if(empty($companyId)){
             $companies = Company::with('user')->where('user_id', auth()->user()->account_owner_id)->get();
         }else{
-            $companies = Company::where('id',$companyId)->get();
+            $companies = Company::where('id',hashids_decode($companyId))->get();
         }
         $gatewayIds = [];
 

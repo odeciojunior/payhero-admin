@@ -19,7 +19,7 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
-                company: sessionStorage.getItem('company_default')
+                company: $('#company-navbar').val(),
             },
             error: function () {
                 //

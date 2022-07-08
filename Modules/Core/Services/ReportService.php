@@ -25,10 +25,10 @@ class ReportService
      * @param $currency
      * @return array|null
      */
-    public function getChartData($date, $projectId, $currency)
+    public function getChartData($date, $projectId, $currency, $companyId)
     {
         if ($date['startDate'] == $date['endDate']) {
-            return $this->getByHours($date, $projectId, $currency);
+            return $this->getByHours($date, $projectId, $currency, $companyId);
         } elseif ($date['startDate'] != $date['endDate']) {
             $data       = null;
             $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
@@ -36,15 +36,15 @@ class ReportService
             $diffInDays = $endDate->diffInDays($startDate);
             if ($projectId) {
                 if ($diffInDays <= 20) {
-                    return $this->getByDays($date, $projectId, $currency);
+                    return $this->getByDays($date, $projectId, $currency, $companyId);
                 } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getByTwentyDays($date, $projectId, $currency);
+                    return $this->getByTwentyDays($date, $projectId, $currency, $companyId);
                 } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getByFortyDays($date, $projectId, $currency);
+                    return $this->getByFortyDays($date, $projectId, $currency, $companyId);
                 } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getByWeek($date, $projectId, $currency);
+                    return $this->getByWeek($date, $projectId, $currency, $companyId);
                 } elseif ($diffInDays > 140) {
-                    return $this->getByMonth($date, $projectId, $currency);
+                    return $this->getByMonth($date, $projectId, $currency, $companyId);
                 }
             } else {
                 return [
@@ -64,7 +64,7 @@ class ReportService
      * @param $currency
      * @return array
      */
-    private function getByHours($data, $projectId, $currency)
+    private function getByHours($data, $projectId, $currency, $companyId)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -97,6 +97,8 @@ class ReportService
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->whereIn('transaction.company_id', $userCompanies);
             })
+            ->leftJoin('checkout_configs', 'sales.project_id', 'checkout_configs.project_id')
+            ->where('checkout_configs.company_id', $companyId)
             ->where('sales.owner_id', auth()->user()->getAccountOwnerId())
             ->where('sales.project_id', $projectId)
             ->whereDate('sales.start_date', $data['startDate'])
@@ -145,7 +147,7 @@ class ReportService
      * @param $diffInDays
      * @return array
      */
-    private function getByDays($data, $projectId, $currency)
+    private function getByDays($data, $projectId, $currency, $companyId)
     {
         try {
             $companyModel   = new Company();
@@ -177,6 +179,8 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
+                ->leftJoin('checkout_configs', 'sales.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method');
@@ -232,7 +236,7 @@ class ReportService
      * @param $diffInDays
      * @return array
      */
-    private function getByTwentyDays($date, $projectId, $currency)
+    private function getByTwentyDays($date, $projectId, $currency, $companyId)
     {
         try {
             $companyModel   = new Company();
@@ -270,6 +274,8 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
+                ->leftJoin('checkout_configs', 'sales.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method');
@@ -329,7 +335,7 @@ class ReportService
      * @param $diffInDays
      * @return array
      */
-    private function getByFortyDays($date, $projectId, $currency)
+    private function getByFortyDays($date, $projectId, $currency, $companyId)
     {
         try {
             $companyModel   = new Company();
@@ -366,6 +372,8 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
+                ->leftJoin('checkout_configs', 'sales.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method');
@@ -423,7 +431,7 @@ class ReportService
      * @param $diffInDays
      * @return array
      */
-    private function getByWeek($date, $projectId, $currency)
+    private function getByWeek($date, $projectId, $currency, $companyId)
     {
         try {
             $saleModel      = new Sale();
@@ -460,7 +468,8 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                //                ->where('sales.owner_id', $userId)
+                ->leftJoin('checkout_configs', 'sales.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method');
@@ -517,7 +526,7 @@ class ReportService
      * @param $diffInDays
      * @return array
      */
-    private function getByMonth($date, $projectId, $currency) //
+    private function getByMonth($date, $projectId, $currency, $companyId)
     {
         try {
             $companyModel   = new Company();
@@ -549,7 +558,8 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                //                ->where('sales.owner_id', $userId)
+                ->leftJoin('checkout_configs', 'sales.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method');
@@ -604,10 +614,10 @@ class ReportService
      * @param $projectId
      * @return array|null
      */
-    public function getChartDataCheckouts($date, $projectId)
+    public function getChartDataCheckouts($date, $projectId, $companyId)
     {
         if ($date['startDate'] == $date['endDate']) {
-            return $this->getCheckoutsByHours($date, $projectId);
+            return $this->getCheckoutsByHours($date, $projectId, $companyId);
         } elseif ($date['startDate'] != $date['endDate']) {
             $data       = null;
             $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
@@ -615,15 +625,15 @@ class ReportService
             $diffInDays = $endDate->diffInDays($startDate);
             if ($projectId) {
                 if ($diffInDays <= 20) {
-                    return $this->getCheckoutsByDays($date, $projectId);
+                    return $this->getCheckoutsByDays($date, $projectId, $companyId);
                 } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getCheckoutsByTwentyDays($date, $projectId);
+                    return $this->getCheckoutsByTwentyDays($date, $projectId, $companyId);
                 } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getCheckoutsByFortyDays($date, $projectId);
+                    return $this->getCheckoutsByFortyDays($date, $projectId, $companyId);
                 } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getCheckoutsByWeek($date, $projectId);
+                    return $this->getCheckoutsByWeek($date, $projectId, $companyId);
                 } elseif ($diffInDays > 140) {
-                    return $this->getCheckoutsByMonth($date, $projectId);
+                    return $this->getCheckoutsByMonth($date, $projectId, $companyId);
                 }
             } else {
                 return [
@@ -639,7 +649,7 @@ class ReportService
      * @param $projectId
      * @return array
      */
-    private function getCheckoutsByWeek($date, $projectId)
+    private function getCheckoutsByWeek($date, $projectId, $companyId)
     {
         try {
             $checkoutModel = new Checkout();
@@ -668,9 +678,11 @@ class ReportService
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
-                ->where('project_id', $projectId)
-                ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                ->select(\DB::raw('count(*) as count, DATE(checkouts.created_at) as date'))
+                ->leftJoin('checkout_configs', 'checkouts.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
+                ->where('checkouts.project_id', $projectId)
+                ->whereBetween('checkouts.created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
 
             if (!empty($affiliate)) {
@@ -707,7 +719,7 @@ class ReportService
      * @param $projectId
      * @return array
      */
-    private function getCheckoutsByMonth($date, $projectId)
+    private function getCheckoutsByMonth($date, $projectId, $companyId)
     {
         try {
             $checkoutModel = new Checkout();
@@ -731,9 +743,11 @@ class ReportService
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
-                ->where('project_id', $projectId)
-                ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                ->select(\DB::raw('count(*) as count, DATE(checkouts.created_at) as date'))
+                ->leftJoin('checkout_configs', 'checkouts.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
+                ->where('checkouts.project_id', $projectId)
+                ->whereBetween('checkouts.created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
 
             if (!empty($affiliate)) {
@@ -768,7 +782,7 @@ class ReportService
      * @param $projectId
      * @return array
      */
-    private function getCheckoutsByFortyDays($date, $projectId)
+    private function getCheckoutsByFortyDays($date, $projectId, $companyId)
     {
         try {
             $checkoutModel = new Checkout();
@@ -798,9 +812,11 @@ class ReportService
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
-                ->where('project_id', $projectId)
-                ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                ->select(\DB::raw('count(*) as count, DATE(checkouts.created_at) as date'))
+                ->leftJoin('checkout_configs', 'checkouts.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
+                ->where('checkouts.project_id', $projectId)
+                ->whereBetween('checkouts.created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
 
             if (!empty($affiliate)) {
@@ -838,7 +854,7 @@ class ReportService
      * @param $projectId
      * @return array
      */
-    private function getCheckoutsByTwentyDays($date, $projectId)
+    private function getCheckoutsByTwentyDays($date, $projectId, $companyId)
     {
         try {
             $checkoutModel = new Checkout();
@@ -866,9 +882,11 @@ class ReportService
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
-                ->where('project_id', $projectId)
-                ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                ->select(\DB::raw('count(*) as count, DATE(checkouts.created_at) as date'))
+                ->leftJoin('checkout_configs', 'checkouts.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
+                ->where('checkouts.project_id', $projectId)
+                ->whereBetween('checkouts.created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
 
             if (!empty($affiliate)) {
@@ -906,7 +924,7 @@ class ReportService
      * @param $projectId
      * @return array
      */
-    private function getCheckoutsByDays($data, $projectId)
+    private function getCheckoutsByDays($data, $projectId, $companyId)
     {
         try {
             $checkoutModel = new Checkout();
@@ -930,9 +948,11 @@ class ReportService
                                                 ])->first();
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
-                ->where('project_id', $projectId)
-                ->whereBetween('created_at', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
+                ->select(\DB::raw('count(*) as count, DATE(checkouts.created_at) as date'))
+                ->leftJoin('checkout_configs', 'checkouts.project_id', 'checkout_configs.project_id')
+                ->where('checkout_configs.company_id', $companyId)
+                ->where('checkouts.project_id', $projectId)
+                ->whereBetween('checkouts.created_at', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
 
             if (!empty($affiliate)) {
@@ -967,7 +987,7 @@ class ReportService
      * @param $projectId
      * @return array
      */
-    private function getCheckoutsByHours($data, $projectId)
+    private function getCheckoutsByHours($data, $projectId, $companyId)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -995,9 +1015,11 @@ class ReportService
                                             ])->first();
 
         $orders = $checkoutModel
-            ->select(\DB::raw('count(*) as count, HOUR(created_at) as hour'))
-            ->where('project_id', $projectId)
-            ->whereDate('created_at', $data['startDate'])
+            ->select(\DB::raw('count(*) as count, HOUR(checkouts.created_at) as hour'))
+            ->leftJoin('checkout_configs', 'checkouts.project_id', 'checkout_configs.project_id')
+            ->where('checkout_configs.company_id', $companyId)
+            ->where('checkouts.project_id', $projectId)
+            ->whereDate('checkouts.created_at', $data['startDate'])
             ->groupBy('hour');
 
         if (!empty($affiliate)) {

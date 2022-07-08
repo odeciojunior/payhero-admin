@@ -54,9 +54,10 @@ const messageLoader = {
 const attachments2send = [];
 
 $('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     $("#project-select").find('option').not(':first').remove()
     updateCompanyDefault().done(function(data1){
-        getCompaniesNoSession().done(function(data2){
+        getCompaniesAndProjects().done(function(data2){
             // companies=r2[0].companies;
             // $.each(companies, function (c, company) {
             //     if( r2[0].company_default == company.id){
@@ -71,19 +72,6 @@ $('#company-navbar').change(function () {
         })
     })
 })
-// function updateAfterChangeCompany(){
-//     $("#project-select").find('option').not(':first').remove();
-//     let companies = JSON.parse(sessionStorage.getItem('companies'));
-//     $.each(companies, function (c, company) {
-//         if( sessionStorage.getItem('company_default') == company.id){
-//             $.each(company.projects, function (i, project) {
-//                 $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
-//             });
-//         }
-//     });
-//     window.index();
-//     window.getResume();
-// }
 
 $(() => {
 
@@ -95,7 +83,7 @@ $(() => {
             .addClass('active');
         $("#input-transaction input").val(params.get('sale_id'));
     }
-    getCompaniesNoSession().done( function (data){
+    getCompaniesAndProjects().done( function (data){
         getProjects();
     });
 
@@ -103,7 +91,7 @@ $(() => {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
+            url: '/api/projects?select=true&company='+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -173,7 +161,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets?' + getFilters(page) + '&company='+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
+            url: '/api/tickets?' + getFilters(page) + '&company='+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -338,7 +326,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets/getvalues?project=' + $('#project-select').val() + "&company_id="+$('#company-navbar').val(), //sessionStorage.getItem('company_default'),
+            url: '/api/tickets/getvalues?project=' + $('#project-select').val() + "&company_id="+$('#company-navbar').val(),
             dataType: "json",
             data: {
                 date: $("#date_range").val(),

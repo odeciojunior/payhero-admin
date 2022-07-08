@@ -1,6 +1,11 @@
-function updateAfterChangeCompany(){
-    window.index('n');
-}
+$('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            window.index('n');
+        });
+	});
+});
 
 $(document).ready(function () {
 
@@ -21,7 +26,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/notazz?company="+ sessionStorage.getItem('company_default'),
+            url: "/api/apps/notazz?company="+ $('#company-navbar').val(),
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
@@ -172,7 +177,7 @@ $(document).ready(function () {
                         var integration_id = $(this).attr("integration");
                         $.ajax({
                             method: "GET",
-                            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
+                            url: "/api/projects?select=true&company="+ $('#company-navbar').val(),
                             headers: {
                                 Authorization: $(
                                     'meta[name="access-token"]'
@@ -367,13 +372,15 @@ $(document).ready(function () {
         });
     }
 
-    window.index();
+    getCompaniesAndProjects().done( function (data){
+        window.index();
+    });
 
     function create() {
         clearForm();
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
+            url: "/api/projects?select=true&company="+ $('#company-navbar').val(),
             data: {
                 status: "active",
             },

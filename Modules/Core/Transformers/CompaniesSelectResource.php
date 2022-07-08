@@ -40,8 +40,14 @@ class CompaniesSelectResource extends JsonResource
         $projects = CheckoutConfig::select('checkout_configs.project_id as id','projects.name', 'users_projects.order_priority as order_p', 'projects.status')
             ->join('projects','projects.id','=','checkout_configs.project_id')
             ->join('users_projects', 'users_projects.project_id', '=', 'projects.id')
-            ->where('checkout_configs.company_id',$this->id)
-            ->orderBy('projects.status')
+            ->where('checkout_configs.company_id',$this->id);
+
+        if(auth()->user()->deleted_project_filter)
+            $projects2 = $projects->whereIn('projects.status', [1,2]);
+        else
+            $projects2 = $projects->where('projects.status',1);
+
+        $projects3 = $projects2->orderBy('projects.status')
             ->orderBy('order_p')
             ->orderBy('projects.id', 'DESC')
             ->get()
@@ -67,7 +73,7 @@ class CompaniesSelectResource extends JsonResource
             'user_address_document_status' => $userAddressDocumentStatus,
             'user_personal_document_status' => $userPersonalDocumentStatus,
             'company_is_approved' => $companyIsApproved,
-            'projects' => $projects
+            'projects' => $projects3
         ];
     }
 }

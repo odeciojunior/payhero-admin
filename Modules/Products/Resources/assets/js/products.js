@@ -1,3 +1,7 @@
+getCompaniesAndProjects().done( function (data){
+    $('.site-navbar .sirius-select-container').addClass('disabled');
+});
+
 loadingOnScreen();
 $(document).ready(function () {
     let code = window.location.href.split('/')[4];

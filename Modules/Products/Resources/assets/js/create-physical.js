@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    getCompaniesAndProjects().done( function (data){
+        $('.site-navbar .sirius-select-container').addClass('disabled');
+    });
     /**
      * Helper Functions
      */

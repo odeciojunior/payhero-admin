@@ -15,6 +15,7 @@ let disabledCompany = false;
 let companyVerification = true;
 
 $('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     $("#content-error").hide();
     updateCompanyDefault().done( function(data){
         $('.company_name').val( $('#company-navbar').find('option:selected').text() );
@@ -24,7 +25,7 @@ $('#company-navbar').change(function () {
 });
 
 $(document).ready(function () {
-    getCompaniesNoSession().done( function (data){
+    getCompaniesAndProjects().done( function (data){
         updateInvites();
     });
 
@@ -172,7 +173,7 @@ $(document).ready(function () {
         var cont = 0;
         $.ajax({
             method: "GET",
-            url: '/api/invitations?company='+ $('#company-navbar').val(),//sessionStorage.getItem('company_default'),
+            url: '/api/invitations?company='+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -305,8 +306,8 @@ $(document).ready(function () {
                             $("#company-list").html('').append(selCompany);
 
                             var linkInvite = '';
-                            var companyId = $('#company-navbar').val();//sessionStorage.getItem('company_default'); //$("#select-company-list option:selected").val();
-                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + companyId; //$("#select-company-list option:selected").val();
+                            var companyId = $('#company-navbar').val();
+                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + companyId;
 
                             $("#invite-link").val(linkInvite);
 
@@ -393,7 +394,7 @@ $(document).ready(function () {
         });
         $.ajax({
             method: "GET",
-            url: '/api/invitations/getinvitationdata' + '?company='+ $('#company-navbar').val(),//sessionStorage.getItem('company_default'),
+            url: '/api/invitations/getinvitationdata' + '?company='+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -492,7 +493,7 @@ $(document).ready(function () {
         }
     }
 
-    $('.company_name').val( $('#company-navbar').find('option:selected').text() );//sessionStorage.getItem('company_default_name') );
+    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
 
     //ALTERAÇÃO DE HTML
 

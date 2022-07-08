@@ -1,17 +1,13 @@
 $('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     $("#data-table-projects").empty();
     updateCompanyDefault().done(function(data1){
-        getCompaniesNoSession().done(function(data2){
+        getCompaniesAndProjects().done(function(data2){
             loadOnAny('#data-table-projects');
             window.index('n');
         });
 	});
 });
-// function updateAfterChangeCompany(){
-//     $("#data-table-projects").empty();
-//     loadOnAny('#data-table-projects');
-//     window.index('n');
-// }
 
 $(function () {
 
@@ -23,7 +19,7 @@ $(function () {
         $.ajax({
             url: "/api/projects",
             data: {
-                company: $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
+                company: $('#company-navbar').val(),
                 status: 'active',
             },
             dataType: "json",
@@ -204,7 +200,7 @@ $(function () {
             },
         });
     });
-    getCompaniesNoSession().done( function (data){
+    getCompaniesAndProjects().done( function (data){
         window.index();
     });
 });

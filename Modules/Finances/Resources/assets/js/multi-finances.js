@@ -1,4 +1,5 @@
 $('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     updateCompanyDefault().done( function(){
         $("#extract_company_select").val( $('#company-navbar').val() );
         $('#gateway-skeleton').show();
@@ -15,23 +16,8 @@ $('#company-navbar').change(function () {
     });
 });
 
-// function updateAfterChangeCompany(){
-//     $("#extract_company_select").val( sessionStorage.getItem('company_default') );
-//     $('#gateway-skeleton').show();
-//     $('#container-all-gateways').html('');
-//     $('#val-skeleton').show();
-//     $('#container_val').css('display','none');
-//     $('.skeleton-withdrawal').show();
-//     $('#container-withdraw').html('');
-//     $('#empty-history').hide();
-//     $('.asScrollable').hide();
-//     $('.container-history').css('padding-top','42px');
-//     window.updateStatements();
-//     window.updateWithdrawals();
-// }
-
 $(document).ready(function(){
-    getCompaniesNoSession().done( function (data){
+    getCompaniesAndProjects().done( function (data){
         getProjects();
     });
 
@@ -236,7 +222,7 @@ $(document).ready(function(){
     }
 
     window.updateStatements = function() {
-        let companyId = $('#company-navbar').val() //sessionStorage.getItem('company_default') //$("#transfers_company_select").val()
+        let companyId = $('#company-navbar').val()
         $.ajax({
             url: `/api/finances/get-statement-resumes?company_id=${companyId}`,
             type: "GET",
@@ -436,7 +422,7 @@ $(document).ready(function(){
         });
     }
      window.updateWithdrawals = function() {
-        let companyId = $('#company-navbar').val() //sessionStorage.getItem('company_default') //$("#transfers_company_select").val()
+        let companyId = $('#company-navbar').val()
 
         $.ajax({
             url: `/api/withdrawals/get-resume?company_id=${companyId}`,

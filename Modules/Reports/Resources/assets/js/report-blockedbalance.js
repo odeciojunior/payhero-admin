@@ -1,44 +1,32 @@
 var currentPage = null;
 //var atualizar = null;
 
-function updateAfterChangeCompany(){
-    // $("#project").find('option').not(':first').remove();
-    // let companies = JSON.parse(sessionStorage.getItem('companies'));
-    // $.each(companies, function (c, company) {
-    //     if( sessionStorage.getItem('company_default') == company.id){
-    //         $.each(company.projects, function (i, project) {
-    //             $("#project").append(
-    //                 $("<option>", {
-    //                     value: project.id,
-    //                     text: project.name,
-    //                 })
-    //             );
-    //         });
-    //     }
-    // });
-
-    window.fillHtmlSelect();
-    window.atualizar();
-}
-
-function fillHtmlSelect(){
+$('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     $("#project").find('option').not(':first').remove();
-    let companies = JSON.parse(sessionStorage.getItem('companies'));
-    $.each(companies, function (c, company) {
-        if( sessionStorage.getItem('company_default') == company.id){
-            $.each(company.projects, function (i, project) {
-                $("#project").append(
-                    $("<option>", {
-                        value: project.id,
-                        text: project.name,
-                    })
-                );
-            });
+    loadOnTable('#dados_tabela', '#tabela_vendas');
+    loadOnAny('.number', false, {
+        styles: {
+            container: {
+                minHeight: '32px',
+                height: 'auto'
+            },
+            loader: {
+                width: '20px',
+                height: '20px',
+                borderWidth: '4px'
+            },
         }
     });
-}
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            window.fillProjectsSelect(data2.companies)
+            window.atualizar();
+        });
+	});
+});
 
-function atualizar(link = null) {
+window.atualizar = function (link = null) {
 
     currentPage = link;
     let updateResume = true;
@@ -165,7 +153,7 @@ function atualizar(link = null) {
 
 function getFilters(urlParams = false) {
     let data = {
-        'company': sessionStorage.getItem('company_default'),
+        'company': $('#company-navbar').val(),
         'project': $("#project").val(),
         'payment_method': $("#payment_method").val(),
         'status': $("#status").val(),
@@ -255,7 +243,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
+        window.atualizar();
     });
 
     $('.btn-light-1').click(function () {
@@ -333,57 +321,63 @@ $(document).ready(function () {
         })
     }
 
-    getProjects();
+    getCompaniesAndProjects().done( function (data){
+        getProjects(data);
+    });
 
-    // Obtem o os campos dos filtros
-    function getProjectsV2() {
+    window.fillProjectsSelect = function(data){
+        $.each(data, function (c, company) {
+            $.each(company.projects, function (i, project) {
+                $("#project").append($("<option>", {value: project.id,text: project.name,}));
+            });
+        });
+    }
+
+    function getProjects(data) {
         loadingOnScreen();
+        window.fillProjectsSelect(data.companies)
         $("#project-empty").hide();
         $("#project-not-empty").show();
         $("#export-excel").show()
-        fillHtmlSelect();
-        atualizar();
+        window.atualizar();
         loadingOnScreenRemove();
-    }
 
-    function getProjects() {
-        loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: '/api/projects?select=true&company='+ sessionStorage.getItem('company_default'),
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel").show()
-                    if (response.data != 'api sales') {
-                        $.each(response.data, function (i, project) {
-                            $("#project").append($('<option>', {
-                                value: project.id,
-                                text: project.name
-                            }));
-                        });
-                    }
-                    atualizar();
+        // $.ajax({
+        //     method: "GET",
+        //     url: '/api/projects?select=true&company='+ $('#company-navbar').val(),
+        //     dataType: "json",
+        //     headers: {
+        //         'Authorization': $('meta[name="access-token"]').attr('content'),
+        //         'Accept': 'application/json',
+        //     },
+        //     error: function error(response) {
+        //         loadingOnScreenRemove();
+        //         errorAjaxResponse(response);
+        //     },
+        //     success: function success(response) {
+        //         if (!isEmpty(response.data)) {
+        //             $("#project-empty").hide();
+        //             $("#project-not-empty").show();
+        //             $("#export-excel").show()
+        //             if (response.data != 'api sales') {
+        //                 $.each(response.data, function (i, project) {
+        //                     $("#project").append($('<option>', {
+        //                         value: project.id,
+        //                         text: project.name
+        //                     }));
+        //                 });
+        //             }
+        //             window.atualizar();
 
-                } else {
-                    $("#export-excel").hide()
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
+        //         } else {
+        //             $("#export-excel").hide()
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
 
-                loadingOnScreenRemove();
-            }
-        });
+        //         loadingOnScreenRemove();
+        //     }
+        // });
     }
 
     $("#project").on('change', function () {
@@ -432,7 +426,7 @@ $(document).ready(function () {
 
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
-            atualizar();
+            window.atualizar();
         }
     });
 

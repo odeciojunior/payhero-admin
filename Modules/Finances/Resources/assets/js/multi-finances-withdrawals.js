@@ -19,7 +19,7 @@ window.defaultWithdrawal = function(gatewayId) {
             type: "POST",
             dataType: "json",
             data: {
-                company_id: $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //$("#transfers_company_select").val(),
+                company_id: $('#company-navbar').val(),
                 withdrawal_value: $('#withdrawal-value-' + gatewayId).val()
             },
             headers: {
@@ -66,7 +66,7 @@ window.customWithdrawal = function(gatewayId) {
         type: "POST",
         dataType: "json",
         data: {
-            company_id: $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //$("#transfers_company_select").val(),
+            company_id: $('#company-navbar').val(),
             gateway_id: gatewayId,
             withdrawal_value: value,
         },
@@ -471,7 +471,7 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             url: "/api/withdrawals",
             type: "POST",
             data: {
-                company_id: $('#company-navbar').val(), //sessionStorage.getItem('company_default'), //$("#transfers_company_select").val(),
+                company_id: $('#company-navbar').val(),
                 withdrawal_value: $(".value-select").data("value"),//
                 gateway_id: gatewayId,
             },

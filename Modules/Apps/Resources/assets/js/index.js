@@ -1,4 +1,5 @@
 $('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
     loadOnAny('.page-content');
     updateCompanyDefault().done( function(){
         window.updateUsedApps();
@@ -8,7 +9,7 @@ $('#company-navbar').change(function () {
 $(document).ready(function () {
     loadingOnScreen();
 
-    getCompaniesNoSession().done( function (data){
+    getCompaniesAndProjects().done( function (data){
         getProjects();
     });
 

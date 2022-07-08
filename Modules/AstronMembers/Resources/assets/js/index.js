@@ -1,6 +1,11 @@
-function updateAfterChangeCompany(){
-    window.index('n');
-}
+$('#company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault()) return;
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            window.index('n');
+        });
+	});
+});
 
 $(document).ready(function () {
 
@@ -12,7 +17,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/astronmembers?company="+ $('#company-navbar').val(), //sessionStorage.getItem('company_default'),
+            url: "/api/apps/astronmembers?company="+ $('#company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -64,7 +69,9 @@ $(document).ready(function () {
         });
     }
 
-    window.index();
+    getCompaniesAndProjects().done( function (data){
+        window.index();
+    });
 
     //checkbox
     $(".check").on("click", function () {
