@@ -100,10 +100,10 @@ $(document).ready(function () {
 
     $('.shipping-money-format').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: 'R$ '});
 
-    setSelect2Plugin('#shipping-plans-add', '.shipping-plans-add-container')
-    setSelect2Plugin('#shipping-plans-edit', '.shipping-plans-edit-container')
-    setSelect2Plugin('#shipping-not-apply-plans-add', '.shipping-not-apply-plans-add-container')
-    setSelect2Plugin('#shipping-not-apply-plans-edit', '.shipping-not-apply-plans-edit-container')
+    setSelect2Plugin('#shipping-plans-add', '#modal-create-shipping')
+    setSelect2Plugin('#shipping-plans-edit', '#modal-edit-shipping')
+    setSelect2Plugin('#shipping-not-apply-plans-add', '#modal-create-shipping')
+    setSelect2Plugin('#shipping-not-apply-plans-edit', '#modal-edit-shipping')
 
     $('.check').on('click', function () {
         if ($(this).is(':checked')) {
@@ -156,10 +156,10 @@ $(document).ready(function () {
 
     $('.shipping-use-variants').on('change', function () {
         const slider = $(this);
-        const form = slider.closest('form');
+        const modal = slider.closest('.modal');
 
-        const offerContainer = form.find('.shipping-plans-add-container, .shipping-plans-edit-container');
-        const notOfferContainer = form.find('.shipping-not-apply-plans-add-container, .shipping-not-apply-plans-edit-container');
+        const offerContainer = modal.find('.shipping-plans-add-container, .shipping-plans-edit-container');
+        const notOfferContainer = modal.find('.shipping-not-apply-plans-add-container, .shipping-not-apply-plans-edit-container');
 
         const offerLabel = offerContainer.find('label');
         const notOfferLabel = notOfferContainer.find('label');
@@ -181,8 +181,8 @@ $(document).ready(function () {
         offerSelect.html(`<option value="all">Qualquer ${targetName}</option>`).val('all').trigger('change');
         notOfferSelect.html('').val('').trigger('change');
 
-        setSelect2Plugin(offerSelect, offerContainer)
-        setSelect2Plugin(notOfferSelect, notOfferContainer)
+        setSelect2Plugin(offerSelect, modal)
+        setSelect2Plugin(notOfferSelect, modal)
     });
 
     // carregar modal de detalhes
