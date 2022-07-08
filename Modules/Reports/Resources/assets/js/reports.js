@@ -299,6 +299,18 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                lista = `
+                    <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
+                        <h4 id='products' class="font-size-24 bold grey">
+                            0
+                        </h4>
+                    </div>
+                    <div class="empty-products">
+                        ${emptyProducts}
+                        <p class="noone">Nenhum produto vendido</p>
+                    </div>
+                `;
+                $("#block-products").html(lista);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
