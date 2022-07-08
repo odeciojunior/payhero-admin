@@ -723,10 +723,14 @@ h4.number{
     text-align: center;
 }
 .bar.pink { background: #F43F5E; text-indent: -9000em; }
-.bar.purple { background: #665FE8; text-indent: -9000em;}
+.bar.purple { background: #5731E1; text-indent: -9000em;}
 .bar.blue { background: #2E85EC; text-indent: -9000em;}
 .bar.blue-1 { background: #002F66; text-indent: -9000em;}
 .bar.blue-2 { background: #0050AF; text-indent: -9000em;}
+
+.container.creditCard .bar { background: #2E85EC; text-indent: -9000em; }
+.container.cardPix .bar { background: #5731E1; text-indent: -9000em; }
+.container.cardBoleto .bar { background: #F43F5E; text-indent: -9000em; }
 
 /* graph */
 .new-graph .ct-series-a .ct-line { stroke: #2e85ec; }
@@ -2022,7 +2026,7 @@ h4.number{
     text-indent: 3px;
 }
 .list-products .blue { background: #2E85EC; }
-.list-products .purple { background: #665FE8; }
+.list-products .purple { background: #5731E1; }
 .list-products .pink { background: #F43F5E; }
 .list-products .orange { background: #FF7900; }
 .list-products .yellow { background: #FBBF24; }

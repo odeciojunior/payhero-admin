@@ -603,7 +603,13 @@ $(function () {
                     paymentsHtml = `<div id="payment-type-items" class="custom-table pb-0 pt-0"><div class="row container-payment" id="type-payment">`;
                         arrJson.forEach(element => {
                             paymentsHtml += `
-                                <div class="container">
+                                <div 
+                                    class="container ${
+                                        element[0] == 'credit_card' ? 'creditCard'
+                                        : element[0] == 'pix' ? 'cardPix'
+                                        : element[0] == 'boleto'? 'cardBoleto' : ''
+                                    }"
+                                >
                                     <div class="data-holder b-bottom">
                                         <div class="box-payment-option">
                                             <div class="col-payment grey box-image-payment ico-pay">
@@ -623,7 +629,7 @@ $(function () {
                                                     ${element[1].percentage}
                                                 </div>
                                                 <div class="col-payment col-graph bar-payment">
-                                                    <div class="bar blue" style="width: ${element[1].percentage};">-</div>
+                                                    <div class="bar" style="width: ${element[1].percentage};">-</div>
                                                 </div>
                                                 <div class="col-payment end">
                                                     <span class="money-td green bold grey" id='credit-card-value'>
