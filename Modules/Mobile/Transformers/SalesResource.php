@@ -2,10 +2,8 @@
 
 namespace Modules\Mobile\Transformers;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
-use Modules\Core\Services\FoxUtils;
 
 class SalesResource extends JsonResource
 {
@@ -54,7 +52,7 @@ class SalesResource extends JsonResource
             'total_paid'     => number_format(intval($this->value) / 100, 2, ',', '.'),
             'status'         => Lang::get('definitions.enum.sale.status.' . $sale->present()->getStatus($sale->status)),
             'payment_method' => $paymentMethod,
-            'payment_time'   => FoxUtils::calcTime(Carbon::create($sale->start_date))
+            'payment_time'   => $sale->start_date,
         ];
 
         return $data;
