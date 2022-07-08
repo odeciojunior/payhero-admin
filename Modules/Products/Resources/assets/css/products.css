@@ -77,7 +77,7 @@ label {
 }
 
 .card-description {
-    overflow: hidden; 
+    overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     line-height: 20px;
@@ -131,4 +131,56 @@ button.menu_product {
 
 .menu_product_tooltip a span {
     -webkit-text-stroke: .5px;
+}
+
+.new-product-modal-option a {
+    width: 115px;
+    height: 115px;
+    border: 1px solid #2E85EC;
+    border-radius: 8px;
+    background: #F4F6FB;
+}
+.new-product-modal-option a:hover {
+    border: 2px solid #2E85EC;
+    background: #CBE0FA;;
+}
+.new-product-modal-option span {
+    font-weight: 400;
+    color: #5B5B5B;
+    margin-top: 12px;
+    font-size: 16px;
+}
+@media screen and (max-width: 430px) {
+    .new-product-modal-option a {
+        width: 90px;
+    }
+
+    .new-product-modal-option span {
+        font-size: 12px;
+    }
+}
+
+.new-product-modal-option-title {
+    position: fixed;
+    left: 0;
+    right: 0;
+    align-self: center;
+    margin: 0;
+    color: #464646;
+    font: normal normal 600 22px Muli;
+}
+
+.new-product-modal-option-close-btn {
+    order: 2;
+    z-index: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 26px;
+    color: #636363;
+}
+.new-product-modal-option-close-btn:focus {
+    border: none;
+    outline: none;
 }

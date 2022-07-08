@@ -80,30 +80,26 @@
     </div>
 
     <div class="modal fade" id="new-product-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" style="width: 350px;max-width: 350px;" role="document">
-            <div class="modal-content s-border-radius">
-                <div class="modal-header simple-border-bottom px-20">
-                    <h4 class="col-12 modal-title text-center" style="color:#787878; font: normal normal bold 20px Muli;">Criar novo produto</h4>
-                    <button type="button" class="close" data-dismiss="modal" style="margin: -10px 0px -15px -5px;" aria-label="Close">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded">
+                <div class="d-flex flex-row-reverse simple-border-bottom px-20">
+                    <h4 class="new-product-modal-option-title text-center">Criar novo produto</h4>
+                    <button type="button" class="new-product-modal-option-close-btn" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body pt-20">
-                    <div class="container-fluid">
-                        <div class="row text-center">
-                            <div class="col-6 d-flex flex-column align-items-center">
-                                <a href="/products/create/physical" class="mb-2 new-product-icon">
-                                    <img src="{{ mix('build/global/img/svg/caixa-fisica.svg') }}" data-value="product_physical" alt="novo produto fisico">
-                                </a>
-                                <p>Físico</p>
-                            </div>
-                            <div class="col-6 d-flex flex-column align-items-center">
-                                <a href="/products/create/digital" class="mb-2 new-product-icon">
-                                    <img src="{{ mix('build/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
-                                </a>
-                                <p>Digital</p>
-                            </div>
-                        </div>
+                <div class="d-flex flex-row justify-content-around" style="padding: 32px 16px">
+                    <div class="d-flex flex-column align-items-center new-product-modal-option">
+                        <a href="/products/create/physical" class="d-flex justify-content-center align-items-center">
+                            <img src="{{ mix('build/global/img/svg/caixa-fisica.svg') }}" data-value="product_physical" alt="novo produto fisico">
+                        </a>
+                        <span>Físico</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center new-product-modal-option">
+                        <a href="/products/create/digital" class="d-flex justify-content-center align-items-center">
+                            <img src="{{ mix('build/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
+                        </a>
+                        <span>Digital</span>
                     </div>
                 </div>
             </div>
