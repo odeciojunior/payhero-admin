@@ -167,6 +167,7 @@ class User extends Authenticable
         'get_faster',
         'release_count',
         'has_security_reserve',
+        'security_reserve_rule',
         'level',
         'ignore_automatic_benefits_updates',
         'total_commission_value',
