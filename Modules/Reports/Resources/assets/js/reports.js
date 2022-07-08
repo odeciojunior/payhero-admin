@@ -677,6 +677,18 @@ $(function () {
             },
             success: function success(response) {
                 regionsHtml = `
+                    <div class="container d-flex value-price">
+                        <h4 id='sales' class="font-size-24 bold grey" style="visibility: hidden; height: 15px;">
+                            0
+                        </h4>
+                    </div>
+                    <div class="no-graph">
+                        ${emptyGraph}
+                        <p class="noone-data">Não há dados suficientes</p>
+                    </div>
+                `;
+                $("#block-regions").html(regionsHtml);
+                regionsHtml = `
                     <footer class="container footer-regions">
                         <section class="box-total-region">
                             <dl class="states"></dl>
