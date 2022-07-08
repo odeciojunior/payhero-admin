@@ -861,6 +861,19 @@ $(function () {
     }
 
     function updateSalesByOrigin() {
+        let td = `
+            <td>
+                ${noWithdrawal}
+            </td>
+            <td>
+                <p class='no-data-origin'>
+                    <strong>Sem dados, por enquanto...</strong>
+                    Ainda faltam dados suficientes a comparação, continue rodando!
+                </p>
+            </td>
+        `;
+
+
         var link =
             arguments.length > 0 && arguments[0] !== undefined
                 ? arguments[0]
@@ -879,21 +892,14 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                $("#card-origin .ske-load").hide();
+                $("#origins-table").html(td);
+                $("#pagination").html("");
+                $("#pagination-origins").hide();
+                $(".origin-report").show();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let td = `
-                    <td>
-                        ${noWithdrawal}
-                    </td>
-                    <td>
-                        <p class='no-data-origin'>
-                            <strong>Sem dados, por enquanto...</strong>
-                            Ainda faltam dados suficientes a comparação, continue rodando!
-                        </p>
-                    </td>
-                    `
-
                 if (response.data.length == 0) {
                     $("#card-origin .ske-load").hide();
                     $("#origins-table").html(td);
