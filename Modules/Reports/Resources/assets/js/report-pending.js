@@ -156,6 +156,7 @@ function resumePending() {
         },
         error: function error(response) {
             //loadOnAny('.number', true);
+            $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
             errorAjaxResponse(response);
         },
         success: function success(response) {

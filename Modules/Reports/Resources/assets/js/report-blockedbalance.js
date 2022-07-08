@@ -30,6 +30,11 @@ function atualizar(link = null) {
             'Accept': 'application/json',
         },
         error: function error(response) {
+            $('#dados_tabela').html('');
+            $('#tabela_vendas').addClass('table-striped');
+            $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                    $("#dados_tabela").attr("img-empty") +
+                    "'>Nenhuma venda encontrada</td></tr>");
             errorAjaxResponse(response);
         },
         success: function success(response) {
