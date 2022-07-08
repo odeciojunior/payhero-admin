@@ -57,7 +57,7 @@ class OrderBumpApiController extends Controller
 
             $selectPlans = ['id', 'name', 'description'];
             if ($rule->use_variants) {
-                $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants');
+                $rawVariants = DB::raw('(select count(distinct p.shopify_variant_id) from plans p where p.shopify_id = plans.shopify_id and p.shopify_id is not null and p.deleted_at is null) as variants');
                 $selectPlans[] = $rawVariants;
             }
 

@@ -224,7 +224,7 @@ $(document).ready(function () {
                     }
                     response.value += '</div>'
                 }
-                $('#modal-detail-shipping .shipping-value').html(response.type != 'static' ? ' Calculado automaticamente' : response.value);
+                $('#modal-detail-shipping .shipping-value').html(response.type != 'static' ? '' : response.value);
                 $('#modal-detail-shipping .shipping-info').html(response.information);
                 $('#modal-detail-shipping .rule-shipping-value').html(response.rule_value);
                 $('#modal-detail-shipping .shipping-status').html(response.status == 1 ? '<span class="badge badge-success text-left">Ativo</span>' : '<span class="badge badge-danger">Desativado</span>');

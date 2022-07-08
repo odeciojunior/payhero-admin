@@ -32,15 +32,15 @@
                 <input name="zip_code_origin" type="text" class="input-pad shipping-zipcode" data-mask="00000-000"
                        value="" placeholder="12345-678">
             </div>
-            <div class="switch-holder">
-                <label>Valor único para todas as regiões</label>
-                <br>
-                <label class="switch">
-                    <input type="checkbox" checked class="check shipping-regions" value="1">
-                    <span class="slider round"></span>
-                </label>
-            </div>
             <div class="value-shipping-row">
+                <div class="switch-holder">
+                    <label>Valor único para todas as regiões</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" checked class="check shipping-regions" value="1">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
                 <div class="form-group" id="shipping-single-value">
                     <label for="value">Valor do Frete</label>
                     <input name="value" type="text" class="input-pad shipping-value shipping-money-format" value=""
