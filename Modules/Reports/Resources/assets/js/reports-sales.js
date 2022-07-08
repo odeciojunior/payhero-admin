@@ -155,23 +155,18 @@ function salesResume() {
             Accept: "application/json",
         },
         error: function error(response) {
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            let { average_ticket, chargeback, comission, transactions } = response.data;
-
             salesTransactions = `
                 <span class="title">N de transações</span>
                 <div class="d-flex">
-                    <strong class="number">${transactions == undefined ? 0: transactions}</strong>
+                    <strong class="number">0</strong>
                 </div>
             `;
-
+    
             salesAverageTicket = `
                 <span class="title">Ticket Médio</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number">${average_ticket == undefined ? '0,00': removeMoneyCurrency(average_ticket)}</strong>
+                    <strong class="number">0,00</strong>
                 </div>
             `;
 
@@ -179,7 +174,7 @@ function salesResume() {
                 <span class="title">Comissão total</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number">${comission == undefined ? '0,00': removeMoneyCurrency(comission)}</strong>
+                    <strong class="number">0,00</strong>
                 </div>
             `;
 
@@ -187,9 +182,81 @@ function salesResume() {
                 <span class="title">Total em Chargebacks</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number">${chargeback == undefined ? '0,00': removeMoneyCurrency(chargeback)}</strong>
+                    <strong class="number">0,00</strong>
                 </div>
             `;
+            $("#sales-number-chargeback").html(salesNumberChargeback);
+            $("#sales-comission").html(salesComission);
+            $("#sales-average-ticket").html(salesAverageTicket);
+            $("#sales-transactions").html(salesTransactions);
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            if(response.data.length > 0) {
+                let { average_ticket, chargeback, comission, transactions } = response.data;
+    
+                salesTransactions = `
+                    <span class="title">N de transações</span>
+                    <div class="d-flex">
+                        <strong class="number">${transactions == undefined ? 0: transactions}</strong>
+                    </div>
+                `;
+    
+                salesAverageTicket = `
+                    <span class="title">Ticket Médio</span>
+                    <div class="d-flex">
+                        <span class="detail">R$</span>
+                        <strong class="number">${average_ticket == undefined ? '0,00': removeMoneyCurrency(average_ticket)}</strong>
+                    </div>
+                `;
+    
+                salesComission = `
+                    <span class="title">Comissão total</span>
+                    <div class="d-flex">
+                        <span class="detail">R$</span>
+                        <strong class="number">${comission == undefined ? '0,00': removeMoneyCurrency(comission)}</strong>
+                    </div>
+                `;
+    
+                salesNumberChargeback = `
+                    <span class="title">Total em Chargebacks</span>
+                    <div class="d-flex">
+                        <span class="detail">R$</span>
+                        <strong class="number">${chargeback == undefined ? '0,00': removeMoneyCurrency(chargeback)}</strong>
+                    </div>
+                `;
+            } else {
+                salesTransactions = `
+                    <span class="title">N de transações</span>
+                    <div class="d-flex">
+                        <strong class="number">0</strong>
+                    </div>
+                `;
+    
+                salesAverageTicket = `
+                    <span class="title">Ticket Médio</span>
+                    <div class="d-flex">
+                        <span class="detail">R$</span>
+                        <strong class="number">0,00</strong>
+                    </div>
+                `;
+    
+                salesComission = `
+                    <span class="title">Comissão total</span>
+                    <div class="d-flex">
+                        <span class="detail">R$</span>
+                        <strong class="number">0,00</strong>
+                    </div>
+                `;
+    
+                salesNumberChargeback = `
+                    <span class="title">Total em Chargebacks</span>
+                    <div class="d-flex">
+                        <span class="detail">R$</span>
+                        <strong class="number">0,00</strong>
+                    </div>
+                `;
+            }
 
             $("#sales-number-chargeback").html(salesNumberChargeback);
             $("#sales-comission").html(salesComission);
@@ -213,6 +280,16 @@ function distribution() {
             Accept: "application/json",
         },
         error: function error(response) {
+            distributionHtml = `
+            <div class="d-flex box-graph-dist no-distribution-graph">
+                <div class="info-graph">
+                    <div class="no-sell">
+                        ${noGraph}
+                    </div>
+                </div>
+            </div>
+            `;
+            $("#block-distribution").html(distributionHtml);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -408,6 +485,18 @@ function loadDevices() {
             Accept: "application/json",
         },
         error: function error(response) {
+            deviceBlock = `
+                <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
+                    <h4 id='products' class="font-size-24 bold grey">
+                        0
+                    </h4>
+                </div>
+                <div class="empty-products pad-0">
+                    ${noData}
+                    <p class="noone">Sem dados</p>
+                </div>
+            `;
+            $("#block-devices").html(deviceBlock);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -546,31 +635,22 @@ function typePayments() {
             Accept: "application/json",
         },
         error: function error(response) {
+            paymentsHtml = `
+                <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
+                    <h4 id='products' class="font-size-24 bold grey">
+                        0
+                    </h4>
+                </div>
+                <div class="empty-products pad-0">
+                    ${noData}
+                    <p class="noone">Sem dados</p>
+                </div>
+            `;
+
+            $("#block-payments").html(paymentsHtml);
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let { credit_card, pix, boleto } = response.data;
-            let boletoNumber        = Number(boleto.value.replace(',',''));
-            let creditCardNumber    = Number(credit_card.value.replace(',',''));
-            let pixNumber           = Number(pix.value.replace(',',''));
-            const total             = [boletoNumber, creditCardNumber, pixNumber].map(Number).reduce((prev, value) => prev + value,0);
-
-            var SortArr = function (j) {
-                var arr = [];
-                for (var key in j) {
-                    arr.push({ key: key, val: j[key] });
-                }
-                arr.sort(function (a, b) {
-                    var intA = parseFloat(a.val.value.replace(',','')),
-                        intB = parseFloat(b.val.value.replace(',',''));
-                    if (intA > intB)
-                        return -1;
-                    if (intA < intB)
-                        return 1;
-                    return 0;
-                });
-                return arr;
-            };
 
             if( response.data.length !== 0 ) {
                 var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]);
@@ -647,6 +727,10 @@ function loadFrequenteSales() {
             Accept: "application/json",
         },
         error: function error(response) {
+            salesBlock = `${noSales}`;
+            $('#block-sales .ske-load' ).remove();
+            $('#block-sales').removeClass('scroll-212');
+            $("#block-sales").html(salesBlock);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -697,29 +781,7 @@ function loadFrequenteSales() {
 
             } else {
                 salesBlock = `
-                    <div class="box-payment-option pad-0">
-                        <div class="d-flex align-items list-sales">
-                            <div class="d-flex align-items">
-                                <div class="no-sell">
-                                    <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
-                                        <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
-                                        <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
-                                        <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
-                                        <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
-                                        <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
-                                    </svg>
-                                    <footer>
-                                        <h4>Nada por aqui...</h4>
-                                        <p>
-                                            Não há dados suficientes
-                                            para gerar este relatório.
-                                        </p>
-                                    </footer>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    ${noSales}
                 `;
                 $('#block-sales .ske-load' ).remove();
                 $('#block-sales').removeClass('scroll-212');
@@ -743,6 +805,13 @@ function abandonedCarts() {
             Accept: "application/json",
         },
         error: function error(response) {
+            abandonedBlock = `
+                <div style="position: relative;">
+                    ${noCart}
+                    <p class="noone">Sem dados</p>
+                </div>
+            `;
+            $("#block-abandoned").html(abandonedBlock);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -806,6 +875,25 @@ function orderbump() {
             Accept: "application/json",
         },
         error: function error(response) {
+            orderbumpBlock = `
+                <div class="d-flex align-items">
+                    <div class="balance col-4">
+                        <div class="box-ico-cash">
+                            <span class="ico-cash">
+                                <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M28.4968 19.0015L36.0525 19.0029L36.1734 19.0168L36.2611 19.0364L36.365 19.0708L36.4541 19.1112L36.5179 19.1468L36.5805 19.1883L36.6445 19.2382L36.7076 19.2965L36.802 19.4062L36.8736 19.5174L36.9271 19.6302L36.9624 19.7355L36.9781 19.8007L36.9873 19.853L36.9983 20.0015V27.5054C36.9983 28.0576 36.5506 28.5054 35.9983 28.5054C35.4854 28.5054 35.0628 28.1193 35.005 27.622L34.9983 27.5054L34.998 22.4155L20.7061 36.7071C20.3456 37.0676 19.7784 37.0953 19.3861 36.7903L19.2919 36.7071C18.9314 36.3466 18.9037 35.7794 19.2087 35.3871L19.2919 35.2929L33.583 21.0015H28.4968C27.9839 21.0015 27.5612 20.6154 27.5035 20.1181L27.4968 20.0015C27.4968 19.4492 27.9445 19.0015 28.4968 19.0015Z" fill="#2E85EC"/>
+                                    <circle cx="27.5" cy="27.5" r="26.5" stroke="#2E85EC" stroke-width="2"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="balance col-8">
+                        <h6 class="no-orderbump">Sem vendas por orderbump</h6>
+                        <p class="txt-no-orderbump">Ofereça mais um produto no checkout e aumente sua conversão</p>
+                    </div>
+                </div>
+            `;
+            $("#block-orderbump").html(orderbumpBlock);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -874,6 +962,10 @@ function upsell() {
             Accept: "application/json",
         },
         error: function error(response) {
+            upsellBlock = `
+                ${noUpsell}
+            `;
+            $("#block-upsell").html(upsellBlock);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -1046,6 +1138,18 @@ function conversion() {
             Accept: "application/json",
         },
         error: function error(response) {
+            conversionBlock = `
+                <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
+                    <h4 id='products' class="font-size-24 bold grey">
+                        0
+                    </h4>
+                </div>
+                <div class="empty-products pad-0">
+                    ${noData}
+                    <p class="noone">Sem dados</p>
+                </div>
+            `;
+            $("#block-conversion").html(conversionBlock);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -1237,6 +1341,10 @@ function recurrence() {
             Accept: "application/json",
         },
         error: function error(response) {
+            recurrenceHtml = `
+                ${noRecurrence}
+            `;
+            $('#block-recurrence').html(recurrenceHtml);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -1447,6 +1555,23 @@ function salesStatus(st) {
             Accept: "application/json",
         },
         error: function error(response) {
+            statusHtml = `
+                <div class="finances-values" style="visibility: hidden;">
+                    <span>R$</span>
+                    <strong>0</strong>
+                </div>
+                <div class="row d-flex empty-graph">
+                    <div class="info-graph no-info-graph">
+                        <div class="no-sell">
+                            ${bigGraph}
+                            <footer class="footer-no-info">
+                                <p>Sem dados para gerar o gráfico</p>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            `;
+            $("#block-status").html(statusHtml);
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -1788,4 +1913,138 @@ let noGraph = `
             para gerar este relatório.
         </p>
     </footer>
+`;
+
+let noRecurrence = `
+    <div class="d-flex box-graph-dist">
+        <div class="info-graph">
+            <div class="no-sell">
+                <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                    <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                    <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                    <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                    <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                    <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                </svg>
+                <footer>
+                    <h4>Nada por aqui...</h4>
+                    <p>
+                        Não há dados suficientes
+                        para gerar este relatório.
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+`;
+
+let noUpsell = `
+<div class="d-flex align-items">
+    <div class="balance col-4">
+        <div class="box-ico-cash">
+            <span class="ico-cash">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="55px" height="55px" viewBox="0 0 55 55" enable-background="new 0 0 55 55" xml:space="preserve">  <image id="image0" width="55" height="55" x="0" y="0"
+                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA3CAYAAACo29JGAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+                AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAA
+                CXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH5gIQDSkIZFXSSgAADaVJREFUaN7NmmtwVdd1gL+9
+                zzn36l69ESAJSWDeiIcx+IkNJhg9gDRO7NT+lWknbqfu40czndjGxnZnmkxTY5s4mXbaZurU40w7
+                yaSOYzvYGIQgftTGPMxTEg+noBcIgd5X995zz9m7P/a9QqArdPWI2/UD/lzts7691l57rbWX8DxP
+                MwUiBQgBSkF/XHO5X9Heq+jo13RFFAOuxldgS8gOCqaFJSV5gtI8ycxcSW5QICVoDWpKNAJ7sgtY
+                EjwF7b2Kkxd9jrR4NF3yaetV9EYVcd8Aj9gMCUEb8rMkZQWSymKL1RU2y2dZFOdKLAm+Gr8+w0VM
+                1HKWhGgCTrR57G5K8On5BC3dioQPOUHBjBzBrHxJca6kMCzIDoghhSOupmtQ09GnuNinuDygiMQh
+                YEFFoWTNXIfqJQ7LZ9mEnIlDjhtOCkj4cLjF45efx/nkfzx6o5qibMHyUos75zismGVRXiDJDwmC
+                thhy2ZRoDb4G19P0RjUt3YoTF30OXkhwst2na1CTHxLcO9fmkVVBVlfYONb43XVccFLA+auKnx2M
+                8V5Dgr6YZm6RpHpJgAcWOcyfLgkHDIXSBmJMBYRZF2DQ1ZzrVOw941LXlOB8lyI/JNiyNMC37gwy
+                Z5ocF2BGcEKA50PdaZd//TjO2cs+ZQWSh24N8AfLA5QXSiTGGpMVS5iNaelRvHPC5dfHXdp7FYuL
+                LR6/L4uNix0smeHGjQUnhYl+r30a5z8OxnF9zcbFDo+tyWJJsYVg6qLbjd/VGho7fF79JEb9mQRZ
+                tuBbdwb547uD5ATFmN+9KZwUcCWieWVflHdOuBSGBX96bxYPrwwQDoy9+FSIJWDA1bxx1OXVT2L0
+                RDXfWBHgrzeEmBa+uQ6jwkkBVwY0P9gzyPuNCeYVSZ6oCrF2ngMiM7eYKhEC0PDBFwlerItyoUvx
+                1eUBnqy6OaA92mJ9Mc2OfVHeb0ywpNjiuU1hbiuzzLn6EsHg2kauX+CQlyX43q4oO0+6OBKerA6R
+                ExRpN1uOAMOE+n/77xi/OemyYLrk+c1hbiu3piRgTEaUhtXlNs9vCjG3SPL2CZeffhLH89P/fiSc
+                gHdPufz8cJwZOYInq8OsLLMmnS1MlfgaVpXbPFEVYlq24D8PxdnV6A5dJ6PCSQGnL/v85OMYvobH
+                14ZYM9eeErDhl7gQE18nBbh2vsOf3ZeF52t+8nGMc53+CMAhOAHEEvDap3EudCm2LAvw4IrAlJwv
+                KeByv2JHfZRX9ke5MqDT7vS4RMM3bg1QuzTA764oXjsQJ+5d/5OhgCIlfPy7BHtPu8wtknz77iBZ
+                9uTvMCmgo1/x97uj1J9OIAS09yierglTlD3x60QDIUfw2D1BjrZ67GlKULU4wYZFzpCnSTBW64tp
+                fnEkTsyDR1cHmTfdmhKwzgHN9roo+84khtxxT1OC7XVRrkYmZ0GlYcEMi0dWBRlMGP37Y5rUkjJl
+                tYMXPI60eFSWWGxeGpi0N6YSgBf2DFLXlEAKqK10qFrsALCrweWlvVG6BicHqIEtyxwWz7Q41Oxx
+                uMVDymFwcc98LObB5qUBZuSISV3Sw8H2NCUA2LQ0wLbaMNtqw2xc7KCBdxtcXqybHKDWUJwr2bzU
+                IZqAXQ0J3OTZk1LAhS6fQ80es/Il6xc4U2ax3Y0GrKbS4bsbQxSEBEXZgq01IQOopwYQ4CsLHUry
+                JAebPVq6TeSUQsDhZo/OAc0ds20qCsdXVtwIdvUGsOolDk9Vh5meDB5Kw8wcydbqEA8sSgKeMi7a
+                PUFApWF2ocXtFRYdfYojrb4ppeKeKTyFgLvnmKJwMmDb66Kjgg1XpjhX8nRNEhDYecrlpfooPdGJ
+                AQZsuGuO8brDzR6uD/JqRHG2UzEtLKgssSZ01qSA7kHNy/VRdjW4Q2Bbq8PMyEkf7kcAath50uWH
+                +6L0TgBQa1hWalEYFpy57NMVUcjWbsXlfkVZgaQkT44bTgroiWpeqo+y85SLBqoWJy2Wc/N7bDjg
+                VxY6KA1vHXd5ZV+Uvtj4ADVQkieZlS/p6Fe09SjkhW7FoKupKLQIB8S4roAU2Mv1JkvXGjYudtha
+                ExrVYqMBPlMTYt18A/jmcWPB8QBqbRpTFYWSSFzT3K2Q7b0KX8GsPIktM1voOrC9ppBV2kSsp6pD
+                zMhJH5QsaYrPdIAleZJttaZe9DW8eWz8gLaE0jw51GqUVwZMrjItW2Sc0F4HdtKA3b/A4ZmaECW5
+                I8FSrYjDzR5HWj2Uhhs/pTTMyk8B2kOAKRfNRDchYFq2sdDViEJGXPOH2YHMyEQSbEf99WDbakOU
+                5I0O9sbRON95I8J33ojw9glzNtMBlhVInq0Ns3aebVz0mMuP9kcZiGsy0TDFMRAH6fnmI5m6pFLw
+                009jvHXcgK1PgpXeBOy/jsb58f4Y3YOarojZmDePuagxAO+bZ+MpeOOoy+sH4hnFA0smu3VKIy1p
+                Ik2mVbav4VKvuuaKGYL1xTSl+ZLiPElPVPPDfVF+fcxNq3AKcFsS0FfQ3qcyDlA6aSw7O9l/iLiZ
+                0TkS/nJdiHULHO6aY1M82hnDuOKP98fojWnmFEqe3RTGV5rvvx+ltUfxyr4oUsDXbw2kVbK8QPK3
+                W8IcavZYWWZn1K8cdA1dOCCwi8LGMboHdUZ3nAZuKZLMnR4YSqfS/eZXR11+9NvrwdbMNeXjs7UM
+                Ae7YF0VK+Nry9IAleZIHVwQyev3RGroiJkAWZUtkab5ESriYvBIyEaXN48Rom/HWcRMEeqMG7Lkk
+                WGoz1s53eLY2RHmBpHvQnMGdp9xRFfZVZkWzp+Bin8aSJvLKOdMswo6gpUcxmMgsIt1M3j7hsmOf
+                yRFnF0q2bQpzTxJs+OasnW+ujrJ8ydWIuVbea3An/H2BccnWHp9wwFzmsqJAMiNH0Nrtc7lfTap5
+                885Jlx31JrsvTwaEe28AGw54/wKHp2tMQLoS0bxYF+XdCQKKZDujrUcxM1dSXiCR03Mk82dYXI1o
+                mjr8CcO9c8Ll5WRlXZZv0qn75tlj5pbrFxrAkkkCCgGNl8zz18IZ0py5LAdWV5iM4LML3qgNzrEs
+                9nK9AZuVL3mmNsT9C5yMzonWsGGRw9Zqk92kAHc1jg8w4cOB8yb7WV1hE7STbYY7ZtsUZQsOXvBo
+                71PjysZ3njKuOARWE2J9hmDDAVMJd8qC2+ui7G5KZORJUkBbj+Jwi8eMHMHtFTZokL6CuUUWq8pt
+                WnsUH32R2YICeL/RuOLVyDWwVOkyXkkBPl0dojhXJrtmprk0lj4C+PCLBG09itUVNnOmmda/BAg5
+                UFsZwJbGElcjN09UDZhpz12JaErzrq/JJipawwOLjYsW5wo6+jX/sOdavzOtLgI6I5qdp1wCNmyq
+                DJCVbANJMAd7zVyblWU2J9t99p5OMFqqKQTsPZNge90gnQOakmSxuWGSYMMBq5Y4PFFlqviOfsUP
+                9kT57dn0gALY0+TScNFnVbnN3bfYQ9MTMrVgYVjwh6sCWBJ+fjhOS0/6s+d6JlNv71UU5wqeqg6x
+                YdHUgA0HrF3i8ERViOnZ5pp667g7IthJAc3dil8ccXEseGRVkPzQtYJ7qJ2ulCk21813qGtK8LPP
+                4nx3YwjrBhM6FmyqdBDAw7cF2JDsf0y1aIyLWULw9gmXmkoHW157uhCA68PrB+Kcu+yzaanDugX2
+                dTMv172sSgHH23z+5s0I/THN85tDfHVZIK1VEr7pOP2+X1iFMN5yY1dOCpMNfX/XIIVhyY6Hs1lW
+                ev0TwHV2URpWlFk8dk+QhK/5xw9iHG3zRlgvZcEv4+lY65FgloQjLR7/9KF5antsTZClpSPfNkaq
+                reGhlQEeWhmgtVvxwu4oZy/7aQH/L8SS0NTh88KeKO09im+uDPL1W4Npn9pGqJx6GvqLdSZQHG/3
+                +d6uKGf+HwCmwP7uvUFOXfKpWuLw5+uyyLLTPyOmVVdpmJ4teKoqxNr5NoeaPZ77zSBHWjwz6vQl
+                QwnMGTt0wehxrM3n/gXOmNMMY86htPUottdFqT+ToKxA8lfrsqhdGiAwgVmsiYhMBpR3G1z++cMY
+                7b2K6uQ1ka69kTFcavGrEc2/fBTjV8fiWBIeXBHkj+4KMrtQovn9BBaR9JDzXYrXD8R4J9n0/eZt
+                QR5fmzXmgE1GcCnAWALeOhHn1U/itPUoFs6UPLoqSM2SANNzrg2zTVZSiUPngOb9Rpdffh7nXKei
+                olDyJ2uy+NqKAMEMr6CMp/ZE8p+Giz7//mmM/WcTJHyoLLHYsizA/fMdygvl0BWhdWazAikLpe6z
+                1h7FB+cSvNfg0nDJJ2jDhoUO374niyUlFmS47rjghu/sYELz0Rdm3vLzFo+4Z3oWt1fY3HWLTWWx
+                RUmeJDsosGX60QytIaEgEtdc6lM0XvI5kHy6bu9VZNmwqsLm0dVB1s6zCTnjHw6Y0KSswLyj90U1
+                n13w2NXocrjFo7PfVBMFIUFZgSn1S/Ik08KS7IB5xlVKE3Gha1BxsVfR2mNmobujxiQzcwV3zHao
+                rXS4c45NXpZAqYlNjEx4DHg4ZNyD5i4z33ykxedsp09HvyLi6ptW9rZl2t/FuZJFM82M8+oKi4pC
+                i6DNhKGmBG64pEZ9Xc9Ypb1X0dJt/u+KaAZcjac0thTkBAVFYUFpvqSiUFKWLykMy6FcdaqumP8F
+                CHotCRcObH4AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMDItMTZUMTY6NDI6MTIrMDM6MDBCCShp
+                AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTAyLTE2VDE2OjQyOjEyKzAzOjAwM1SQ1QAAAABJRU5E
+                rkJggg==" />
+                </svg>
+            </span>
+        </div>
+    </div>
+    <div class="balance col-8">
+        <h6 class="no-orderbump">Sem vendas por upsell</h6>
+        <p class="txt-no-orderbump">Ofereça mais um produto no checkout e aumente sua conversão</p>
+    </div>
+</div>
+`;
+
+let noSales = `
+<div class="box-payment-option pad-0">
+    <div class="d-flex align-items list-sales">
+        <div class="d-flex align-items">
+            <div class="no-sell">
+                <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                    <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                    <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                    <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                    <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                    <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                </svg>
+                <footer>
+                    <h4>Nada por aqui...</h4>
+                    <p>
+                        Não há dados suficientes
+                        para gerar este relatório.
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>
 `;
