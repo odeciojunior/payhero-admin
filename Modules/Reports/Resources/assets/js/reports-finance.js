@@ -273,7 +273,7 @@ function onResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data.length > 0) {
+            if(response.data != undefined) {
                 let { transactions, average_ticket, comission, chargeback } = response.data;
                 trans = `
                     <span class="title">N de transações</span>
@@ -469,7 +469,7 @@ function getPending() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if( response.data.length > 0 ) {
+            if( response.data != undefined ) {
                 let { amount, value } = response.data;
     
                 pendingBlock = `

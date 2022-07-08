@@ -192,7 +192,7 @@ function salesResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data.length > 0) {
+            if(response.data != undefined) {
                 let { average_ticket, chargeback, comission, transactions } = response.data;
     
                 salesTransactions = `

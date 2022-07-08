@@ -141,7 +141,7 @@ function loadResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if( response.data.length > 0 ) {
+            if( response.data != undefined ) {
                 checkouts = `
                     <span class="title">Acessos</span>
                     <div class="d-flex">
