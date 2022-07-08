@@ -427,7 +427,7 @@ $(function () {
             }
         });
     }
-
+    
     function getCoupons() {
         let cuponsHtml = '';
         $('#card-coupons .onPreLoad *').remove();
@@ -442,6 +442,16 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                cuponsHtml = `
+                    <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
+                        <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
+                    </div>
+                    <div class="d-flex align-items justify-around">
+                        <div class="no-coupon">${emptyCoupons}</div>
+                        <div class="msg-coupon">Nenhum cupom utilizado</div>
+                    </div>
+                `;
+                $("#block-coupons").html(cuponsHtml);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
