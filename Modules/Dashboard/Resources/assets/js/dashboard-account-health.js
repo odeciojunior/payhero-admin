@@ -199,7 +199,7 @@ $(document).ready(function () {
                                             <span class="bg-color-gray empty-cilce"></span>
                                             <span></span>
                                         </div>
-                                        <span class="account-health-note-description">Chargebacks</span>
+                                        <span class="account-health-note-description">Contestações</span>
                                     </div>
                                     <div class="hr-vertical d-flex justify-content-center align-items-center align-self-center"></div>
                                     <div class="d-flex flex-column justify-content-between align-items-center align-self-center">
@@ -294,7 +294,7 @@ $(document).ready(function () {
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-chargeback">
                             <div class="font-size-14 gray-600 mr-auto">
-                                <span class="ml-0">Chargebacks</span>
+                                <span class="ml-0">Contestações</span>
                             </div>
                                 <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
                                     <li class="" data-slide-to="1"></li>
@@ -367,7 +367,7 @@ $(document).ready(function () {
                                     <span class="account-health-note">${data.total_sales_chargeback}
                                         <!-- <span class="account-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> -->
                                     </span>
-                                    <span class="account-health-note-description">Chargebacks</span>
+                                    <span class="account-health-note-description">Contestações</span>
                                 </div>
                                 <div class="col-2 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
                                     <span class="account-health-note" style="font-size: 20px; ${indexColor(data.chargeback_rate)}">${parseFloat( data.chargeback_rate ).toFixed(1)}%</span>

@@ -187,7 +187,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src='{{ mix('build/layouts/notazz/show.min.js') }}'></script>
+        <script src="{{ mix('build/layouts/notazz/show.min.js') }}"></script>
     @endpush
 
 @endsection
