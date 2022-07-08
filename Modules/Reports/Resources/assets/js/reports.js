@@ -33,6 +33,19 @@ $(function () {
             },
 
             error: function error(response) {
+                cashHtml = `
+                    <div class="container d-flex value-price">
+                        <h4 id='cashback' class="font-size-24 bold grey">
+                            <span class="currency">R$ </span>
+                            0,00
+                        </h4>
+                    </div>
+                    <div class="no-graph">
+                        ${emptyGraph}
+                        <p class="noone-data">Não há dados suficientes</p>
+                    </div>
+                `;
+                $("#block-cash").html(cashHtml);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
