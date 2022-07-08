@@ -569,6 +569,20 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                paymentsHtml = `
+                    <div class="container d-flex value-price" style="visibility: hidden; height: 30px">
+                        <h4 id='sales' class="font-size-24 bold grey">
+                            0
+                        </h4>
+                    </div>
+                    <div class="no-graph">
+                        ${emptyGraph}
+                        <p class="noone-data">Não há dados suficientes</p>
+                    </div>
+                `;
+
+                $("#block-payments").html(paymentsHtml);
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
