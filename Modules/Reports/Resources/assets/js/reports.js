@@ -84,8 +84,6 @@ $(function () {
                 }
             }
         });
-
-
     }
 
     function getPending() {
@@ -102,6 +100,19 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                pendHtml = `
+                    <div class="container d-flex value-price">
+                        <h4 id='pending' class="font-size-24 bold grey">
+                            <span class="currency">R$ </span>
+                            0,00
+                        </h4>
+                    </div>
+                    <div class="no-graph">
+                        ${emptyGraph}
+                        <p class="noone-data">Não há dados suficientes</p>
+                    </div>
+                `;
+                $("#block-pending").html(pendHtml);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
