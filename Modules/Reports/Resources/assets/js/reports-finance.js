@@ -18,7 +18,15 @@ let resumeUrl = '/api/reports/resume';
 let financesResumeUrl = '/api/reports/finances';
 
 function distribution() {
-    let distributionHtml = '';
+    let distributionHtml = `
+        <div class="d-flex box-graph-dist no-distribution-graph">
+            <div class="info-graph">
+                <div class="no-sell" style="margin-top: 60px;">
+                ${noGraph}
+                </div>
+            </div>
+        </div>
+    `;
     $('#card-distribution .onPreLoad *').remove();
     $("#block-distribution").prepend(skeLoad);
 
@@ -31,23 +39,15 @@ function distribution() {
             Accept: "application/json",
         },
         error: function error(response) {
-            distributionHtml = `
-                <div class="d-flex box-graph-dist no-distribution-graph">
-                    <div class="info-graph">
-                        <div class="no-sell" style="margin-top: 60px;">
-                        ${noGraph}
-                        </div>
-                    </div>
-                </div>
-            `;
             $("#block-distribution").html(distributionHtml);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
              let { available, blocked, pending, total } = response.data;
              let series = [available.percentage, pending.percentage, blocked.percentage];
 
-             if(removeMoneyCurrency(total) !== '0') {
+             if(total !== null) {
                  distributionHtml = `
                     <div class="d-flex box-graph-dist">
                         <div class="info-graph">
@@ -99,15 +99,6 @@ function distribution() {
                  $(".box-graph-dist").prepend('<div class="distribution-graph"></div>');
                  distributionGraph(series);
              } else {
-                distributionHtml = `
-                    <div class="d-flex box-graph-dist no-distribution-graph">
-                        <div class="info-graph">
-                            <div class="no-sell" style="margin-top: 60px;">
-                            ${noGraph}
-                            </div>
-                        </div>
-                    </div>
-                `;
                 $("#block-distribution").html(distributionHtml);
              }
         }
@@ -147,18 +138,19 @@ function withdrawals() {
         },
         error: function error(response) {
             $("#draw").html(infoWithdraw);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let { chart } = response.data;
-            let { withdrawal, income } = chart;
-            let incomeTotal = String(removeMoneyCurrency(income.total).replace(',','.'));
-            let withdrawalTotal = String(removeMoneyCurrency(withdrawal.total).replace(',','.'));
-            const numbers = [incomeTotal, withdrawalTotal].map(Number).reduce((prev, value) => prev + value,0);            
+            if(response.data !== null) {
+                let { chart } = response.data;
+                let { withdrawal, income } = chart;
+                let incomeTotal = String(removeMoneyCurrency(income.total).replace(',','.'));
+                let withdrawalTotal = String(removeMoneyCurrency(withdrawal.total).replace(',','.'));
+                const numbers = [incomeTotal, withdrawalTotal].map(Number).reduce((prev, value) => prev + value,0);
 
-            graphDraw = `<div id="block-withdraw"></div>`;
+                graphDraw = `<div id="block-withdraw"></div>`;
 
-            if(numbers !== 0) {
                 $("#draw").html(graphDraw);
                 $('#block-withdraw').html('<canvas height="260" id="financesChart"></canvas>');
                 let label = [...chart.labels];
@@ -198,30 +190,64 @@ function blockeds() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-             let {amount, value} = response.data;
+            if (response.data != null) {
+                let {amount, value} = response.data;
 
-             blockedsHtml = `
-                <div class="d-flex">
-                    <div class="balance col-3">
-                        <h6 class="grey font-size-14">Total</h6>
-                        <strong class="grey total">${kFormatter(amount)}</strong>
+                blockedsHtml = `
+                    <div class="d-flex">
+                        <div class="balance col-3">
+                            <h6 class="grey font-size-14">Total</h6>
+                            <strong class="grey total">${kFormatter(amount)}</strong>
+                        </div>
+                        <div class="balance col-9">
+                            <h6 class="font-size-14">Saldo</h6>
+                            <small>R$</small>
+                            <strong class="total red ">${removeMoneyCurrency(value)}</strong>
+                        </div>
                     </div>
-                    <div class="balance col-9">
-                        <h6 class="font-size-14">Saldo</h6>
-                        <small>R$</small>
-                        <strong class="total red ">${removeMoneyCurrency(value)}</strong>
-                    </div>
-                </div>
-             `;
-             $("#block-blockeds").html(blockedsHtml);
+                `;
+
+                $("#block-blockeds").html(blockedsHtml);
+            }
         }
     });
 }
 
 function onResume() {
-    let ticket, commission, chargebacks, trans = '';
-    $('#finance-card .onPreLoad *').remove();
+    let trans = `
+        <span class="title">N de transações</span>
+        <div class="d-flex">
+            <strong class="number">
+                <span>0</span>
+            </strong>
+        </div>
+    `;
 
+    let ticket = `
+        <span class="title">Ticket Médio</span>
+        <div class="d-flex">
+            <span class="detail">R$</span>
+            <strong class="number">0,00</strong>
+        </div>
+    `;
+
+    let commission = `
+        <span class="title">Comissão total</span>
+        <div class="d-flex">
+            <span class="detail">R$</span>
+            <strong class="number">0,00</strong>
+        </div>
+    `;
+
+    let chargebacks = `
+        <span class="title">Total em Chargebacks</span>
+        <div class="d-flex">
+            <span class="detail">R$</span>
+            <strong class="number"><span class="bold">0,00</span></strong>
+        </div>
+    `;
+
+    $('#finance-card .onPreLoad *').remove();
     $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").html(skeLoad);
 
     return $.ajax({
@@ -233,38 +259,6 @@ function onResume() {
             Accept: "application/json",
         },
         error: function error(response) {
-            trans = `
-                <span class="title">N de transações</span>
-                <div class="d-flex">
-                    <strong class="number">
-                        <span>0</span>
-                    </strong>
-                </div>
-            `;
-    
-            ticket = `
-                <span class="title">Ticket Médio</span>
-                <div class="d-flex">
-                    <span class="detail">R$</span>
-                    <strong class="number">0,00</strong>
-                </div>
-            `;
-            commission = `
-                <span class="title">Comissão total</span>
-                <div class="d-flex">
-                    <span class="detail">R$</span>
-                    <strong class="number">0,00</strong>
-                </div>
-            `;
-
-            chargebacks = `
-                <span class="title">Total em Chargebacks</span>
-                <div class="d-flex">
-                    <span class="detail">R$</span>
-                    <strong class="number"><span class="bold">0,00</span></strong>
-                </div>
-            `;
-
             $("#finance-commission").html(commission);
             $("#finance-ticket").html(ticket);
             $("#finance-chargebacks").html(chargebacks);
@@ -283,7 +277,7 @@ function onResume() {
                         </strong>
                     </div>
                 `;
-    
+
                 ticket = `
                     <span class="title">Ticket Médio</span>
                     <div class="d-flex">
@@ -298,7 +292,7 @@ function onResume() {
                         <strong class="number">${comission == undefined ? '0,00' : removeMoneyCurrency(comission)}</strong>
                     </div>
                 `;
-    
+
                 chargebacks = `
                     <span class="title">Total em Chargebacks</span>
                     <div class="d-flex">
@@ -307,37 +301,7 @@ function onResume() {
                     </div>
                 `;
             } else {
-                trans = `
-                    <span class="title">N de transações</span>
-                    <div class="d-flex">
-                        <strong class="number">
-                            <span>0</span>
-                        </strong>
-                    </div>
-                `;
-    
-                ticket = `
-                    <span class="title">Ticket Médio</span>
-                    <div class="d-flex">
-                        <span class="detail">R$</span>
-                        <strong class="number">0,00</strong>
-                    </div>
-                `;
-                commission = `
-                    <span class="title">Comissão total</span>
-                    <div class="d-flex">
-                        <span class="detail">R$</span>
-                        <strong class="number">0,00</strong>
-                    </div>
-                `;
-    
-                chargebacks = `
-                    <span class="title">Total em Chargebacks</span>
-                    <div class="d-flex">
-                        <span class="detail">R$</span>
-                        <strong class="number"><span class="bold">0,00</span></strong>
-                    </div>
-                `;
+
             }
 
 
@@ -351,7 +315,22 @@ function onResume() {
 }
 
 function onCommission() {
-    let infoComission = '';
+    let infoComission = `
+        <div class="finances-values" style="visibility: hidden; height: 10px;">
+            <span>R$</span>
+            <strong>0</strong>
+        </div>
+        <div class="row d-flex empty-graph">
+            <div class="info-graph no-info-graph">
+                <div class="no-sell">
+                    ${bigGraph}
+                    <footer class="footer-no-info">
+                        <p>Sem dados para gerar o gráfico</p>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    `;
     $('#card-commission .onPreLoadBig *').remove();
     $("#block-commission").html(skeLoadBig);
 
@@ -364,72 +343,41 @@ function onCommission() {
             Accept: "application/json",
         },
         error: function error(response) {
-            infoComission = `
-                <div class="finances-values" style="visibility: hidden; height: 10px;">
-                    <span>R$</span>
-                    <strong>0</strong>
-                </div>
-                <div class="row d-flex empty-graph">
-                    <div class="info-graph no-info-graph">
-                        <div class="no-sell">
-                            ${bigGraph}
-                            <footer class="footer-no-info">
-                                <p>Sem dados para gerar o gráfico</p>
-                            </footer>
-                        </div>
-                    </div>
-                </div>
-            `;
             $("#block-commission").html(infoComission);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let { chart, total, variation } = response.data;
+            if(response.data !== null) {
+                let { chart, total, variation } = response.data;
 
-            // <div class="finances-values">
-            //     <svg class="${variation.color}" width="18" height="14" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            //         <path d="M10.1237 0L16.9451 0.00216293L17.1065 0.023901L17.2763 0.0736642L17.4287 0.145306L17.4865 0.18052L17.5596 0.23218L17.6737 0.332676L17.8001 0.484464L17.8876 0.634047L17.9499 0.792176L17.9845 0.938213L18 1.125V7.88084C18 8.50216 17.4964 9.00583 16.8751 9.00583C16.3057 9.00583 15.835 8.58261 15.7606 8.03349L15.7503 7.88084L15.7495 3.8415L9.41947 10.1762C9.01995 10.5759 8.39457 10.6121 7.95414 10.2849L7.82797 10.1758L5.62211 7.96668L1.92041 11.6703C1.48121 12.1098 0.768994 12.1099 0.329622 11.6707C-0.069807 11.2713 -0.106236 10.6463 0.220416 10.2059L0.329304 10.0797L4.82693 5.57966C5.22645 5.17994 5.85182 5.14374 6.29225 5.47097L6.41841 5.58004L8.62427 7.78914L14.1597 2.25H10.1237C9.55424 2.25 9.08361 1.82677 9.00912 1.27766L8.99885 1.125C8.99885 0.50368 9.50247 0 10.1237 0Z" fill="#1BE4A8"/>
-            //     </svg>
-            //     <em class="${variation.color}">${variation.value}</em>
-            // </div>
+                // <div class="finances-values">
+                //     <svg class="${variation.color}" width="18" height="14" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                //         <path d="M10.1237 0L16.9451 0.00216293L17.1065 0.023901L17.2763 0.0736642L17.4287 0.145306L17.4865 0.18052L17.5596 0.23218L17.6737 0.332676L17.8001 0.484464L17.8876 0.634047L17.9499 0.792176L17.9845 0.938213L18 1.125V7.88084C18 8.50216 17.4964 9.00583 16.8751 9.00583C16.3057 9.00583 15.835 8.58261 15.7606 8.03349L15.7503 7.88084L15.7495 3.8415L9.41947 10.1762C9.01995 10.5759 8.39457 10.6121 7.95414 10.2849L7.82797 10.1758L5.62211 7.96668L1.92041 11.6703C1.48121 12.1098 0.768994 12.1099 0.329622 11.6707C-0.069807 11.2713 -0.106236 10.6463 0.220416 10.2059L0.329304 10.0797L4.82693 5.57966C5.22645 5.17994 5.85182 5.14374 6.29225 5.47097L6.41841 5.58004L8.62427 7.78914L14.1597 2.25H10.1237C9.55424 2.25 9.08361 1.82677 9.00912 1.27766L8.99885 1.125C8.99885 0.50368 9.50247 0 10.1237 0Z" fill="#1BE4A8"/>
+                //     </svg>
+                //     <em class="${variation.color}">${variation.value}</em>
+                // </div>
 
-            infoComission = `
-                <div class="d-flex justify-content-between box-finances-values">
-                    <div class="finances-values">
-                        <span>R$</span>
-                        <strong>${removeMoneyCurrency(total)}</strong>
+                infoComission = `
+                    <div class="d-flex justify-content-between box-finances-values">
+                        <div class="finances-values">
+                            <span>R$</span>
+                            <strong>${removeMoneyCurrency(total)}</strong>
+                        </div>
                     </div>
-                </div>
-                <section style="margin-left: -7px;">
-                    <div class="graph-reports">
-                        <div class="${removeMoneyCurrency(total) !== '0,00' ? 'new-finance-graph' : ''  }"></div>
-                    </div>
-                </section>
-            `;
-            $("#block-commission").html(infoComission);
+                    <section style="margin-left: -7px;">
+                        <div class="graph-reports">
+                            <div class="${removeMoneyCurrency(total) !== '0,00' ? 'new-finance-graph' : ''  }"></div>
+                        </div>
+                    </section>
+                `;
+                $("#block-commission").html(infoComission);
 
-            if( removeMoneyCurrency(total) !== '0,00' ) {
                 $('.new-finance-graph').html('<canvas id=comission-graph-finance></canvas>');
                 let labels = [...chart.labels];
                 let series = [...chart.values];
                 graphComission(series, labels);
             } else {
-                infoComission = `
-                    <div class="finances-values" style="visibility: hidden; height: 10px;">
-                        <span>R$</span>
-                        <strong>0</strong>
-                    </div>
-                    <div class="row d-flex empty-graph">
-                        <div class="info-graph no-info-graph">
-                            <div class="no-sell">
-                                ${bigGraph}
-                                <footer class="footer-no-info">
-                                    <p>Sem dados para gerar o gráfico</p>
-                                </footer>
-                            </div>
-                        </div>
-                    </div>
-                `;
                 $("#block-commission").html(infoComission);
             }
         }
@@ -471,7 +419,7 @@ function getPending() {
         success: function success(response) {
             if( response.data != undefined ) {
                 let { amount, value } = response.data;
-    
+
                 pendingBlock = `
                     <footer class="">
                         <div class="d-flex">

@@ -1905,9 +1905,9 @@ h4.number{
     color: #fff;
     font-weight: 700;
     font-size: 12px;
-    height: 30px;
-    line-height: 30px;
-    margin-bottom: 5px;
+    height: 24px;
+    line-height: 24px;
+    margin-bottom: 0px;
     text-align: center;
     padding-left: 5px;
     border: 1px solid transparent;
@@ -1975,7 +1975,8 @@ h4.number{
 .regions-legend li.conversion span { background-color: #2E85EC; }
 
 
-.footer-products {
+.footer-products,
+.footer-origins {
     align-items: center;
     justify-content: center;
     display: flex;
@@ -2234,8 +2235,8 @@ h4.number{
 #card-sales .new-graph-sell,
 #card-cashback .new-graph-cashback { height: 109px; }
 
-#card-regions .new-graph-regions { 
-    width: 157px; 
+#card-regions .new-graph-regions {
+    width: 157px;
     float: left;
 }
 
@@ -2321,8 +2322,8 @@ h4.number{
     padding: 0 0 0px 16px;
 }
 
-#select_projects +  .sirius-select-text { 
-    min-height: 49px !important; 
+#select_projects +  .sirius-select-text {
+    min-height: 49px !important;
     padding-bottom: 0 !important;
     line-height: 27px !important;
 }

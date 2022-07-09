@@ -52,7 +52,11 @@ class ReportMarketingService
                                         ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
                                         ->sum('transactions.value');
 
-            return [
+            if ($checkoutsCount == 0 && $salesCount == 0 && $salesValue == 0) {
+                return null;
+            }
+
+                                        return [
                 'checkouts_count' => number_format($checkoutsCount, 0, '.', '.'),
                 'sales_count' => number_format($salesCount, 0, '.', '.'),
                 'sales_value' => foxutils()->formatMoney($salesValue / 100),
@@ -147,6 +151,10 @@ class ReportMarketingService
                         ->limit(10)
                         ->get();
 
+            if (count($data) == 0) {
+                return null;
+            }
+
             foreach($data as &$plan) {
                 $plan->photo = $plan->products()->first()->photo;
                 $plan->sales_amount = number_format($plan->sales_amount, 0, '.', '.');
@@ -185,7 +193,11 @@ class ReportMarketingService
                         ->first()
                         ->toArray();
 
-            if(empty($data['count_mobile'])){
+            if(empty($data['count_mobile']) && empty($data['count_desktop'])) {
+                return null;
+            }
+
+            if(empty($data['count_mobile'])) {
                 $data['count_mobile'] = 0;
                 $data['count_mobile_approved'] = 0;
                 $data['percentage_mobile'] = '0%';
@@ -195,7 +207,7 @@ class ReportMarketingService
                 $data['percentage_mobile_total'] = round(number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',')) . '%';
             }
 
-            if(empty($data['count_desktop'])){
+            if(empty($data['count_desktop'])) {
                 $data['count_desktop'] = 0;
                 $data['count_desktop_approved'] = 0;
                 $data['percentage_desktop'] = '0%';
@@ -244,6 +256,10 @@ class ReportMarketingService
                                 ->orderBy('sales_amount', 'desc')
                                 ->get()
                                 ->toArray();
+
+                                if (empty($data)) {
+                                    return null;
+                                }
 
             $salesAmount = 0;
 

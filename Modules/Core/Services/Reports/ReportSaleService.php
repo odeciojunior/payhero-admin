@@ -437,7 +437,7 @@ class ReportSaleService
             $total = $query->total;
 
             if ($total == 0) {
-                return [];
+                return null;
             }
 
             $totalCreditCard = $query->total_credit_card;
@@ -492,6 +492,13 @@ class ReportSaleService
             ->orderByDesc('amount')
             ->limit(8)
             ->get();
+
+            if (count($products) == 0) {
+                return [
+                    'products' => null,
+                    'total' => 0
+                ];
+            }
 
             $total = 0;
             foreach($products as $r)
@@ -704,6 +711,10 @@ class ReportSaleService
                                 ->where('user_id', auth()->user()->account_owner_id)
                                 ->first();
 
+            if (empty($data)) {
+                return null;
+            }
+
             return [
                 'value' => foxutils()->formatMoney($data->value / 100),
                 'amount' => $data->amount
@@ -729,6 +740,10 @@ class ReportSaleService
                                 ->where('user_id', auth()->user()->account_owner_id)
                                 ->first();
 
+            if (empty($data)) {
+                return null;
+            }
+
             return [
                 'value' => foxutils()->formatMoney($data->value / 100),
                 'amount' => $data->amount
@@ -752,6 +767,10 @@ class ReportSaleService
                             ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 THEN 1 ELSE 0 END) AS total_pix'))
                             ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 and status = 1 THEN 1 ELSE 0 END) AS total_pix_approved'))
                             ->first();
+
+            if ($query->total_credit_card == 0 && $query->total_boleto == 0 && $query->total_pix == 0) {
+                return null;
+            }
 
             $totalCreditCard = $query->total_credit_card;
             $totalCreditCardApproved = $query->total_credit_card_approved;

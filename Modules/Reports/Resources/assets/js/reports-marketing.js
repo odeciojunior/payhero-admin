@@ -47,6 +47,18 @@ function loadOrigins(link = null) {
 
     link = `${resumeUrl}/origins?paginate=true&date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
 
+    let td = `
+        <td>
+            ${noWithdrawal}
+        </td>
+        <td>
+            <p class='no-data-origin'>
+                <strong>Sem dados, por enquanto...</strong>
+                Ainda faltam dados suficientes a comparação, continue rodando!
+            </p>
+        </td>
+    `;
+
     $.ajax({
         url: link,
         type: "GET",
@@ -56,21 +68,11 @@ function loadOrigins(link = null) {
             Accept: "application/json",
         },
         error: function error(response) {
+            $("#origins-table").html(td);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let td = `
-                <td>
-                    ${noWithdrawal}
-                </td>
-                <td>
-                    <p class='no-data-origin'>
-                        <strong>Sem dados, por enquanto...</strong>
-                        Ainda faltam dados suficientes a comparação, continue rodando!
-                    </p>
-                </td>
-                `
-
             if (response.data.length == 0) {
                 $('.table-vendas').height('100%');
                 $("#card-origin .ske-load").hide();
@@ -103,7 +105,26 @@ function loadOrigins(link = null) {
 }
 
 function loadResume() {
-    let checkouts, salesCount,salesValue = '';
+    let checkouts = `
+        <span class="title">Acessos</span>
+        <div class="d-flex">
+            <strong class="number">0</strong>
+        </div>
+    `;
+    let salesCount = `
+        <span class="title">Vendas</span>
+        <div class="d-flex">
+            <strong class="number">0</strong>
+            <small class="percent">(0%)</small>
+        </div>
+    `;
+    let salesValue = `
+        <span class="title">Receita</span>
+        <div class="d-flex">
+            <span class="detail">R$</span>
+            <strong class="number">0,00</strong>
+        </div>
+    `;
     $("#checkouts_count, #sales_count, #sales_value").html(skeLoad);
 
     return $.ajax({
@@ -115,33 +136,14 @@ function loadResume() {
             Accept: "application/json",
         },
         error: function error(response) {
-            checkouts = `
-                <span class="title">Acessos</span>
-                <div class="d-flex">
-                    <strong class="number">0</strong>
-                </div>
-            `;
-            salesCount = `
-                <span class="title">Vendas</span>
-                <div class="d-flex">
-                    <strong class="number">0</strong>
-                    <small class="percent">(0%)</small>
-                </div>
-            `;
-            salesValue = `
-                <span class="title">Receita</span>
-                <div class="d-flex">
-                    <span class="detail">R$</span>
-                    <strong class="number">'0,00</strong>
-                </div>
-            `;
             $("#checkouts_count").html(checkouts);
             $("#sales_count").html(salesCount);
             $("#sales_value").html(salesValue);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if( response.data != undefined ) {
+            if(response.data !== null) {
                 checkouts = `
                     <span class="title">Acessos</span>
                     <div class="d-flex">
@@ -162,28 +164,8 @@ function loadResume() {
                         <strong class="number">${removeMoneyCurrency(response.data.sales_value)}</strong>
                     </div>
                 `;
-            } else {
-                checkouts = `
-                    <span class="title">Acessos</span>
-                    <div class="d-flex">
-                        <strong class="number">0</strong>
-                    </div>
-                `;
-                salesCount = `
-                    <span class="title">Vendas</span>
-                    <div class="d-flex">
-                        <strong class="number">0</strong>
-                        <small class="percent">(0%)</small>
-                    </div>
-                `;
-                salesValue = `
-                    <span class="title">Receita</span>
-                    <div class="d-flex">
-                        <span class="detail">R$</span>
-                        <strong class="number">'0,00</strong>
-                    </div>
-                `;
             }
+
             $("#checkouts_count").html(checkouts);
             $("#sales_count").html(salesCount);
             $("#sales_value").html(salesValue);
@@ -195,6 +177,13 @@ function loadCoupons() {
     $('#card-coupon .onPreLoad *' ).remove();
     $("#block-coupons").html(skeLoad);
     let couponList = '';
+    let cuponsHtml = `
+        <div class="d-flex align-items justify-around" style="width: 100%;">
+            <div class="no-coupon">${emptyCoupons}</div>
+            <div class="msg-coupon">Nenhum cupom utilizado</div>
+        </div>
+
+    `;
 
     return $.ajax({
         method: "GET",
@@ -205,14 +194,8 @@ function loadCoupons() {
             Accept: "application/json",
         },
         error: function error(response) {
-            cuponsHtml = `
-                <div class="d-flex align-items justify-around" style="width: 100%;">
-                    <div class="no-coupon">${emptyCoupons}</div>
-                    <div class="msg-coupon">Nenhum cupom utilizado</div>
-                </div>
-
-            `;
             $("#block-coupons").html(cuponsHtml);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -267,15 +250,9 @@ function loadCoupons() {
                     });
 
             } else {
-                cuponsHtml = `
-                    <div class="d-flex align-items justify-around" style="width: 100%;">
-                        <div class="no-coupon">${emptyCoupons}</div>
-                        <div class="msg-coupon">Nenhum cupom utilizado</div>
-                    </div>
-
-                `;
                 $("#block-coupons").html(cuponsHtml);
             }
+
             $('#card-coupons .ske-load').hide();
         }
     });
@@ -285,6 +262,29 @@ function loadFrequenteSales() {
     let salesBlock = '';
     $('#card-most-sales .onPreLoad *' ).remove();
     $("#block-sales").html(skeLoad);
+    let noData = `
+        <div class="d-flex" style="justify-content: center; margin: auto;" >
+            <div class="info-graph">
+                <div class="no-sell">
+                    <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                        <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                        <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                        <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                        <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                        <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                    </svg>
+                    <footer>
+                        <h4>Nada por aqui...</h4>
+                        <p>
+                            Não há dados suficientes
+                            para gerar este relatório.
+                        </p>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    `;
 
     return $.ajax({
         method: "GET",
@@ -295,64 +295,14 @@ function loadFrequenteSales() {
             Accept: "application/json",
         },
         error: function error(response) {
-            noData = `
-                <div class="d-flex" style="justify-content: center; margin: auto;" >
-                    <div class="info-graph">
-                        <div class="no-sell">
-                            <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
-                                <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
-                                <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
-                                <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
-                                <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
-                                <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
-                            </svg>
-                            <footer>
-                                <h4>Nada por aqui...</h4>
-                                <p>
-                                    Não há dados suficientes
-                                    para gerar este relatório.
-                                </p>
-                            </footer>
-                        </div>
-                    </div>
-                </div>
-            `;
-
             $("#block-sales").append(noData);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
             $("#block-sales").html('');
 
-            if(response.data.length == 0) {
-                noData = `
-                    <div class="d-flex" style="justify-content: center; margin: auto;" >
-                        <div class="info-graph">
-                            <div class="no-sell">
-                                <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
-                                    <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
-                                    <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
-                                    <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
-                                    <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
-                                    <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
-                                </svg>
-                                <footer>
-                                    <h4>Nada por aqui...</h4>
-                                    <p>
-                                        Não há dados suficientes
-                                        para gerar este relatório.
-                                    </p>
-                                </footer>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                $("#block-sales").append(noData);
-                return;
-            } else {
+            if(response.data !== null) {
                 $.each(response.data, function (i, item) {
                     let value = removeMoneyCurrency(item.value);
                     let newV = formatCash(String(parseFloat(value)).replace('.',''));
@@ -391,6 +341,8 @@ function loadFrequenteSales() {
                     salesBlock = `<div>${noListProducts}</div>`;
                     $("#block-sales").append(salesBlock);
                 }
+            } else {
+                $("#block-sales").append(noData);
             }
         }
     });
@@ -471,7 +423,12 @@ function changeCompany() {
 }
 
 function loadDevices() {
-    let deviceBlock = '';
+    let deviceBlock = `
+        <div class="empty-products pad-0" style="width: 100%;">
+            ${emptyData}
+            <p class="noone">Sem dados</p>
+        </div>
+    `;
     $('#card-devices .onPreLoad *' ).remove();
     $("#block-devices").html(skeLoad);
 
@@ -484,20 +441,15 @@ function loadDevices() {
             Accept: "application/json",
         },
         error: function error(response) {
-            deviceBlock = `
-                <div class="empty-products pad-0" style="width: 100%;">
-                    ${emptyData}
-                    <p class="noone">Sem dados</p>
-                </div>
-            `;
             $("#block-devices").html(deviceBlock);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let { desktop, mobile } = response.data;
-            const numbers = [desktop.total, mobile.total].map(Number).reduce((prev, value) => prev + value,0);
+            if(response.data !== null) {
+                let { desktop, mobile } = response.data;
+                const numbers = [desktop.total, mobile.total].map(Number).reduce((prev, value) => prev + value,0);
 
-            if( numbers !== 0 ) {
                 deviceBlock = `
                 <div class="row container-devices">
                     <div class="container">
@@ -554,16 +506,9 @@ function loadDevices() {
                     </div>
                 </div>
                 `;
-                $("#block-devices").html(deviceBlock);
-            } else {
-                deviceBlock = `
-                    <div class="empty-products pad-0" style="width: 100%;">
-                        ${emptyData}
-                        <p class="noone">Sem dados</p>
-                    </div>
-                `;
-                $("#block-devices").html(deviceBlock);
             }
+
+            $("#block-devices").html(deviceBlock);
         }
     });
 }
@@ -575,10 +520,10 @@ function devicesInfo() {
 
     Promise.all([loadDevices()])
     .then(result => {
-        let { desktop, mobile } = result[0].data;
-        const numbers = [desktop.total, mobile.total].map(Number).reduce((prev, value) => prev + value,0);
+        if(result[0].data !== null) {
+            let { desktop, mobile } = result[0].data;
+            const numbers = [desktop.total, mobile.total].map(Number).reduce((prev, value) => prev + value,0);
 
-        if(numbers !== 0) {
             if( mobile.total > desktop.total ) {
                 deviceInfoBlock = `
                     <div>
@@ -633,12 +578,17 @@ function devicesInfo() {
     })
     .catch(e => console.log('error =>' + e));
 
-
 }
 
 function loadOperationalSystems() {
     $('#card-system .onPreLoad *' ).remove();
     $('#container-operational-systems').html(skeLoad);
+    let stateNoData = `
+        <div class="empty-products pad-0" style="width: 100%;">
+            ${emptyData}
+            <p class="noone">Sem dados</p>
+        </div>
+    `;
 
     $.ajax({
         method: "GET",
@@ -649,27 +599,14 @@ function loadOperationalSystems() {
             Accept: "application/json",
         },
         error: function error(response) {
-            stateNoData = `
-                <div class="empty-products pad-0" style="width: 100%;">
-                    ${emptyData}
-                    <p class="noone">Sem dados</p>
-                </div>
-            `;
             $('#container-operational-systems').html(stateNoData);
+
             errorAjaxResponse(response);
         },
         success: function success(response) {
             $('#container-operational-systems').html('');
 
-            if(response.data.length == 0) {
-                stateNoData = `
-                    <div class="empty-products pad-0" style="width: 100%;">
-                        ${emptyData}
-                        <p class="noone">Sem dados</p>
-                    </div>
-                `;
-                $('#container-operational-systems').html(stateNoData);
-            } else {
+            if(response.data !== null) {
                 let systemsHtml = `<div class="contentSystems"></div>`
                 $('#container-operational-systems').html(systemsHtml);
                 $.each(response.data, function(i, data){
@@ -702,6 +639,9 @@ function loadOperationalSystems() {
                         </div>
                     `);
                 });
+            } else {
+                $('#container-operational-systems').html(stateNoData);
+                return;
             }
 
             function getOperationalSystemSvg(operationalSystem) {
@@ -943,6 +883,19 @@ function loadBrazilMap() {
     $('.state text').css({ fill: '#F1F1F1' });
     $(".state").addClass('skeleton');
 
+    let noData = `
+        <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
+            <div>
+                <img src=${$("#origins-table").attr("img-empty")}>
+            </div>
+            <div class="px-10">
+                <p class='no-data-origin'>
+                    <strong>Sem dados, por enquanto...</strong>
+                    Ainda faltam dados suficientes a comparação, continue rodando!
+                </p>
+            </div>
+        </div>
+    `;
 
     $.ajax({
         method: "GET",
@@ -953,29 +906,15 @@ function loadBrazilMap() {
             Accept: "application/json",
         },
         error: function error(response) {
-            let noData = `
-                <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
-                    <div>
-                        <img src=${$("#origins-table").attr("img-empty")}>
-                    </div>
-                    <div class="px-10">
-                        <p class='no-data-origin'>
-                            <strong>Sem dados, por enquanto...</strong>
-                            Ainda faltam dados suficientes a comparação, continue rodando!
-                        </p>
-                    </div>
-                </div>
-                `;
-
             $("#list-states").html(noData);
+
             errorAjaxResponse(response);
-            
         },
         success: function success(response) {
             $(".state").removeClass('skeleton');
             $("#list-states").html('');
 
-            if(response.data.length == 0){
+            if(response.data.length == 0) {
                 let noData = `
                 <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
                     <div>

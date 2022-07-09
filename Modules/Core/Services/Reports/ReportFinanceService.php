@@ -32,7 +32,11 @@ class ReportFinanceService
                                         ->whereNull('transactions.invitation_id')
                                         ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ]);
 
-            $date['startDate'] = $dateRange[0];
+            if ($transactions->count() == 0) {
+                return null;
+            }
+
+                                        $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
 
             if ($date['startDate'] == $date['endDate']) {
@@ -437,6 +441,10 @@ class ReportFinanceService
                                         ->join('sales', 'sales.id', 'transactions.sale_id')
                                         ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
                                         ->where('sales.project_id', $projectId);
+
+            if ($transactions->count() == 0) {
+                return null;
+            }
 
             if ($date['startDate'] == $date['endDate']) {
                 return $this->getResumePendingsByHours($transactions, $filters);
@@ -1388,6 +1396,10 @@ class ReportFinanceService
                 }
             }
 
+            if (count($balancesBlockedCount) == 0 && count($balancesBlockedPendinCount) == 0) {
+                return null;
+            }
+
             $totalBlockedValue = array_sum($balancesBlockedValue) + array_sum($balancesBlockedPendingValue);
             $totalBlockedCount = array_sum($balancesBlockedCount) + array_sum($balancesBlockedPendinCount);
 
@@ -1451,7 +1463,7 @@ class ReportFinanceService
                     'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
                     'color' => 'red'
                 ],
-                'total' => foxutils()->formatMoney($totalBalance / 100),
+                'total' => $totalBalance > 0 ? foxutils()->formatMoney($totalBalance / 100) : null,
             ];
         });
     }
@@ -1505,6 +1517,10 @@ class ReportFinanceService
             $withdrawals = $withdrawals->select(DB::raw('value, DATE(release_date) as date'))->get();
 
             $transactions = $transactions->select(DB::raw('transactions.value, DATE(sales.start_date) as date'))->get();
+
+            if (count($withdrawals) == 0 && count($transactions) == 0) {
+                return null;
+            }
 
             $withdrawalData = [];
             $transactionData = [];

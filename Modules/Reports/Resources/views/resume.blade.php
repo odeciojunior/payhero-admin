@@ -285,11 +285,13 @@
                                                             <div class="data-holder card-origin-report">
                                                                 <div class="row">
                                                                     <div class="col-12 p-10">
-                                                                        <table class="table-vendas table table-striped "style="width:100%;margin: auto; margin-top:15px">
-                                                                            <tbody id="origins-table"  class="origin-report">
-                                                                                {{-- js carrega... --}}
-                                                                            </tbody>
-                                                                        </table>
+                                                                        <footer class='footer-origins'>
+                                                                            <table class="table-vendas table table-striped "style="width:100%;margin: auto; margin-top:15px">
+                                                                                <tbody id="origins-table"  class="origin-report">
+                                                                                    {{-- js carrega... --}}
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </footer>
                                                                     </div>
                                                                 </div>
                                                                 <br/>

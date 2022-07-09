@@ -19,7 +19,18 @@ $(function () {
     }
 
     function getCashback() {
-        let cashHtml = '';
+        let cashHtml = `
+            <div class="container d-flex value-price">
+                <h4 id='cashback' class="font-size-24 bold grey">
+                    <span class="currency">R$ </span>
+                    0,00
+                </h4>
+            </div>
+            <div class="no-graph">
+                ${emptyGraph}
+                <p class="noone-data">Não há dados suficientes</p>
+            </div>
+        `;
         $('#card-cashback .onPreLoad *' ).remove();
         $("#block-cash").html(skeLoad);
 
@@ -33,24 +44,11 @@ $(function () {
             },
 
             error: function error(response) {
-                cashHtml = `
-                    <div class="container d-flex value-price">
-                        <h4 id='cashback' class="font-size-24 bold grey">
-                            <span class="currency">R$ </span>
-                            0,00
-                        </h4>
-                    </div>
-                    <div class="no-graph">
-                        ${emptyGraph}
-                        <p class="noone-data">Não há dados suficientes</p>
-                    </div>
-                `;
                 $("#block-cash").html(cashHtml);
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let { chart, count, total, variation } = response.data;
-
                 // <em class="${variation.color} visible">
                 //     <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                 //         <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
@@ -58,7 +56,9 @@ $(function () {
                 //     ${variation.value}
                 // </em>
 
-                if( count > 0 ) {
+                if(response.data > 0) {
+                    let { chart, count, total, variation } = response.data;
+
                     cashHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='cashback' class="font-size-24 bold grey">
@@ -81,18 +81,6 @@ $(function () {
                     });
 
                 } else {
-                    cashHtml = `
-                        <div class="container d-flex value-price">
-                            <h4 id='cashback' class="font-size-24 bold grey">
-                                <span class="currency">R$ </span>
-                                0,00
-                            </h4>
-                        </div>
-                        <div class="no-graph">
-                            ${emptyGraph}
-                            <p class="noone-data">Não há dados suficientes</p>
-                        </div>
-                    `;
                     $("#block-cash").html(cashHtml);
                 }
             }
@@ -100,7 +88,18 @@ $(function () {
     }
 
     function getPending() {
-        let pendHtml = '';
+        let pendHtml = `
+            <div class="container d-flex value-price">
+                <h4 id='pending' class="font-size-24 bold grey">
+                    <span class="currency">R$ </span>
+                    0,00
+                </h4>
+            </div>
+            <div class="no-graph">
+                ${emptyGraph}
+                <p class="noone-data">Não há dados suficientes</p>
+            </div>
+        `;
         $('#card-pending .onPreLoad *' ).remove();
         $("#block-pending").html(skeLoad);
 
@@ -113,24 +112,11 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                pendHtml = `
-                    <div class="container d-flex value-price">
-                        <h4 id='pending' class="font-size-24 bold grey">
-                            <span class="currency">R$ </span>
-                            0,00
-                        </h4>
-                    </div>
-                    <div class="no-graph">
-                        ${emptyGraph}
-                        <p class="noone-data">Não há dados suficientes</p>
-                    </div>
-                `;
                 $("#block-pending").html(pendHtml);
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let { chart, total, variation } = response.data;
-
                 // <em class="${variation.color} visible">
                 //     <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                 //         <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
@@ -138,7 +124,9 @@ $(function () {
                 //     ${variation.value}
                 // </em>
 
-                if( total !== "0,00" ) {
+                if(response.data !== null) {
+                    let { chart, total, variation } = response.data;
+
                     pendHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='cashback' class="font-size-24 bold grey">
@@ -158,20 +146,7 @@ $(function () {
                     $(window).on("resize", function() {
                         $('.new-graph-pending').width($('#block-pending').width());
                     });
-
                 } else {
-                    pendHtml = `
-                        <div class="container d-flex value-price">
-                            <h4 id='pending' class="font-size-24 bold grey">
-                                <span class="currency">R$ </span>
-                                0,00
-                            </h4>
-                        </div>
-                        <div class="no-graph">
-                            ${emptyGraph}
-                            <p class="noone-data">Não há dados suficientes</p>
-                        </div>
-                    `;
                     $("#block-pending").html(pendHtml);
                 }
             }
@@ -179,7 +154,18 @@ $(function () {
     }
 
     function getCommission() {
-        let comissionhtml = '';
+        let comissionhtml = `
+            <div class="container d-flex value-price">
+                <h4 id='comission' class="font-size-24 bold grey">
+                    <span class="currency">R$ </span>
+                    0,00
+                </h4>
+            </div>
+            <div class="no-graph">
+                ${emptyGraph}
+                <p class="noone-data">Não há dados suficientes</p>
+            </div>
+        `;
         $('#card-comission .onPreLoad *' ).remove();
         $("#block-comission").html(skeLoad);
 
@@ -192,24 +178,11 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                comissionhtml = `
-                    <div class="container d-flex value-price">
-                        <h4 id='comission' class="font-size-24 bold grey">
-                            <span class="currency">R$ </span>
-                            0,00
-                        </h4>
-                    </div>
-                    <div class="no-graph">
-                        ${emptyGraph}
-                        <p class="noone-data">Não há dados suficientes</p>
-                    </div>
-                `;
                 $("#block-comission").html(comissionhtml);
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let { chart, total, variation } = response.data;
-
                 // <em class="${variation.color} visible" style="display: none;">
                 //     <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                 //         <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
@@ -217,7 +190,9 @@ $(function () {
                 //     ${variation.value}
                 // </em>
 
-                if( total !== 'R$ 0,00' ) {
+                if(response.data != null) {
+                    let { chart, total, variation } = response.data;
+
                     comissionhtml = `
                         <div class="container d-flex value-price">
                             <h4 id='comission' class="font-size-24 bold grey">
@@ -239,18 +214,6 @@ $(function () {
                     });
 
                 } else {
-                    comissionhtml = `
-                        <div class="container d-flex value-price">
-                            <h4 id='comission' class="font-size-24 bold grey">
-                                <span class="currency">R$ </span>
-                                0,00
-                            </h4>
-                        </div>
-                        <div class="no-graph">
-                            ${emptyGraph}
-                            <p class="noone-data">Não há dados suficientes</p>
-                        </div>
-                    `;
                     $("#block-comission").html(comissionhtml);
                 }
             }
@@ -258,7 +221,17 @@ $(function () {
     }
 
     function getSales() {
-        let salesHtml = '';
+        let salesHtml = `
+            <div class="container d-flex value-price" style="visibility: hidden; height: 30px;">
+                <h4 id='sales' class="font-size-24 bold grey">
+                    0
+                </h4>
+            </div>
+            <div class="no-graph">
+                ${emptyGraph}
+                <p class="noone-data">Não há dados suficientes</p>
+            </div>
+        `;
         $('#card-sales .onPreLoad *' ).remove();
         $("#block-sales").html(skeLoad);
 
@@ -271,18 +244,8 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                salesHtml = `
-                    <div class="container d-flex value-price" style="visibility: hidden; height: 30px;">
-                        <h4 id='sales' class="font-size-24 bold grey">
-                            0
-                        </h4>
-                    </div>
-                    <div class="no-graph">
-                        ${emptyGraph}
-                        <p class="noone-data">Não há dados suficientes</p>
-                    </div>
-                `;
                 $("#block-sales").html(salesHtml);
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -295,7 +258,7 @@ $(function () {
                 //     ${variation.value}
                 // </em>
 
-                if( total !== "0" ) {
+                if(total > 0) {
                     salesHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='sales' class=" font-size-24 bold">
@@ -315,18 +278,7 @@ $(function () {
                         $('.new-graph-sell').width($('#block-sales').width());
                     });
 
-                }else {
-                    salesHtml = `
-                        <div class="container d-flex value-price" style="visibility: hidden; height: 30px;">
-                            <h4 id='sales' class="font-size-24 bold grey">
-                                0
-                            </h4>
-                        </div>
-                        <div class="no-graph">
-                            ${emptyGraph}
-                            <p class="noone-data">Não há dados suficientes</p>
-                        </div>
-                    `;
+                } else {
                     $("#block-sales").html(salesHtml);
                 }
             }
@@ -335,7 +287,17 @@ $(function () {
     }
 
     function getProducts() {
-        let lista = '';
+        let lista = `
+            <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
+                <h4 id='products' class="font-size-24 bold grey">
+                    0
+                </h4>
+            </div>
+            <div class="empty-products">
+                ${emptyProducts}
+                <p class="noone">Nenhum produto vendido</p>
+            </div>
+        `;
         $('#card-products .onPreLoad *' ).remove();
         $("#block-products").html(skeLoad);
 
@@ -348,24 +310,14 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                lista = `
-                    <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
-                        <h4 id='products' class="font-size-24 bold grey">
-                            0
-                        </h4>
-                    </div>
-                    <div class="empty-products">
-                        ${emptyProducts}
-                        <p class="noone">Nenhum produto vendido</p>
-                    </div>
-                `;
                 $("#block-products").html(lista);
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 let { total, products } = response.data;
 
-                if(total) {
+                if(total > 0) {
                     $("#block-products").prepend(`
                         <footer class="footer-products scroll-212">
                             <ul class="list-products container"></ul>
@@ -404,32 +356,31 @@ $(function () {
                             });
                         }
                     });
+
                     if(products.length < 4) {
                         lista = `<li>${noListProducts}</li>`;
                         $("#block-products .list-products").append(lista);
                     }
 
-                }else {
-                    lista = `
-                        <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
-                            <h4 id='products' class="font-size-24 bold grey">
-                                0
-                            </h4>
-                        </div>
-                        <div class="empty-products">
-                            ${emptyProducts}
-                            <p class="noone">Nenhum produto vendido</p>
-                        </div>
-                    `;
+                } else {
                     $("#block-products").html(lista);
                 }
+
                 $('#card-products .ske-load').remove();
             }
         });
     }
-    
+
     function getCoupons() {
-        let cuponsHtml = '';
+        let cuponsHtml = `
+            <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
+                <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
+            </div>
+            <div class="d-flex align-items justify-around">
+                <div class="no-coupon">${emptyCoupons}</div>
+                <div class="msg-coupon">Nenhum cupom utilizado</div>
+            </div>
+        `;
         $('#card-coupons .onPreLoad *').remove();
         $("#block-coupons").html(skeLoad);
 
@@ -442,31 +393,14 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                cuponsHtml = `
-                    <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
-                        <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
-                    </div>
-                    <div class="d-flex align-items justify-around">
-                        <div class="no-coupon">${emptyCoupons}</div>
-                        <div class="msg-coupon">Nenhum cupom utilizado</div>
-                    </div>
-                `;
                 $("#block-coupons").html(cuponsHtml);
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 let { coupons, total } = response.data;
 
-                if( total != 0 ) {
-                    cuponsHtml = `
-                        <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
-                            <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
-                        </div>
-                        <div class="container d-flex justify-content-between box-donut">
-                            <div class="new-graph-pie graph"></div>
-                            <div class="data-pie"><ul></ul></div>
-                        </div>
-                    `;
+                if(total > 0) {
                     $("#block-coupons").html(cuponsHtml);
                     $('.new-graph-pie').html('<div class=graph-pie></div>');
                     let arr = [];
@@ -479,56 +413,58 @@ $(function () {
                     for(let i = 0; i < arr.length; i++) {
                         if(arr[i].amount != undefined) {
                             seriesArr.push(arr[i].amount);
-                                $('.data-pie ul').append(
-                                    `
-                                        <li>
-                                            <div class="donut-pie ${arr[i].color}">
-                                                <figure>
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
-                                                    </svg>
-                                                </figure>
-                                                <div>${arr[i].coupon}</div>
-                                            </div>
-                                            <div class="grey bold">${arr[i].amount}</div>
-                                        </li>
-                                    `
-                                );
-
+                            $('.data-pie ul').append(
+                                `
+                                    <li>
+                                        <div class="donut-pie ${arr[i].color}">
+                                            <figure>
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
+                                                </svg>
+                                            </figure>
+                                            <div>${arr[i].coupon}</div>
+                                        </div>
+                                        <div class="grey bold">${arr[i].amount}</div>
+                                    </li>
+                                `
+                            );
                         }
                     }
-                        new Chartist.Pie('.graph-pie',
-                        { series: seriesArr },
-                        {
-                            donut: true,
-                            donutWidth: 20,
-                            donutSolid: true,
-                            startAngle: 270,
-                            showLabel: false,
-                            chartPadding: 0,
-                            labelOffset: 0,
-                        });
 
+                    new Chartist.Pie('.graph-pie',
+                    {
+                        series: seriesArr
+                    },
+                    {
+                        donut: true,
+                        donutWidth: 20,
+                        donutSolid: true,
+                        startAngle: 270,
+                        showLabel: false,
+                        chartPadding: 0,
+                        labelOffset: 0,
+                    });
                 } else {
-                    cuponsHtml = `
-                        <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
-                            <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
-                        </div>
-                        <div class="d-flex align-items justify-around">
-                            <div class="no-coupon">${emptyCoupons}</div>
-                            <div class="msg-coupon">Nenhum cupom utilizado</div>
-                        </div>
-
-                    `;
                     $("#block-coupons").html(cuponsHtml);
                 }
+
                 $('#card-coupons .ske-load').hide();
             }
         });
     }
 
     function getTypePayments() {
-        let paymentsHtml = '';
+        let paymentsHtml = `
+            <div class="container d-flex value-price" style="visibility: hidden; height: 30px">
+                <h4 id='sales' class="font-size-24 bold grey">
+                    0
+                </h4>
+            </div>
+            <div class="no-graph">
+                ${emptyGraph}
+                <p class="noone-data">Não há dados suficientes</p>
+            </div>
+        `;
         $('#card-typepayments .onPreLoad *' ).remove();
         $("#block-payments").html(skeLoad);
 
@@ -579,31 +515,18 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                paymentsHtml = `
-                    <div class="container d-flex value-price" style="visibility: hidden; height: 30px">
-                        <h4 id='sales' class="font-size-24 bold grey">
-                            0
-                        </h4>
-                    </div>
-                    <div class="no-graph">
-                        ${emptyGraph}
-                        <p class="noone-data">Não há dados suficientes</p>
-                    </div>
-                `;
-
                 $("#block-payments").html(paymentsHtml);
 
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-
-                if( response.data.length !== 0 ) {
-                    var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]); 
+                if(response.data !== null ) {
+                    var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]);
 
                     paymentsHtml = `<div id="payment-type-items" class="custom-table pb-0 pt-0"><div class="row container-payment" id="type-payment">`;
                         arrJson.forEach(element => {
                             paymentsHtml += `
-                                <div 
+                                <div
                                     class="container ${
                                         element[0] == 'credit_card' ? 'creditCard'
                                         : element[0] == 'pix' ? 'cardPix'
@@ -642,23 +565,11 @@ $(function () {
                                 </div>
                             `;
                         });
+
                     paymentsHtml += `</div></div>`;
 
                     $("#block-payments").html(paymentsHtml);
-
                 } else {
-                    paymentsHtml = `
-                        <div class="container d-flex value-price" style="visibility: hidden; height: 30px">
-                            <h4 id='sales' class="font-size-24 bold grey">
-                                0
-                            </h4>
-                        </div>
-                        <div class="no-graph">
-                            ${emptyGraph}
-                            <p class="noone-data">Não há dados suficientes</p>
-                        </div>
-                    `;
-
                     $("#block-payments").html(paymentsHtml);
                 }
             }
@@ -666,7 +577,17 @@ $(function () {
     }
 
     function getRegions() {
-        let regionsHtml = '';
+        let regionsHtml = `
+            <div class="container d-flex value-price">
+                <h4 id='sales' class="font-size-24 bold grey" style="visibility: hidden; height: 15px;">
+                    0
+                </h4>
+            </div>
+            <div class="no-graph">
+                ${emptyGraph}
+                <p class="noone-data">Não há dados suficientes</p>
+            </div>
+        `;
         $('#card-regions .onPreLoad *').remove();
         $("#block-regions").html(skeLoad);
 
@@ -679,41 +600,32 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
+                $("#block-regions").html(regionsHtml);
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                regionsHtml = `
-                    <div class="container d-flex value-price">
-                        <h4 id='sales' class="font-size-24 bold grey" style="visibility: hidden; height: 15px;">
-                            0
-                        </h4>
-                    </div>
-                    <div class="no-graph">
-                        ${emptyGraph}
-                        <p class="noone-data">Não há dados suficientes</p>
-                    </div>
-                `;
-                $("#block-regions").html(regionsHtml);
-                regionsHtml = `
-                    <footer class="container footer-regions">
-                        <section class="box-total-region">
-                            <dl class="states"></dl>
-                            <div class="new-graph-regions graph">
-                            </div>
-                            <div class="info-regions">
-                                <ul class="conversion-colors"></ul>
-                            </div>
-                        </section>
-                        <section class="info-regions">
-                            <ul class="regions-legend">
-                                <li class="access"><span></span>Acessos</li>
-                                <li class="conversion"><span></span>Conversões</li>
-                            </ul>
-                        </section>
-                    </footer>
-                `;
 
-                if(response.data.length > 0){
+                if(response.data.length > 0) {
+                    regionsHtml = `
+                        <footer class="container footer-regions">
+                            <section class="box-total-region">
+                                <dl class="states"></dl>
+                                <div class="new-graph-regions graph">
+                                </div>
+                                <div class="info-regions">
+                                    <ul class="conversion-colors"></ul>
+                                </div>
+                            </section>
+                            <section class="info-regions">
+                                <ul class="regions-legend">
+                                    <li class="access"><span></span>Acessos</li>
+                                    <li class="conversion"><span></span>Conversões</li>
+                                </ul>
+                            </section>
+                        </footer>
+                    `;
+
                     $("#block-regions").html(regionsHtml);
 
                     let regionArr       = [];
@@ -724,7 +636,7 @@ $(function () {
                     $.each(response.data, function(i, v) {
                         regionArr.push(v);
                     });
-                    
+
                     for(let i = 0; i < regionArr.length; i++) {
                         conversionArr.push(regionArr[i].conversion);
                         accessArr.push(regionArr[i].access);
@@ -736,21 +648,9 @@ $(function () {
 
                     $(".new-graph-regions").height($('.conversion-colors').height());
                     $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
-                    
-                    graphRegions(statesArr, conversionArr, accessArr);
 
+                    graphRegions(statesArr, conversionArr, accessArr);
                 } else {
-                    regionsHtml = `
-                        <div class="container d-flex value-price">
-                            <h4 id='sales' class="font-size-24 bold grey" style="visibility: hidden; height: 15px;">
-                                0
-                            </h4>
-                        </div>
-                        <div class="no-graph">
-                            ${emptyGraph}
-                            <p class="noone-data">Não há dados suficientes</p>
-                        </div>
-                    `;
                     $("#block-regions").html(regionsHtml);
                 }
             }
@@ -915,6 +815,8 @@ $(function () {
                 } else {
                     var table_data = "";
 
+                    $(".footer-origins").removeClass('scroll-212');
+
                     $.each(response.data, function (index, data) {
                         table_data += "<tr>";
                             table_data += "<td>" + data.origin + "</td>";
@@ -923,15 +825,17 @@ $(function () {
                         table_data += "</tr>";
                     });
 
+                    if (response.data.length > 3) {
+                        $(".footer-origins").addClass('scroll-212');
+                    }
+
                     $("#origins-table").html("");
                     $("#origins-table").append(table_data);
                     $("#card-origin .ske-load").hide();
                     $(".table-vendas").addClass("table-striped");
 
-                    //pagination(response, "origins", updateSalesByOrigin);
                     $(".origin-report").show();
                 }
-
             },
         });
     }
