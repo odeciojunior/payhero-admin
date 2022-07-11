@@ -377,7 +377,6 @@ class ReportMarketingService
     public function getResumeRegions($filters)
     {
         $cacheName = 'regions-resume-'.json_encode($filters);
-        cache()->forget($cacheName);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = current(Hashids::decode($filters['project_id']));
