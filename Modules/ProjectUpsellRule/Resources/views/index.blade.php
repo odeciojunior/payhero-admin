@@ -50,16 +50,16 @@
 </div>
 
 {{-- Modal add-edit upsell --}}
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
+<div class="modal fade example-modal-lg" id="modal_add_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content w-450" id="conteudo_modal_add">
-            <div class="modal-header">
+            <div class="modal-header py-15 pl-20 pr-40">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
                 <h4 class="modal-title text-center" style="font-weight: 700;"></h4>
             </div>
-            <div class="pt-10 pr-20 pl-20 modal_upsell_body">
+            <div class="pr-20 pl-20 modal_upsell_body">
                 @include('projectupsellrule::create')
                 @include('projectupsellrule::edit')
             </div>
@@ -73,7 +73,7 @@
 {{-- End Modal  --}}
 
 {{-- Modal config upsell --}}
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y: scroll;'>
+<div class="modal fade example-modal-lg" id="modal_config_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y: scroll;'>
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="conteudo_modal_add">
             <div class="modal-header mb-0">
@@ -86,7 +86,6 @@
                 @include('projectupsellrule::config')
             </div>
             <div class="modal-footer pt-0">
-                <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button> -->
                 <button type="button" class="btn btn-success bt-upsell-config-update">Atualizar</button>
             </div>
         </div>
@@ -95,7 +94,7 @@
 {{-- End Modal  --}}
 
 <!-- Details -->
-<div id="modal-detail-upsell" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+<div id="modal-detail-upsell" class="modal fade example-modal-lg" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
@@ -113,7 +112,7 @@
 {{-- End Modal  --}}
 
 {{-- Modal delete upsell --}}
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-upsell" aria-hidden="true" role="dialog" tabindex="-1">
+<div class="modal fade example-modal-lg" id="modal-delete-upsell" aria-hidden="true" role="dialog" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -143,7 +142,7 @@
 {{-- End Modal  --}}
 
 {{-- Modal visualizar configurações do upsell --}}
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-view-upsell-config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y:auto;'>
+<div class="modal fade example-modal-lg" id="modal-view-upsell-config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y:auto;'>
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="">
             <div class="modal-header border-bottom d-flex justify-content-center">

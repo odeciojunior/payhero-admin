@@ -202,7 +202,7 @@ $(document).ready(function () {
                                             <span class="bg-color-gray empty-cilce"></span>
                                             <span></span>
                                         </div>
-                                        <span class="account-health-note-description">Chargebacks</span>
+                                        <span class="account-health-note-description">Contestações</span>
                                     </div>
                                     <div class="hr-vertical d-flex justify-content-center align-items-center align-self-center"></div>
                                     <div class="d-flex flex-column justify-content-between align-items-center align-self-center">
@@ -297,7 +297,7 @@ $(document).ready(function () {
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-chargeback">
                             <div class="font-size-14 gray-600 mr-auto">
-                                <span class="ml-0">Chargebacks</span>
+                                <span class="ml-0">Contestações</span>
                             </div>
                                 <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
                                     <li class="" data-slide-to="1"></li>
@@ -326,7 +326,7 @@ $(document).ready(function () {
                                         </div>
 
                                         <div id="chargeback-custom-tooltip-container" class="custom-tooltip-container mx-2" style="display: none; margin-top: -430px;">
-                                            <div class="custom-tooltip-content" style="margin-right: 150px">
+                                            <div class="custom-tooltip-content" style="margin-right: 220px">
                                                 <p>
                                                 O chargeback acontece quando uma cobrança é contestada pelo titular do cartão de crédito.
                                                 </p>
@@ -336,7 +336,7 @@ $(document).ready(function () {
                                                 </p>
 
                                                 <p>
-                                                O índice exigido pelas regras internacionais das bandeiras é de não exceder 1,5%. 
+                                                O índice exigido pelas regras internacionais das bandeiras é de não exceder 1,5%.
                                                 Dentre 1,5% e 3% é considerado alto, podendo sofrer multas por cada chargeback.
                                                 Acima de 3%, além das multas, a sua conta poderá ser bloqueada definitivamente.
                                                 </p>
@@ -370,7 +370,7 @@ $(document).ready(function () {
                                     <span class="account-health-note">${data.total_sales_chargeback}
                                         <!-- <span class="account-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> -->
                                     </span>
-                                    <span class="account-health-note-description">Chargebacks</span>
+                                    <span class="account-health-note-description">Contestações</span>
                                 </div>
                                 <div class="col-2 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
                                     <span class="account-health-note" style="font-size: 20px; ${indexColor(data.chargeback_rate)}">${parseFloat( data.chargeback_rate ).toFixed(1)}%</span>
