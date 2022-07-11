@@ -613,9 +613,14 @@ class PlansApiController extends Controller
             }
 
             if (!empty($data['is_config'])) {
-                $plans = $plans->orderBy('name')->take(10)->get();
+                $plans = $plans->orderBy('name')
+                    ->orderBy('description')
+                    ->take(10)
+                    ->get();
             } else {
-                $plans = $plans->orderBy('name')->paginate(10);
+                $plans = $plans->orderBy('name')
+                    ->orderBy('description')
+                    ->paginate(10);
             }
 
             return PlansSelectResource::collection($plans);
