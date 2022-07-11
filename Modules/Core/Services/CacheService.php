@@ -16,7 +16,7 @@ class CacheService
     const CHECKOUT_RECOVERY_PARAM = 'checkout-recovery-param'; // unique: checkout_id or id_log_session
     const CHECKOUT_RECOVERY_PLAN = 'checkout-recovery-plan'; // unique: checkout_id
     const CHECKOUT_OB_APPLY_ON_PLANS = 'checkout-ob-apply-on-plans'; // unique: plan_id[]
-    const CHECKOUT_OB_RULES = 'checkout-ob-rules'; // unique: project_id and plan_id[]
+    const CHECKOUT_OB_RULES = 'checkout-ob-rules'; // unique: project_id, shipping_id and plan_id[]
     const CHECKOUT_OB_RULE_PLANS = 'checkout-ob-rule-plans'; // unique: order_bump_rule_id
     const CHECKOUT_LOG = 'checkout-log'; // unique: checkout_id
     const CHECKOUT_PRODUCER = 'checkout-producer'; // unique: project_id
