@@ -253,7 +253,7 @@
 												<div class="card-body card-origin">
                                                     <div class="content-info">
                                                         <div class="row">
-                                                            <div class="ske-load">
+                                                            <div class="ske-load" style="top: 40%;">
                                                                 <div class="px-20 py-0">
                                                                     <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                                                 </div>
@@ -286,7 +286,7 @@
                                                                 <div class="row">
                                                                     <div class="col-12 p-10">
                                                                         <footer class='footer-origins'>
-                                                                            <table class="table-vendas table table-striped "style="width:100%;margin: auto; margin-top:15px">
+                                                                            <table class="table-vendas table table-striped "style="width:100%;margin: auto; margin-top:10px">
                                                                                 <tbody id="origins-table"  class="origin-report">
                                                                                     {{-- js carrega... --}}
                                                                                 </tbody>

@@ -2477,3 +2477,5 @@ h4.number{
     height: 12px;
     margin: 0;
 }
+
+.bs-tooltip-top .arrow { bottom: 4px !important; }

@@ -2551,6 +2551,7 @@ h4.number{
     margin: 0;
 }
 
+.bs-tooltip-top .arrow { bottom: 4px !important; }
 .date-picker {
   width: 170px;
   height: 25px;

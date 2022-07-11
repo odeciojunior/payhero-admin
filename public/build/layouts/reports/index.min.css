@@ -2480,6 +2480,7 @@ h4.number{
     margin: 0;
 }
 
+.bs-tooltip-top .arrow { bottom: 4px !important; }
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;

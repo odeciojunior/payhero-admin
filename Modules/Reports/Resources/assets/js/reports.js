@@ -401,6 +401,16 @@ $(function () {
                 let { coupons, total } = response.data;
 
                 if(total > 0) {
+                    cuponsHtml = `
+                        <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
+                            <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
+                        </div>
+                        <div class="container d-flex justify-content-between box-donut">
+                            <div class="new-graph-pie graph"></div>
+                            <div class="data-pie"><ul></ul></div>
+                        </div>
+                    `;
+
                     $("#block-coupons").html(cuponsHtml);
                     $('.new-graph-pie').html('<div class=graph-pie></div>');
                     let arr = [];
@@ -444,6 +454,7 @@ $(function () {
                         chartPadding: 0,
                         labelOffset: 0,
                     });
+                    
                 } else {
                     $("#block-coupons").html(cuponsHtml);
                 }
