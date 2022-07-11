@@ -19,6 +19,7 @@ $(function () {
     }
 
     function getCashback() {
+        
         let cashHtml = `
             <div class="container d-flex value-price">
                 <h4 id='cashback' class="font-size-24 bold grey">
@@ -56,9 +57,8 @@ $(function () {
                 //     ${variation.value}
                 // </em>
 
-                if(response.data > 0) {
+                if(response.data.count > 0) {
                     let { chart, count, total, variation } = response.data;
-
                     cashHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='cashback' class="font-size-24 bold grey">
@@ -129,7 +129,7 @@ $(function () {
 
                     pendHtml = `
                         <div class="container d-flex value-price">
-                            <h4 id='cashback' class="font-size-24 bold grey">
+                            <h4 id='pending' class="font-size-24 bold grey">
                                 <span class="currency">R$ </span>
                                 ${total}
                             </h4>
