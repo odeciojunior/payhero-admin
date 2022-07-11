@@ -140,17 +140,16 @@
                                                     </h5>
 
                                                     <div 
+                                                        data-html="true"
+                                                        data-container="body"
+                                                        data-viewport=".container"
+                                                        data-placement="top"
+                                                        data-toggle="tooltip"
+                                                        title="<p style='padding-top: 8px;'><b>Vendas: </b>Porcentagem do total de vendas para aquele estado.</p>
+                                                                <p><b>Densidade: </b>Quantidade de vendas para cada 100 mil habitantes daquele estado.</p>"
                                                         class="know-more"
-                                                        
                                                     >
-                                                        <svg 
-                                                            data-html="true"
-                                                            data-container="body"
-                                                            data-viewport=".container"
-                                                            data-placement="top"
-                                                            data-toggle="tooltip"
-                                                            title="<p style='padding-top: 8px;'><b>Vendas: </b>Porcentagem do total de vendas para aquele estado.</p>
-                                                                    <p><b>Densidade: </b>Quantidade de vendas para cada 100 mil habitantes daquele estado.</p>"
+                                                        <svg
                                                             width="12" 
                                                             height="12" 
                                                             viewBox="0 0 12 12" 

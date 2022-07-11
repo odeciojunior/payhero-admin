@@ -883,7 +883,7 @@ function loadBrazilMap() {
     $('.state text').css({ fill: '#F1F1F1' });
     $(".state").addClass('skeleton');
 
-    $('[data-toggle="tooltip"]').tooltip({container: '.know-more'});
+    $('[data-toggle="tooltip"]').tooltip({container: '.box-states'});
 
     let noData = `
         <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
