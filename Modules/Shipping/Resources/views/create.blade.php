@@ -91,11 +91,11 @@
             <div class="form-group">
                 <label>Disponível para compras acima de: </label>
                 <input name="rule_value" type="text" class="input-pad rule-shipping-value shipping-money-format"
-                       value="" placeholder="R$ 0,00">
+                       value="" placeholder="0,00">
             </div>
             <div class="d-flex">
                 <div class="switch-holder w-full">
-                    <label for="cartao">Ativo</label>
+                    <label for="status">Ativo</label>
                     <br>
                     <label class="switch">
                         <input name="status" value="1" class="check shipping-status" type="checkbox" checked>
@@ -103,10 +103,19 @@
                     </label>
                 </div>
                 <div class="switch-holder w-full">
-                    <label for="cartao">Pré-selecionado</label>
+                    <label for="pre_selected">Pré-selecionado</label>
                     <br>
                     <label class="switch">
                         <input name="pre_selected" value="1" class="check shipping-pre-selected" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="switch-holder w-full">
+                    <label for="use_variants">Usar variantes</label>
+                    <br>
+                    <label class="switch">
+                        <input name="use_variants" value="1" class="check shipping-use-variants" type="checkbox"
+                               checked>
                         <span class="slider round"></span>
                     </label>
                 </div>

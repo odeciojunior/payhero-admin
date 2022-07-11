@@ -23,6 +23,7 @@ class CacheService
     const CHECKOUT_ONLY_DIGITAL_PRODUCTS = 'checkout-only-digital-products'; // unique: plan_id
     const SHIPPING_RULES = 'shipping-rules'; // unique: project_id:amount
     const SHIPPING_PLAN = 'shipping-plan'; // unique: plan_id
+    const SHIPPING_PLAN_VARIANTS = 'shipping-plan-variants'; // unique: plan_id
     const SHIPPING_OB_RULES = 'shipping-ob-rules'; // unique: order_bump_rule_id
     const SHIPPING_OB_PLANS = 'shipping-ob-plans'; // unique: plan_id
     const REVIEWS_CHECKOUT = 'reviews-checkout'; // unique: checkout_id

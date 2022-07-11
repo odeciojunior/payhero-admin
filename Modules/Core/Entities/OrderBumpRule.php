@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $project_id
  * @property string $description
  * @property int $discount
+ * @property string $apply_on_shipping
+ * @property boolean $use_variants
  * @property string $apply_on_plans
  * @property string $offer_plans
  * @property boolean $active_flag
@@ -22,6 +24,8 @@ class OrderBumpRule extends Model
         'project_id',
         'description',
         'discount',
+        'apply_on_shipping',
+        'use_variants',
         'apply_on_plans',
         'offer_plans',
         'active_flag',
@@ -32,6 +36,11 @@ class OrderBumpRule extends Model
     /**
      * Mutators
      */
+    public function getApplyOnShippingAttribute($value)
+    {
+        return json_decode($value);
+    }
+
     public function getApplyOnPlansAttribute($value)
     {
         return json_decode($value);
