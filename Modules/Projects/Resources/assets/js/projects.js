@@ -79,7 +79,7 @@ $(() => {
             },
             error: (response) => {
                 window.location.replace(`${location.origin}/projects`);
-                $('.page-content').show()
+                $('.page-content').show();
                 $(".page").removeClass("low-opacity");
 
             },
@@ -112,10 +112,9 @@ $(() => {
                 $('#total-approved').text(TotalOfSales)
                 $('#total-approved-value').text(approvedSalesValue)
 
-                $('.page-content').show()
+                $('.page-content').show();
                 $(".page").removeClass("low-opacity");
 
-                // loadOnAny('#tab_info_geral .card', true);
                 loadingOnScreenRemove();
             }
         });
@@ -142,7 +141,7 @@ $(() => {
                 errorAjaxResponse(response);
 
             }, success: function (data) {
-                localStorage.setItem('projectConfig',JSON.stringify(data));
+                localStorage.setItem('projectConfig', JSON.stringify(data));
                 renderProjectConfig(data);
 
                 loadingOnScreenRemove();
@@ -239,24 +238,24 @@ $(() => {
         }
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(".ql-toolbar.ql-snow").addClass("d-flex justify-content-center")
     });
 
-    $(".ql-editor").on("focus", function(){
+    $(".ql-editor").on("focus", function () {
         $(".h-200, .ql-container, .ql-snow").css("border-color", "#88BFFF");
     });
 
-    $(".ql-editor").on("focusout", function(){
+    $(".ql-editor").on("focusout", function () {
         $(".h-200, .ql-container, .ql-snow").css("border-color", "#cccccc");
     });
 
-    const statusUrlAffiliatesEl =  formUpdateProject.find('#status-url-affiliates')
+    const statusUrlAffiliatesEl = formUpdateProject.find('#status-url-affiliates')
 
-    statusUrlAffiliatesEl.on("click", function(){
-        if($(this).prop("checked") == true ){
+    statusUrlAffiliatesEl.on("click", function () {
+        if ($(this).prop("checked") == true) {
             $("#affiliation-access").show();
-        }else{
+        } else {
             $("#affiliation-access").hide();
         }
     });
@@ -264,7 +263,7 @@ $(() => {
     //CONFIGURACOES CARD 3 & 4
     function renderProjectConfig(data) {
 
-        let {project} = data;
+        let { project } = data;
 
         // AFILIACOES ON / OFF
         let getStatusAffiliation = statusUrlAffiliatesEl.prop("checked");
@@ -274,22 +273,22 @@ $(() => {
             $("#affiliation-access").show();
         }
 
-        if(project.status_url_affiliates == 0){
+        if (project.status_url_affiliates == 0) {
             $(".affiliation").children("img").attr("src", "/build/global/img/projects/affiliationDisable.svg").css("background-color", "#F2F8FF");
             $("#affiliation-access").hide();
 
-            if(project.status_url_affiliates == 0 && getStatusAffiliation == true){
+            if (project.status_url_affiliates == 0 && getStatusAffiliation == true) {
                 statusUrlAffiliatesEl.trigger('click');
 
             }
         }
 
         //IMAGEM DO PROJETO
-        replacePreview("project_photo",project.photo,"");
-        if(!project.photo){
+        replacePreview("project_photo", project.photo, "");
+        if (!project.photo) {
             $(".dropify-render > img").remove();
             $(".dropify-wrapper").removeClass("has-preview")
-            $(".dropify-preview").css("display","none");
+            $(".dropify-preview").css("display", "none");
         }
         $('#project_photo').dropify(dropifyOptions);
 
@@ -336,11 +335,11 @@ $(() => {
         // PORCENTAGEM
         $('#percentage-affiliates').val(0);
 
-        $('#percentage-affiliates').click( function(){
-            if( $(this).val()=='0' ) $(this).val('');
+        $('#percentage-affiliates').click(function () {
+            if ($(this).val() == '0') $(this).val('');
         });
-        $('#percentage-affiliates').blur( function(){
-            if( $(this).val()=='' ) $(this).val('0');
+        $('#percentage-affiliates').blur(function () {
+            if ($(this).val() == '') $(this).val('0');
         });
 
         $('#percentage-affiliates').mask('000', {
@@ -352,7 +351,7 @@ $(() => {
             }
         });
 
-        if(project.percentage_affiliates){
+        if (project.percentage_affiliates) {
             formUpdateProject.find('#percentage-affiliates').val(project.percentage_affiliates);
         }
 
@@ -375,19 +374,19 @@ $(() => {
         formUpdateProject.find('#url-affiliates').val(project.url_affiliates);
 
         // COMPORTAMENTO CARD SALVAR / CANCELAR
-        if(!onChangeSet){
-            formUpdateProject.on('input change', function() {
-                $( "#confirm-changes" ).fadeIn( "slow" );
+        if (!onChangeSet) {
+            formUpdateProject.on('input change', function () {
+                $("#confirm-changes").fadeIn("slow");
             });
 
-            $(".dropify-clear, .o-bin-1").on("click", function(){
+            $(".dropify-clear, .o-bin-1").on("click", function () {
                 $(".dropify-errors-container > ul > li").remove();
                 localStorage.setItem("photo_remove", true)
-                $( "#confirm-changes" ).fadeIn( "slow" );
+                $("#confirm-changes").fadeIn("slow");
             });
             onChangeSet = true;
         }
-        $( "#confirm-changes" ).hide();
+        $("#confirm-changes").hide();
     }
 
     function replacePreview(name, src, fname = "") {
@@ -407,17 +406,17 @@ $(() => {
         preview.fadeIn();
     }
 
-    function messageErrors(defaultMessage, menssageError = ""){
+    function messageErrors(defaultMessage, menssageError = "") {
         $("#confirm-changes").fadeOut(3000);
 
-        if(menssageError != ""){
+        if (menssageError != "") {
             $("#data-error span").html(menssageError)
             $("#data-error").fadeIn(1000).delay(2000).fadeOut(2000);
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#data-error span").html(defaultMessage)
-            },5000)
+            }, 5000)
 
-        }else{
+        } else {
             $("#data-error span").html(defaultMessage)
             $("#data-error").fadeIn(2000).delay(2000).fadeOut(2000);
         }
@@ -427,16 +426,16 @@ $(() => {
     let getDefaultErrorMessage = $("#data-error span").html()
     const projectNameInput = formUpdateProject.find("#name");
 
-    function validateForm(photoIsValid){
+    function validateForm(photoIsValid) {
 
-        if(projectNameInput.val().length <= 2){
+        if (projectNameInput.val().length <= 2) {
             projectNameInput.addClass("error-alert")
             let messageError = "<strong>Ops!</strong> Você precisa preencher os campos indicados."
             messageErrors(getDefaultErrorMessage, messageError)
             return false;
         }
 
-        if(photoIsValid === false){
+        if (photoIsValid === false) {
             messageErrors(getDefaultErrorMessage)
             return false;
         }
@@ -444,25 +443,25 @@ $(() => {
         return true;
     }
 
-    $("#project_photo").on("dropify.errors", function() {
+    $("#project_photo").on("dropify.errors", function () {
         messageErrors(getDefaultErrorMessage)
         imgReady = false
     })
 
-    $("#project_photo").on("dropify.fileReady", function(){
+    $("#project_photo").on("dropify.fileReady", function () {
         imgReady = true
-        if(validateForm(imgReady)){
+        if (validateForm(imgReady)) {
             $("#bt-update-project").prop("disabled", false);
         }
     })
 
     // INPUT AFFILIATION
-    statusUrlAffiliatesEl.on("click", function(){
+    statusUrlAffiliatesEl.on("click", function () {
         let affiliationStatus = statusUrlAffiliatesEl.prop("checked")
-        if(affiliationStatus == false){
+        if (affiliationStatus == false) {
             $(".affiliation").children("img").attr("src", "/build/global/img/projects/affiliationDisable.svg");
 
-        }else if(affiliationStatus == true){
+        } else if (affiliationStatus == true) {
             $(".affiliation").children("img").attr("src", "/build/global/img/projects/afiliatesIcon.svg");
         }
     });
@@ -515,7 +514,7 @@ $(() => {
 
     // SALVAR AS CONFIGURACOES DO PROJETO
     formUpdateProject.on('submit', function (event) {
-        if(!validateForm(imgReady)){
+        if (!validateForm(imgReady)) {
             return false;
         }
 
@@ -540,7 +539,7 @@ $(() => {
         }
 
         let automaticAffiliation = 0;
-        if(formUpdateProject.find('.automatic-affiliation input').prop("checked")){
+        if (formUpdateProject.find('.automatic-affiliation input').prop("checked")) {
             automaticAffiliation = 1;
         };
 
@@ -548,11 +547,11 @@ $(() => {
         formData.append('status_url_affiliates', statusUrlAffiliates);
         formData.append("automatic_affiliation", automaticAffiliation);
 
-        if(!$("#project_photo").prop("files").length){
+        if (!$("#project_photo").prop("files").length) {
             formData.delete("project_photo");
         }
 
-        if(localStorage.getItem("photo_remove") == "true"){
+        if (localStorage.getItem("photo_remove") == "true") {
             formData.append("remove_project_photo", true)
         }
 
@@ -574,20 +573,20 @@ $(() => {
                     errorAjaxResponse(response);
 
                 }, success: function (response) {
-                    localStorage.setItem("photo_remove",false);
+                    localStorage.setItem("photo_remove", false);
                     updateConfiguracoes();
                     $('html, body').animate({
                         scrollTop: 410
                     });
                     setTimeout(function () {
-                        $( "#confirm-changes" ).hide();
+                        $("#confirm-changes").hide();
 
                         $(".final-card span").html(getTextSaveChanges);
                         $("#options-buttons").children().show();
                         $(".loader").hide();
 
                         $("#saved-alterations").fadeIn('slow').delay(2500).fadeOut('slow');
-                    },1500);
+                    }, 1500);
 
                     show();
                     $(".page").removeClass("low-opacity");
@@ -601,7 +600,7 @@ $(() => {
     });
 
     //CANCELAR
-    $("#cancel-edit").on("click", function(){
+    $("#cancel-edit").on("click", function () {
         renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
         $("#confirm-changes").fadeOut("slow");
         $('html, body').animate({

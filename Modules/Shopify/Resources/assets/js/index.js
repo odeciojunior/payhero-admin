@@ -462,6 +462,7 @@ $(document).ready(function () {
                 });
                 break;
             case 'tracking':
+                
                 $.ajax({
                     method: 'POST',
                     url: '/api/apps/shopify/synchronize/trackings',
@@ -474,7 +475,8 @@ $(document).ready(function () {
                         project_id: projectId,
                     },
                     error: function (response) {
-                        alertCustom('success', 'Os códigos de rastreio sendo importados...')
+                        errorAjaxResponse(response);
+                        
                     },
                     success: function (response) {
                         alertCustom('success', response.message);

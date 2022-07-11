@@ -27,7 +27,7 @@ Route::group(['middleware' => ['web', 'auth','permission:apps']], function () {
      Route::get('apps/activecampaignevent', 'ActiveCampaignEventController@index');
      Route::get('apps/activecampaignevent/{id}', 'ActiveCampaignEventController@show');
      Route::get('apps/activecampaignevent/{id}/edit', 'ActiveCampaignEventController@edit');
-     
+
      Route::Resource('apps/activecampaignevent', 'ActiveCampaignEventController')
      ->only('create', 'store', 'update', 'destroy')->middleware('permission:apps_manage');
 });

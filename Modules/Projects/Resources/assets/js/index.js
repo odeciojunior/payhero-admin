@@ -37,33 +37,33 @@ $(function () {
 
                         let data =`
                             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 name_project" data-id="${project.id}">
-                                
-                                <div class="card"> 
+
+                                <div class="card">
 
                                     ${project.woocommerce_id != null ?
                                         `<div class="ribbon ribbon-woo">
-                                            <span>WooCommerce 
+                                            <span>WooCommerce
                                                 <a class="ribbon-woocommerce-default"></a>
                                             </span>
                                         </div>` : ''
                                     }
-                                    
-                                    ${project.shopify_id != null && !project.affiliated ? 
+
+                                    ${project.shopify_id != null && !project.affiliated ?
                                         `<div class="ribbon">
-                                            <span>Shopify 
+                                            <span>Shopify
                                                 <a class="ribbon-shopify-default"></a>
                                             </span>
                                         </div>`: ""
                                     }
-                                    
-                                    ${project.affiliated ? 
+
+                                    ${project.affiliated ?
                                         `<div class="ribbon-left">
                                             <span>Afiliado</span>
                                         </div>` : ""
                                     }
 
                                     <img class="card-img-top" onerror="this.src = 'build/global/img/produto.svg'" src="${project.photo ? project.photo : "build/global/img/produto.svg"}" alt="${project.name}">
-                                    
+
                                     <div class="card-body">
                                         <h5 class="card-title text-truncate">${project.name}</h5>
 
@@ -83,7 +83,7 @@ $(function () {
                         $("#data-table-projects").append(data);
                         if (verifyAccountFrozen()) {
                             $("#btn-add-project").hide();
-                            
+
                         } else {
                             $("#btn-add-project").show();
                         }
@@ -91,7 +91,7 @@ $(function () {
                     verifyHasOnlyOne();
 
                 } else {
-                    
+
                     $("#subtitle_drag_drop").hide();
                     $("#button_toggle").css({visibility: "hidden"});
                     $("#data-table-projects").css({visibility: "hidden"});
@@ -112,10 +112,11 @@ $(function () {
             },
         });
     }
-    
+
     // Funcao responsavel pelo Arrastar e soltar(DRAG e DROP)
     const sortableElement = $("#data-table-projects");
     sortableElement.sortable({
+        containment: "window",
         opacity: 1,
         revert: true,
         tolerance: "pointer",
@@ -149,8 +150,8 @@ $(function () {
                 top: '0px'
             });
         },
-        beforeStop: function (event, ui){ 
-            ui.helper.css('margin-top',0); 
+        beforeStop: function (event, ui){
+            ui.helper.css('margin-top',0);
         }
     });
 
@@ -166,7 +167,7 @@ $(function () {
         }
     }
 
-    // Seta valor do filtro toggle(ALTERNANCIA) para exibir/esconder projetos 
+    // Seta valor do filtro toggle(ALTERNANCIA) para exibir/esconder projetos
     $(".check").on("change", function () {
         if ($(this).is(":checked")) {
             $(this).val(1);
