@@ -358,6 +358,7 @@ class PlansApiController extends Controller
 
                             $productId = $requestData['products'][$keyProduct];
                             CacheService::forget(CacheService::CHECKOUT_CART_PRODUCT_PLAN, $productId);
+                            PlanService::forgetCache($planId);
                         }
                     }
 
