@@ -667,6 +667,7 @@ function changeCompany() {
 
 function updateReports() {
     $('.sirius-select-container').addClass('disabled');
+    $('input[name="daterange"]').attr('disabled', 'disabled');
 
     Promise.all([
         blockeds(),
@@ -679,9 +680,11 @@ function updateReports() {
     ])
     .then(() => {
         $('.sirius-select-container').removeClass('disabled');
+        $('input[name="daterange"]').removeAttr('disabled');
     })
     .catch(() => {
         $('.sirius-select-container').removeClass('disabled');
+        $('input[name="daterange"]').removeAttr('disabled');
     });
 }
 

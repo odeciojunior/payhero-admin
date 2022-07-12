@@ -764,6 +764,7 @@ function changeCalendar() {
 
 function updateReports() {
     $('.sirius-select-container').addClass('disabled');
+    $('input[name="daterange"]').attr('disabled', 'disabled');
     $('#brazil-map-filter').find('input').attr('disabled', 'disabled');
 
     Promise.all([
@@ -778,10 +779,12 @@ function updateReports() {
     ])
     .then(() => {
         $('.sirius-select-container').removeClass('disabled');
+        $('input[name="daterange"]').removeAttr('disabled');
         $('#brazil-map-filter').find('input').removeAttr('disabled');
     })
     .catch(() => {
         $('.sirius-select-container').removeClass('disabled');
+        $('input[name="daterange"]').removeAttr('disabled');
         $('#brazil-map-filter').find('input').removeAttr('disabled');
     });
 }
@@ -866,7 +869,7 @@ function loadBrazilMap() {
     $('.state text').css({ fill: '#F1F1F1' });
     $(".state").addClass('skeleton');
 
-    $('[data-toggle="tooltip"]').tooltip({container: '.box-states'});
+    $('[data-toggle="tooltip"]').tooltip({container: '#parent-more'});
 
     let noData = `
         <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
