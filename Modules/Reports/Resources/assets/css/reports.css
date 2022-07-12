@@ -2479,3 +2479,15 @@ h4.number{
 }
 
 .bs-tooltip-top .arrow { bottom: 4px !important; }
+
+#date-filter:hover {
+    border-color: #cad1d8;
+    outline: none;
+}
+
+#date-filter[disabled="disabled"] {
+    opacity: 0.5;
+}
+#date-filter[disabled="disabled"]:hover {
+    border-color: #e0e7ee !important;
+}

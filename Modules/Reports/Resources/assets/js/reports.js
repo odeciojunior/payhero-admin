@@ -43,8 +43,12 @@ function changeCompany() {
 }
 
 function changeCalendar() {
+    $('.onPreLoad *, .onPreLoadBig *').remove();
+
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
+
+    data = sessionStorage.getItem('info') ? JSON.parse(sessionStorage.getItem('info')).calendar : `${startDate}-${endDate}`;
 
     $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
     $('input[name="daterange"]').dateRangePicker({
@@ -60,6 +64,16 @@ function changeCalendar() {
             }
         }
     })
+    .on('datepicker-change', function () {
+        $.ajaxQ.abortAll();
+
+        if (data !== $(this).val()) {
+            data = $(this).val();
+
+            updateStorage({calendar: $(this).val()});
+            updateReports();
+        }
+    })
     .on('datepicker-open', function () {
         $('.filter-badge-input').removeClass('show');
     })
@@ -69,6 +83,8 @@ function changeCalendar() {
             $(this).addClass('active');
         }
     });
+
+    data = $('input[name="daterange"]').val();
 }
 
 function getProjects() {
@@ -133,6 +149,7 @@ function changeOrigin() {
 
 function updateReports() {
     $('.sirius-select-container').addClass('disabled');
+    $('input[name="daterange"]').attr('disabled', 'disabled');
 
     Promise.all([
         getCommission(),
@@ -147,9 +164,11 @@ function updateReports() {
     ])
     .then(() => {
         $('.sirius-select-container').removeClass('disabled');
+        $('input[name="daterange"]').removeAttr('disabled');
     })
     .catch(() => {
         $('.sirius-select-container').removeClass('disabled');
+        $('input[name="daterange"]').removeAttr('disabled');
     });
 }
 
@@ -656,9 +675,9 @@ function getTypePayments() {
         success: function success(response) {
             if(response.data !== null ) {
                 var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]);
-
                 paymentsHtml = `<div id="payment-type-items" class="custom-table pb-0 pt-0"><div class="row container-payment" id="type-payment">`;
-                    arrJson.forEach(element => {
+                    arrJson.forEach((element, index) => {
+                        var percentage = index == 0 ? '100%' : element[1].percentage;
                         paymentsHtml += `
                             <div
                                 class="container ${
@@ -686,7 +705,7 @@ function getTypePayments() {
                                                 ${element[1].percentage}
                                             </div>
                                             <div class="col-payment col-graph bar-payment">
-                                                <div class="bar" style="width: ${element[1].percentage};">-</div>
+                                                <div class="bar" style="width: ${percentage};">-</div>
                                             </div>
                                             <div class="col-payment end">
                                                 <span class="money-td green bold grey" id='credit-card-value'>

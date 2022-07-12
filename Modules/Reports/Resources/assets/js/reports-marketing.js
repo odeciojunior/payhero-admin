@@ -716,8 +716,12 @@ function updateStorage(v){
 }
 
 function changeCalendar() {
+    $('.onPreLoad *, .onPreLoadBig *').remove();
+
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
+
+    data = sessionStorage.getItem('info') ? JSON.parse(sessionStorage.getItem('info')).calendar : `${startDate}-${endDate}`;
 
     $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
     $('input[name="daterange"]').dateRangePicker({
@@ -739,11 +743,10 @@ function changeCalendar() {
 
         $.ajaxQ.abortAll();
 
-        if (date !== $(this).val()) {
-            date = $(this).val();
+        if (data !== $(this).val()) {
+            data = $(this).val();
 
             updateStorage({calendar: $(this).val()});
-
             updateReports();
         }
     })

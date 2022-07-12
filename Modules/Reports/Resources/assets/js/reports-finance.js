@@ -615,6 +615,8 @@ function changeCalendar() {
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
+    data = sessionStorage.getItem('info') ? JSON.parse(sessionStorage.getItem('info')).calendar : `${startDate}-${endDate}`;
+
     $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
     $('input[name="daterange"]').dateRangePicker({
         setValue: function (s) {
@@ -632,8 +634,12 @@ function changeCalendar() {
     .on('datepicker-change', function () {
         $.ajaxQ.abortAll();
 
-        updateStorage({calendar: $(this).val()});
-        updateReports();
+        if (data !== $(this).val()) {
+            data = $(this).val();
+
+            updateStorage({calendar: $(this).val()});
+            updateReports();
+        }
     })
     .on('datepicker-open', function () {
         $('.filter-badge-input').removeClass('show');

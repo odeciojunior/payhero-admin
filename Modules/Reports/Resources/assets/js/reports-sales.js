@@ -1244,10 +1244,12 @@ const formatCash = n => {
 
 
 function changeCalendar() {
-    $('.onPreLoad *').remove();
+    $('.onPreLoad *, .onPreLoadBig *').remove();
 
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
+
+    data = sessionStorage.getItem('info') ? JSON.parse(sessionStorage.getItem('info')).calendar : `${startDate}-${endDate}`;
 
     $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
     $('input[name="daterange"]').dateRangePicker({
@@ -1264,8 +1266,14 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
-        updateStorage({calendar: $(this).val()});
-        updateReports();
+        $.ajaxQ.abortAll();
+
+        if (data !== $(this).val()) {
+            data = $(this).val();
+
+            updateStorage({calendar: $(this).val()});
+            updateReports();
+        }
     })
     .on('datepicker-open', function () {
         $('.filter-badge-input').removeClass('show');
@@ -1286,7 +1294,6 @@ function changeCompany() {
             company = $(this).val();
 
             updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
-
             updateReports();
         }
     });
