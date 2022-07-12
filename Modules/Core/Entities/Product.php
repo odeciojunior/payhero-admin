@@ -48,6 +48,10 @@ class Product extends Model
     const TYPE_PHYSICAL = 1;
     const TYPE_DIGITAL = 2;
 
+    const STATUS_ENUM_ANALYZING = 1;
+    const STATUS_ENUM_APPROVED = 2;
+    const STATUS_ENUM_REFUSED = 3;
+
     /**
      * @var array
      */
@@ -177,6 +181,11 @@ class Product extends Model
      */
     public function variants()
     {
-        return $this->hasMany(Product::class, 'shopify_id', 'shopify_id');
+        return $this->hasMany(Product::class, 'shopify_id', 'shopify_id')
+            ->where(function ($query) {
+                $query->where('type_enum', Product::TYPE_PHYSICAL)
+                    ->orWhere('type_enum', Product::TYPE_DIGITAL)
+                    ->where('status_enum', Product::STATUS_ENUM_APPROVED);
+            });
     }
 }

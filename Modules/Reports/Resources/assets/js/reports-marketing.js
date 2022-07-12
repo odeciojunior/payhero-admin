@@ -404,15 +404,13 @@ function getProjects() {
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        $("#card-origin .ske-load").show();
-        $('.origin-report').hide();
-
         $.ajaxQ.abortAll();
 
         if (company !== $(this).val()) {
             company = $(this).val();
 
             updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+
             updateReports();
         }
     });
@@ -420,10 +418,12 @@ function changeCompany() {
 
 function changeOrigin() {
     $("#origin").on("change", function () {
-        $("#card-origin .ske-load").show();
-        $('.origin-report').hide();
-
         if (origin !== $(this).val()) {
+            $("#card-origin .ske-load").show();
+            $('.origin-report').hide();
+
+            origin = $(this).val();
+
             $("#origin").val($(this).val());
             loadOrigins();
         }
@@ -861,6 +861,8 @@ function loadBrazilMap() {
     $('.state path').css({ fill: '#F1F1F1', stroke: '#F1F1F1' });
     $('.state text').css({ fill: '#F1F1F1' });
     $(".state").addClass('skeleton');
+
+    $('[data-toggle="tooltip"]').tooltip({container: '.box-states'});
 
     let noData = `
         <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">

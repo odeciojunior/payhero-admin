@@ -253,7 +253,7 @@
 												<div class="card-body card-origin">
                                                     <div class="content-info">
                                                         <div class="row">
-                                                            <div class="ske-load">
+                                                            <div class="ske-load" style="top: 40%;">
                                                                 <div class="px-20 py-0">
                                                                     <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                                                 </div>

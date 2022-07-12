@@ -30,13 +30,14 @@ class ReportFinanceService
                                         ->where('sales.project_id', $projectId)
                                         ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
                                         ->whereNull('transactions.invitation_id')
-                                        ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ]);
+                                        ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ])
+                                        ->whereNull('invitation_id');
 
             if ($transactions->count() == 0) {
                 return null;
             }
 
-                                        $date['startDate'] = $dateRange[0];
+            $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
 
             if ($date['startDate'] == $date['endDate']) {
@@ -202,6 +203,7 @@ class ReportFinanceService
             }
         }
 
+        $total = $transactions->sum('value');
         $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
@@ -216,8 +218,6 @@ class ReportFinanceService
 
             array_push($comissionData, $comissionDataValue);
         }
-
-        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -264,6 +264,7 @@ class ReportFinanceService
             }
         }
 
+        $total = $transactions->sum('value');
         $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
@@ -280,8 +281,6 @@ class ReportFinanceService
             }
             array_push($comissionData, $comissionDataValue);
         }
-
-        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -328,6 +327,7 @@ class ReportFinanceService
             }
         }
 
+        $total = $transactions->sum('value');
         $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
@@ -344,8 +344,6 @@ class ReportFinanceService
             }
             array_push($comissionData, $comissionDataValue);
         }
-
-        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -386,6 +384,7 @@ class ReportFinanceService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
+        $total = $transactions->sum('value');
         $resume = $transactions->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))->get();
 
         $comissionData = [];
@@ -399,8 +398,6 @@ class ReportFinanceService
             }
             array_push($comissionData, $comissionDataValue);
         }
-
-        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -1471,7 +1468,6 @@ class ReportFinanceService
     public function getFinancesWithdrawals()
     {
         $cacheName = 'withdrawals-data-';
-        cache()->forget($cacheName);
         return cache()->remember($cacheName, 300, function() {
             date_default_timezone_set('America/Sao_Paulo');
 

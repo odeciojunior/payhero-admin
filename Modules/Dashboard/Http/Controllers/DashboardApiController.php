@@ -2,37 +2,36 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
-use Exception;
+use App\Console\Commands\UpdateUserAchievements;
+use App\Console\Commands\UpdateUserLevel;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
+use Exception;
 use Illuminate\Http\Request;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Ticket;
-use Modules\Core\Entities\Product;
-use Modules\Core\Entities\Company;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Jenssegers\Agent\Facades\Agent;
-use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Cashback;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\DashboardNotification;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\AchievementService;
+use Modules\Core\Services\BenefitsService;
+use Modules\Core\Services\ChargebackService;
+use Modules\Core\Services\CompanyBalanceService;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
-use Modules\Core\Services\UserService;
-use Spatie\Activitylog\Models\Activity;
-use Modules\Core\Services\Reports\ReportService;
-use App\Console\Commands\UpdateUserLevel;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\TrackingService;
-use Modules\Core\Services\ChargebackService;
-use Modules\Core\Services\AchievementService;
-use Symfony\Component\HttpFoundation\Response;
-use Modules\Core\Entities\DashboardNotification;
-use Modules\Core\Services\CompanyBalanceService;
-use App\Console\Commands\UpdateUserAchievements;
+use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
+use Symfony\Component\HttpFoundation\Response;
+use Vinkla\Hashids\Facades\Hashids;
 
 class DashboardApiController extends Controller
 {
@@ -288,16 +287,16 @@ class DashboardApiController extends Controller
             $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackService = new ChargebackService();
-            $totalChargeback = $chargebackService->getTotalChargebacksInPeriod($user, $startDate);
+            $totalContestations = $chargebackService->getTotalContestationsInPeriod($user, $startDate, $endDate);
 
             $saleService = new SaleService();
             $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
-
+            $contestationsRate = $totalApprovedSales ? round(($totalContestations / $totalApprovedSales) * 100, 2) : 0;
             return [
                 'chargeback_score'       => $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
-                'chargeback_rate'        => $user->chargeback_rate ?? "0.00%",
+                'chargeback_rate'        => $contestationsRate ?? "0.00%",
                 'total_sales_approved'   => $totalApprovedSales ?? 0,
-                'total_sales_chargeback' => $totalChargeback ?? 0,
+                'total_sales_chargeback' => $totalContestations ?? 0,
             ];
         } catch (Exception $e) {
             report($e);

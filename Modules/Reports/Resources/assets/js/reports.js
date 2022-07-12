@@ -19,19 +19,18 @@ $(function () {
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
+
     }
 });
 
 let resumeUrl = '/api/reports/resume';
 
 let company = '';
-let date = '';
+let data = '';
+let origin = 'src';
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        $("#card-origin .ske-load").show();
-        $('.origin-report').hide();
-
         $.ajaxQ.abortAll();
 
         if (company !== $(this).val()) {
@@ -40,8 +39,6 @@ function changeCompany() {
             updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
             updateReports();
         }
-
-        $(".data-pie ul li").remove();
     });
 }
 
@@ -61,20 +58,6 @@ function changeCalendar() {
                 $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
                 $('input[name="daterange"]').val(`${startDate}-${endDate}`);
             }
-        }
-    })
-    .on('datepicker-change', function () {
-        $("#card-origin .ske-load").show();
-        $('.origin-report').hide();
-
-        $.ajaxQ.abortAll();
-
-        if (date !== $(this).val()) {
-            date = $(this).val();
-
-            updateStorage({calendar: $(this).val()});
-
-            updateReports();
         }
     })
     .on('datepicker-open', function () {
@@ -139,11 +122,12 @@ function getProjects() {
 
 function changeOrigin() {
     $("#origin").on("change", function () {
-        $("#card-origin .ske-load").show();
-        $('.origin-report').hide();
+        if (origin !== $(this).val()) {
+            origin = $(this).val();
 
-        $("#origin").val($(this).val());
-        updateSalesByOrigin();
+            $("#origin").val($(this).val());
+            updateSalesByOrigin();
+        }
     });
 }
 
@@ -165,7 +149,7 @@ function updateReports() {
         $('.sirius-select-container').removeClass('disabled');
     })
     .catch(() => {
-
+        $('.sirius-select-container').removeClass('disabled');
     });
 }
 
@@ -845,6 +829,9 @@ function loadReports() {
 }
 
 function updateSalesByOrigin() {
+    $("#card-origin .ske-load").show();
+    $('.origin-report').hide();
+
     let td = `
         <table class="table-vendas table table-striped "style="width:100%; height: 100%; margin: auto;">
             <tbody>

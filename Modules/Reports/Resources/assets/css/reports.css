@@ -2448,6 +2448,34 @@ h4.number{
     .margin-store { margin-right: 1.0715rem !important; }
 }
 
-.box-withdraw {
-    height: 275px;
+.box-withdraw { height: 275px; }
+
+.know-more {
+    background: #F4F6FB;
+    border-radius: 8px;
+    width: 108px;
+    height: 34px;
+    cursor: pointer;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
 }
+.know-more svg {
+    border-radius: 100%;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #2E85EC;
+    margin-top: 2px;
+}
+
+.know-more em svg {
+    border: 0;
+    border-radius: 0;
+    width: 71px;
+    height: 12px;
+    margin: 0;
+}
+
+.bs-tooltip-top .arrow { bottom: 4px !important; }

@@ -477,7 +477,6 @@ class ReportSaleService
     public function getResumeProducts($filters)
     {
         $cacheName = 'products-resume-'.json_encode($filters);
-        cache()->forget($cacheName);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $projectId = hashids_decode($filters['project_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
