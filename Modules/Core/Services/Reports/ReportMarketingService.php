@@ -385,27 +385,24 @@ class ReportMarketingService
                 DB::raw('
                     ip_state as region,
                     COUNT(*) as access,
-                    COUNT(DISTINCT CASE WHEN status_enum in (4, 3) then id end) as conversion
+                    COUNT(CASE WHEN status_enum in (4, 3) then 1 end) as conversion
                 ')
             )
             ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
             ->where('checkouts.project_id', $projectId)
             ->whereNotNull('checkouts.ip_state')
             ->groupBy('region')
+            ->having('conversion', '>', 0)
+            ->orderBy('conversion', 'desc')
             ->get()
             ->toArray();
 
-            $total = 0;
-            foreach($regions as $region)
-            {
-                $total += $region['access'] + $region['conversion'];
+            foreach($regions as &$region) {
+                $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $region['access'], 2, '.', ','), 1, PHP_ROUND_HALF_UP);
             }
 
-            foreach($regions as &$region)
-            {
-                $region['percentage_access'] = round(number_format(($region['access'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
-                $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
-            }
+            $percentageConversion = array_column($regions, 'percentage_conversion');
+            array_multisort($percentageConversion, SORT_DESC, $regions);
 
             return $regions;
         });
