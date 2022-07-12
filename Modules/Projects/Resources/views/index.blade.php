@@ -69,9 +69,9 @@
         </div>
 
         <div class="modal fade" id="new-store-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content rounded">
-                    <div class="d-flex flex-row-reverse simple-border-bottom px-20">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 450px">
+                <div class="modal-content" style="border-radius: 8px;">
+                    <div class="d-flex flex-row-reverse simple-border-bottom py-10 px-20">
                         <h4 class="new-store-modal-option-title text-center">Criar nova loja</h4>
                         <button type="button" class="new-store-modal-option-close-btn" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
