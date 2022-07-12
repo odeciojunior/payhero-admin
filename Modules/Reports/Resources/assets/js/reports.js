@@ -210,7 +210,7 @@ function getCashback() {
             //     ${variation.value}
             // </em>
 
-            if(response.data > 0) {
+            if(response.data.count > 0) {
                 let { chart, count, total, variation } = response.data;
 
                 cashHtml = `
@@ -554,6 +554,12 @@ function getCoupons() {
             let { coupons, total } = response.data;
 
             if(total > 0) {
+                cuponsHtml = `
+                    <div class="container d-flex justify-content-between box-donut">
+                        <div class="new-graph-pie graph" style="height: 117px;"></div>
+                        <div class="data-pie data-coupon"><ul></ul></div>
+                    </div>
+                `;
                 $("#block-coupons").html(cuponsHtml);
                 $('.new-graph-pie').html('<div class=graph-pie></div>');
                 let arr = [];
@@ -763,7 +769,7 @@ function getRegions() {
                 regionsHtml = `
                     <footer class="container footer-regions">
                         <section class="box-total-region">
-                            <dl class="states"></dl>
+                            <ul class="states"></ul>
                             <div class="new-graph-regions graph">
                             </div>
                             <div class="info-regions">
@@ -791,15 +797,17 @@ function getRegions() {
                 });
 
                 for(let i = 0; i < regionArr.length; i++) {
-                    conversionArr.push(regionArr[i].conversion);
+                    conversionArr.push(regionArr[i].percentage_conversion);
                     accessArr.push(regionArr[i].access);
                     statesArr.push(regionArr[i].region);
 
-                    $(".conversion-colors").append(`<li>${regionArr[i].conversion}%</li>`);
-                    $(".states").append(`<dt>${regionArr[i].region}</dt>`);
+                    $(".conversion-colors").append(`<li>${regionArr[i].percentage_conversion}%</li>`);
+                    $(".states").append(`<li>${regionArr[i].region}</li>`);
                 }
 
+                accessArr = new Array(statesArr.length).fill(100);
                 $(".new-graph-regions").height($('.conversion-colors').height());
+                $(".states").height($('.conversion-colors').height());
                 $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
 
                 graphRegions(statesArr, conversionArr, accessArr);

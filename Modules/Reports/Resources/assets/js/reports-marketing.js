@@ -204,7 +204,7 @@ function loadCoupons() {
         success: function success(response) {
             let { coupons, total } = response.data;
 
-            if( total != 0 ) {
+            if( total > 0 ) {
                 cuponsHtml = `
                     <div class="container d-flex justify-content-between box-donut">
                         <div class="new-graph-pie graph" style="height: 117px;"></div>
@@ -223,34 +223,35 @@ function loadCoupons() {
                 for(let i = 0; i < arr.length; i++) {
                     if(arr[i].amount != undefined) {
                         seriesArr.push(arr[i].amount);
-                            $('.data-pie ul').append(
-                                `
-                                    <li>
-                                        <div class="donut-pie ${arr[i].color}">
-                                            <figure>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
-                                                </svg>
-                                            </figure>
-                                            <div>${arr[i].coupon}</div>
-                                        </div>
-                                        <div class="grey bold">${arr[i].amount}</div>
-                                    </li>
-                                `
-                            );
+                        $('.data-pie ul').append(
+                            `
+                                <li>
+                                    <div class="donut-pie ${arr[i].color}">
+                                        <figure>
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
+                                            </svg>
+                                        </figure>
+                                        <div>${arr[i].coupon}</div>
+                                    </div>
+                                    <div class="grey bold">${arr[i].amount}</div>
+                                </li>
+                            `
+                        );
+                        removeDuplcateItem('.data-pie li');
                     }
                 }
-                    new Chartist.Pie('.graph-pie',
-                    { series: seriesArr },
-                    {
-                        donut: true,
-                        donutWidth: 20,
-                        donutSolid: true,
-                        startAngle: 270,
-                        showLabel: false,
-                        chartPadding: 0,
-                        labelOffset: 0,
-                    });
+                new Chartist.Pie('.graph-pie',
+                { series: seriesArr },
+                {
+                    donut: true,
+                    donutWidth: 20,
+                    donutSolid: true,
+                    startAngle: 270,
+                    showLabel: false,
+                    chartPadding: 0,
+                    labelOffset: 0,
+                });
 
             } else {
                 $("#block-coupons").html(cuponsHtml);
@@ -902,7 +903,7 @@ function loadBrazilMap() {
                 let noData = `
                 <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
                     <div>
-                        <img src=${$("#origins-table").attr("img-empty")}>
+                        ${noWithdrawal}
                     </div>
                     <div class="px-10">
                         <p class='no-data-origin'>
