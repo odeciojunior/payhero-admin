@@ -2,15 +2,15 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
-  
-    
+
+
     showBonusBalance()
-    
+
     $('.bonus-balance-button').on('click', function() {
         $('body').addClass('bonus-modal-opened');
         $('#bonus-balance-modal').fadeToggle('slow', 'linear');
     })
-    
+
 
     $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
         e.preventDefault();
@@ -1410,6 +1410,7 @@ function initSiriusSelect(target) {
     let $target = $(target);
     let classes = Array.from(target[0].classList).filter(e => e !== 'sirius-select').join(' ');
     $target.removeClass(classes);
+    if($target.is(':disabled')) classes += ' disabled';
     $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
     $target.hide();
     $target.after(`<div class="sirius-select-options"></div>`);
@@ -1640,15 +1641,15 @@ function buildModalBonusBalance(bonusObject) {
                         </svg>
                     </span>
                 </div>
-                
+
 
                 <h3 class="bonus-title"><span id="bonus-username">${userName || 'Olá!'}</span>, aqui está seu <b>desconto!</b></h3>
 
                 <p>
                     Você tentou sua sorte e conseguiu <span id="total-bonus-balance" class="bold">${totalBalance}</span> em
-                    desconto nas taxas de suas vendas. Obrigado pela 
-                    sua visita no nosso estande no Afiliados Brasil. 
-                    Que esse seja o início de uma lucrativa parceria! 
+                    desconto nas taxas de suas vendas. Obrigado pela
+                    sua visita no nosso estande no Afiliados Brasil.
+                    Que esse seja o início de uma lucrativa parceria!
                 </p>
 
 
@@ -1668,7 +1669,7 @@ function buildModalBonusBalance(bonusObject) {
 
                 <div class="bonus-numbers d-flex align-items-start ml-5">
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">    
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">
                         <div>
                             <h4 class="bonus-number-title">
                                 Você ganhou
@@ -1688,7 +1689,7 @@ function buildModalBonusBalance(bonusObject) {
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">    
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">
                         <div>
                             <h4 class="bonus-number-title">
                                 Você já utilizou
@@ -1709,7 +1710,7 @@ function buildModalBonusBalance(bonusObject) {
 
                 </div>
             </div>
-            
+
             <span class="bonus-slogan">O seu sucesso é o <b>nosso combustível!</b>🚀</span>
         </div>
         `;
@@ -1724,7 +1725,7 @@ function buildModalBonusBalance(bonusObject) {
         // <div class="bonus-balance-history">
         //     <button class="orange-link back-button" onclick="toggleBonusContent()">
         //         <i class="material-icons">arrow_back</i> Voltar
-        //     </button>    
+        //     </button>
         //     <div class="d-flex">
         //         <h3 class="bonus-title d-flex align-items-center">
         //             <i class="material-icons">history</i> Histórico de descontos
@@ -1750,8 +1751,8 @@ function buildModalBonusBalance(bonusObject) {
         // </div>
         // `;
 
-    
-    
+
+
     $('.bonus-balance-container').html(content);
     mkChartRender();
 
@@ -1770,9 +1771,9 @@ const toggleBonusContent = function() {
 
 function showBonusBalance() {
 
-    if(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance')) {        
+    if(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance')) {
         var bonus_balance = JSON.parse(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance'));
-        
+
         $('#total-bonus-balance').html(bonus_balance.current_bonus);
 
         buildModalBonusBalance(bonus_balance);
@@ -1791,15 +1792,15 @@ function showBonusBalance() {
                 'Accept': 'application/json',
             },
             error: response => {
-                
+
             },
             success: response => {
-                
+
                 if(response.error) {
                     return;
                 }
                 setCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance', 0.083, response);
-                
+
 
                 $('#total-bonus-balance').html(response.current_bonus)
 
@@ -1842,13 +1843,13 @@ const loadSkeletonBonus = `
 
                 <div class="d-flex align-items-center">
                     <div class="bonus-circle-chart">
-                        <div class="skeleton skeleton-circle" style="width: 100px; height: 100px;"> 
+                        <div class="skeleton skeleton-circle" style="width: 100px; height: 100px;">
                         </div>
                     </div>
 
                     <div class="bonus-numbers d-flex flex-column">
 
-                        <div class="d-flex justify-content-between">    
+                        <div class="d-flex justify-content-between">
                             <div style="margin-right: 15px; width: 90px">
                                 <h4 class="bonus-number-title">
                                     <div class="skeleton skeleton-p" style="width: 60px; height: 15px;"></div>
@@ -1869,7 +1870,7 @@ const loadSkeletonBonus = `
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-between">    
+                        <div class="d-flex justify-content-between">
                             <div style="margin-right: 15px; width: 90px">
                                 <h4 class="bonus-number-title">
                                     <div class="skeleton skeleton-p" style="width: 60px; height: 15px;"></div>
@@ -1891,7 +1892,7 @@ const loadSkeletonBonus = `
 
                     </div>
                 </div>
-                
+
                 <div class="skeleton skeleton-p" style="width: 60%; margin-top: 10px"></div>
             </div>
             `;
