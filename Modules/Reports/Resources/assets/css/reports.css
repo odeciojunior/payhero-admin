@@ -252,8 +252,8 @@ h4.number{
 
 .coupons-btn {
     padding: 14px 15px;
-    margin-top: 27px !important; 
-    height: 44px; 
+    margin-top: 27px !important;
+    height: 44px;
     line-height: 19px;
 }
 
@@ -2448,8 +2448,8 @@ h4.number{
 }
 
 @media(min-width: 992px) {
-    .margin-store { 
-        margin-right: 1.0715rem !important; 
+    .margin-store {
+        margin-right: 1.0715rem !important;
         padding: 0 !important;
     }
 }
@@ -2496,4 +2496,8 @@ h4.number{
 }
 #date-filter[disabled="disabled"]:hover {
     border-color: #e0e7ee !important;
+}
+
+#brazil-map-filter .disabled {
+    opacity: 0.5;
 }

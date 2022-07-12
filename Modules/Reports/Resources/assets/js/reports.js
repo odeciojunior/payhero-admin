@@ -139,10 +139,23 @@ function getProjects() {
 function changeOrigin() {
     $("#origin").on("change", function () {
         if (origin !== $(this).val()) {
+            $('.sirius-select-container').addClass('disabled');
+            $('input[name="daterange"]').attr('disabled', 'disabled');
+
             origin = $(this).val();
 
             $("#origin").val($(this).val());
-            updateSalesByOrigin();
+            Promise.all([
+                updateSalesByOrigin()
+            ])
+            .then(() => {
+                $('.sirius-select-container').removeClass('disabled');
+                $('input[name="daterange"]').removeAttr('disabled');
+            })
+            .catch(() => {
+                $('.sirius-select-container').removeClass('disabled');
+                $('input[name="daterange"]').removeAttr('disabled');
+            });
         }
     });
 }

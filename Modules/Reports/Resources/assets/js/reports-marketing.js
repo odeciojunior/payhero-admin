@@ -7,16 +7,12 @@ $(function() {
     changeCompany();
     changeCalendar();
     changeOrigin();
+    changeMap();
 
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
     }
-
-    $("input[name='brazil_map_filter']").on("change", function(){
-        $('.back-list').trigger('click');
-        loadBrazilMap();
-    });
 });
 
 let resumeUrl = '/api/reports/resume';
@@ -25,6 +21,33 @@ let mktUrl = '/api/reports/marketing';
 let company = '';
 let date = '';
 let origin = 'src';
+
+function changeMap() {
+    $("input[name='brazil_map_filter']").on("change", function() {
+        $('.back-list').trigger('click');
+
+        $('.sirius-select-container').addClass('disabled');
+        $('input[name="daterange"]').attr('disabled', 'disabled');
+        $('#brazil-map-filter').addClass('disabled');
+        $('#brazil-map-filter').find('input').attr('disabled', 'disabled');
+
+        Promise.all([
+            loadBrazilMap()
+        ])
+        .then(() => {
+            $('.sirius-select-container').removeClass('disabled');
+            $('input[name="daterange"]').removeAttr('disabled', 'disabled');
+            $('#brazil-map-filter').removeClass('disabled');
+            $('#brazil-map-filter').find('input').removeAttr('disabled', 'disabled');
+        })
+        .catch(() => {
+            $('.sirius-select-container').removeClass('disabled');
+            $('input[name="daterange"]').removeAttr('disabled', 'disabled');
+            $('#brazil-map-filter').removeClass('disabled');
+            $('#brazil-map-filter').find('input').removeAttr('disabled', 'disabled');
+        });
+    });
+}
 
 function loadOrigins(link = null) {
     var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -411,7 +434,6 @@ function changeCompany() {
             company = $(this).val();
 
             updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
-
             updateReports();
         }
     });
@@ -420,13 +442,29 @@ function changeCompany() {
 function changeOrigin() {
     $("#origin").on("change", function () {
         if (origin !== $(this).val()) {
-            $("#card-origin .ske-load").show();
-            $('.origin-report').hide();
+            $('.sirius-select-container').addClass('disabled');
+            $('input[name="daterange"]').attr('disabled', 'disabled');
+            $('#brazil-map-filter').addClass('disabled');
+            $('#brazil-map-filter').find('input').attr('disabled', 'disabled');
 
             origin = $(this).val();
 
             $("#origin").val($(this).val());
-            loadOrigins();
+            Promise.all([
+                loadOrigins()
+            ])
+            .then(() => {
+                $('.sirius-select-container').removeClass('disabled');
+                $('input[name="daterange"]').removeAttr('disabled');
+                $('#brazil-map-filter').removeClass('disabled');
+                $('#brazil-map-filter').find('input').removeAttr('disabled');
+            })
+            .catch(() => {
+                $('.sirius-select-container').removeClass('disabled');
+                $('input[name="daterange"]').removeAttr('disabled');
+                $('#brazil-map-filter').removeClass('disabled');
+                $('#brazil-map-filter').find('input').removeAttr('disabled');
+            });
         }
     });
 }
@@ -765,6 +803,7 @@ function changeCalendar() {
 function updateReports() {
     $('.sirius-select-container').addClass('disabled');
     $('input[name="daterange"]').attr('disabled', 'disabled');
+    $('#brazil-map-filter').addClass('disabled');
     $('#brazil-map-filter').find('input').attr('disabled', 'disabled');
 
     Promise.all([
@@ -780,11 +819,13 @@ function updateReports() {
     .then(() => {
         $('.sirius-select-container').removeClass('disabled');
         $('input[name="daterange"]').removeAttr('disabled');
+        $('#brazil-map-filter').removeClass('disabled');
         $('#brazil-map-filter').find('input').removeAttr('disabled');
     })
     .catch(() => {
         $('.sirius-select-container').removeClass('disabled');
         $('input[name="daterange"]').removeAttr('disabled');
+        $('#brazil-map-filter').removeClass('disabled');
         $('#brazil-map-filter').find('input').removeAttr('disabled');
     });
 }
@@ -927,20 +968,19 @@ function loadBrazilMap() {
             let maxValue = null;
             $.each(response.data, function(i, data){
                 if(maxValue == null) {
-                    if($("input[name='brazil_map_filter']:checked").val() == 'density'){
+                    if($("input[name='brazil_map_filter']:checked").val() == 'density') {
                         maxValue = data.percentage;
-                    }
-                    else{
+                    } else {
                         maxValue = onlyNumbers(data.value);
                     }
                 }
 
-                if($("input[name='brazil_map_filter']:checked").val() == 'density'){
+                if($("input[name='brazil_map_filter']:checked").val() == 'density') {
                     setCustomMapCss('#state-' + data.state, maxValue, data.percentage);
-                }
-                else {
+                } else {
                     setCustomMapCss('#state-' + data.state, maxValue, onlyNumbers(data.value));
                 }
+
                 appendStateDataToStateList(data, i + 1);
             });
         }

@@ -6,15 +6,12 @@ $(function() {
 
     changeCompany();
     changeCalendar();
+    changeSaleStatus();
 
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
     }
-
-    $("#status-graph").on('change', function() {
-        salesStatus($(this).find('option:selected').val());
-    });
 });
 
 let salesUrl = '/api/reports/sales';
@@ -22,6 +19,30 @@ let mktUrl = '/api/reports/marketing';
 
 let company = '';
 let date = '';
+let sales_status = '';
+
+function changeSaleStatus() {
+    $("#status-graph").on('change', function() {
+        if (sales_status !== $(this).val()) {
+            sales_status = $(this).val();
+
+            $('.sirius-select-container').addClass('disabled');
+            $('input[name="daterange"]').attr('disabled', 'disabled');
+
+            Promise.all([
+                salesStatus($(this).find('option:selected').val())
+            ])
+            .then(() => {
+                $('.sirius-select-container').removeClass('disabled');
+                $('input[name="daterange"]').removeAttr('disabled', 'disabled');
+            })
+            .catch(() => {
+                $('.sirius-select-container').removeClass('disabled');
+                $('input[name="daterange"]').removeAttr('disabled', 'disabled');
+            });
+        }
+    });
+}
 
 function getProjects() {
     $.ajax({
