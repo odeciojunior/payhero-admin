@@ -435,4 +435,12 @@ class ContestationService
 
     }
 
+    public static function getprojectsWithContestations(){
+        return Sale::select('sales.project_id')
+            ->distinct()
+            ->leftjoin('sale_contestations','sale_contestations.sale_id','sales.id')
+            ->where('sales.owner_id',auth()->user()->account_owner_id)
+            ->whereIn('sale_contestations.status',[1,2,3])
+            ->get();
+    }
 }

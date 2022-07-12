@@ -849,4 +849,40 @@ class ReportsApiController extends Controller
             return response()->json(['message' => 'Erro ao obter lista de motivos de bloqueio'], 400);
         }
     }
+
+    public static function getProjectsWithCheckouts(){
+        $projects = ReportService::getProjectsWithCheckouts();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
+
+    public static function getProjectsWithCoupons(){
+        $projects = ReportService::getProjectsWithCoupons();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
+
+    public static function getProjectsWithPendingBalance(){
+        $projects = ReportService::getProjectsWithPendingBalance();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
+
+    public static function getProjectsWithBlockedBalance(){
+        $projects = ReportService::getProjectsWithBlockedBalance();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
 }

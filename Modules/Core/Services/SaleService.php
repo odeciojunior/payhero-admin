@@ -817,7 +817,7 @@ class SaleService
                 $companyId = Hashids::decode($filters["company"]);
                 $transactions->where('company_id', $companyId);
             }
-    
+
             if (empty($filters["invite"])) {
                 $transactions->whereNull('invitation_id');
             }
@@ -1261,5 +1261,13 @@ class SaleService
         $refundDate = $transaction->sale->saleLogs()->whereIn('status_enum', [Sale::STATUS_REFUNDED, Sale::STATUS_BILLET_REFUNDED])->first()->created_at;
 
         return PDF::loadView('sales::refund_receipt', compact('company', 'transaction', 'saleInfo', 'checkoutConfigs', 'productsPlansSales', 'refundDate'));
+    }
+
+    public static function getProjectsWithSales(){
+        return Sale::select('sales.project_id')
+            ->distinct()
+            ->leftjoin('projects','projects.id','sales.project_id')
+            ->where('owner_id',auth()->user()->account_owner_id)
+            ->get();
     }
 }

@@ -473,4 +473,13 @@ class SalesRecoveryApiController extends Controller
 
         return SalesRecoveryCardRefusedResource::collection($sales);
     }
+
+    public function getProjectsWithRecovery(){
+        $projects = SalesRecoveryService::getProjectsWithRecovery();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
 }

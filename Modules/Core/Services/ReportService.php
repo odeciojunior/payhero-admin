@@ -6,16 +6,18 @@ use Carbon\Carbon;
 use Exception;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Sale;
-use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
-use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Checkout;
-use Illuminate\Support\Facades\Auth;
-use Modules\Reports\Transformers\SalesByOriginResource;
+use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\Pe;
 use Modules\Core\Entities\Transaction;
+use Modules\Reports\Transformers\SalesByOriginResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ReportService
 {
@@ -1162,5 +1164,41 @@ class ReportService
                     'message' => 'Não foi possível verificar todos os valores totais de venda'
                 ];
         }
+    }
+
+    public static function getProjectsWithCheckouts(){
+        return Checkout::select('checkouts.project_id')
+            ->distinct()
+            ->leftjoin('checkout_configs','checkout_configs.project_id','checkouts.project_id')
+            ->join('companies','companies.id','checkout_configs.company_id')
+            ->where('companies.user_id',auth()->user()->account_owner_id)
+            ->get();
+    }
+
+    public static function getProjectsWithCoupons(){
+        return DiscountCoupon::select('discount_coupons.project_id')
+            ->distinct()
+            ->leftjoin('checkout_configs','checkout_configs.project_id','discount_coupons.project_id')
+            ->join('companies','companies.id','checkout_configs.company_id')
+            ->where('companies.user_id',auth()->user()->account_owner_id)
+            ->get();
+    }
+
+    public static function getProjectsWithPendingBalance(){
+        return Sale::select('sales.project_id')
+            ->distinct()
+            ->leftjoin('transactions','transactions.sale_id','sales.id')
+            ->where('transactions.user_id',auth()->user()->account_owner_id)
+            ->where('transactions.STATUS','pending')
+            ->get();
+    }
+
+    public static function getProjectsWithBlockedBalance(){
+        return Sale::select('sales.project_id')
+            ->distinct()
+            ->leftjoin('block_reason_sales','block_reason_sales.sale_id','sales.id')
+            ->where('sales.owner_id',auth()->user()->account_owner_id)
+            ->where('block_reason_sales.status',1)
+            ->get();
     }
 }

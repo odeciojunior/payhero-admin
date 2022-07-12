@@ -25,4 +25,6 @@ Route::group(
         Route::get('/{contestation_id}/contestation', 'ContestationsApiController@show')
             ->name('contestations.show')->middleware('permission:contestations_manage');
 
+        Route::get('/projects-with-contestations', 'ContestationsApiController@getProjectsWithContestations');
+
     });

@@ -537,4 +537,13 @@ class SalesApiController extends Controller
         }
     }
 
+    public function getProjectsWithSales(){
+        $projects = SaleService::getProjectsWithSales();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
+
 }

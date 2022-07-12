@@ -18,12 +18,30 @@ $('#company-navbar').change(function () {
 $(document).ready(function () {
 
     window.fillProjectsSelect = function(data){
-        $.each(data, function (c, company) {
-            //if( data2.company_default == company.id){
-                $.each(company.projects, function (i, project) {
-                    $("#project").append($("<option>", {value: project.id,text: project.name,}));
-                });
-            //}
+        $.ajax({
+            method: "GET",
+            url: "/api/recovery/projects-with-recovery",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('error')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                //if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        if( dataSales.includes(project.id) )
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                    });
+                //}
+            });
         });
     }
 

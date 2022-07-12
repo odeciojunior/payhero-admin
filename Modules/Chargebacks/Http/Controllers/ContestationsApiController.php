@@ -62,7 +62,7 @@ class ContestationsApiController extends Controller
 
             $contestationService = new ContestationService();
             $chargebackService = new ChargebackService();
-            
+
             $totalContestationValue = $contestationService->getTotalValueContestations($requestValidated);
             $totalSalesApproved = $contestationService->getTotalApprovedSales($requestValidated);
             $totalContestations = $contestationService->getTotalContestations($requestValidated);
@@ -219,4 +219,12 @@ class ContestationsApiController extends Controller
 
     }
 
+    public function getProjectsWithContestations(){
+        $projects = ContestationService::getProjectsWithContestations();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
 }

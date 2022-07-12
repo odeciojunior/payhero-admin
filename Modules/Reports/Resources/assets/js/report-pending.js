@@ -263,17 +263,36 @@ $(document).ready(function () {
     });
 
     window.fillProjectsSelect = function(data){
-        $.each(data, function (c, company) {
-            $.each(company.projects, function (i, project) {
-                $("#project").append($("<option>", {value: project.id,text: project.name,}));
+        $.ajax({
+            method: "GET",
+            url: "/api/reports/projects-with-pending-balance",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                $.each(company.projects, function (i, project) {
+                    if( dataSales.includes(project.id) )
+                        $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                });
             });
         });
     }
 
     window.getCompanies = function(data,loading='y') {
-        if(loading=='y')
+        if(loading=='y'){
             loadingOnScreen();
-
+            window.fillProjectsSelect(data.companies)
+        }
         $.ajax({
             method: "GET",
             //url: '/api/projects?select=true',
@@ -308,7 +327,6 @@ $(document).ready(function () {
     }
 
     function getProjects(data) {
-        window.fillProjectsSelect(data.companies)
         $("#project-empty").hide();
         $("#project-not-empty").show();
         $("#export-excel").show()

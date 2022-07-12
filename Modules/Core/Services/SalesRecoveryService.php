@@ -4,21 +4,21 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\View\View;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Customer;
-use Modules\Core\Entities\Domain;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Checkout;
-use Illuminate\Contracts\View\Factory;
-use Modules\Core\Entities\UserProject;
-use Modules\Core\Entities\Log as CheckoutLog;
-use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Log as CheckoutLog;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\UserProject;
+use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -322,15 +322,15 @@ class SalesRecoveryService
         {
             if($sale->payment_method === Sale::PIX_PAYMENT)
             {
-                $link.='/pix/' . Hashids::connection('sale_id')->encode($sale->id);                
-            }else {                
-                $link.= '/recovery/' . Hashids::encode($checkout->id);                
+                $link.='/pix/' . Hashids::connection('sale_id')->encode($sale->id);
+            }else {
+                $link.= '/recovery/' . Hashids::encode($checkout->id);
             }
 
         }else{
             $link = 'Domínio removido';
         }
-        
+
         $products = $saleService->getProducts($checkout->sale_id);
 
         $customer->document = FoxUtils::getDocument($customer->document);
@@ -347,6 +347,24 @@ class SalesRecoveryService
             'status' => $status,
             'link' => $link,
         ];
+    }
+
+    public static function getProjectsWithRecovery(){
+        $first = Sale::select('project_id')
+            ->distinct()
+            ->where('owner_id',auth()->user()->account_owner_id)
+            ->where('status',3);
+
+        $second = Checkout::select('checkouts.project_id')
+            ->distinct()
+            ->leftjoin('checkout_configs','checkout_configs.project_id','checkouts.project_id')
+            ->join('companies','companies.id','checkout_configs.company_id')
+            ->where('companies.user_id',auth()->user()->account_owner_id)
+            ->where('checkouts.status_enum',2)
+            ->union($first)
+            ->get();
+
+        return $second;
     }
 }
 

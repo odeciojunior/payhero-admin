@@ -37,6 +37,7 @@ Route::group(
         Route::get('/user-plans', 'SalesApiController@getPlans');
         Route::post('/set-observation/{transaction_id}', 'SalesApiController@setValueObservation')
         ->middleware('permission:sales_manage');
+        Route::get('/projects-with-sales', 'SalesApiController@getProjectsWithSales');
     }
 );
 Route::group([
