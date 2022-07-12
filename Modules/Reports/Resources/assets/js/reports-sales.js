@@ -1,7 +1,8 @@
 $(function() {
     loadingOnScreen();
     exportReports();
-    updateReports();
+
+    getProjects();
 
     changeCompany();
     changeCalendar();
@@ -18,6 +19,59 @@ $(function() {
 
 let salesUrl = '/api/reports/sales';
 let mktUrl = '/api/reports/marketing';
+
+let company = '';
+let date = '';
+
+function getProjects() {
+    $.ajax({
+        method: "GET",
+        url: "/api/projects?select=true",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            loadingOnScreenRemove();
+            $("#modal-content").hide();
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            if (!isEmpty(response.data)) {
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                $("#export-excel").show();
+
+                $.each(response.data, function (i, project) {
+                    $("#select_projects").append(
+                        $("<option>", {
+                            value: project.id,
+                            text: project.name,
+                        })
+                    );
+
+                    removeDuplcateItem("#select_projects option");
+                });
+
+                if(sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                }
+
+                company = $("#select_projects").val();
+
+                updateReports();
+            } else {
+                $("#export-excel").hide();
+                $("#project-not-empty").hide();
+                $("#project-empty").show();
+            }
+
+            loadingOnScreenRemove();
+        }
+    });
+}
 
 function barGraph(data, labels, total) {
     const titleTooltip = (tooltipItems) => {
@@ -411,7 +465,6 @@ function distribution() {
             }
         }
     });
-
 }
 
 function distributionGraph(series) {
@@ -531,7 +584,6 @@ function loadDevices() {
 }
 
 function typePayments() {
-    let url = "/api/reports/resume/type-payments?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val();
     let paymentsHtml = `
         <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
             <h4 id='products' class="font-size-24 bold grey">
@@ -587,7 +639,7 @@ function typePayments() {
 
     return $.ajax({
         method: "GET",
-        url,
+        url: "/api/reports/resume/type-payments?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -673,7 +725,7 @@ function loadFrequenteSales() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data.length > 0) {
+            if(response.data !== null) {
                 $.each(response.data, function (i, item) {
                     let value = removeMoneyCurrency(item.value);
                     let newV = formatCash(String(parseFloat(value)).replace('.',''));
@@ -1234,62 +1286,25 @@ function changeCompany() {
 }
 
 function updateReports() {
-    $('.onPreLoad *, .onPreLoadBig *').remove();
-    $('.onPreLoad').html(skeLoad);
-    $('.onPreLoadBig').html(skeLoadBig);
+    $('.sirius-select-container').addClass('disabled');
 
-    $.ajax({
-        method: "GET",
-        url: "/api/projects?select=true",
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            loadingOnScreenRemove();
-            $("#modal-content").hide();
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            if (!isEmpty(response.data)) {
-
-                $("#project-empty").hide();
-                $("#project-not-empty").show();
-                $("#export-excel").show();
-
-                $.each(response.data, function (i, project) {
-                    $("#select_projects").append(
-                        $("<option>", {
-                            value: project.id,
-                            text: project.name,
-                        })
-                    );
-                    removeDuplcateItem("#select_projects option");
-                });
-                if(sessionStorage.info) {
-                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-                }
-            } else {
-                $("#export-excel").hide();
-                $("#project-not-empty").hide();
-                $("#project-empty").show();
-            }
-
-            loadingOnScreenRemove();
-            $('.onPreLoad *').remove();
-            salesResume();
-            distribution();
-            loadDevices();
-            loadFrequenteSales();
-            abandonedCarts();
-            orderbump();
-            upsell();
-            infoCard();
-            //recurrence();
-            salesStatus();
-        }
+    Promise.all([
+        salesResume(),
+        distribution(),
+        loadDevices(),
+        loadFrequenteSales(),
+        abandonedCarts(),
+        orderbump(),
+        upsell(),
+        infoCard(),
+        //recurrence();
+        salesStatus(),
+    ])
+    .then(() => {
+        $('.sirius-select-container').removeClass('disabled');
+    })
+    .catch(() => {
+        $('.sirius-select-container').removeClass('disabled');
     });
 }
 
@@ -1563,8 +1578,7 @@ $.ajaxQ = (function(){
         return r;
       }
     };
-
-  })();
+})();
 
 let skeLoad = `
     <div class="ske-load">

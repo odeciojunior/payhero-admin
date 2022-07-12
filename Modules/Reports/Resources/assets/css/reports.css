@@ -2428,7 +2428,7 @@ h4.number{
     width: 100%;
 }
 
-.table-striped tbody tr:nth-of-type(2n+1) { height: 37px; }
+.table-striped tbody tr:nth-of-type(2n+1) { height: 51px; }
 .table-striped tbody tr:nth-of-type(2n+2) { height: 51px; }
 
 .table-vendas tbody td { color: #636363 !important; }

@@ -76,7 +76,7 @@ class ReportsMarketingApiController extends Controller
         catch(Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao obter vendas mais frequentes'], 400);
-        }            
+        }
     }
 
     public function getDevices(Request $request)
@@ -211,7 +211,11 @@ class ReportsMarketingApiController extends Controller
             $cacheName = 'origins-resume-'.json_encode($data);
             return cache()->remember($cacheName, 120, function() use ($orders, $data) {
                 if ($data['paginate'] === 'false') {
-                    return SalesByOriginResource::collection($orders->limit(10)->get());
+                    if ($data['limit'] == 'all') {
+                        return SalesByOriginResource::collection($orders->get());
+                    }
+
+                    return SalesByOriginResource::collection($orders->limit($data['limit'])->get());
                 }
 
                 return SalesByOriginResource::collection($orders->paginate(10));

@@ -668,7 +668,6 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
 $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').attr('overflow', 'hidden')
 
 function pagination(response, model, callback) {
-    console.log('here');
     let paginationContainer = "#pagination-" + model;
 
     $(paginationContainer).html("");

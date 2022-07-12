@@ -2,7 +2,7 @@ $(function() {
     loadingOnScreen();
     exportReports();
 
-    updateReports();
+    getProjects();
 
     changeCompany();
     changeCalendar();
@@ -11,11 +11,61 @@ $(function() {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
     }
-
 });
 
 let resumeUrl = '/api/reports/resume';
 let financesResumeUrl = '/api/reports/finances';
+
+function getProjects() {
+    $.ajax({
+        method: "GET",
+        url: "/api/projects?select=true",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            loadingOnScreenRemove();
+            $("#modal-content").hide();
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            if (!isEmpty(response.data)) {
+
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                $("#export-excel").show();
+
+                $.each(response.data, function (i, project) {
+                    $("#select_projects").append(
+                        $("<option>", {
+                            value: project.id,
+                            text: project.name,
+                        })
+                    );
+
+                    removeDuplcateItem("#select_projects option");
+                });
+
+                if(sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                }
+
+                company = $("#select_projects").val();
+
+                updateReports();
+            } else {
+                $("#export-excel").hide();
+                $("#project-not-empty").hide();
+                $("#project-empty").show();
+            }
+
+            loadingOnScreenRemove();
+        }
+    });
+}
 
 function distribution() {
     let distributionHtml = `
@@ -27,8 +77,9 @@ function distribution() {
             </div>
         </div>
     `;
+
     $('#card-distribution .onPreLoad *').remove();
-    $("#block-distribution").prepend(skeLoad);
+    $('#card-distribution .onPreLoad').html(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -580,6 +631,7 @@ function changeCalendar() {
     })
     .on('datepicker-change', function () {
         $.ajaxQ.abortAll();
+
         updateStorage({calendar: $(this).val()});
         updateReports();
     })
@@ -596,70 +648,34 @@ function changeCalendar() {
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        $('.onPreLoad *, .onPreLoadBig *').remove();
-        $('.onPreLoad').html(skeLoad);
-        $('.onPreLoadBig').html(skeLoadBig);
         $.ajaxQ.abortAll();
-        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
-        updateReports();
+
+        if (company !== $(this).val()) {
+            company = $(this).val();
+
+            updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+            updateReports();
+        }
     });
 }
 
-
 function updateReports() {
-    $('.onPreLoad *, .onPreLoadBig *').remove();
-    $('.onPreLoad').html(skeLoad);
-    $('.onPreLoadBig').html(skeLoadBig);
+    $('.sirius-select-container').addClass('disabled');
 
-    $.ajax({
-        method: "GET",
-        url: "/api/projects?select=true",
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            loadingOnScreenRemove();
-            $("#modal-content").hide();
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            if (!isEmpty(response.data)) {
-
-                $("#project-empty").hide();
-                $("#project-not-empty").show();
-                $("#export-excel").show();
-
-                $.each(response.data, function (i, project) {
-                    $("#select_projects").append(
-                        $("<option>", {
-                            value: project.id,
-                            text: project.name,
-                        })
-                    );
-                    removeDuplcateItem("#select_projects option");
-                });
-                if(sessionStorage.info) {
-                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-                }
-            } else {
-                $("#export-excel").hide();
-                $("#project-not-empty").hide();
-                $("#project-empty").show();
-            }
-
-            loadingOnScreenRemove();
-            $('.onPreLoad *').remove();
-            blockeds();
-            onResume();
-            onCommission();
-            getPending();
-            getCashback();
-            withdrawals();
-            distribution();
-        },
+    Promise.all([
+        blockeds(),
+        onResume(),
+        onCommission(),
+        getPending(),
+        getCashback(),
+        withdrawals(),
+        distribution(),
+    ])
+    .then(() => {
+        $('.sirius-select-container').removeClass('disabled');
+    })
+    .catch(() => {
+        $('.sirius-select-container').removeClass('disabled');
     });
 }
 
@@ -669,7 +685,8 @@ function updateStorage(v){
     existing = existing ? JSON.parse(existing) : {};
     Object.keys(v).forEach(function(val, key){
         existing[val] = v[val];
-   })
+    })
+
     sessionStorage.setItem('info', JSON.stringify(existing));
 }
 
@@ -977,7 +994,7 @@ function removeDuplcateItem(item) {
 }
 
 // abort all ajax
-$.ajaxQ = (function(){
+$.ajaxQ = (function() {
     var id = 0, Q = {};
 
     $(document).ajaxSend(function(e, jqx){
@@ -999,7 +1016,10 @@ $.ajaxQ = (function(){
       }
     };
 
-  })();
+})();
+
+let company = '';
+let date = '';
 
 let skeLoad = `
     <div class="ske-load">

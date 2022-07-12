@@ -285,23 +285,10 @@
                                                             <div class="data-holder card-origin-report">
                                                                 <div class="row">
                                                                     <div class="col-12 p-10">
-                                                                        <footer class='footer-origins'>
-                                                                            <table class="table-vendas table table-striped "style="width:100%;margin: auto; margin-top:15px">
-                                                                                <tbody id="origins-table"  class="origin-report">
-                                                                                    {{-- js carrega... --}}
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </footer>
+                                                                        <div id="block-origins" style="height: 149px;">
+                                                                            {{-- js carrega... --}}
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <br/>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-11">
-                                                                    <ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination"
-                                                                        style="margin-top:10px; margin-left: 5%">
-                                                                        {{-- js carrega... --}}
-                                                                    </ul>
                                                                 </div>
                                                             </div>
                                                         </div>

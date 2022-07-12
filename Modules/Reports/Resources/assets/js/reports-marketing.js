@@ -2,11 +2,11 @@ $(function() {
     loadingOnScreen();
     exportReports();
 
-    loadStores();
+    getProjects();
 
     changeCompany();
     changeCalendar();
-
+    changeOrigin();
 
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
@@ -17,47 +17,37 @@ $(function() {
         $('.back-list').trigger('click');
         loadBrazilMap();
     });
-
-    //loadingOnScreenRemove();
 });
 
 let resumeUrl = '/api/reports/resume';
 let mktUrl = '/api/reports/marketing';
 
-function reload() {
-    loadingOnScreenRemove();
-    loadResume();
-    loadCoupons();
-    loadDevices();
-    devicesInfo();
-    loadOperationalSystems();
-    loadFrequenteSales();
-    loadBrazilMap();
-    loadOrigins();
-}
-
+let company = '';
+let date = '';
+let origin = 'src';
 
 function loadOrigins(link = null) {
-    var link =
-        arguments.length > 0 && arguments[0] !== undefined
-            ? arguments[0]
-            : null;
+    var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-    // loadOnTable("#origins-table", ".table-vendas");
-
-    link = `${resumeUrl}/origins?paginate=true&date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
+    link = `${resumeUrl}/origins?paginate=false&limit=all&date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
 
     let td = `
-        <td>
-            ${noWithdrawal}
-        </td>
-        <td>
-            <p class='no-data-origin'>
-                <strong>Sem dados, por enquanto...</strong>
-                Ainda faltam dados suficientes a comparação, continue rodando!
-            </p>
-        </td>
+        <table class="table-vendas table table-striped "style="width:100%; height: 100%; margin: auto;">
+            <tbody>
+                <td>
+                    ${noWithdrawal}
+                </td>
+                <td>
+                    <p class='no-data-origin'>
+                        <strong>Sem dados, por enquanto...</strong>
+                        Ainda faltam dados suficientes a comparação, continue rodando!
+                    </p>
+                </td>
+            </tbody>
+        </table>
     `;
+
+    $("#block-origins").html("");
 
     $.ajax({
         url: link,
@@ -68,7 +58,7 @@ function loadOrigins(link = null) {
             Accept: "application/json",
         },
         error: function error(response) {
-            $("#origins-table").html(td);
+            $("#block-origins").html(td);
 
             errorAjaxResponse(response);
         },
@@ -76,11 +66,25 @@ function loadOrigins(link = null) {
             if (response.data.length == 0) {
                 $('.table-vendas').height('100%');
                 $("#card-origin .ske-load").hide();
-                $("#origins-table").html(td);
+                $("#block-origins").html(td);
                 $("#pagination").html("");
                 $("#pagination-origins").hide();
                 $(".origin-report").show();
             } else {
+                $("#block-origins").prepend(`
+                    <footer class="footer-origins scroll-212" style="height: 100%; display: block;">
+                        <table class="table-vendas table table-striped "style="width:100%;margin: auto;">
+                            <tbody id="origins-table"  class="origin-report" img-empty="{!! asset('/build/global/img/reports/img-nodata.svg')!!}">
+
+                            </tbody>
+                        </table>
+                    </footer>
+                `);
+
+                if (response.data.length < 10) {
+                    $('.footer-origins').removeClass('scroll-212');
+                }
+
                 var table_data = "";
 
                 $.each(response.data, function (index, data) {
@@ -96,11 +100,10 @@ function loadOrigins(link = null) {
                 $("#card-origin .ske-load").hide();
                 $(".table-vendas").addClass("table-striped");
 
-                pagination(response, "origins", loadOrigins);
+                //pagination(response, "origins", loadOrigins);
                 $(".origin-report").show();
             }
-
-        },
+        }
     });
 }
 
@@ -348,12 +351,7 @@ function loadFrequenteSales() {
     });
 }
 
-function loadStores() {
-    $(".box-donut").addClass('invis');
-    $('.no-graph').remove();
-    $('.onPreLoad *').remove();
-    $('.onPreLoad').html(skeLoad);
-
+function getProjects() {
     $.ajax({
         method: "GET",
         url: "/api/projects?select=true",
@@ -381,6 +379,7 @@ function loadStores() {
                             text: project.name,
                         })
                     );
+
                     removeDuplcateItem("#select_projects option");
                 });
 
@@ -389,36 +388,45 @@ function loadStores() {
                     $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
                 }
 
+                company = $("#select_projects").val();
+
+                updateReports();
             } else {
                 $("#export-excel").hide();
                 $("#project-not-empty").hide();
                 $("#project-empty").show();
             }
 
-            reload();
+            loadingOnScreenRemove();
         }
     });
 }
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        $('.onPreLoad *').remove();
-        $('.onPreLoad').html(skeLoad);
-        $("#list-states").prepend(skeLoadStatesList);
         $("#card-origin .ske-load").show();
         $('.origin-report').hide();
 
         $.ajaxQ.abortAll();
-        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
-        loadStores();
-    });
 
+        if (company !== $(this).val()) {
+            company = $(this).val();
+
+            updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+            updateReports();
+        }
+    });
+}
+
+function changeOrigin() {
     $("#origin").on("change", function () {
         $("#card-origin .ske-load").show();
         $('.origin-report').hide();
 
-        $("#origin").val($(this).val());
-        loadOrigins();
+        if (origin !== $(this).val()) {
+            $("#origin").val($(this).val());
+            loadOrigins();
+        }
     });
 }
 
@@ -708,8 +716,6 @@ function updateStorage(v){
 }
 
 function changeCalendar() {
-    $('.onPreLoad *').remove();
-
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
@@ -730,9 +736,16 @@ function changeCalendar() {
     .on('datepicker-change', function () {
         $("#card-origin .ske-load").show();
         $('.origin-report').hide();
+
         $.ajaxQ.abortAll();
-        updateStorage({calendar: $(this).val()});
-        updateReports();
+
+        if (date !== $(this).val()) {
+            date = $(this).val();
+
+            updateStorage({calendar: $(this).val()});
+
+            updateReports();
+        }
     })
     .on('datepicker-open', function () {
         $('.filter-badge-input').removeClass('show');
@@ -746,60 +759,26 @@ function changeCalendar() {
 }
 
 function updateReports() {
-    $('.onPreLoad *').remove();
-    $('.onPreLoad').html(skeLoad);
-    $("#list-states").prepend(skeLoadStatesList);
+    $('.sirius-select-container').addClass('disabled');
+    $('#brazil-map-filter').find('input').attr('disabled', 'disabled');
 
-    $.ajax({
-        method: "GET",
-        url: "/api/projects?select=true",
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            loadingOnScreenRemove();
-            $("#modal-content").hide();
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            if (!isEmpty(response.data)) {
-
-                $("#project-empty").hide();
-                $("#project-not-empty").show();
-                $("#export-excel").show();
-
-                $.each(response.data, function (i, project) {
-                    $("#select_projects").append(
-                        $("<option>", {
-                            value: project.id,
-                            text: project.name,
-                        })
-                    );
-                    removeDuplcateItem("#select_projects option");
-                });
-                if(sessionStorage.info) {
-                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-                }
-            } else {
-                $("#export-excel").hide();
-                $("#project-not-empty").hide();
-                $("#project-empty").show();
-            }
-
-            loadingOnScreenRemove();
-            $('.onPreLoad *').remove();
-            loadResume();
-            loadCoupons();
-            // loadDevices();
-            devicesInfo();
-            loadOperationalSystems();
-            loadFrequenteSales();
-            loadBrazilMap();
-            loadOrigins();
-        },
+    Promise.all([
+        loadResume(),
+        loadCoupons(),
+        loadDevices(),
+        devicesInfo(),
+        loadOperationalSystems(),
+        loadFrequenteSales(),
+        loadBrazilMap(),
+        loadOrigins(),
+    ])
+    .then(() => {
+        $('.sirius-select-container').removeClass('disabled');
+        $('#brazil-map-filter').find('input').removeAttr('disabled');
+    })
+    .catch(() => {
+        $('.sirius-select-container').removeClass('disabled');
+        $('#brazil-map-filter').find('input').removeAttr('disabled');
     });
 }
 

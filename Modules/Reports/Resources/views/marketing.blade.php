@@ -71,8 +71,8 @@
                             <fieldset>
                                 <div class="form-group form-icons">
                                     <i class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         placeholder="E-mail para enviar os relatórios"
                                         class="modal-email"
                                     >
@@ -101,7 +101,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div style="overflow: hidden;" id="project-not-empty" style="display: none">
 
             <section class="container box-reports" id="reports-content">
@@ -125,7 +125,7 @@
 
                 <div class="row">
                     <div class="col-12 d-flex box-chart-primary">
-                        <!-- comission -->    
+                        <!-- comission -->
                         <div class="commission mkt">
                             <div class="card">
                                 <section class="container">
@@ -150,7 +150,7 @@
                                                                 <svg width="9" height="7" viewBox="0 0 9 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M2.93274 6.86079L0.129037 3.83608C-0.0430126 3.65047 -0.0430126 3.34953 0.129037 3.16392L2.93274 0.139208C3.10479 -0.0464029 3.38374 -0.0464029 3.55578 0.139208C3.72783 0.32482 3.72783 0.625756 3.55578 0.811367L1.50416 3.02471L8.55944 3.02471C8.80275 3.02471 9 3.23751 9 3.5C9 3.76249 8.80275 3.97529 8.55944 3.97529L1.50416 3.97529L3.55578 6.18863C3.72783 6.37424 3.72783 6.67518 3.55578 6.86079C3.38374 7.0464 3.10479 7.0464 2.93274 6.86079Z" fill="#636363"/>
                                                                 </svg>
-                                                            </a>                                                            
+                                                            </a>
                                                             <strong id="state-position"></strong>
                                                             <em class="name-state"></em>
                                                         </h4>
@@ -209,7 +209,7 @@
                                                                         <small>Conversão</small>
                                                                         <strong id="state-conversion"></strong>
                                                                     </h6>
-                                                                </header>                                                        
+                                                                </header>
                                                             </div>
                                                         </div>
                                                     </footer>
@@ -598,7 +598,7 @@
                             </div>
                         </div>
                         <!-- /comission -->
-                        
+
                         <!-- distribtion -->
                         <div class="distribution mkt">
                             <!-- <div class="card inner pad-bottom-0 origin">
@@ -647,7 +647,7 @@
                                             <header class="col-6">
                                                 <h6 class="font-size-16 gray-700"> Origens </h6>
                                             </header>
-                                            
+
                                             <div class="col-6 sirius-select-origin">
                                                 <select class="float-right sirius-select max-118" id='origin'>
                                                     <option selected value="src">SRC</option>
@@ -690,23 +690,13 @@
                                         <div class="row" style="height: 90%;">
                                             <div class="data-holder" style="height: 100%; width: 100%;">
                                                 <div class="row" style="height: 100%;">
-                                                    <div class="col-12">
-                                                        <table class="table-vendas table table-striped "style="width:100%;margin: auto;">
-                                                            <tbody id="origins-table"  class="origin-report" img-empty="{!! asset('/build/global/img/reports/img-nodata.svg')!!}">
-                                                                {{-- js carrega... --}}
-                                                            </tbody>
-                                                        </table>
+                                                    <div class="col-12" style="height: 100%;">
+                                                        <div id="block-origins" style="height: 100%;">
+                                                            {{-- js carrega... --}}
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <br/>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-11">
-                                                    <ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination"
-                                                        style="margin-top:10px; margin-left: 5%">
-                                                        {{-- js carrega... --}}
-                                                    </ul>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
