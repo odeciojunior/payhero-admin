@@ -1895,32 +1895,13 @@ h4.number{
         padding-left: 0;
     }
 }
-
-.footer-regions .states {
-    position: absolute;
-    left: 0;
-    top: 3px;
-}
-.footer-regions dt {
-    color: #fff;
-    font-weight: 700;
-    font-size: 12px;
-    height: 24px;
-    line-height: 24px;
-    margin-bottom: 0px;
-    text-align: center;
-    padding-left: 5px;
-    border: 1px solid transparent;
-}
-
-.footer-regions section { flex: 1; }
-
 .conversion-colors {
     padding: 0;
     display: flex;
     flex-direction: column;
 }
-.conversion-colors li {
+.conversion-colors li,
+.footer-regions .states li {
     list-style: none;
     height: 30px;
     text-align: center;
@@ -1929,7 +1910,20 @@ h4.number{
     font-weight: bold;
     font-size: 12px;
 }
-.conversion-colors li:last-child { margin: 0; }
+.conversion-colors li:last-child,
+.footer-regions .states li:last-child { margin: 0; }
+
+.footer-regions .states {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    padding: 0;
+}
+.footer-regions .states li {
+    color: #fff;
+    margin-bottom: 5.9px;
+}
+.footer-regions section { flex: 1; }
 
 .box-total-region {
     height: 142px;
