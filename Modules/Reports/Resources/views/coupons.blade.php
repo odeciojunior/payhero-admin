@@ -88,7 +88,7 @@
                                             <div class="form-icons">
                                                 <label for="date_range" >Data</label>
                                                 <div class="col-12 mb-10 date-report">
-                                                    <div class="row align-items-center form-icons box-select">
+                                                    <div class="row align-items-center form-icons box-select coupons">
                                                         <input id="date-filter" type="text" name="daterange" class="font-size-14" value="" readonly>
                                                         <i style="right:16px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
                                                     </div>
@@ -96,7 +96,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                            <button id="bt_filtro" class="btn btn-primary w-full" style="padding: 14px 15px;margin-top: 27px !important;">
+                                            <button id="bt_filtro" class="btn btn-primary w-full coupons-btn">
                                                 <img style="height: 12px; margin-right: 4px; visibility: hidden;" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">
                                                 Aplicar filtros
                                                 <img style="height: 12px; margin-right: 4px; visibility: hidden;" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">

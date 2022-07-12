@@ -900,7 +900,7 @@ function loadBrazilMap() {
                 let noData = `
                 <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
                     <div>
-                        <img src=${$("#origins-table").attr("img-empty")}>
+                        ${noWithdrawal}
                     </div>
                     <div class="px-10">
                         <p class='no-data-origin'>
