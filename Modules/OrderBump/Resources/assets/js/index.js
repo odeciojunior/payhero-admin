@@ -69,9 +69,17 @@ $(() => {
                 }
             }
         });
+
+        if (!['shopify', 'woocommerce'].includes($('#project_type').val())) {
+            $('.use-variants-order-bump')
+                .prop('checked', false)
+                .val(0)
+                .closest('.switch-holder')
+                .hide();
+        }
     }
 
-    $('#tab_order_bump').on('click', function (){
+    $('#tab_order_bump').on('click', function () {
         index();
     });
 
@@ -88,6 +96,9 @@ $(() => {
             },
             success: resp => {
                 let rule = resp.data;
+                let applyOnShipping = rule.apply_on_shipping
+                    .map(shipping => shipping.name + (shipping.information ? ` - ${shipping.information}` : ''))
+                    .join(' / ');
                 let applyOnPlans = rule.apply_on_plans
                     .map(plan => plan.name + (plan.description ? ` - ${plan.description}` : ''))
                     .join(' / ');
@@ -96,6 +107,7 @@ $(() => {
                     .join(' / ');
                 $('#order-bump-show-table .order-bump-description').html(rule.description);
                 $('#order-bump-show-table .order-bump-discount').html(rule.discount + '%');
+                $('#order-bump-show-table .order-bump-apply-shipping').html(applyOnShipping);
                 $('#order-bump-show-table .order-bump-apply-plans').html(applyOnPlans);
                 $('#order-bump-show-table .order-bump-offer-plans').html(offerPlans);
                 $('#order-bump-show-table .order-bump-status').html(rule.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`);
@@ -117,11 +129,26 @@ $(() => {
             },
             success: resp => {
                 let rule = resp.data;
+                let applyOnShippingInput = $('#update-apply-on-shipping-order-bump');
                 let applyOnPlansInput = $('#update-apply-on-plans-order-bump');
                 let offerPlansInput = $('#update-offer-plans-order-bump');
 
                 $('#update-description-order-bump').val(rule.description);
                 $('#update-discount-order-bump').val(rule.discount);
+
+                $('#update-active-flag-order-bump').val(rule.active_flag)
+                    .prop('checked', rule.active_flag === 1);
+                $('#modal-update-order-bump .use-variants-order-bump').val(rule.use_variants)
+                    .prop('checked', rule.use_variants === 1)
+                    .trigger('change');
+
+                let applyOnShipping = [];
+                applyOnShippingInput.html('');
+                for (let shipping of rule.apply_on_shipping) {
+                    applyOnShipping.push(shipping.id);
+                    applyOnShippingInput.append(`<option value="${shipping.id}">${shipping.name + (shipping.information ? ` - ${shipping.information}` : '')}</option>`);
+                }
+                applyOnShippingInput.val(applyOnShipping);
 
                 let applyOnPlans = [];
                 applyOnPlansInput.html('');
@@ -139,11 +166,9 @@ $(() => {
                 }
                 offerPlansInput.val(offerPlans);
 
-                if (rule.active_flag===1) {
-                    $('#update-active-flag-order-bump').val("1").trigger("change");
-                } else {
-                    $('#update-active-flag-order-bump').val("0").trigger("change");
-                }
+                setShippingSelect2('#update-apply-on-shipping-order-bump', '#modal-update-order-bump');
+                setPlanSelect2('#update-apply-on-plans-order-bump', '#modal-update-order-bump');
+                setPlanSelect2('#update-offer-plans-order-bump', '#modal-update-order-bump');
 
                 $('#btn-update-order-bump').data('id', id);
                 $('#modal-update-order-bump').modal('show');
@@ -154,6 +179,12 @@ $(() => {
     $('#btn-store-order-bump').on('click', function () {
         let formData = new FormData(document.querySelector('#form-store-order-bump'));
         formData.append('project_id', projectId);
+
+        let data = {};
+        for (let pair of formData.entries()) {
+            data[pair[0]] = pair[1];
+        }
+
         $.ajax({
             method: 'POST',
             url: '/api/orderbump',
@@ -172,7 +203,7 @@ $(() => {
                 alertCustom('success', resp.message);
                 $('#modal-store-order-bump').modal('hide');
                 $('#store-description-order-bump, #store-discount-order-bump').val('');
-                $("#store-apply-on-plans-order-bump, #store-offer-plans-order-bump")
+                $("#store-apply-on-shipping-order-bump, #store-apply-on-plans-order-bump, #store-offer-plans-order-bump")
                     .val(null)
                     .trigger('change');
                 index();
@@ -234,66 +265,181 @@ $(() => {
         });
     });
 
-    $('#store-apply-on-plans-order-bump, #update-apply-on-plans-order-bump').on('select2:select', function () {
+    //Search Shipping
+    function setShippingSelect2(element, dropdownParent) {
+        const $element = typeof element === 'string' ? $(element) : element;
+        const $dropdownParent = typeof element === 'string' ? $(dropdownParent) : dropdownParent;
+
+        let configs = {
+            placeholder: 'Nome do frete',
+            multiple: true,
+            dropdownParent: $dropdownParent,
+            language: {
+                noResults: function () {
+                    return 'Nenhum frete encontrado';
+                },
+                searching: function () {
+                    return 'Procurando...';
+                },
+                loadingMore: function () {
+                    return 'Carregando mais fretes...';
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    return {
+                        list: 'shipping',
+                        search: params.term,
+                        project_id: projectId,
+                        page: params.page || 1,
+                    };
+                },
+                method: "GET",
+                url: "/api/shippings/user-shippings",
+                delay: 300,
+                dataType: 'json',
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                processResults: function (res) {
+                    if (res.meta.current_page === 1) {
+                        let allObject = {
+                            id: 'all',
+                            name: `Qualquer frete`,
+                            information: ''
+                        };
+                        res.data.unshift(allObject);
+                    }
+
+                    return {
+                        results: $.map(res.data, function (obj) {
+                            return {id: obj.id, text: obj.name + (obj.information ? ' - ' + obj.information : '')};
+                        }),
+                        pagination: {
+                            'more': res.meta.current_page !== res.meta.last_page
+                        }
+                    };
+                },
+            }
+        }
+        $element.select2(configs);
+    }
+
+    setShippingSelect2('#store-apply-on-shipping-order-bump', '#modal-store-order-bump');
+    setShippingSelect2('#update-apply-on-shipping-order-bump', '#modal-update-order-bump');
+    $('#store-apply-on-shipping-order-bump').html(`<option value="all">Qualquer frete</option>`).val('all');
+
+    //Search plan
+    function setPlanSelect2(element, dropdownParent) {
+        const $element = typeof element === 'string' ? $(element) : element;
+        const $dropdownParent = typeof element === 'string' ? $(dropdownParent) : dropdownParent;
+
+        const useVariants = $dropdownParent.find('.use-variants-order-bump').prop('checked') ? 1 : 0;
+        const targetName = useVariants ? 'plano' : 'produto';
+
+        let configs = {
+            placeholder: `Nome do ${targetName}`,
+            multiple: true,
+            dropdownParent: $dropdownParent,
+            language: {
+                noResults: function () {
+                    return `Nenhum ${targetName} encontrado`;
+                },
+                searching: function () {
+                    return 'Procurando...';
+                },
+                loadingMore: function () {
+                    return `Carregando mais ${targetName}s...`;
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    return {
+                        list: 'plan',
+                        search: params.term,
+                        project_id: projectId,
+                        page: params.page || 1,
+                        variants: useVariants,
+                    };
+                },
+                method: "GET",
+                url: "/api/plans/user-plans",
+                delay: 300,
+                dataType: 'json',
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                processResults: function (res) {
+                    let elemId = this.$element.attr('id');
+                    if (['store-apply-on-plans-order-bump', 'update-apply-on-plans-order-bump'].includes(elemId) && res.meta.current_page === 1) {
+                        let allObject = {
+                            id: 'all',
+                            name: `Qualquer ${targetName}`,
+                            description: ''
+                        };
+                        res.data.unshift(allObject);
+                    }
+                    return {
+                        results: $.map(res.data, function (obj) {
+                            return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                        }),
+                        pagination: {
+                            'more': res.meta.current_page !== res.meta.last_page
+                        }
+                    };
+                },
+            }
+        }
+
+        $element.select2(configs);
+    }
+
+    const select2HasAll = [
+        '#store-apply-on-plans-order-bump',
+        '#update-apply-on-plans-order-bump',
+        '#store-apply-on-shipping-order-bump',
+        '#update-apply-on-shipping-order-bump'
+    ].join(', ')
+    $(select2HasAll).on('select2:select', function () {
         let selectPlan = $(this);
         if ((selectPlan.val().length > 1 && selectPlan.val().includes('all'))) {
             selectPlan.val('all').trigger("change");
         }
     });
 
-    //Search plan
-    let select2Configs = {
-        placeholder: 'Nome do plano',
-        multiple: true,
-        language: {
-            noResults: function () {
-                return 'Nenhum plano encontrado';
-            },
-            searching: function () {
-                return 'Procurando...';
-            },
-            loadingMore: function () {
-                return 'Carregando mais planos...';
-            },
-        },
-        ajax: {
-            data: function (params) {
-                return {
-                    list: 'plan',
-                    search: params.term,
-                    project_id: projectId,
-                    page: params.page || 1
-                };
-            },
-            method: "GET",
-            url: "/api/plans/user-plans",
-            delay: 300,
-            dataType: 'json',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processResults: function (res) {
-                let elemId = this.$element.attr('id');
-                if (['store-apply-on-plans-order-bump', 'update-apply-on-plans-order-bump'].includes(elemId) && res.meta.current_page === 1) {
-                    let allObject = {
-                        id: 'all',
-                        name: 'Qualquer plano',
-                        description: ''
-                    };
-                    res.data.unshift(allObject);
-                }
-                return {
-                    results: $.map(res.data, function (obj) {
-                        return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
-                    }),
-                    pagination: {
-                        'more': res.meta.current_page !== res.meta.last_page
-                    }
-                };
-            },
+    $('.use-variants-order-bump').on('change', function () {
+        const slider = $(this);
+        const modal = slider.closest('.modal');
+
+        const applyContainer = modal.find('.apply-on-plan-container');
+        const offerContainer = modal.find('.offer-plan-container');
+
+        const applyLabel = applyContainer.find('label');
+        const offerLabel = offerContainer.find('label');
+
+        const applySelect = applyContainer.find('select');
+        const offerSelect = offerContainer.find('select');
+
+        if (slider.prop('checked')) {
+            applyLabel.text('Ao comprar os plano:');
+            offerLabel.text('Oferecer os planos:');
+            applySelect.html(`<option value="all">Qualquer plano</option>`).val('all').trigger('change');
+        } else {
+            applyLabel.text('Ao comprar os produtos:');
+            offerLabel.text('Oferecer os produtos:');
+            applySelect.html(`<option value="all">Qualquer produto</option>`).val('all').trigger('change');
         }
-    }
-    $('#store-apply-on-plans-order-bump, #store-offer-plans-order-bump').select2({dropdownParent: $('#modal-store-order-bump'), ...select2Configs});
-    $('#update-apply-on-plans-order-bump, #update-offer-plans-order-bump').select2({dropdownParent: $('#modal-update-order-bump'), ...select2Configs});
+
+        offerSelect.html('').val('').trigger('change');
+
+        setPlanSelect2(applySelect, modal)
+        setPlanSelect2(offerSelect, modal)
+    }).trigger('change');
+
+    setPlanSelect2('#store-apply-on-plans-order-bump', '#modal-store-order-bump');
+    setPlanSelect2('#store-offer-plans-order-bump', '#modal-store-order-bump');
+    setPlanSelect2('#update-apply-on-plans-order-bump', '#modal-update-order-bump');
+    setPlanSelect2('#update-offer-plans-order-bump', '#modal-update-order-bump');
 });

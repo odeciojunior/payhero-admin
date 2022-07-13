@@ -55,6 +55,7 @@ class PlanService
         CacheService::forget(CacheService::CHECKOUT_PARAM_PRODUCT_PLANS, $id);
         CacheService::forget(CacheService::CHECKOUT_CART_PLAN, $id);
         CacheService::forget(CacheService::SHIPPING_PLAN, $id);
+        CacheService::forget(CacheService::SHIPPING_PLAN_VARIANTS, $id);
         CacheService::forgetContainsUnique(CacheService::CHECKOUT_CART_PRODUCT_PLANS, $id);
         CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_APPLY_ON_PLANS, $id);
         CacheService::forgetContainsUnique(CacheService::CHECKOUT_ONLY_DIGITAL_PRODUCTS, $id);
