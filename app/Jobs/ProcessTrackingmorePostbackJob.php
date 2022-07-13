@@ -23,7 +23,7 @@ class ProcessTrackingmorePostbackJob implements ShouldQueue
         $this->trackingCode = $trackingCode;
         $this->trackingService = new TrackingService();
 
-        $this->allOnQueue('low');
+        $this->allOnQueue('postback');
     }
 
     public function tags()
