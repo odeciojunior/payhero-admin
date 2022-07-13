@@ -166,15 +166,15 @@ function updateReports() {
     $('input[name="daterange"]').attr('disabled', 'disabled');
 
     Promise.all([
-        getCommission(),
-        getPending(),
-        getCashback(),
-        getSales(),
-        getTypePayments(),
-        getProducts(),
-        getCoupons(),
+        // getCommission(),
+        // getPending(),
+        // getCashback(),
+        // getSales(),
+        // getTypePayments(),
+        // getProducts(),
+        // getCoupons(),
         getRegions(),
-        updateSalesByOrigin()
+        // updateSalesByOrigin()
     ])
     .then(() => {
         $('.sirius-select-container').removeClass('disabled');
@@ -777,7 +777,7 @@ function getRegions() {
 
             errorAjaxResponse(response);
         },
-        success: function success(response) {
+        success: function success(response) {            
             if(response.data.length > 0) {
                 regionsHtml = `
                     <footer class="container footer-regions">
@@ -816,7 +816,6 @@ function getRegions() {
                     $(".conversion-colors").append(`<li>${regionArr[i].percentage_conversion}%</li>`);
                 }
 
-                //accessArr = new Array(statesArr.length).fill(100);
                 $(".new-graph-regions").height($('.conversion-colors').height());
                 $(".states").height($('.conversion-colors').height());
                 $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
@@ -1459,7 +1458,6 @@ function graphComission(series, labels) {
 }
 
 function graphRegions(labels, conversion, access) {
-    console.log(access);
     Chart.register(ChartDataLabels);
     const ctx = document.getElementById('regionsChart').getContext('2d');
     const myChart = new Chart(ctx, {
