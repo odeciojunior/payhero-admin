@@ -44,7 +44,7 @@
                             </div>
 
                             <!-- BOTAO ADICIONAR LOJA -->
-                            <button id="new-store-button" data-toggle="modal" data-target="#new-store-modal" class="btn btn-floating btn-primary" style="position: relative; float: right;" data-placement="bottom" title="Adicionar Loja">
+                            <button id="new-store-button" data-toggle="modal" data-target="#new-store-modal" class="btn btn-floating btn-primary" style="position: relative; float: right; display: none;" data-placement="bottom" title="Adicionar Loja">
                                 <span style="color: white; font-size: 35px" class='o-add-1'></span>
                             </button>
 
