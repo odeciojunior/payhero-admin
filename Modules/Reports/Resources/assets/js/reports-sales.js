@@ -60,6 +60,7 @@ function getProjects() {
         },
         success: function success(response) {
             if (!isEmpty(response.data)) {
+                $(".div-filters").show();
                 $("#project-empty").hide();
                 $("#project-not-empty").show();
                 $("#export-excel").show();
@@ -84,6 +85,7 @@ function getProjects() {
 
                 updateReports();
             } else {
+                $(".div-filters").hide();
                 $("#export-excel").hide();
                 $("#project-not-empty").hide();
                 $("#project-empty").show();
@@ -863,7 +865,7 @@ function abandonedCarts() {
                         </div>
                     </div>
                 `;
-            }            
+            }
 
             $("#block-abandoned").html(abandonedBlock);
         }
