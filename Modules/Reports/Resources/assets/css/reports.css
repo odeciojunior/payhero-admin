@@ -751,7 +751,7 @@ h4.number{
 .new-graph-sell .ct-series-a .ct-area { fill: #2e85ec; }
 
 .no-graph {
-    color: #757575;
+    color: #999;
     font-size: 16px;
     font-weight: bold;
     text-align: center;
@@ -1374,19 +1374,21 @@ h4.number{
 }
 
 .no-cashback, .no-orderbump {
-    color: #1BE4A8;
+    color: #999;
     font-weight: bold;
     font-size: 15px;
     margin-bottom: 7px;
 }
 .txt-no-cashback,
-.txt-no-orderbump {
-    color: #828282;
+.txt-no-orderbump,
+.footer-no-info p {
+    color: #999;
     font-size: 14px;
     line-height: 19px;
 }
-.no-orderbump { color: #2E85EC; }
-
+.no-orderbump {
+    color: #999;
+}
 
 @media( min-width: 1371px ) {
     .card-fc { width: 356px; }
@@ -1597,11 +1599,11 @@ h4.number{
 }
 
 .no-data-origin {
-    color: #828282;
+    color: #999;
     font-size: 14px;
 }
 .no-data-origin strong {
-    color: #2E85EC;
+    color: #999;
     font-size: 15px;
     display: block;
     padding-bottom: 5px;
@@ -2282,7 +2284,7 @@ h4.number{
     text-align: center;
 }
 .no-sell h4 {
-    color: #2E85EC;
+    color: #999;
     font-weight: 700;
     font-size: 16px;
     line-height: 20px;
@@ -2355,7 +2357,7 @@ h4.number{
      position: relative;
 }
 .noone {
-    font-weight: 700;
+    font-weight: 400;
     font-size: 16px;
     line-height: 20px;
     color: #999;
@@ -2370,7 +2372,7 @@ h4.number{
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
-    color: #757575;
+    color: #999;
     position: absolute;
     top: 50%;
     left: 50%;

@@ -669,7 +669,9 @@
                                     <div class="content-info">
                                         <div class="row">
                                             <header class="col-6">
-                                                <h6 class="font-size-16 gray-700"> Origens </h6>
+                                                <h5 class="grey font-size-16">
+                                                    <strong>Origens</strong>
+                                                </h5>
                                             </header>
 
                                             <div class="col-6 sirius-select-origin">
