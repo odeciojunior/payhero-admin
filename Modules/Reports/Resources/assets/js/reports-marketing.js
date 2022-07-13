@@ -50,6 +50,11 @@ function changeMap() {
 }
 
 function loadOrigins(link = null) {
+    $('#card-origin').css('height', '358px');
+
+    $("#card-origin .ske-load").show();
+    $('.origin-report').hide();
+
     var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
     link = `${resumeUrl}/origins?paginate=false&limit=all&date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
@@ -82,10 +87,13 @@ function loadOrigins(link = null) {
         },
         error: function error(response) {
             $("#block-origins").html(td);
+            $('#card-origin').css('height', 'auto');
 
             errorAjaxResponse(response);
         },
         success: function success(response) {
+            $('#card-origin').css('height', 'auto');
+
             if (response.data.length == 0) {
                 $('.table-vendas').height('100%');
                 $("#card-origin .ske-load").hide();
@@ -95,7 +103,7 @@ function loadOrigins(link = null) {
                 $(".origin-report").show();
             } else {
                 $("#block-origins").prepend(`
-                    <footer class="footer-origins scroll-212" style="height: 100%; display: block;">
+                    <footer class="footer-origins scroll-212" style="${ response.data.length > 10 ? 'height: 510px; ' : 'height: 100%; ' }display: block; padding: 0; margin: 0;">
                         <table class="table-vendas table table-striped "style="width:100%;margin: auto;">
                             <tbody id="origins-table"  class="origin-report" img-empty="{!! asset('/build/global/img/reports/img-nodata.svg')!!}">
 
@@ -112,7 +120,7 @@ function loadOrigins(link = null) {
 
                 $.each(response.data, function (index, data) {
                     table_data += "<tr>";
-                        table_data += "<td>" + data.origin + "</td>";
+                        table_data += "<td>" + (data.origin.length > 10 ? data.origin.substring(0,10)+'...' : data.origin) + "</td>";
                         table_data += "<td>" + data.sales_amount + "</td>";
                         table_data += "<td style='text-align: right;'>" + data.value + "</td>";
                     table_data += "</tr>";
@@ -778,9 +786,6 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
-        $("#card-origin .ske-load").show();
-        $('.origin-report').hide();
-
         $.ajaxQ.abortAll();
 
         if (data !== $(this).val()) {

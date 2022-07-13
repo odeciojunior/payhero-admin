@@ -664,7 +664,7 @@
                                     </div>
                                 </div>
                             </div> -->
-                            <div class="card big-card-origin" id="card-origin">
+                            <div class="card big-card-origin" id="card-origin" style="height: 358px;">
                                 <div class="card-body card-origin">
                                     <div class="content-info">
                                         <div class="row">
@@ -682,7 +682,7 @@
                                                     <option value="utm_content">UTM Content</option>
                                                 </select>
                                             </div>
-                                            <div class="ske-load">
+                                            <div class="ske-load" style="margin-top: 15px;">
                                                 <div class="px-20 py-0">
                                                     <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                                 </div>
@@ -711,16 +711,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row" style="height: 90%;">
-                                            <div class="data-holder" style="height: 100%; width: 100%;">
-                                                <div class="row" style="height: 100%;">
-                                                    <div class="col-12" style="height: 100%;">
-                                                        <div id="block-origins" style="height: 100%;">
-                                                            {{-- js carrega... --}}
-                                                        </div>
-                                                    </div>
+                                        <div class="row">
+                                            <div class="col-12 p-0">
+                                                <div class="data-holder" id="block-origins">
+                                                    {{-- js carrega... --}}
                                                 </div>
-                                                <br/>
                                             </div>
                                         </div>
                                     </div>

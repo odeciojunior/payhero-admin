@@ -937,7 +937,7 @@ function updateSalesByOrigin() {
 
                 $.each(response.data, function (index, data) {
                     table_data += "<tr>";
-                        table_data += "<td>" + data.origin + "</td>";
+                        table_data += "<td>" + (data.origin.length > 10 ? data.origin.substring(0,10)+'...' : data.origin) + "</td>";
                         table_data += "<td>" + data.sales_amount + "</td>";
                         table_data += "<td style='text-align: right;'>" + data.value + "</td>";
                     table_data += "</tr>";
