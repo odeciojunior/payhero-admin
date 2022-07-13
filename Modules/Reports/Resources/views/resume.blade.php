@@ -741,5 +741,6 @@
 
 @push('scripts')
     <script type='text/javascript' src='{{ mix('build/layouts/reports/index.min.js') }}'></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 @endpush
 

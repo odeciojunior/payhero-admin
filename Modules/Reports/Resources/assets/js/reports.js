@@ -777,12 +777,10 @@ function getRegions() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-
             if(response.data.length > 0) {
                 regionsHtml = `
                     <footer class="container footer-regions">
                         <section class="box-total-region">
-                            <ul class="states"></ul>
                             <div class="new-graph-regions graph">
                             </div>
                             <div class="info-regions">
@@ -805,17 +803,16 @@ function getRegions() {
                 let accessArr       = [];
                 let statesArr       = [];
 
-                $.each(response.data, function(i, v) {
+                $.each(andre, function(i, v) {
                     regionArr.push(v);
                 });
 
                 for(let i = 0; i < regionArr.length; i++) {
                     conversionArr.push(regionArr[i].conversion);
-                    // accessArr.push(regionArr[i].access);
+                    accessArr.push(regionArr[i].access);
                     statesArr.push(regionArr[i].region);
 
                     $(".conversion-colors").append(`<li>${regionArr[i].percentage_conversion}%</li>`);
-                    $(".states").append(`<li>${regionArr[i].region}</li>`);
                 }
 
                 accessArr = new Array(statesArr.length).fill(100);
@@ -1461,6 +1458,7 @@ function graphComission(series, labels) {
 }
 
 function graphRegions(labels, conversion, access) {
+    Chart.register(ChartDataLabels);
     const ctx = document.getElementById('regionsChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'bar',
@@ -1497,12 +1495,23 @@ function graphRegions(labels, conversion, access) {
                 }
             ]
         },
+        plugins: [ChartDataLabels],
         options: {
             maintainAspectRatio: false,
             indexAxis: 'y',
             plugins: {
                 legend: {display: false},
                 title: {display: false},
+                datalabels: {
+                    anchor: 'start',
+                    align: 'end',
+                    color: chart => {
+                        return 'rgba(255,255,255,1)';
+                    },
+                    formatter: function(value, context) {
+                        return context.chart.data.labels[context.dataIndex];
+                    }
+                  }
             },
 
             responsive: true,
@@ -1522,16 +1531,13 @@ function graphRegions(labels, conversion, access) {
                     max: 100,
                     ticks: {
                         padding: -18,
-                        mirror: false,
-                        stepSize: 0,
+                        mirror: true,
+                        stepSize: true,
                         font: {
                             family: 'Muli',
                             size: 12,
                         },
-                        // color: "#ff0000",
-                        callback: function(value, index){
-                            return this.getLabelForValue(value);
-                        }
+                        color: "#ffffff"
                     }
                 }
             },
