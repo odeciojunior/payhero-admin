@@ -809,7 +809,7 @@ function getRegions() {
                 });
 
                 for(let i = 0; i < regionArr.length; i++) {
-                    conversionArr.push(regionArr[i].conversion);
+                    conversionArr.push(regionArr[i].conversion_conversion);
                     accessArr.push(regionArr[i].access);
                     statesArr.push(regionArr[i].region);
 
