@@ -809,13 +809,14 @@ function getRegions() {
                 });
 
                 for(let i = 0; i < regionArr.length; i++) {
-                    conversionArr.push(regionArr[i].conversion_conversion);
+                    conversionArr.push(regionArr[i].conversion);
                     accessArr.push(regionArr[i].access);
                     statesArr.push(regionArr[i].region);
 
                     $(".conversion-colors").append(`<li>${regionArr[i].percentage_conversion}%</li>`);
                 }
 
+                accessArr = new Array(statesArr.length).fill(100);
                 $(".new-graph-regions").height($('.conversion-colors').height());
                 $(".states").height($('.conversion-colors').height());
                 $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
@@ -1458,6 +1459,7 @@ function graphComission(series, labels) {
 }
 
 function graphRegions(labels, conversion, access) {
+    console.log(access);
     Chart.register(ChartDataLabels);
     const ctx = document.getElementById('regionsChart').getContext('2d');
     const myChart = new Chart(ctx, {
