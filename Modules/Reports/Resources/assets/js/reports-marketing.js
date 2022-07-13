@@ -582,7 +582,7 @@ function devicesInfo() {
                     </div>
                     <div>
                         <span class="mkt-msg-conversion">
-                            Smartphones com Android são os dispositivos mais usados e representam <strong>${mobile.percentage} das suas conversões.</strong>
+                            Smartphones com Android são os dispositivos mais usados e representam <strong>${mobile.percentage_approved} das suas conversões.</strong>
                         </span>
                     </div>
                     `;
@@ -597,7 +597,7 @@ function devicesInfo() {
                     </div>
                     <div>
                         <span class="mkt-msg-conversion">
-                            Desktops são os dispositivos mais usados e representam <strong>${desktop.percentage} das suas conversões.</strong>
+                            Desktops são os dispositivos mais usados e representam <strong>${desktop.percentage_approved} das suas conversões.</strong>
                         </span>
                     </div>
                     `;
@@ -612,7 +612,7 @@ function devicesInfo() {
                     </div>
                     <div>
                         <span class="mkt-msg-conversion">
-                            São iguais ${desktop.percentage}
+                            São iguais ${desktop.percentage_approved}
                         </span>
                     </div>
                     `;
