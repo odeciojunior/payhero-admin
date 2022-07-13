@@ -810,8 +810,8 @@ function getRegions() {
                 });
 
                 for(let i = 0; i < regionArr.length; i++) {
-                    conversionArr.push(regionArr[i].percentage_conversion);
-                    accessArr.push(regionArr[i].access);
+                    conversionArr.push(regionArr[i].conversion);
+                    // accessArr.push(regionArr[i].access);
                     statesArr.push(regionArr[i].region);
 
                     $(".conversion-colors").append(`<li>${regionArr[i].percentage_conversion}%</li>`);

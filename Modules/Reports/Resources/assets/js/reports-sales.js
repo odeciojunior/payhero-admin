@@ -830,9 +830,9 @@ function abandonedCarts() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let { percentage, value } = response.data;
+            if(response.data.percentage !== "0%") {
+                let { percentage, value } = response.data;
 
-            if(percentage !== "0%") {
                 abandonedBlock = `
                     <div class="row container-payment height-auto">
                         <div class="container">
@@ -863,7 +863,7 @@ function abandonedCarts() {
                         </div>
                     </div>
                 `;
-            }
+            }            
 
             $("#block-abandoned").html(abandonedBlock);
         }
@@ -906,7 +906,7 @@ function orderbump() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data !== null) {
+            if(response.data.amount > 0) {
                 let { amount, value } = response.data;
                 value = removeMoneyCurrency(value);
 
@@ -957,7 +957,7 @@ function upsell() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data !== null) {
+            if(response.data.amount > 0) {
                 let { value, amount } = response.data;
                 value = removeMoneyCurrency(value);
 
@@ -982,6 +982,8 @@ function upsell() {
                         </div>
                     </div>
                 `;
+            } else {
+                upsellBlock = `${noUpsell}`;
             }
 
             $("#block-upsell").html(upsellBlock);
