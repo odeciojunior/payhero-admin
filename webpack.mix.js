@@ -764,6 +764,7 @@ mix.babel([
     'Modules/Reports/Resources/assets/js/chartist.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',
+    'Modules/Reports/Resources/assets/js/chartjs-plugin-datalabels.min.js',
     'Modules/Reports/Resources/assets/js/reports.js'
 ], 'public/build/layouts/reports/index.min.js');
 
