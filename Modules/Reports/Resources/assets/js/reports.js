@@ -777,7 +777,7 @@ function getRegions() {
 
             errorAjaxResponse(response);
         },
-        success: function success(response) {
+        success: function success(response) {            
             if(response.data.length > 0) {
                 regionsHtml = `
                     <footer class="container footer-regions">
@@ -804,19 +804,19 @@ function getRegions() {
                 let accessArr       = [];
                 let statesArr       = [];
 
-                $.each(andre, function(i, v) {
+                $.each(response.data, function(i, v) {
                     regionArr.push(v);
                 });
 
                 for(let i = 0; i < regionArr.length; i++) {
-                    conversionArr.push(regionArr[i].conversion);
+                    conversionArr.push(regionArr[i].percentage_conversion);
                     accessArr.push(regionArr[i].access);
                     statesArr.push(regionArr[i].region);
 
                     $(".conversion-colors").append(`<li>${regionArr[i].percentage_conversion}%</li>`);
                 }
 
-                //accessArr = new Array(statesArr.length).fill(100);
+                accessArr = new Array(statesArr.length).fill(100);
                 $(".new-graph-regions").height($('.conversion-colors').height());
                 $(".states").height($('.conversion-colors').height());
                 $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
