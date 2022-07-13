@@ -19,7 +19,8 @@
                     <span type="hidden" class="error-data"></span>
                 </div>
 
-                <div class="col-sm-12 col-lg-9 col-xl-7 div-filters">
+                <div class=" col-sm-12 col-lg-9 col-xl-7">
+
                     <div class="row justify-content-end align-items-center">
 
                         <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects margin-store" id="box-projects">
@@ -43,7 +44,9 @@
                                 </a>
                             </div>
                         </div> -->
+
                     </div>
+
                 </div>
 
             </div>
@@ -738,5 +741,6 @@
 
 @push('scripts')
     <script type='text/javascript' src='{{ mix('build/layouts/reports/index.min.js') }}'></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 @endpush
 
