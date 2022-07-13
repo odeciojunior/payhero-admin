@@ -804,7 +804,7 @@ function getRegions() {
                 let accessArr       = [];
                 let statesArr       = [];
 
-                $.each(andre, function(i, v) {
+                $.each(response.data, function(i, v) {
                     regionArr.push(v);
                 });
 
