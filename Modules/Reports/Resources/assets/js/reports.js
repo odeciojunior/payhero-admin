@@ -166,15 +166,15 @@ function updateReports() {
     $('input[name="daterange"]').attr('disabled', 'disabled');
 
     Promise.all([
-        // getCommission(),
-        // getPending(),
-        // getCashback(),
-        // getSales(),
-        // getTypePayments(),
-        // getProducts(),
-        // getCoupons(),
+        getCommission(),
+        getPending(),
+        getCashback(),
+        getSales(),
+        getTypePayments(),
+        getProducts(),
+        getCoupons(),
         getRegions(),
-        // updateSalesByOrigin()
+        updateSalesByOrigin()
     ])
     .then(() => {
         $('.sirius-select-container').removeClass('disabled');
