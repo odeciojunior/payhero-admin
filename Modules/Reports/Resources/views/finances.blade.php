@@ -19,10 +19,8 @@
                     <span type="hidden" class="error-data"></span>
                 </div>
 
-                <div class=" col-sm-12 col-lg-9 col-xl-7">
-
+                <div class=" col-sm-12 col-lg-9 col-xl-7 div-filters">
                     <div class="row justify-content-end align-items-center">
-
                         <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects margin-store">
                             <select id='select_projects' class="sirius-select">
                                 {{-- JS carrega.. --}}
@@ -44,9 +42,7 @@
                                 </a>
                             </div>
                         </div> -->
-
                     </div>
-
                 </div>
 
             </div>
@@ -67,8 +63,8 @@
                             <fieldset>
                                 <div class="form-group form-icons">
                                     <i class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         placeholder="E-mail para enviar os relatórios"
                                         class="modal-email"
                                     >
@@ -97,7 +93,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div style="overflow: hidden;" id="project-not-empty" style="display: none">
 
             <section class="container box-reports" id="reports-content">
@@ -125,7 +121,7 @@
 
                 <div class="row">
                     <div class="col-12 d-flex box-chart-primary">
-                        <!-- comission -->    
+                        <!-- comission -->
                         <div class="primary fc">
                             <div class="card" id="card-commission">
                                 <section class="container pb-20 graph-principal">
@@ -180,13 +176,13 @@
                                                 <div class="onPreLoad" id="draw"></div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- /comission -->
-                        
+
                         <!-- distribtion -->
                         <div class="distribution fc">
                             <div class="card inner distribution-content" id="card-distribution">
