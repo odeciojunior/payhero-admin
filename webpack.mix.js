@@ -598,7 +598,7 @@ mix.babel([
     'Modules/Plans/Resources/assets/js/plans.js',
     'Modules/Shipping/Resources/assets/js/shipping.js',
     'Modules/Pixels/Resources/assets/js/pixels.js',
-    'resources/modules/projectupsell/js/index.js',
+    'Modules/ProjectUpsellRule/Resources/assets/js/index.js',
     'Modules/OrderBump/Resources/assets/js/index.js',
     'Modules/ProjectReviews/Resources/assets/js/index.js',
     'Modules/ProjectNotification/Resources/assets/js/projectNotification.js',
@@ -996,7 +996,7 @@ mix.styles([
     'resources/modules/global/css/new-site.css',
     // Bonus Balance Donut Progress
     'resources/modules/global/css/mk_charts.css',
-    'resources/modules/global/css/global.css',    
+    'resources/modules/global/css/global.css',
     'resources/modules/global/adminremark/global/vendor/asscrollable/asScrollable.css',
 ],'public/build/layouts/master/master.min.css');
 

@@ -27,7 +27,7 @@ class LinkShortenerService
 
             $linkValidate = $this->http($apiCall);
 
-            if ($linkValidate == '') {
+            if ($linkValidate) {
                 Log::warning('Link URL invalido (LinkShortenerService - shorten) - ' . $url);
 
                 return $linkValidate;
@@ -43,7 +43,13 @@ class LinkShortenerService
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $resp = curl_exec($curl);
+        $info = curl_getinfo($curl);
+
         curl_close($curl);
+
+        if(isset($info['http_code']) && $info['http_code'] != 200) {
+            return false;
+        }
 
         return $resp;
     }

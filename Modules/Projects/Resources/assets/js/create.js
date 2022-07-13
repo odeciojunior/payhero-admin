@@ -19,61 +19,61 @@ $(document).ready(function () {
         loadingOnScreenRemove();
     });
 
-    // loadingOnScreen();
-    // $.ajax({
-    //     url: '/api/projects/create',
-    //     dataType: "json",
-    //     headers: {
-    //         'Authorization': $('meta[name="access-token"]').attr('content'),
-    //         'Accept': 'application/json',
-    //     },
-    //     error: (response) => {
-    //         if (response.responseJSON.account_is_approved == false) {
-    //             $('#card-project').hide();
-    //             $('#empty-companies-error').show();
-    //             $('.content-error').show()
-    //         }
-    //         $('.page').show()
-    //         loadingOnScreenRemove();
-    //     },
-    //     success: (response) => {
-    //         if (!isEmpty(response)) {
-    //             let countApproved = 0;
-    //             $.each(response, (key, company) => {
-    //                 let dataSelect = '';
-    //                     countApproved = countApproved + 1;
-    //                     if (company.company_type == 'physical person') {
-    //                         if (company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
-    //                             dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')} disabled>${company.name}</option>`;
-    //                         } else {
-    //                             dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
-    //                         }
-    //                     } else if (company.company_type == 'juridical person') {
-    //                         if (company.company_document_status != 'approved' || company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
-    //                             dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')} disabled>${company.name}</option>`;
-    //                         } else {
-    //                             dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
-    //                         }
-    //                     }
-    //                 $('#company').append(dataSelect);
-    //             });
+    loadingOnScreen();
+    $.ajax({
+        url: '/api/projects/create',
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: (response) => {
+            if (response.responseJSON.account_is_approved == false) {
+                $('#card-project').hide();
+                $('#empty-companies-error').show();
+                $('.content-error').show()
+            }
+            $('.page').show()
+            loadingOnScreenRemove();
+        },
+        success: (response) => {
+            if (!isEmpty(response)) {
+                let countApproved = 0;
+                $.each(response, (key, company) => {
+                    let dataSelect = '';
+                        countApproved = countApproved + 1;
+                        if (company.company_type == 'physical person') {
+                            if (company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
+                                dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')} disabled>${company.name}</option>`;
+                            } else {
+                                dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
+                            }
+                        } else if (company.company_type == 'juridical person') {
+                            if (company.company_document_status != 'approved' || company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
+                                dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')} disabled>${company.name}</option>`;
+                            } else {
+                                dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
+                            }
+                        }
+                    $('#company').append(dataSelect);
+                });
 
-    //             if (countApproved == 0){
-    //                 $('.page-content').hide();
-    //                 $('#empty-companies-error').show();
-    //             }else{
-    //                 $('.page-content').show();
-    //                 $('#empty-companies-error').hide();
-    //             }
-    //         } else {
-    //             $('#card-project').hide();
-    //             $('.content-error').show();
-    //         }
+                if (countApproved == 0){
+                    $('.page-content').hide();
+                    $('#empty-companies-error').show();
+                }else{
+                    $('.page-content').show();
+                    $('#empty-companies-error').hide();
+                }
+            } else {
+                $('#card-project').hide();
+                $('.content-error').show();
+            }
 
-    //         $('.page').show()
-    //         loadingOnScreenRemove();
-    //     }
-    // });
+            $('.page').show()
+            loadingOnScreenRemove();
+        }
+    });
 
     function verifyFields() {
         if ($('#name').val().length === 0) {

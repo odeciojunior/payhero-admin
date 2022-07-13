@@ -1406,6 +1406,7 @@ function initSiriusSelect(target) {
     let $target = $(target);
     let classes = Array.from(target[0].classList).filter(e => e !== 'sirius-select').join(' ');
     $target.removeClass(classes);
+    if($target.is(':disabled')) classes += ' disabled';
     $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
     $target.hide();
     $target.after(`<div class="sirius-select-options"></div>`);
@@ -1664,7 +1665,7 @@ function buildModalBonusBalance(bonusObject) {
 
                 <div class="bonus-numbers d-flex align-items-start ml-5">
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">
                         <div>
                             <h4 class="bonus-number-title">
                                 Você ganhou
@@ -1684,7 +1685,7 @@ function buildModalBonusBalance(bonusObject) {
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="margin-right: 10px; width: 100px">
+                    <div class="d-flex flex-column align-items-baseline justify-content-start" style="width: 110px; gap: 8px">
                         <div>
                             <h4 class="bonus-number-title">
                                 Você já utilizou
@@ -1794,7 +1795,7 @@ function showBonusBalance() {
                 if(response.error) {
                     return;
                 }
-                setCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance', 0.5, response);
+                setCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance', 0.083, response);
 
 
                 $('#total-bonus-balance').html(response.current_bonus)

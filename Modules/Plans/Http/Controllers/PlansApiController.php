@@ -58,7 +58,7 @@ class PlansApiController extends Controller
                     if (Gate::allows('edit', [$project])) {
                         //se pode editar o projeto pode visualizar os planos dele
                         $plans = $planModel->with([
-                            'productsPlans.product', 'project.domains' => function($query) use ($projectId) {
+                            'productsPlans.product', 'project.domains' => function ($query) use ($projectId) {
                                 $query->where('project_id', $projectId)
                                     ->where('status', 3)
                                     ->first();
@@ -118,12 +118,12 @@ class PlansApiController extends Controller
     public function store(PlanStoreRequest $request)
     {
         try {
-            $planModel          = new Plan();
-            $productPlan        = new ProductPlan();
-            $productModel       = new Product();
-            $projectModel       = new Project();
+            $planModel = new Plan();
+            $productPlan = new ProductPlan();
+            $productModel = new Product();
+            $projectModel = new Project();
             $affiliateLinkModel = new AffiliateLink();
-            $planService        = new PlanService();
+            $planService = new PlanService();
 
             $requestData = $request->validated();
             $requestData['project_id'] = current(Hashids::decode($requestData['project_id']));
@@ -144,23 +144,23 @@ class PlansApiController extends Controller
                         $requestData['description'] = FoxUtils::removeSpecialChars($requestData['description']);
 
                         $plan = $planModel->create([
-                            'project_id'            => $projectId,
-                            'name'                  => FoxUtils::removeSpecialChars($request['name']),
-                            'description'           => FoxUtils::removeSpecialChars($request['description']),
-                            'price'                 => $requestData['price'],
-                            'status'                => 1,
-                            'shopify_id'            => $get_product->shopify_id ?? null,
-                            'shopify_variant_id'    => $get_product->shopify_variant_id ?? null
+                            'project_id' => $projectId,
+                            'name' => FoxUtils::removeSpecialChars($request['name']),
+                            'description' => FoxUtils::removeSpecialChars($request['description']),
+                            'price' => $requestData['price'],
+                            'status' => 1,
+                            'shopify_id' => $get_product->shopify_id ?? null,
+                            'shopify_variant_id' => $get_product->shopify_variant_id ?? null
                         ]);
 
                         if (!empty($plan)) {
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($request['products'] as $product) {
                                 $productPlan->create([
-                                    'product_id'         => current(Hashids::decode($product['id'])),
-                                    'plan_id'            => $plan->id,
-                                    'amount'             => $product['amount'] ?? 1,
-                                    'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
+                                    'product_id' => current(Hashids::decode($product['id'])),
+                                    'plan_id' => $plan->id,
+                                    'amount' => $product['amount'] ?? 1,
+                                    'cost' => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
                                     'currency_type_enum' => $productPlan->present()->getCurrency($product['currency_type_enum']),
                                 ]);
                             }
@@ -358,6 +358,7 @@ class PlansApiController extends Controller
 
                             $productId = $requestData['products'][$keyProduct];
                             CacheService::forget(CacheService::CHECKOUT_CART_PRODUCT_PLAN, $productId);
+                            PlanService::forgetCache($planId);
                         }
                     }
 
@@ -393,20 +394,20 @@ class PlansApiController extends Controller
     public function updateInformations(PlanUpdateInformationsRequest $request, $id)
     {
         try {
-            $planModel    = new Plan();
+            $planModel = new Plan();
 
             $requestData = $request->validated();
             $price = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
             $price = $this->getValue($price);
 
-            $planId   = current(Hashids::decode($id));
+            $planId = current(Hashids::decode($id));
             $plan = $planModel->with('plansSales')->where('id', $planId)->first();
             $plan->update([
-                'name'        => FoxUtils::removeSpecialChars($requestData['name']),
+                'name' => FoxUtils::removeSpecialChars($requestData['name']),
                 'description' => FoxUtils::removeSpecialChars($requestData['description']),
-                'code'        => $id,
-                'price'       => $price,
-                'status'      => $planModel->present()->getStatus('active'),
+                'code' => $id,
+                'price' => $price,
+                'status' => $planModel->present()->getStatus('active'),
             ]);
 
             $planResource = $planModel->with(['productsPlans.product'])->find($planId);
@@ -436,7 +437,7 @@ class PlansApiController extends Controller
             $planId = current(Hashids::decode($id));
             $plan = $planModel->with(['productsPlans'])->where('id', $planId)->first();
             if (!empty($plan)) {
-                $productsIds = array_map(function($p) {
+                $productsIds = array_map(function ($p) {
                     return current(Hashids::decode($p['id']));
                 }, $requestData['products']);
 
@@ -451,10 +452,10 @@ class PlansApiController extends Controller
                 foreach ($requestData['products'] as $product) {
                     if (!in_array(current(Hashids::decode($product['id'])), $productsPlan->pluck('product_id')->toArray())) {
                         $productPlanModel->create([
-                            'product_id'         => current(Hashids::decode($product['id'])),
-                            'plan_id'            => $plan->id,
-                            'amount'             => $product['amount'] ?? 1,
-                            'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
+                            'product_id' => current(Hashids::decode($product['id'])),
+                            'plan_id' => $plan->id,
+                            'amount' => $product['amount'] ?? 1,
+                            'cost' => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
                             'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
                         ]);
                     } else {
@@ -563,7 +564,7 @@ class PlansApiController extends Controller
                 $plans->whereIn('project_id', $projects);
             }
 
-            if(!empty($data['total'])){
+            if (!empty($data['total'])) {
                 $result = DB::select("SELECT count(*) as total FROM plans where deleted_at is null and project_id = $projectId and status = 1");
                 $thumbnails = Plan::where('project_id', $projectId)->with('products')->limit(8)->get();
 
@@ -580,20 +581,20 @@ class PlansApiController extends Controller
             }
 
             $itemsNotIn = [];
-            if(!empty($data['items_saved']) && is_array($data['items_saved'])){
-                foreach($data['items_saved'] as $items){
+            if (!empty($data['items_saved']) && is_array($data['items_saved'])) {
+                foreach ($data['items_saved'] as $items) {
                     $itemsNotIn[] = current(Hashids::decode($items['id']));
                 }
             }
 
             //if(empty($data['search']) && empty($data['search2'])) $itemsNotIn = [];
 
-            if(!empty($data['most_sales'])){
+            if (!empty($data['most_sales'])) {
 
                 $plans->select('id', 'name', 'description',
-                                DB::raw("id as i"),
-                                DB::raw("(select count(plan_id) from plans_sales where plan_id = i) as sales"))
-                                ->whereNotIn('id', $itemsNotIn);
+                    DB::raw("id as i"),
+                    DB::raw("(select count(plan_id) from plans_sales where plan_id = i) as sales"))
+                    ->whereNotIn('id', $itemsNotIn);
                 $plans = $plans->orderBy('sales', 'desc')->paginate(16);
 
                 return PlansSelectResource::collection($plans);
@@ -610,11 +611,15 @@ class PlansApiController extends Controller
                 $plans->select('id', 'name', 'description');
             }
 
-
             if (!empty($data['is_config'])) {
-                $plans = $plans->orderBy('name')->take(10)->get();
+                $plans = $plans->orderBy('name')
+                    ->orderBy('description')
+                    ->take(10)
+                    ->get();
             } else {
-                $plans = $plans->orderBy('name')->paginate(10);
+                $plans = $plans->orderBy('name')
+                    ->orderBy('description')
+                    ->paginate(10);
             }
 
             return PlansSelectResource::collection($plans);
@@ -705,9 +710,9 @@ class PlansApiController extends Controller
 
             if ($updateAllCurrency == 1) {
                 ProductPlan::whereIn('plan_id', $project->plans->pluck('id')->toArray())
-                ->update([
-                    'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
-                ]);
+                    ->update([
+                        'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                    ]);
             }
 
             if (!empty($productsSelected) && !empty($cost)) {
@@ -724,20 +729,20 @@ class PlansApiController extends Controller
                         }
 
                         ProductPlan::whereIn('product_id', $product->variants->pluck('id')->toArray())
-                        ->update([
-                            'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
-                            'cost' => $cost
-                        ]);
+                            ->update([
+                                'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                                'cost' => $cost
+                            ]);
                     } else {
                         $product->currency_type_enum = $projectModel->present()->getCurrencyCost($costCurrency);
                         $product->cost = $cost;
                         $product->save();
 
                         ProductPlan::where('product_id', $productId)
-                        ->update([
-                            'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
-                            'cost' => $cost
-                        ]);
+                            ->update([
+                                'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                                'cost' => $cost
+                            ]);
                     }
                 }
             } else {
@@ -803,87 +808,79 @@ class PlansApiController extends Controller
 
     public function saveConfigCustomProducts(Request $request)
     {
-        try{
-            set_time_limit(0);
-            $rules = [
-                'plan' => 'required',
-            ];
+        set_time_limit(0);
+        $rules = [
+            'plan' => 'required',
+        ];
 
-            $messages = [
-                'plan.required' => 'Informe o plano',
-            ];
+        $messages = [
+            'plan.required' => 'Informe o plano',
+        ];
 
-            $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules, $messages);
 
-            if ($validator->fails()) {
-                return response()->json($validator, 400);
-            }
-
-            $planId = current(Hashids::decode($request->plan));
-
-            $allow_change_in_block = false;
-            if (!empty($request->allow_change_in_block) && boolval($request->allow_change_in_block) === true) {
-                $allow_change_in_block = true;
-            }
-
-            if (count($request->input('productsPlan', [])) > 0) {
-                $productsPlanIds = array_unique($request->productsPlan);
-
-                $details = [];
-                foreach ($productsPlanIds as $productPlanId) {
-                    $details[$productPlanId]['type'] = !empty($request->type[$productPlanId]) ? $request->type[$productPlanId] : [];
-                    $details[$productPlanId]['label'] = !empty($request->label[$productPlanId]) ? $request->label[$productPlanId] : [];
-                }
-
-                $itens = [];
-                foreach ($details as $productPlanId => $detailL1) {
-                    foreach ($detailL1 as $key2 => $detailL2) {
-                        foreach ($detailL2 as $key3 => $detailL3) {
-                            $itens[$productPlanId][$key3][$key2] = $detailL3 ?? '';
-                        }
-                    }
-                }
-
-                //atualizando personalização existente
-                $idsProductPlans = [];
-                foreach ($itens as $productPlanId => $config) {
-                    $productPlanModel = new ProductPlan();
-                    $productPlan = $productPlanModel->where('product_id', current(Hashids::decode($productPlanId)))->where('plan_id', $planId)->first();
-                    if (!empty($productPlan)) {
-                        $productPlan->custom_config = $config;
-                        $productPlan->is_custom = !empty($request->is_custom[$productPlanId]) ? 1 : 0;
-                        $productPlan->update();
-                        if ($allow_change_in_block === true) {
-                            $productShopfyId = Product::where('id', current(Hashids::decode($productPlanId)))->first();
-                            $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, $config, !empty($request->is_custom[$productPlanId]) ? 1 : 0);
-                        }
-                        $idsProductPlans[] = $productPlan->id;
-                    }
-                }
-            } else {
-                $productPlans = ProductPlan::where('plan_id', current(Hashids::decode($request->plan)))->where('product_id', current(Hashids::decode($request->product_id)))->get();
-                foreach ($productPlans as $productPlan) {
-                    $productPlan->custom_config = [];
-                    $productPlan->is_custom = !empty($request->is_custom[$productPlan->id]) ? 1 : 0;
-                    $productPlan->update();
-                }
-
-                if ($allow_change_in_block === true) {
-                    $productShopfyId = Product::where('id', current(Hashids::decode($request->product_id)))->first();
-                    $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, [], !empty($request->is_custom[$productPlan->id]) ? 1 : 0);
-                }
-            }
-
-            return response()->json([
-                'message' => 'Configurações atualizadas com sucesso',
-            ], 200);
-
-        } catch (Exception $e) {
-            report($e);
-            return response()->json([
-                'message' => 'Erro ao atualizar configurações do plano',
-            ], 400);
+        if ($validator->fails()) {
+            return response()->json($validator, 400);
         }
+
+        $planId = current(Hashids::decode($request->plan));
+
+        $allow_change_in_block = false;
+        if (!empty($request->allow_change_in_block) && boolval($request->allow_change_in_block) === true) {
+            $allow_change_in_block = true;
+        }
+
+        if (count($request->input('productsPlan', [])) > 0) {
+            $productsPlanIds = array_unique($request->productsPlan);
+
+            $details = [];
+            foreach ($productsPlanIds as $productPlanId) {
+                $details[$productPlanId]['type'] = !empty($request->type[$productPlanId]) ? $request->type[$productPlanId] : [];
+                $details[$productPlanId]['label'] = !empty($request->label[$productPlanId]) ? $request->label[$productPlanId] : [];
+            }
+
+            $itens = [];
+            foreach ($details as $productPlanId => $detailL1) {
+                foreach ($detailL1 as $key2 => $detailL2) {
+                    foreach ($detailL2 as $key3 => $detailL3) {
+                        $itens[$productPlanId][$key3][$key2] = $detailL3 ?? '';
+                    }
+                }
+            }
+
+            //atualizando personalização existente
+            $idsProductPlans = [];
+            foreach ($itens as $productPlanId => $config) {
+                $productPlanModel = new ProductPlan();
+                $productPlan = $productPlanModel->where('product_id', current(Hashids::decode($productPlanId)))->where('plan_id', $planId)->first();
+                if (!empty($productPlan)) {
+                    $productPlan->custom_config = $config;
+                    $productPlan->is_custom = !empty($request->is_custom[$productPlanId]) ? 1 : 0;
+                    $productPlan->update();
+                    if ($allow_change_in_block === true) {
+                        $productShopfyId = Product::where('id', current(Hashids::decode($productPlanId)))->first();
+                        $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, $config, !empty($request->is_custom[$productPlanId]) ? 1 : 0);
+                    }
+                    $idsProductPlans[] = $productPlan->id;
+                }
+            }
+        } else {
+            $productPlans = ProductPlan::where('plan_id', current(Hashids::decode($request->plan)))->where('product_id', current(Hashids::decode($request->product_id)))->get();
+            foreach ($productPlans as $productPlan) {
+                $productPlan->custom_config = [];
+                $productPlan->is_custom = !empty($request->is_custom[$productPlan->id]) ? 1 : 0;
+                $productPlan->update();
+            }
+
+            if ($allow_change_in_block === true) {
+                $productShopfyId = Product::where('id', current(Hashids::decode($request->product_id)))->first();
+                $this->updateAllConfigCustomProduct($productShopfyId->shopify_id, [], !empty($request->is_custom[$productPlan->id]) ? 1 : 0);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Configurações atualizadas com sucesso',
+        ], 200);
     }
 
     private function updateAllConfigCustomProduct($shopify_id, $config, $is_custom)

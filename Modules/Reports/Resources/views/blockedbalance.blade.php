@@ -69,13 +69,6 @@
                         <div class="row">
 
                             <div class="col-sm-6 col-md-3">
-                                <label for="company">Empresa</label>
-                                <select name='select_company' id="company" class="sirius-select">
-                                    <option value="">Todas as empresas</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6 col-md-3">
                                 <label for="projeto">Lojas</label>
                                 <select name='select_project' id="project" class="sirius-select">
                                     <option value="">Todas lojas</option>
@@ -98,18 +91,19 @@
                                     <option value="4">PIX</option>
                                 </select>
                             </div>
+
+                            <div class="col-sm-6 col-md-3">
+                                <label for="status">Status</label>
+                                <select name='sale_status' id="status" class="sirius-select">
+                                    <option value="">Todos status</option>
+                                    <option value="1">Aprovado</option>
+                                    <option value="24">Em disputa</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="collapse" id="bt_collapse">
                             <div class="row mt-15">
-                                <div class="col-sm-6 col-md-3">
-                                    <label for="status">Status</label>
-                                    <select name='sale_status' id="status" class="sirius-select">
-                                        <option value="">Todos status</option>
-                                        <option value="1">Aprovado</option>
-                                        <option value="24">Em disputa</option>
-                                    </select>
-                                </div>
 
                                 <div class="col-sm-6 col-md-3">
                                     <label for="transaction">Transação</label>
@@ -126,9 +120,6 @@
                                     <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                                 </div>
 
-                            </div>
-
-                            <div class="row">
                                 <div class="col-sm-6 col-md-3">
                                     <label for="reason">Motivo</label>
                                     <select name="reason" id="reason" class="sirius-select">
@@ -136,7 +127,9 @@
                                         {{-- loaded via javascript --}}
                                     </select>
                                 </div>
+                            </div>
 
+                            <div class="row">
                                 <div class="col-sm-6 col-md-3">
                                     <label for="date_type">Data</label>
                                     <select name='date_type' id="date_type" class="sirius-select">

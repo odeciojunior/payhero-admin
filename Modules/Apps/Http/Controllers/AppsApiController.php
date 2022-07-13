@@ -28,7 +28,7 @@ class AppsApiController extends Controller
     public function index(Request $request): JsonResponse
     {
         $accountOwnerId = auth()->user()->getAccountOwnerId();
-        $company_default = Hashids::decode($request->company);//auth()->user()->company_default;
+        $company_default = auth()->user()->company_default;
         return response()->json([
 
             'hotzappIntegrations' => HotzappIntegration::

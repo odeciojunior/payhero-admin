@@ -323,7 +323,7 @@ $(document).ready(function () {
                                         </div>
 
                                         <div id="chargeback-custom-tooltip-container" class="custom-tooltip-container mx-2" style="display: none; margin-top: -430px;">
-                                            <div class="custom-tooltip-content" style="margin-right: 150px">
+                                            <div class="custom-tooltip-content" style="margin-right: 220px">
                                                 <p>
                                                 O chargeback acontece quando uma cobrança é contestada pelo titular do cartão de crédito.
                                                 </p>
