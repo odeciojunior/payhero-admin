@@ -14,7 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
- * Class TrackingCodeUpdatedSendEmailClientListener
+ * Class TicketMessageSendEmailListener
  * @package Modules\Core\Listeners
  */
 class TicketMessageSendEmailListener implements ShouldQueue
