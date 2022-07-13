@@ -12,7 +12,9 @@ const srcPlatforms = {
     'taboola': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola',
     'pinterest': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest',
     'uol_ads': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads',
-    'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok'
+    'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok',
+    'kwai': 'https://play-lh.googleusercontent.com/SppqhvYt5jitanHUUXZKrVHqLedt7sCN5wTcZZfVL8oq10YgJCNSaEksCoaoWgD9cj6P=w240-h480-rw'
+    //https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai
 }
 
 $(function () {
@@ -345,6 +347,7 @@ $(function () {
             case "outbrain":
             case 'uol_ads':
             case 'tiktok':
+            case 'kwai':
             default:
                 return code;
         }
@@ -537,6 +540,12 @@ $(function () {
                 multipleEvent.removeClass('d-none')
                 break;
             case 'tiktok':
+                inputPlatform.attr("placeholder", 'C5OSDKKVNBDLN9M5C6UG');
+                inputPlatform.parent().parent().find('label').html('ID');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
+                break;
+            case 'kwai':
                 inputPlatform.attr("placeholder", 'C5OSDKKVNBDLN9M5C6UG');
                 inputPlatform.parent().parent().find('label').html('ID');
                 singleEvent.addClass('d-none');
