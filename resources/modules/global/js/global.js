@@ -1518,13 +1518,13 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.sirius-select-text', function () {
-        $('.sirius-select-text').removeClass('active');
-        $('.sirius-select-options').fadeOut();
-
         let $target = $(this);
+        let $options = $target.parent().find('.sirius-select-options');
+
+        $('.sirius-select-text').not($target).removeClass('active');
+        $('.sirius-select-options').not($options).fadeOut();
+
         $target.toggleClass('active');
-        let $wrapper = $target.parent();
-        let $options = $wrapper.find('.sirius-select-options');
         $target.hasClass('active') ? $options.fadeIn() : $options.fadeOut();
     });
 
