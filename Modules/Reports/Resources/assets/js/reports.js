@@ -821,7 +821,7 @@ function getRegions() {
                 }
 
                 accessArr = new Array(statesArr.length).fill(100);
-                $(".new-graph-regions").height($('.conversion-colors').height());
+                $(".new-graph-regions").height($('.conversion-colors').height() + 16);
                 $(".states").height($('.conversion-colors').height());
                 $('.new-graph-regions').html('<canvas id="regionsChart"></canvas>');
 
@@ -1520,7 +1520,7 @@ function graphRegions(labels, conversion, access) {
                 y: {
                     stacked: true,
                     grid: {
-                        color: 'white',
+                        color: '#2e85ec',
                         drawBorder: false,
                         display: false
                     },
@@ -1528,14 +1528,14 @@ function graphRegions(labels, conversion, access) {
                     min: 0,
                     max: 100,
                     ticks: {
-                        padding: -18,
+                        padding: 0,
                         mirror: false,
                         stepSize: true,
                         font: {
                             family: 'Muli',
                             size: 12,
                         },
-                        color: "#ffffff"
+                        color: "#2e85ec"
                     }
                 }
             },
