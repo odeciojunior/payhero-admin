@@ -403,7 +403,12 @@ class ReportMarketingService
             ->get()
             ->toArray();
 
-            foreach($regions as &$region) {
+            $brasilianStates = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
+            foreach($regions as $key => &$region) {
+                if(!in_array($region['region'], $brasilianStates)){
+                    unset($regions[$key]);
+                    continue;
+                }
                 $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $region['access'], 2, '.', ','), 1, PHP_ROUND_HALF_UP);
             }
 
