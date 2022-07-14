@@ -19,7 +19,7 @@
                     <span type="hidden" class="error-data"></span>
                 </div>
 
-                <div class=" col-sm-12 col-lg-9 col-xl-7">
+                <div class=" col-sm-12 col-lg-9 col-xl-7 div-filters">
 
                     <div class="row justify-content-end align-items-center">
 
