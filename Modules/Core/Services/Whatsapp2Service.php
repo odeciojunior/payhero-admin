@@ -224,7 +224,7 @@ class Whatsapp2Service
                     'financial_status' => Whatsapp2Integration::STATUS_CANCELLED,
                     'billet_url' => $link,
                     'gateway' => 'cloudfox',
-                    'checkout_url' => "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
+                    'checkout_url' => "https://checkout." . $domain->name . "/recovery/" . hashids_encode($sale->checkout_id),
                     'id' => $sale->checkout_id,
                     'status' => Whatsapp2Integration::STATUS_CANCELLED,
                     'values'           => [
