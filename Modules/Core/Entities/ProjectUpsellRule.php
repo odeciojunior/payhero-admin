@@ -5,7 +5,6 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,6 +22,8 @@ class ProjectUpsellRule extends Model
         'project_id',
         'description',
         'discount',
+        'use_variants',
+        'apply_on_shipping',
         'apply_on_plans',
         'offer_on_plans',
         'active_flag',

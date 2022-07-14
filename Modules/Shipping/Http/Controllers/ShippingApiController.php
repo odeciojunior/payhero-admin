@@ -2,9 +2,9 @@
 
 namespace Modules\Shipping\Http\Controllers;
 
-use Composer\Cache;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -16,6 +16,7 @@ use Modules\Core\Services\CacheService;
 use Modules\Shipping\Http\Requests\ShippingStoreRequest;
 use Modules\Shipping\Http\Requests\ShippingUpdateRequest;
 use Modules\Shipping\Transformers\ShippingResource;
+use Modules\Shipping\Transformers\ShippingSelectResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -80,7 +81,7 @@ class ShippingApiController extends Controller
 
             $shippingValidated = $request->validated();
 
-            
+
             if ($shippingValidated) {
                 $shippingValidated['project_id'] = current(Hashids::decode($projectId));
 
@@ -312,6 +313,9 @@ class ShippingApiController extends Controller
 
                     $requestValidated['type_enum'] = $shippingModel->present()->getTypeEnum($requestValidated['type']);
 
+                    $oldApplyOnPlans = json_decode($shipping->apply_on_plans);
+                    $oldNotApplyOnPlans = json_decode($shipping->not_apply_on_plans);
+
                     $shippingUpdated = $shipping->update($requestValidated);
 
                     if (!$requestValidated['pre_selected'] && !$shipping->pre_selected) {
@@ -341,6 +345,16 @@ class ShippingApiController extends Controller
                             $mensagem = 'É obrigatório deixar um frete ativado';
                         }
 
+                        foreach ($oldApplyOnPlans as $plan) {
+                            if($plan !== 'all') {
+                                CacheService::forget(CacheService::SHIPPING_PLAN, $plan);
+                                CacheService::forget(CacheService::SHIPPING_PLAN_VARIANTS, $plan);
+                            }
+                        }
+                        foreach ($oldNotApplyOnPlans as $plan) {
+                            CacheService::forget(CacheService::SHIPPING_PLAN, $plan);
+                            CacheService::forget(CacheService::SHIPPING_PLAN_VARIANTS, $plan);
+                        }
                         CacheService::forgetContainsUnique(CacheService::SHIPPING_RULES, $shipping->project_id);
 
                         return response()->json([
@@ -483,6 +497,23 @@ class ShippingApiController extends Controller
         }
 
         return true;
+    }
+
+    public function getShippings(Request $request)
+    {
+        try {
+            $data = (object)$request->all();
+            $projectId = hashids_decode($data->project_id);
+
+            $shippings = Shipping::select(['id', 'name', 'information', 'type'])
+                ->where('status', Shipping::STATUS_ACTIVE)
+                ->where('project_id', $projectId)
+                ->paginate(10);
+
+            return ShippingSelectResource::collection($shippings);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Erro ao listar fretes'], 400);
+        }
     }
 
     private function getDecodedPlanIds(array $encodedIds)
