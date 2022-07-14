@@ -180,7 +180,7 @@
                                         <div class="card inner card-devices" id="card-devices">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
-                                                    <strong>Dispositivos</strong>
+                                                    <strong>Conversão por dispositivos</strong>
                                                 </h5>
                                             </header>
                                             <div class="custom-table pb-0 pt-0 onPreLoad" id="block-devices"></div>
