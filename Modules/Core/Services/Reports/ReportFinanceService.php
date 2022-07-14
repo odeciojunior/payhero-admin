@@ -1447,17 +1447,17 @@ class ReportFinanceService
             return [
                 'available' => [
                     'value' => foxutils()->formatMoney($availableBalance / 100),
-                    'percentage' => round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'percentage' => !empty($totalBalance) ? round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP) : 0,
                     'color' => 'green'
                 ],
                 'pending' => [
                     'value' => foxutils()->formatMoney($pendingBalance / 100),
-                    'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'percentage' => !empty($totalBalance) ? round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP) : 0,
                     'color' => 'yellow'
                 ],
                 'blocked' => [
                     'value' => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
-                    'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'percentage' => !empty($totalBalance) ? round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP) : 0,
                     'color' => 'red'
                 ],
                 'total' => $totalBalance > 0 ? foxutils()->formatMoney($totalBalance / 100) : null,
