@@ -490,6 +490,9 @@ function loadDevices() {
             <p class="noone">Sem dados</p>
         </div>
     `;
+
+    let deviceInfoBlock = '';
+
     $('#card-devices .onPreLoad *' ).remove();
     $("#block-devices").html(skeLoad);
 
@@ -614,7 +617,9 @@ function loadDevices() {
                         </div>
                         `;
                 }
-            } else {
+            }
+
+            if (response.data == null) {
                 $('#card-info-conversion').hide();
             }
 
