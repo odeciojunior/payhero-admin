@@ -668,7 +668,6 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
 $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').attr('overflow', 'hidden')
 
 function pagination(response, model, callback) {
-
     let paginationContainer = "#pagination-" + model;
 
     $(paginationContainer).html("");
@@ -689,6 +688,7 @@ function pagination(response, model, callback) {
     }
 
     $(paginationContainer + ' .first_page').on("click", function () {
+        console.log($(this).html() + ' -1111');
         callback('?page=1');
     });
 
@@ -701,6 +701,7 @@ function pagination(response, model, callback) {
         $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
 
         $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
+            console.log($(this).html() + ' 00000');
             callback('?page=' + $(this).html());
         });
     }
@@ -721,6 +722,7 @@ function pagination(response, model, callback) {
         $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
 
         $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
+            console.log($(this).html() + ' 1111');
             callback('?page=' + $(this).html());
         });
     }
@@ -735,6 +737,7 @@ function pagination(response, model, callback) {
         }
 
         $(paginationContainer + ' .last_page').on("click", function () {
+            console.log($(this).html() + ' 2222');
             callback('?page=' + lastPage);
         });
     }
