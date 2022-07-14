@@ -269,6 +269,8 @@ h4.number{
     }  */
 }
 
+.select-projects { flex: auto; }
+
 @media only screen and (max-width: 480px) {
     .select-projects,
     .date-report {
@@ -1921,19 +1923,26 @@ h4.number{
     font-weight: bold;
     font-size: 12px;
 }
+.footer-regions .states li:only-child,
+.conversion-colors li:only-child { 
+    min-height: 48px; 
+    line-height: 48px;
+}
 .conversion-colors li:last-child,
 .footer-regions .states li:last-child { margin: 0; }
 
 .footer-regions .states {
     position: absolute;
-    left: 0;
+    left: 3px;
     top: 2px;
     padding: 0;
+    z-index: 1;
 }
 .footer-regions .states li {
     color: #fff;
     margin-bottom: 5.9px;
 }
+
 .footer-regions section { flex: 1; }
 
 .box-total-region {
@@ -2241,6 +2250,7 @@ h4.number{
 #card-cashback .new-graph-cashback { height: 109px; }
 
 #card-regions .new-graph-regions {
+    min-height: 48px;
     width: 157px;
     float: left;
 }

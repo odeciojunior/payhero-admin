@@ -294,26 +294,28 @@ function getPending() {
 
             if(response.data !== null) {
                 let { chart, total, variation } = response.data;
-
-                pendHtml = `
-                    <div class="container d-flex value-price">
-                        <h4 id='cashback' class="font-size-24 bold grey">
-                            <span class="currency">R$ </span>
-                            ${total}
-                        </h4>
-                    </div>
-                    <div class="new-graph-pending graph"></div>
-                `;
-                $("#block-pending").html(pendHtml);
-                $('.new-graph-pending').width($('#block-pending').width());
-                $('.new-graph-pending').html('<canvas id=graph-pending></canvas>')
-                let labels = [...chart.labels];
-                let series = [...chart.values];
-                newGraphPending(series,labels);
-
-                $(window).on("resize", function() {
+                if(total !== null || total > '0,00') {
+                    pendHtml = `
+                        <div class="container d-flex value-price">
+                            <h4 id='cashback' class="font-size-24 bold grey">
+                                <span class="currency">R$ </span>
+                                ${total}
+                            </h4>
+                        </div>
+                        <div class="new-graph-pending graph"></div>
+                    `;
+                    $("#block-pending").html(pendHtml);
                     $('.new-graph-pending').width($('#block-pending').width());
-                });
+                    $('.new-graph-pending').html('<canvas id=graph-pending></canvas>')
+                    let labels = [...chart.labels];
+                    let series = [...chart.values];
+                    newGraphPending(series,labels);
+                    $(window).on("resize", function() {
+                        $('.new-graph-pending').width($('#block-pending').width());
+                    });
+                } else {
+                    $("#block-pending").html(pendHtml);
+                }
             } else {
                 $("#block-pending").html(pendHtml);
             }
@@ -781,6 +783,7 @@ function getRegions() {
             if(response.data.length > 0) {
                 regionsHtml = `
                     <footer class="container footer-regions">
+                        <ul class="states"></ul>
                         <section class="box-total-region">
                             <div class="new-graph-regions graph">
                             </div>
@@ -814,6 +817,7 @@ function getRegions() {
                     statesArr.push(regionArr[i].region);
 
                     $(".conversion-colors").append(`<li>${regionArr[i].percentage_conversion}%</li>`);
+                    $(".states").append(`<li>${regionArr[i].region}</li>`);
                 }
 
                 accessArr = new Array(statesArr.length).fill(100);
@@ -1464,7 +1468,6 @@ function graphComission(series, labels) {
 }
 
 function graphRegions(labels, conversion, access) {
-    Chart.register(ChartDataLabels);
     const ctx = document.getElementById('regionsChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'bar',
@@ -1501,23 +1504,12 @@ function graphRegions(labels, conversion, access) {
                 }
             ]
         },
-        plugins: [ChartDataLabels],
         options: {
             maintainAspectRatio: false,
             indexAxis: 'y',
             plugins: {
                 legend: {display: false},
                 title: {display: false},
-                datalabels: {
-                    anchor: 'start',
-                    align: 'end',
-                    color: chart => {
-                        return 'rgba(255,255,255,1)';
-                    },
-                    formatter: function(value, context) {
-                        return context.chart.data.labels[context.dataIndex];
-                    }
-                  }
             },
 
             responsive: true,
@@ -1537,7 +1529,7 @@ function graphRegions(labels, conversion, access) {
                     max: 100,
                     ticks: {
                         padding: -18,
-                        mirror: true,
+                        mirror: false,
                         stepSize: true,
                         font: {
                             family: 'Muli',
