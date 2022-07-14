@@ -2503,3 +2503,5 @@ h4.number{
 #brazil-map-filter .disabled {
     opacity: 0.5;
 }
+
+.no-data-draws h6 { color: #999; }

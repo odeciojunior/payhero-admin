@@ -170,7 +170,7 @@ function withdrawals() {
                     ${noWithdrawal}
                 </div>
 
-                <div class="data-withdrawals">
+                <div class="data-withdrawals no-data-draws">
                     <h6>Sem dados, por enquanto...</h6>
                     <p>
                     Ainda faltam dados suficientes para a comparação, continue rodando!

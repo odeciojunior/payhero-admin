@@ -199,7 +199,7 @@
                                     <div class="card inner secondary-blocks" id="card-pending">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
-                                                <strong>Pendente</strong>
+                                                <strong>Saldo pendente</strong>
                                             </h5>
                                             <a href="{{ route('reports.pending') }} " class="box-link silver">
                                                 <span>Acessar&nbsp&nbsp</span>
@@ -211,7 +211,7 @@
                                     <div class="card inner secondary-blocks" id="card-blockeds">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
-                                                <strong>Retido</strong>
+                                                <strong>Saldo retido</strong>
                                             </h5>
                                             <a href="{{ route('reports.blockedbalance') }}" class="box-link silver">
                                                 <span>Acessar&nbsp&nbsp</span>

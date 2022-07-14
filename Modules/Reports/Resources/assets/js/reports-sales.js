@@ -1212,7 +1212,7 @@ function infoCard() {
                     <div>
                         <span class="font-size-12">
                         Cartão representa <strong class="card-represent">${credit_card.percentage}</strong> das vendas
-                        aprovadas e tem um indíce de conversão de <strong class="conversion-card">${conversionCard.credit_card.percentage}</strong>
+                        aprovadas e tem um índice de conversão de <strong class="conversion-card">${conversionCard.credit_card.percentage}</strong>
                         </span>
                     </div>
                 </div>

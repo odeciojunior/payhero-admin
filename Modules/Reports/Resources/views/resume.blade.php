@@ -197,7 +197,7 @@
 												<div class="card-body data-content">
                                                     <div class="content-info">
                                                         <header class="container">
-                                                            <h6 class="font-size-16 gray-700 grey"> Produtos </h6>
+                                                            <h6 class="font-size-16 gray-700 grey">Produtos mais vendidos</h6>
                                                         </header>
                                                         <div class="onPreLoad" id="block-products"></div>
                                                     </div>
@@ -232,7 +232,7 @@
 												<div class="card-body data-content">
                                                     <div class="content-info">
                                                         <header class="container">
-                                                            <h6 class="font-size-16 gray-700 grey"> Cupons </h6>
+                                                            <h6 class="font-size-16 gray-700 grey">Cupons de desconto</h6>
                                                         </header>
                                                         <div class="onPreLoad" id="block-coupons"></div>
                                                     </div>
@@ -242,7 +242,7 @@
 												<div class="card-body">
                                                     <div class="content-info">
                                                         <header class="container">
-                                                            <h6 class="font-size-16 gray-700 grey"> Regiões </h6>
+                                                            <h6 class="font-size-16 gray-700 grey">Conversão por estado</h6>
                                                             <!-- <h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4> -->
                                                         </header>
                                                         <div class="onPreLoad" id="block-regions"></div>
@@ -267,7 +267,7 @@
                                                             </div>
 
                                                             <header class="col-6">
-                                                                <h6 class="font-size-16 gray-700"> Origens </h6>
+                                                                <h6 class="font-size-16 gray-700">UTMs</h6>
                                                             </header>
 
                                                             <div class="col-6 sirius-select-origin" style="padding-right: 11px;">
