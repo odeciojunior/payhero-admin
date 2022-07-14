@@ -304,7 +304,7 @@
                                     <td class="table-title display-sm-none display-m-none">Data</td>
                                     <td class="table-title display-sm-none">Pagamento</td>
                                     <td class="table-title">Comissão</td>
-                                    <td class="table-title">Motivo bloqueio</td>
+                                    <td class="table-title">Motivo</td>
                                 </tr>
                                 </thead>
                                 <tbody id="dados_tabela"  img-empty="{!! mix('build/global/img/vendas.svg')!!}">
