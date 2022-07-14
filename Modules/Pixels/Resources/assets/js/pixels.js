@@ -13,8 +13,7 @@ const srcPlatforms = {
     'pinterest': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest',
     'uol_ads': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads',
     'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok',
-    'kwai': 'https://play-lh.googleusercontent.com/SppqhvYt5jitanHUUXZKrVHqLedt7sCN5wTcZZfVL8oq10YgJCNSaEksCoaoWgD9cj6P=w240-h480-rw'
-    //https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai
+    'kwai': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai'
 }
 
 $(function () {
