@@ -308,7 +308,7 @@ class SendgridService
     {
         try {
             if (env('APP_ENV') == 'production') {
-                if (!FoxUtils::validateEmail($toEmail)) {
+                if (!foxutils()->validateEmail($toEmail)) {
                     return false;
                 }
             } else {
