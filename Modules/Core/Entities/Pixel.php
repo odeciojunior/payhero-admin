@@ -95,6 +95,7 @@ class Pixel extends Model
     public const TABOOLA_PLATFORM = 'taboola';
     public const OUTBRAIN_PLATFORM = 'outbrain';
     public const PINTEREST_PLATFORM = 'pinterest';
+    public const KWAI_PLATFORM = 'kwai';
 
     /**
      * @var string
