@@ -1251,6 +1251,8 @@ h4.number{
     stroke: #1BE4A8;
 }
 
+.sub-comission{ flex-direction: column; }
+
 @media (min-width: 1220px) {
     .sub-comission{ flex-direction: row; }
 }
@@ -1267,6 +1269,8 @@ h4.number{
 }
 
 .distribution.fc .sub-distribution { flex-direction: column; }
+
+.distribution.mkt .card-most-sales { width: 100%; }
 
 .box-graph-dist {
     padding: 1.0715rem 1.0715rem 25px 1.0715rem;
