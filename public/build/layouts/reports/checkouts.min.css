@@ -2549,6 +2549,9 @@ h4.number{
 }
 
 .no-data-draws h6 { color: #999; }
+
+.mt-28 { margin-top: 28px; }
+.pt-12 { padding-top: 12px; }
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;

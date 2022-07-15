@@ -128,11 +128,11 @@
                         <div class="primary sc">
                             <div class="card" id="card-status">
                                 <section class="container pb-20 graph-principal">
-                                    <header class="d-flex title-graph title-graph-sales">
+                                    <header class="d-flex title-graph title-graph-sales mt-0">
                                         <h5 class="grey font-size-16">
                                             <strong>Quantidade</strong>
                                         </h5>
-                                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects">
+                                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects mt-28">
                                             <div class="sirius-select-container sirius-select-inside">
                                                 <select name="status" id="status-graph" class="sirius-select">
                                                     <option value="">Todos os status</option>
@@ -178,7 +178,7 @@
                                     <div class="inner-comission sc">
 
                                         <div class="card inner card-devices" id="card-devices">
-                                            <header class="d-flex title-graph">
+                                            <header class="d-flex title-graph mt-0">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Conversão por dispositivos</strong>
                                                 </h5>
@@ -223,7 +223,7 @@
                         <!-- distribtion -->
                         <div class="distribution sc">
                             <div class="card inner distribution-content sales" id="card-distribution">
-                                <header class="d-flex title-graph title-distribution">
+                                <header class="d-flex title-graph title-distribution mt-0">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
                                     </h5>
@@ -234,7 +234,7 @@
                             <div class="">
                                 <div class="sub-distribution">
                                     <div class="card inner sales-card card-most-sales" id="card-most-sales">
-                                        <header class="d-flex title-graph">
+                                        <header class="d-flex title-graph mt-0">
                                             <h5 class="grey font-size-16">
                                                 <strong>Vendas mais frequentes</strong>
                                             </h5>

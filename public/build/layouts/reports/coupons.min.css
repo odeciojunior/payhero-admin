@@ -2620,6 +2620,9 @@ h4.number{
 }
 
 .no-data-draws h6 { color: #999; }
+
+.mt-28 { margin-top: 28px; }
+.pt-12 { padding-top: 12px; }
 .date-picker {
   width: 170px;
   height: 25px;
