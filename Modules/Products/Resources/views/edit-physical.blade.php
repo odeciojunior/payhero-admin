@@ -107,6 +107,10 @@
                                 <small class="text-muted">
                                     Informações utilizadas para calcular o valor do frete PAC e SEDEX, se não utilizar esses fretes ignore essas informações
                                 </small>
+                                <div class="d-flex flex-row align-items-center mt-10 px-2 py-1 rounded" style="width: fit-content; background: #F4F6FB;">
+                                    <img src="{{ mix('build/global/img/icon-info-plans-c.svg') }}" width="9" height="9" style="margin-top: -1px" />
+                                    <span class="font-size-10 ml-2" style="color: #636363">Em vendas de produtos físicos, será solicitado o rastreio para liberação da comissão da venda.</span>
+                                </div>
                             </div>
                         </div>
                     </div>

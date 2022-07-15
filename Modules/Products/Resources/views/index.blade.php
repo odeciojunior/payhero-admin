@@ -80,26 +80,32 @@
     </div>
 
     <div class="modal fade" id="new-product-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content rounded">
-                <div class="d-flex flex-row-reverse simple-border-bottom px-20">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 450px">
+            <div class="modal-content" style="border-radius: 8px;">
+                <div class="d-flex flex-row-reverse simple-border-bottom py-10 px-20">
                     <h4 class="new-product-modal-option-title text-center">Criar novo produto</h4>
                     <button type="button" class="new-product-modal-option-close-btn" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="d-flex flex-row justify-content-around" style="padding: 32px 16px">
-                    <div class="d-flex flex-column align-items-center new-product-modal-option">
-                        <a href="/products/create/physical" class="d-flex justify-content-center align-items-center">
-                            <img src="{{ mix('build/global/img/svg/caixa-fisica.svg') }}" data-value="product_physical" alt="novo produto fisico">
-                        </a>
-                        <span>Físico</span>
+                <div class="d-flex flex-column align-self-center new-product-modal-body">
+                    <div class="d-flex flex-row justify-content-between" style="width: 100%">
+                        <div class="d-flex flex-column align-items-center new-product-modal-option">
+                            <button type="button" class="d-flex justify-content-center align-items-center new-product-btn" data-add-url="/products/create/physical">
+                                <img src="{{ mix('build/global/img/svg/caixa-fisica.svg') }}" data-value="product_physical" alt="novo produto fisico">
+                            </button>
+                            <span>Físico</span>
+                        </div>
+                        <div class="d-flex flex-column align-items-center new-product-modal-option">
+                            <button type="button" class="d-flex justify-content-center align-items-center new-product-btn" data-add-url="/products/create/digital">
+                                <img src="{{ mix('build/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
+                            </button>
+                            <span>Digital</span>
+                        </div>
                     </div>
-                    <div class="d-flex flex-column align-items-center new-product-modal-option">
-                        <a href="/products/create/digital" class="d-flex justify-content-center align-items-center">
-                            <img src="{{ mix('build/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
-                        </a>
-                        <span>Digital</span>
+                    <div id="next-btn-container" class="text-center" style="display: none">
+                        <p id="selected-option-desc" class="font-weight-400 font-size-12 mt-25" style="color: #5B5B5B"></p>
+                        <a id="selected-option-url" href="#" class="btn btn-primary" style="padding: 12px 0px">Avançar</a>
                     </div>
                 </div>
             </div>

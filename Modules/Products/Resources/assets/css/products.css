@@ -133,16 +133,34 @@ button.menu_product {
     -webkit-text-stroke: .5px;
 }
 
-.new-product-modal-option a {
+.new-product-modal-body {
+    padding: 32px 0px;
+    width: 60%;
+}
+@media screen and (max-width: 350px) {
+    .new-product-modal-body {
+        width: 70%;
+    }
+}
+
+.new-product-modal-option button {
     width: 115px;
     height: 115px;
     border: 1px solid #2E85EC;
     border-radius: 8px;
     background: #F4F6FB;
+    cursor: pointer;
 }
-.new-product-modal-option a:hover {
+.new-product-modal-option button:hover {
     border: 2px solid #2E85EC;
-    background: #CBE0FA;;
+    background: #CBE0FA;
+}
+.new-product-modal-option button:focus {
+    outline: none;
+}
+.new-product-modal-option .active {
+    border: 2px solid #2E85EC;
+    background: #CBE0FA;
 }
 .new-product-modal-option span {
     font-weight: 400;
@@ -151,7 +169,7 @@ button.menu_product {
     font-size: 16px;
 }
 @media screen and (max-width: 430px) {
-    .new-product-modal-option a {
+    .new-product-modal-option button {
         width: 90px;
     }
 
