@@ -125,7 +125,7 @@
                 <div class="row">
                     <div class="col-12 d-flex box-chart-primary">
                         <!-- comission -->
-                        <div class="primary">
+                        <div class="primary sc">
                             <div class="card" id="card-status">
                                 <section class="container pb-20 graph-principal">
                                     <header class="d-flex title-graph title-graph-sales">
@@ -152,7 +152,7 @@
                             </div>
 
                             <div class="">
-                                <div class="d-flex justify-content-between sub-comission">
+                                <div class="d-flex justify-content-between sub-comission sc">
                                     <div class="inner-comission sc">
                                         <div class="card inner card-payments pad-bottom-0 sc" id="card-payments">
                                             <header class="d-flex title-graph mt-0">
@@ -221,7 +221,7 @@
                         <!-- /comission -->
 
                         <!-- distribtion -->
-                        <div class="distribution">
+                        <div class="distribution sc">
                             <div class="card inner distribution-content sales" id="card-distribution">
                                 <header class="d-flex title-graph title-distribution">
                                     <h5 class="grey font-size-16">

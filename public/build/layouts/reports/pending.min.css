@@ -471,11 +471,20 @@ h4.number{
     width: 89.5%;
 }
 
-@media(min-width: 1341px) {
+@media(min-width: 1220px) {
     .inner-comission.sc { width: 377px; }
+    .inner-comission.mkt { width: 350px; }
+
 }
+
+@media(min-width: 1300px) {
+    .inner-comission.mkt { width: 371px; }
+
+}
+
 @media(min-width: 1371px) {
     .inner-comission.sc { width: 398px; }
+    .inner-comission.mkt { width: 398px; }
 }
 .card-payments { height: 210px; }
 .tp-payment { height: 140px; }
@@ -1109,7 +1118,8 @@ h4.number{
     padding-bottom: 10px;
 }
 
-.primary.fc .sub-comission { flex-direction: column; }
+.primary.fc .sub-comission,
+.sub-comission.sc { flex-direction: column; }
 
 @media only screen and (max-width: 768px) {
     .primary { max-width: 638px; }
@@ -1117,34 +1127,40 @@ h4.number{
 
 @media only screen and (min-width: 1220px) {
     .distribution { width: 344px;  }
-    /* .distribution.fc { width: auto;  } */
-    /* .commission.mkt { flex: 0 0 65.8%; } */
-    .commission.mkt { width: 820px; }
+    
+    .commission.mkt { width: 734px; }
 
     .box-chart-primary { flex-direction: row; }
-    .primary.fc { width: 774px; }
-    .distribution.fc { width: 318px; }
+    
+    .primary.fc, .primary.sc { width: 774px; }
+
+    .distribution.fc, .distribution.sc { width: 318px; }
+
     .inner-comission.flc { width: 350px; }
     .inner-comission.space-mobol { width: 408px; }
-    .primary.fc .sub-comission { flex-direction: row; }
+    
+    .primary.fc .sub-comission, .sub-comission.sc { flex-direction: row; }
 }
 
 @media only screen and (min-width: 1341px) {
     .distribution { width: 368px;  }
-}
+    .commission.mkt { width: 767px; }
 
-@media only screen and (min-width: 1341px) {
-    .primary.fc { width: 795px; }
-    .distribution.fc { width: 345px;  }
+    .primary.fc, .primary.sc { width: 795px; }
+    
+    .distribution.fc, .distribution.sc { width: 345px;  }
+
     .inner-comission.flc { width: 350px; }
 }
 
 @media only screen and (min-width: 1370px) {
     .primary { width: 820px; }
-    .primary.fc { width: 863px; }
+    .primary.fc, .primary.sc { width: 863px; }
 
     .distribution { width: 398px;  }
-    .distribution.fc { width: 353px;  }
+    .distribution.fc, .distribution.sc { width: 353px; }
+
+    .commission.mkt { width: 820px; }
 
 }
 @media only screen and (min-width: 1600px) {

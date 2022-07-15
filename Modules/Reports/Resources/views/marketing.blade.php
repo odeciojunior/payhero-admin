@@ -576,7 +576,7 @@
 
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
-                                    <div class="inner-comission sc">
+                                    <div class="inner-comission mkt">
                                         <div class="card inner pad-bottom-0 card-devices-mkt" id="card-devices">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
@@ -589,7 +589,7 @@
                                             <div class="d-flex align-items cash-box seller onPreLoad no-ske pad-0" id="block-info-card-conversion"></div>
                                         </div>
                                     </div>
-                                    <div class="inner-comission sc">
+                                    <div class="inner-comission mkt">
                                         <div class="card inner pad-bottom-0 card-coupon" id="card-coupon">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
