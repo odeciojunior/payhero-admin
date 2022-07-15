@@ -465,7 +465,7 @@ h4.number{
     transform: translate(-50%, -50%);
     width: 100%;
 }
-.card-most-sales { height: 308px; }
+/* .card-most-sales { height: 308px; } */
 
 .sales-card .ske-load {
     position: absolute;
