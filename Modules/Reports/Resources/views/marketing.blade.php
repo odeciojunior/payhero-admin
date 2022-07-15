@@ -724,7 +724,7 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex sub-distribution">
+                            <div class="sub-distribution">
                                 <div class="card inner card-most-sales" id="card-most-sales">
                                     <header class="d-flex title-graph">
                                         <h5 class="grey font-size-16">

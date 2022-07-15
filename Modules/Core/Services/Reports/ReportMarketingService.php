@@ -200,11 +200,9 @@ class ReportMarketingService
             if(empty($data['count_mobile'])) {
                 $data['count_mobile'] = 0;
                 $data['count_mobile_approved'] = 0;
-                $data['conversion_mobile'] = '0%';
                 $data['percentage_mobile'] = '0%';
                 $data['percentage_mobile_total'] = '0%';
             } else {
-                $data['conversion_mobile'] = round(number_format(($data['count_mobile_approved'] * 100) / ($data['count_mobile_approved'] + $data['count_desktop_approved']), 2, '.', ',')) . '%';
                 $data['percentage_mobile'] = round(number_format(($data['count_mobile_approved'] * 100) / $data['count_mobile'], 2, '.', ',')) . '%';
                 $data['percentage_mobile_total'] = round(number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',')) . '%';
             }
@@ -212,14 +210,15 @@ class ReportMarketingService
             if(empty($data['count_desktop'])) {
                 $data['count_desktop'] = 0;
                 $data['count_desktop_approved'] = 0;
-                $data['conversion_desktop'] = '0%';
                 $data['percentage_desktop'] = '0%';
                 $data['percentage_desktop_total'] = '0%';
             } else {
-                $data['conversion_desktop'] = round(number_format(($data['count_desktop_approved'] * 100) / ($data['count_mobile_approved'] + $data['count_desktop_approved']), 2, '.', ',')) . '%';
                 $data['percentage_desktop'] = round(number_format(($data['count_desktop_approved'] * 100) / $data['count_desktop'], 2, '.', ',')) . '%';
                 $data['percentage_desktop_total'] = round(number_format(($data['count_desktop'] * 100) / $data['total'], 2, '.', ',')) . '%';
             }
+
+            $data['conversion_mobile'] = $data['count_mobile_approved'] > 0 || $data['count_desktop_approved'] > 0 ? round(number_format(($data['count_mobile_approved'] * 100) / ($data['count_mobile_approved'] + $data['count_desktop_approved']), 2, '.', ',')) . '%' : '0%';
+            $data['conversion_desktop'] = $data['count_mobile_approved'] > 0 || $data['count_desktop_approved'] > 0 ? round(number_format(($data['count_desktop_approved'] * 100) / ($data['count_mobile_approved'] + $data['count_desktop_approved']), 2, '.', ',')) . '%' : '0%';
 
             $data['value_mobile'] = $data['value_mobile'] > 0 ? foxutils()->formatMoney($data['value_mobile'] / 100) : 'R$ 0,00';
             $data['value_desktop'] = $data['value_desktop'] > 0 ? foxutils()->formatMoney($data['value_desktop'] / 100) : 'R$ 0,00';
