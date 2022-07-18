@@ -45,7 +45,7 @@ class LinkShortenerService
         ]);
 
         if (!empty($data)) {
-            if ($method !== "GET") {
+            if ($method === "GET") {
                 $url = sprintf("%s?%s", $url, http_build_query($data));
             } else {
                 $data = json_encode($data);
