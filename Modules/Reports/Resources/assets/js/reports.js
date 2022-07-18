@@ -46,7 +46,7 @@ $(function () {
         loadingOnScreen();
         getInfo();
     
-        getProjects();
+        getProjects(data);
     
         changeCompany();
         changeCalendar();
@@ -252,7 +252,7 @@ function getCashback() {
 
     return $.ajax({
         method: "GET",
-        url: resumeUrl + "/cashbacks?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: resumeUrl + "/cashbacks?project_id=" + $("#select_projects").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
