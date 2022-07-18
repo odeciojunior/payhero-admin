@@ -25,11 +25,11 @@ class LinkShortenerService
 
         $result = $this->doRequest('/links', 'POST', $data);
 
-        if (!$result) {
+        if (empty($result)) {
             Log::warning('Link URL invalido (LinkShortenerService - shorten) - ' . $url);
         }
 
-        return $result;
+        return $result->secureShortURL ?? false;
     }
 
     private function doRequest(string $uri = "/", string $method = "GET", array $data = null, array $headers = [])
