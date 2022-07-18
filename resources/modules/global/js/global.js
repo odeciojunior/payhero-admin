@@ -1944,7 +1944,7 @@ function getCompaniesAndProjects() {
                         itemDisabled = '';
 
                     if (companies[i].company_type == '1') {
-                        $('#company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
+                        $('#company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa Física</option>')
                     } else {
                         if(companies[i].name.length>20)
                             companyName = companies[i].name.substring(0,20)+'...';
