@@ -1,12 +1,11 @@
 $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
     loadOnAny('.page-content');
-    updateCompanyDefault().done( function(){
-        window.updateUsedApps();
-    });
-});
+    window.updateUsedApps();
+}
 
 $(document).ready(function () {
+
     loadingOnScreen();
 
     getCompaniesAndProjects().done( function (data){
@@ -16,7 +15,7 @@ $(document).ready(function () {
     function getProjects() {
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&status=active&company='+ $('#company-navbar').val(),
+            url: '/api/projects?select=true&status=active&company='+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -48,7 +47,7 @@ $(document).ready(function () {
     window.updateUsedApps = function () {
         $.ajax({
             method: 'GET',
-            url: '/api/apps?company='+ $('#company-navbar').val(),
+            url: '/api/apps',
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

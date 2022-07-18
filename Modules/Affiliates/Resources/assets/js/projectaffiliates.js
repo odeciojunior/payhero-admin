@@ -2,10 +2,8 @@ $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
     $("#project-affiliate").find('option').not(':first').remove();
     $("#project-affiliate-request").find('option').not(':first').remove();
-    updateCompanyDefault().done( function(){
-        window.getProjects('n');
-    });
-});
+    window.getProjects('n');
+}
 
 $(document).ready(function () {
     var badgeAffiliateRequest = {
@@ -87,10 +85,8 @@ $(document).ready(function () {
                         })
                     );
                 }
-                if(loading=='y')
-                    loadingOnScreenRemove();
-                else
-                    loadOnAny('.page-content',true);
+                loadOnAny('.page-content',true);
+                loadingOnScreenRemove();
             },
         });
     }

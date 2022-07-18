@@ -935,6 +935,6 @@ $(document).ready(function () {
         }
     });
 
-    //$('.company_name').val( sessionStorage.getItem('company_default_name') );
+    $('.company_name').val( sessionStorage.getItem('company_default_name') );
 
 });

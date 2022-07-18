@@ -15,9 +15,6 @@ $('#company-navbar').change(function () {
         window.updateBalances();
         window.loadStatementTable();
         $("#nav-statement").css('display', '');
-        $("#nav-statement-tab").on('click', function () {
-            $("#nav-statement").css('display', '');
-        });
     });
 });
 
@@ -212,7 +209,7 @@ $(window).on("load", function(){
         }
     });
 
-    function getCompanies(data) {
+    function getCompanies() {
         loadingOnScreen();
 
         $.ajax({
@@ -247,8 +244,8 @@ $(window).on("load", function(){
                 });
 
                 window.checkBlockedWithdrawal();
-                window.updateBalances();
-                window.loadStatementTable();
+                updateBalances();
+                loadStatementTable();
                 $("#nav-statement").css('display', '');
                 $("#nav-statement-tab").on('click', function () {
                     $("#nav-statement").css('display', '');

@@ -33,15 +33,14 @@ $(document).ready(function () {
 
     function updateInvites() {
         loadingOnScreen();
-
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         var cont = 0;
 
         if (link == null) {
-            link = '/api/invitations?company='+ $('#company-navbar').val();
+            link = '/api/invitations';
         } else {
-            link = '/api/invitations' + link + '&company='+ $('#company-navbar').val();
+            link = '/api/invitations' + link;
         }
 
         $.ajax({
@@ -58,12 +57,9 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
-                    // $("#card-table-invite").hide();
-                    // $("#table_invites").hide();
                     $("#content-error").show();
                 } else {
                     $("#content-error").hide();
-                    // $("#table_invites").show();
                     $("#card-table-invite").css('display', 'block');
                     $("#card-invitation-data").css('display', 'block');
 
@@ -100,8 +96,7 @@ $(document).ready(function () {
 
                     pagination(response, 'invites');
                 }
-
-                window.getInvitationData();
+                getInvitationData();
 
                 // Reenviar convite
                 $(".resend-invitation").unbind('click');
@@ -351,8 +346,6 @@ $(document).ready(function () {
     });
 
     function sendInviteAjax(email, companyId) {
-        console.log(email)
-        console.log(companyId)
         $.ajax({
             method: "POST",
             url: "/api/invitations",
@@ -378,20 +371,7 @@ $(document).ready(function () {
         });
     }
 
-    window.getInvitationData = function () {
-        loadOnAny(".number", false, {
-            styles: {
-                container: {
-                    minHeight: "47px",
-                    height: "auto",
-                },
-                loader: {
-                    width: "20px",
-                    height: "20px",
-                    borderWidth: "4px",
-                },
-            },
-        });
+    function getInvitationData() {
         $.ajax({
             method: "GET",
             url: '/api/invitations/getinvitationdata' + '?company='+ $('#company-navbar').val(),
@@ -404,8 +384,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response)
             },
             success: (response) => {
-                loadOnAny(".number", true);
-                $("#invitations_accepted, #invitations_sent, #commission_paid, #commission_pending").html("");
                 $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '');
                 $("#invitations_sent").html('' + response.data.invitation_sent_count + '');
                 var commission_paid = response.data.commission_paid.split(/\s/g);

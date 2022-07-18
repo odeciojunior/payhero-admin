@@ -1,11 +1,8 @@
 $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
     loadOnAny('#page-integrates');
-    updateCompanyDefault().done( function(){
-        $('.company_name').val( $('#company-navbar').find('option:selected').text() );
-        window.onlyData();
-    });
-});
+    window.onlyData();
+}
 
 $(document).ready(function () {
 
@@ -78,9 +75,10 @@ $(document).ready(function () {
 
     function refreshIntegrations(page = 1) {
         loadingOnScreen();
+
         $.ajax({
             method: "GET",
-            url: "/api/integrations?resume=true&page=" + page + "&company_id="+$('#company-navbar').val(),
+            url: "/api/integrations?resume=true&page=" + page + "&company_id="+sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
