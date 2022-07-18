@@ -16,7 +16,7 @@ class SalesByOriginResource extends JsonResource
         return [
             'origin'       => $this->origin ?? 0,
             'sales_amount' => $this->sales_amount ?? 0,
-            'balance'      => isset($this->value) ? number_format(intval($this->value) / 100, 2, ',', '.') : 0,
+            'value'        => foxutils()->formatMoney($this->value / 100),
         ];
     }
 }

@@ -14,6 +14,15 @@ var currentPage = null;
 var atualizar = null;
 
 $(document).ready(function () {
+    changeCalendar();
+    changeCompany();
+
+    if(sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem('info'));
+        $('input[name=daterange]').val(info.calendar);
+        $('#status').val(info.statusCompany);
+        $("#status").find('option:selected').text(info.statusCompanyText);
+    }
 
     $("#filtros").on("click", function () {
         if ($("#div_filtros").is(":visible")) {
@@ -28,50 +37,14 @@ $(document).ready(function () {
         window.atualizar();
     });
 
-    let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-    let endDate = moment().format('YYYY-MM-DD');
-    $('#date_range').daterangepicker({
-        startDate: moment('2018-01-01 00:00:00'),
-        endDate: moment(),
-        opens: 'center',
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
-        },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
-        }
-    }, function (start, end) {
-        startDate = start.format('YYYY-MM-DD');
-        endDate = end.format('YYYY-MM-DD');
-    });
-
     function getFilters(urlParams = false) {
         let data = {
             'project': $("#projeto").val(),
-            'status': $("#status").val(),
-            'date_range': $("#date_range").val(),
+            'status': $("#status").val(),            
             'company': $('#company-navbar').val(),
+            'date_range': $("#date-filter").val(),
         };
+        updateStorage({statusCompany: data["status"], statusCompanyText: $("#status").find('option:selected').text()});
 
         if (urlParams) {
             let params = "";
@@ -82,7 +55,7 @@ $(document).ready(function () {
         } else {
             return data;
         }
-    }
+    }    
 
     getCompaniesAndProjects().done( function (data){
         getProjects(data);
@@ -102,7 +75,32 @@ $(document).ready(function () {
                 console.log(response)
             },
             success: function success(response) {
-                return response;
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel").show()
+
+                    $.each(response.data, function (i, project) {
+                        $("#projeto").append($('<option>', {
+                            value: project.id,
+                            text: project.name
+                        }));
+                    });
+
+                    if(sessionStorage.info) {
+                        $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
+                        $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                    }
+
+                    atualizar();
+
+                } else {
+                    $("#export-excel").hide()
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
+                loadingOnScreenRemove();
             }
         }).done(function(dataSales){
             $.each(data, function (c, company) {
@@ -167,6 +165,7 @@ $(document).ready(function () {
 
         let updateResume = true;
         loadOnTable('#body-table-coupons', '.table-coupons');
+        //$('#body-table-coupons').html(skeLoad);
 
         if (link == null) {
             link = '/api/reports/coupons?' + getFilters(true).substr(1);
@@ -183,6 +182,12 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                $('#body-table-coupons').html('');
+                $('.table-coupons').addClass('table-striped');
+                $('#body-table-coupons').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                $("#body-table-coupons").attr("img-empty") +
+                "'> Nenhum cupom encontrado</td></tr>");
+                
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -210,6 +215,11 @@ $(document).ready(function () {
                 pagination(response, 'coupons', atualizar);
             }
         });
+
+        // if(updateResume) {
+        //     resumePending();
+        // }
+        
     }
 
     $(document).on('keypress', function (e) {
@@ -218,3 +228,169 @@ $(document).ready(function () {
         }
     });
 });
+
+function changeCalendar() {
+    var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
+    var endDate = moment().format("DD/MM/YYYY");
+
+    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+    $('input[name="daterange"]').dateRangePicker({
+        setValue: function (s) {
+            if (s) {
+                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                $(this).html(s).data('value', normalize);
+                $('input[name="daterange"]').attr('value', normalize);
+                $('input[name="daterange"]').val(normalize);
+            } else {
+                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+            }
+        }
+    })
+    .on('datepicker-change', function () {
+        updateStorage({calendar: $(this).val()});
+    })
+    .on('datepicker-open', function () {
+        $('.filter-badge-input').removeClass('show');
+    })
+    .on('datepicker-close', function () {
+        $(this).removeClass('focused');
+        if ($(this).data('value')) {
+            $(this).addClass('active');
+        }
+    });
+}
+
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
+}
+
+function changeCompany() {
+    $("#projeto").on("change", function () {
+        // $('.onPreLoad *, .onPreLoadBig *').remove();
+        // $('.onPreLoad').html(skeLoad);
+        // $('.onPreLoadBig').html(skeLoadBig);
+        $.ajaxQ.abortAll();
+        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+        
+        atualizar();
+    });
+}
+
+
+function resumePending() {
+
+    $("#total_sales").html(skeLoadMini);    
+
+    $.ajax({
+        method: "GET",
+        url: '/api/reports/resume-pending-balance',
+        data: getFilters(),
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            if (response.total_sales) {
+                $('#total_sales, #total-pending, #total').text('');
+                $('#total_sales').text(response.total_sales);
+                var comission=response.commission.split(/\s/g);
+                $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+            } else {
+                $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+            }
+        }
+    });
+}
+
+
+// abort all ajax
+$.ajaxQ = (function(){
+    var id = 0, Q = {};
+  
+    $(document).ajaxSend(function(e, jqx){
+      jqx._id = ++id;
+      Q[jqx._id] = jqx;
+    });
+    $(document).ajaxComplete(function(e, jqx){
+      delete Q[jqx._id];
+    });
+  
+    return {
+      abortAll: function(){
+        var r = [];
+        $.each(Q, function(i, jqx){
+          r.push(jqx._id);
+          jqx.abort();
+        });
+        return r;
+      }
+    };
+  
+  })();
+
+let skeLoad = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
+`;
+
+let skeLoadBig = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
+`;
+
+let skeLoadMini = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+        </div>
+    </div>
+`;

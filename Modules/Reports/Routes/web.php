@@ -12,7 +12,10 @@
 */
 
 Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
-    Route::get('/sales', 'ReportsController@index')->name('reports.index')->middleware('permission:report_sales');
+    Route::get('/', 'ReportsController@resume')->name('reports.resume')->middleware('permission:report_sales');
+    Route::get('/sales', 'ReportsController@sales')->name('reports.sales')->middleware('permission:report_sales');
+    Route::get('/finances', 'ReportsController@finances')->name('reports.finances')->middleware('permission:report_sales');
+    Route::get('/marketing', 'ReportsController@marketing')->name('reports.marketing')->middleware('permission:report_sales');
 
     Route::get('/checkouts', 'ReportsController@checkouts')->name('reports.checkouts')->middleware('permission:report_checkouts');
 

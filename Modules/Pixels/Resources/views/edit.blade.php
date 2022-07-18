@@ -80,6 +80,15 @@
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">TikTok</div>
                     </div>
                 </div>
+                <div class="row text-center">
+                    <div class="col-lg-4 col-6 text-center mb-30">
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                             data-value="kwai"
+                             alt="logo kwai ads">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Kwai</div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal-footer"></div>

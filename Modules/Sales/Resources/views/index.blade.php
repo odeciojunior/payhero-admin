@@ -271,7 +271,7 @@
                                                  <a href="{{ route('trackings.index') }}">Rastreamento</a>
                                             </li>
                                             <li>
-                                                 <a href="{{ route('reports.index') }}">Relatórios</a>
+                                                 <a href="{{ route('reports.resume') }}">Relatórios</a>
                                             </li>
                                         </ul>
                                     </div>

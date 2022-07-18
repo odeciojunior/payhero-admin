@@ -25,9 +25,24 @@ class ReportsController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function index()
+    public function resume()
     {
-        return view('reports::index');
+        return view('reports::resume');
+    }
+
+    public function sales()
+    {
+        return view('reports::sales');
+    }
+
+    public function finances()
+    {
+        return view('reports::finances');
+    }
+
+    public function marketing()
+    {
+        return view('reports::marketing');
     }
 
     public function checkouts()

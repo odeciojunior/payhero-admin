@@ -664,7 +664,6 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
 $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').attr('overflow', 'hidden')
 
 function pagination(response, model, callback) {
-
     let paginationContainer = "#pagination-" + model;
 
     $(paginationContainer).html("");
@@ -685,6 +684,7 @@ function pagination(response, model, callback) {
     }
 
     $(paginationContainer + ' .first_page').on("click", function () {
+        console.log($(this).html() + ' -1111');
         callback('?page=1');
     });
 
@@ -697,6 +697,7 @@ function pagination(response, model, callback) {
         $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
 
         $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
+            console.log($(this).html() + ' 00000');
             callback('?page=' + $(this).html());
         });
     }
@@ -717,6 +718,7 @@ function pagination(response, model, callback) {
         $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
 
         $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
+            console.log($(this).html() + ' 1111');
             callback('?page=' + $(this).html());
         });
     }
@@ -731,6 +733,7 @@ function pagination(response, model, callback) {
         }
 
         $(paginationContainer + ' .last_page').on("click", function () {
+            console.log($(this).html() + ' 2222');
             callback('?page=' + lastPage);
         });
     }
@@ -1514,13 +1517,13 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.sirius-select-text', function () {
-        $('.sirius-select-text').removeClass('active');
-        $('.sirius-select-options').fadeOut();
-
         let $target = $(this);
+        let $options = $target.parent().find('.sirius-select-options');
+
+        $('.sirius-select-text').not($target).removeClass('active');
+        $('.sirius-select-options').not($options).fadeOut();
+
         $target.toggleClass('active');
-        let $wrapper = $target.parent();
-        let $options = $wrapper.find('.sirius-select-options');
         $target.hasClass('active') ? $options.fadeIn() : $options.fadeOut();
     });
 
@@ -1991,7 +1994,6 @@ function verifyIfCompanyIsDefault(){
     if( $('#company-navbar').find('option:selected').css('font-weight')=='700' ){
         $('.sirius-select-options').css('display','none');
         return true;
-    }
-    else
-        return false;
+    }    
+    return false;
 }

@@ -49,6 +49,21 @@ class SaleService
                 $userId = auth()->user()->getAccountOwnerId();
             }
 
+            if (empty($filters["company"])) {
+                $userCompanies = $companyModel->where('user_id', $userId)
+                    ->get()
+                    ->pluck('id')
+                    ->toArray();
+
+            } else {
+                $userCompanies = [];
+                $companies = explode(',', $filters["company"]);
+
+                foreach ($companies as $company) {
+                    array_push($userCompanies, current(Hashids::decode($company)));
+                }
+            }
+
             $relationsArray = [
                 'sale',
                 'sale.project',
@@ -278,7 +293,7 @@ class SaleService
                     $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
+            ->orderByDesc('sales.start_date');
 
             return $transactions;
         } catch (Exception $e) {
@@ -744,42 +759,45 @@ class SaleService
 
     public function getResumeBlocked($filters)
     {
-        $transactionModel = new Transaction();
-        $filters['invite'] = 1;
-        $transactions = $this->getSalesBlockedBalance($filters);
-        $transactionStatus = implode(',',
-            [
-                Transaction::STATUS_TRANSFERRED,
-                Transaction::STATUS_PAID
-            ]
-        );
+        $cacheName = 'blocked-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 120, function() use ($filters) {
+            $transactionModel = new Transaction;
+            $filters['invite'] = 1;
+            $transactions = $this->getSalesBlockedBalance($filters);
+            $transactionStatus = implode(',',
+                [
+                    Transaction::STATUS_TRANSFERRED,
+                    Transaction::STATUS_PAID
+                ]
+            );
 
-        $resume = $transactions->without(['sale'])
-            ->select(
-                DB::raw(
-                    "
-                     sum(CASE WHEN transactions.invitation_id IS NULL THEN 1 ELSE 0 END) as total_sales,
-                     sum(CASE WHEN transactions.invitation_id IS NULL THEN
-                        if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0) ELSE 0 END
-                     ) / 100 as commission,
-                     sum(CASE WHEN transactions.invitation_id IS NOT NULL THEN
-                        if(transactions.status_enum in ({$transactionModel->present()->getStatusEnum('transfered')}), transactions.value, 0) ELSE 0 END
-                     ) / 100 as commission_invite,
-                     sum(CASE WHEN transactions.invitation_id IS NULL THEN
-                            (sales.sub_total + sales.shipment_value) -
-                            (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100
-                            ELSE 0 END
-                        ) as total"
+            $resume = $transactions->without(['sale'])
+                ->select(
+                    DB::raw(
+                        "
+                        sum(CASE WHEN transactions.invitation_id IS NULL THEN 1 ELSE 0 END) as total_sales,
+                        sum(CASE WHEN transactions.invitation_id IS NULL THEN
+                            if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0) ELSE 0 END
+                        ) / 100 as commission,
+                        sum(CASE WHEN transactions.invitation_id IS NOT NULL THEN
+                            if(transactions.status_enum in ({$transactionModel->present()->getStatusEnum('transfered')}), transactions.value, 0) ELSE 0 END
+                        ) / 100 as commission_invite,
+                        sum(CASE WHEN transactions.invitation_id IS NULL THEN
+                                (sales.sub_total + sales.shipment_value) -
+                                (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100
+                                ELSE 0 END
+                            ) as total"
+                    )
                 )
-            )
-            ->first()
-            ->toArray();
+                ->first()
+                ->toArray();
 
-        $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
-        $resume['commission_invite'] = number_format($resume['commission_invite'], 2, ',', '.');
-        $resume['total'] = number_format($resume['total'], 2, ',', '.');
+            $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
+            $resume['commission_invite'] = number_format($resume['commission_invite'], 2, ',', '.');
+            $resume['total'] = number_format($resume['total'], 2, ',', '.');
 
-        return $resume;
+            return $resume;
+        });
     }
 
     public function getSalesBlockedBalance($filters)
@@ -899,37 +917,30 @@ class SaleService
 
     public function getResumePending($filters)
     {
-        $transactionModel = new Transaction();
-        $transactions = $this->getSalesPendingBalance($filters);
-        $transactionStatus = implode(
-            ',',
-            [
-                $transactionModel->present()->getStatusEnum('paid'),
-            ]
-        );
+        $cacheName = 'pending-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 120, function() use ($filters) {
 
-        $resume = $transactions->without(['sale'])
-            ->select(
-                DB::raw(
-                    "count(sales.id) as total_sales,
-                              sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
-                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
+            $transactions = $this->getSalesPendingBalance($filters);
+            $transactionStatus = implode(',',[Transaction::STATUS_PAID]);
+    
+            $resume = $transactions->without(['sale'])
+                ->select(
+                    DB::raw(
+                        "count(sales.id) as total_sales,
+                                sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
+                    )
                 )
-            )
-            ->first()
-            ->toArray();
+                ->first()
+                ->toArray();
 
-        $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
-        $resume['total'] = FoxUtils::formatMoney($resume['total']);
+            $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
 
-        return $resume;
+            return $resume;
+        });
     }
 
     public function getSalesPendingBalance($filters)
     {
-        $customerModel = new Customer();
-        $transactionModel = new Transaction();
-
         try {
             $relationsArray = [
                 'sale',
@@ -937,13 +948,13 @@ class SaleService
                 'sale.customer',
             ];
 
-            $transactions = $transactionModel->with($relationsArray)
+            $transactions = Transaction::with($relationsArray)
                 ->where('user_id', auth()->user()->getAccountOwnerId())
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->where(
                     'transactions.status_enum',
                     '=',
-                    $transactionModel->present()->getStatusEnum('paid')
+                    Transaction::STATUS_PAID
                 )
                 ->whereNull('invitation_id');
 
@@ -1047,24 +1058,24 @@ class SaleService
 
             // Nome do Usuário
             if (!empty($filters["client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
+                $customerIds = Customer::where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
                 $transactions->whereHas(
                     'sale',
-                    function ($querySale) use ($customers) {
-                        $querySale->whereIn('customer_id', $customers);
+                    function ($querySale) use ($customerIds) {
+                        $querySale->whereIn('customer_id', $customerIds);
                     }
                 );
             }
 
             // CPF do Usuário
             if (!empty($filters['customer_document'])) {
-                $customers = $customerModel->where(
+                $customers = Customer::where(
                     'document',
                     FoxUtils::onlyNumbers($filters["customer_document"])
                 )->pluck('id');
 
                 if (count($customers) < 1) {
-                    $customers = $customerModel->where('document', $filters["customer_document"])->pluck('id');
+                    $customers = Customer::where('document', $filters["customer_document"])->pluck('id');
                 }
 
                 $transactions->whereHas(
@@ -1101,17 +1112,21 @@ class SaleService
     }
 
     public function getPendingBalance($filters)
-    {
-        $transactions = $this->getSalesPendingBalance($filters);
-
-        return $transactions->paginate(10);
+    {   
+        $cacheName = 'pending-'.json_encode($filters);
+        return cache()->remember($cacheName, 120, function() use ($filters) {
+            $transactions = $this->getSalesPendingBalance($filters);
+            return $transactions->paginate(10);
+        });
     }
 
     public function getPaginetedBlocked($filters)
-    {
-        $transactions = $this->getSalesBlockedBalance($filters);
-
-        return $transactions->paginate(10);
+    {        
+        $cacheName = 'blocked-'.json_encode($filters);
+        return cache()->remember($cacheName, 120, function() use ($filters) {
+            $transactions = $this->getSalesBlockedBalance($filters);
+            return $transactions->paginate(10);
+        });
     }
 
     public function getApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)

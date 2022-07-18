@@ -64,7 +64,8 @@ return [
                 'outbrain' => 'Outbrain',
                 'pinterest' => 'Pinterest',
                 'uol_ads' => 'UOL Ads',
-                'tiktok' => 'TikTok'
+                'tiktok' => 'TikTok',
+                'kwai' => 'Kwai'
             ],
         ],
         "discount_coupon" => [

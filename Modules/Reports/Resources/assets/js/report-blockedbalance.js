@@ -20,10 +20,17 @@ $('#company-navbar').change(function () {
     });
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
+            changeCalendar();
+            changeCompany();
             window.fillProjectsSelect(data2.companies)
             window.atualizar();
         });
 	});
+});
+
+$(function() {
+    changeCalendar();
+    changeCompany();
 });
 
 window.atualizar = function (link = null) {
@@ -32,6 +39,7 @@ window.atualizar = function (link = null) {
     let updateResume = true;
 
     loadOnTable('#dados_tabela', '#tabela_vendas');
+    //$('#dados_tabela').html(skeLoad);
 
     loadOnAny('.number', false, {
         styles: {
@@ -48,9 +56,9 @@ window.atualizar = function (link = null) {
     });
 
     if (link == null) {
-        link = '/api/reports/blockedbalance?' + getFilters(true).substr(1);
+        link = '/api/reports/blocked-balance?' + getFilters(true).substr(1);
     } else {
-        link = '/api/reports/blockedbalance' + link + getFilters(true);
+        link = '/api/reports/blocked-balance' + link + getFilters(true);
         updateResume = false;
     }
 
@@ -63,6 +71,11 @@ window.atualizar = function (link = null) {
             'Accept': 'application/json',
         },
         error: function error(response) {
+            $('#dados_tabela').html('');
+            $('#tabela_vendas').addClass('table-striped');
+            $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                    $("#dados_tabela").attr("img-empty") +
+                    "'>Nenhuma venda encontrada</td></tr>");
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -160,7 +173,7 @@ function getFilters(urlParams = false) {
         'client': $("#client").val(),
         'customer_document': $("#customer_document").val(),
         'date_type': $("#date_type").val(),
-        'date_range': $("#date_range").val(),
+        'date_range': $("#date-filter").val(),
         'transaction': $("#transaction").val().replace('#', ''),
         'reason': $('#reason').val(),
         'plan': $('#plan').val(),
@@ -177,24 +190,24 @@ function getFilters(urlParams = false) {
 }
 
 function blockedResume() {
-
-    loadOnAny('.number', false, {
-        styles: {
-            container: {
-                minHeight: '32px',
-                height: 'auto'
-            },
-            loader: {
-                width: '20px',
-                height: '20px',
-                borderWidth: '4px'
-            },
-        }
-    });
+    $("#commission_blocked, #total_sales").html(skeLoadMini).width('100%');
+    // loadOnAny('.number', false, {
+    //     styles: {
+    //         container: {
+    //             minHeight: '32px',
+    //             height: 'auto'
+    //         },
+    //         loader: {
+    //             width: '20px',
+    //             height: '20px',
+    //             borderWidth: '4px'
+    //         },
+    //     }
+    // });
 
     $.ajax({
         method: "GET",
-        url: '/api/reports/blockedresume',
+        url: '/api/reports/resume-blocked-balance',
         data: getFilters(),
         dataType: "json",
         headers: {
@@ -202,20 +215,24 @@ function blockedResume() {
             'Accept': 'application/json',
         },
         error: function error(response) {
-            loadOnAny('.number', true);
+            //loadOnAny('.number', true);
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            loadOnAny('.number', true);
-            $('#total_sales').text('0');
-            $('#commission_blocked, #total').html('R$ <span class="font-size-30 bold">0,00</span>');
+            //loadOnAny('.number', true);
+            //$('#total_sales').text('0');
+            
             if (response.total_sales) {
                 $('#total_sales, #commission_blocked, #total').text('');
                 $('#total_sales').html(response.total_sales);
-                $('#commission_blocked').html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
+                $('#commission_blocked').html(`<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 bold">${response.commission}</strong>`);
                 $('.blocked-balance-icon').attr('title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
                 $('.blocked-balance-icon').attr('data-original-title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
-                $('#total').html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
+                $('#total').html(`R$ <span class="font-size-24 bold">${response.total}</span>`);
+            }
+            else {
+                $('#commission_blocked, #total').html('<small class="font-size-16 small gray-1">R$</small> <span class="font-size-24 bold">0,00</span>');
+                $('#total_sales').html('<strong class="font-size-24 orange">0</strong>');
             }
         }
     });
@@ -262,40 +279,40 @@ $(document).ready(function () {
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
-    $('#date_range').daterangepicker({
-        startDate: moment('2018-01-01 00:00:00'),
-        endDate: moment(),
-        opens: 'center',
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
-        },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
-        }
-    }, function (start, end) {
-        startDate = start.format('YYYY-MM-DD');
-        endDate = end.format('YYYY-MM-DD');
-    });
+    // $('#date_range').daterangepicker({
+    //     startDate: moment('2018-01-01 00:00:00'),
+    //     endDate: moment(),
+    //     opens: 'center',
+    //     maxDate: moment().endOf("day"),
+    //     alwaysShowCalendar: true,
+    //     showCustomRangeLabel: 'Customizado',
+    //     autoUpdateInput: true,
+    //     locale: {
+    //         locale: 'pt-br',
+    //         format: 'DD/MM/YYYY',
+    //         applyLabel: "Aplicar",
+    //         cancelLabel: "Limpar",
+    //         fromLabel: 'De',
+    //         toLabel: 'Até',
+    //         customRangeLabel: 'Customizado',
+    //         weekLabel: 'W',
+    //         daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    //         monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    //         firstDay: 0
+    //     },
+    //     ranges: {
+    //         'Hoje': [moment(), moment()],
+    //         'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+    //         'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+    //         'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+    //         'Este mês': [moment().startOf('month'), moment().endOf('month')],
+    //         'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+    //         'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+    //     }
+    // }, function (start, end) {
+    //     startDate = start.format('YYYY-MM-DD');
+    //     endDate = end.format('YYYY-MM-DD');
+    // });
 
     // FIM - COMPORTAMENTOS DA JANELA
 
@@ -308,7 +325,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
             },
             error: resp => {
-                errorAjaxResponse(response);
+                errorAjaxResponse(resp);
             },
             success: resp => {
                 for(const item of resp) {
@@ -359,10 +376,10 @@ $(document).ready(function () {
         $("#export-excel").show()
         window.atualizar();
         loadingOnScreenRemove();
-
+       
         // $.ajax({
         //     method: "GET",
-        //     url: '/api/projects?select=true&company='+ $('#company-navbar').val(),
+        //     url: '/api/projects?select=true',
         //     dataType: "json",
         //     headers: {
         //         'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -377,15 +394,25 @@ $(document).ready(function () {
         //             $("#project-empty").hide();
         //             $("#project-not-empty").show();
         //             $("#export-excel").show()
-        //             if (response.data != 'api sales') {
-        //                 $.each(response.data, function (i, project) {
-        //                     $("#project").append($('<option>', {
+
+        //             $.each(response.data, function (i, project) {
+        //                 $("#project").append($('<option>', {
+        //                     value: project.id,
+        //                     text: project.name
+        //                 }));
+        //                 $("#select_projects").append(
+        //                     $("<option>", {
         //                         value: project.id,
-        //                         text: project.name
-        //                     }));
-        //                 });
+        //                         text: project.name,
+        //                     })
+        //                 );
+        //             });
+        //             if(sessionStorage.info) {
+        //                 $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+        //                 $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
         //             }
-        //             window.atualizar();
+
+        //             atualizar();
 
         //         } else {
         //             $("#export-excel").hide()
@@ -448,4 +475,120 @@ $(document).ready(function () {
         }
     });
 
+    function blockedResume() {
+
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: '32px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '20px',
+                    height: '20px',
+                    borderWidth: '4px'
+                },
+            }
+        });
+
+        $.ajax({
+            method: "GET",
+            url: '/api/reports/blockedresume',
+            data: getFilters(),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadOnAny('.number', true);
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadOnAny('.number', true);
+                $('#total_sales').text('0');
+                $('#commission_blocked, #total').html('R$ <span class="font-size-30 bold">0,00</span>');
+                if (response.total_sales) {
+                    $('#total_sales, #commission_blocked, #total').text('');
+                    $('#total_sales').html(response.total_sales);
+                    $('#commission_blocked').html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
+                    $('.blocked-balance-icon').attr('title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({placement: 'bottom'});
+                    $('.blocked-balance-icon').attr('data-original-title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({placement: 'bottom'});
+                    $('#total').html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
+                }
+            }
+        });
+    }
 });
+
+function changeCalendar() {
+    var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
+    var endDate = moment().format("DD/MM/YYYY");
+
+    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+    $('input[name="daterange"]').dateRangePicker({
+        setValue: function (s) {
+            if (s) {
+                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                $(this).html(s).data('value', normalize);
+                $('input[name="daterange"]').attr('value', normalize);
+                $('input[name="daterange"]').val(normalize);
+            } else {
+                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+            }
+        }
+    })
+    .on('datepicker-change', function () {
+        
+    })
+    .on('datepicker-open', function () {
+        $('.filter-badge-input').removeClass('show');
+    })
+    .on('datepicker-close', function () {
+        $(this).removeClass('focused');
+        if ($(this).data('value')) {
+            $(this).addClass('active');
+        }
+    });
+}
+function changeCompany() {
+    $("#select_projects").on("change", function () {
+        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+    });
+}
+
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
+}
+
+let skeLoad = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+            <div class="skeleton skeleton-text ske"></div>
+        </div>
+    </div>
+`;
+
+let skeLoadMini = `
+    <div class="ske-load">
+        <div class="px-20 py-0">
+            <div class="row align-items-center mx-0 py-10">
+                <div class="skeleton skeleton-circle"></div>
+                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+            </div>
+        </div>
+    </div>
+`;
