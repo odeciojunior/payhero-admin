@@ -16,7 +16,7 @@ class LinkShortenerService
 
         $data = [
             'domain' => 'mud.ae',
-            'originalUrl' => $url,
+            'originalURL' => $url,
             'allowDuplicates' => false,
         ];
         if (isset($path)) {
@@ -48,7 +48,7 @@ class LinkShortenerService
             if ($method === "GET") {
                 $url = sprintf("%s?%s", $url, http_build_query($data));
             } else {
-                $data = json_encode($data);
+                $data = json_encode($data, JSON_UNESCAPED_SLASHES);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             }
         }
