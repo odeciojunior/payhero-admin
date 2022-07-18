@@ -27,21 +27,21 @@ class AstronMembersApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $astronMembersIntegration = new AstronMembersIntegration();
-            $userProjectModel   = new UserProject();
-            $projectModel       = new Project();
 
-            $user = auth()->user();
-            $astronMembersIntegrations = $astronMembersIntegration
-                ->join('checkout_configs as cc', 'cc.project_id', '=', 'astron_members_integrations.project_id')
-                ->where('cc.company_id', hashids_decode($request->company))
-                ->where('user_id', $user->getAccountOwnerId())
-                ->with('project')->get();
+            $astronMembersIntegrations = AstronMembersIntegration::with('project', 'project.usersProjects')
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->account_owner_id);
+                }
+            )->get();
 
             $projects     = collect();
-            $userProjects = $userProjectModel->where([[
-                'user_id', $user->getAccountOwnerId()],[
-                'company_id', $user->company_default
+            $userProjects = UserProject::where([[
+                'user_id', auth()->user()->account_owner_id],[
+                'company_id', auth()->user()->company_default
             ]])->orderBy('id', 'desc')->get();
 
             if ($userProjects->count() > 0) {

@@ -29,11 +29,15 @@ class HotZappApiController extends Controller
         try {
             $user = auth()->user();
 
-            $hotzappIntegrations = HotzappIntegration::
-                join('checkout_configs as cc', 'cc.project_id', '=', 'hotzapp_integrations.project_id')
-                ->where('cc.company_id', hashids_decode($request->company))
-                ->where('user_id', $user->getAccountOwnerId())
-                ->with('project')->get();
+            $hotzappIntegrations = HotzappIntegration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             $projects     = collect();
             $userProjects = UserProject::where([[
@@ -249,7 +253,7 @@ class HotZappApiController extends Controller
         try {
             $integrationId           = current(Hashids::decode($id));
             $hotzappIntegrationModel = new HotzappIntegration();
-            $integration             = $hotzappIntegrationModel->find($integrationId);
+            $integration             = $hotzappIntegrationModel->find($integrationId);Log::debug($integration);
             $integrationDeleted      = $integration->delete();
             if ($integrationDeleted) {
                 return response()->json([

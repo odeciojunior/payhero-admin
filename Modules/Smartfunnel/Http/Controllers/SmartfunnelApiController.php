@@ -30,11 +30,15 @@ class SmartfunnelApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações Smart Funnel');
 
-            $smartfunnelIntegrations = SmartfunnelIntegration::
-                join('checkout_configs as cc', 'cc.project_id', '=', 'smartfunnel_integrations.project_id')
-                ->where('cc.company_id', hashids_decode($request->company))
-                ->where('user_id', $user->getAccountOwnerId())
-                ->with('project')->get();
+            $smartfunnelIntegrations = SmartfunnelIntegration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             $projects     = collect();
             $userProjects = UserProject::where([[

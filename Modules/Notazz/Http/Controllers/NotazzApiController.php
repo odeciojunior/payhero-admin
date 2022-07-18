@@ -30,13 +30,15 @@ class NotazzApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $notazzIntegrationModel = new NotazzIntegration();
-
-            $notazzIntegrations = $notazzIntegrationModel
-                ->join('checkout_configs as cc', 'cc.project_id', '=', 'notazz_integrations.project_id')
-                ->where('cc.company_id', hashids_decode($request->company))
-                ->where('user_id', auth()->user()->getAccountOwnerId())
-                ->with('project')->get();
+            $notazzIntegrations = NotazzIntegration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             return NotazzResource::collection($notazzIntegrations);
         } catch (Exception $e) {

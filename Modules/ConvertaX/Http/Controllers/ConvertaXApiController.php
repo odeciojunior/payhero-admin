@@ -23,17 +23,19 @@ class ConvertaXApiController extends Controller
     {
 
         try {
-            $convertaxIntegration = new ConvertaxIntegration();
-
-            activity()->on($convertaxIntegration)->tap(function(Activity $activity) {
+            activity()->on(new ConvertaxIntegration())->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações do ConvertaX');
 
-            $convertaxIntegrations = $convertaxIntegration
-                ->join('checkout_configs as cc', 'cc.project_id', '=', 'convertax_integrations.project_id')
-                ->where('cc.company_id', hashids_decode($request->company))
-                ->where('user_id', auth()->user()->getAccountOwnerId())
-                ->with('project')->get();
+            $convertaxIntegrations = ConvertaxIntegration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             return ConvertaxResource::collection($convertaxIntegrations);
         } catch (Exception $e) {
