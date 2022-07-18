@@ -3,7 +3,7 @@ $('#company-navbar').change(function () {
     $("#project-affiliate").find('option').not(':first').remove();
     $("#project-affiliate-request").find('option').not(':first').remove();
     window.getProjects('n');
-}
+});
 
 $(document).ready(function () {
     var badgeAffiliateRequest = {

@@ -2,7 +2,7 @@ $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
     loadOnAny('.page-content');
     window.updateUsedApps();
-}
+});
 
 $(document).ready(function () {
 
