@@ -1926,7 +1926,7 @@ tbody td{
 /* sirius select */
 .sirius-select-container {
     position: relative;
-    width: 240px;
+    width: 100%;
 }
 
 .sirius-select-container .sirius-select-text {
