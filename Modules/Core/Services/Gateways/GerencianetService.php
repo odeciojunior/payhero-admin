@@ -72,6 +72,20 @@ class GerencianetService implements Statement
             ->sum('transactions.value');
     }
 
+    public function getPendingBalanceCount(): int
+    {
+        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+        })
+        ->whereNull('brs.id')
+        ->where('transactions.company_id', $this->company->id)
+        ->where('transactions.status_enum', Transaction::STATUS_PAID)
+        ->whereIn('transactions.gateway_id', $this->gatewayIds)
+        ->where('transactions.is_waiting_withdrawal', 0)
+        ->whereNull('transactions.withdrawal_id')
+        ->count();
+    }
+
     public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
@@ -80,6 +94,36 @@ class GerencianetService implements Statement
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
+    }
+
+    public function getBlockedBalanceCount(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
+    }
+
+    public function getBlockedBalancePending(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->sum('value');
+    }
+
+    public function getBlockedBalancePendingCount(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
     }
 
     public function getPendingDebtBalance(): int
@@ -114,7 +158,7 @@ class GerencianetService implements Statement
     }
 
     public function existsBankAccountApproved(){
-        //verifica se existe uma chave pix aprovada 
+        //verifica se existe uma chave pix aprovada
         $bankAccount =  $this->company->getDefaultBankAccount();
         if(empty($bankAccount) || (!empty($bankAccount) && $bankAccount->transfer_type=='TED')){
             return false;
