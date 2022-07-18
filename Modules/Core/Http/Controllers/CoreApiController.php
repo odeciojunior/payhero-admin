@@ -333,7 +333,7 @@ class CoreApiController extends Controller
 
         $user = Auth::user();
         if($user->company_default == $companyId){
-            return response()->json(['message'=>'A empresa selecionada já é a default.'],400);
+            return; //response()->json(['message'=>'A empresa selecionada já é a default.'],400);
         }
 
         if($companyId > 1){

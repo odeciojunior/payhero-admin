@@ -63,7 +63,7 @@ class CompaniesSelectResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'country' => $this->country,
-            'name' => $this->company_type == 1 ? 'Pessoa física' : ucwords(strtolower($this->fantasy_name)),
+            'name' => $this->company_type == 1 ? 'Pessoa Física' : ucwords(strtolower($this->fantasy_name)),
             'document' => foxutils()->getDocument($this->document),
             'company_document_status' => $companyDocumentStatus,
             'company_has_sale_before_getnet' => auth()->user()->has_sale_before_getnet,

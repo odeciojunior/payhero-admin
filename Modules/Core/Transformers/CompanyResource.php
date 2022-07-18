@@ -67,7 +67,7 @@ class CompanyResource extends JsonResource
             'user_code' => Hashids::encode($this->resource->user_id),
             // 'support_email' => $this->resource->support_email ?? '',
             // 'support_telephone' => $this->resource->support_telephone ?? '',
-            'fantasy_name' => $this->resource->company_type == 1 ? 'Pessoa física' : $this->resource->fantasy_name ?? '',
+            'fantasy_name' => $this->resource->company_type == 1 ? 'Pessoa Física' : $this->resource->fantasy_name ?? '',
             'document' => strlen($this->resource->document) == 14 ? FoxUtils::mask(
                 $this->resource->document,
                 '##.###.###/####-##'
