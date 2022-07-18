@@ -1,22 +1,26 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    updateCompanyDefault().done( function(){
-        $("#extract_company_select").val( $('#company-navbar').val() );
-        $('#gateway-skeleton').show();
-        $('#container-all-gateways').html('');
-        $('#val-skeleton').show();
-        $('#container_val').css('display','none');
-        $('.skeleton-withdrawal').show();
-        $('#container-withdraw').html('');
-        $('#empty-history').hide();
-        $('.asScrollable').hide();
-        $('.container-history').css('padding-top','42px');
-        window.updateStatements();
-        window.updateWithdrawals();
-    });
-});
-
 $(document).ready(function(){
+
+    $('#company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault()) return;
+        updateCompanyDefault().done( function(){
+            if($('#container-config').is(':visible')){
+                hiddenConfig()
+            }
+            $("#extract_company_select").val( $('#company-navbar').val() );
+            $('#gateway-skeleton').show();
+            $('#container-all-gateways').html('');
+            $('#val-skeleton').show();
+            $('#container_val').css('display','none');
+            $('.skeleton-withdrawal').show();
+            $('#container-withdraw').html('');
+            $('#empty-history').hide();
+            $('.asScrollable').hide();
+            $('.container-history').css('padding-top','42px');
+            window.updateStatements();
+            window.updateWithdrawals();
+        });
+    });
+
     getCompaniesAndProjects().done( function (data){
         getProjects();
     });
@@ -555,29 +559,32 @@ $(document).ready(function(){
 
     $(document).on('click','#container-return',function(){
         if($('#container-config').is(':visible')){
-            $('#btn-config-all').removeClass('active-outline');
-            $('#container-config').hide();
-            $('#container-return').hide();
-            $('#container-gateways').show();
-            $('#container-available').show();
+            hiddenConfig()
         }
     });
 
     $(document).on('click','#btn-config-all',function(){
         if($('#container-config').is(':hidden')){
-            $('#btn-config-all').addClass('active-outline');
-            $('#container-config').show();
-            $('#container-return').show();
-            $('#container-gateways').hide();
-            $('#container-available').hide();
+            showConfig()
         }else{
-            $('#btn-config-all').removeClass('active-outline');
-            $('#container-config').hide();
-            $('#container-return').hide();
-            $('#container-gateways').show();
-            $('#container-available').show();
+            hiddenConfig()
         }
     });
+
+    function hiddenConfig(){
+        $('#btn-config-all').removeClass('active-outline');
+        $('#container-config').hide();
+        $('#container-return').hide();
+        $('#container-gateways').show();
+        $('#container-available').show();
+    }
+    function showConfig(){
+        $('#btn-config-all').addClass('active-outline');
+        $('#container-config').show();
+        $('#container-return').show();
+        $('#container-gateways').hide();
+        $('#container-available').hide();
+    }
 
     function createCarousel() {
         let checkWidth = $(window).width();
