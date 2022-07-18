@@ -2481,8 +2481,20 @@ h4.number{
     width: 100%;
 }
 
-.table-striped tbody tr:nth-of-type(2n+1) { height: 51px; }
-.table-striped tbody tr:nth-of-type(2n+2) { height: 51px; }
+.no-data-table {
+    margin: 30px auto;
+    display: block;
+}
+@media(min-width: 1024px) {
+    .table-striped tbody tr:nth-of-type(2n+1) { height: 51px; }
+    .table-striped tbody tr:nth-of-type(2n+2) { height: 51px; }
+
+    .no-data-table {
+        margin: 30px auto;
+        margin-right:12px;
+        display: inline;
+    }
+}
 
 .table-vendas tbody td { color: #636363 !important; }
 
