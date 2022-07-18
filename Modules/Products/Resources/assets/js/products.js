@@ -3,6 +3,7 @@ getCompaniesAndProjects().done( function (data){
 });
 
 loadingOnScreen();
+
 $(document).ready(function () {
     let code = window.location.href.split('/')[4];
     let typeEnum;
