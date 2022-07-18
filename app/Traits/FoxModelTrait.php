@@ -16,11 +16,11 @@ trait FoxModelTrait
      */
     public static function bootFoxModelTrait(): void
     {
-        static::retrieved(function($model) {
-            $model->appends = array_merge($model->appends, [
-                'id_code',
-            ]);
-        });
+        // static::retrieved(function($model) {
+        //     $model->appends = array_merge($model->appends, [
+        //         'id_code',
+        //     ]);
+        // });
     }
 
     /**
