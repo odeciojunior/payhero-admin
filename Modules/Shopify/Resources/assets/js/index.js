@@ -1,16 +1,25 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.getCompanies('n');
-        });
-	});
-});
-
 $(document).ready(function () {
 
+    $('#company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault()) return;
+        $("#no-integration-found").hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                globalData = data2;
+                window.getCompanies('n');
+            });
+        });
+    });
+
+    getCompaniesAndProjects().done( function (data){
+        globalData = data;
+        $('.company_name').val( globalData.company_default_fullname );
+        window.getCompanies();
+    });
+
     $("#company-navbar-value").val( $('#company-navbar').val() );
-    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
+    //$('.company_name').val( $('#company-navbar').find('option:selected').text() );
 
 
     window.getCompanies = function(loading='y') {
@@ -34,14 +43,12 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 verifyCompanies(response.data);
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
             },
         });
     }
 
-    getCompaniesAndProjects().done( function (data){
-        window.getCompanies();
-    });
 
     function verifyCompanies(companies) {
         if (isEmpty(companies)) {

@@ -1,5 +1,4 @@
 @extends("layouts.master")
-
 @push('css')
     <link rel="stylesheet" href="{!! mix('build/layouts/convertax/index.min.css') !!}">
     <style>
@@ -8,7 +7,6 @@
         }
     </style>
 @endpush
-
 @section('content')
     <div class='page'>
         <div style="display: none !important;" class="page-header container">
@@ -28,18 +26,27 @@
                 </div>
             </div>
         </div>
-        @include('projects::empty')
+        <div id="no-integration-found" class='justify-content-center' style="display:none !important;
+                                                                                height: 100%;
+                                                                                width: 100%;
+                                                                                position: absolute;
+                                                                                display: -webkit-flex;
+                                                                                display: flex;
+                                                                                -webkit-align-items: center;
+                                                                                align-items: center;
+                                                                                -webkit-justify-content: center;
+                                                                                justify-content: center;">
+            <div class="content-error text-center">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
+                <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
+                <p class="desc gray">Integre suas lojas com ConvertaX de forma totalmente automatizada!</p>
+            </div>
+        </div>
         <div class='page-content container' id='project-integrated'>
             <div class="row" id="content">
                 {{-- js load dynamically --}}
             </div>
-            <div id="no-integration-found" class='row justify-content-center' style="display:none">
-                <div class="content-error text-center">
-                    <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
-                    <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                    <p class="desc gray">Integre suas lojas com ConvertaX de forma totalmente automatizada!</p>
-                </div>
-            </div>
+
             {{-- Modal add-edit integration --}}
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-lg d-flex justify-content-center">
@@ -63,6 +70,8 @@
             </div>
             {{-- End Modal  --}}
         </div>
+
+        @include('projects::empty')
     </div>
     <!-- Delete -->
     <div id="modal-delete-integration" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" role="dialog" tabindex="-1">

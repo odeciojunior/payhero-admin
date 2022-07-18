@@ -1,5 +1,9 @@
 $(() => {
 
+    getCompaniesAndProjects().done( function (data){
+        $('.site-navbar .sirius-select-container').addClass('disabled');
+    });
+
     index();
 
     function index(){

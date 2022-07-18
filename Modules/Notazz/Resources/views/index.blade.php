@@ -19,7 +19,7 @@
                         </a>
                     </h1>
                 </div>
-                <div class="col text-right">
+                <div class="col text-right" id="integration-actions">
                     <a data-toggle="modal" id='btn-add-integration' class="btn btn-floating btn-primary" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-add-1" aria-hidden="true"></i>
                     </a>
@@ -71,6 +71,7 @@
                     <p class="desc gray">Integre suas lojas com Notazz de forma totalmente automatizada!</p>
                 </div>
         </div>
+        @include('projects::empty')
     </div>
     <!-- Delete -->
     <div id="modal-delete-integration" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" role="dialog" tabindex="-1">

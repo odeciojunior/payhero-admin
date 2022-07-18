@@ -1,5 +1,7 @@
 $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
+    $("#no-integration-found").hide();
+    loadOnAny('#content');
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
             window.index('n');

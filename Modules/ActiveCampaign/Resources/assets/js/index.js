@@ -1,10 +1,12 @@
 $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
+    $('#integration-actions').hide();
     $("#no-integration-found").hide();
+    $('#project-empty').hide();
     loadOnAny('#content');
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            window.fillProjectsSelect(data2.company_default_projects)
+            //window.fillProjectsSelect(data2.company_default_projects)
             window.index('n',data2);
         });
 	});
@@ -12,7 +14,7 @@ $('#company-navbar').change(function () {
 
 $(document).ready(function () {
 
-    window.fillProjectsSelect = function(data){
+    window.fillProjectsSelect = function(data){console.log(data)
         $.each(data, function (i, project) {
             if(project.status == 1)
                 $("#project_id, #select_projects_edit").append($("<option>", {value: project.id, text: project.name}));
@@ -22,62 +24,83 @@ $(document).ready(function () {
     window.index = function(loading='y',data) {
         if(loading=='y')
             loadingOnScreen();
-        // else
-        //     loadOnAny('#content');
+        else{
+            $("#content").html("");
+            loadOnAny('#content');
+        }
 
-        $.ajax({
-            method: "GET",
-            url: "/api/apps/activecampaign?company="+ $('#company-navbar').val(),
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                loadOnAny('#content',true);
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                $("#content").html("");
-                //if (isEmpty(response.projects)) {
-                if (isEmpty(data.company_default_projects)) {
-                    $('#project-empty').show();
-                    $('#integration-actions').hide();
-                } else {
-                    $('#project_id, #select_projects_edit').html("");
-                    window.fillProjectsSelect(data.company_default_projects)
-                    // let projects = response.projects;
-                    // for (let i = 0; i < projects.length; i++) {
-                    //     if(projects[i].status === 1){
-                    //         $('#project_id, #select_projects_edit').append(
-                    //             '<option value="' +
-                    //             projects[i].id +
-                    //             '">' +
-                    //             projects[i].name +
-                    //             '</option>'
-                    //         );
-                    //     }
-                    // }
-                    if (isEmpty(response.integrations)) {
-                        $("#no-integration-found").show();
-                    } else {
-                        $('#content').html("");
-                        let integrations = response.integrations;
-                        for (let i = 0; i < integrations.length; i++) {
-                            renderIntegration(integrations[i]);
-                        }
-                        $("#no-integration-found").hide();
-                    }
-                    $('#project-empty').hide();
-                    $('#integration-actions').show();
-                }
-                if(loading=='y')
-                    loadingOnScreenRemove();
-                else
+        $hasProjects=false;
+        if (data.company_default_projects) {
+            $.each(data.company_default_projects, function (i, project) {
+                if(project.status == 1)
+                    $hasProjects=true;
+            });
+        }
+
+        if(!$hasProjects){
+            $('#integration-actions').hide();
+            $("#no-integration-found").hide();
+            //$('#project-integrated').hide();
+            $('#project-empty').show();
+            loadingOnScreenRemove();
+            loadOnAny('#content',true);
+        }
+        else{
+
+            $.ajax({
+                method: "GET",
+                url: "/api/apps/activecampaign?company="+ $('#company-navbar').val(),
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
                     loadOnAny('#content',true);
-            }
-        });
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    //$("#content").html("");
+                    //if (isEmpty(response.projects)) {
+                    // if (isEmpty(data.company_default_projects)) {
+                    //     $('#project-empty').show();
+                    //     $('#integration-actions').hide();
+                    // } else {
+                        $('#project_id, #select_projects_edit').html("");
+                        window.fillProjectsSelect(data.company_default_projects)
+                        // let projects = response.projects;
+                        // for (let i = 0; i < projects.length; i++) {
+                        //     if(projects[i].status === 1){
+                        //         $('#project_id, #select_projects_edit').append(
+                        //             '<option value="' +
+                        //             projects[i].id +
+                        //             '">' +
+                        //             projects[i].name +
+                        //             '</option>'
+                        //         );
+                        //     }
+                        // }
+                        if (isEmpty(response.integrations)) {
+                            $("#no-integration-found").show();
+                        } else {
+                            $('#content').html("");
+                            let integrations = response.integrations;
+                            for (let i = 0; i < integrations.length; i++) {
+                                renderIntegration(integrations[i]);
+                            }
+                            $("#no-integration-found").hide();
+                        }
+                        $('#project-empty').hide();
+                        $('#integration-actions').show();
+                    // }
+                    if(loading=='y')
+                        loadingOnScreenRemove();
+                    loadOnAny('#content',true);
+                }
+            });
+
+        }
     }
 
     getCompaniesAndProjects().done( function (data){

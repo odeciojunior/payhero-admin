@@ -8,6 +8,9 @@ $('#company-navbar').change(function () {
 })
 
 $(document).ready(function () {
+
+    getCompaniesAndProjects();
+
     let allCompanyNotApproved = false;
     let companyNotFound = false;
     let woocommerceIntegrationNotFound = false;
