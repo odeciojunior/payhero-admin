@@ -1,6 +1,6 @@
 <?php
 
-if (env('APP_ENV', 'homolog') == 'production') {
+if (env('APP_ENV', 'local') == 'production' || env('APP_ENV', 'local') == 'homolog') {
     $sentry_dsn = env('SENTRY_LARAVEL_DSN', env('SENTRY_DSN')); // production
 } else {
     $sentry_dsn = null; // local
