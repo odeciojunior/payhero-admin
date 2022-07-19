@@ -1502,6 +1502,7 @@ class ReportFinanceService
                 'Nov' => 'Nov',
                 'Dec' => 'Dez'
             ];
+
             $labelList = [];
             $portugueseLabelList = [];
             while ($dateStart->lessThanOrEqualTo($dateEnd)) {
