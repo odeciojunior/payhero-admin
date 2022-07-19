@@ -33,8 +33,6 @@ class GenericCommand extends Command
             ->whereNotNull('delivery_id')
             ->whereHas('productsPlansSale', function ($query) {
                 $query->whereDoesntHave('tracking');
-            })->whereHas('transactions', function ($query) {
-                $query->where('tracking_required', true);
             })->chunk(1000, function ($sales) {
                 foreach ($sales as $sale) {
                     try {
