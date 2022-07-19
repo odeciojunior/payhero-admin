@@ -314,25 +314,9 @@ $(function () {
         }
     });
 
-    $("#modal-edit-pixel .img-edit-selected").on('click', function () {
-        openModalEditPixel(true);
-    });
-
-    function openModalEditPixel(selectPlatform = false) {
-        if (selectPlatform) {
-            $("#modal-edit-pixel #configure-edit-pixel").hide();
-            $("#modal-edit-pixel #select-platform-edit-pixel").show();
-        } else {
-            $("#modal-edit-pixel #select-platform-edit-pixel").hide();
+    function openModalEditPixel() {
             $("#modal-edit-pixel #configure-edit-pixel").show();
-        }
     }
-
-    $("#modal-edit-pixel img.logo-pixels-edit").on('click', function () {
-        renderModalPixelEdit(pixelEdit, $(this).data('value'));
-        openModalEditPixel();
-    });
-
 
     function inputCodeByPlatform(platform, code, conversional = '', explode = false) {
 
