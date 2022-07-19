@@ -16,63 +16,63 @@
                 <div class="row text-center">
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                             data-value="google_analytics"
                             alt="logo analytics">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Analytics</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
                             data-value="google_analytics_four"
                             alt="logo analytics four">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
                             data-value="google_adwords"
                             alt="logo google adwords">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
                             data-value="facebook"
                             alt="logo facebook">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">Facebook</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
                             data-value="outbrain"
                             alt="logo outbrain">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">Outbrain</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                             data-value="taboola"
                             alt="logo taboola">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">Taboola</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                             data-value="pinterest"
                             alt="logo pinterest">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">Pinterest</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                             data-value="uol_ads"
                             alt="logo uol ads">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">UOL Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                             data-value="tiktok"
                             alt="logo uol ads">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">TikTok</div>
@@ -81,7 +81,7 @@
                 <div class="row text-center">
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai"
-                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                              data-value="kwai"
                              alt="logo kwai ads">
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">Kwai</div>
