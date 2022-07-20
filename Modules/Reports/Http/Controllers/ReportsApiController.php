@@ -16,7 +16,7 @@ use Modules\Reports\Transformers\PendingBalanceResource;
 use Modules\Reports\Transformers\TransactionBlockedResource;
 use ParagonIE\Sodium\Compat;
 use Modules\Core\Http\Controllers\CoreApiController;
-use Modules\Core\Services\ReportService;
+use Modules\Core\Services\Reports\ReportService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ReportsApiController extends Controller

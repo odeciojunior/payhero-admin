@@ -1,6 +1,11 @@
 var currentPage = null;
 //var atualizar = null;
 
+$(function() {
+    changeCalendar();
+    changeCompany();
+});
+
 $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
     $("#project").find('option').not(':first').remove();
@@ -20,17 +25,9 @@ $('#company-navbar').change(function () {
     });
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            changeCalendar();
-            changeCompany();
-            window.fillProjectsSelect(data2.companies)
-            window.atualizar();
+            getProjects(data2.companies);
         });
 	});
-});
-
-$(function() {
-    changeCalendar();
-    changeCompany();
 });
 
 window.atualizar = function (link = null) {
@@ -338,14 +335,39 @@ $(document).ready(function () {
         })
     }
 
-    getCompaniesAndProjects().done( function (data){
-        getProjects(data);
+    getCompaniesAndProjects().done( function (data2){
+        getProjects(data2.companies);
     });
 
-    window.fillProjectsSelect = function(data){
-        $.ajax({
+    // window.fillProjectsSelect = function(data){
+    //     $.ajax({
+    //         method: "GET",
+    //         url: "/api/reports/projects-with-blocked-balance",
+    //         dataType: "json",
+    //         headers: {
+    //             Authorization: $('meta[name="access-token"]').attr("content"),
+    //             Accept: "application/json",
+    //         },
+    //         error: function error(response) {
+    //             console.log('erro')
+    //             console.log(response)
+    //         },
+    //         success: function success(response) {
+    //             return response;
+    //         }
+    //     }).done(function(dataSales){
+    //         $.each(data, function (c, company) {
+    //             $.each(company.projects, function (i, project) {
+    //                 if( dataSales.includes(project.id) )
+    //                     $("#project").append($("<option>", {value: project.id,text: project.name,}));
+    //             });
+    //         });
+    //     });
+    // }
+    window.fillProjectsSelect = function(){
+        return $.ajax({
             method: "GET",
-            url: "/api/reports/projects-with-blocked-balance",
+            url: "/api/sales/projects-with-sales",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -358,23 +380,37 @@ $(document).ready(function () {
             success: function success(response) {
                 return response;
             }
-        }).done(function(dataSales){
-            $.each(data, function (c, company) {
-                $.each(company.projects, function (i, project) {
-                    if( dataSales.includes(project.id) )
-                        $("#project").append($("<option>", {value: project.id,text: project.name,}));
-                });
-            });
         });
     }
+    
 
-    function getProjects(data) {
-        loadingOnScreen();
-        window.fillProjectsSelect(data.companies)
+    function getProjects(companies) {
+        loadingOnScreen();        
         $("#project-empty").hide();
         $("#project-not-empty").show();
-        $("#export-excel").show()
-        window.atualizar();
+        $("#export-excel").show();
+
+        window.fillProjectsSelect()
+        .done(function(dataSales)
+        {        
+            $(".div-filters").show();        
+            $.each(companies, function (c, company) {
+                $.each(company.projects, function (i, project) {
+                    if( dataSales.includes(project.id) )
+                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
+                });
+            });
+            $("#select_projects option:first").attr('selected','selected');
+
+            if(sessionStorage.info) {            
+                $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+            }
+
+            company = $("#select_projects").val();
+
+            atualizar();
+        }); 
         loadingOnScreenRemove();
        
         // $.ajax({

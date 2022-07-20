@@ -19,6 +19,10 @@ $('#company-navbar').change(function () {
             },
         }
     });
+
+    $("#select_projects").html('');
+    sessionStorage.removeItem('info');
+    
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
             window.getCompanies(data2,'n');

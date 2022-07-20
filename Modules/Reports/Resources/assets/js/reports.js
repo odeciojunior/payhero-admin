@@ -1,10 +1,10 @@
 $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
+    loadingOnScreen();
 	$("#select_projects").val($("#select_projects option:first").val());
     $(
         "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
     ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
-    loadingOnScreen();
     $("#select_projects").html('');
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){            

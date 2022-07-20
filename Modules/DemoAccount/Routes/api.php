@@ -285,7 +285,7 @@ Route::group([
 
         Route::get('/reports/projections', 'ReportsApiDemoController@projections');
 
-        Route::get('/reports/coupons', 'ReportsApiDemoController@coupons');
+        Route::get('/reports/coupons', 'ReportsApiDemoController@getDiscountCoupons');
 
         Route::get('/reports/pending-balance', 'ReportsApiDemoController@pendingBalance');
 
@@ -329,6 +329,11 @@ Route::group([
         Route::get('/reports/marketing/coupons', 'ReportsMarketingApiDemoController@getResumeCoupons');
         Route::get('/reports/marketing/regions', 'ReportsMarketingApiDemoController@getResumeRegions');
         Route::get('/reports/marketing/origins', 'ReportsMarketingApiDemoController@getResumeOrigins');
+
+        Route::get('/reports/projects-with-blocked-balance', 'ReportsApiDemoController@getProjectsWithBlockedBalance');
+        Route::get('/reports/projects-with-checkouts', 'ReportsApiDemoController@getProjectsWithCheckouts');
+        Route::get('/reports/projects-with-coupons', 'ReportsApiDemoController@getProjectsWithCoupons');
+        Route::get('/reports/projects-with-pending-balance', 'ReportsApiDemoController@getProjectsWithPendingBalance');
     });        
 
     //SalesRecovery

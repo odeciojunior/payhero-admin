@@ -1,11 +1,41 @@
+$(function() {
+    loadingOnScreen();
+    exportReports();
+
+    changeCompany();
+    changeCalendar();
+    
+
+    if(sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem('info'));
+        $('input[name=daterange]').val(info.calendar);
+    } 
+    
+    getCompaniesAndProjects().done( function (data2){           
+        getProjects(data2.companies);
+    });
+});
+
+let salesUrl = '/api/reports/sales';
+let mktUrl = '/api/reports/marketing';
+
+let company = '';
+let date = '';
+let sales_status = '';
+
 $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
-	$("#select_projects").val($("#select_projects option:first").val());
+
+    loadingOnScreen();
+	
+    $("#select_projects").val($("#select_projects option:first").val());
     $(
         "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
     ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
-    loadingOnScreen();
+
     $("#select_projects").html('');
+    sessionStorage.removeItem('info');
+    
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){            
             getProjects(data2.companies);
@@ -31,31 +61,6 @@ window.fillProjectsSelect = function(){
         }
     });
 }
-
-$(function() {
-    loadingOnScreen();
-    exportReports();
-
-    getCompaniesAndProjects().done( function (data2){           
-        getProjects(data2.companies);
-    }); 
-
-    changeCompany();
-    changeCalendar();
-    
-
-    if(sessionStorage.info) {
-        let info = JSON.parse(sessionStorage.getItem('info'));
-        $('input[name=daterange]').val(info.calendar);
-    }      
-});
-
-let salesUrl = '/api/reports/sales';
-let mktUrl = '/api/reports/marketing';
-
-let company = '';
-let date = '';
-let sales_status = '';
 
 function changeSaleStatus() {
     $("#status-graph").on('change', function() {
@@ -90,19 +95,16 @@ function getProjects(companies) {
 
     window.fillProjectsSelect()
     .done(function(dataSales)
-    {        
-        console.log('selecionando projetos');
+    {    
         $(".div-filters").show();        
         $.each(companies, function (c, company) {            
             $.each(company.projects, function (i, project) {
-                if( dataSales.includes(project.id) ){
-                    $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-                    console.log(project.name);
+                if( dataSales.includes(project.id) ){                    
+                    $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));                    
                 }                
             });
         });
-        
-        console.log('selecionando projeto default');
+                
         $("#select_projects option:first").attr('selected','selected');
 
         if(sessionStorage.info) {            
@@ -110,65 +112,13 @@ function getProjects(companies) {
             $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
         }
 
-        company = $("#select_projects").val();
-        console.log(company);
-
+        company = $("#select_projects").val();        
         updateReports();
 
         changeSaleStatus();
     }); 
 
-    loadingOnScreenRemove();
-
-    // $.ajax({
-    //     method: "GET",
-    //     url: "/api/projects?select=true",
-    //     dataType: "json",
-    //     headers: {
-    //         Authorization: $('meta[name="access-token"]').attr("content"),
-    //         Accept: "application/json",
-    //     },
-    //     error: function error(response) {
-    //         loadingOnScreenRemove();
-    //         $("#modal-content").hide();
-    //         errorAjaxResponse(response);
-    //     },
-    //     success: function success(response) {
-    //         if (!isEmpty(response.data)) {
-    //             $(".div-filters").show();
-    //             $("#project-empty").hide();
-    //             $("#project-not-empty").show();
-    //             $("#export-excel").show();
-
-    //             $.each(response.data, function (i, project) {
-    //                 $("#select_projects").append(
-    //                     $("<option>", {
-    //                         value: project.id,
-    //                         text: project.name,
-    //                     })
-    //                 );
-
-    //                 removeDuplcateItem("#select_projects option");
-    //             });
-
-    //             if(sessionStorage.info) {
-    //                 $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-    //                 $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-    //             }
-
-    //             company = $("#select_projects").val();
-
-    //             updateReports();
-    //         } else {
-    //             $(".div-filters").hide();
-    //             $("#export-excel").hide();
-    //             $("#project-not-empty").hide();
-    //             $("#project-empty").show();
-    //         }
-
-    //         loadingOnScreenRemove();
-    //     }
-    // });
+    loadingOnScreenRemove();   
 }
 
 function barGraph(data, labels, total) {

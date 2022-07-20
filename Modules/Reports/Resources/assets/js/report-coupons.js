@@ -2,10 +2,10 @@ $('#company-navbar').change(function () {
     if (verifyIfCompanyIsDefault()) return;
     $("#projeto").find('option').not(':first').remove();
     loadOnTable('#body-table-coupons', '.table-coupons');
+    $("#select_projects").html('');
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            window.fillProjectsSelect(data2.companies)
-            window.atualizar();
+            window.getProjects(data2.companies);
         });
 	});
 });
@@ -57,12 +57,12 @@ $(document).ready(function () {
         }
     }    
 
-    getCompaniesAndProjects().done( function (data){
-        getProjects(data);
+    getCompaniesAndProjects().done( function (data2){
+        window.getProjects(data2.companies);
     });
 
-    window.fillProjectsSelect = function(data){
-        $.ajax({
+    window.fillProjectsSelect = function(){
+        return $.ajax({
             method: "GET",
             url: "/api/reports/projects-with-coupons",
             dataType: "json",
@@ -75,50 +75,89 @@ $(document).ready(function () {
                 console.log(response)
             },
             success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel").show()
-
-                    $.each(response.data, function (i, project) {
-                        $("#projeto").append($('<option>', {
-                            value: project.id,
-                            text: project.name
-                        }));
-                    });
-
-                    if(sessionStorage.info) {
-                        $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
-                        $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-                    }
-
-                    atualizar();
-
-                } else {
-                    $("#export-excel").hide()
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-
-                loadingOnScreenRemove();
+                return response;
             }
-        }).done(function(dataSales){
-            $.each(data, function (c, company) {
+        });
+    }
+    // window.fillProjectsSelect = function(data){
+    //     $.ajax({
+    //         method: "GET",
+    //         url: "/api/reports/projects-with-coupons",
+    //         dataType: "json",
+    //         headers: {
+    //             Authorization: $('meta[name="access-token"]').attr("content"),
+    //             Accept: "application/json",
+    //         },
+    //         error: function error(response) {
+    //             console.log('erro')
+    //             console.log(response)
+    //         },
+    //         success: function success(projectIds) {
+    //             console.log(response.data);
+    //             if (!isEmpty(projectIds)) {
+    //                 $("#project-empty").hide();
+    //                 $("#project-not-empty").show();
+    //                 $("#export-excel").show()
+
+    //                 $.each(projectIds, function (i, project) {
+    //                     $("#projeto").append($('<option>', {
+    //                         value: project.id,
+    //                         text: project.name
+    //                     }));
+    //                 });
+
+    //                 if(sessionStorage.info) {
+    //                     $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
+    //                     $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+    //                 }
+
+    //                 atualizar();
+
+    //             } else {
+    //                 $("#export-excel").hide()
+    //                 $("#project-not-empty").hide();
+    //                 $("#project-empty").show();
+    //             }
+
+    //             loadingOnScreenRemove();
+    //         }
+    //     }).done(function(dataSales){
+    //         $.each(data, function (c, company) {
+    //             $.each(company.projects, function (i, project) {
+    //                 if( dataSales.includes(project.id) )
+    //                     $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
+    //             });
+    //         });
+    //     });
+    // }
+
+    window.getProjects = function(companies) {
+        loadingOnScreen();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel").show()        
+        window.fillProjectsSelect()
+        .done(function(dataSales)
+        {                  
+            $(".div-filters").show();        
+            $.each(companies, function (c, company) {
                 $.each(company.projects, function (i, project) {
                     if( dataSales.includes(project.id) )
                         $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
                 });
             });
-        });
-    }
+            $("#projeto option:first").attr('selected','selected');
 
-    function getProjects(data) {
-        loadingOnScreen();
-        window.fillProjectsSelect(data.companies)
-        $("#project-empty").hide();
-        $("#project-not-empty").show();
-        $("#export-excel").show()
-        window.atualizar();
+            if(sessionStorage.info) {            
+                $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
+                $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+            }
+
+            company = $("#projeto").val();
+
+            window.atualizar();
+        }); 
+        
         loadingOnScreenRemove();
 
         // $.ajax({
