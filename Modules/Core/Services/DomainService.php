@@ -272,6 +272,7 @@ class DomainService
             }
 
             if (empty($domain->cloudflare_domain_id)) {
+                
                 DomainRecord::where('domain_id', $domain->id)->delete();
                 $domain->delete();
 
