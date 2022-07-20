@@ -41,7 +41,7 @@ class PostBackShopifyController extends Controller
 
             if (!empty($project)) {
                 ProcessShopifyTrackingPostbackJob::dispatch($projectId, $requestData)
-                    ->onQueue('high');
+                    ->onQueue('postback-shopify-tracking');
 
                 return response()->json(['message' => 'success']);
             } else {
