@@ -76,6 +76,7 @@ Route::group([
 
         Route::get('/sales', 'SalesApiDemoController@index');
         Route::get('/sales/{id}', 'SalesApiDemoController@show');
+        Route::get('/sales/projects-with-sales', 'SalesApiDemoController@getProjectsWithSales');
     });
 
     //ActiveCampaign
@@ -293,6 +294,41 @@ Route::group([
         Route::get('/reports/blockedbalance', 'ReportsApiDemoController@blockedbalance');
 
         Route::get('/reports/blockedresume', 'ReportsApiDemoController@resumeBlockedBalance');
+
+        Route::get('/reports/resume/commissions', 'ReportsFinanceApiDemoController@getResumeCommissions');
+        Route::get('/reports/resume/pendings', 'ReportsFinanceApiDemoController@getResumePendings');
+        Route::get('/reports/resume/cashbacks', 'ReportsFinanceApiDemoController@getResumeCashbacks');
+        Route::get('/reports/resume/sales', 'ReportsSaleApiDemoController@getResumeSales');
+        Route::get('/reports/resume/type-payments', 'ReportsSaleApiDemoController@getResumeTypePayments');
+        Route::get('/reports/resume/products', 'ReportsSaleApiDemoController@getResumeProducts');
+        Route::get('/reports/resume/coupons', 'ReportsMarketingApiDemoController@getResumeCoupons');
+        Route::get('/reports/resume/regions', 'ReportsMarketingApiDemoController@getResumeRegions');
+        Route::get('/reports/resume/origins', 'ReportsMarketingApiDemoController@getResumeOrigins');
+
+        Route::get('/reports/finances/resume', 'ReportsFinanceApiDemoController@getFinancesResume');
+        Route::get('/reports/finances/cashbacks', 'ReportsFinanceApiDemoController@getFinancesCashbacks');
+        Route::get('/reports/finances/pendings', 'ReportsFinanceApiDemoController@getFinancesPendings');
+        Route::get('/reports/finances/blockeds', 'ReportsFinanceApiDemoController@getFinancesBlockeds');
+        Route::get('/reports/finances/distribuitions', 'ReportsFinanceApiDemoController@getFinancesDistribuitions');
+        Route::get('/reports/finances/withdrawals', 'ReportsFinanceApiDemoController@getFinancesWithdrawals');
+
+        Route::get('/reports/sales/resume', 'ReportsSaleApiDemoController@getSalesResume');
+        Route::get('/reports/sales/distribuitions', 'ReportsSaleApiDemoController@getSalesDistribuitions');
+        Route::get('/reports/sales/abandoned-carts', 'ReportsSaleApiDemoController@getAbandonedCarts');
+        Route::get('/reports/sales/orderbump', 'ReportsSaleApiDemoController@getOrderBump');
+        Route::get('/reports/sales/upsell', 'ReportsSaleApiDemoController@getUpsell');
+        Route::get('/reports/sales/conversion', 'ReportsSaleApiDemoController@getConversion');
+        Route::get('/reports/sales/recurrence', 'ReportsSaleApiDemoController@getRecurrence');
+
+        Route::get('/reports/marketing/resume', 'ReportsMarketingApiDemoController@getResume');
+        Route::get('/reports/marketing/sales-by-state', 'ReportsMarketingApiDemoController@getSalesByState');
+        Route::get('/reports/marketing/most-frequent-sales', 'ReportsMarketingApiDemoController@getMostFrequentSales');
+        Route::get('/reports/marketing/devices', 'ReportsMarketingApiDemoController@getDevices');
+        Route::get('/reports/marketing/operational-systems', 'ReportsMarketingApiDemoController@getOperationalSystems');
+        Route::get('/reports/marketing/state-details', 'ReportsMarketingApiDemoController@getStateDetail');
+        Route::get('/reports/marketing/coupons', 'ReportsMarketingApiDemoController@getResumeCoupons');
+        Route::get('/reports/marketing/regions', 'ReportsMarketingApiDemoController@getResumeRegions');
+        Route::get('/reports/marketing/origins', 'ReportsMarketingApiDemoController@getResumeOrigins');
     });        
 
     //SalesRecovery

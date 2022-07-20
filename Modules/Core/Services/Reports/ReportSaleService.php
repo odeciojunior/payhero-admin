@@ -20,7 +20,7 @@ class ReportSaleService
             $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
 
             $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
-                        ->where('owner_id', auth()->user()->account_owner_id)
+                        ->where('owner_id', auth()->user()->getAccountOwnerId())
                         ->whereBetween($dateFilter, [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
             if (!empty($filters['status'])) {
@@ -424,7 +424,7 @@ class ReportSaleService
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $query = Sale::join('transactions', 'transactions.sale_id', 'sales.id')
-                            ->where('transactions.user_id', auth()->user()->account_owner_id)
+                            ->where('transactions.user_id', auth()->user()->getAccountOwnerId())
                             ->where('project_id', $projectId)
                             ->where('sales.status', Sale::STATUS_APPROVED)
                             ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
@@ -536,7 +536,7 @@ class ReportSaleService
             $projectId = hashids_decode($filters['project_id']);
 
             $salesApproved = Sale::whereBetween('end_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                                    ->where('owner_id', auth()->user()->account_owner_id)
+                                    ->where('owner_id', auth()->user()->getAccountOwnerId())
                                     ->where('project_id', $projectId)
                                     ->where('status', Sale::STATUS_APPROVED)
                                     ->count();
@@ -547,7 +547,7 @@ class ReportSaleService
                                         ->avg('original_total_paid_value');
 
             $salesComission = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                                        ->where('user_id', auth()->user()->account_owner_id)
+                                        ->where('user_id', auth()->user()->getAccountOwnerId())
                                         ->where('project_id', $projectId)
                                         ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                                         ->whereNull('invitation_id')
@@ -577,7 +577,7 @@ class ReportSaleService
             $projectId = hashids_decode($filters['project_id']);
 
             $salesApprovedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                    ->where('owner_id', auth()->user()->account_owner_id)
+                                    ->where('owner_id', auth()->user()->getAccountOwnerId())
                                     ->where('project_id', $projectId)
                                     ->where('status', Sale::STATUS_APPROVED)
                                     ->count();
@@ -681,7 +681,7 @@ class ReportSaleService
                                     ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                                     ->where('sales.status', Sale::STATUS_APPROVED)
                                     ->whereIn('transaction.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                                    ->where('transaction.user_id', auth()->user()->account_owner_id)
+                                    ->where('transaction.user_id', auth()->user()->getAccountOwnerId())
                                     ->whereNull('invitation_id')
                                     ->sum('transaction.value');
 
@@ -707,7 +707,7 @@ class ReportSaleService
                                 ->where('sales.has_order_bump', true)
                                 ->where('sales.project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_APPROVED)
-                                ->where('user_id', auth()->user()->account_owner_id)
+                                ->where('user_id', auth()->user()->getAccountOwnerId())
                                 ->first();
 
             if (empty($data)) {
@@ -736,7 +736,7 @@ class ReportSaleService
                                 ->whereNotNull('sales.upsell_id')
                                 ->where('sales.project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_APPROVED)
-                                ->where('user_id', auth()->user()->account_owner_id)
+                                ->where('user_id', auth()->user()->getAccountOwnerId())
                                 ->first();
 
             if (empty($data)) {
