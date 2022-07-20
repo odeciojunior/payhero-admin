@@ -37,7 +37,23 @@
     </div>
 
 
+    <div class="row no-gutters">
+        <div style="margin:auto 100px auto auto">
+        <!-- CONVITE PARA INICIAR -->
+        @php
+            $userModel = new \Modules\Core\Entities\User();
+            $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+        @endphp
 
+        @if(!auth()->user()->account_is_approved && $account_type === 'admin')
+            <div class="new-register-navbar-open-modal-container" style="display: none;">
+                <div class="row new-register-open-modal no-gutters">
+                    Você está em uma conta demonstrativa. <span class="new-register-open-modal-btn">Clique aqui para começar</span>
+                </div>
+            </div>
+        @endif
+        </div>
+    </div>
     <div class="row no-gutters ml-auto">
 
         <!-- CONTAINER DOS ICONES/LINKS DO ANNOUNCEKIT, NOTIFICACOES E USUARIO -->
@@ -52,21 +68,7 @@
             <!-- NAVERBAR FILHA DA CONTAINER -->
             <div class="row no-gutters d-flex" id="site-navbar-collapse">
 
-                <div style="margin:auto 100px auto auto">
-                <!-- CONVITE PARA INICIAR -->
-                @php
-                    $userModel = new \Modules\Core\Entities\User();
-                    $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
-                @endphp
-
-                @if(!auth()->user()->account_is_approved && $account_type === 'admin')
-                    <div class="new-register-navbar-open-modal-container" style="display: none;">
-                        <div class="row new-register-open-modal">
-                            Você está em uma conta demo. <span class="new-register-open-modal-btn">Clique aqui para começar</span>
-                        </div>
-                    </div>
-                @endif
-                </div>
+                
 
                 <!-- EMPRESAS -->
                 <div class="pr-20" id="company-select" style="display:none"><!--d-sm-flex -->
