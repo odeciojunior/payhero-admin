@@ -211,6 +211,12 @@ $(document).ready(function () {
                 ver = false;
                 $("#url_expiration_time").focus();
             }
+
+            if (!$('.btn-view-product-url').attr('link') && $.trim($('#digital_product_url').val()) === '') {
+                alertCustom('error', 'Envie o arquivo digital');
+                ver = false;
+                $('#digital_product_url').focus();
+            }
         }
         return ver;
     }

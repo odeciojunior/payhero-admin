@@ -158,29 +158,33 @@
             </div>
             <!-- Modal Converter em digital -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-converte" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                <div class="modal-dialog  modal-dialog-centered  modal-simple">
-                    <div class="modal-content">
-                        <div id="modal_converter_body" class="modal-body text-center p-20">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h3> Você tem certeza? </h3>
-                            <div class="justify-content-center">
+                <div class="modal-dialog  modal-dialog-centered  modal-simple" style="max-width: 450px">
+                    <div class="modal-content p-20">
+                        <div id="modal_converter_body" class="text-center">
+                            <div style="border-bottom: 1px solid #E9E9E9">
+                                <button type="button" class="close font-size-30" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h3 class="text-center"> Você tem certeza? </h3>
+                            </div>
+                            <div class="justify-content-center my-20">
                                 <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect width="88" height="88" rx="44" fill="#F3F3F3"/>
                                     <path d="M30.1081 23C27.287 23 25 25.287 25 28.1081V33.7838C25 36.6049 27.287 38.8919 30.1081 38.8919H51.6757C54.4968 38.8919 56.7838 36.6049 56.7838 33.7838V28.1081C56.7838 25.287 54.4968 23 51.6757 23H30.1081ZM28.4054 28.1081C28.4054 27.1677 29.1677 26.4054 30.1081 26.4054H51.6757C52.6161 26.4054 53.3784 27.1677 53.3784 28.1081V33.7838C53.3784 34.7242 52.6161 35.4865 51.6757 35.4865H30.1081C29.1677 35.4865 28.4054 34.7242 28.4054 33.7838V28.1081ZM35.6703 52.5135C34.7926 52.5135 34.0811 53.2758 34.0811 54.2162C34.0811 55.1566 34.7926 55.9189 35.6703 55.9189H46.1135C46.9912 55.9189 47.7027 55.1566 47.7027 54.2162C47.7027 53.2758 46.9912 52.5135 46.1135 52.5135H35.6703ZM55.3148 53.5245L55.1499 53.7155C54.5454 54.32 53.5995 54.3749 52.9329 53.8803L52.742 53.7155L48.2014 49.1749C47.5969 48.5704 47.542 47.6245 48.0366 46.9579L48.2014 46.7669L52.742 42.2264C53.4069 41.5614 54.485 41.5614 55.1499 42.2264C55.7544 42.8309 55.8094 43.7768 55.3148 44.4434L55.1499 44.6344L53.5173 46.2709L56.9215 46.2697C58.3908 46.2697 59.5994 45.153 59.7447 43.722L59.7593 43.4319V38.3238C59.7593 37.3834 60.5217 36.6211 61.462 36.6211C62.3241 36.6211 63.0365 37.2616 63.1492 38.0927L63.1647 38.3238V43.4319C63.1647 46.7522 60.5728 49.4672 57.3018 49.6637L56.9215 49.6751L53.5195 49.6763L55.1499 51.3075C55.7544 51.912 55.8094 52.8579 55.3148 53.5245ZM56.7838 59.8919V55.2921L56.7551 55.3208C55.834 56.2419 54.5748 56.6158 53.3784 56.4436V59.8919C53.3784 60.8323 52.6161 61.5946 51.6757 61.5946H30.1081C29.1677 61.5946 28.4054 60.8323 28.4054 59.8919V48.5405C28.4054 47.6002 29.1677 46.8378 30.1081 46.8378H45.5971C45.7264 46.4023 45.9318 45.9844 46.2132 45.6051L46.2632 45.5378L46.5372 45.2204L48.3251 43.4324H30.1081C27.287 43.4324 25 45.7194 25 48.5405V59.8919C25 62.713 27.287 65 30.1081 65H51.6757C54.4968 65 56.7838 62.713 56.7838 59.8919Z" fill="#3772FF"/>
                                 </svg>
                             </div>
                             <p class="title"> Converter produto físico para digital </p>
-                            <p class="aviso"> Essa ação não poderá ser desfeita! </p>
+                            <div class="d-flex flex-column align-items-center mt-25">
+                                <p class="aviso" style="width: 60%">Confirme a conversão do produto e insira o arquivo digital.</p>
+                                <p class="aviso" style="width: 60%"> Essa ação não poderá ser desfeita! </p>
+                            </div>
                         </div>
-                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                        <div class="d-flex align-items-center justify-content-center pt-10" style="column-gap: 16px">
                             <button id="bt_cancelar" type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;; background-color: #F3F3F3; color: #636363; padding: 20px 0">
                                 <b>Cancelar</b>
                             </button>
                             <button id="bt_converter" type="button" class="col-4 btn border-0 btn-outline btn-converte-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%; background-color: #3772FF; color: #FCFCFD; padding: 20px 0">
                                 <b class="mr-2">Converter </b>
-                                <!-- <span class="o-bin-1"></span> -->
                             </button>
                         </div>
                     </div>
