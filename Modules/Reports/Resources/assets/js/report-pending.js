@@ -21,9 +21,6 @@ $('#company-navbar').change(function () {
     });
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            changeCalendar();
-            changeCompany();
-            window.fillProjectsSelect(data2.companies)
             window.getCompanies(data2,'n');
         });
 	});
@@ -33,7 +30,7 @@ $(function() {
     changeCalendar();
     changeCompany();
 });
-
+/*
 function atualizar(link = null) {
 
     currentPage = link;
@@ -127,7 +124,7 @@ function atualizar(link = null) {
         resumePending();
     }
 }
-
+*/
 function getFilters(urlParams = false) {
     let data = {
         'company': $('#company-navbar').val(),
@@ -149,57 +146,9 @@ function getFilters(urlParams = false) {
             params += '&' + param + '=' + data[param];
         }
         return encodeURI(params);
-    } else {
-        return data;
-    }
-}
+    } 
 
-function resumePending() {
-
-    $("#total_sales").html(skeLoadMini);
-
-    // loadOnAny('.number', false, {
-    //     styles: {
-    //         container: {
-    //             minHeight: '32px',
-    //             height: 'auto'
-    //         },
-    //         loader: {
-    //             width: '20px',
-    //             height: '20px',
-    //             borderWidth: '4px'
-    //         },
-    //     }
-    // });
-
-    $.ajax({
-        method: "GET",
-        url: '/api/reports/resume-pending-balance',
-        data: getFilters(),
-        dataType: "json",
-        headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
-        },
-        error: function error(response) {
-            //loadOnAny('.number', true);
-            $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            //loadOnAny('.number', true);
-            //$('#total_sales').text('0');
-            
-            if (response.total_sales) {
-                $('#total_sales, #total-pending, #total').text('');
-                $('#total_sales').text(response.total_sales);
-                var comission=response.commission.split(/\s/g);
-                $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
-            } else {
-                $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
-            }
-        }
-    });
+    return data;    
 }
 
 $(document).ready(function () {
@@ -233,49 +182,15 @@ $(document).ready(function () {
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
-    // $('#date-filter').daterangepicker({
-    //     startDate: moment('2018-01-01 00:00:00'),
-    //     endDate: moment(),
-    //     opens: 'center',
-    //     maxDate: moment().endOf("day"),
-    //     alwaysShowCalendar: true,
-    //     showCustomRangeLabel: 'Customizado',
-    //     autoUpdateInput: true,
-    //     locale: {
-    //         locale: 'pt-br',
-    //         format: 'DD/MM/YYYY',
-    //         applyLabel: "Aplicar",
-    //         cancelLabel: "Limpar",
-    //         fromLabel: 'De',
-    //         toLabel: 'Até',
-    //         customRangeLabel: 'Customizado',
-    //         weekLabel: 'W',
-    //         daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-    //         monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-    //         firstDay: 0
-    //     },
-    //     ranges: {
-    //         'Hoje': [moment(), moment()],
-    //         'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-    //         'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-    //         'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-    //         'Este mês': [moment().startOf('month'), moment().endOf('month')],
-    //         'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-    //         'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
-    //     }
-    // }, function (start, end) {
-    //     startDate = start.format('YYYY-MM-DD');
-    //     endDate = end.format('YYYY-MM-DD');
-    // });
-
+    
     getCompaniesAndProjects().done( function (data){
         window.getCompanies(data);
     });
 
-    window.fillProjectsSelect = function(data){
-        $.ajax({
+    window.fillProjectsSelect = function(){
+        return $.ajax({
             method: "GET",
-            url: "/api/reports/projects-with-pending-balance",
+            url: "/api/sales/projects-with-sales",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -288,13 +203,6 @@ $(document).ready(function () {
             success: function success(response) {
                 return response;
             }
-        }).done(function(dataSales){
-            $.each(data, function (c, company) {
-                $.each(company.projects, function (i, project) {
-                    if( dataSales.includes(project.id) )
-                        $("#project").append($("<option>", {value: project.id,text: project.name,}));
-                });
-            });
         });
     }
 
@@ -304,8 +212,7 @@ $(document).ready(function () {
             window.fillProjectsSelect(data.companies)
         }
         $.ajax({
-            method: "GET",
-            //url: '/api/projects?select=true',
+            method: "GET",            
             url: '/api/core/companies?select=true',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -330,16 +237,16 @@ $(document).ready(function () {
                     }
                 }
 
-                getProjects(data);
+                getProjects(data.companies);
                 getAcquirer();
             }
         });
     }
 
-    function getProjects(data) {
-        $("#project-empty").hide();
-        $("#project-not-empty").show();
-        $("#export-excel").show()
+    // function getProjects(data) {
+    //     $("#project-empty").hide();
+    //     $("#project-not-empty").show();
+    //     $("#export-excel").show()
         //atualizar();
         //loadingOnScreenRemove();
         
@@ -366,7 +273,7 @@ $(document).ready(function () {
         //                     value: project.id,
         //                     text: project.name
         //                 }));
-        //                 $("#select_projects").append(
+        //                 $("#project").append(
         //                     $("<option>", {
         //                         value: project.id,
         //                         text: project.name,
@@ -374,8 +281,8 @@ $(document).ready(function () {
         //                 );
         //             });
         //             if(sessionStorage.info) {
-        //                 $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-        //                 $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+        //                 $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
+        //                 $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
         //             }
 
         //             atualizar();
@@ -388,6 +295,39 @@ $(document).ready(function () {
         //         loadingOnScreenRemove();
         //     }
         // });
+    //}
+
+    function getProjects(companies)
+    {    
+        loadingOnScreen();
+        $(".div-filters").hide();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel > div >").show();
+
+        window.fillProjectsSelect()
+        .done(function(dataSales)
+        {     
+            $(".div-filters").show();        
+            $.each(companies, function (c, company) {
+                $.each(company.projects, function (i, project) {
+                    if( dataSales.includes(project.id) ){
+                        $("#project").append($("<option>", {value: project.id,text: project.name,}));                        
+                    }
+                });
+            });
+            $("#project option:first").attr('selected','selected');
+
+            if(sessionStorage.info) {            
+                $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
+                $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+            }
+
+            company = $("#project").val();
+            
+        }); 
+
+        loadingOnScreenRemove();
     }
 
     function getAcquirer() {
@@ -417,6 +357,42 @@ $(document).ready(function () {
             }
         });
     }
+
+    
+    // function resumePending() {
+
+    //     //$("#total_sales").html(skeLoadMini);
+
+    //     $.ajax({
+    //         method: "GET",
+    //         url: '/api/reports/resume-pending-balance',
+    //         data: getFilters(),
+    //         dataType: "json",
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: function error(response) {
+    //             //loadOnAny('.number', true);
+    //             $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+    //             errorAjaxResponse(response);
+    //         },
+    //         success: function success(response) {
+    //             //loadOnAny('.number', true);
+    //             //$('#total_sales').text('0');
+                
+    //             if (response.total_sales) {
+    //                 $('#total_sales, #total-pending, #total').text('');
+    //                 $('#total_sales').text(response.total_sales);
+    //                 var comission=response.commission.split(/\s/g);
+    //                 $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+    //             } else {
+    //                 $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+    //             }
+    //         }
+    //     });
+    // }
+    
 
     function resumePending() {
         $("#total-pending, #total_sales").html(skeLoadMini).width('100%');
@@ -448,16 +424,16 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                //loadOnAny('.number', true);
+                loadOnAny('.number', true);
                 //$('#total_sales').text('0');
-                
+                console.log(response);
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').text(response.total_sales);
                     var comission=response.commission.split(/\s/g);
                     $('#total-pending').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange bold">'+comission[1]+'</strong>');
-                    var total=response.total.split(/\s/g);
-                    $('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
+                    // var total=response.total.split(/\s/g);
+                    // $('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
                 } else {
                     $('#total-pending, #total').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>');
                     $('#total_sales').html('<strong class="font-size-24 orange">0</strong>');
@@ -603,8 +579,9 @@ function changeCalendar() {
         }
     });
 }
+
 function changeCompany() {
-    $("#select_projects").on("change", function () {
+    $("#project").on("change", function () {
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
     });
 }

@@ -22,7 +22,7 @@ class ReportFinanceService
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
 
 
             $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
@@ -434,7 +434,7 @@ class ReportFinanceService
             $date['endDate'] = $dateRange[1];
 
             $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
-                                        ->where('user_id', auth()->user()->account_owner_id)
+                                        ->where('user_id', auth()->user()->getAccountOwnerId())
                                         ->join('sales', 'sales.id', 'transactions.sale_id')
                                         ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
                                         ->where('sales.project_id', $projectId);
@@ -1273,7 +1273,7 @@ class ReportFinanceService
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
 
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
 
             $transactions = Transaction::where('user_id', $userId)
                                         ->join('sales', 'sales.id', 'transactions.sale_id')
@@ -1311,7 +1311,7 @@ class ReportFinanceService
         $cacheName = 'cashback-data-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
 
             $cashbacks = Cashback::where('user_id', $userId)->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
 
@@ -1340,7 +1340,7 @@ class ReportFinanceService
             $balancesPendingValue = [];
             $balancesPendingCount = [];
 
-            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
+            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())->get();
             foreach($companies as $company) {
                 foreach($defaultGateways as $gatewayClass) {
                     $gateway = app()->make($gatewayClass);
@@ -1379,7 +1379,7 @@ class ReportFinanceService
             $balancesBlockedPendingValue = [];
             $balancesBlockedPendinCount = [];
 
-            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
+            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())->get();
             foreach($companies as $company) {
                 foreach($defaultGateways as $gatewayClass) {
                     $gateway = app()->make($gatewayClass);
@@ -1424,7 +1424,7 @@ class ReportFinanceService
             $balancesBlocked = [];
             $balancesBlockedPending = [];
 
-            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
+            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())->get();
             foreach($companies as $company) {
                 foreach($defaultGateways as $gatewayClass) {
                     $gateway = app()->make($gatewayClass);
@@ -1474,13 +1474,13 @@ class ReportFinanceService
             $dateEnd = date('Y-m-d');
             $dateStart = date('Y-m-d', strtotime($dateEnd . ' -5 month'));
 
-            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())->get()->pluck('id')->toArray();
             $withdrawals = Withdrawal::whereIn('company_id', $companies)
                                         ->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ])
                                         ->where('status', Withdrawal::STATUS_TRANSFERRED);
 
             $transactions = Transaction::whereIn('transactions.company_id', $companies)
-                                        ->where('user_id', auth()->user()->account_owner_id)
+                                        ->where('user_id', auth()->user()->getAccountOwnerId())
                                         ->join('sales', 'transactions.sale_id', 'sales.id')
                                         ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
                                         ->whereBetween('sales.start_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);

@@ -38,14 +38,14 @@ class ReportMarketingService
                                         ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                         ->count();
 
-            $salesCount = Sale::where('owner_id', auth()->user()->account_owner_id)
+            $salesCount = Sale::where('owner_id', auth()->user()->getAccountOwnerId())
                                 ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->where('status', Sale::STATUS_APPROVED)
                                 ->where('project_id', $projectId)
                                 ->count();
 
             $salesValue = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                                        ->where('user_id', auth()->user()->account_owner_id)
+                                        ->where('user_id', auth()->user()->getAccountOwnerId())
                                         ->where('project_id', $projectId)
                                         ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                                         ->whereNull('invitation_id')
@@ -75,7 +75,7 @@ class ReportMarketingService
             $data = Sale::select(DB::raw('delivery.state, count(*) as sales_amount, SUM(transaction.value) as value'))
                             ->join('transactions as transaction', function ($join) {
                                 $join->on('transaction.sale_id', '=', 'sales.id');
-                                $join->where('transaction.user_id', auth()->user()->account_owner_id);
+                                $join->where('transaction.user_id', auth()->user()->getAccountOwnerId());
                             })
                             ->join('deliveries as delivery', function ($join) {
                                 $join->on('delivery.id', '=', 'sales.delivery_id');
@@ -186,9 +186,9 @@ class ReportMarketingService
                         })
                         ->join('transactions as transaction', function ($join) {
                             $join->on('transaction.sale_id', '=', 'sales.id');
-                            $join->where('transaction.user_id', auth()->user()->account_owner_id);
+                            $join->where('transaction.user_id', auth()->user()->getAccountOwnerId());
                         })
-                        ->where('owner_id', auth()->user()->account_owner_id)
+                        ->where('owner_id', auth()->user()->getAccountOwnerId())
                         ->where('sales.project_id', $projectId)
                         ->first()
                         ->toArray();
@@ -254,7 +254,7 @@ class ReportMarketingService
             $data = Checkout::select(DB::raw('os_enum, count(*) as sales_amount'))
                                 ->leftJoin('sales as s', 's.checkout_id', '=', 'checkouts.id')
                                 ->where('s.status', Sale::STATUS_APPROVED)
-                                ->where('s.owner_id', auth()->user()->account_owner_id)
+                                ->where('s.owner_id', auth()->user()->getAccountOwnerId())
                                 ->whereBetween('s.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->where('checkouts.project_id', $projectId)
                                 ->groupBy('os_enum')
@@ -302,7 +302,7 @@ class ReportMarketingService
 
             $totalValue = Sale::join('transactions as transaction', function ($join) {
                                     $join->on('transaction.sale_id', '=', 'sales.id');
-                                    $join->where('transaction.user_id', auth()->user()->account_owner_id);
+                                    $join->where('transaction.user_id', auth()->user()->getAccountOwnerId());
                                 })
                                 ->join('deliveries as delivery', function ($join) use ($filters) {
                                     $join->on('delivery.id', '=', 'sales.delivery_id')
@@ -310,7 +310,7 @@ class ReportMarketingService
                                 })
                                 ->where('sales.status', Sale::STATUS_APPROVED)
                                 ->where('project_id', $projectId)
-                                ->where('owner_id', auth()->user()->account_owner_id)
+                                ->where('owner_id', auth()->user()->getAccountOwnerId())
                                 ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->sum('transaction.value');
 
@@ -320,7 +320,7 @@ class ReportMarketingService
                             })
                             ->where('project_id', $projectId)
                             ->where('sales.status', Sale::STATUS_APPROVED)
-                            ->where('owner_id', auth()->user()->account_owner_id)
+                            ->where('owner_id', auth()->user()->getAccountOwnerId())
                             ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                             ->count();
 

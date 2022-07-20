@@ -1282,7 +1282,7 @@ class SaleService
         return Sale::select('sales.project_id')
             ->distinct()
             ->leftjoin('projects','projects.id','sales.project_id')
-            ->where('owner_id',auth()->user()->account_owner_id)
+            ->where('owner_id',auth()->user()->getAccountOwnerId())
             ->get();
     }
 }
