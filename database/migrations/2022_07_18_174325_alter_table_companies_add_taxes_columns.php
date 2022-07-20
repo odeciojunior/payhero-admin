@@ -14,12 +14,12 @@ class AlterTableCompaniesAddTaxesColumns extends Migration
     public function up()
     {
         Schema::table('companies',function(Blueprint $table){
-            $table->string('boleto_rule')->nullable()->after('gateway_tax');
-            $table->string('boleto_tax')->nullable()->after('gateway_tax');
-            $table->string('pix_rule')->nullable()->after('gateway_tax');
-            $table->string('pix_tax')->nullable()->after('gateway_tax');
-            $table->string('credit_card_rule')->nullable()->after('gateway_tax');
-            $table->string('credit_card_tax')->nullable()->after('gateway_tax');
+            $table->string('boleto_rule')->default('percent')->after('gateway_tax');
+            $table->string('boleto_tax')->default('6.9')->after('gateway_tax');
+            $table->string('pix_rule')->default('percent')->after('gateway_tax');
+            $table->string('pix_tax')->default('6.9')->after('gateway_tax');
+            $table->string('credit_card_rule')->default('percent')->after('gateway_tax');
+            $table->string('credit_card_tax')->default('6.9')->after('gateway_tax');
             $table->boolean('tax_default')->default(true)->after('gateway_tax');
         });
     }
