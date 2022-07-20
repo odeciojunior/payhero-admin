@@ -1,15 +1,26 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.location.reload();
-        })
-    })
-})
-
 $(document).ready(function () {
 
-    getCompaniesAndProjects();
+    $('#company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault()) return;
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                location.reload();
+            })
+        })
+    })
+
+    companiesAndProjects = '';
+    getCompaniesAndProjects().done(function(data2){
+        companiesAndProjects = data2
+
+        $("#company-navbar-value").val( $('#company-navbar').val() )
+        //$('.company_name').val( $('#company-navbar').find('option:selected').text() );
+        if(companiesAndProjects.company_default_fullname.length > 40)
+            $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
+        else
+            $('.company_name').val( companiesAndProjects.company_default_fullname );
+    })
 
     let allCompanyNotApproved = false;
     let companyNotFound = false;
@@ -17,8 +28,7 @@ $(document).ready(function () {
 
     loadingOnScreen();
 
-    $("#company-navbar-value").val( $('#company-navbar').val() )
-    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
+
 
     $('#btn-integration-model').hide();
 

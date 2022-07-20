@@ -1,17 +1,22 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $("#no-integration-found").hide();
-    loadOnAny('#content');
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.index('n');
-        });
-	});
-});
-
 $(document).ready(function () {
 
-    window.index = function(loading='y') {
+    $('#company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault()) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    function index(loading='y') {
         if(loading=='y')
             loadingOnScreen();
         else
@@ -37,16 +42,7 @@ $(document).ready(function () {
                     $("#integration-actions").hide();
                 } else {
                     $("#project_id").html("");
-                    let projects = response.projects;
-                    // for (let i = 0; i < projects.length; i++) {
-                    //     $("#project_id").append(
-                    //         '<option value="' +
-                    //             projects[i].id +
-                    //             '">' +
-                    //             projects[i].name +
-                    //             "</option>"
-                    //     );
-                    // }
+
                     for (let project of response.projects) {
                         $("#project_id, #select_projects_edit").append(`<option value="${project.id}">${project.name}</option>`);
                     }
@@ -70,7 +66,8 @@ $(document).ready(function () {
     }
 
     getCompaniesAndProjects().done( function (data){
-        window.index();
+        companiesAndProjects = data
+        index();
     });
 
     //checkbox
@@ -243,7 +240,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                window.index();
+                index();
                 alertCustom("success", response.message);
             },
         });
@@ -276,7 +273,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                window.index();
+                index();
                 alertCustom("success", response.message);
             },
         });
@@ -309,7 +306,7 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    window.index();
+                    index();
                     alertCustom("success", response.message);
                 },
             });

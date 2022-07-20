@@ -8,20 +8,20 @@ $(document).ready(function () {
         loadOnAny('#content');
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
-                globalData = data2
-                window.index('n')
+                companiesAndProjects = data2
+                index('n')
             });
         });
     });
 
-    var globalData = ''
+    var companiesAndProjects = ''
 
     getCompaniesAndProjects().done( function (data){
-        globalData = data
-        window.index();
+        companiesAndProjects = data
+        index();
     });
 
-    window.index = function(loading='y') {
+    function index(loading='y') {
         if(loading=='y')
             loadingOnScreen();
         else{
@@ -30,8 +30,8 @@ $(document).ready(function () {
         }
 
         $hasProjects=false;
-        if (globalData.company_default_projects) {
-            $.each(globalData.company_default_projects, function (i, project) {
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
                 if(project.status == 1)
                     $hasProjects=true;
             });
@@ -67,16 +67,7 @@ $(document).ready(function () {
                     } else {
                         $("#content").html("");
                         $("#project_id").html("");
-                        let projects = response.projects;
-                        for (let i = 0; i < projects.length; i++) {
-                            $("#project_id").append(
-                                '<option value="' +
-                                    projects[i].id +
-                                    '">' +
-                                    projects[i].name +
-                                    "</option>"
-                            );
-                        }
+                        fillSelectProject(companiesAndProjects,'#project_id')
                         if (isEmpty(response.integrations)) {
                             $("#no-integration-found").show();
                         } else {
@@ -185,8 +176,8 @@ $(document).ready(function () {
             error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: (response) => {
-                $("#select_projects_edit").val(response.data.project_id);
+            success: (response) => { console.log(response)
+                fillSelectProject(companiesAndProjects,'#select_projects_edit',response.data.project_id)
                 $("#integration_id").val(response.data.id);
                 $("#link_edit").val(response.data.link);
 
@@ -251,7 +242,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                window.index();
+                index();
                 alertCustom("success", response.message);
             },
         });
@@ -284,7 +275,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                window.index();
+                index();
                 alertCustom("success", response.message);
             },
         });
@@ -316,7 +307,7 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    window.index();
+                    index();
                     alertCustom("success", response.message);
                 },
             });

@@ -43,7 +43,7 @@ class UnicodropApiController extends Controller
             $userProjects = UserProject::where([[
                 'user_id', $ownerId],[
                 'company_id', $user->company_default
-            ]])->get();
+            ]])->orderBy('id', 'desc')->get();
 
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {

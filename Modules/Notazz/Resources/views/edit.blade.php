@@ -7,7 +7,7 @@
             <div class="col-12">
                 <div class='form-group'>
                     <label for="select_projects_edit">Selecione sua loja</label>
-                    <select class="sirius-select" id="select_projects_edit" name="select_projects_edit" disabled> </select>
+                    <select id="select_projects_edit" name="select_projects_edit" disabled> </select>
                 </div>
             </div>
             <div class="col-12">
@@ -35,12 +35,6 @@
                     <small>https://sirius.cloudfox.net/postback/notazz</small>
                 </div>
             </div>
-{{--             <div class='form-group col-12'>
-                <label for="url_store">Token Logística</label>
-                <div class="d-flex input-group">
-                    <input type="text" class="input-pad addon" name="token_logistics_edit" id="token_logistics_edit" placeholder="Digite o Token Logística" value=''>
-                </div>
-            </div> --}}
             <div class='form-group col-12'>
                 <label for="url_store">Data inicial</label>
                 <div class="d-flex input-group">

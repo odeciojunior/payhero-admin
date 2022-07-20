@@ -40,11 +40,12 @@ class SmartfunnelApiController extends Controller
                 }
             )->get();
 
-            $projects     = collect();
+            $projects = collect();
             $userProjects = UserProject::where([[
                 'user_id', $user->getAccountOwnerId()],[
                 'company_id', $user->company_default
-            ]])->get();
+            ]])->orderBy('id', 'desc')->get();
+
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
@@ -121,7 +122,7 @@ class SmartfunnelApiController extends Controller
                 $integrationCreated = $smartfunnelIntegrationModel->create([
                     'api_url'             => $data['api_url'],
                     'project_id'          => $projectId,
-                    'user_id'             => auth()->user()->account_owner_id,
+                    'user_id'             => auth()->user()->getAccountOwnerId(),
                 ]);
 
                 if ($integrationCreated) {

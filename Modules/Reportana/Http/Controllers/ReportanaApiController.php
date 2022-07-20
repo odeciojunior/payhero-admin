@@ -42,7 +42,7 @@ class ReportanaApiController extends Controller
             $userProjects = UserProject::where([[
                 'user_id', auth()->user()->getAccountOwnerId()],[
                 'company_id', auth()->user()->company_default
-            ]])->get();
+            ]])->orderBy('id', 'desc')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject

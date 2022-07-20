@@ -1,37 +1,27 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $('#integration-actions').hide();
-    $("#no-integration-found").hide();
-    $('#project-empty').hide();
-    loadOnAny('#content');
-	$("#select_projects, #select_projects_edit").find('option').remove();
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            companies=data2.companies;
-            $.each(companies, function (c, company) {
-                if( data2.company_default == company.id){
-                    $.each(company.projects, function (i, project) {
-                        $("#select_projects, #select_projects_edit").append(
-                                            $("<option>", {
-                                                value: project.id,
-                                                text: project.name,
-                                            })
-                                        );
-                    });
-                }
-            });
-            window.index('n',data2)
-        });
-	});
-});
-
 $(document).ready(function () {
 
-    getCompaniesAndProjects().done( function (data){
-        create(data);
+    $('#company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault()) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n')
+            });
+        });
     });
 
-    window.index = function(loading='y',data) {
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
+
+    function index(loading='y') {
         if(loading=='y')
             loadingOnScreen();
         else{
@@ -40,8 +30,8 @@ $(document).ready(function () {
         }
 
         $hasProjects=false;
-        if (data.company_default_projects) {
-            $.each(data.company_default_projects, function (i, project) {
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
                 if(project.status == 1)
                     $hasProjects=true;
             });
@@ -56,7 +46,6 @@ $(document).ready(function () {
             loadOnAny('#content',true);
         }
         else{
-
             $.ajax({
                 method: "GET",
                 url: "/api/apps/convertax?company="+ $('#company-navbar').val(),
@@ -71,439 +60,261 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
-                    //$("#content").html("");
-                    if (Object.keys(response.data).length === 0) {
+                    $("#content").html("");
+                    $("#select_projects").html("");
+                    fillSelectProject(companiesAndProjects,'#select_projects')
+                    if (isEmpty(response)) {
                         $("#no-integration-found").show();
                     } else {
-                        $('#content').html("");
-                        $(response.data).each(function (index, data) {
-                            $("#content").append(`
-                                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                                    <div class="card shadow card-edit" project=${
-                                        data.id
-                                    } style='cursor:pointer;'>
-                                        <img class="card-img-top img-fluid w-full" src="${
-                                            data.project_photo
-                                                ? data.project_photo
-                                                : "/build/global/img/produto.png"
-                                        }"/>
-                                        <div class="card-body">
-                                            <div class='row'>
-                                                <div class='col-md-10'>
-                                                    <h4 class="card-title">${
-                                                        data.project_name
-                                                    }</h4>
-                                                    <p class="card-text sm">Criado em ${
-                                                        data.created_at
-                                                    }</p>
-                                                </div>
-                                                <div class='col-md-2'>
-                                                    <a role='button' title='Excluir' class='delete-integration float-right mt-35' project="${
-                                                        data.id
-                                                    }" data-toggle='modal' data-target='#modal-delete' type='a'>
-                                                        <span class='o-bin-1 pointer'></span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `);
-                        });
+                        $("#content").html("");
+                        let integrations = response.data;
+                        for (let i = 0; i < integrations.length; i++) {
+                            renderIntegration(integrations[i]);
+                        }
                         $("#no-integration-found").hide();
-                        $(".card-edit").unbind("click");
-                        $(".card-edit").on("click", function () {
-                            var project_id = $(this).attr("project");
-                            $.ajax({
-                                method: "GET",
-                                url: "/api/projects/user-projects",
-                                headers: {
-                                    Authorization: $(
-                                        'meta[name="access-token"]'
-                                    ).attr("content"),
-                                    Accept: "application/json",
-                                },
-                                error: function error(response) {
-                                    errorAjaxResponse(response);
-                                },
-                                success: function success(response) {
-                                    $("#select_projects_edit").html("");
-                                    $(response.data).each(function (index, data) {
-                                        $("#select_projects_edit").append(
-                                            "<option value='" +
-                                                data.id +
-                                                "'>" +
-                                                data.name +
-                                                "</option>"
-                                        );
-                                    });
-
-                                    $(".modal-title").html(
-                                        "Editar Integração com ConvertaX"
-                                    );
-
-                                    $.ajax({
-                                        method: "GET",
-                                        url: "/api/apps/convertax/" + project_id,
-                                        headers: {
-                                            Authorization: $(
-                                                'meta[name="access-token"]'
-                                            ).attr("content"),
-                                            Accept: "application/json",
-                                        },
-                                        error: function error() {
-                                            //
-                                        },
-                                        success: function success(response) {
-                                            $("#select_projects_edit").val(
-                                                response.data.project_id
-                                            );
-                                            $("#integration_id").val(
-                                                response.data.id
-                                            );
-                                            $("#link_edit").val(response.data.link);
-                                            $("#value_edit").val(
-                                                response.data.value
-                                            );
-                                            $("#value_edit").unmask();
-                                            $("#value_edit").mask("#.###,#0", {
-                                                reverse: true,
-                                            });
-
-                                            $("#boleto_generated_edit").val(
-                                                response.data.boleto_generated
-                                            );
-                                            $("#boleto_generated_edit").val() == "1"
-                                                ? $("#boleto_generated_edit").attr(
-                                                    "checked",
-                                                    "checked"
-                                                )
-                                                : $("#boleto_generated_edit").attr(
-                                                    ""
-                                                );
-
-                                            $("#boleto_paid_edit").val(
-                                                response.data.boleto_paid
-                                            );
-                                            $("#boleto_paid_edit").val() == "1"
-                                                ? $("#boleto_paid_edit").attr(
-                                                    "checked",
-                                                    "checked"
-                                                )
-                                                : $("#boleto_paid_edit").attr("");
-
-                                            $("#credit_card_refused_edit").val(
-                                                response.data.credit_card_refused
-                                            );
-                                            $("#credit_card_refused_edit").val() ==
-                                            "1"
-                                                ? $(
-                                                    "#credit_card_refused_edit"
-                                                ).attr("checked", "checked")
-                                                : $(
-                                                    "#credit_card_refused_edit"
-                                                ).attr("");
-
-                                            $("#credit_card_paid_edit").val(
-                                                response.data.credit_card_paid
-                                            );
-                                            $("#credit_card_paid_edit").val() == "1"
-                                                ? $("#credit_card_paid_edit").attr(
-                                                    "checked",
-                                                    "checked"
-                                                )
-                                                : $("#credit_card_paid_edit").attr(
-                                                    ""
-                                                );
-
-                                            $("#abandoned_cart_edit").val(
-                                                response.data.abandoned_cart
-                                            );
-                                            $("#abandoned_cart_edit").val() == "1"
-                                                ? $("#abandoned_cart_edit").attr(
-                                                    "checked",
-                                                    "checked"
-                                                )
-                                                : $("#abandoned_cart_edit").attr(
-                                                    ""
-                                                );
-
-                                            $("#modal_add_integracao").modal(
-                                                "show"
-                                            );
-                                            $("#form_add_integration").hide();
-                                            $("#form_update_integration").show();
-
-                                            $("#bt_integration").addClass(
-                                                "btn-update"
-                                            );
-                                            $("#bt_integration").removeClass(
-                                                "btn-save"
-                                            );
-                                            $("#bt_integration").text("Atualizar");
-                                            $("#btn-modal").show();
-
-                                            $(".check").on("click", function () {
-                                                if ($(this).is(":checked")) {
-                                                    $(this).val(1);
-                                                } else {
-                                                    $(this).val(0);
-                                                }
-                                            });
-
-                                            $(".btn-update").unbind("click");
-                                            $(".btn-update").on(
-                                                "click",
-                                                function () {
-                                                    if (
-                                                        $("#link_edit").val() ==
-                                                            "" ||
-                                                        $("#value_edit").val() == ""
-                                                    ) {
-                                                        alertCustom(
-                                                            "error",
-                                                            "Dados informados inválidos"
-                                                        );
-                                                        return false;
-                                                    }
-
-                                                    var integrationId = $(
-                                                        "#integration_id"
-                                                    ).val();
-                                                    var form_data = new FormData(
-                                                        document.getElementById(
-                                                            "form_update_integration"
-                                                        )
-                                                    );
-
-                                                    $.ajax({
-                                                        method: "POST",
-                                                        url:
-                                                            "/api/apps/convertax/" +
-                                                            integrationId,
-                                                        headers: {
-                                                            Authorization: $(
-                                                                'meta[name="access-token"]'
-                                                            ).attr("content"),
-                                                            Accept:
-                                                                "application/json",
-                                                        },
-                                                        processData: false,
-                                                        contentType: false,
-                                                        cache: false,
-                                                        data: form_data,
-                                                        error: function (response) {
-                                                            errorAjaxResponse(
-                                                                response
-                                                            );
-                                                        },
-                                                        success: function success(
-                                                            response
-                                                        ) {
-                                                            window.index('',data);
-                                                            alertCustom(
-                                                                "success",
-                                                                response.message
-                                                            );
-                                                        },
-                                                    });
-                                                }
-                                            );
-                                        },
-                                    });
-                                },
-                            });
-                        });
-                        $(".delete-integration").unbind("click");
-                        // load delete modal
-                        $(document).on(
-                            "click",
-                            ".delete-integration",
-                            function (e) {
-                                e.preventDefault();
-                                let project = $(this).attr("project");
-                                var card = $(
-                                    'a[class="delete-integration float-right mt-35"][ project="' +
-                                        project +
-                                        '"]'
-                                )
-                                    .parent()
-                                    .parent()
-                                    .parent()
-                                    .parent()
-                                    .parent();
-                                card.find(".card-edit").unbind("click");
-                                $("#modal-delete-integration .btn-delete").attr(
-                                    "project",
-                                    project
-                                );
-                                $("#modal-delete-integration").modal("show");
-                            }
-                        );
-                        $("#modal-delete-integration .btn-delete").on(
-                            "click",
-                            function (e) {
-                                e.stopPropagation();
-                                var project_id = $(this).attr("project");
-                                var card = $(
-                                    'a[class="delete-integration float-right mt-35"][ project="' +
-                                        project_id +
-                                        '"]'
-                                )
-                                    .parent()
-                                    .parent()
-                                    .parent()
-                                    .parent()
-                                    .parent();
-                                card.find(".card-edit").unbind("click");
-                                $.ajax({
-                                    method: "DELETE",
-                                    url: "/api/apps/convertax/" + project_id,
-                                    headers: {
-                                        Authorization: $(
-                                            'meta[name="access-token"]'
-                                        ).attr("content"),
-                                        Accept: "application/json",
-                                    },
-                                    error: function (response) {
-                                        errorAjaxResponse(response);
-                                    },
-                                    success: function success(response) {
-                                        window.index('',data);
-                                        alertCustom("success", response.message);
-                                    },
-                                });
-                            }
-                        );
                     }
+                    $("#project-empty").hide();
+                    $("#integration-actions").show();
+
                     if(loading=='y')
                         loadingOnScreenRemove();
                     loadOnAny('#content',true);
                 },
             });
-
         }
     }
 
-    function create(data) {
-        loadingOnScreen();
+    //reset the intergation modal
+    function clearForm() {
+        $(":text").val("");
+        $(":checkbox").prop("checked", true).val(1);
+        $("#select_projects").prop("selectedIndex", 0).change();
+    }
+
+    //draw the integration cards
+    function renderIntegration(data) {
+        $("#content").append(
+            `
+                            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                <div class="card shadow card-edit" project=` +
+                data.id +
+                ` style='cursor:pointer;'>
+                                    <img class="card-img-top img-fluid w-full" src=` +
+                data.project_photo +
+                ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` +
+                data.project_name +
+                `"/>
+                                    <div class="card-body">
+                                        <div class='row'>
+                                            <div class='col-md-10'>
+                                                <h4 class="card-title">` +
+                data.project_name +
+                `</h4>
+                                                <p class="card-text sm">Criado em ` +
+                data.created_at +
+                `</p>
+                                            </div>
+                                            <div class='col-md-2'>
+                                                <a role='button' title='Excluir' class='delete-integration float-right mt-35' project=` +
+                data.id +
+                `>
+                                                    <span class='o-bin-1 pointer'></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `
+        );
+    }
+
+    //checkbox
+    $(".check").on("click", function () {
+        if ($(this).is(":checked")) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
+
+    //create
+    $("#btn-add-integration").on("click", function () {
+        $(".modal-title").html("Adicionar nova Integração com ConvertaX");
+        $("#bt_integration").addClass("btn-save");
+        $("#bt_integration").removeClass("btn-update");
+        $("#bt_integration").text("Adicionar integração");
+        $("#modal_add_integracao").modal("show");
+        $("#form_update_integration").hide();
+        $("#form_add_integration").show();
+        clearForm();
+    });
+
+    //edit
+    $(document).on("click", ".card-edit", function () {
+        $(".modal-title").html("Editar Integração com ConvertaX");
+        $("#bt_integration").addClass("btn-update");
+        $("#bt_integration").removeClass("btn-save");
+        $("#bt_integration").text("Atualizar");
+        $("#form_update_integration").show();
+        $("#form_add_integration").hide();
+        $("#modal_add_integracao").modal("show");
+
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&company="+ $('#company-navbar').val(),
-            data: {
-                status: "active",
-            },
+            url: "/api/apps/convertax/" + $(this).attr("project"),
+            dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
-            error: function error(response) {
-                loadOnAny('#content',true);
-                loadingOnScreenRemove();
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                $("#select_projects_edit").html("");
+                fillSelectProject(companiesAndProjects,'#select_projects_edit',response.data.project_id)
+                $("#integration_id").val(response.data.id);
+                $("#link_edit").val(response.data.link);
+
+                $("#value_edit").val(
+                    response.data.value
+                );
+                $("#value_edit").unmask();
+                $("#value_edit").mask("#.###,#0", {
+                    reverse: true,
+                });
+
+                $("#boleto_generated_edit").val(response.data.boleto_generated);
+                $("#boleto_generated_edit").prop(
+                    "checked",
+                    $("#boleto_generated_edit").val() == "1"
+                );
+
+                $("#boleto_paid_edit").val(response.data.boleto_paid);
+                $("#boleto_paid_edit").prop(
+                    "checked",
+                    $("#boleto_paid_edit").val() == "1"
+                );
+
+                $("#credit_card_refused_edit").val(
+                    response.data.credit_card_refused
+                );
+                $("#credit_card_refused_edit").prop(
+                    "checked",
+                    $("#credit_card_refused_edit").val() == "1"
+                );
+
+                $("#credit_card_paid_edit").val(response.data.credit_card_paid);
+                $("#credit_card_paid_edit").prop(
+                    "checked",
+                    $("#credit_card_paid_edit").val() == "1"
+                );
+
+                $("#abandoned_cart_edit").val(response.data.abandoned_cart);
+                $("#abandoned_cart_edit").prop(
+                    "checked",
+                    $("#abandoned_cart_edit").val() == "1"
+                );
+            },
+        });
+    });
+
+    //store
+    $(document).on("click", ".btn-save", function () {
+        if ($("#link").val() == "") {
+            alertCustom("error", "Dados informados inválidos");
+            return false;
+        }
+        var form_data = new FormData(
+            document.getElementById("form_add_integration")
+        );
+
+        $.ajax({
+            method: "POST",
+            url: "/api/apps/convertax",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                index();
+                alertCustom("success", response.message);
+            },
+        });
+    });
+
+    //update
+    $(document).on("click", ".btn-update", function () {
+        if ($("#link_edit").val() == "") {
+            alertCustom("error", "Dados informados inválidos");
+            return false;
+        }
+        var integrationId = $("#integration_id").val();
+        var form_data = new FormData(
+            document.getElementById("form_update_integration")
+        );
+
+        $.ajax({
+            method: "POST",
+            url: "/api/apps/convertax/" + integrationId,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: (response) => {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadOnAny('#content',true);
-                loadingOnScreenRemove();
-
-                if (isEmpty(response.data)) {
-                    $("#project-empty").show();
-                    $("#integration-actions").hide();
-                    return;
-                }
-
-                $("#select_projects").html("");
-                $(response.data).each(function (index, data) {
-                    if(data.status===1){
-                        $("#select_projects").append(
-                            "<option value='" +
-                                data.id +
-                                "'>" +
-                                data.name +
-                                "</option>"
-                        );
-                    }
-                });
-                $(".modal-title").html(
-                    "Adicionar nova Integração com ConvertaX"
-                );
-                $("#bt_integration")
-                    .addClass("btn-save")
-                    .text("Adicionar integração");
-                $("#form_update_integration").hide();
-                $("#form_add_integration").show();
-
-                $("#value").mask("#.###,#0", { reverse: true });
-
-                $(".check").on("click", function () {
-                    if ($(this).is(":checked")) {
-                        $(this).val(1);
-                    } else {
-                        $(this).val(0);
-                    }
-                });
-
-                if ($(":checkbox").is(":checked")) {
-                    $(":checkbox").val(1);
-                } else {
-                    $(":checkbox").val(0);
-                }
-
-                $(".btn-save").unbind("click");
-                $(".btn-save").on("click", function () {
-                    if ($("#link").val() == "" || $("#value").val() == "") {
-                        alertCustom("error", "Dados informados inválidos");
-                        return false;
-                    }
-                    var form_data = new FormData(
-                        document.getElementById("form_add_integration")
-                    );
-
-                    $.ajax({
-                        method: "POST",
-                        url: "/api/apps/convertax",
-                        headers: {
-                            Authorization: $('meta[name="access-token"]').attr(
-                                "content"
-                            ),
-                            Accept: "application/json",
-                        },
-                        processData: false,
-                        contentType: false,
-                        cache: false,
-                        data: form_data,
-                        error: function error(response) {
-                            if (response.status === 422) {
-                                for (error in response.errors) {
-                                    alertCustom(
-                                        "error",
-                                        String(response.errors[error])
-                                    );
-                                }
-                            } else {
-                                alertCustom(
-                                    "error",
-                                    response.responseJSON.message
-                                );
-                            }
-                        },
-                        success: function success(response) {
-                            $("#no-integration-found").hide();
-                            window.index('',data);
-                            alertCustom("success", response.message);
-                        },
-                    });
-                });
-
-                $("#project-empty").hide();
-                $("#integration-actions").show();
-
-                window.index('',data);
+                index();
+                alertCustom("success", response.message);
             },
         });
-    }
-
-    $("#btn-add-integration").on("click", function () {
-        $("#modal_add_integracao").modal("show");
     });
+
+    // load delete modal
+    $(document).on("click", ".delete-integration", function (e) {
+        e.stopPropagation();
+        let project = $(this).attr("project");
+        $("#modal-delete-integration .btn-delete").attr("project", project);
+        $("#modal-delete-integration").modal("show");
+    });
+
+    //destroy
+    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
+            e.stopPropagation();
+            var project = $(this).attr("project");
+            $.ajax({
+                method: "DELETE",
+                url: "/api/apps/convertax/" + project,
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index();
+                    alertCustom("success", response.message);
+                },
+            });
+        }
+    );
 });

@@ -31,11 +31,15 @@ class Whatsapp2ApiController extends Controller
 
             $accountOwnerId = auth()->user()->getAccountOwnerId();
 
-            $whatsapp2Integrations = Whatsapp2Integration::
-                join('checkout_configs as cc', 'cc.project_id', '=', 'whatsapp2_integrations.project_id')
-                ->where('cc.company_id', hashids_decode($request->company))
-                ->where('user_id', $accountOwnerId)
-                ->with('project')->get();
+            $whatsapp2Integrations = Whatsapp2Integration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             $projects = collect();
             $userProjects = UserProject::with([
@@ -44,7 +48,7 @@ class Whatsapp2ApiController extends Controller
                 }
             ])->where([['user_id', $accountOwnerId],[
                 'company_id', auth()->user()->company_default
-            ]])->get();
+            ]])->orderBy('id', 'desc')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject

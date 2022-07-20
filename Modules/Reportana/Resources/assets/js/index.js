@@ -1,17 +1,22 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $("#no-integration-found").hide();
-    loadOnAny('#content');
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.index('n');
-        });
-	});
-});
-
 $(document).ready(function () {
 
-    window.index = function(loading='y') {
+    $('#company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault()) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    function index(loading='y') {
         if(loading=='y')
             loadingOnScreen();
         else
@@ -63,7 +68,8 @@ $(document).ready(function () {
     }
 
     getCompaniesAndProjects().done( function (data){
-        window.index();
+        companiesAndProjects = data
+        index();
     });
 
     //checkbox
@@ -201,7 +207,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                window.index();
+                index();
                 alertCustom('success', response.message);
             }
         });
@@ -232,33 +238,43 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                window.index();
+                index();
                 alertCustom('success', response.message);
             }
         });
     });
 
-    //destroy
+    // load delete modal
     $(document).on('click', '.delete-integration', function (e) {
         e.stopPropagation();
         var project = $(this).attr('project');
-        var card = $(this).parent().parent().parent().parent().parent();
-        card.find('.card-edit').unbind('click');
-        $.ajax({
-            method: "DELETE",
-            url: "/api/apps/reportana/" + project,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                window.index();
-                alertCustom("success", response.message);
-            }
-        });
+        $("#modal-delete-integration .btn-delete").attr("project", project);
+        $("#modal-delete-integration").modal("show");
     });
+    //destroy
+    $(document).on(
+        "click",
+        "#modal-delete-integration .btn-delete",
+        function (e) {
+            e.stopPropagation();
+            var project = $(this).attr("project");
+
+            $.ajax({
+                method: "DELETE",
+                url: "/api/apps/reportana/" + project,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index();
+                    alertCustom("success", response.message);
+                }
+            });
+        }
+    );
 });

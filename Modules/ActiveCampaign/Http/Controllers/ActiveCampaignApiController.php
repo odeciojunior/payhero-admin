@@ -34,39 +34,18 @@ class ActiveCampaignApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todas as integrações do ActiveCampaign');
 
-            $ownerId = $user->getAccountOwnerId();
-            $activecampaignIntegrations = ActivecampaignIntegration::
-                join('checkout_configs as cc', 'cc.project_id', '=', 'activecampaign_integrations.project_id')
-                ->where('cc.company_id', hashids_decode($request->company))
-                ->where('user_id', $ownerId)
-                ->with('project')->get();
+            $activecampaignIntegrations = ActivecampaignIntegration::with('project', 'project.usersProjects')
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
-            // $projects = collect();
-            // $userProjects = UserProject::where([[
-            //     'user_id', $ownerId],[
-            //     'company_id', $user->company_default
-            // ]])->get();//->with('project')
-            // if ($userProjects->count() > 0) {
-            //     foreach ($userProjects as $userProject) {
-            //         $project = $userProject
-            //             ->project()
-            //             ->leftjoin('domains',
-            //                 function ($join) {
-            //                     $join->on('domains.project_id', '=', 'projects.id')
-            //                         ->where('domains.status', 3)
-            //                         ->whereNull('domains.deleted_at');
-            //                 }
-            //             )
-            //             ->where('projects.status', Project::STATUS_ACTIVE)
-            //             ->first();
-            //         if (!empty($project)) {
-            //             $projects->add($userProject->project);
-            //         }
-            //     }
-            // }
             return response()->json([
                 'integrations' => ActivecampaignResource::collection($activecampaignIntegrations),
-                //'projects' => ProjectsSelectResource::collection($projects)
             ]);
         }
         catch(Exception $e){

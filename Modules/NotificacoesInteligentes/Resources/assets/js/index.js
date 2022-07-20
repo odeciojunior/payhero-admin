@@ -1,17 +1,27 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $("#no-integration-found").hide();
-    loadOnAny('#content');
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.index('n');
-        });
-	});
-});
-
 $(document).ready(function () {
 
-    window.index = function(loading='y') {
+    $('#company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault()) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
+
+    function index(loading='y') {
         if(loading=='y')
             loadingOnScreen();
         else
@@ -65,10 +75,6 @@ $(document).ready(function () {
             },
         });
     }
-
-    getCompaniesAndProjects().done( function (data){
-        window.index();
-    });
 
     //checkbox
     $(".check").on("click", function () {
@@ -240,7 +246,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                window.index();
+                index();
                 alertCustom("success", response.message);
             },
         });
@@ -273,11 +279,12 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                window.index();
+                index();
                 alertCustom("success", response.message);
             },
         });
     });
+
     // load delete modal
     $(document).on("click", ".delete-integration", function (e) {
         e.stopPropagation();
@@ -285,6 +292,7 @@ $(document).ready(function () {
         $("#modal-delete-integration .btn-delete").attr("project", project);
         $("#modal-delete-integration").modal("show");
     });
+
     //destroy
     $(document).on(
         "click",
@@ -292,23 +300,23 @@ $(document).ready(function () {
         function (e) {
             e.stopPropagation();
             var project = $(this).attr("project");
+
+
             $.ajax({
                 method: "DELETE",
                 url: "/api/apps/notificacoesinteligentes/" + project,
                 dataType: "json",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
+                    Authorization: $('meta[name="access-token"]').attr("content"),
                     Accept: "application/json",
                 },
                 error: (response) => {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    window.index();
+                    index();
                     alertCustom("success", response.message);
-                },
+                }
             });
         }
     );

@@ -1931,7 +1931,7 @@ function getCompaniesAndProjects() {
                 }
             });
             if (!isEmpty(companies)) {
-                $('.company_name').val( company_default_name );
+                //$('.company_name').val( company_default_name );
                 $('.company_id').val( company_default );
                 $('#company-navbar').html('');
 
@@ -1994,6 +1994,17 @@ function verifyIfCompanyIsDefault(){
     if( $('#company-navbar').find('option:selected').css('font-weight')=='700' ){
         $('.sirius-select-options').css('display','none');
         return true;
-    }    
+    }
     return false;
+}
+
+function fillSelectProject(companiesAndProjects,selectorName,value=''){
+    $.each(companiesAndProjects.company_default_projects, function (i, project) {
+        if(project.status===1){
+            $(selectorName).append($("<option>", {value: project.id ,text: project.name}));
+        }
+    });
+    if(!isEmpty(value)){
+        $(selectorName).val(value)
+    }
 }
