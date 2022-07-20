@@ -194,7 +194,7 @@ $(document).ready(function () {
     window.fillProjectsSelect = function(){
         return $.ajax({
             method: "GET",
-            url: "/api/sales/projects-with-sales",
+            url: "/api/sales/projects-with-pending-balance",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -246,60 +246,6 @@ $(document).ready(function () {
             }
         });
     }
-
-    // function getProjects(data) {
-    //     $("#project-empty").hide();
-    //     $("#project-not-empty").show();
-    //     $("#export-excel").show()
-        //atualizar();
-        //loadingOnScreenRemove();
-        
-        // $.ajax({
-        //     method: "GET",
-        //     url: '/api/projects?select=true',
-        //     dataType: "json",
-        //     headers: {
-        //         'Authorization': $('meta[name="access-token"]').attr('content'),
-        //         'Accept': 'application/json',
-        //     },
-        //     error: function error(response) {
-        //         loadingOnScreenRemove();
-        //         errorAjaxResponse(response);
-        //     },
-        //     success: function success(response) {
-        //         if (!isEmpty(response.data)) {
-        //             $("#project-empty").hide();
-        //             $("#project-not-empty").show();
-        //             $("#export-excel").show()
-
-        //             $.each(response.data, function (i, project) {
-        //                 $("#project").append($('<option>', {
-        //                     value: project.id,
-        //                     text: project.name
-        //                 }));
-        //                 $("#project").append(
-        //                     $("<option>", {
-        //                         value: project.id,
-        //                         text: project.name,
-        //                     })
-        //                 );
-        //             });
-        //             if(sessionStorage.info) {
-        //                 $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
-        //                 $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-        //             }
-
-        //             atualizar();
-        //         } else {
-        //             $("#export-excel").hide()
-        //             $("#project-not-empty").hide();
-        //             $("#project-empty").show();
-        //         }
-
-        //         loadingOnScreenRemove();
-        //     }
-        // });
-    //}
 
     function getProjects(companies)
     {    
@@ -429,8 +375,7 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadOnAny('.number', true);
-                //$('#total_sales').text('0');
-                console.log(response);
+                //$('#total_sales').text('0');                
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').text(response.total_sales);
