@@ -26,14 +26,6 @@
                     <b>Clique para ver as novidades</b>
                 </div>
 
-                {{-- <div class="col-lg-4" id="company-select" style="display:none">
-                    <div class="d-lg-flex align-items-center justify-content-end">
-                        <div>
-                            <select id="company" class="sirius-select"> </select>
-                        </div>
-                    </div>
-                </div> --}}
-
             </div>
 
         </div>

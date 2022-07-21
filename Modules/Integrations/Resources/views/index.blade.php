@@ -5,6 +5,9 @@
         <link rel="stylesheet" href="{{ mix('build/layouts/integrations/index.min.css') }}">
     @endpush
     <div class="page new-layout">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container pb-0">
             <div class="d-flex justify-content-between align-items-center mb-45">
                 <div>
