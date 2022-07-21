@@ -242,7 +242,7 @@ class SalesRecoveryService
         $saleService = new SaleService();
         $delivery = $sale->delivery;
         $customer = $sale->customer;
-        $checkout = $sale->checkout;
+        $checkout = $sale->checkout??Checkout::find($sale->checkout_id);
 
         if (!empty($customer->telephone)) {
             $customer->telephone = preg_replace('/[^0-9]/', '', $customer->telephone);

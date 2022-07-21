@@ -251,7 +251,7 @@ $(window).on("load", function(){
                     $("#nav-statement").css('display', '');
                 });
 
-                $('.company_name').val( data.company_default_name );
+               $('.company_name').val( $("#company-navbar option:selected").text());
 
                 loadingOnScreenRemove();
             }
