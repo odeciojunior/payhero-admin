@@ -127,7 +127,6 @@ class WooCommerceService
     {
         // Will loop through pages until it finishes;
         $page = 1;
-
         ImportWooCommerceProducts::dispatch($projectId, $userId, $page);
 
     }
@@ -166,8 +165,10 @@ class WooCommerceService
             }else{
 
                 foreach($_product->variations as $variationId){
-
+                    
                     ImportWooCommerceProductVariation::dispatch($projectId, $userId, $_product, $variationId);
+                    
+                    sleep(10);
 
                 }
 

@@ -46,7 +46,7 @@ class ImportWooCommerceProducts implements ShouldQueue
                 
                 //first checkpoint
                 try {
-                    $products = $service->woocommerce->get('products', ['status'=>'publish', 'page'=> $this->page, 'per_page'=>5]);
+                    $products = $service->woocommerce->get('products', ['status'=>'publish', 'page'=> $this->page, 'per_page'=>1]);
                 } catch (\Throwable $th) {
                     //$woocommerceSyinc = new WooCommerceIntegration()
                 }
@@ -62,6 +62,8 @@ class ImportWooCommerceProducts implements ShouldQueue
                     $page = $this->page;
 
                     $page++;
+                    
+                    sleep(10);
                     
                     $this->dispatch($this->projectId, $this->userId, $page);
                 }
