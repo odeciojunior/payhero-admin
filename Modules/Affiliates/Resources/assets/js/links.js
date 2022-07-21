@@ -53,7 +53,8 @@ $(function () {
                 $(".loading").css("visibility", "hidden");
                 alertCustom("success", "Link Adicionado!");
                 index();
-                $('#link-affiliate').val('');
+                $('#link-affiliate-update').val('');
+                $('#link-affiliate-name-update').val('');
             }
         });
     });
@@ -75,6 +76,7 @@ $(function () {
             }, success: function success(response) {
                 $('#modal-edit-link .link-id').val(response.data.id);
                 $('#modal-edit-link #link-affiliate-update').val(response.data.link);
+                $('#modal-edit-link #link-affiliate-name-update').val(response.data.name);
                 $('#modal-edit-link').modal('show');
             }
         });
@@ -94,6 +96,7 @@ $(function () {
             },
             data: {
                 link: $("#modal-edit-link #link-affiliate-update").val(),
+                name: $("#modal-edit-link #link-affiliate-name-update").val(),
             },
             error: function (response) {
                 loadingOnScreenRemove();

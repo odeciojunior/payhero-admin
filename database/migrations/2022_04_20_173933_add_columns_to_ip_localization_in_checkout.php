@@ -14,8 +14,8 @@ class AddColumnsToIpLocalizationInCheckout extends Migration
     public function up()
     {
         Schema::table('checkouts', function (Blueprint $table) {
-            $table->text('ip_state')->after('ip')->nullable();
-            $table->text('ip_localization')->after('ip')->nullable();
+//            $table->text('ip_state')->after('ip')->nullable();
+//            $table->text('ip_localization')->after('ip')->nullable();
         });
     }
 

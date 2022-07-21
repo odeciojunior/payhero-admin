@@ -46,7 +46,7 @@ class AffiliateLinkResource extends JsonResource
         return [
             'id'                => Hashids::encode($this->id),
             'plan_name'         => $this->plan->name ?? '',
-            'plan_name_short'   => Str::limit($this->plan->name ?? 'Loja', 24),
+            'plan_name_short'   => Str::limit($this->plan->name ?? $this->name, 24),
             'description'       => $this->plan->description ?? '',
             'description_short' => Str::limit($this->plan->description ?? '', 24),
             'link'              => $this->link ?? null,
