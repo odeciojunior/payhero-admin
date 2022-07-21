@@ -895,6 +895,8 @@ function orderbump() {
     $("#card-orderbump .onPreLoad *" ).remove();
     $("#block-orderbump").prepend(skeLoad);
 
+    $("#card-orderbump header").addClass('mt-0');
+
     return $.ajax({
         method: "GET",
         url: salesUrl + "/orderbump?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -937,6 +939,7 @@ function orderbump() {
             }
 
             $("#block-orderbump").html(orderbumpBlock);
+            $("#card-orderbump header").removeClass('mt-0');
         }
     });
 }
@@ -945,6 +948,7 @@ function upsell() {
     let upsellBlock = '';
     $("#card-upsell .onPreLoad *" ).remove();
     $("#block-upsell").prepend(skeLoad);
+    $("#card-upsell header").addClass('mt-0');
 
     return $.ajax({
         method: "GET",
@@ -988,8 +992,8 @@ function upsell() {
             } else {
                 upsellBlock = `${noUpsell}`;
             }
-
             $("#block-upsell").html(upsellBlock);
+            $("#card-upsell header").removeClass('mt-0');
         }
     });
 
