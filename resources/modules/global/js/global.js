@@ -1956,7 +1956,7 @@ function getCompaniesAndProjects() {
                         $('#company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
                     }
                 }
-                $('#company-select').addClass('d-sm-flex');
+                $('#company-select').addClass('d-sm-flex').css('display','block');
                 return data;
 
             } else {

@@ -1977,7 +1977,7 @@ tbody td{
     font-size: 16px;
     overflow-y: auto;
     scrollbar-width: none;
-    z-index: 999;
+    z-index: 1101;
 }
 
 .sirius-select-container .sirius-select-options::-webkit-scrollbar {
@@ -2004,6 +2004,10 @@ tbody td{
     opacity: 0.5;
     background: #F6F7F9;
     cursor: none !important;
+}
+
+#company-select-mobile .sirius-select-text{
+    background-color:#fff !important;
 }
 /* END sirius select */
 
@@ -2830,6 +2834,40 @@ tbody td{
 }
 #company-navbar + .sirius-select-text{
     color:#15034C; font-weight: 600
+}
+
+.cloudfox-logo-desktop{
+    display: flex;
+}
+.cloudfox-logo-mobile{
+    display: none;
+    background-color: #fff;
+}
+
+@media (max-width: 768px) {
+    #company-select{
+        display:none !important
+    }
+    #company-select-mobile{
+        display: block !important;
+    }
+    .cloudfox-logo-desktop{
+        display: none;
+    }
+    .cloudfox-logo-mobile{
+        display: flex;
+    }
+    .announcekit-widget{
+        display: flex !important;
+    }
+    .announcekit-widget-badge{
+        position: absolute;
+        top: -3px;
+        right: 3px;
+    }
+    #top-vertical-bar{
+        display: none;
+    }
 }
 
 @-webkit-keyframes fade-in {

@@ -8,9 +8,13 @@
     </button>
 
     <!-- CLOUDFOX LOGO -->
-    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu" style="background-color: #0e0233">
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop" data-toggle="gridmenu" style="background-color: #0e0233">
         <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
         <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 2rem 0px 1rem;">
+    </div>
+
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-mobile" data-toggle="gridmenu">
+        <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-secundary.svg') }}" style="height:  2.7rem;">
     </div>
 
     <!-- BOTAO HAMBURGUER NO DESKTOP-->
@@ -68,16 +72,9 @@
                 @endif
                 </div>
 
-                <!-- EMPRESAS -->
-                <div class="pr-20" id="company-select" style="display:none"><!--d-sm-flex -->
-                    <div class="d-lg-flex align-items-center justify-content-end">
-                        <div>
-                            <select id="company-navbar" class="sirius-select"> </select>
-                        </div>
-                    </div>
-                </div>
+                @include('layouts.company-select')
 
-                <div style=" background-color: #f4f4f4; width:2px; margin:15px 15px 15px 0"></div>
+                <div id="top-vertical-bar" style="background-color: #f4f4f4; width:2px; margin:15px 15px 15px 0"></div>
 
                 <div class="bonus-balance-menu d-flex justify-content-center align-items-center">
                     <button id="bonus-balance" class="bonus-balance-button desktop justify-content-center align-items-center" style="display: none">
