@@ -36,7 +36,7 @@ $(function () {
     window.fillProjectsSelect = function(){
         return $.ajax({
             method: "GET",
-            url: "/api/sales/projects-with-sales",
+            url: "/api/sales/projects-with-checkouts",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
