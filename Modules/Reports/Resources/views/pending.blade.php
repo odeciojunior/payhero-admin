@@ -26,7 +26,7 @@
 
     <div class="page mb-0">
         <div style="display: none" class="page-header container inner-header">
-            
+
             <header class="top-system">
                 <a href="{!! route('reports.finances') !!}" class="back">
                     <svg style="margin-right: 10px;" width="27" height="16" viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,8 +34,8 @@
                     </svg>
                     Voltar para Financeiro
                 </a>
-            </header>       
-            
+            </header>
+
             <div class="row align-items-center justify-content-between top-inner-reports">
                 <div class="col-8">
                     <h1 class="d-flex title-system">
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div id="project-not-empty" style="display: none">
-            
+
             <section class="container box-inner-reports" id="reports-content">
                 <div class="row">
 					<div class="col-12 box-items-finance pending">
@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="fianance-items box-inner-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border blue mb-10 block-result">
                                     <span class="title">Quantidade de vendas</span>
@@ -102,18 +102,18 @@
                                             <option value="0">Todas as lojas</option>
                                         </select>
                                     </div>
-                                    
+
                                     <div class="col-sm-8 col-md-6 col-xl-3">
                                         <label for="client">Nome do cliente</label>
                                         <input name='client' id="client" class="input-pad" placeholder="Digite o nome">
                                     </div>
                                     <div class="col-sm-8 col-md-6 col-xl-3">
                                         <label for="customer_document">CPF do cliente</label>
-                                        <input 
-                                            name='customer_document' 
-                                            id="customer_document" 
-                                            class="input-pad default-border" 
-                                            placeholder="Digite o CPF" 
+                                        <input
+                                            name='customer_document'
+                                            id="customer_document"
+                                            class="input-pad default-border"
+                                            placeholder="Digite o CPF"
                                             data-mask="000.000.000-00"
                                         >
                                     </div>
@@ -123,7 +123,7 @@
                                         <div class="col-sm-6 col-md-3">
                                             <label for="payment_method">Forma de pagamento</label>
                                             <select name='select_payment_method' id="payment_method" class="sirius-select">
-                                                <option value="">Boleto e cartão de crédito</option>
+                                                <option value="">Todas formas de pagamento</option>
                                                 <option value="1">Cartão de crédito</option>
                                                 <option value="2">Boleto</option>
                                                 <option value="4">PIX</option>
@@ -155,7 +155,7 @@
                                             <input name='date_range' id="date_range" class="input-pad"
                                             placeholder="Clique para editar..." readonly>
                                         </div> -->
-                                        
+
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3 pt-20" style="display:none">
@@ -192,17 +192,17 @@
                                              data-target="#bt_collapse"
                                              aria-expanded="false"
                                              aria-controls="bt_collapse">
-                                            <img 
-                                                style="visibility:hidden" 
-                                                id="icon-filtro" 
-                                                class="hidden-xs-down" 
+                                            <img
+                                                style="visibility:hidden"
+                                                id="icon-filtro"
+                                                class="hidden-xs-down"
                                                 src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "
                                             />
                                             <span id="text-filtro">Filtros avançados</span>
-                                            <img 
-                                                style="visibility:hidden" 
-                                                id="icon-filtro" 
-                                                class="hidden-xs-down" 
+                                            <img
+                                                style="visibility:hidden"
+                                                id="icon-filtro"
+                                                class="hidden-xs-down"
                                                 src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "
                                             />
                                         </div>
