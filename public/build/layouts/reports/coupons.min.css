@@ -540,8 +540,9 @@ h4.number{
 
 .sales-card .ske-load {
     position: absolute;
-    transform: translate(6%, -35%);
+    transform: translate(6%, -49%);
     width: 89.5%;
+    height: 100px;
 }
 
 @media(min-width: 1220px) {
@@ -571,7 +572,7 @@ h4.number{
     position: absolute;
     width: 100%;
     z-index: 4;
-    top: 55%;
+    top: 54%;
     left: 0;
     transform: translate(0, -50%);
 }
@@ -785,7 +786,8 @@ h4.number{
 .block-sales-mkt { position: relative; }
 .block-sales-mkt .ske-load {
     position: absolute;
-    transform: translate(0, -50%);
+    transform: translate(0, -64%);
+    height: 100px;
 }
 
 /* payment options */
@@ -986,7 +988,11 @@ h4.number{
 #block-commission .ske-load,
 #block-status .ske-load {
     position: absolute;
-    transform: translate(0, -40%);
+    transform: translate(0, -47%);
+}
+#block-status .ske-load { 
+    height: 263px; 
+    transform: translate(0,-50%);
 }
 
 .empty-graph {
@@ -997,10 +1003,13 @@ h4.number{
 
 #block-distribution .ske-load {
     position: absolute;
-    transform: translate(0, -50%);
+    transform: translate(0, -45%);
 }
 #block-pending .ske-load,
-#block-blockeds .ske-load { position: absolute; }
+#block-blockeds .ske-load {
+    position: absolute; 
+    transform: translate(0, -26%)
+}
 
 .card-cashback { height: 148px; }
 .txt-cash { font-size: 12px; }
@@ -1087,6 +1096,20 @@ h4.number{
     height: 102px;
     display: flex;
     flex-direction: column;
+}
+
+/* sales finance card loading*/
+.box-items-finance.sc .ske-load {
+    max-width: 254px;
+    height: 59px;
+    transform: translate(-50%, -55%);
+    position: absolute;
+    left: 50%;
+}
+/* marketing finances card loading*/
+.box-items-finance.mkt .ske-load {
+    height: 58px;
+    transform: translate(0, 12%);
 }
 
 @media(min-width: 1371px) {
@@ -1227,11 +1250,13 @@ h4.number{
 }
 
 @media only screen and (min-width: 1370px) {
-    .primary { width: 820px; }
-    .primary.fc, .primary.sc { width: 863px; }
+    .primary, .primary.sc { width: 820px; }
+    
+    .primary.fc { width: 863px; }
 
     .distribution { width: 398px;  }
-    .distribution.fc, .distribution.sc { width: 353px; }
+    .distribution.fc { width: 353px; }
+    .distribution.sc { width: 398px; }
 
     .commission.mkt { width: 820px; }
 
@@ -2383,7 +2408,7 @@ h4.number{
 
 #card-withdraw  .ske-load {
     position: absolute;
-    transform: translate(0, -50%);
+    transform: translate(0, -43%);
 }
 
 .no-draws {
@@ -2411,7 +2436,7 @@ h4.number{
 
 #card-conversion .ske-load {
     position: absolute;
-    transform: translate(0, -40%);
+    transform: translate(0, -44%);
 }
 
 #card-devices .ske-load,
@@ -2420,15 +2445,23 @@ h4.number{
 #card-coupon .ske-load,
 #container-operational-systems .ske-load {
     position: absolute;
-    transform: translate(0, -30%);
+    transform: translate(0, -48%);
+    height: 100px;
 }
+
 #card-orderbump .ske-load,
 #card-abandoned .ske-load,
 #card-recurrence .ske-load,
 #card-upsell .ske-load,
 .sales .card-most-sales .ske-load {
     position: absolute;
-    transform: translate(0, -20%);
+    height: 58px;
+    transform: translate(0, -25%);
+}
+
+#card-abandoned .ske-load {
+    transform: translate(0, -25%);
+    height: 59px;
 }
 
 .sirius-select-inside {

@@ -101,7 +101,7 @@
 
             <section class="container box-reports" id="reports-content">
 				<div class="row">
-					<div class="col-12 box-items-finance">
+					<div class="col-12 box-items-finance sc">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card fc no-ske border blue mb-10 onPreLoad" id="sales-transactions"></div>
