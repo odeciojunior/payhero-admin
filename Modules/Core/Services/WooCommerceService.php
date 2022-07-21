@@ -139,7 +139,7 @@ class WooCommerceService
             if($_product->status != 'publish') continue;
 
             ImportWooCommerceProduct::dispatch($projectId, $userId, $_product);
-
+            sleep(10);
         }
 
         return;
