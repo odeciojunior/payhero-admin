@@ -110,7 +110,7 @@ class CompanyResource extends JsonResource
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,
             'gateway_release_money_days' => $this->gateway_release_money_days,
-            'currency_quotation' => $lastUsdQuotation->value,
+            'currency_quotation' => $lastUsdQuotation->value??0,
             'company_is_approved' => $companyIsApproved
         ];
 
