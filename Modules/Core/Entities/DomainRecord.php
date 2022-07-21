@@ -88,8 +88,8 @@ class DomainRecord extends Model
     /**
      * @return BelongsTo
      */
-    public function domain()
+    public function domainsRecords(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Domain');
+        return $this->belongsTo(Domain::class);
     }
 }

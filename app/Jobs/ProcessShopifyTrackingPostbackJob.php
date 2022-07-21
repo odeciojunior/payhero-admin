@@ -24,6 +24,7 @@ class ProcessShopifyTrackingPostbackJob implements ShouldQueue
     {
         $this->projectId = $projectId;
         $this->postback = $postback;
+        $this->allOnQueue('postback-shopify-tracking');
     }
 
     public function handle()
