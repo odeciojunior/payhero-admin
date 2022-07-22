@@ -358,16 +358,9 @@ $(function () {
         $(".div-purchase-event-name-edit").show();
     }
 
-    function openModalEditPixel(selectPlatform = false) {
-        if (selectPlatform) {
-            $("#modal-edit-pixel #configure-edit-pixel").hide();
-            $("#modal-edit-pixel #select-platform-edit-pixel").show();
-        } else {
-            $("#modal-edit-pixel #select-platform-edit-pixel").hide();
-            $("#modal-edit-pixel #configure-edit-pixel").show();
-        }
-    }
-
+    function openModalEditPixel() {
+        $("#modal-edit-pixel #configure-edit-pixel").show();
+}
     /**
      * Delete Pixel
      */
