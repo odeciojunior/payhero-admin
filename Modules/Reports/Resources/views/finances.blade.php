@@ -206,7 +206,7 @@
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>
                                         </header>
-                                        <div class="onPreLoad no-ske" id="block-pending"></div>
+                                        <div class="onPreLoad no-ske finance-pending" id="block-pending"></div>
                                     </div>
                                     <div class="card inner secondary-blocks" id="card-blockeds">
                                         <header class="d-flex title-graph mt-0">

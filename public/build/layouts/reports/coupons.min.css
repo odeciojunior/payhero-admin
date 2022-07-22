@@ -1005,11 +1005,22 @@ h4.number{
     position: absolute;
     transform: translate(0, -45%);
 }
-#block-pending .ske-load,
+
+.report-pending .ske-load {
+    position: absolute;
+    width: 100%;
+    z-index: 4;
+    top: 54%;
+    left: 0;
+    transform: translate(0, -50%);
+}
+
+.finance-pending .ske-load,
 #block-blockeds .ske-load {
     position: absolute; 
-    transform: translate(0, -26%)
+    transform: translate(0, -26%);
 }
+
 
 .card-cashback { height: 148px; }
 .txt-cash { font-size: 12px; }
