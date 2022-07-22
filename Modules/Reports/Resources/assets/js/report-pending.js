@@ -162,7 +162,7 @@ function resumePending() {
         success: function success(response) {
             //loadOnAny('.number', true);
             //$('#total_sales').text('0');
-            
+
             if (response.total_sales) {
                 $('#total_sales, #total-pending, #total').text('');
                 $('#total_sales').text(response.total_sales);
@@ -385,14 +385,14 @@ $(document).ready(function () {
             success: function success(response) {
                 //loadOnAny('.number', true);
                 //$('#total_sales').text('0');
-                
+
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').text(response.total_sales);
                     var comission=response.commission.split(/\s/g);
                     $('#total-pending').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange bold">'+comission[1]+'</strong>');
-                    var total=response.total.split(/\s/g);
-                    $('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
+                    //var total=response.total.split(/\s/g);
+                    //$('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
                 } else {
                     $('#total-pending, #total').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>');
                     $('#total_sales').html('<strong class="font-size-24 orange">0</strong>');
@@ -523,7 +523,7 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
-        
+
     })
     .on('datepicker-open', function () {
         $('.filter-badge-input').removeClass('show');

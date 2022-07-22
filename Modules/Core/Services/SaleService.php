@@ -912,7 +912,6 @@ class SaleService
     {
         $cacheName = 'pending-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 120, function() use ($filters) {
-
             $transactions = $this->getSalesPendingBalance($filters);
             $transactionStatus = implode(',', [ Transaction::STATUS_PAID ]);
 
@@ -923,7 +922,7 @@ class SaleService
                 )
             )
             ->first()
-            ->toSql();
+            ->toArray();
 
             $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
 
