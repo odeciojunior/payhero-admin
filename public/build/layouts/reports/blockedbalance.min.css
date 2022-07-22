@@ -2386,6 +2386,7 @@ h4.number{
     transform: translate(0, -48%);
     height: 100px;
 }
+#card-cashback.card-fc .ske-load { transform: translate(0, -36%); }
 
 #card-orderbump .ske-load,
 #card-abandoned .ske-load,
