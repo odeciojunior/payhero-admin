@@ -436,6 +436,7 @@ class PlansApiController extends Controller
 
             $planId = current(Hashids::decode($id));
             $plan = $planModel->with(['productsPlans'])->where('id', $planId)->first();
+
             if (!empty($plan)) {
                 $productsIds = array_map(function ($p) {
                     return current(Hashids::decode($p['id']));
@@ -459,7 +460,7 @@ class PlansApiController extends Controller
                             'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
                         ]);
                     } else {
-                        $productPlanModel->where('product_id', current(Hashids::decode($product['id'])))
+                        $productPlanModel->where('plan_id', $plan->id)->where('product_id', current(Hashids::decode($product['id'])))
                         ->update([
                             'amount'             => $product['amount'] ?? 1,
                             'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
