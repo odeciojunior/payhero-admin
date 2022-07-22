@@ -72,7 +72,7 @@
 
                                 <div id='upload_logo'>
                                     <input type="file" id="checkout_logo" name="checkout_logo"
-                                        data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                        data-max-file-size="10M" data-min-height="64" data-min-width="64" data-allowed-file-extensions="jpg jpeg png">
                                     <input type="hidden" id="has_checkout_logo" value="false">
                                 </div>
 
@@ -457,28 +457,10 @@
                                 </div>
 
                                 <div class="input-container">
-                                    <label for="countdown-time" class="checkout-label">Descrição <span
-                                            class="observation-span">Opcional</span></label>
-                                    <textarea class="checkout-textarea" id="countdown_description"
-                                        name="countdown_description" rows="4" maxlength="150"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
-
-                                    <div id="countdown_description_error" class="checkout-error" style="display: none;">
-                                        <p>Preencha o campo de descrição.</p>
-                                    </div>
-
-                                    <div class="textarea-observation">
-                                        <img class="dot"
-                                            src="{{ mix('build/layouts/checkouteditor/img/svg/info-icon.svg') }}"><span
-                                            class="observation-span">Visível somente em desktop.</span>
-                                    </div>
-                                </div>
-
-                                <div class="input-container">
                                     <label for="timeout-message" class="checkout-label">Mensagem ao encerrar o
                                         tempo</label>
                                     <textarea class="checkout-textarea" id="countdown_finish_message"
-                                        name="countdown_finish_message" rows="3" maxlength="150"
+                                        name="countdown_finish_message" rows="3" maxlength="117"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 
                                     <div id="countdown_finish_message_error" class="checkout-error"

@@ -258,6 +258,8 @@ $(() => {
                     error: {
                         fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
                         fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                        minWidth: "Imagem muito pequena. Sua imagem deve ter um largura minima de {{ value }}}px.",
+                        minHeight: "Imagem muito pequena. Sua imagem deve ter um altura minima de {{ value }}}px.",
                     },
                     tpl: {
                         message:
@@ -367,6 +369,8 @@ $(() => {
                 error: {
                     fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
                     fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                    minWidth: "Sua imagem deve ter um largura minima de {{ value }}}px.",
+                    minHeight: "Sua imagem deve ter um altura minima de {{ value }}}px.",
                 },
                 tpl: {
                     message:
@@ -690,7 +694,6 @@ $(() => {
                 checkout.countdown_time || 15
             );
 
-            $("#checkout_editor #countdown_description").val(checkout.countdown_description || "Aproveite o desconto extra ao comprar no Cartão ou pelo PIX! É por tempo limitado.");
 
             $("#checkout_editor #countdown_finish_message").val(checkout.countdown_finish_message || "Seu tempo acabou! Você precisa finalizar sua compra agora para ganhar o desconto extra.");
 

@@ -181,9 +181,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 41px;
-    height: 41px;
-    overflow: hidden;
 }
 
 .logo-preview-container.has-banner {
@@ -193,9 +190,10 @@
 
 
 .preview-logo.desktop {
-    max-width: 41px;
-    max-height: 41px;
-    object-fit: cover;
+    border-radius: 4px;
+    max-width: 64px;
+    height: 64px;
+    object-fit: contain;
 }
 
 /* ----------- Menubar Mobile Preview ----------- */
