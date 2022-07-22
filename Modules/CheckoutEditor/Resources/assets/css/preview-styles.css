@@ -163,7 +163,7 @@
     width: 100%;
     margin-top: 5px;
     /* height: 50px; */
-    padding: 10px 70px 0 80px;
+    padding: 10px 70px 0 70px;
     -webkit-transition: all 0.1s;
     -moz-transition: all 0.1s;
     -ms-transition: all 0.1s;
@@ -174,8 +174,15 @@
 .logo-desktop-div.has-banner {
     height: 50px;
     margin-top: -20px;
+    padding: 0px 70px 0 70px;
+}
+
+.logo-desktop-div.has-retangle-banner {
+    height: 50px;
+    margin-top: -20px;
     padding: 0px 70px 0 80px;
 }
+
 
 .logo-desktop-div .logo-desktop {
     display: flex;
@@ -183,17 +190,13 @@
     align-items: center;
 }
 
-.logo-preview-container.has-banner {
-    border-radius: 99px;
-    background-color: #fff;
-}
-
 
 .preview-logo.desktop {
     border-radius: 4px;
-    max-width: 64px;
-    height: 64px;
+    max-height: 41px;
+    max-width: 90px;
     object-fit: contain;
+    background-color: #fff;
 }
 
 /* ----------- Menubar Mobile Preview ----------- */
@@ -228,33 +231,29 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 25px;
-    height: 25px;
-    border-radius: 99px;
-    overflow: hidden;
     background-color: #fff;
 }
 
 .logo-menu-bar.has-banner {
-    margin-top: -16px;
+    margin-top: -8px;
 }
 
 .purchase-menu-mobile {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    width: 50px;
-    height: 20px;
+    width: 100%;
+    height: 25px;
     background: #fff;
     border-radius: 4px;
     padding: 5px;
 }
 
 .preview-logo.mobile {
-    max-width: 27px;
-    max-height: 27px;
-    object-fit: cover;
+    max-width: 60px;
+    max-height: 20px;
+    border-radius: 4px;
 }
 
 .menu-circle-mobile {

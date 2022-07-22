@@ -1306,16 +1306,19 @@
                                     </div>
 
                                     <div class="logo-div logo-menu-bar has-banner" style="overflow-y:hidden">
-                                        <div>
-                                            <div class="logo-mobile-div logo-preview-container" style="display: none">
-                                                <img id="logo_preview_mobile" class="preview-logo mobile" />
-                                            </div>
-                                        </div>
-
                                         <div class="purchase-menu-mobile">
-                                            <img class="arrow-icon-mobile" src="{{ mix('build/layouts/checkouteditor/img/svg/purchase-icon.svg') }}">
-                                            <div class="menu-circle-mobile primary-color"></div>
-                                            <img class="arrow-icon-mobile" src="{{ mix('build/layouts/checkouteditor/img/svg/menu-arrow.svg') }}">
+
+                                            <div>
+                                                <div class="logo-mobile-div logo-preview-container" style="display: none">
+                                                    <img id="logo_preview_mobile" class="preview-logo mobile" />
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-between align-center">
+                                                <img class="arrow-icon-mobile" src="{{ mix('build/layouts/checkouteditor/img/svg/purchase-icon.svg') }}">
+                                                <div class="menu-circle-mobile primary-color"></div>
+                                                <img class="arrow-icon-mobile" src="{{ mix('build/layouts/checkouteditor/img/svg/menu-arrow.svg') }}">
+                                            </div>
                                         </div>
                                     </div>
 
