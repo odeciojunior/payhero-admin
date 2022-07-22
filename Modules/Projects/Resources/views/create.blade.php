@@ -5,6 +5,9 @@
     @endpush
 
     <div class="page" style="display: none; margin-bottom: 0 !important;">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div id="card-project">
             <div style="display: none" class="page-header container">
                 <h1 class="page-title my-10" style="min-height: 28px">

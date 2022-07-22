@@ -1,25 +1,33 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $("#data-table-projects").empty();
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            loadOnAny('#data-table-projects');
-            window.index('n');
-        });
-	});
-});
-
 $(function () {
 
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#data-table-projects").empty();
+        loadOnAny('#data-table-projects');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
+
     // Funcao Responsavel por gerar cards de cada projeto
-    window.index = function (loading='y') {
+    index = function (loading='y') {
         if(loading=='y'){
             loadingOnScreen();
         }
         $.ajax({
             url: "/api/projects",
             data: {
-                company: $('#company-navbar').val(),
+                company: $('.company-navbar').val(),
                 status: 'active',
             },
             dataType: "json",
@@ -196,12 +204,9 @@ $(function () {
             success: (response) => {
                 $("#modal_config").modal("hide");
                 //location.reload(true);
-                //window.index();
+                //index();
                 alertCustom("success", response.message);
             },
         });
-    });
-    getCompaniesAndProjects().done( function (data){
-        window.index();
     });
 });

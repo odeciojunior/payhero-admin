@@ -1,12 +1,12 @@
 $(document).ready(function(){
 
-    $('#company-navbar').change(function () {
-        if (verifyIfCompanyIsDefault()) return;
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
         updateCompanyDefault().done( function(){
             if($('#container-config').is(':visible')){
                 hiddenConfig()
             }
-            $("#extract_company_select").val( $('#company-navbar').val() );
+            $("#extract_company_select").val( $('.company-navbar').val() );
             $('#gateway-skeleton').show();
             $('#container-all-gateways').html('');
             $('#val-skeleton').show();
@@ -226,7 +226,7 @@ $(document).ready(function(){
     }
 
     window.updateStatements = function() {
-        let companyId = $('#company-navbar').val()
+        let companyId = $('.company-navbar').val()
         $.ajax({
             url: `/api/finances/get-statement-resumes?company_id=${companyId}`,
             type: "GET",
@@ -426,7 +426,7 @@ $(document).ready(function(){
         });
     }
      window.updateWithdrawals = function() {
-        let companyId = $('#company-navbar').val()
+        let companyId = $('.company-navbar').val()
 
         $.ajax({
             url: `/api/withdrawals/get-resume?company_id=${companyId}`,

@@ -11,6 +11,9 @@
     @endpush
 
     <div class="page dashboard">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-6 mb-15">

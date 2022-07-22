@@ -1,7 +1,7 @@
 var exportFormat = null;
 
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
     $("#project").find('option').not(':first').remove();
     $("#plan").find('option').not(':first').remove();
     $("#project").val($("#project option:first").val());
@@ -173,7 +173,7 @@ $(document).ready(function () {
 
         // $.ajax({
         //     method: "GET",
-        //     url: "/api/projects?select=true&company="+ $('#company-navbar').val(),
+        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
         //     dataType: "json",
         //     headers: {
         //         Authorization: $('meta[name="access-token"]').attr("content"),
@@ -241,7 +241,7 @@ $(document).ready(function () {
 
             &plan=${$("#plan").val()}`;
         }
-        url += "&company="+ $('#company-navbar').val();
+        url += "&company="+ $('.company-navbar').val();
 
         let recoveryTypeSelected = $("#recovery_type option:selected").val();
         if (recoveryTypeSelected == 1) {
@@ -868,7 +868,7 @@ $(document).ready(function () {
                     list: "plan",
                     search: params.term,
                     project_id: $("#project").val(),
-                    company: $("#company-navbar").val()
+                    company: $(".company-navbar").val()
                 };
             },
             method: "GET",

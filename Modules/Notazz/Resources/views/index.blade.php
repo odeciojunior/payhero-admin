@@ -9,6 +9,9 @@
 @endpush
 @section('content')
     <div class='page'>
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div class="page-header container" style="display:none !important;">
             <div class="row justify-content-between">
                 <div class="col-lg-8">

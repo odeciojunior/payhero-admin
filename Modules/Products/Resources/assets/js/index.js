@@ -1,21 +1,23 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $("#type-products").find('option').not(':first').remove();
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            renderSiriusSelect("#type-products");
-            $("#select-projects-1").find('option').remove();
-            $("#select-projects-2").find('option').remove();
-            $("#projects-list select").prop("disabled", true).addClass("disabled");
-            $("#projects-list, .box-projects").addClass("d-none");
-            localStorage.removeItem('page')
-            localStorage.removeItem('filtersApplied')
-            window.getProjects('n');
+jQuery(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#type-products").find('option').not(':first').remove();
+        loadOnAny('.page-content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                renderSiriusSelect("#type-products");
+                $("#select-projects-1").find('option').remove();
+                $("#select-projects-2").find('option').remove();
+                $("#projects-list select").prop("disabled", true).addClass("disabled");
+                $("#projects-list, .box-projects").addClass("d-none");
+                localStorage.removeItem('page')
+                localStorage.removeItem('filtersApplied')
+                getProjects('n');
+            });
         });
     });
-});
 
-jQuery(function () {
     let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
     let lastPage = document.referrer;
     if (!lastPage.match(regexp)) {
@@ -47,7 +49,7 @@ jQuery(function () {
         }
     }
 
-    window.getProjects = function(loading='y') {
+    function getProjects(loading='y') {
         if(loading=='y')
             loadingOnScreen();
         else
@@ -55,7 +57,7 @@ jQuery(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&status=active&company="+ $('#company-navbar').val(),
+            url: "/api/projects?select=true&status=active&company="+ $('.company-navbar').val(),
             data: {
                 status: "active",
             },
@@ -404,6 +406,6 @@ jQuery(function () {
     });
 
     getCompaniesAndProjects().done( function (data){
-        window.getProjects();
+        getProjects();
     });
 });

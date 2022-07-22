@@ -1,5 +1,5 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
     $('.sirius-performance > .card').html('');
     $('.sirius-account > .card').html('');
     $('#cashback-container #cashback-container-money').text("")
@@ -46,7 +46,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-chart-data`,
             dataType: "json",
             data: {
-                company: $('#company-navbar').val(),
+                company: $('.company-navbar').val(),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -220,7 +220,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             data: {
-                company: $('#company-navbar').val()
+                company: $('.company-navbar').val()
             },
             error: function error(response) {
                 loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
@@ -258,7 +258,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ $('#company-navbar').val(),
+            url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

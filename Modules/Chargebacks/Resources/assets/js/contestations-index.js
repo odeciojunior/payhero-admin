@@ -1,5 +1,5 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
     $("#project").find('option').not(':first').remove();
     $("#project").val($("#project option:first").val());
     loadOnTable("#chargebacks-table-data", "#chargebacks-table");
@@ -110,7 +110,7 @@ $(document).ready(function () {
             is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
             sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
-            company: $('#company-navbar').val(),
+            company: $('.company-navbar').val(),
         };
         if (urlParams) {
             let params = "";
@@ -502,7 +502,7 @@ $(document).ready(function () {
 
         // $.ajax({
         //     method: "GET",
-        //     url: "/api/projects?select=true&company="+ $('#company-navbar').val(),
+        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
         //     dataType: "json",
         //     headers: {
         //         Authorization: $('meta[name="access-token"]').attr("content"),

@@ -1,6 +1,6 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    updateCompanyDefault().done( function(){console.log(con)
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
+    updateCompanyDefault().done( function(){
         window.gatewayCode = window.location.href.split('/')[4];
         window.getGateway(window.gatewayCode);
         var companies = JSON.parse( $companies );
@@ -251,7 +251,7 @@ $(window).on("load", function(){
                     $("#nav-statement").css('display', '');
                 });
 
-                $('.company_name').val( data.company_default_name );
+                $('.company_name').val( $('.company-navbar').first().find('option:selected').text() );
 
                 loadingOnScreenRemove();
             }

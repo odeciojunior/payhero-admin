@@ -14,18 +14,46 @@ var statusDocumentUser = {
 let disabledCompany = false;
 let companyVerification = true;
 
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $("#content-error").hide();
-    updateCompanyDefault().done( function(data){
-        $('.company_name').val( $('#company-navbar').find('option:selected').text() );
-        window.getInvitationData();
-        window.updateInvitesAfterChangeCompany();
-    })
-});
-
 $(document).ready(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#content-error").hide();
+        loadOnTable('#table-body-invites', '#table_invites');
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        updateCompanyDefault().done( function(data){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                if(companiesAndProjects.company_default_fullname.length > 40)
+                    $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
+                else
+                    $('.company_name').val( companiesAndProjects.company_default_fullname );
+                getInvitationData();
+                updateInvitesAfterChangeCompany();
+            })
+        })
+    });
+
+    var companiesAndProjects = ''
+
     getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        if(companiesAndProjects.company_default_fullname.length > 40)
+            $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
+        else
+            $('.company_name').val( companiesAndProjects.company_default_fullname );
         updateInvites();
     });
 
@@ -163,12 +191,25 @@ $(document).ready(function () {
         });
     }
 
-    window.updateInvitesAfterChangeCompany = function () {
+    function updateInvitesAfterChangeCompany() {
         loadOnTable('#table-body-invites', '#table_invites');
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
         var cont = 0;
         $.ajax({
             method: "GET",
-            url: '/api/invitations?company='+ $('#company-navbar').val(),
+            url: '/api/invitations?company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -222,6 +263,8 @@ $(document).ready(function () {
 
                     pagination(response, 'invites');
                 }
+
+                loadingOnScreenRemove();
             }
         });
     }
@@ -301,7 +344,7 @@ $(document).ready(function () {
                             $("#company-list").html('').append(selCompany);
 
                             var linkInvite = '';
-                            var companyId = $('#company-navbar').val();
+                            var companyId = $('.company-navbar').val();
                             linkInvite = 'https://accounts.cloudfox.net/signup?i=' + companyId;
 
                             $("#invite-link").val(linkInvite);
@@ -374,7 +417,7 @@ $(document).ready(function () {
     function getInvitationData() {
         $.ajax({
             method: "GET",
-            url: '/api/invitations/getinvitationdata' + '?company='+ $('#company-navbar').val(),
+            url: '/api/invitations/getinvitationdata' + '?company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -382,6 +425,8 @@ $(document).ready(function () {
             },
             error: (response) => {
                 errorAjaxResponse(response)
+                loadingOnScreenRemove();
+                loadOnAny('.number',true);
             },
             success: (response) => {
                 $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '');
@@ -394,6 +439,7 @@ $(document).ready(function () {
                 if (verifyAccountFrozen()) {
                     $('#store-invite').attr('disabled', true);
                 }
+                loadOnAny('.number',true);
             }
         });
     }
@@ -471,7 +517,7 @@ $(document).ready(function () {
         }
     }
 
-    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
+    //$('.company_name').val( $('.company-navbar').find('option:selected').text() );
 
     //ALTERAÇÃO DE HTML
 

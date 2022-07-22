@@ -2,7 +2,7 @@
 @push('css')
 
     <link rel="stylesheet" href="{{ mix('build/layouts/notificacoesInteligentes/index.min.css') }}">
-    
+
      <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -18,6 +18,9 @@
 @endpush
 @section('content')
     <div class='page'>
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none !important;" class="page-header container">
             <div class="row jusitfy-content-between">
                 <div class="col-lg-8">

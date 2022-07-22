@@ -7,6 +7,9 @@
 @section('content')
 
 <div class="page" style="margin-bottom: 0 !important">
+
+    @include('layouts.company-select',['version'=>'mobile'])
+
     <div style="display: none" class="page-header container">
         <div class="row align-items-center" style="min-height:4rem">
             <div class="col-6">

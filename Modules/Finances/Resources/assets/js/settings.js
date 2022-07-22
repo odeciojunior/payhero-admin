@@ -18,7 +18,7 @@ $(document).ready(function () {
     }
 
     var financesSettingsForm = $('#finances-settings-form')
-    var companySelect = $('#company-navbar').val()
+    var companySelect = $('.company-navbar').val()
     var withdrawalByPeriod = $('#withdrawal_by_period')
     var frequencyContainer = $('.frequency-container')
     var frequencyButtons = frequencyContainer.find('.btn')
@@ -54,7 +54,7 @@ $(document).ready(function () {
     window.saveSettings = function (data) {
 
         settingsData = Object.assign(settingsData, {
-            company_id: $('#company-navbar').val(),
+            company_id: $('.company-navbar').val(),
             amount: withdrawalAmount.val(),
         })
 
@@ -166,7 +166,7 @@ $(document).ready(function () {
 
     window.clearSettingsForm = function () {
         settingsData = {
-            company_id: $('#company-navbar').val(),
+            company_id: $('.company-navbar').val(),
             rule: null,
             frequency: null,
             weekday: null,
@@ -292,8 +292,8 @@ $(document).ready(function () {
     withdrawalAmount.maskMoney({thousands: '.', decimal: ',', allowZero: true});
     frequencyButtons.removeClass('active')
 
-    if (!isEmpty($('#company-navbar').val())) {
-        getSettings($('#company-navbar').val())
+    if (!isEmpty($('.company-navbar').val())) {
+        getSettings($('.company-navbar').val())
     } else {
         onWithdrawalByAmountChange()
         onWithdrawalByPeriodChange()

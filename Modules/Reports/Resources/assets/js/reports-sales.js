@@ -4,14 +4,14 @@ $(function() {
 
     changeCompany();
     changeCalendar();
-    
+
 
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
-    } 
-    
-    getCompaniesAndProjects().done( function (data2){           
+    }
+
+    getCompaniesAndProjects().done( function (data2){
         getProjects(data2.companies);
     });
 });
@@ -23,11 +23,11 @@ let company = '';
 let date = '';
 let sales_status = '';
 
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
 
     loadingOnScreen();
-	
+
     $("#select_projects").val($("#select_projects option:first").val());
     $(
         "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
@@ -35,9 +35,9 @@ $('#company-navbar').change(function () {
 
     $("#select_projects").html('');
     sessionStorage.removeItem('info');
-    
+
     updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){            
+        getCompaniesAndProjects().done(function(data2){
             getProjects(data2.companies);
         });
 	});
@@ -95,30 +95,30 @@ function getProjects(companies) {
 
     window.fillProjectsSelect()
     .done(function(dataSales)
-    {    
-        $(".div-filters").show();        
-        $.each(companies, function (c, company) {            
+    {
+        $(".div-filters").show();
+        $.each(companies, function (c, company) {
             $.each(company.projects, function (i, project) {
-                if( dataSales.includes(project.id) ){                    
-                    $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));                    
-                }                
+                if( dataSales.includes(project.id) ){
+                    $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
+                }
             });
         });
-                
+
         $("#select_projects option:first").attr('selected','selected');
 
-        if(sessionStorage.info) {            
+        if(sessionStorage.info) {
             $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
             $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
         }
 
-        company = $("#select_projects").val();        
+        company = $("#select_projects").val();
         updateReports();
 
         changeSaleStatus();
-    }); 
+    });
 
-    loadingOnScreenRemove();   
+    loadingOnScreenRemove();
 }
 
 function barGraph(data, labels, total) {

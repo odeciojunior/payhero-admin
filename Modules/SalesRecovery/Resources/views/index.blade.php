@@ -8,6 +8,9 @@
 
     <!-- Page -->
     <div class="page mb-0">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">

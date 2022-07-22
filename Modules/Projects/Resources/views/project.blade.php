@@ -15,6 +15,8 @@
     <!-- Page -->
     <div class="page">
 
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <input type="hidden" id="project_type">
 
         <div style="display: none" class="page-header container">

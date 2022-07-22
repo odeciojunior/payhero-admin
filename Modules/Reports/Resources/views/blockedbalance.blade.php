@@ -54,6 +54,9 @@
 
     <!-- Page -->
     <div class="page mb-0">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container inner-header">
             <header class="top-system">
                 <a href="{!! route('reports.finances') !!}" class="back">
@@ -62,8 +65,8 @@
                     </svg>
                     Voltar para Financeiro
                 </a>
-            </header>       
-        
+            </header>
+
             <div class="row align-items-center justify-content-between top-inner-reports">
                 <div class="col-8">
                     <h1 class="d-flex title-system">
@@ -97,7 +100,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border blue mb-10">
                                     <span class="title">Quantidade de vendas</span>
@@ -206,17 +209,17 @@
                                      data-target="#bt_collapse"
                                      aria-expanded="false"
                                      aria-controls="bt_collapse">
-                                     <img 
-                                        style="visibility:hidden" 
-                                        id="icon-filtro" 
-                                        class="hidden-xs-down" 
+                                     <img
+                                        style="visibility:hidden"
+                                        id="icon-filtro"
+                                        class="hidden-xs-down"
                                         src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "
                                     />
                                     <span id="text-filtro">Filtros avançados</span>
-                                    <img 
-                                        style="visibility:hidden" 
-                                        id="icon-filtro" 
-                                        class="hidden-xs-down" 
+                                    <img
+                                        style="visibility:hidden"
+                                        id="icon-filtro"
+                                        class="hidden-xs-down"
                                         src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "
                                     />
                                 </div>
@@ -306,14 +309,14 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="row justify-content-center justify-content-md-end pb-50">
                         <ul id="pagination-sales" class="pagination-sm margin-chat-pagination pl-5 pr-md-15 mb-20 pagination" style="position:relative;float:right">
                             {{-- js carrega... --}}
                         </ul>
                     </div>
                 </div>
-               
+
             </div>
         </div>
         {{-- Quando não tem loja cadastrado  --}}

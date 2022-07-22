@@ -53,28 +53,23 @@ const messageLoader = {
 
 const attachments2send = [];
 
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $("#project-select").find('option').not(':first').remove()
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            // companies=r2[0].companies;
-            // $.each(companies, function (c, company) {
-            //     if( r2[0].company_default == company.id){
-            //         $.each(company.projects, function (i, project) {
-            //             console.log(project.name)
-            //             $('#project-select').append('<option value="project.id">'+project.name+'</option>')
-            //         });
-            //     }
-            // });
-            window.index()
-            window.getResume()
-        })
-    })
-})
-
 $(() => {
 
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        loadOnAny('.tickets-container', false, ticketLoader);
+        $("#project-select").find('option').not(':first').remove()
+        $('#ticket-open .detail').html('');
+        $('#ticket-mediation .detail').html('');
+        $('#ticket-closed .detail').html('');
+        loadOnAny('.number', false, resumeLoader);
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                index()
+                getResume()
+            })
+        })
+    })
 
     //fill the filter if the parameter comes in the url
     const params = new URLSearchParams(window.location.search);
@@ -91,7 +86,7 @@ $(() => {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ $('#company-navbar').val(),
+            url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -106,8 +101,8 @@ $(() => {
                     for (let project of resp.data) {
                         $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
                     }
-                    window.index();
-                    window.getResume();
+                    index();
+                    getResume();
                     $('.page-header').show();
                     $("#project-not-empty").show();
                     $("#project-empty").hide();
@@ -154,14 +149,14 @@ $(() => {
         return Object.entries(filters).map(([key, val]) => `${key}=${val}`).join('&');
     }
 
-    window.index = function(page = 1) {
+    function index(page = 1) {
 
         loadOnAny('.tickets-container', false, ticketLoader);
         clearViews();
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets?' + getFilters(page) + '&company='+ $('#company-navbar').val(),
+            url: '/api/tickets?' + getFilters(page) + '&company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -316,7 +311,7 @@ $(() => {
         $('.messages-container').html(messageEmpty);
     }
 
-    window.getResume = function() {
+    function getResume() {
 
         $('#ticket-open .detail').html('');
         $('#ticket-mediation .detail').html('');
@@ -326,7 +321,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets/getvalues?project=' + $('#project-select').val() + "&company_id="+$('#company-navbar').val(),
+            url: '/api/tickets/getvalues?project=' + $('#project-select').val() + "&company_id="+$('.company-navbar').val(),
             dataType: "json",
             data: {
                 date: $("#date_range").val(),

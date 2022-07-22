@@ -1,5 +1,5 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
 	$("#select_projects").val($("#select_projects option:first").val());
     $(
         "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
@@ -8,9 +8,9 @@ $('#company-navbar').change(function () {
 
     $("#select_projects").html('');
     sessionStorage.removeItem('info');
-    
+
     updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){            
+        getCompaniesAndProjects().done(function(data2){
             getProjects(data2.companies);
         });
 	});
@@ -38,7 +38,7 @@ window.fillProjectsSelect = function(){
 $(function() {
     loadingOnScreen();
     exportReports();
-    
+
     changeCompany();
     changeCalendar();
 
@@ -47,9 +47,9 @@ $(function() {
         $('input[name=daterange]').val(info.calendar);
     }
 
-    getCompaniesAndProjects().done( function (data2){        
+    getCompaniesAndProjects().done( function (data2){
         getProjects(data2.companies);
-    });  
+    });
 });
 
 let resumeUrl = '/api/reports/resume';
@@ -65,8 +65,8 @@ function getProjects(companies) {
 
     window.fillProjectsSelect()
     .done(function(dataSales)
-    {        
-        $(".div-filters").show();        
+    {
+        $(".div-filters").show();
         $.each(companies, function (c, company) {
             $.each(company.projects, function (i, project) {
                 if( dataSales.includes(project.id) )
@@ -75,7 +75,7 @@ function getProjects(companies) {
         });
         $("#select_projects option:first").attr('selected','selected');
 
-        if(sessionStorage.info) {            
+        if(sessionStorage.info) {
             $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
             $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
         }
@@ -83,7 +83,7 @@ function getProjects(companies) {
         company = $("#select_projects").val();
 
         updateReports();
-    }); 
+    });
 
     loadingOnScreenRemove();
 }

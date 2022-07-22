@@ -1,11 +1,24 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    $("#project-affiliate").find('option').not(':first').remove();
-    $("#project-affiliate-request").find('option').not(':first').remove();
-    window.getProjects('n');
-});
-
 $(document).ready(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                $("#project-affiliate").find('option').not(':first').remove();
+                $("#project-affiliate-request").find('option').not(':first').remove();
+                getProjects('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        getProjects();
+    });
+
     var badgeAffiliateRequest = {
         1: "primary",
         2: "warning",
@@ -25,7 +38,7 @@ $(document).ready(function () {
         getAffiliatesRequest();
     });
 
-    window.getProjects = function(loading='y') {
+    function getProjects(loading='y') {
         if(loading=='y')
             loadingOnScreen();
         else
@@ -35,7 +48,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?affiliate=true&status=active&company="+ $('#company-navbar').val(),
+            url: "/api/projects?affiliate=true&status=active&company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -90,10 +103,6 @@ $(document).ready(function () {
             },
         });
     }
-
-    getCompaniesAndProjects().done( function (data){
-        window.getProjects();
-    });
 
     function getAffiliates() {
         var link =
