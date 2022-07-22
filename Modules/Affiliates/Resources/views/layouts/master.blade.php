@@ -15,6 +15,7 @@
     <!-- access token used for api ajax requests -->
     <meta name="access-token"
           content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
+    <meta name="user-id" content="{{ \Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id) }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/apple-touch-icon.png') }}">

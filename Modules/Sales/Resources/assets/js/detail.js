@@ -214,6 +214,7 @@ $(() => {
 
                 $("#refundAmount").val(response.data.total);
                 $("#refundBilletAmount").text(response.data.total);
+                $(".btn-confirm-refund-transaction").prop('disabled', false);
                 $(".btn_refund_transaction").unbind("click");
                 $(".btn_refund_transaction").on("click", function () {
                     $('#refund_observation').val('');
@@ -1386,7 +1387,7 @@ $(() => {
                 loadingOnChartRemove(".sirius-loading");
                 $("#modal-refund-transaction").modal('toggle')
                 errorAjaxResponse(response);
-                atualizar(currentPage);
+                //atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop('disabled', false);
             },
             success: (response) => {
@@ -1394,7 +1395,7 @@ $(() => {
                 $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
                 $("#refund_observation").val("");
-                atualizar(currentPage);
+                //atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop('disabled', false);
             },
         });
@@ -1416,12 +1417,12 @@ $(() => {
             error: (response) => {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
-                atualizar(currentPage);
+                //atualizar(currentPage);
             },
             success: (response) => {
                 loadingOnScreenRemove();
                 alertCustom("success", response.message);
-                atualizar(currentPage);
+                //atualizar(currentPage);
             },
         });
     }

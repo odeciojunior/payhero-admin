@@ -233,6 +233,7 @@ Route::group([
         Route::get('/projects', 'ProjectsApiDemoController@index');
         Route::get('/projects/{id}', 'ProjectsApiDemoController@show');
         Route::get('/projects/{id}/edit', 'ProjectsApiDemoController@edit');
+        Route::get('/projects/{id}/companie', 'ProjectsApiDemoController@getCompanieByProject');
     });
 
     //Plans

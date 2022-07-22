@@ -138,7 +138,7 @@
                             <div class="col-sm-6 col-md-3">
                                 <label for="payment_method">Forma de pagamento</label>
                                 <select name='payment_method' id="payment_method" class="sirius-select">
-                                    <option value="">Boleto e cartão de crédito</option>
+                                    <option value="">Todas formas de pagamento</option>
                                     <option value="1">Cartão de crédito</option>
                                     <option value="2">Boleto</option>
                                     <option value="4">PIX</option>

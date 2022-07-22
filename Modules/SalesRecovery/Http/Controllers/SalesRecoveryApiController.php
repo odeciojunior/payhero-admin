@@ -281,22 +281,23 @@ class SalesRecoveryApiController extends Controller
             if ($request->has('checkout') && !empty($request->input('checkout'))) {
                 $saleId = current(Hashids::decode($request->input('checkout')));
                 $sale   = $saleModel->find($saleId);
-                if (!empty($sale)) {
 
+                if (!empty($sale)) {
                     return SalesRecoverydetailsResourceTransformer::make($salesRecoveryService->getSalesCartOrBoletoDetails($sale));
-                } else {
-                    $checkout = $checkoutModel->find($saleId);
-                    if (!empty($checkout)) {
-                        return SalesRecoveryCartAbandonedDetailsResourceTransformer::make($salesRecoveryService->getSalesCheckoutDetails($checkout));
-                    } else {
-                        return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
-                    }
+                } 
+
+                $checkout = $checkoutModel->find($saleId);
+                if (!empty($checkout)) {
+                    return SalesRecoveryCartAbandonedDetailsResourceTransformer::make($salesRecoveryService->getSalesCheckoutDetails($checkout));
                 }
-            } else {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
+
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);                                    
             }
-        } catch (Exception $e) {
-            Log::warning('Erro ao buscar detalhes do carrinho abandonado');
+
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
+            
+        } catch (Exception $e)
+        {            
             report($e);
 
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);

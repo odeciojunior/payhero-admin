@@ -13,7 +13,6 @@ use Modules\Core\Entities\Whatsapp2Integration;
 use Modules\Projects\Transformers\ProjectsSelectResource;
 use Modules\Whatsapp2\Transformers\Whatsapp2Resource;
 use Spatie\Activitylog\Models\Activity;
-use Vinkla\Hashids\Facades\Hashids;
 
 class Whatsapp2ApiController extends Controller
 {
@@ -84,7 +83,7 @@ class Whatsapp2ApiController extends Controller
 
             activity()->on((new Whatsapp2Integration()))->tap(function (Activity $activity) use ($id) {
                 $activity->log_name = 'visualization';
-                $activity->subject_id = current(Hashids::decode($id));
+                $activity->subject_id =  hashids_decode($id);
             })->log('Visualizou tela editar configurações de integração projeto ' . $whatsapp2Integration->project->name . ' com whatsapp 2.0');
 
             return new Whatsapp2Resource($whatsapp2Integration);
@@ -215,7 +214,7 @@ class Whatsapp2ApiController extends Controller
     public function destroy($id)
     {
         try {
-            $integrationId = current(Hashids::decode($id));
+            $integrationId = hashids_decode($id);
             $whatsapp2IntegrationModel = new Whatsapp2Integration();
             $integration = $whatsapp2IntegrationModel->find($integrationId);
             if (empty($integration)) {

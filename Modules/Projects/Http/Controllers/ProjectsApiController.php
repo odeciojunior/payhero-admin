@@ -530,7 +530,7 @@ class ProjectsApiController extends Controller
     public function getCompanieByProject($id)
     {
         try {
-            $projectID = hashids_decode($id);;
+            $projectID = hashids_decode($id);
 
             $projectModel = new Project();
             $project = $projectModel->with('usersProjects.company')->find($projectID);
