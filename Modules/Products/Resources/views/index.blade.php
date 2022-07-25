@@ -92,19 +92,19 @@
                     <div class="d-flex flex-row justify-content-between" style="width: 100%">
                         <div class="d-flex flex-column align-items-center new-product-modal-option">
                             <button type="button" class="d-flex justify-content-center align-items-center new-product-btn" data-add-url="/products/create/physical">
-                                <img src="{{ mix('build/global/img/svg/caixa-fisica.svg') }}" data-value="product_physical" alt="novo produto fisico">
+                                <img src="{{ mix('build/global/img/svg/new-box.svg') }}" data-value="product_physical" alt="novo produto fisico">
                             </button>
                             <span>Físico</span>
                         </div>
                         <div class="d-flex flex-column align-items-center new-product-modal-option">
                             <button type="button" class="d-flex justify-content-center align-items-center new-product-btn" data-add-url="/products/create/digital">
-                                <img src="{{ mix('build/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
+                                <img src="{{ mix('build/global/img/svg/new-phone.svg') }}" data-value="product_digital" alt="novo produto digital">
                             </button>
                             <span>Digital</span>
                         </div>
                     </div>
                     <div id="next-btn-container" class="text-center" style="display: none">
-                        <p id="selected-option-desc" class="font-weight-400 font-size-12 mt-25" style="color: #5B5B5B"></p>
+                        <p id="selected-option-desc" class="font-weight-400 font-size-12 my-25" style="color: #5B5B5B"></p>
                         <a id="selected-option-url" href="#" class="btn btn-primary" style="padding: 12px 0px">Avançar</a>
                     </div>
                 </div>
