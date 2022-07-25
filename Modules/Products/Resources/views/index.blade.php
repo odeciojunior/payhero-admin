@@ -42,13 +42,13 @@
                         <div id="projects-list" class="mb-10 d-none">
                             <div class="box-projects" id="box-projects-1">
                                 <label id="select-projects-label-1" for="select-projects-1">Loja</label>
-                                <select id="select-projects-1" class="sirius-select" disabled>
+                                <select id="select-projects-1" class="sirius-select">
                                     {{-- <option class='opcao-vazia'></option> --}}
                                 </select>
                             </div>
                             <div class="box-projects" id="box-projects-2">
                                 <label id="select-projects-label-2" for="select-projects-2">Loja</label>
-                                <select id="select-projects-2" class="sirius-select" disabled>
+                                <select id="select-projects-2" class="sirius-select">
                                     {{-- <option class='opcao-vazia'></option> --}}
                                 </select>
                             </div>

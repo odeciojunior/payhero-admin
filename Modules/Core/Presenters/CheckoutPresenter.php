@@ -4,6 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Modules\Core\Entities\Domain;
 use Laracasts\Presenter\Presenter;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -118,4 +119,31 @@ class CheckoutPresenter extends Presenter
 
         return '';
     }
+
+    public function getOperationalSystemName($operationalSystemEnum)
+    {
+        if($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_IOS) {
+            return 'IOS';
+        }
+        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_ANDROID) {
+            return 'Android';
+        }
+        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_WINDOWS) {
+            return 'Windows';
+        }
+        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_LINUX) {
+            return 'Linux';
+        }
+        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_BLACK_BERRY) {
+            return 'Black Berry';
+        }
+        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_JAVA) {
+            return 'Java OS';
+        }
+        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_CHROME) {
+            return 'Chrome OS';
+        }
+        return 'Desconhecido';
+    }
+
 }

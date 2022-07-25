@@ -3,56 +3,36 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
 
 class GenericCommand extends Command
 {
     protected $signature = 'generic';
-
     protected $description = 'Command description';
 
     public function handle()
     {
-        $productsQuery = Product::with([
-            'productsPlans.plan'
-        ])->select('id', 'project_id', 'shopify_id')
-            ->where('shopify', 0)
-            ->whereNotNull('shopify_id')
-            ->where('shopify_id', '!=', '');
+        $trackings = Tracking::select('product_plan_sale_id', 'tracking_code')
+            ->whereNotIn('system_status_enum', [
+                Tracking::SYSTEM_STATUS_VALID,
+                Tracking::SYSTEM_STATUS_CHECKED_MANUALLY,
+            ])
+            ->whereIn('tracking_status_enum', [
+                Tracking::STATUS_DELIVERED,
+                Tracking::STATUS_DISPATCHED,
+                Tracking::STATUS_OUT_FOR_DELIVERY
+            ])->get();
 
         $bar = $this->getOutput()->createProgressBar();
-        $bar->start($productsQuery->count());
+        $bar->start($trackings->count());
 
-        $productsQuery->chunk(1000, function ($products) use ($bar) {
-            foreach ($products as $product) {
+        $service = new TrackingService();
 
-                try {
-
-                    if (!stristr($product->shopify_id, '-')) {
-                        $plan = null;
-                        foreach ($product->productsPlans as $pp) {
-                            if ($pp->plan->shopify_id === $product->shopify_id) {
-                                $plan = $pp->plan;
-                                break;
-                            }
-                        }
-
-                        $newId = $product->shopify_id . '-' . hashids_encode($product->project_id);
-                        $product->shopify_id = $plan->shopify_id = $newId;
-
-                        $product->save();
-                        $plan->save();
-                    } else {
-                        $this->info('já foi');
-                    }
-                } catch (\Exception $e) {
-                    $this->error($e->getMessage());
-                }
-                $bar->advance();
-            }
-        });
+        foreach ($trackings as $t) {
+            $service->createOrUpdateTracking($t->tracking_code, $t->product_plan_sale_id, false, false);
+            $bar->advance();
+        }
 
         $bar->finish();
     }

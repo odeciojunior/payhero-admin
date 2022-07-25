@@ -310,6 +310,7 @@ class CloudFlareService
             $this->adapter->delete('zones/' . $this->zoneID . '/dns_records/' . $recordId);
 
         } catch (Exception $e) {
+            report($e);
         }
     }
 
@@ -332,9 +333,9 @@ class CloudFlareService
 
     public function integrationWebsite(int $domainModelId, string $domain, $ipAddress)
     {
-        $domainModel = new Domain();
+        $domainModel = Domain::find($domainModelId);
 
-        $this->deleteZone($domain);
+        $this->removeDomain($domainModel);
         $this->getDomainRecordModel()->where('domain_id', $domainModelId)->delete();
 
         //criar o dominio
@@ -343,8 +344,7 @@ class CloudFlareService
         if ($newZone) {
             //dominio criado
 
-            $domainModel->where('id', $domainModelId)
-                ->update(
+            $domainModel->update(
                     [
                         'cloudflare_domain_id' => $newZone->id,
                     ]
@@ -497,9 +497,9 @@ class CloudFlareService
 
     public function integrationShopify(int $domainModelId, string $domain)
     {
-        $domainModel = new Domain();
+        $domainModel = Domain::find($domainModelId);
 
-        $this->deleteZone($domain);
+        $this->removeDomain($domainModel);
         $this->getDomainRecordModel()->where('domain_id', $domainModelId)->delete();
 
         //criar o dominio
@@ -508,8 +508,7 @@ class CloudFlareService
         if ($newZone) {
             //dominio criado
 
-            $domainModel->where('id', $domainModelId)
-                ->update(
+            $domainModel->update(
                     [
                         'cloudflare_domain_id' => $newZone->id,
                     ]
@@ -958,7 +957,7 @@ class CloudFlareService
         }
     }
 
-    public function removeDomain($domain)
+    public function removeDomain(Domain $domain)
     {
         try {
             $this->setZone($domain->name);
@@ -966,9 +965,10 @@ class CloudFlareService
             return ;
         }
 
-        $domain->load('domainsRecords');
-        foreach ($domain->domainsRecords as $domainsRecord) {
-            $this->deleteRecord($domainsRecord->cloudflare_record_id);
+        $getRecords = $this->getRecords($domain->name);
+
+        foreach($getRecords as $getRecord) {
+            $this->deleteRecord($getRecord->id);
         }
 
         if(!foxutils()->isEmpty($domain->cloudflare_domain_id)) {

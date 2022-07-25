@@ -1,96 +1,12 @@
 @push('css')
     <link rel="stylesheet" href="{!! mix('build/layouts/pixels/edit.min.css') !!}">
 @endpush
-<div style="display: none; width: 100%;" id="select-platform-edit-pixel">
-    <div class="modal-content p-10 s-border-radius">
-        <div class="modal-header simple-border-bottom mb-10">
-            <h4 class="col-12 modal-title text-center" id="modal-title"
-                style="color:#787878; font: normal normal bold 22px Muli;">
-                Editar Pixel
-            </h4>
-            <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                <i class="material-icons md-16">close</i>
-            </a>
-        </div>
-        <div style='min-height: 100px'>
-            <div>
-                <h4 class="col-12 modal-title text-center mb-15" style="color:#787878">Selecione a plataforma</h4>
-                <div class="row text-center">
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                            data-value="google_analytics"
-                            alt="logo analytics">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Analytics</div>
-                    </div>
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                            data-value="google_analytics_four"
-                            alt="logo analytics four">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
-                    </div>
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                            data-value="google_adwords"
-                            alt="logo google adwords">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Ads</div>
-                    </div>
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                            data-value="facebook"
-                            alt="logo facebook">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Facebook</div>
-                    </div>
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                            data-value="outbrain"
-                            alt="logo outbrain">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Outbrain</div>
-                    </div>
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                            data-value="taboola"
-                            alt="logo taboola">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Taboola</div>
-                    </div>
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                            data-value="pinterest"
-                            alt="logo pinterest">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Pinterest</div>
-                    </div>
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                            data-value="uol_ads"
-                            alt="logo uol ads">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">UOL Ads</div>
-                    </div>
-                    <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                            data-value="tiktok"
-                            alt="logo uol ads">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">TikTok</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer"></div>
-    </div>
-</div>
 
 <div style="display: block;" id="configure-edit-pixel">
     <div class="modal-content p-10 s-border-radius">
         <div class="modal-header simple-border-bottom mb-10 align-items-center">
-            <div class="col-2" data-toggle="tooltip" data-placement="top" title="Clique para alterar o pixel">
-                <img src="" class="img-logo img-fluid img-edit-selected pointer" alt="image selected">
+            <div class="col-2" data-placement="top">
+                <img src="" class="img-logo img-fluid img-edit-selected" alt="image selected">
             </div>
             <div class="col-7" style="border-left: 1px solid #70707040; border-right: 1px solid #70707040">
                 <h4 class="col-12 modal-title text-center" id="modal-title"

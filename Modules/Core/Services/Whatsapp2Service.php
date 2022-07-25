@@ -43,7 +43,7 @@ class Whatsapp2Service
 
     private function sendPost($data, $url): array
     {
-        if (!FoxUtils::isProduction()) {
+        if (!foxutils()->isProduction()) {
             return ['code' => 403, 'result' => "Funcionalidade habilitada somente em ambiente de produção!"];
         }
 
@@ -119,23 +119,22 @@ class Whatsapp2Service
                         break;
                 }
 
-                $totalValue = preg_replace("/[^0-9]/", "", $sale->sub_total) + preg_replace("/[^0-9]/", "",
-                        $sale->shipment_value);
-                $totalValue = substr_replace($totalValue, '.', strlen($totalValue) - 2, 0);
+                $totalValue = foxutils()->onlyNumbers($sale->sub_total) + foxutils()->onlyNumbers($sale->shipment_value);
+                $totalValue = foxutils()->floatFormat($totalValue);
 
-                $domainName = $domain->name??'cloudfox.net';
-                $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
+                $domainName = $domain->name ?? 'cloudfox.net';
+                $boletoLink = "https://checkout.{$domainName}/order/". hashids_encode($sale->id, 'sale_id') ."/download-boleto";
 
                 $data = [
                     'type' => 'order',
                     'api_token' => $this->apiToken,
                     'payment_type' => (new Sale())->present()->getPaymentType($sale->payment_method),
                     'order' => [
-                        'token' => Hashids::encode($sale->checkout_id),
+                        'token' => hashids_encode($sale->checkout_id),
                         'financial_status' => $status,
                         'billet_url' => $boletoLink,
                         'gateway' => 'cloudfox',
-                        'checkout_url' => "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
+                        'checkout_url' => "https://checkout." . $domain->name . "/recovery/" . hashids_encode($sale->checkout_id),
                         'id' => $sale->checkout_id,
                         'status' => $status,
                         "codigo_barras" => $sale->boleto_digitable_line,
@@ -146,15 +145,15 @@ class Whatsapp2Service
                             'name' => $sale->customer->name,
                             'email' => $sale->customer->present()->getEmail(),
                             'doc' => $sale->customer->document,
-                            'phone_number' => preg_replace('/[^0-9]/', '', $sale->customer->telephone),
-                            'address' => $sale->delivery->street,
-                            'address_number' => $sale->delivery->number,
-                            'address_comp' => $sale->delivery->complement,
-                            'address_district' => $sale->delivery->neighborhood,
-                            'address_city' => $sale->delivery->city,
-                            'address_state' => $sale->delivery->state,
-                            'address_country' => $sale->delivery->country,
-                            'address_zip_code' => preg_replace('/[^0-9]/', '', $sale->delivery->zip_code),
+                            'phone_number' => foxutils()->onlyNumbers($sale->customer->telephone),
+                            'address' => $sale->delivery->street ?? '',
+                            'address_number' => $sale->delivery->number ?? '',
+                            'address_comp' => $sale->delivery->complement ?? '',
+                            'address_district' => $sale->delivery->neighborhood ?? '',
+                            'address_city' => $sale->delivery->city ?? '',
+                            'address_state' => $sale->delivery->state ?? '',
+                            'address_country' => $sale->delivery->country ?? '',
+                            'address_zip_code' => foxutils()->onlyNumbers($sale->delivery->zip_code ?? ''),
                         ],
                         'products' => $dataProducts,
                     ],
@@ -207,16 +206,14 @@ class Whatsapp2Service
                 ];
             }
 
-            $saleIdEncoded = hashids_encode($sale->id, 'sale_id');
-
             $domain = Domain::where('status', Domain::STATUS_APPROVED)
                 ->where('project_id', $sale->project_id)
                 ->first();
             $domainName = $domain->name ?? 'cloudfox.net';
-            $link = "https://checkout.$domainName/pix/$saleIdEncoded";
+            $link = "https://checkout.$domainName/pix/". hashids_encode($sale->id, 'sale_id');
 
             $totalValue = foxutils()->onlyNumbers($sale->sub_total) + foxutils()->onlyNumbers($sale->shipment_value);
-            $totalValue = substr_replace($totalValue, '.', strlen($totalValue) - 2, 0);
+            $totalValue = foxutils()->floatFormat($totalValue);
 
             $data = [
                 'type' => 'order',
@@ -225,10 +222,14 @@ class Whatsapp2Service
                 'order' => [
                     'token' => hashids_encode($sale->checkout_id),
                     'financial_status' => Whatsapp2Integration::STATUS_CANCELLED,
-                    'gateway' => 'cloudfox',
                     'billet_url' => $link,
+                    'gateway' => 'cloudfox',
+                    'checkout_url' => "https://checkout." . $domain->name . "/recovery/" . hashids_encode($sale->checkout_id),
                     'id' => $sale->checkout_id,
-                    'values' => ['total' => $totalValue],
+                    'status' => Whatsapp2Integration::STATUS_CANCELLED,
+                    'values'           => [
+                        'total' => $totalValue,
+                    ],
                     'costumer' => [
                         'name' => $sale->customer->name,
                         'email' => $sale->customer->present()->getEmail(),
