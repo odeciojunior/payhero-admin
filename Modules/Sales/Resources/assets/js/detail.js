@@ -536,10 +536,10 @@ $(() => {
 
         // Taxas detalhadas
         $("#taxas-label").html(
-            sale.percentage_rate
+            sale.tax
                 ? "Taxas (" +
-                sale.percentage_rate +
-                "% + " +
+                sale.tax +
+                " + " +
                 sale.transaction_rate +
                 "): "
                 : "Taxas"
@@ -555,7 +555,7 @@ $(() => {
         }
 
 
-        $("#tax-percentage").html(`Taxa (${sale.percentage_rate}%)`);
+        $("#tax-percentage").html(`Taxa (${sale.tax})`);
         $("#tax-percentage-value").html(`${sale.taxaDiscount}`);
 
         $("#tax-fixed").html("Taxa fixa: ");

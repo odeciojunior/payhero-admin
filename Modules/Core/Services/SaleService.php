@@ -415,8 +415,14 @@ class SaleService
         $totalToCalcTaxReal = $total + $cashbackValue;
 
         if ($userTransaction->tax > 0) {
-            $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->tax / 100));
-            $totalTax += $totalTaxPercentage;
+            if($userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX) {
+                $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->tax / 100));
+                $totalTax += $totalTaxPercentage;
+            }
+            else {
+                $totalTaxPercentage = foxutils()->onlyNumbers($userTransaction->tax);
+                $totalTax += $totalTaxPercentage;
+            }
         }
 
         if ($userTransaction->transaction_rate > 0) {
@@ -477,7 +483,8 @@ class SaleService
         //add details to sale
         $sale->details = (object)[
             'transaction_rate' => FoxUtils::formatMoney($transactionRate / 100),
-            'percentage_rate' => $userTransaction->tax ?? 0,
+            'tax' => ($userTransaction->tax) ? (($userTransaction->tax_type == 1) ? $userTransaction->tax.'%' : FoxUtils::formatMoney(FoxUtils::onlyNumbers($userTransaction->tax) / 100)) : 0,
+            'tax_type' => $userTransaction->tax_type ?? 0,
             'totalTax' => FoxUtils::formatMoney($totalTax / 100),
             'total' => FoxUtils::formatMoney($total / 100),
             'subTotal' => FoxUtils::formatMoney(intval($subTotal) / 100),
