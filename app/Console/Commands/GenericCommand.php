@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class GenericCommand extends Command
 {
@@ -13,5 +14,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
+
     }
 }

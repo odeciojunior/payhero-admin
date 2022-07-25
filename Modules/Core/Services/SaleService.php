@@ -328,6 +328,8 @@ class SaleService
             ->first()
             ->toArray();
 
+            \Log::info(str_replace_array('?',$transactions->getBindings(),$transactions->toSql()));
+
         $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
         $resume['total'] = number_format($resume['total'], 2, ',', '.');
 

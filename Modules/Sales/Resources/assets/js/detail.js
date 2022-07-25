@@ -1417,7 +1417,7 @@ $(() => {
             error: (response) => {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
-                //atualizar(currentPage);
+                //atualizar(currentPage); //ta dando erro de 
             },
             success: (response) => {
                 loadingOnScreenRemove();

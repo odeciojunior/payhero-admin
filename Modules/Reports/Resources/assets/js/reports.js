@@ -5,10 +5,13 @@ $('#company-navbar').change(function () {
     $(
         "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
     ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
+
     $("#select_projects").html('');
+    sessionStorage.removeItem('info');
+
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){            
-            getProjects(data2);
+            getProjects(data2.companies);
         });
 	});
 });
@@ -56,7 +59,7 @@ $(function () {
     $("#select_projects").html('');
 
     getCompaniesAndProjects().done( function (data2){        
-        getProjects(data2);
+        getProjects(data2.companies);
     });    
 
 });
@@ -128,7 +131,7 @@ function changeCalendar() {
     dateRange = $('input[name="daterange"]').val();    
 }
 
-function getProjects(data2)
+function getProjects(companies)
 {    
     loadingOnScreen();
     $(".div-filters").hide();
@@ -140,7 +143,7 @@ function getProjects(data2)
     .done(function(dataSales)
     {        
         $(".div-filters").show();        
-        $.each(data2.companies, function (c, company) {
+        $.each(companies, function (c, company) {
             $.each(company.projects, function (i, project) {
                 if( dataSales.includes(project.id) )
                     $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
@@ -154,7 +157,7 @@ function getProjects(data2)
         }
 
         company = $("#select_projects").val();
-
+console.log(company);
         updateReports();
     }); 
 
@@ -469,7 +472,7 @@ function getSales() {
 
     return $.ajax({
         method: "GET",        
-        url: `${resumeUrl}/sales?project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
+        url: `${resumeUrl}/sales?project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}&status=approved`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
