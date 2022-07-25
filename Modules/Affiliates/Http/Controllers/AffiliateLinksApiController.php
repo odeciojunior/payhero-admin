@@ -80,7 +80,7 @@ class AffiliateLinksApiController extends Controller
 
                 $domain = $affiliate->project->domains->first()->name;
                 if(strpos($link, $domain) === false) {
-                    return response()->json(['message' => 'Link inválido'], 400);
+                    return response()->json(['message' => 'O link deve estar dentro do domínio cadastrado na loja'], 400);
                 }
 
                 if (!empty($affiliate->id)) {

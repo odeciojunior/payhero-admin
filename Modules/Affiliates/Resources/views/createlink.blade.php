@@ -15,7 +15,7 @@
                     <div class="col-md-12">
                         <label for="link-affiliate">Link</label>
                         <div class="input-group mb-3">
-                            <input name="link-affiliate" type="text" id='link-affiliate-update' class="form-control" placeholder="https:\\" maxlength='254' aria-describedby="link-affiliate">
+                            <input name="link-affiliate" type="text" id='link-affiliate-update' class="form-control" placeholder="https://" maxlength='254' aria-describedby="link-affiliate">
                         </div>
                     </div>
                 </div>
