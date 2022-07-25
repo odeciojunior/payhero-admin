@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends("layouts.master")
 
 @section('content')
 
@@ -7,6 +7,8 @@
     @endpush
 
     <div class="page">
+
+        @include('layouts.company-select',['version'=>'mobile'])
 
         <div class="page-header container pb-0" style="display: none !important;">
             <div class="row align-items-center justify-content-between" style="min-height:50px">

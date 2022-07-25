@@ -1,5 +1,5 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
     loadingOnScreen();
 	$("#select_projects").val($("#select_projects option:first").val());
     $(
@@ -40,7 +40,7 @@ $(function () {
     getInfo();
 
     changeCalendar();
-    changeCompany();    
+    changeCompany();
     changeOrigin();
 
     $('.sirius-select1').each(function () {
@@ -128,7 +128,7 @@ function changeCalendar() {
         }
     });
 
-    dateRange = $('input[name="daterange"]').val();    
+    dateRange = $('input[name="daterange"]').val();
 }
 
 function getProjects(companies)
@@ -151,15 +151,15 @@ function getProjects(companies)
         });
         $("#select_projects option:first").attr('selected','selected');
 
-        if(sessionStorage.info) {            
+        if(sessionStorage.info) {
             $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
             $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
         }
 
         company = $("#select_projects").val();
-console.log(company);
+        console.log(company);
         updateReports();
-    }); 
+    });
 
     loadingOnScreenRemove();
 
@@ -226,7 +226,7 @@ function changeOrigin() {
 }
 
 function updateReports()
-{    
+{
     $('.sirius-select-container').addClass('disabled');
     $('input[name="daterange"]').attr('disabled', 'disabled');
 
@@ -619,7 +619,7 @@ function getCoupons() {
     $("#block-coupons").html(skeLoad);
 
     return $.ajax({
-        method: "GET",        
+        method: "GET",
         url: `${resumeUrl}/coupons?project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {
@@ -832,7 +832,7 @@ function getRegions() {
     $("#block-regions").html(skeLoad);
 
     return $.ajax({
-        method: "GET",        
+        method: "GET",
         url: `${resumeUrl}/regions?project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {

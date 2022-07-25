@@ -1,5 +1,5 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
     $("#projeto").find('option').not(':first').remove();
     loadOnTable('#body-table-coupons', '.table-coupons');
     $("#select_projects").html('');
@@ -40,8 +40,8 @@ $(document).ready(function () {
     function getFilters(urlParams = false) {
         let data = {
             'project': $("#projeto").val(),
-            'status': $("#status").val(),            
-            'company': $('#company-navbar').val(),
+            'status': $("#status").val(),
+            'company': $('.company-navbar').val(),
             'date_range': $("#date-filter").val(),
         };
         updateStorage({statusCompany: data["status"], statusCompanyText: $("#status").find('option:selected').text()});
@@ -55,7 +55,7 @@ $(document).ready(function () {
         } else {
             return data;
         }
-    }    
+    }
 
     getCompaniesAndProjects().done( function (data2){
         window.getProjects(data2.companies);
@@ -135,11 +135,11 @@ $(document).ready(function () {
         loadingOnScreen();
         $("#project-empty").hide();
         $("#project-not-empty").show();
-        $("#export-excel").show()        
+        $("#export-excel").show()
         window.fillProjectsSelect()
         .done(function(dataSales)
-        {                  
-            $(".div-filters").show();        
+        {
+            $(".div-filters").show();
             $.each(companies, function (c, company) {
                 $.each(company.projects, function (i, project) {
                     if( dataSales.includes(project.id) )
@@ -148,7 +148,7 @@ $(document).ready(function () {
             });
             $("#projeto option:first").attr('selected','selected');
 
-            if(sessionStorage.info) {            
+            if(sessionStorage.info) {
                 $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
                 $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
             }
@@ -156,13 +156,13 @@ $(document).ready(function () {
             company = $("#projeto").val();
 
             window.atualizar();
-        }); 
-        
+        });
+
         loadingOnScreenRemove();
 
         // $.ajax({
         //     method: "GET",
-        //     url: '/api/projects?select=true&company='+ $('#company-navbar').val(),
+        //     url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
         //     dataType: "json",
         //     headers: {
         //         'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -226,7 +226,7 @@ $(document).ready(function () {
                 $('#body-table-coupons').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
                 $("#body-table-coupons").attr("img-empty") +
                 "'> Nenhum cupom encontrado</td></tr>");
-                
+
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -258,7 +258,7 @@ $(document).ready(function () {
         // if(updateResume) {
         //     resumePending();
         // }
-        
+
     }
 
     $(document).on('keypress', function (e) {
@@ -316,7 +316,7 @@ function changeCompany() {
         // $('.onPreLoadBig').html(skeLoadBig);
         $.ajaxQ.abortAll();
         updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
-        
+
         atualizar();
     });
 }
@@ -324,7 +324,7 @@ function changeCompany() {
 
 function resumePending() {
 
-    $("#total_sales").html(skeLoadMini);    
+    $("#total_sales").html(skeLoadMini);
 
     $.ajax({
         method: "GET",
@@ -355,7 +355,7 @@ function resumePending() {
 // abort all ajax
 $.ajaxQ = (function(){
     var id = 0, Q = {};
-  
+
     $(document).ajaxSend(function(e, jqx){
       jqx._id = ++id;
       Q[jqx._id] = jqx;
@@ -363,7 +363,7 @@ $.ajaxQ = (function(){
     $(document).ajaxComplete(function(e, jqx){
       delete Q[jqx._id];
     });
-  
+
     return {
       abortAll: function(){
         var r = [];
@@ -374,7 +374,7 @@ $.ajaxQ = (function(){
         return r;
       }
     };
-  
+
   })();
 
 let skeLoad = `

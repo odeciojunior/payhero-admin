@@ -14,6 +14,9 @@
 
     <!-- PAGINA INTEIRA -->
     <div class="page" style="padding-bottom: 0;">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <!-- CONTAINER DO CONTEUDO DA PAGINA -->
         <div class="page-content container pr-5" style="padding-top: 0">
 

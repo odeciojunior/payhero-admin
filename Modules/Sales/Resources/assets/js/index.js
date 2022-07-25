@@ -273,7 +273,7 @@ function getFilters(urlParams = false) {
         'cashback': $("#cashback").val(),
         'plan': $('#plan').val(),
         'coupon': $("#cupom").val(),
-        'company': $('#company-navbar').val(),
+        'company': $('.company-navbar').val(),
         'value': $("#valor").val().replace(/[^\d]+/g, ''),
         'email_client': $("#email_cliente").val(),
         'upsell': $("#upsell").val(),
@@ -393,8 +393,8 @@ function hoverBilletPending() {
     }
 }
 
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
     $("#projeto").find('option').not(':first').remove();
     $("#plan").find('option').not(':first').remove();
     $("#projeto").val($("#projeto option:first").val());
@@ -658,7 +658,7 @@ $(document).ready(function () {
 
         // $.ajax({
         //     method: "GET",
-        //     url: "/api/projects?select=true&company="+ $('#company-navbar').val(),
+        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
         //     dataType: "json",
         //     headers: {
         //         Authorization: $('meta[name="access-token"]').attr("content"),
@@ -877,7 +877,7 @@ $(document).ready(function () {
                     list: "plan",
                     search: params.term,
                     project_id: $("#projeto").val(),
-                    company: $("#company-navbar").val()
+                    company: $(".company-navbar").val()
                 };
             },
             method: "GET",
@@ -935,6 +935,6 @@ $(document).ready(function () {
         }
     });
 
-    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    $('.company_name').val( $('.company-navbar').find('option:selected').text() );
 
 });

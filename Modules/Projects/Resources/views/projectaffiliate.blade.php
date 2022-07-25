@@ -8,6 +8,9 @@
 
     <!-- Page -->
     <div class="page">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="" class="page-header container">
             <h1 class="page-title" style="min-height: 28px">
                 <a class="gray" href="/projects" style="outline: none">

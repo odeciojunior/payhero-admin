@@ -54,6 +54,9 @@
 
     <!-- Page -->
     <div class="page mb-0">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container inner-header">
             <header class="top-system">
                 <a href="{!! route('reports.finances') !!}" class="back">

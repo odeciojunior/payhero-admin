@@ -29,8 +29,8 @@ const systemStatus = {
     '': '',
 }
 
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
 	$("#project-select").find('option').not(':first').remove();
     $("#project-select").val($("#project-select option:first").val());
     loadOnTable('#dados_tabela', '#tabela_trackings');
@@ -205,7 +205,7 @@ $(() => {
             'sale': $('#sale').val().replace('#', ''),
             'transaction_status': $("#status_commission").val(),
             'problem': $('#tracking_problem').prop('checked') ? 1 : 0,
-            'company': $('#company-navbar').val(),
+            'company': $('.company-navbar').val(),
         };
         if (urlParams) {
             let params = "";
@@ -264,7 +264,7 @@ $(() => {
 
         // $.ajax({
         //     method: 'GET',
-        //     url: '/api/projects?select=true&affiliate=false&company='+ $('#company-navbar').val(),
+        //     url: '/api/projects?select=true&affiliate=false&company='+ $('.company-navbar').val(),
         //     dataType: 'json',
         //     headers: {
         //         'Authorization': $('meta[name="access-token"]').attr('content'),

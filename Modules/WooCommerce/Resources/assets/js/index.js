@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    $('#company-navbar').change(function () {
-        if (verifyIfCompanyIsDefault()) return;
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
                 companiesAndProjects = data2
@@ -11,11 +11,12 @@ $(document).ready(function () {
     })
 
     companiesAndProjects = '';
-    getCompaniesAndProjects().done(function(data2){
-        companiesAndProjects = data2
 
-        $("#company-navbar-value").val( $('#company-navbar').val() )
-        //$('.company_name').val( $('#company-navbar').find('option:selected').text() );
+    getCompaniesAndProjects().done(function(data){
+        companiesAndProjects = data
+
+        $("#company-navbar-value").val( $('.company-navbar').val() )
+        //$('.company_name').val( $('.company-navbar').find('option:selected').text() );
         if(companiesAndProjects.company_default_fullname.length > 40)
             $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
         else
@@ -74,7 +75,7 @@ $(document).ready(function () {
     function index() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/woocommerce?company="+ $('#company-navbar').val(),
+            url: "/api/apps/woocommerce?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

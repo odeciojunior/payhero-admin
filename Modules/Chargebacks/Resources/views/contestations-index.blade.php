@@ -57,6 +57,9 @@
 
     <!-- Page -->
     <div class="page" style="margin-bottom: 0 !important;">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container pt-35" id="page_header">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-md-6">

@@ -1,19 +1,34 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    loadOnAny('#page-integrates');
-    window.onlyData();
-});
-
 $(document).ready(function () {
 
-    window.onlyData = function(){
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        loadOnAny('#page-integrates');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                $('.company_name').val( companiesAndProjects.company_default_fullname );
+                onlyData();
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        $('.company_name').val( companiesAndProjects.company_default_fullname );
+        refreshIntegrations();
+        createIntegration();
+    });
+
+    function onlyData(){
         $("#content-error").css('display','none');
         $("#content-script").css('display','none');
         $("#card-table-integrate").css('display','none');
         $("#pagination-integrates").css('display','none');
         $.ajax({
             method: "GET",
-            url: "/api/integrations?resume=true&page=1&company_id="+$('#company-navbar').val(),
+            url: "/api/integrations?resume=true&page=1&company_id="+$('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -68,17 +83,12 @@ $(document).ready(function () {
         // 3: 'warning',
     };
 
-    getCompaniesAndProjects().done( function (data){
-        refreshIntegrations();
-        createIntegration();
-    });
-
     function refreshIntegrations(page = 1) {
         loadingOnScreen();
 
         $.ajax({
             method: "GET",
-            url: "/api/integrations?resume=true&page=" + page + "&company_id="+sessionStorage.getItem('company_default'),
+            url: "/api/integrations?resume=true&page=" + page + "&company_id=" + $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -329,7 +339,7 @@ $(document).ready(function () {
                 let description = $("#modal-integrate").find("input[name='description']").val();
                 let tokenTypeEnum = $("#select-enum-list").val();
                 let postback = $("#modal-integrate").find("input[name='postback']").val();
-                let companyHash = $('#company-navbar').val();
+                let companyHash = $('.company-navbar').val();
                 if (description == '') {
                     alertCustom('error', 'O campo Descrição é obrigatório');
                 } else if (!companyHash && tokenTypeEnum == 4) {
@@ -527,5 +537,4 @@ $(document).ready(function () {
         $('#modal-integrate').modal('show');
     }
 
-    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
 });

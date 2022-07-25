@@ -60,7 +60,7 @@ window.loadWithdrawalsTable = function(link = null) {
         method: "GET",
         url: link,
         data: {
-            company_id: $('#company-navbar').val(),
+            company_id: $('.company-navbar').val(),
             gateway_id: window.gatewayCode
         },
         dataType: "json",

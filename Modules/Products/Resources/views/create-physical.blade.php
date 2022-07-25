@@ -8,6 +8,9 @@
 
     <!-- Page -->
     <div class="page" style="margin-bottom: 0 !important; display:none !important;">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div class="page-header container">
             <h1 class="page-title my-10" style="min-height: 28px; color: #707070;">Novo produto físico</h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>

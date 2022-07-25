@@ -14,6 +14,9 @@
 
     <!-- Page -->
     <div class="page">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none !important;" class="page-header container">
             <div class="row jusitfy-content-between" style="min-height:56px">
                 <div class="col-lg-8  align-items-center">

@@ -12,7 +12,7 @@ $(function() {
         $('input[name=daterange]').val(info.calendar);
     }
 
-    getCompaniesAndProjects().done( function (data2){             
+    getCompaniesAndProjects().done( function (data2){
         getProjects(data2.companies);
     });
 });
@@ -24,8 +24,8 @@ let company = '';
 let date = '';
 let origin = 'src';
 
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
     loadingOnScreen();
 	$("#select_projects").val($("#select_projects option:first").val());
     $(
@@ -36,7 +36,7 @@ $('#company-navbar').change(function () {
     sessionStorage.removeItem('info');
 
     updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){            
+        getCompaniesAndProjects().done(function(data2){
             getProjects(data2.companies);
         });
 	});
@@ -423,7 +423,7 @@ function loadFrequenteSales() {
     });
 }
 
-function getProjects(companies) 
+function getProjects(companies)
 {
     loadingOnScreen();
     $(".div-filters").hide();
@@ -434,7 +434,7 @@ function getProjects(companies)
     window.fillProjectsSelect()
     .done(function(dataSales)
     {
-        $(".div-filters").show();        
+        $(".div-filters").show();
 
         $.each(companies, function (c, company) {
             $.each(company.projects, function (i, project) {
@@ -445,11 +445,11 @@ function getProjects(companies)
                 }
             });
         });
-        
+
         $("#select_projects option:first").attr('selected','selected');
 
-        if(sessionStorage.info) {   
-            console.log('setando da sessao');         
+        if(sessionStorage.info) {
+            console.log('setando da sessao');
             $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
             $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
         }
@@ -457,7 +457,7 @@ function getProjects(companies)
         company = $("#select_projects").val();
 
         updateReports();
-    }); 
+    });
 
     loadingOnScreenRemove();
 

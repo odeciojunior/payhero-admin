@@ -8,6 +8,8 @@
 
     <div class="page">
 
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div class="page-header container">
             <div class="row">
                 <div class="col-lg-6 mb-30">

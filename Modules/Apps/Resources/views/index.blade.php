@@ -6,6 +6,9 @@
     @endpush
 
     <div class="page">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none !important;" class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
@@ -170,7 +173,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/apps/notificacoesinteligentes" style='width: 270px;'>
                             <a id="notificacoesinteligentes-bt" href="/apps/notificacoesinteligentes" class="add-btn">
@@ -184,7 +187,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
 
                     {{--
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">

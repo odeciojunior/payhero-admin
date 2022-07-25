@@ -200,64 +200,11 @@ $(() => {
                                 $('#save_load').fadeOut('slow', 'linear');
                                 $('#save_success').fadeIn('slow', 'linear');
 
-                                // inicio: update session storage of company_default and companies/projects
-
-                                $.ajax({
-                                    method: "GET",
-                                    url: `/api/core/usercompanies`,
-                                    dataType: "json",
-                                    headers: {
-                                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                                        'Accept': 'appliation/json',
-                                    },
-                                    error: function error(response) {
-                                        loadingOnScreenRemove();
-                                        errorAjaxResponse(response);
-                                    },
-                                    success: function success(data) {
-                                        data.companies.push({
-                                            "id":"v2RmA83EbZPVpYB",
-                                            "name":"Empresa Demo",
-                                            "company_document_status": "approved",
-                                            "active_flag": 1,
-                                            "projects": [{
-                                                "id" : "v2RmA83EbZPVpYB",
-                                                "name": "CLOUDFOX DEMO LTDA",
-                                                "order_p":1,
-                                                "status":1
-                                            }]
-                                        });
-                                        companies = data.companies;
-                                        company_default = data.company_default;
-                                        company_default_name = data.company_default_name;
-                                        if (!isEmpty(companies)) {
-                                            sessionStorage.removeItem('companies');
-                                            sessionStorage.removeItem('company_default')
-                                            sessionStorage.removeItem('company_default_name')
-                                            sessionStorage.setItem('companies', JSON.stringify(companies));
-                                            sessionStorage.setItem('company_default', company_default);
-                                            sessionStorage.setItem('company_default_name', company_default_name);
-
-                                            $('.company_name').val( company_default_name );
-                                            $('.company_id').val( company_default );
-
-                                            $(".content-error").hide();
-                                            selectCompanies();
-
-                                        } else {
-                                            $(".content-error").show();
-                                            $('#company-select, .page-content').hide();
-                                        }
-                                    }
-                                });
-
-                                // fim: update session storage of company_default
-
                                 setTimeout(function() {
                                     $('#save_success').fadeOut('slow', 'linear');
                                 }, 4000)
                             },
-                            error: function (response){                                
+                            error: function (response){
                                 $('.select-type').removeClass('low-opacity')
                                 $('.visual').removeClass('low-opacity')
                                 $('.payment').removeClass('low-opacity')
@@ -266,7 +213,7 @@ $(() => {
 
                                 $('#save_load').fadeOut('slow', 'linear');
                                 $('#save_error').fadeIn('slow', 'linear');
-                                
+
                                 if(response.responseJSON.message && response.responseJSON.message.search(/demo/) > 0){
                                     $('#save_error p').html(response.responseJSON.message);
                                 }
@@ -365,7 +312,7 @@ $(() => {
 
         $("#cancel_button").on("click", function () {
             fillForm(checkout);
-            $('#company-navbar').val( $('#checkout_editor #companies').val() ).change();
+            $('.company-navbar').val( $('#checkout_editor #companies').val() ).change();
             $("#save_changes").fadeOut("slow", "swing");
         });
 

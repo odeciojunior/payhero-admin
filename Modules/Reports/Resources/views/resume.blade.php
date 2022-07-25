@@ -7,8 +7,10 @@
         <link rel="stylesheet" href="{{ mix('build/layouts/reports/index.min.css') }}">
     @endpush
 
-
     <div class="page mb-0">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container">
             <div class="filter-container row justify-content-between">
 

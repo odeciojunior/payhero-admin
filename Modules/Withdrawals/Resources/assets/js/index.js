@@ -24,7 +24,7 @@ function loadWithdrawalsTable(link = null, quemMeChamou = "ninguém") {
     $.ajax({
         method: "GET",
         url: link,
-        data: {company: $('#company-navbar').val()},
+        data: {company: $('.company-navbar').val()},
         dataType: "json",
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),

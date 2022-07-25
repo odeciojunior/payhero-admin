@@ -23,6 +23,9 @@
 
     <!-- Page -->
     <div class="page">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container">
             <div class="row jusitfy-content-between" style="min-height:56px">
 

@@ -1,21 +1,29 @@
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
-    loadOnAny('.page-content');
-    window.updateUsedApps();
-});
-
 $(document).ready(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        loadOnAny('.page-content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                updateUsedApps();
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
 
     loadingOnScreen();
 
     getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
         getProjects();
     });
 
     function getProjects() {
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&status=active&company='+ sessionStorage.getItem('company_default'),
+            url: '/api/projects?select=true&status=active&company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -36,7 +44,7 @@ $(document).ready(function () {
 
                 if (response.data.length) {
                     $("#project-empty").hide();
-                    window.updateUsedApps();
+                    updateUsedApps();
                 } else {
                     loadingOnScreenRemove();
                 }
@@ -44,7 +52,7 @@ $(document).ready(function () {
         });
     }
 
-    window.updateUsedApps = function () {
+    function updateUsedApps() {
         $.ajax({
             method: 'GET',
             url: '/api/apps',

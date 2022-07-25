@@ -1407,7 +1407,7 @@ $.fn.shake = function () {
 
 function initSiriusSelect(target) {
     let $target = $(target);
-    let classes = Array.from(target[0].classList).filter(e => e !== 'sirius-select').join(' ');
+    let classes = Array.from(target[0].classList).filter(e => (e !== 'sirius-select' && e !== 'company-navbar')).join(' ');
     $target.removeClass(classes);
     if($target.is(':disabled')) classes += ' disabled';
     $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
@@ -1933,7 +1933,7 @@ function getCompaniesAndProjects() {
             if (!isEmpty(companies)) {
                 //$('.company_name').val( company_default_name );
                 $('.company_id').val( company_default );
-                $('#company-navbar').html('');
+                $('.company-navbar').html('');
 
                 for (let i = 0; i < companies.length; i++) {
                     if (company_default === companies[i].id)
@@ -1947,13 +1947,13 @@ function getCompaniesAndProjects() {
                         itemDisabled = '';
 
                     if (companies[i].company_type == '1') {
-                        $('#company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa Física</option>')
+                        $('.company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa Física</option>')
                     } else {
                         if(companies[i].name.length>20)
                             companyName = companies[i].name.substring(0,20)+'...';
                         else
                             companyName = companies[i].name;
-                        $('#company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
+                        $('.company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
                     }
                 }
                 $('#company-select').addClass('d-sm-flex').css('display','block');
@@ -1970,7 +1970,7 @@ function getCompaniesAndProjects() {
 }
 
 function updateCompanyDefault() {
-    var company_id = $('#company-navbar').val()
+    var company_id = $('.company-navbar').val()
     var ajax = $.ajax({
         method: 'POST',
         url: '/api/core/company-default',
@@ -1990,8 +1990,9 @@ function updateCompanyDefault() {
     return ajax;
 }
 
-function verifyIfCompanyIsDefault(){
-    if( $('#company-navbar').find('option:selected').css('font-weight')=='700' ){
+function verifyIfCompanyIsDefault(companyId){
+    $('.company-navbar').val( companyId )
+    if( $('.company-navbar').find('option:selected').css('font-weight')=='700' ){
         $('.sirius-select-options').css('display','none');
         return true;
     }

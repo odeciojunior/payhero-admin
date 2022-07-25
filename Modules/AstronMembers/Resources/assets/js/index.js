@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    $('#company-navbar').change(function () {
-        if (verifyIfCompanyIsDefault()) return;
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
         $('#integration-actions').hide();
         $("#no-integration-found").hide();
         $('#project-empty').hide();
@@ -24,7 +24,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/astronmembers?company="+ $('#company-navbar').val(),
+            url: "/api/apps/astronmembers?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),

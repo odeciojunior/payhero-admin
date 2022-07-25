@@ -8,6 +8,9 @@
     @endpush
 
     <div class="page dashboard">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         @include('dashboard::achievement-details')
         @include('dashboard::onboarding.presentation')
         @include('dashboard::pix.pix')

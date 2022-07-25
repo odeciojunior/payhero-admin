@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    $('#company-navbar').change(function () {
-        if (verifyIfCompanyIsDefault()) return;
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
         $('#integration-actions').hide();
         $("#no-integration-found").hide();
         $('#project-empty').hide();
@@ -25,7 +25,7 @@ $(document).ready(function () {
         getCompanies();
     });
 
-    $("#company-navbar-value").val( $('#company-navbar').val() );
+    $("#company-navbar-value").val( $('.company-navbar').val() );
 
     function getCompanies(loading='y') {
         if(loading=='y')
@@ -86,7 +86,7 @@ $(document).ready(function () {
     function getShopifyIntegrations() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/shopify?company="+ $('#company-navbar').val(),
+            url: "/api/apps/shopify?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),

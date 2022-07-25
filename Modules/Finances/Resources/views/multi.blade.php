@@ -8,6 +8,8 @@
 @section('content')
     <div class="page">
 
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div id="project-empty-title">
             <div class="page-header container px-25 px-md-30" style="padding-bottom: 0; padding-top:30px; display: none;">
                 <div class="col-12 col-md-7 order-0 px-md-15" style="padding: 10px 0 20px">

@@ -9,6 +9,9 @@
 
 
 <div class="page">
+
+    @include('layouts.company-select',['version'=>'mobile'])
+
   <div class="page-content container-fluid">
     <div class="row" data-plugin="matchHeight" data-by-row="true">
       <div class="col-xxl-12 col-lg-12">
@@ -37,7 +40,7 @@
                     </div>
                     <!-- End Widget Sale Bar -->
                   </div>
-        
+
                   <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
                     <!-- Widget Sale Bar -->
                     <div class="card card-inverse card-shadow bg-purple-600 white" id="widgetSaleBar">
@@ -77,7 +80,7 @@
                     </div>
                     <!-- End Widget Sale Bar -->
                   </div>
-                                    
+
 
               </div>
               <div class="row">

@@ -2,8 +2,8 @@ var currentPage = null;
 //var atualizar = null;
 let hasSale = false;
 
-$('#company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault()) return;
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
     $("#project").find('option').not(':first').remove();
     loadOnTable('#body-table-pending', '.table-pending');
     loadOnAny('.number', false, {
@@ -22,7 +22,7 @@ $('#company-navbar').change(function () {
 
     $("#select_projects").html('');
     sessionStorage.removeItem('info');
-    
+
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
             window.getCompanies(data2,'n');
@@ -131,7 +131,7 @@ function atualizar(link = null) {
 */
 function getFilters(urlParams = false) {
     let data = {
-        'company': $('#company-navbar').val(),
+        'company': $('.company-navbar').val(),
         'project': $("#project").val(),
         'client': $("#client").val(),
         'customer_document': $("#customer_document").val(),
@@ -150,9 +150,9 @@ function getFilters(urlParams = false) {
             params += '&' + param + '=' + data[param];
         }
         return encodeURI(params);
-    } 
+    }
 
-    return data;    
+    return data;
 }
 
 $(document).ready(function () {
@@ -186,7 +186,7 @@ $(document).ready(function () {
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
-    
+
     getCompaniesAndProjects().done( function (data){
         window.getCompanies(data);
     });
@@ -216,7 +216,7 @@ $(document).ready(function () {
             window.fillProjectsSelect(data.companies)
         }
         $.ajax({
-            method: "GET",            
+            method: "GET",
             url: '/api/core/companies?select=true',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -248,7 +248,7 @@ $(document).ready(function () {
     }
 
     function getProjects(companies)
-    {    
+    {
         loadingOnScreen();
         $(".div-filters").hide();
         $("#project-empty").hide();
@@ -257,25 +257,25 @@ $(document).ready(function () {
 
         window.fillProjectsSelect()
         .done(function(dataSales)
-        {     
-            $(".div-filters").show();        
+        {
+            $(".div-filters").show();
             $.each(companies, function (c, company) {
                 $.each(company.projects, function (i, project) {
                     if( dataSales.includes(project.id) ){
-                        $("#project").append($("<option>", {value: project.id,text: project.name,}));                        
+                        $("#project").append($("<option>", {value: project.id,text: project.name,}));
                     }
                 });
             });
             $("#project option:first").attr('selected','selected');
 
-            if(sessionStorage.info) {            
+            if(sessionStorage.info) {
                 $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
                 $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
             }
 
             company = $("#project").val();
-            
-        }); 
+
+        });
 
         loadingOnScreenRemove();
     }
@@ -283,7 +283,7 @@ $(document).ready(function () {
     function getAcquirer() {
         $.ajax({
             method: "GET",
-            url: '/api/finances/acquirers/'+ $('#company-navbar').val(),
+            url: '/api/finances/acquirers/'+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -308,7 +308,7 @@ $(document).ready(function () {
         });
     }
 
-    
+
     // function resumePending() {
 
     //     //$("#total_sales").html(skeLoadMini);
@@ -330,7 +330,7 @@ $(document).ready(function () {
     //         success: function success(response) {
     //             //loadOnAny('.number', true);
     //             //$('#total_sales').text('0');
-                
+
     //             if (response.total_sales) {
     //                 $('#total_sales, #total-pending, #total').text('');
     //                 $('#total_sales').text(response.total_sales);
@@ -342,7 +342,7 @@ $(document).ready(function () {
     //         }
     //     });
     // }
-    
+
 
     function resumePending() {
         $("#total-pending, #total_sales").html(skeLoadMini).width('100%');
@@ -375,7 +375,7 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadOnAny('.number', true);
-                //$('#total_sales').text('0');                
+                //$('#total_sales').text('0');
                 if (response.total_sales) {
                     $('#total_sales, #commission_blocked, #total').text('');
                     $('#total_sales').text(response.total_sales);
@@ -492,7 +492,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.company_name').val( $('#company-navbar').find('option:selected').text() );
+    $('.company_name').val( $('.company-navbar').find('option:selected').text() );
 
 });
 
@@ -516,7 +516,7 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
-        
+
     })
     .on('datepicker-open', function () {
         $('.filter-badge-input').removeClass('show');

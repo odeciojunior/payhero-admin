@@ -1,6 +1,6 @@
 $(document).ready( function () {
     $('#checkout_editor #companies').on("change", function () {
-        $('#company-navbar').val( $('#checkout_editor #companies').val() ).change();
+        $('.company-navbar').val( $('#checkout_editor #companies').val() ).change();
     });
     // ----------------------- Funções de Botão ----------------------------
     $("#default_finish_color").on("change", function () {

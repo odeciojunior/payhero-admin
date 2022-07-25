@@ -2823,16 +2823,16 @@ tbody td{
     }
 }
 
-#company-navbar + .sirius-select-container, #company-navbar + .sirius-select-text{
+.company-navbar + .sirius-select-container, .company-navbar + .sirius-select-text{
     border: 1px white solid;
     background-position-x: 92.5%;
     padding-right: 50px;
     background-color: #f4f4f4;
 }
-#company-navbar + .active {
+.company-navbar + .active {
     border: 1px solid #88BFFF;
 }
-#company-navbar + .sirius-select-text{
+.company-navbar + .sirius-select-text{
     color:#15034C; font-weight: 600
 }
 
