@@ -27,7 +27,7 @@ use Modules\Core\Presenters\TransactionPresenter;
  * @property string $release_date
  * @property string $created_at
  * @property string $updated_at
- * @property string $percentage_rate
+ * @property string $tax
  * @property string $transaction_rate
  * @property string $gateway_released_at
  * @property boolean $is_waiting_withdrawal
@@ -57,6 +57,9 @@ class Transaction extends Model
     const TYPE_CONVERTAX = 6;
     const TYPE_REFUNDED = 7;
     const TYPE_CASHBACK = 8;
+
+    const TYPE_PERCENTAGE_TAX = 1;
+    const TYPE_VALUE_TAX = 2;
 
     const STATUS_TRANSFERRED = 1;
     const STATUS_PAID = 2;
@@ -92,7 +95,7 @@ class Transaction extends Model
         'status',
         'status_enum',
         'release_date',
-        'percentage_rate',
+        'tax',
         'transaction_rate',
         'installment_tax',
         'created_at',

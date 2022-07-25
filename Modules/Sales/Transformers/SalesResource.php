@@ -85,7 +85,7 @@ class SalesResource extends JsonResource
             'invoices' => $this->details->invoices ?? null,
             //transaction
             'transaction_rate' => $this->details->transaction_rate ?? null,
-            'percentage_rate' => $this->details->percentage_rate ?? null,
+            'percentage_rate' => $this->details->tax ?? null,
             //extra info
             'total' => $this->details->total ?? null,
             'subTotal' => $this->details->subTotal ?? null,

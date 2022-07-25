@@ -414,8 +414,8 @@ class SaleService
         //$totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         $totalToCalcTaxReal = $total + $cashbackValue;
 
-        if ($userTransaction->percentage_rate > 0) {
-            $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->percentage_rate / 100));
+        if ($userTransaction->tax > 0) {
+            $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->tax / 100));
             $totalTax += $totalTaxPercentage;
         }
 
@@ -477,7 +477,7 @@ class SaleService
         //add details to sale
         $sale->details = (object)[
             'transaction_rate' => FoxUtils::formatMoney($transactionRate / 100),
-            'percentage_rate' => $userTransaction->percentage_rate ?? 0,
+            'percentage_rate' => $userTransaction->tax ?? 0,
             'totalTax' => FoxUtils::formatMoney($totalTax / 100),
             'total' => FoxUtils::formatMoney($total / 100),
             'subTotal' => FoxUtils::formatMoney(intval($subTotal) / 100),
