@@ -63,6 +63,8 @@ class ImportWooCommerceProducts implements ShouldQueue
 
                     $page++;
                     
+                    sleep(10);
+                    
                     $this->dispatch($this->projectId, $this->userId, $page);
                 }
                 
