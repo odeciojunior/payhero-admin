@@ -97,7 +97,11 @@ function distribution() {
         },
         success: function success(response) {
              let { available, blocked, pending, total } = response.data;
-             let series = [available.percentage, pending.percentage, blocked.percentage];
+             let series = [
+                    (available.percentage < 0 ? 0 : available.percentage),
+                    (pending.percentage < 0 ? 0 : pending.percentage),
+                    (blocked.percentage < 0 ? 0 : blocked.percentage)
+                ];
 
              if(total !== null) {
                  distributionHtml = `
@@ -208,6 +212,7 @@ function withdrawals() {
                 let label = [...chart.labels];
                 let withdraw = [...chart.withdrawal.values];
                 let series = [...chart.income.values];
+
                 barGraph(series, label, withdraw);
             } else {
                 $("#draw").html(infoWithdraw);

@@ -136,7 +136,7 @@
                                                         <header class="container">
                                                             <h6 class="font-size-16 gray-700 grey"> Pendentes </h6>
                                                         </header>
-                                                        <div class="onPreLoad" id="block-pending"></div>
+                                                        <div class="onPreLoad report-pending" id="block-pending"></div>
                                                     </div>
 												</div>
 											</div>

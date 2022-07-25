@@ -486,7 +486,7 @@ class ReportFinanceService
             ];
         }
 
-        $resume = $transactions->select(DB::raw('transactions.value'))->get();
+        $resume = $transactions->select(DB::raw('transactions.value, HOUR(sales.start_date) as hour'))->get();
 
         $saleData = [];
 
@@ -1502,6 +1502,7 @@ class ReportFinanceService
                 'Nov' => 'Nov',
                 'Dec' => 'Dez'
             ];
+
             $labelList = [];
             $portugueseLabelList = [];
             while ($dateStart->lessThanOrEqualTo($dateEnd)) {
