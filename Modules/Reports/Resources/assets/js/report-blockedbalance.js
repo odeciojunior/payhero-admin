@@ -147,7 +147,7 @@ window.atualizar = function (link = null) {
                 $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                 $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
             } else {
-                $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
                     $("#dados_tabela").attr("img-empty") +
                     "'>Nenhuma venda encontrada</td></tr>");
             }

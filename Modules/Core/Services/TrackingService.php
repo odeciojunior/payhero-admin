@@ -124,7 +124,7 @@ class TrackingService
                 if ($postDate->lt($productPlanSale->created_at)) {
                     $systemStatusEnum = Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE;
                 }
-            } else {
+            } elseif($apiResult->status !== 'delivered') {
                 $systemStatusEnum = Tracking::SYSTEM_STATUS_NO_TRACKING_INFO;
             }
         } else {

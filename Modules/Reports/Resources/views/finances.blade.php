@@ -128,7 +128,7 @@
                         <div class="primary fc">
                             <div class="card" id="card-commission">
                                 <section class="container pb-20 graph-principal">
-                                    <header class="d-flex title-graph mb-0">
+                                    <header class="d-flex title-graph mb-0 mt-0">
                                         <h5 class="grey font-size-16">
                                             <strong>Comissão</strong>
                                         </h5>
@@ -189,7 +189,7 @@
                         <!-- distribtion -->
                         <div class="distribution fc">
                             <div class="card inner distribution-content" id="card-distribution">
-                                <header class="d-flex title-graph mb-0">
+                                <header class="d-flex title-graph mb-0 mt-0">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
                                     </h5>
@@ -200,7 +200,7 @@
                             <div class="">
                                 <div class="d-flex sub-distribution">
                                     <div class="card inner secondary-blocks" id="card-pending">
-                                        <header class="d-flex title-graph">
+                                        <header class="d-flex title-graph mt-0">
                                             <h5 class="grey font-size-16">
                                                 <strong>Saldo pendente</strong>
                                             </h5>
@@ -209,10 +209,10 @@
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>
                                         </header>
-                                        <div class="onPreLoad no-ske" id="block-pending"></div>
+                                        <div class="onPreLoad no-ske finance-pending" id="block-pending"></div>
                                     </div>
                                     <div class="card inner secondary-blocks" id="card-blockeds">
-                                        <header class="d-flex title-graph">
+                                        <header class="d-flex title-graph mt-0">
                                             <h5 class="grey font-size-16">
                                                 <strong>Saldo retido</strong>
                                             </h5>

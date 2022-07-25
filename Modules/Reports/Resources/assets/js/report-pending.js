@@ -155,6 +155,54 @@ function getFilters(urlParams = false) {
     return data;
 }
 
+function resumePending() {
+
+    $("#total_sales").html(skeLoadMini);
+
+    // loadOnAny('.number', false, {
+    //     styles: {
+    //         container: {
+    //             minHeight: '32px',
+    //             height: 'auto'
+    //         },
+    //         loader: {
+    //             width: '20px',
+    //             height: '20px',
+    //             borderWidth: '4px'
+    //         },
+    //     }
+    // });
+
+    $.ajax({
+        method: "GET",
+        url: '/api/reports/resume-pending-balance',
+        data: getFilters(),
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            //loadOnAny('.number', true);
+            $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            //loadOnAny('.number', true);
+            //$('#total_sales').text('0');
+
+            if (response.total_sales) {
+                $('#total_sales, #total-pending, #total').text('');
+                $('#total_sales').text(response.total_sales);
+                var comission=response.commission.split(/\s/g);
+                $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+            } else {
+                $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
 
     $("#filtros").on("click", function () {
@@ -381,8 +429,8 @@ $(document).ready(function () {
                     $('#total_sales').text(response.total_sales);
                     var comission=response.commission.split(/\s/g);
                     $('#total-pending').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange bold">'+comission[1]+'</strong>');
-                    // var total=response.total.split(/\s/g);
-                    // $('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
+                    //var total=response.total.split(/\s/g);
+                    //$('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
                 } else {
                     $('#total-pending, #total').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>');
                     $('#total_sales').html('<strong class="font-size-24 orange">0</strong>');
@@ -473,7 +521,7 @@ $(document).ready(function () {
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
                 } else {
-                    $('#body-table-pending').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                    $('#body-table-pending').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
                         $("#body-table-pending").attr("img-empty") +
                         "'> Nenhuma venda encontrada </td></tr>");
                 }

@@ -134,7 +134,7 @@
                                         <div class="d-flex justify-content-between box-conversion-state">
                                             <!-- lista de estados -->
                                             <div class="box-states">
-                                                <header class="d-flex title-graph">
+                                                <header class="d-flex title-graph mt-0">
                                                     <h5 class="grey font-size-16 tt-state">
                                                         <strong>Conversão por estado</strong>
                                                     </h5>
@@ -579,9 +579,9 @@
 
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
-                                    <div class="inner-comission sc">
+                                    <div class="inner-comission mkt">
                                         <div class="card inner pad-bottom-0 card-devices-mkt" id="card-devices">
-                                            <header class="d-flex title-graph">
+                                            <header class="d-flex title-graph mt-0">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Dispositivos</strong>
                                                 </h5>
@@ -592,9 +592,9 @@
                                             <div class="d-flex align-items cash-box seller onPreLoad no-ske pad-0" id="block-info-card-conversion"></div>
                                         </div>
                                     </div>
-                                    <div class="inner-comission sc">
+                                    <div class="inner-comission mkt">
                                         <div class="card inner pad-bottom-0 card-coupon" id="card-coupon">
-                                            <header class="d-flex title-graph">
+                                            <header class="d-flex title-graph mt-0">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Cupons</strong>
                                                 </h5>
@@ -611,7 +611,7 @@
                                             </div>
                                         </div>
                                         <div class="card inner pad-bottom-0 card-system" id="card-system">
-                                            <header class="d-flex title-graph">
+                                            <header class="d-flex title-graph mt-0">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Sistemas</strong>
                                                 </h5>
@@ -668,11 +668,11 @@
                                 </div>
                             </div> -->
                             <div class="card big-card-origin" id="card-origin" style="height: 358px;">
-                                <div class="card-body card-origin">
+                                <div class="card-body card-origin pt-12">
                                     <div class="content-info">
                                         <div class="row">
                                             <header class="col-6">
-                                                <h5 class="grey font-size-16">
+                                                <h5 class="grey font-size-16 mt-0">
                                                     <strong>Origens</strong>
                                                 </h5>
                                             </header>
@@ -729,7 +729,7 @@
 
                             <div class="sub-distribution">
                                 <div class="card inner card-most-sales" id="card-most-sales">
-                                    <header class="d-flex title-graph">
+                                    <header class="d-flex title-graph mt-0">
                                         <h5 class="grey font-size-16">
                                             <strong>Vendas mais frequentes</strong>
                                         </h5>

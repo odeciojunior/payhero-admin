@@ -921,19 +921,17 @@ class SaleService
     {
         $cacheName = 'pending-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 120, function() use ($filters) {
-
             $transactions = $this->getSalesPendingBalance($filters);
-            $transactionStatus = implode(',',[Transaction::STATUS_PAID]);
-    
+            $transactionStatus = implode(',', [ Transaction::STATUS_PAID ]);
+
             $resume = $transactions->without(['sale'])
-                ->select(
-                    DB::raw(
-                        "count(sales.id) as total_sales,
-                                sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
-                    )
+            ->select(
+                DB::raw(
+                    "count(sales.id) as total_sales, sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
                 )
-                ->first()
-                ->toArray();
+            )
+            ->first()
+            ->toArray();
 
             $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
 
@@ -953,11 +951,7 @@ class SaleService
             $transactions = Transaction::with($relationsArray)
                 ->where('user_id', auth()->user()->getAccountOwnerId())
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->where(
-                    'transactions.status_enum',
-                    '=',
-                    Transaction::STATUS_PAID
-                )
+                ->where('transactions.status_enum', Transaction::STATUS_PAID)
                 ->whereNull('invitation_id');
 
             // Filtro Company
@@ -998,25 +992,25 @@ class SaleService
                         $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Asaas'))
                             ->where('transactions.created_at', '>', '2021-09-20');
                     })
-                        ->orWhere(function ($qr2) {
-                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
-                        })
-                        ->orWhere(function ($qr2) {
-                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Gerencianet'))
-                                ->where('is_waiting_withdrawal', 0);
-                        })
-                        ->orWhere(function ($qr3) {
-                            $qr3->where('is_waiting_withdrawal', 0)
-                                ->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Getnet'));
-                        })
-                        ->orWhere(function ($qr2) {
-                            if (auth()->user()->show_old_finances) {
-                                $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
-                                    ->orWhere(function ($query) {
-                                        $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
-                                    });
-                            }
-                        });
+                    ->orWhere(function ($qr2) {
+                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
+                    })
+                    ->orWhere(function ($qr2) {
+                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Gerencianet'))
+                            ->where('is_waiting_withdrawal', 0);
+                    })
+                    ->orWhere(function ($qr3) {
+                        $qr3->where('is_waiting_withdrawal', 0)
+                            ->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Getnet'));
+                    })
+                    ->orWhere(function ($qr2) {
+                        if (auth()->user()->show_old_finances) {
+                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
+                                ->orWhere(function ($query) {
+                                    $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
+                                });
+                        }
+                    });
                 });
             }
 
@@ -1031,8 +1025,9 @@ class SaleService
                 function ($querySale) use ($dateRange, $dateType) {
                     $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
-            )->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
+            )
+            ->selectRaw('transactions.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
 
             // Projeto
             if (!empty($filters["project"])) {
@@ -1114,7 +1109,7 @@ class SaleService
     }
 
     public function getPendingBalance($filters)
-    {   
+    {
         $cacheName = 'pending-'.json_encode($filters);
         return cache()->remember($cacheName, 120, function() use ($filters) {
             $transactions = $this->getSalesPendingBalance($filters);
@@ -1123,7 +1118,7 @@ class SaleService
     }
 
     public function getPaginetedBlocked($filters)
-    {        
+    {
         $cacheName = 'blocked-'.json_encode($filters);
         return cache()->remember($cacheName, 120, function() use ($filters) {
             $transactions = $this->getSalesBlockedBalance($filters);

@@ -413,6 +413,7 @@ function loadFrequenteSales() {
                 });
 
                 if(response.data.length < 4 ) {
+                    $('#card-most-sales .scrollbar, .scroll-212').height('auto');
                     salesBlock = `<div>${noListProducts}</div>`;
                     $("#block-sales").append(salesBlock);
                 }

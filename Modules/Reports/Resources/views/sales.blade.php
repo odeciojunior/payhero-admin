@@ -104,7 +104,7 @@
 
             <section class="container box-reports" id="reports-content">
 				<div class="row">
-					<div class="col-12 box-items-finance">
+					<div class="col-12 box-items-finance sc">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card fc no-ske border blue mb-10 onPreLoad" id="sales-transactions"></div>
@@ -128,14 +128,14 @@
                 <div class="row">
                     <div class="col-12 d-flex box-chart-primary">
                         <!-- comission -->
-                        <div class="primary">
+                        <div class="primary sc">
                             <div class="card" id="card-status">
                                 <section class="container pb-20 graph-principal">
-                                    <header class="d-flex title-graph title-graph-sales">
+                                    <header class="d-flex title-graph title-graph-sales mt-0">
                                         <h5 class="grey font-size-16">
                                             <strong>Quantidade</strong>
                                         </h5>
-                                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects">
+                                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects mt-28">
                                             <div class="sirius-select-container sirius-select-inside">
                                                 <select name="status" id="status-graph" class="sirius-select">
                                                     <option value="">Todos os status</option>
@@ -155,7 +155,7 @@
                             </div>
 
                             <div class="">
-                                <div class="d-flex justify-content-between sub-comission">
+                                <div class="d-flex justify-content-between sub-comission sc">
                                     <div class="inner-comission sc">
                                         <div class="card inner card-payments pad-bottom-0 sc" id="card-payments">
                                             <header class="d-flex title-graph mt-0">
@@ -181,7 +181,7 @@
                                     <div class="inner-comission sc">
 
                                         <div class="card inner card-devices" id="card-devices">
-                                            <header class="d-flex title-graph">
+                                            <header class="d-flex title-graph mt-0">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Conversão por dispositivos</strong>
                                                 </h5>
@@ -224,9 +224,9 @@
                         <!-- /comission -->
 
                         <!-- distribtion -->
-                        <div class="distribution">
+                        <div class="distribution sc">
                             <div class="card inner distribution-content sales" id="card-distribution">
-                                <header class="d-flex title-graph title-distribution">
+                                <header class="d-flex title-graph title-distribution mt-0">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
                                     </h5>
@@ -237,7 +237,7 @@
                             <div class="">
                                 <div class="sub-distribution">
                                     <div class="card inner sales-card card-most-sales" id="card-most-sales">
-                                        <header class="d-flex title-graph">
+                                        <header class="d-flex title-graph mt-0">
                                             <h5 class="grey font-size-16">
                                                 <strong>Vendas mais frequentes</strong>
                                             </h5>

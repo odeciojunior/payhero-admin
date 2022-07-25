@@ -210,17 +210,8 @@ function changeOrigin() {
             origin = $(this).val();
 
             $("#origin").val($(this).val());
-            Promise.all([
-                updateSalesByOrigin()
-            ])
-            .then(() => {
-                $('.sirius-select-container').removeClass('disabled');
-                $('input[name="daterange"]').removeAttr('disabled');
-            })
-            .catch(() => {
-                $('.sirius-select-container').removeClass('disabled');
-                $('input[name="daterange"]').removeAttr('disabled');
-            });
+
+            updateSalesByOrigin();
         }
     });
 }
@@ -970,6 +961,9 @@ function updateSalesByOrigin() {
             Accept: "application/json",
         },
         error: function error(response) {
+            $('.sirius-select-container').removeClass('disabled');
+            $('input[name="daterange"]').removeAttr('disabled');
+
             $("#card-origin .ske-load").hide();
             $("#block-origins").html(td);
             $("#pagination").html("");
@@ -979,6 +973,9 @@ function updateSalesByOrigin() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
+            $('.sirius-select-container').removeClass('disabled');
+            $('input[name="daterange"]').removeAttr('disabled');
+
             if (response.data.length == 0) {
                 $("#card-origin .ske-load").hide();
                 $("#block-origins").html(td);
