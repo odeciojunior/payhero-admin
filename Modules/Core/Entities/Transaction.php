@@ -96,10 +96,9 @@ class Transaction extends Model
         'status_enum',
         'release_date',
         'tax',
+        'tax_type',
         'transaction_rate',
         'installment_tax',
-        'created_at',
-        'updated_at',
         'gateway_released_at',
         'is_waiting_withdrawal',
         'withdrawal_id',
@@ -107,6 +106,8 @@ class Transaction extends Model
         'gateway_transferred_at',
         'tracking_required',
         'is_security_reserve',
+        'created_at',
+        'updated_at',
     ];
 
     protected static $logFillable = true;
