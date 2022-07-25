@@ -56,8 +56,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:tickets')->withoutOverlapping()->hourly();
         $schedule->command('verify:tickets-refunded')->withoutOverlapping()->hourly();
 
-        $schedule->command('create:ticket')->withoutOverlapping()->everySixHours();
-
         $schedule->command('command:checkUpdateCompanyGetnet')->sundays()->at('05:00');
         $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('06:30');
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('06:25');
