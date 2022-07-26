@@ -100,6 +100,7 @@ class Transaction extends Model
         'tax_type',
         'transaction_rate',
         'installment_tax',
+        'checkout_tax',
         'gateway_released_at',
         'is_waiting_withdrawal',
         'withdrawal_id',

@@ -70,6 +70,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property int|null $has_pix_key
  * @property string $pix_key_situation
  * @property string|null $installment_tax
+ * @property string|null $checkout_tax
  //* @property string|null $extra_document
  * @property string|null $id_wall_date_update
  * @property string|null $transaction_rate
@@ -157,6 +158,7 @@ class Company extends Model
         'boleto_tax',
         'boleto_rule',
         'installment_tax',
+        'checkout_tax',
         'gateway_release_money_days',
         'transaction_rate',
         'deleted_at',
