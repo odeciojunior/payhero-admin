@@ -41,7 +41,7 @@ class CheckoutService
 
         }
 
-        $dateRange = FoxUtils::validateDateRange(request('date_range'));
+        $dateRange = foxutils()->validateDateRange(request('date_range'));
 
         $abandonedCartsStatus = [
             Checkout::STATUS_RECOVERED,
@@ -137,7 +137,7 @@ class CheckoutService
     {
         try {
             $idEncoded = hashids_encode($sale->id, 'sale_id');
-            if (FoxUtils::isProduction()) {
+            if (foxutils()->isProduction()) {
                 $urlCancelPayment = "https://checkout.cloudfox.net/api/payment/cancel/{$idEncoded}";
             } else {
                 $urlCancelPayment = env('CHECKOUT_URL') . "/api/payment/cancel/{$idEncoded}";
@@ -204,7 +204,7 @@ class CheckoutService
             }
 
             $domain = $sale->project->domains->where('status', 3)->first();
-            if (FoxUtils::isProduction()) {
+            if (foxutils()->isProduction()) {
                 $regenerateBilletUrl = 'https://checkout.cloudfox.net/api/payment/regeneratebillet';
             } else {
                 $regenerateBilletUrl = env(

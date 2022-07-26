@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,6 @@ use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\EmailService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\ShopifyErrors;
 use Modules\Core\Services\ShopifyService;
@@ -27,9 +27,7 @@ use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
-use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\WooCommerceIntegration;
-use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\WooCommerceService;
 
 class SalesApiController extends Controller
@@ -100,7 +98,7 @@ class SalesApiController extends Controller
                 }
             )->log('Exportou tabela ' . $dataRequest['format'] . ' de vendas');
             $user = auth()->user();
-            $filename = 'sales_report_' . Hashids::encode($user->id) . '.csv'; //. $dataRequest['format'];
+            $filename = 'sales_report_' . hashids_encode($user->id) . '.csv'; //. $dataRequest['format'];
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
             return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
         } catch (Exception $e) {
@@ -130,29 +128,9 @@ class SalesApiController extends Controller
     public function refund(Request $request, $saleId)
     {
         try {
+            $postData = request()->all();
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
-
-            if($sale->status != Sale::STATUS_APPROVED) {
-                return response()->json(
-                    ['status' => 'error', 'message' => 'Somente vendas aprovadas podem ser estornadas.'],
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
-
-            if (!in_array($sale->gateway_id, [
-                Gateway::GERENCIANET_PRODUCTION_ID,
-                Gateway::GERENCIANET_SANDBOX_ID,
-                Gateway::ASAAS_PRODUCTION_ID,
-                Gateway::ASAAS_SANDBOX_ID,
-                Gateway::SAFE2PAY_PRODUCTION_ID,
-                Gateway::SAFE2PAY_SANDBOX_ID
-            ])) {
-                return response()->json(
-                    ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
 
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($saleIdDecoded) {
@@ -161,32 +139,21 @@ class SalesApiController extends Controller
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
 
-            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
-            $gatewayService = Gateway::getServiceById($sale->gateway_id);
-            $gatewayService->setCompany($producerCompany);
+            $saleService = new SaleService();
+            $data = $saleService->refund($sale, $postData['refund_observation']);
 
-            if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
-                return response()->json(
-                    ['status' => 'error', 'message' => 'Saldo insuficiente para realizar o estorno'],
-                    Response::HTTP_BAD_REQUEST);
+            if($data['status'] == 'success') {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => $data['message']
+                ], Response::HTTP_OK);
             }
 
-            $refundObservation = $request->input('refund_observation') ?? null;
-            $result = (new CheckoutService())->cancelPaymentCheckout($sale);
-            if ($result['status'] != 'success') {
-                return response()->json(
-                    ['status' => 'error', 'message' => $result['message']],
-                    Response::HTTP_BAD_REQUEST);
-            }
+            return response()->json([
+                    'status' => 'error',
+                    'message' => $data['message']
+            ], Response::HTTP_BAD_REQUEST);
 
-            $gatewayService->cancel($sale,$result['response'], $refundObservation);
-
-            if ( !$sale->api_flag ) {
-                event(new SaleRefundedEvent($sale));
-            }
-
-            return response()->json(['message' => $result['message']], Response::HTTP_OK);
-            
         } catch (Exception $e) {
             report($e);
             return response()->json(
@@ -195,59 +162,21 @@ class SalesApiController extends Controller
         }
     }
 
-    public function refundBillet(Request $request, $saleId): JsonResponse
-    {
-        try {
-            $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
-
-            if(!in_array($sale->gateway_id, [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID])) {
-                return response()->json(
-                    ['status' => 'error', 'message' => 'Estorno de boleto habilitado somente no Vega'],
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
-
-            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
-
-            $gatewayService = Gateway::getServiceById($sale->gateway_id);
-            $gatewayService->setCompany($producerCompany);
-
-            if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
-                return response()->json(
-                    ['status' => 'error', 'message' => 'Saldo insuficiente para realizar o estorno'],
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
-
-            (new SaleService())->refundBillet($sale);
-
-            return response()->json(
-                ['message' => 'Boleto estornado com sucesso'],
-                Response::HTTP_OK
-            );
-        } catch (Exception $e) {
-            report($e);
-            return response()->json(
-                ['status' => 'error', 'error' => 'Erro ao tentar estornar boleto'],
-                Response::HTTP_BAD_REQUEST);
-        }
-    }
-
     public function newOrderShopify(Request $request, $saleId)
     {
         try {
-            if (FoxUtils::isProduction()) {
+            if (foxutils()->isProduction()) {
                 $result = false;
                 $saleModel = new Sale();
-                $sale = $saleModel->with('upsells')->find(Hashids::connection('sale_id')->decode($saleId))->first();
+                $sale = $saleModel->with('upsells')->find(hashids_decode($saleId, 'sale_id'))->first();
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                 activity()->on($saleModel)->tap(
                     function (Activity $activity) use ($saleId) {
                         $activity->log_name = 'visualization';
-                        $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
+                        $activity->subject_id = current(hashids_decode($saleId, 'sale_id'));
                     }
                 )->log('Gerou nova ordem no shopify para transação: #' . $saleId);
-                if (!FoxUtils::isEmpty($shopifyIntegration)) {
+                if (!foxutils()->isEmpty($shopifyIntegration)) {
                     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
                     $result = $shopifyService->newOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
@@ -275,21 +204,21 @@ class SalesApiController extends Controller
 
     public function newOrderWoocommerce(Request $request, $saleId)
     {
-
-
         try {
-            // if (FoxUtils::isProduction()) {
+            if (foxutils()->isProduction()) {
 
                 $saleModel = new Sale();
-                $sale = $saleModel->with('upsells')->find(Hashids::connection('sale_id')->decode($saleId))->first();
+                $sale = $saleModel->with('upsells')->find(hashids_decode($saleId, 'sale_id'))->first();
                 $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
+                
                 activity()->on($saleModel)->tap(
                     function (Activity $activity) use ($saleId) {
                         $activity->log_name = 'visualization';
-                        $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
+                        $activity->subject_id = hashids_decode($saleId, 'sale_id');
                     }
                 )->log('Gerou nova ordem no woocommerce para transação: #' . $saleId);
-                if (!FoxUtils::isEmpty($integration)) {
+
+                if (!foxutils()->isEmpty($integration)) {
                     $service = new WooCommerceService( $integration->url_store, $integration->token_user, $integration->token_pass);
 
 
@@ -319,37 +248,30 @@ class SalesApiController extends Controller
                             $result = json_encode($result);
                             $service->updatePostRequest($request['id'], 1, $result, $order);
 
-
-
                             if($changeToPaidStatus == 1){
-
                                 $result = $service->approveBillet($order, $request['project_id'], $request['sale_id']);
-
                             }
 
                             return response()->json(['message' => 'Ordem criada com sucesso!'], Response::HTTP_OK);
 
-                        }else{
-
+                        } else{
                             return response()->json(['message' => 'Erro ao tentar criar a ordem!'], Response::HTTP_BAD_REQUEST);
-
                         }
 
-
-                    }else{
+                    } else{
                         return response()->json(['message' => 'Requisição não encontrada!'], Response::HTTP_BAD_REQUEST);
-
                     }
 
-                }else {
+                } else {
                     return response()->json(['message' => 'Integração não encontrada'], Response::HTTP_BAD_REQUEST);
                 }
-            // } else {
-            //     return response()->json(
-            //         ['message' => 'Funcionalidade habilitada somente em produção =)'],
-            //         Response::HTTP_OK
-            //     );
-            // }
+
+            } else {
+                return response()->json(
+                    ['message' => 'Funcionalidade habilitada somente em produção =)'],
+                    Response::HTTP_OK
+                );
+            }
         } catch (Exception $e) {
 
             report($e);
@@ -364,7 +286,7 @@ class SalesApiController extends Controller
         try {
             $saleModel = new Sale();
             $sale = explode(" ", $request->input('sale'));
-            $saleId = current(Hashids::connection('sale_id')->decode($sale[0]));
+            $saleId = hashids_decode($sale[0], 'sale_id');
             $sale = $saleModel->with(['customer', 'project.checkoutConfig'])->find($saleId);
             if (empty($sale)) {
                 return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
@@ -388,7 +310,7 @@ class SalesApiController extends Controller
         try {
             $saleRefundHistoryModel = new SaleRefundHistory();
             $data = $request->all();
-            $id = current(Hashids::connection('sale_id')->decode($id));
+            $id = hashids_decode($id, 'sale_id');
             if (!empty($id && !empty($data['name']) && !empty($data['value']))) {
                 $saleRefundHistory = $saleRefundHistoryModel->where('sale_id', $id)->first();
                 if (!empty($saleRefundHistory)) {
@@ -414,12 +336,12 @@ class SalesApiController extends Controller
             $planModel = new Plan();
             $userProjectModel = new UserProject();
 
-            $projectIds = [current(Hashids::decode($data['project_id']))];
+            $projectIds = [hashids_decode($data['project_id'])];
 
             if(is_array($data['project_id'])){
                 $projectIds = [];
                 foreach($data['project_id'] as $project){
-                    array_push($projectIds, current(Hashids::decode($project)));
+                    array_push($projectIds, hashids_decode($project));
                 };
             }
 
@@ -469,10 +391,10 @@ class SalesApiController extends Controller
                 activity()->on($saleModel)->tap(
                     function (Activity $activity) use ($id) {
                         $activity->log_name = 'updated';
-                        $activity->subject_id = current(Hashids::connection('sale_id')->decode($id));
+                        $activity->subject_id = hashids_decode($id, 'sale_id');
                     }
                 )->log('Adicionou observação a venda #' . $id);
-                $sale = $saleModel->find(current(Hashids::connection('sale_id')->decode($id)));
+                $sale = $saleModel->find(hashids_decode($id, 'sale_id'));
                 $sale->update(
                     [
                         'observation' => $request->input('observation'),

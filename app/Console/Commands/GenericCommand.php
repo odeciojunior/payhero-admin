@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ImportShopifyTrackingCodesJob;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
@@ -19,32 +20,26 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $project = Project::find(7149);
-        $integration = $project->shopifyIntegrations->first();
-        $this->shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+        // xGWQmlo3 , VZp9onjG, VgdbRPbZ, K3LKQeVg
+        $saleIdDecoded = hashids_decode('VgdbRPbZ  ', 'sale_id');
+        $sale = Sale::find($saleIdDecoded);
 
-        Sale::with([
-            'productsPlansSale.tracking',
-            'productsPlansSale.product',
-            'productsSaleApi',
-        ])->whereIn('project_id', [6689, 7149])
-            ->where('status', Sale::STATUS_APPROVED)
-            ->whereNotNull('shopify_order')
-            ->whereNotNull('delivery_id')
-            ->whereHas('productsPlansSale', function ($query) {
-                $query->whereDoesntHave('tracking');
-            })->chunk(1000, function ($sales) {
-                foreach ($sales as $sale) {
-                    try {
-                        $fulfillments = $this->shopifyService->findFulfillments($sale->shopify_order);
-                        if (!empty($fulfillments)) {
-                            $this->checkFulfillment($sale, $fulfillments);
-                        }
-                    } catch (\Exception $e) {
-                        report($e);
-                    }
-                }
-            });
+        //$toDay = Carbon::now()->format("Y-m-d");
+
+        dd($sale->payment_method == Sale::BILLET_PAYMENT  || ($sale->payment_method == Sale::PIX_PAYMENT and Carbon::now()->diffInDays($sale->end_date) > 90));
+
+        dump(Carbon::now()->diffInDays($sale->end_date));
+
+        dd(Carbon::now()->diffInDays($sale->end_date) < 90);
+
+        dd($sale->payment_method == Sale::BILLET_PAYMENT  || ($sale->payment_method == Sale::PIX_PAYMENT and Carbon::now()->diffInDays($sale->end_date) > 90));
+        $diffInDays = Carbon::now()->diffInDays($sale->end_date);
+        if(($sale->payment_method == Sale::PIX_PAYMENT) and (Carbon::now()->diffInDays($sale->end_date) > 90)) {
+            dd('mais que 90 dias');
+        }
+
+        dd($sale);
+        //$toDay = Carbon::now()->format("Y-m-d");
     }
 
     private function checkFulfillment(Sale $sale, array $fulfillments)

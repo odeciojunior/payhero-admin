@@ -35,8 +35,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="refund_observation">Causa do estorno</label>
-                <textarea class="form-control" id="refund_observation" rows="3"></textarea>
+                <label for="refund-observation-transaction">Causa do estorno</label>
+                <textarea class="form-control" id="refund-observation-transaction" rows="3"></textarea>
             </div>
             <div class="modal-footer">
                 <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">

@@ -23,9 +23,7 @@ Route::group(
             'uses' => 'SalesApiController@resume',
         ]);
         Route::post('/refund/{transaction_id}', 'SalesApiController@refund')
-        ->middleware('permission:sales_manage');
-        Route::post('/refund/billet/{transaction_id}', 'SalesApiController@refundBillet')
-        ->middleware('permission:sales_manage');
+        ->middleware(['permission:sales_manage', 'permission:finances_manage']);
         Route::post('/newordershopify/{transaction_id}', 'SalesApiController@newOrderShopify')
         ->middleware('permission:sales_manage');
         Route::post('/neworderwoocommerce/{transaction_id}', 'SalesApiController@newOrderWoocommerce')
