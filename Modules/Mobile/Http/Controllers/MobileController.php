@@ -23,7 +23,6 @@ class MobileController extends Controller
     {
         try {
             $companyId = hashids_decode($request->company_id);
-            $status = ($request->status) ? explode(',', $request->status) : null;
 
             $relations = [
                 'sale',
@@ -37,9 +36,16 @@ class MobileController extends Controller
                 ->selectRaw('transactions.*')
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id')
-                ->where('type', Transaction::TYPE_PRODUCER)
                 ->where('company_id', $companyId)
                 ->orderByDesc('sales.start_date');
+
+            if (!$request->status) {
+                $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
+            }
+            else {
+                $status = explode(',', $request->status);
+                $status = in_array(7, $status) ? array_merge($status, [22]) : $status;
+            }
 
             if (!empty($status)) {
                 $sales->whereHas('sale', function ($query) use ($status) {
@@ -53,7 +59,7 @@ class MobileController extends Controller
 
             return SalesResource::collection($sales->get());
         }
-         catch (Exception $e) {
+        catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao carregar vendas'], 400);
         }
