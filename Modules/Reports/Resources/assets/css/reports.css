@@ -463,19 +463,29 @@ h4.number{
     transform: translate(-50%, -50%);
     width: 100%;
 }
-.card-most-sales { height: 308px; }
+/* .card-most-sales { height: 308px; } */
 
 .sales-card .ske-load {
     position: absolute;
-    transform: translate(6%, -35%);
+    transform: translate(6%, -49%);
     width: 89.5%;
+    height: 100px;
 }
 
-@media(min-width: 1341px) {
+@media(min-width: 1220px) {
     .inner-comission.sc { width: 377px; }
+    .inner-comission.mkt { width: 350px; }
+
 }
+
+@media(min-width: 1300px) {
+    .inner-comission.mkt { width: 371px; }
+
+}
+
 @media(min-width: 1371px) {
     .inner-comission.sc { width: 398px; }
+    .inner-comission.mkt { width: 398px; }
 }
 .card-payments { height: 210px; }
 .tp-payment { height: 140px; }
@@ -489,7 +499,7 @@ h4.number{
     position: absolute;
     width: 100%;
     z-index: 4;
-    top: 55%;
+    top: 54%;
     left: 0;
     transform: translate(0, -50%);
 }
@@ -703,7 +713,8 @@ h4.number{
 .block-sales-mkt { position: relative; }
 .block-sales-mkt .ske-load {
     position: absolute;
-    transform: translate(0, -50%);
+    transform: translate(0, -64%);
+    height: 100px;
 }
 
 /* payment options */
@@ -904,7 +915,11 @@ h4.number{
 #block-commission .ske-load,
 #block-status .ske-load {
     position: absolute;
-    transform: translate(0, -40%);
+    transform: translate(0, -47%);
+}
+#block-status .ske-load {
+    height: 263px;
+    transform: translate(0,-50%);
 }
 
 .empty-graph {
@@ -915,10 +930,24 @@ h4.number{
 
 #block-distribution .ske-load {
     position: absolute;
+    transform: translate(0, -45%);
+}
+
+.report-pending .ske-load {
+    position: absolute;
+    width: 100%;
+    z-index: 4;
+    top: 54%;
+    left: 0;
     transform: translate(0, -50%);
 }
-#block-pending .ske-load,
-#block-blockeds .ske-load { position: absolute; }
+
+.finance-pending .ske-load,
+#block-blockeds .ske-load {
+    position: absolute;
+    transform: translate(0, -26%);
+}
+
 
 .card-cashback { height: 148px; }
 .txt-cash { font-size: 12px; }
@@ -1005,6 +1034,20 @@ h4.number{
     height: 102px;
     display: flex;
     flex-direction: column;
+}
+
+/* sales finance card loading*/
+.box-items-finance.sc .ske-load {
+    max-width: 254px;
+    height: 59px;
+    transform: translate(-50%, -55%);
+    position: absolute;
+    left: 50%;
+}
+/* marketing finances card loading*/
+.box-items-finance.mkt .ske-load {
+    height: 58px;
+    transform: translate(0, 12%);
 }
 
 @media(min-width: 1371px) {
@@ -1109,7 +1152,8 @@ h4.number{
     padding-bottom: 10px;
 }
 
-.primary.fc .sub-comission { flex-direction: column; }
+.primary.fc .sub-comission,
+.sub-comission.sc { flex-direction: column; }
 
 @media only screen and (max-width: 768px) {
     .primary { max-width: 638px; }
@@ -1117,34 +1161,42 @@ h4.number{
 
 @media only screen and (min-width: 1220px) {
     .distribution { width: 344px;  }
-    /* .distribution.fc { width: auto;  } */
-    /* .commission.mkt { flex: 0 0 65.8%; } */
-    .commission.mkt { width: 820px; }
+
+    .commission.mkt { width: 734px; }
 
     .box-chart-primary { flex-direction: row; }
-    .primary.fc { width: 774px; }
-    .distribution.fc { width: 318px; }
+
+    .primary.fc, .primary.sc { width: 774px; }
+
+    .distribution.fc, .distribution.sc { width: 318px; }
+
     .inner-comission.flc { width: 350px; }
     .inner-comission.space-mobol { width: 408px; }
-    .primary.fc .sub-comission { flex-direction: row; }
+
+    .primary.fc .sub-comission, .sub-comission.sc { flex-direction: row; }
 }
 
 @media only screen and (min-width: 1341px) {
     .distribution { width: 368px;  }
-}
+    .commission.mkt { width: 767px; }
 
-@media only screen and (min-width: 1341px) {
-    .primary.fc { width: 795px; }
-    .distribution.fc { width: 345px;  }
+    .primary.fc, .primary.sc { width: 795px; }
+
+    .distribution.fc, .distribution.sc { width: 345px;  }
+
     .inner-comission.flc { width: 350px; }
 }
 
 @media only screen and (min-width: 1370px) {
-    .primary { width: 820px; }
+    .primary, .primary.sc { width: 820px; }
+
     .primary.fc { width: 863px; }
 
     .distribution { width: 398px;  }
-    .distribution.fc { width: 353px;  }
+    .distribution.fc { width: 353px; }
+    .distribution.sc { width: 398px; }
+
+    .commission.mkt { width: 820px; }
 
 }
 @media only screen and (min-width: 1600px) {
@@ -1233,6 +1285,8 @@ h4.number{
     stroke: #1BE4A8;
 }
 
+.sub-comission{ flex-direction: column; }
+
 @media (min-width: 1220px) {
     .sub-comission{ flex-direction: row; }
 }
@@ -1249,6 +1303,8 @@ h4.number{
 }
 
 .distribution.fc .sub-distribution { flex-direction: column; }
+
+.distribution.mkt .card-most-sales { width: 100%; }
 
 .box-graph-dist {
     padding: 1.0715rem 1.0715rem 25px 1.0715rem;
@@ -1929,7 +1985,7 @@ h4.number{
 .conversion-colors li,
 .footer-regions .states li {
     list-style: none;
-    height: 30px;    
+    height: 30px;
     text-align: center;
     line-height: 30px;
     margin: 0 0 6px 0;
@@ -1938,8 +1994,8 @@ h4.number{
     border: 1px solid transparent;
 }
 .footer-regions .states li:only-child,
-.conversion-colors li:only-child { 
-    min-height: 35px; 
+.conversion-colors li:only-child {
+    min-height: 35px;
     line-height: 35px;
 }
 .conversion-colors li:last-child,
@@ -2290,7 +2346,7 @@ h4.number{
 
 #card-withdraw  .ske-load {
     position: absolute;
-    transform: translate(0, -50%);
+    transform: translate(0, -43%);
 }
 
 .no-draws {
@@ -2318,7 +2374,7 @@ h4.number{
 
 #card-conversion .ske-load {
     position: absolute;
-    transform: translate(0, -40%);
+    transform: translate(0, -44%);
 }
 
 #card-devices .ske-load,
@@ -2327,15 +2383,24 @@ h4.number{
 #card-coupon .ske-load,
 #container-operational-systems .ske-load {
     position: absolute;
-    transform: translate(0, -30%);
+    transform: translate(0, -48%);
+    height: 100px;
 }
+#card-cashback.card-fc .ske-load { transform: translate(0, -36%); }
+
 #card-orderbump .ske-load,
 #card-abandoned .ske-load,
 #card-recurrence .ske-load,
 #card-upsell .ske-load,
 .sales .card-most-sales .ske-load {
     position: absolute;
-    transform: translate(0, -20%);
+    height: 58px;
+    transform: translate(0, -25%);
+}
+
+#card-abandoned .ske-load {
+    transform: translate(0, -25%);
+    height: 59px;
 }
 
 .sirius-select-inside {
@@ -2459,12 +2524,24 @@ h4.number{
     width: 100%;
 }
 
-.table-striped tbody tr:nth-of-type(2n+1) { height: 51px; }
-.table-striped tbody tr:nth-of-type(2n+2) { height: 51px; }
+.no-data-table {
+    margin: 30px auto;
+    display: block;
+}
+@media(min-width: 1024px) {
+    .table-striped tbody tr:nth-of-type(2n+1) { height: 51px; }
+    .table-striped tbody tr:nth-of-type(2n+2) { height: 51px; }
+
+    .no-data-table {
+        margin: 30px auto;
+        margin-right:12px;
+        display: inline;
+    }
+}
 
 .table-vendas tbody td { color: #636363 !important; }
 
-.table-vendas tbody td:nth-child(1) { text-transform: uppercase; }
+.table-vendas tbody td:nth-child(1) { text-transform: unset; }
 .table-vendas tbody td:nth-child(2) { color: #999 !important; }
 .table-vendas tbody td:nth-child(3) { font-weight: 700; }
 
@@ -2531,3 +2608,6 @@ h4.number{
 }
 
 .no-data-draws h6 { color: #999; }
+
+.mt-28 { margin-top: 28px; }
+.pt-12 { padding-top: 12px; }
