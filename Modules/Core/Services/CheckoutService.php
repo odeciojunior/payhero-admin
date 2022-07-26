@@ -65,6 +65,7 @@ class CheckoutService
 
         $abandonedCarts = Checkout::
         join('checkout_configs','checkouts.project_id','=','checkout_configs.project_id')
+        ->select('checkouts.*')
         ->with(
             [
                 'project.domains' => function ($query) {
@@ -113,7 +114,7 @@ class CheckoutService
         if (!empty($affiliateIds) && count($affiliateIds) > 0) {
             $abandonedCarts->whereIn('affiliate_id', $affiliateIds);
         }
-        //Log::info(str_replace_array('?',$abandonedCarts->getBindings(),$abandonedCarts->toSql()));
+
         return $abandonedCarts->orderBy('checkouts.id', 'DESC')->paginate(10);
     }
 
