@@ -1,23 +1,23 @@
 var exportFormat = null;
 
-$('.company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault($(this).val())) return;
-    $("#project").find('option').not(':first').remove();
-    $("#plan").find('option').not(':first').remove();
-    $("#project").val($("#project option:first").val());
-    $("#plan").val($("#plan option:first").val());
-    loadOnTable("#table_data", "#carrinhoAbandonado");
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.fillProjectsSelect(data2.companies)
-            window.updateSalesRecovery();
-        });
-	});
-});
-
 $(document).ready(function () {
 
-    window.fillProjectsSelect = function(data){
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project").find('option').not(':first').remove();
+        $("#plan").find('option').not(':first').remove();
+        $("#project").val($("#project option:first").val());
+        $("#plan").val($("#plan option:first").val());
+        loadOnTable("#table_data", "#carrinhoAbandonado");
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                fillProjectsSelect(data2.companies)
+                updateSalesRecovery();
+            });
+        });
+    });
+
+    fillProjectsSelect = function(data){
         $.ajax({
             method: "GET",
             url: "/api/recovery/projects-with-recovery",
@@ -65,7 +65,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        window.updateSalesRecovery();
+        updateSalesRecovery();
     });
 
     $("#bt_get_csv").on("click", function () {
@@ -164,51 +164,12 @@ $(document).ready(function () {
         $("#project-empty").hide();
         $("#project-not-empty").show();
         $("#export-excel").show();
-        window.fillProjectsSelect(data.companies)
+        fillProjectsSelect(data.companies)
         $("#project").val($("#project option:first").val());
         $("#plan").val($("#plan option:first").val());
-        window.updateSalesRecovery();
+        updateSalesRecovery();
 
         loadingOnScreenRemove();
-
-        // $.ajax({
-        //     method: "GET",
-        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
-        //     dataType: "json",
-        //     headers: {
-        //         Authorization: $('meta[name="access-token"]').attr("content"),
-        //         Accept: "application/json",
-        //     },
-        //     error: function (response) {
-        //         console.log("entrei erro");
-        //         loadingOnScreenRemove();
-        //         errorAjaxResponse(response);
-        //     },
-        //     success: function (response) {
-        //         if (!isEmpty(response.data)) {
-        //             $("#project-empty").hide();
-        //             $("#project-not-empty").show();
-        //             $("#export-excel").show();
-        //             if (response.data != 'api sales') {
-        //                 $.each(response.data, function (i, project) {
-        //                     $("#project").append(
-        //                         $("<option>", {
-        //                             value: project.id,
-        //                             text: project.name,
-        //                         })
-        //                     );
-        //                 });
-        //             }
-        //             window.updateSalesRecovery();
-        //         } else {
-        //             $("#export-excel").hide();
-        //             $("#project-not-empty").hide();
-        //             $("#project-empty").show();
-        //         }
-
-        //         loadingOnScreenRemove();
-        //     },
-        // });
     }
 
     /**
@@ -261,7 +222,7 @@ $(document).ready(function () {
      * Atualiza tabela de recuperação de vendas
      * @param link
      */
-    window.updateSalesRecovery = function (link = null) {
+    function updateSalesRecovery(link = null) {
         loadOnTable("#table_data", "#carrinhoAbandonado");
 
         // Formata a url
@@ -278,7 +239,7 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: function success(response) {console.log(response)
                 const BOLETO_TYPE = '5'
 
                 $("#table_data").html("");
@@ -300,7 +261,7 @@ $(document).ready(function () {
                 } else {
                     createHTMLTable(response);
                     $("#pagination-salesRecovery").show();
-                    pagination(response, "salesRecovery", window.updateSalesRecovery);
+                    pagination(response, "salesRecovery", updateSalesRecovery);
 
                     $(".copy_link").on("click", function () {
                         var temp = $("<input>");
@@ -926,7 +887,7 @@ $(document).ready(function () {
 
     $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
-            window.updateSalesRecovery();
+            updateSalesRecovery();
         }
     });
 });
