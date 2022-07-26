@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     <div id="next-btn-container" class="text-center" style="display: none">
-                        <p id="selected-option-desc" class="font-weight-400 font-size-12 my-25" style="color: #5B5B5B"></p>
+                        <p id="selected-option-desc" class="font-weight-400 font-size-14 my-25" style="color: #5B5B5B"></p>
                         <a id="selected-option-url" href="#" class="btn btn-primary" style="padding: 12px 0px">Avançar</a>
                     </div>
                 </div>
