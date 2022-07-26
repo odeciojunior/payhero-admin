@@ -917,8 +917,8 @@ h4.number{
     position: absolute;
     transform: translate(0, -47%);
 }
-#block-status .ske-load { 
-    height: 263px; 
+#block-status .ske-load {
+    height: 263px;
     transform: translate(0,-50%);
 }
 
@@ -944,7 +944,7 @@ h4.number{
 
 .finance-pending .ske-load,
 #block-blockeds .ske-load {
-    position: absolute; 
+    position: absolute;
     transform: translate(0, -26%);
 }
 
@@ -1161,18 +1161,18 @@ h4.number{
 
 @media only screen and (min-width: 1220px) {
     .distribution { width: 344px;  }
-    
+
     .commission.mkt { width: 734px; }
 
     .box-chart-primary { flex-direction: row; }
-    
+
     .primary.fc, .primary.sc { width: 774px; }
 
     .distribution.fc, .distribution.sc { width: 318px; }
 
     .inner-comission.flc { width: 350px; }
     .inner-comission.space-mobol { width: 408px; }
-    
+
     .primary.fc .sub-comission, .sub-comission.sc { flex-direction: row; }
 }
 
@@ -1181,7 +1181,7 @@ h4.number{
     .commission.mkt { width: 767px; }
 
     .primary.fc, .primary.sc { width: 795px; }
-    
+
     .distribution.fc, .distribution.sc { width: 345px;  }
 
     .inner-comission.flc { width: 350px; }
@@ -1189,7 +1189,7 @@ h4.number{
 
 @media only screen and (min-width: 1370px) {
     .primary, .primary.sc { width: 820px; }
-    
+
     .primary.fc { width: 863px; }
 
     .distribution { width: 398px;  }
@@ -1985,7 +1985,7 @@ h4.number{
 .conversion-colors li,
 .footer-regions .states li {
     list-style: none;
-    height: 30px;    
+    height: 30px;
     text-align: center;
     line-height: 30px;
     margin: 0 0 6px 0;
@@ -1994,8 +1994,8 @@ h4.number{
     border: 1px solid transparent;
 }
 .footer-regions .states li:only-child,
-.conversion-colors li:only-child { 
-    min-height: 35px; 
+.conversion-colors li:only-child {
+    min-height: 35px;
     line-height: 35px;
 }
 .conversion-colors li:last-child,
@@ -2541,7 +2541,7 @@ h4.number{
 
 .table-vendas tbody td { color: #636363 !important; }
 
-.table-vendas tbody td:nth-child(1) { text-transform: lowercase; }
+.table-vendas tbody td:nth-child(1) { text-transform: unset; }
 .table-vendas tbody td:nth-child(2) { color: #999 !important; }
 .table-vendas tbody td:nth-child(3) { font-weight: 700; }
 
