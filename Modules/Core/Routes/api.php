@@ -29,6 +29,7 @@ Route::group(
     function() {
         Route::get('/core/sac/allow-block/{company_id}/{sale_id}', 'CoreApiController@allowBlockBalance');
         Route::post('/core/sac/ticket-notification/{ticketId}', 'CoreApiController@notifyTicket');
+        Route::post('/core/accounts/bureau-validation/{userId}', 'CoreApiController@checkDocumentOnBureau');
     }
 );
 
