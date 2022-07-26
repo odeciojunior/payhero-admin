@@ -2006,6 +2006,10 @@ tbody td{
     cursor: none !important;
 }
 
+#company-select .sirius-select-container {
+    width: 240px;
+}
+
 #company-select-mobile .sirius-select-text{
     background-color:#fff !important;
 }
