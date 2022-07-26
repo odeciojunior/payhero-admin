@@ -1,6 +1,6 @@
 <div id="modal-refund-transaction" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content p-10" id="modal-refund">
+        <div id="modal-refund" class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title">Estornar transação</h4>
                 <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">

@@ -410,9 +410,15 @@ class SaleService
         //$totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         $totalToCalcTaxReal = $total + $cashbackValue;
 
-        if ($userTransaction->percentage_rate > 0) {
-            $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->percentage_rate / 100));
-            $totalTax += $totalTaxPercentage;
+        if ($userTransaction->tax > 0) {
+            if($userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX) {
+                $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->tax / 100));
+                $totalTax += $totalTaxPercentage;
+            }
+            else {
+                $totalTaxPercentage = foxutils()->onlyNumbers($userTransaction->tax);
+                $totalTax += $totalTaxPercentage;
+            }
         }
 
         if ($userTransaction->transaction_rate > 0) {
@@ -473,7 +479,8 @@ class SaleService
         //add details to sale
         $sale->details = (object)[
             'transaction_rate' => foxutils()->formatMoney($transactionRate / 100),
-            'percentage_rate' => $userTransaction->percentage_rate ?? 0,
+            'tax' => ($userTransaction->tax) ? (($userTransaction->tax_type == 1) ? $userTransaction->tax.'%' : foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->tax) / 100)) : 0,
+            'tax_type' => $userTransaction->tax_type ?? 0,
             'totalTax' => foxutils()->formatMoney($totalTax / 100),
             'total' => foxutils()->formatMoney($total / 100),
             'subTotal' => foxutils()->formatMoney(intval($subTotal) / 100),
@@ -931,19 +938,17 @@ class SaleService
     {
         $cacheName = 'pending-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 120, function() use ($filters) {
-
             $transactions = $this->getSalesPendingBalance($filters);
-            $transactionStatus = implode(',',[Transaction::STATUS_PAID]);
+            $transactionStatus = implode(',', [ Transaction::STATUS_PAID ]);
 
             $resume = $transactions->without(['sale'])
-                ->select(
-                    DB::raw(
-                        "count(sales.id) as total_sales,
-                                sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
-                    )
+            ->select(
+                DB::raw(
+                    "count(sales.id) as total_sales, sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
                 )
-                ->first()
-                ->toArray();
+            )
+            ->first()
+            ->toArray();
 
             $resume['commission'] = foxutils()->formatMoney($resume['commission']);
 
@@ -963,11 +968,7 @@ class SaleService
             $transactions = (new Transaction)->with($relationsArray)
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->where(
-                    'transactions.status_enum',
-                    '=',
-                    Transaction::STATUS_PAID
-                )
+                ->where('transactions.status_enum', Transaction::STATUS_PAID)
                 ->whereNull('invitation_id');
 
             // Filtro Company
@@ -1008,25 +1009,25 @@ class SaleService
                         $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Asaas'))
                             ->where('transactions.created_at', '>', '2021-09-20');
                     })
-                        ->orWhere(function ($qr2) {
-                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
-                        })
-                        ->orWhere(function ($qr2) {
-                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Gerencianet'))
-                                ->where('is_waiting_withdrawal', 0);
-                        })
-                        ->orWhere(function ($qr3) {
-                            $qr3->where('is_waiting_withdrawal', 0)
-                                ->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Getnet'));
-                        })
-                        ->orWhere(function ($qr2) {
-                            if (auth()->user()->show_old_finances) {
-                                $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
-                                    ->orWhere(function ($query) {
-                                        $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
-                                    });
-                            }
-                        });
+                    ->orWhere(function ($qr2) {
+                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
+                    })
+                    ->orWhere(function ($qr2) {
+                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Gerencianet'))
+                            ->where('is_waiting_withdrawal', 0);
+                    })
+                    ->orWhere(function ($qr3) {
+                        $qr3->where('is_waiting_withdrawal', 0)
+                            ->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Getnet'));
+                    })
+                    ->orWhere(function ($qr2) {
+                        if (auth()->user()->show_old_finances) {
+                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
+                                ->orWhere(function ($query) {
+                                    $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
+                                });
+                        }
+                    });
                 });
             }
 
@@ -1041,8 +1042,9 @@ class SaleService
                 function ($querySale) use ($dateRange, $dateType) {
                     $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
-            )->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
+            )
+            ->selectRaw('transactions.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
 
             // Projeto
             if (!empty($filters["project"])) {

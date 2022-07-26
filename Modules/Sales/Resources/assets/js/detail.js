@@ -262,8 +262,9 @@ $(() => {
                     $(".billet-refunded-tax-value").text(
                         response.data.taxaReal ? response.data.taxaReal : ""
                     );
-                    $("#modal-refund-billet").modal("show");
+
                     $("#modal_detalhes").modal("hide");
+                    $("#modal-refund-billet").modal("show");
 
                     $(".btn-confirm-refund-billet").unbind("click");
                     $(".btn-confirm-refund-billet").on("click", function () {
@@ -544,10 +545,10 @@ $(() => {
 
         // Taxas detalhadas
         $("#taxas-label").html(
-            sale.percentage_rate
+            sale.tax
                 ? "Taxas (" +
-                sale.percentage_rate +
-                "% + " +
+                sale.tax +
+                " + " +
                 sale.transaction_rate +
                 "): "
                 : "Taxas"
@@ -563,7 +564,7 @@ $(() => {
         }
 
 
-        $("#tax-percentage").html(`Taxa (${sale.percentage_rate}%)`);
+        $("#tax-percentage").html(`Taxa (${sale.tax})`);
         $("#tax-percentage-value").html(`${sale.taxaDiscount}`);
 
         $("#tax-fixed").html("Taxa fixa: ");
@@ -1362,7 +1363,7 @@ $(() => {
         partial = 0
     ) {
         $(".btn-confirm-refund-transaction").prop('disabled', true);
-        loadingOnChart("#modal-refund");
+        loadingOnChart("#modal-refund-transaction");
         $.ajax({
             method: "POST",
             url: refundUrl,

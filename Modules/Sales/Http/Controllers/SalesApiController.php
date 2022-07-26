@@ -2,21 +2,17 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Events\SaleRefundedEvent;
-use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\EmailService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\ShopifyErrors;
@@ -210,7 +206,7 @@ class SalesApiController extends Controller
                 $saleModel = new Sale();
                 $sale = $saleModel->with('upsells')->find(hashids_decode($saleId, 'sale_id'))->first();
                 $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
-                
+
                 activity()->on($saleModel)->tap(
                     function (Activity $activity) use ($saleId) {
                         $activity->log_name = 'visualization';
