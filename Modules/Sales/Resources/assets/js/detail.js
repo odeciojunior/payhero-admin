@@ -1,7 +1,7 @@
 $(() => {
     // COMPORTAMENTOS DA JANELA
 
-    $("#discount_value").mask("00%", {reverse: true});
+    $("#discount_value").mask("00%", { reverse: true });
 
     $("#apply_discount").on("click", function () {
         if ($("#div_discount").is(":visible")) {
@@ -13,11 +13,11 @@ $(() => {
             $("#discount_type").on("change", function () {
                 if ($("#discount_type").val() == "value") {
                     $("#discount_value")
-                        .mask("#.###,#0", {reverse: true})
+                        .mask("#.###,#0", { reverse: true })
                         .removeAttr("maxlength");
                     $("#label_discount_value").html("Valor (ex: 20,00)");
                 } else {
-                    $("#discount_value").mask("00%", {reverse: true});
+                    $("#discount_value").mask("00%", { reverse: true });
                     $("#label_discount_value").html("Valor (ex: 20%)");
                 }
             });
@@ -194,8 +194,8 @@ $(() => {
         $("#nav-woo").removeClass("show");
 
         $("#modal_detalhes").modal("show");
-        $("#refundAmount").mask("##.###,#0", {reverse: true});
-        $("#refundBilletAmount").mask("##.###,#0", {reverse: true});
+        $("#refundAmount").mask("##.###,#0", { reverse: true });
+        $("#refundBilletAmount").mask("##.###,#0", { reverse: true });
 
         $.ajax({
             method: "GET",
@@ -214,16 +214,16 @@ $(() => {
 
                 $("#refundAmount").val(response.data.total);
                 $("#refundBilletAmount").text(response.data.total);
+
                 $(".btn_refund_transaction").unbind("click");
                 $(".btn_refund_transaction").on("click", function () {
-                    $('#refund_observation').val('');
+                    $('#refund-observation-transaction').val('');
 
-                    let sale = $(this).attr("sale");
                     $("#modal_detalhes").modal("hide");
                     $("#modal-refund-transaction").modal("show");
 
                     $('#asaas_message').html('');
-                    if(response.data.asaas_amount_refund!= ''){
+                    if (response.data.asaas_amount_refund != '') {
                         $('#asaas_message').html(`<p class="gray"> Esta venda já foi antecipada, o valor a ser debitado no extrato será de <strong>${response.data.asaas_amount_refund}</strong></p>`)
                     }
 
@@ -237,34 +237,43 @@ $(() => {
 
                     $(".btn-confirm-refund-transaction").unbind("click");
                     $(".btn-confirm-refund-transaction").on("click", function () {
+
+                        const refund_observation = $("#refund-observation-transaction").val();
+                        if (refund_observation.length < 4) {
+                            alertCustom('error', 'Preencha o motivo do estorno para prosseguir');
+                            return;
+                        }
+
                         let partial = 0;
                         if (document.getElementById("radioPartialRefund").checked) {
                             partial = 1;
                         }
 
                         let refunded_value = $("#refundAmount").val();
-                        refundedClick(
-                            sale,
-                            refunded_value,
-                            partial,
-                            $("#refund_observation").val()
-                        );
+                        refundedClick(refunded_value, refund_observation, response.data.refund_url, partial);
                     });
                 });
 
                 $(".btn_refund_billet").unbind("click");
                 $(".btn_refund_billet").on("click", function () {
-                    var sale = $(this).attr("sale");
+                    $('#refund-observation-billet').val('');
+
                     var refunded_value = response.data.total;
                     $(".billet-refunded-tax-value").text(
                         response.data.taxaReal ? response.data.taxaReal : ""
                     );
-                    $("#modal-refund-billet").modal("show");
+
                     $("#modal_detalhes").modal("hide");
-                    // var refunded_value = $('#refundBilletAmount').val();
+                    $("#modal-refund-billet").modal("show");
+
                     $(".btn-confirm-refund-billet").unbind("click");
                     $(".btn-confirm-refund-billet").on("click", function () {
-                        refundedBilletClick(sale, refunded_value);
+                        const refund_observation = $("#refund-observation-billet").val();
+                        if (refund_observation.length < 4) {
+                            alertCustom('error', 'Preencha o motivo do estorno para prosseguir');
+                            return;
+                        }
+                        refundedBilletClick(refunded_value, refund_observation, response.data.refund_url);
                     });
                 });
             },
@@ -329,7 +338,7 @@ $(() => {
             paymentMethod = 'Boleto';
         }
 
-        $('#comission-details').css('display','flex');
+        $('#comission-details').css('display', 'flex');
 
         $('#sale-code').text(sale.id);
         if (!!sale.upsell) {
@@ -489,13 +498,13 @@ $(() => {
             switch (sale.payment_method) {
                 case 2:
                     $(".text-discount").html("Desconto automático boleto");
-                break;
+                    break;
                 case 4:
                     $(".text-discount").html("Desconto automático pix");
-                break;
+                    break;
                 default:
                     $(".text-discount").html("Desconto automático cartão");
-                break;
+                    break;
             }
 
             $(".automatic-discount-value").show();
@@ -531,7 +540,7 @@ $(() => {
         }
 
         if (sale.status_name == 'refunded') {
-            $('#comission-details').css('display','none');
+            $('#comission-details').css('display', 'none');
         }
 
         // Taxas detalhadas
@@ -692,18 +701,18 @@ $(() => {
         //Ordem Woocommerce
         if (sale.has_woocommerce_integration) {
             $('#nav-woo-tab').show()
-            if(sale.woocommerce_order){
-                var order = 'Status: <strong>'+sale.woocommerce_order.status+'</strong>'
+            if (sale.woocommerce_order) {
+                var order = 'Status: <strong>' + sale.woocommerce_order.status + '</strong>'
                 // console.log(sale)
                 $('#woo_order').html(order)
 
                 $("#resendWoocommerceOrder").addClass("d-none");
                 $("#resendWoocommerceOrder").removeClass("d-block");
                 $("#resendWoocommerceOrderButton").attr("sale", "");
-            }else{
+            } else {
                 $('#woo_order').html('Ordem não encontrada!')
 
-                if(sale.woocommerce_retry_order){
+                if (sale.woocommerce_retry_order) {
 
                     $("#resendWoocommerceOrder").removeClass("d-none");
                     $("#resendWoocommerceOrder").addClass("d-block");
@@ -723,7 +732,7 @@ $(() => {
                     });
                 }
             }
-        }else{
+        } else {
             $('#nav-woo-tab').hide()
 
         }
@@ -796,24 +805,24 @@ $(() => {
             $("#checkout-attempts").text("Quantidade de tentativas: " + sale.attempts).show();
         }
 
-        if (
-            (sale.payment_method == 1 || sale.payment_method == 3 || (sale.payment_method == 4 && !sale.has_withdrawal)) &&
-            (sale.status == 1 || sale.status == 8 || sale.status == 24) &&
-            sale.userPermissionRefunded
-        ) {
-            if (sale.has_contestation) {
-                $("#div_refund_transaction").html(
-                    '<button disabled class="btn btn-danger btn-sm">Estorno desabilitado, venda está em disputa</button>'
-                );
-            } else {
-                $("#div_refund_transaction").html(
+        $("#div_refund").html("");
+        if (sale.refund_enabled) {
+            if (sale.payment_method != 2) {
+                $("#div_refund").html(
                     '<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' +
                     sale.id +
                     ">Estornar transação</button>"
                 );
+            } else {
+                $("#div_refund").html(
+                    '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' + sale.id + ">Estornar boleto</button>"
+                );
             }
-        } else {
-            $("#div_refund_transaction").html("");
+
+        } else if (sale.already_refunded) {
+            $("#div_refund").html(
+                '<a href="/sales/' + sale.id + '/refundreceipt" class="btn btn-sm btn-primary" target="_blank" style="color:white">Comprovante de estorno</a>'
+            );
         }
 
         if (sale.status == 7 || sale.status == 22) {
@@ -825,7 +834,7 @@ $(() => {
         }
 
         if (sale.status == 2 || sale.status == 1) {
-            if ( !sale.api_flag ) {
+            if (!sale.api_flag) {
                 $("#saleReSendEmail").show();
             } else {
                 $("#saleReSendEmail").hide();
@@ -834,24 +843,12 @@ $(() => {
             $("#saleReSendEmail").hide();
         }
 
-        if ( !sale.api_flag ) {
+        if (!sale.api_flag) {
             $("#details-api").hide();
         } else {
             $("#details-api").show();
         }
 
-       if (
-           sale.payment_method == 2 &&
-           sale.status == 1 &&
-           sale.userPermissionRefunded &&
-           (sale.gateway_id == 'BeYEwR3AdgdKykA' || sale.gateway_id == 'ODzj6aGnOgwlK9J') //vega
-       ) {
-           $("#div_refund_billet").html(
-               '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' + sale.id + ">Estornar boleto</button>"
-           );
-       } else {
-            $("#div_refund_billet").html("");
-       }
         if (sale.refund_observation != null) {
             $(".div-refund-observation").show();
             $("#refund-observation")
@@ -882,13 +879,11 @@ $(() => {
             $(".btn-edit-client").hide();
             $("#update-sale-observation").hide();
             $("#saleReSendEmail").hide();
-            $("#div_refund_transaction").hide();
-            $("#div_refund_billet").hide();
+            $("#div_refund").hide();
         } else {
             $(".btn-edit-client").show();
             $("#update-sale-observation").show();
-            $("#div_refund_transaction").show();
-            $("#div_refund_billet").show();
+            $("#div_refund").show();
         }
     }
 
@@ -1094,10 +1089,10 @@ $(() => {
             .mask('+00 (00) 00000-0000');
         $("#client-email").val(client.email).attr("client", client.code);
         $("#client-document").text("CPF: " + client.document);
-        if(client.fraudster) {
+        if (client.fraudster) {
             $("#client-whatsapp-container").hide();
             $('.btn-edit-client').hide();
-        }else{
+        } else {
             $('.btn-edit-client').show();
             $("#client-whatsapp-container").show();
             $("#client-whatsapp").attr("href", client.whatsapp_link);
@@ -1133,16 +1128,16 @@ $(() => {
         let div = "";
         $.each(products, function (index, value) {
             div += '<div class="row justify-content-between mb-15">';
-                div += '<div class="col-lg-2">';
-                    div += '<img src="/build/global/img/produto.svg" width="50px" height="50px" style="border-radius: 6px;">';
-                div += '</div>';
-                div += '<div class="col-md-5 col-lg-6">';
-                    div += '<h4 class="table-title m-0">' + value.name + '</h4>';
-                    div += '<small>' + value.description + '</small>';
-                div += '</div>';
-                div += '<div class="col-md-3 col-lg-2 text-right">';
-                    div += '<p class="sm-text text-muted">' + value.amount + 'x</p>';
-                div += '</div>';
+            div += '<div class="col-lg-2">';
+            div += '<img src="/build/global/img/produto.svg" width="50px" height="50px" style="border-radius: 6px;">';
+            div += '</div>';
+            div += '<div class="col-md-5 col-lg-6">';
+            div += '<h4 class="table-title m-0">' + value.name + '</h4>';
+            div += '<small>' + value.description + '</small>';
+            div += '</div>';
+            div += '<div class="col-md-3 col-lg-2 text-right">';
+            div += '<p class="sm-text text-muted">' + value.amount + 'x</p>';
+            div += '</div>';
             div += '</div>';
 
             $("#table-product").html(div);
@@ -1362,18 +1357,18 @@ $(() => {
 
     //Estornar venda
     function refundedClick(
-        sale,
-        refunded_value = 0,
-        partial = 0,
-        refundObservation
+        refundedValue = 0,
+        refundObservation,
+        refundUrl,
+        partial = 0
     ) {
         $(".btn-confirm-refund-transaction").prop('disabled', true);
-        loadingOnChart("#modal-refund");
+        loadingOnChart("#modal-refund-transaction");
         $.ajax({
             method: "POST",
-            url: "/api/sales/refund/" + sale,
+            url: refundUrl,
             data: {
-                refunded_value: refunded_value,
+                refunded_value: refundedValue,
                 partial: partial,
                 refund_observation: refundObservation,
             },
@@ -1393,7 +1388,7 @@ $(() => {
                 loadingOnChartRemove(".sirius-loading");
                 $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
-                $("#refund_observation").val("");
+                $("#refund-observation-transaction").val("");
                 atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop('disabled', false);
             },
@@ -1401,27 +1396,39 @@ $(() => {
     }
 
     //Estornar boleto
-
-    function refundedBilletClick(sale, refunded_value) {
-        loadingOnScreen();
+    function refundedBilletClick(
+        refundedValue = 0,
+        refundObservation,
+        refundUrl
+    ) {
+        $(".btn-confirm-refund-billet").prop('disabled', true);
+        loadingOnChart("#modal-refund-billet");
         $.ajax({
             method: "POST",
-            url: "/api/sales/refund/billet/" + sale,
-            data: {refunded_value: refunded_value},
+            url: refundUrl,
+            data: {
+                refunded_value: refundedValue,
+                refund_observation: refundObservation,
+            },
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: (response) => {
-                loadingOnScreenRemove();
+                loadingOnChartRemove(".sirius-loading");
+                $("#modal-refund-billet").modal('toggle')
                 errorAjaxResponse(response);
                 atualizar(currentPage);
+                $(".btn-confirm-refund-billet").prop('disabled', false);
             },
             success: (response) => {
-                loadingOnScreenRemove();
+                loadingOnChartRemove(".sirius-loading");
+                $("#modal-refund-billet").modal('toggle')
                 alertCustom("success", response.message);
+                $("#refund-observation-billet").val("");
                 atualizar(currentPage);
+                $(".btn-confirm-refund-billet").prop('disabled', false);
             },
         });
     }
@@ -1488,7 +1495,7 @@ $(() => {
                 method: "POST",
                 url: "/api/sales/saleresendemail",
                 dataType: "json",
-                data: {sale: sale},
+                data: { sale: sale },
                 headers: {
                     Authorization: $('meta[name="access-token"]').attr(
                         "content"
