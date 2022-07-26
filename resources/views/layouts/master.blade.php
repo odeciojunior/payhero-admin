@@ -36,6 +36,7 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}">
         <link rel="mask-icon" href="{{ mix('build/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
         <!-- Stylesheets -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
         <link rel="stylesheet" href="{{ mix('build/layouts/master/master.min.css') }}">
         @stack('css')
         <!-- Google Tag Manager -->

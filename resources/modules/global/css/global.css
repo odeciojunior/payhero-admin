@@ -2837,7 +2837,10 @@ tbody td{
     border: 1px solid #88BFFF;
 }
 .company-navbar + .sirius-select-text{
-    color:#15034C; font-weight: 600
+    color:#15034C;
+    font-family: 'Inter';
+    font-weight: 600;
+    font-size: 16px;
 }
 
 .cloudfox-logo-desktop{
