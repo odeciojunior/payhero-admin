@@ -38,6 +38,7 @@ use Modules\Core\Events\TrackingsExportedEvent;
 use Modules\Core\Events\TrackingsImportedEvent;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 use Modules\Core\Events\UserRegisteredEvent;
+use Modules\Core\Events\UserRegistrationFinishedEvent;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Events\WithdrawalsExportedEvent;
 use Modules\Core\Listeners\AffiliateRequestSendEmailListener;
@@ -89,6 +90,7 @@ use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
+use Modules\Core\Listeners\UserDocumentBureauValidationListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -197,6 +199,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserRegisteredEvent::class => [
             SendEmailRegisteredListener::class,
+        ],
+        UserRegistrationFinishedEvent::class => [
+            UserDocumentBureauValidationListener::class,
         ],
         UpdateCompanyGetnetEvent::class => [
             UpdateCompanyGetnetSendEmailListener::class,
