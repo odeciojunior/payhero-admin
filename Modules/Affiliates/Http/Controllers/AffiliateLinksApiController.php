@@ -52,7 +52,6 @@ class AffiliateLinksApiController extends Controller
             return new AffiliateLinkCollection($links->paginate(5));
 
         } catch (Exception $e) {
-            dd($e->getMessage());
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
@@ -156,7 +155,6 @@ class AffiliateLinksApiController extends Controller
 
                     $update = $linkAffiliate->update(['link' => $link, 'name' => $name]);
                     if ($update) {
-                        dd($update);
                         return response()->json(['message' => 'Link atualizado com sucesso!'], 200);
                     }
                 }
