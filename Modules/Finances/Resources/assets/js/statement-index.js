@@ -1,23 +1,3 @@
-$('.company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault($(this).val())) return;
-    updateCompanyDefault().done( function(){
-        window.gatewayCode = window.location.href.split('/')[4];
-        window.getGateway(window.gatewayCode);
-        var companies = JSON.parse( $companies );
-        $(companies).each(function (index, value) {
-            let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
-            $("#transfers_company_select").append(data);
-            $("#transfers_company_select_mobile").append(data);
-            $("#extract_company_select").append(data);
-            $("#statement_company_select").append(data);
-        });
-        window.checkBlockedWithdrawal();
-        window.updateBalances();
-        window.loadStatementTable();
-        $("#nav-statement").css('display', '');
-    });
-});
-
 $(window).on("load", function(){
 
     const gatewayLogos = {
@@ -96,7 +76,42 @@ $(window).on("load", function(){
         </svg>`
     }
 
-    window.getGateway = function (nome){
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('.company_name').val( $('.company-navbar').first().find('option:selected').text() );
+        loadOnAny(".number", false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
+        $("#table-transfers-body").html('');
+        loadOnTable('#table-transfers-body', '#transfersTable');
+        $("#available-in-period").html('');
+        updateCompanyDefault().done( function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                window.gatewayCode = window.location.href.split('/')[4];
+                getGateway(window.gatewayCode);
+                checkBlockedWithdrawal();
+                updateBalances();
+                loadStatementTable();
+                $("#nav-statement").css('display', '');
+            });
+        });
+    });
+
+    window.gatewayCode = window.location.href.split('/')[4];
+    getGateway(window.gatewayCode)
+
+    function getGateway(nome){
         switch (nome) {
             case 'NzJqoR32egVj5D6':
                 $(".page-title").html(`<a href="/finances">
@@ -140,9 +155,6 @@ $(window).on("load", function(){
                 break;
         }
     }
-
-    window.gatewayCode = window.location.href.split('/')[4];
-    window.getGateway(window.gatewayCode)
 
     $('#date_range').daterangepicker({
         startDate: moment().startOf('week'),
@@ -211,51 +223,15 @@ $(window).on("load", function(){
 
     function getCompanies() {
         loadingOnScreen();
-
-        $.ajax({
-            method: "GET",
-            url: "/api/core/companies?select=true",
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-
-                if (isEmpty(response.data)) {
-                    $('.page-content').hide();
-                    $('.content-error').show();
-                    loadingOnScreenRemove();
-                    return;
-                }
-
-                $('.page-content').show();
-                $('.content-error').hide();
-                $(response.data).each(function (index, value) {
-                    let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
-                    $("#transfers_company_select").append(data);//
-                    $("#transfers_company_select_mobile").append(data);
-                    $("#extract_company_select").append(data);//
-                    $("#statement_company_select").append(data);
-                });
-
-                window.checkBlockedWithdrawal();
-                updateBalances();
-                loadStatementTable();
-                $("#nav-statement").css('display', '');
-                $("#nav-statement-tab").on('click', function () {
-                    $("#nav-statement").css('display', '');
-                });
-
-                $('.company_name').val( $('.company-navbar').first().find('option:selected').text() );
-
-                loadingOnScreenRemove();
-            }
+        checkBlockedWithdrawal();
+        updateBalances();
+        loadStatementTable();
+        $("#nav-statement").css('display', '');
+        $("#nav-statement-tab").on('click', function () {
+            $("#nav-statement").css('display', '');
         });
+        $('.company_name').val( $('.company-navbar').first().find('option:selected').text() );
+        loadingOnScreenRemove();
     }
 
     getCompaniesAndProjects().done( function (data){
@@ -277,7 +253,7 @@ $(window).on("load", function(){
     $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
 
     //Verifica se o saque está liberado
-    window.checkBlockedWithdrawal = function () {
+    function checkBlockedWithdrawal() {
         $.ajax({
             url: "/api/withdrawals/checkallowed",
             dataType: "json",
