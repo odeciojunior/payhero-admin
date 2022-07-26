@@ -15,7 +15,6 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
@@ -354,8 +353,18 @@ class CieloService implements Statement
         return !empty($lastTransaction) ? ['Cielo'] : [];
     }
 
-    public function getGatewayId()
+    public function getGatewayId(): int
     {
-        return FoxUtils::isProduction() ? Gateway::CIELO_PRODUCTION_ID : Gateway::CIELO_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::CIELO_PRODUCTION_ID : Gateway::CIELO_SANDBOX_ID;
+    }
+
+    public function refundEnabled(): bool
+    {
+        return false;
+    }
+
+    public function canRefund(Sale $sale): bool
+    {
+        return false;
     }
 }
