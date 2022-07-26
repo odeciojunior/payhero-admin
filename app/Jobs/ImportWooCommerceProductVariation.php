@@ -64,8 +64,7 @@ class ImportWooCommerceProductVariation implements ShouldQueue
         } catch (Exception $e) {
             
             
-            Log::debug($e);
-            // report($e);
+            report($e);
 
             
         }
