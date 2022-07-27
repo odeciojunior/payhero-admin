@@ -73,20 +73,20 @@ class CompanyBalanceService
         }
 
         // Checks if the request has the 'is_mobile' parameter
-        if (!$request->has('is_mobile')) {
+        if ($request->has('is_mobile')) {
 
             // Formats gateway values
             foreach ($gatewaysBalances as &$gatewayBalance) {
                 foreach ($gatewayBalance as &$data) {
-                    $data = is_int($data) ? foxutils()->formatMoney($data / 100) : $data;
+                    $data = is_int($data) ? number_format(intval($data) / 100, 2, ',', '.') : $data;
                 }
             }
 
             // Formats the total available
-            $totalAvailable = is_int($totalAvailable) ? foxutils()->formatMoney($totalAvailable / 100) : $totalAvailable;
+            $totalAvailable = is_int($totalAvailable) ? number_format(intval($totalAvailable) / 100, 2, ',', '.') : $totalAvailable;
 
             // Formats the total balance
-            $totalBalance = is_int($totalBalance) ? foxutils()->formatMoney($totalBalance / 100) : $totalBalance;
+            $totalBalance = is_int($totalBalance) ? number_format(intval($totalBalance) / 100, 2, ',', '.') : $totalBalance;
         }
 
         return [
