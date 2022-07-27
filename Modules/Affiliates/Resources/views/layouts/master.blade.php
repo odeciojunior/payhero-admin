@@ -17,6 +17,7 @@
           content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
     <meta name="user-id" content="{{ \Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id) }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
+    <meta name="user-id" content="{{ hashids_encode(auth()->user()->id) }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/favicon-32x32.png') }}">

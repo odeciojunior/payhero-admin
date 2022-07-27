@@ -19,7 +19,6 @@ use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Events\BilletExpiredEvent;
 use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Entities\SaleLog;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class BoletoService
@@ -93,12 +92,12 @@ class BoletoService
                             $products = json_decode($sale->products);
                             foreach ($products as $product) {
                                 if ($product->type_enum === Product::TYPE_DIGITAL && !empty($product->url)) {
-                                    $product->url = FoxUtils::getAwsSignedUrl($product->url, $product->expiration);
+                                    $product->url = foxutils()->getAwsSignedUrl($product->url, $product->expiration);
                                     ProductPlanSale::where('id', $product->pps_id)->update(['temporary_url' => $product->url]);
                                 } else {
                                     $product->url = '';
                                 }
-                                $product->photo = FoxUtils::checkFileExistUrl($product->photo) ? $product->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
+                                $product->photo = foxutils()->checkFileExistUrl($product->photo) ? $product->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
                             }
 
                             $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -125,7 +124,7 @@ class BoletoService
 
                             $domain = Domain::select('name')->where('project_id', $sale->project_id)->where('status', 3)->first();
                             $domainName = $domain->name??'cloudfox.net';
-                            $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
+                            $boletoLink = "https://checkout.{$domainName}/order/".hashids_encode($sale->id, 'sale_id')."/download-boleto";
 
                             $saleData = (object)[
                                 'id' => $sale->id,
@@ -304,7 +303,7 @@ class BoletoService
                                 ->where('status', $domainPresent->getStatus('approved'))
                                 ->first();
                             $domainName = $domain->name??'cloudfox.net';
-                            $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($boleto->id)."/download-boleto";
+                            $boletoLink = "https://checkout.{$domainName}/order/".hashids_encode($boleto->id, 'sale_id')."/download-boleto";
 
                             $subTotal = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                             $boleto->shipment_value = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
@@ -500,7 +499,7 @@ class BoletoService
                                     ->where('status', 3)
                                     ->first();
                                 $domainName = $domain->name??'cloudfox.net';
-                                $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($boleto->id)."/download-boleto";
+                                $boletoLink = "https://checkout.{$domainName}/order/".hashids_encode($boleto->id, 'sale_id')."/download-boleto";
 
                                 if (!empty($domain) && !empty($clientEmail)) {
                                     if (stristr($clientEmail, 'invalido') === false) {
@@ -675,7 +674,7 @@ class BoletoService
                                 $domain = $domainModel->where('project_id', $project->id)
                                     ->where('status', $domainPresenter->getStatus('approved'))->first();
                                 $domainName = $domain->name??'cloudfox.net';
-                                $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($boleto->id)."/download-boleto";
+                                $boletoLink = "https://checkout.{$domainName}/order/".hashids_encode($boleto->id, 'sale_id')."/download-boleto";
 
                                 if (!empty($domain) && !empty($clientEmail)
                                     && stristr($clientEmail, 'invalido') === false) {
@@ -840,7 +839,7 @@ class BoletoService
         try {
             $boletos = Sale::where(
                     [
-                        ['payment_method', Sale::BOLETO_PAYMENT],
+                        ['payment_method', Sale::BILLET_PAYMENT],
                         ['status', Sale::STATUS_PENDING],
                         [
                             DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),

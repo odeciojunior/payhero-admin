@@ -39,14 +39,13 @@
                                     <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
                                 </div>
 
-                                <div class="form-group col-12 col-md-7 input-file-container">
+                                <div class="col-12 col-md-7 input-file-container">
                                     <label>Arquivo do produto</label>
                                     <input class="input-file" name="digital_product_url" id="digital_product_url" type="file">
                                     <div class="form-group d-flex pt-10">
                                         <label tabindex="0" for="digital_product_url" class="input-file-trigger mb-0 px-15 py-5">Escolher arquivos</label>
                                         <span id="file_return" class="ml-20 pt-10"></span>
                                     </div>
-                                    <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
                                 </div>
 
                                 <div class="col-12 col-md-5 div-expiration-time">
@@ -56,6 +55,14 @@
                                         <div class="input-group-append">
                                             <span class="input-group-text font-weight-bold">HORA(S)</span>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <small class="text-center text-muted mt-15" style="width: 100%">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
+                                    <div class="d-flex flex-row align-items-center mt-10 px-2 py-1 rounded" style="width: fit-content; background: #F4F6FB;">
+                                        <img src="{{ mix('build/global/img/icon-info-plans-c.svg') }}" width="9" height="9" />
+                                        <span class="font-size-10 ml-2" style="color: #636363">Essa opção é exclusiva para produtos digitais.</span>
                                     </div>
                                 </div>
 

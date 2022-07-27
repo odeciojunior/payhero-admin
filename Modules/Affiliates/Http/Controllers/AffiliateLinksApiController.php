@@ -37,6 +37,12 @@ class AffiliateLinksApiController extends Controller
                     ->orWhere('price', 'like', '%'. str_replace(array('R', '$', ' ', '.', ','), array('', '', '', '', '.'),$request->input('plan')). '%')
                     ->orWhere('description', 'like', '%' . $request->input('plan') . '%');
                 });
+
+                $union = AffiliateLink::whereHas('affiliate', function($q) use ($userId, $projectId) {
+                    $q->where('user_id', $userId)->where('project_id', $projectId);
+                })->with('affiliate.project.domains', 'plan');
+                $union->where('affiliate_links.name', 'like', '%' . $request->input('plan') . '%');
+                $links->union($union);
             }
 
             $links = $links->whereHas('affiliate.project.domains', function($query) {
@@ -59,9 +65,10 @@ class AffiliateLinksApiController extends Controller
         try {
             $affiliateId = current(Hashids::decode($request->input('affiliate')));
             $link = $request->input('link-affiliate');
+            $name = $request->input('link-affiliate-name');
 
             $request->validate(['link-affiliate' => 'required|max:254']);
-            if (!empty($affiliateId) && !empty($link)) {
+            if (!empty($affiliateId) && !empty($link) && !empty($name)) {
 
                 $affiliate = Affiliate::with(['project.domains' => function($query) {
                                         $query->where('status', 3);
@@ -72,12 +79,13 @@ class AffiliateLinksApiController extends Controller
 
                 $domain = $affiliate->project->domains->first()->name;
                 if(strpos($link, $domain) === false) {
-                    return response()->json(['message' => 'Link inválido'], 400);
+                    return response()->json(['message' => 'O link deve estar dentro do domínio cadastrado na loja'], 400);
                 }
 
                 if (!empty($affiliate->id)) {
                     $affiliateLink = AffiliateLink::create([
                                                                 'link'         => $link,
+                                                                'name'         => $name,
                                                                 'affiliate_id' => $affiliateId,
                                                         ]);
                     if($affiliateLink) {
@@ -129,8 +137,9 @@ class AffiliateLinksApiController extends Controller
             $request->validate(['link' => 'required|max:254']);
             $linkId = current(Hashids::decode($id));
             $link = $request->input('link');
+            $name = $request->input('name');
 
-            if (!empty($linkId) && !empty($link)) {
+            if (!empty($linkId) && !empty($link) && !empty($name)) {
 
                 $linkAffiliate = AffiliateLink::with('affiliate')->find($linkId);
                 if($linkAffiliate->affiliate->user_id == auth()->user()->getAccountOwnerId()) {
@@ -144,7 +153,7 @@ class AffiliateLinksApiController extends Controller
                         return response()->json(['message' => 'Link inválido'], 400);
                     }
 
-                    $update = $linkAffiliate->update(['link' => $link]);
+                    $update = $linkAffiliate->update(['link' => $link, 'name' => $name]);
                     if ($update) {
                         return response()->json(['message' => 'Link atualizado com sucesso!'], 200);
                     }

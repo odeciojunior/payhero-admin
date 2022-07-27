@@ -7,7 +7,7 @@ namespace Modules\Core\Events;
 use Illuminate\Broadcasting\Channel;
 use Modules\Core\Entities\Sale;
 
-class BilletRefundedEvent
+class ManualRefundEvent
 {
     /**
      * @var Sale

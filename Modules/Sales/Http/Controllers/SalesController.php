@@ -64,7 +64,7 @@ class SalesController extends Controller
                 ->whereHas('sale', function ($query) {
                     $query
                     ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
-                    ->orWhere('payment_method',  Sale::BOLETO_PAYMENT)
+                    ->orWhere('payment_method',  Sale::BILLET_PAYMENT)
                     ->orWhere('payment_method',  Sale::PIX_PAYMENT);
                 })->first();
 

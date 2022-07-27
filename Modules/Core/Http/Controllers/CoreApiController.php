@@ -5,11 +5,13 @@ namespace Modules\Core\Http\Controllers;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Ticket;
 use Illuminate\Routing\Controller;
+use Modules\Core\Events\UserRegistrationFinishedEvent;
 use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
@@ -33,37 +35,36 @@ class CoreApiController extends Controller
     public function verifyAccount($id)
     {
         try {
-            $userModel = new User();
             $userService = new UserService();
 
             $companyModel = new Company();
             $companyService = new CompanyService();
 
-            $user = User::find(current(Hashids::decode($id)));
+            $user = User::find(hashids_decode($id));
 
             $userInformations = UserInformation::where('document', $user->document)->exists();
 
             $userStatus = null;
-            $userAddressDocument = $userModel->present()->getAddressDocumentStatus($user->address_document_status);
-            $userPersonaltDocument = $userModel->present()->getPersonalDocumentStatus($user->personal_document_status);
+            $userAddressDocument = $user->present()->getAddressDocumentStatus($user->address_document_status);
+            $userPersonaltDocument = $user->present()->getPersonalDocumentStatus($user->personal_document_status);
             $userRedirect = null;
             if ($userService->haveAnyDocumentPending()) {
-                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
+                $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
                 $userRedirect = '/personal-info';
             }
 
             if ($userService->haveAnyDocumentAnalyzing()) {
-                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_ANALYZING);
+                $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_ANALYZING);
                 $userRedirect = '/personal-info';
             }
 
             if ($userService->haveAnyDocumentApproved()) {
-                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_APPROVED);
+                $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_APPROVED);
                 $userRedirect = '/personal-info';
             }
 
             if ($userService->haveAnyDocumentRefused()) {
-                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_REFUSED);
+                $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_REFUSED);
                 $userRedirect = '/personal-info';
             }
 
@@ -90,7 +91,7 @@ class CoreApiController extends Controller
                         $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_PENDING);
                         $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyPending->address_document_status);
                         $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyPending->contract_document_status);
-                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyPending->id);
+                        $companyRedirect = '/companies/company-detail/'. hashids_decode($companyPending->id);
                     }
 
                     $companyAnalyzing = $companyService->companyDocumentAnalyzing();
@@ -98,7 +99,7 @@ class CoreApiController extends Controller
                         $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_ANALYZING);
                         $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyAnalyzing->address_document_status);
                         $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyAnalyzing->contract_document_status);
-                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyAnalyzing->id);
+                        $companyRedirect = '/companies/company-detail/'. hashids_decode($companyAnalyzing->id);
                     }
 
                     $companyRefused = $companyService->companyDocumentRefused();
@@ -106,7 +107,7 @@ class CoreApiController extends Controller
                         $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_REFUSED);
                         $companyAddressDocument = $companyModel->present()->getAddressDocumentStatus($companyRefused->address_document_status);
                         $companyContractDocument = $companyModel->present()->getContractDocumentStatus($companyRefused->contract_document_status);
-                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyRefused->id);
+                        $companyRedirect = '/companies/company-detail/'. hashids_decode($companyRefused->id);
                     }
                 }
             }
@@ -116,8 +117,8 @@ class CoreApiController extends Controller
             return response()->json([
                 'data' => [
                     'account' => [
-                        'status' => $userModel->present()->getAccountStatus($user->account_is_approved),
-                        'type' => $userModel->present()->getAccountType($user->id, $user->account_owner_id),
+                        'status' => $user->present()->getAccountStatus($user->account_is_approved),
+                        'type' => $user->present()->getAccountType($user->id, $user->account_owner_id),
                     ],
                     'user' => [
                         'status' => $userStatus,
@@ -177,7 +178,7 @@ class CoreApiController extends Controller
                 $companyDocumentApproved = $companyService->companyDocumentApproved();
                 if (empty($companyDocumentApproved) && !empty($companyDocumentRefused)) {
                     $refused = true;
-                    $companyCode = Hashids::encode($companyDocumentRefused->id);
+                    $companyCode = hashids_decode($companyDocumentRefused->id);
                     if ($companyDocumentRefused->company_type == $companyDocumentRefused->present()->getCompanyType(
                             'physical person'
                         )
@@ -434,5 +435,19 @@ class CoreApiController extends Controller
             'expires_at' => Carbon::parse($bonusBalance->expires_at)->format('d/m/Y'),
             'used_percentage' => floor(100 - ($bonusBalance->current_value * 100 / $bonusBalance->total_value))
         ]);
+    }
+
+    public function checkDocumentOnBureau(string $userId) {
+        try {
+            $user = User::findOrFail(hashids_decode($userId));
+            event(new UserRegistrationFinishedEvent($user));
+            return response('', Response::HTTP_NO_CONTENT);
+        } catch (ModelNotFoundException $e) {
+            report($e);
+            return response('User not found.', 404);
+        } catch (Exception $e) {
+            report($e);
+            return response('Internal server error.', 500);
+        }
     }
 }

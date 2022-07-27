@@ -88,7 +88,7 @@ class DomainRecord extends Model
     /**
      * @return BelongsTo
      */
-    public function domainsRecords(): BelongsTo
+    public function domain(): BelongsTo
     {
         return $this->belongsTo(Domain::class);
     }

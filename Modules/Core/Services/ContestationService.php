@@ -327,7 +327,7 @@ class ContestationService
             'attempts' => $sale->attempts,
             'shipment_value' => $sale->shipment_value,
             'transaction_rate' => $sale->details->transaction_rate ?? null,
-            'percentage_rate' => $sale->details->percentage_rate ?? null,
+            'tax' => $sale->details->tax ?? null,
             'total' => $sale->details->total ?? null,
             'subTotal' => $sale->details->subTotal ?? null,
             'discount' => $sale->details->discount ?? null,

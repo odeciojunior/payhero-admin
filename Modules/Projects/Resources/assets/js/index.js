@@ -95,9 +95,10 @@ $(function () {
 
                         $("#data-table-projects").append(data);
                         if (verifyAccountFrozen()) {
-                            $("#btn-add-project").hide();
+                            $("#new-store-button").hide();
+
                         } else {
-                            $("#btn-add-project").show();
+                            $("#new-store-button").show();
                         }
                     });
                     verifyHasOnlyOne();

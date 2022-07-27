@@ -383,6 +383,24 @@ jQuery(function () {
         $('#new-product-modal').show();
     });
 
+    $('.new-product-btn').on('click', function () {
+        $('.new-product-btn').removeClass('active');
+        $(this).addClass('active');
+
+        if ($(this).attr('data-add-url') === '/products/create/physical') {
+            $('#selected-option-desc').text('Em vendas de produtos físicos, será solicitado o rastreio para liberação da comissão da venda.');
+        }
+
+        if ($(this).attr('data-add-url') === '/products/create/digital') {
+            $('#selected-option-desc').text('Ao selecionar produto digital, avance e preencha os dados.');
+        }
+
+        $('#selected-option-url').attr('href', $(this).attr('data-add-url'));
+
+        $('#next-btn-container').addClass('d-flex flex-column')
+            .show();
+    });
+
     $("#btn-filtro").on("click", function () {
         if (storeTypeProduct().getTypeProducts != $("#type-products option:selected").val()
             || storeTypeProduct().getName != $('#name').val()

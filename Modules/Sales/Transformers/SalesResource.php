@@ -2,8 +2,8 @@
 
 namespace Modules\Sales\Transformers;
 
+use Carbon\Carbon;
 use Exception;
-use Google\Service\ShoppingContent\Amount;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
@@ -13,10 +13,8 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\WooCommerceIntegration;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\WooCommerceService;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class SalesResource
@@ -30,6 +28,8 @@ class SalesResource extends JsonResource
      */
     public function toArray($request)
     {
+        $sale = Sale::find($this->id);
+
         $user = auth()->user();
         $userPermissionRefunded = false;
         if ($user->hasAnyPermission(['sales_manage','finances_manage'])) {
@@ -46,23 +46,27 @@ class SalesResource extends JsonResource
 
         $urlCheckout ="https://checkout.{$domainName}/order/";
         if (!empty($domain->name)) {
-            if (config('app.env') == 'homolog') {
-                $urlCheckout = "https://checkout-test.cloudfox.net/order/";
-            }            
-            $thankPageUrl = $urlCheckout . $hashSaleId;
+            $thankPageUrl = "https://checkout.{$domain->name}/order/" . hashids_encode($this->id, 'sale_id');
+        }
+        if(!foxutils()->isProduction()) {
+            $thankPageUrl = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/order/' . hashids_encode($this->id, 'sale_id');
         }
 
         if($user->company_default==Company::DEMO_ID){
             $urlCheckout = "https://demo.cloudfox.net/order/";
             $thankPageUrl = $urlCheckout . $hashSaleId;
         }
+        // if($this->progressive_discount){
+        //     $total = (foxutils()->formatMoney( (foxutils()->onlyNumbers($this->details->total) - $this->progressive_discount) / 100) );
+        //     $this->details->total = $total;
+        // }
 
-        if ($this->payment_method == 4 && $this->status <> Sale::STATUS_APPROVED) {
-            $thankLabelText = 'Link página de Qrcode:';
-        }        
-        
-        $boletoLink = $urlCheckout.$hashSaleId."/download-boleto";
-        
+        $boletoLink = "https://checkout.{$domainName}/order/".hashids_encode($this->id, 'sale_id'). "/download-boleto";
+
+        if(!foxutils()->isProduction()) {
+            $boletoLink = env('CHECKOUT_URL', 'http://dev.checkout.com').'/order/'.hashids_encode($this->id, 'sale_id')."/download-boleto";
+        }
+
         $data = [
             'id' => hashids_encode($this->id, 'sale_id'),
             'upsell' => hashids_encode($this->upsell_id, 'sale_id'),
@@ -82,17 +86,18 @@ class SalesResource extends JsonResource
             'boleto_digitable_line' => $this->boleto_digitable_line,
             'boleto_due_date' => $this->boleto_due_date,
             'attempts' => $this->attempts,
-            'shipment_value' => FoxUtils::formatMoney(FoxUtils::onlyNumbers($this->shipment_value) / 100),
+            'shipment_value' => foxutils()->formatMoney(foxutils()->onlyNumbers($this->shipment_value) / 100),
             'cupom_code' => $this->cupom_code,
             //invoices
             'invoices' => $this->details->invoices ?? null,
             //transaction
             'transaction_rate' => $this->details->transaction_rate ?? null,
-            'percentage_rate' => $this->details->percentage_rate ?? null,
+            'tax' => $this->details->tax ?? null,
+            'tax_type' => $this->details->tax_type ?? null,
             //extra info
             'total' => $this->details->total ?? null,
             'subTotal' => $this->details->subTotal ?? null,
-            'progressive_discount' => FoxUtils::formatMoney($this->progressive_discount / 100,) ?? null,
+            'progressive_discount' => foxutils()->formatMoney($this->progressive_discount / 100,) ?? null,
             'discount' => $this->details->discount ?? null,
             'comission' => $this->details->comission ?? 0 + ($this->cashback->value ?? 0),
             'convertax_value' => $this->details->convertax_value ?? null,
@@ -100,7 +105,7 @@ class SalesResource extends JsonResource
             'taxaReal' => $this->details->taxaReal ?? null,
             'taxaDiscount' => $this->details->taxaDiscount ?? null,
             'totalTax' => $this->details->totalTax ?? null,
-            'installment_tax_value' => FoxUtils::formatMoney($this->installment_tax_value / 100,),
+            'installment_tax_value' => foxutils()->formatMoney($this->installment_tax_value / 100,),
             'release_date' => $this->details->release_date,
             'affiliate_comission' => $this->details->affiliate_comission,
             'shopify_order' => $this->shopify_order ?? null,
@@ -118,12 +123,12 @@ class SalesResource extends JsonResource
             'thank_label_text' => $thankLabelText,
             'company_name' => $this->details->company_name,
             'has_order_bump' => $this->has_order_bump,
-            'has_contestation' => $this->contestations->count() ? true : false,
-            'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
+            'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? foxutils()->formatMoney($this->cashback->value / 100) : 0):0,
             'has_cashback' => $this->cashback->value ?? false,
             'api_flag' => $this->api_flag,
-            'has_withdrawal' => !empty($this->details->has_withdrawal),
-            'gateway_id' => hashids_encode($this->gateway_id)
+            'refund_enabled' => ($this->status == Sale::STATUS_APPROVED and (Gateway::getServiceById($this->gateway_id)->refundEnabled()) and $userPermissionRefunded),
+            'refund_url' => env('APP_URL', 'http://dev.checkout.com'). '/api/sales/refund/'.hashids_encode($this->id, 'sale_id'),
+            'already_refunded' => (new SaleService)->alreadyRefunded($sale)
         ];
 
         $shopifyIntegrations = [];
@@ -188,7 +193,7 @@ class SalesResource extends JsonResource
         }
 
         $data['total_parcial'] = foxutils()->onlyNumbers($data['total']) + foxutils()->onlyNumbers($data['cashback_value']);
-        $data['total_parcial'] = FoxUtils::formatMoney($data['total_parcial'] / 100);
+        $data['total_parcial'] = foxutils()->formatMoney($data['total_parcial'] / 100);
 
         return $data;
     }
@@ -198,6 +203,6 @@ class SalesResource extends JsonResource
         $cashbackValue = !empty($this->cashback) ? $this->cashback->value:0;
         $saleTax = (new SaleService)->getSaleTaxRefund($this,$cashbackValue);
 
-        return FoxUtils::formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100);
+        return foxutils()->formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100);
     }
 }

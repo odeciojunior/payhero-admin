@@ -399,11 +399,17 @@
                         <label id="refundBilletAmount"></label>
                     </strong>
                 </div>
+
+                <div class="form-group">
+                    <label for="refund-observation-billet">Causa do estorno</label>
+                    <textarea class="form-control" id="refund-observation-billet" rows="3"></textarea>
+                </div>
+
                 <div class="modal-footer">
                     <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                         Fechar
                     </a>
-                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-billet" total="" data-dismiss="modal">
+                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-billet" total="" >
                         Estornar
                     </button>
                 </div>

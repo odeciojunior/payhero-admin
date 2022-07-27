@@ -77,14 +77,14 @@
                                 Links
                             </a>
                         </li>
-                        <li class="nav-item tab_settings_affiliate-panel" role="presentation"
-                            style="margin-left: auto;margin-right: 10px">
-                            <a id="tab_settings_affiliate" class="nav-link"
-                               data-toggle="tab" href="#tab_settings_affiliate-panel"
-                               aria-controls="tab_settings_affiliate" role="tab">
-                                <img height="15" src="{{ mix('build/global/img/svg/settings.svg') }}"/>
-                            </a>
-                        </li>
+{{--                        <li class="nav-item tab_settings_affiliate-panel" role="presentation"--}}
+{{--                            style="margin-left: auto;margin-right: 10px">--}}
+{{--                            <a id="tab_settings_affiliate" class="nav-link"--}}
+{{--                               data-toggle="tab" href="#tab_settings_affiliate-panel"--}}
+{{--                               aria-controls="tab_settings_affiliate" role="tab">--}}
+{{--                                <img height="15" src="{{ mix('build/global/img/svg/settings.svg') }}"/>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
                     </ul>
                 </div>
             </div>
@@ -93,16 +93,16 @@
                     <div class="tab-content">
                         <!-- Painel de Pixels -->
                         <div class="tab-pane active" id="tab_pixels-panel" role="tabpanel">
-                            @include('pixels::index')
+                            @include('pixels::affiliates')
                         </div>
                         <!--- Painel de Planos -->
                         <div class="tab-pane" id="tab_links-panel" role="tabpanel">
                             @include('affiliates::links')
                         </div>
                         <!--- Painel de Configurações -->
-                        <div class="tab-pane" id="tab_settings_affiliate-panel" role="tabpanel">
-                            @include('projects::editprojectaffiliate')
-                        </div>
+{{--                        <div class="tab-pane" id="tab_settings_affiliate-panel" role="tabpanel">--}}
+{{--                            @include('projects::editprojectaffiliate')--}}
+{{--                        </div>--}}
                     </div>
                 </div>
             </div>

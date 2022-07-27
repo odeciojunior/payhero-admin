@@ -58,6 +58,7 @@
         @include('layouts.company-select',['version'=>'mobile'])
 
         <div style="display: none" class="page-header container inner-header">
+            @can('report_sales')
             <header class="top-system">
                 <a href="{!! route('reports.finances') !!}" class="back">
                     <svg style="margin-right: 10px;" width="27" height="16" viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,6 +67,7 @@
                     Voltar para Financeiro
                 </a>
             </header>
+            @endcan
 
             <div class="row align-items-center justify-content-between top-inner-reports">
                 <div class="col-8">
