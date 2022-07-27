@@ -58,11 +58,14 @@ class TrackingmoreService
             return $result;
         } else {
             switch (true) {
-                case strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber):
+                case preg_match('/^\d{14}$/', $trackingNumber):
                     $carrierCode = 'dpd-brazil'; //jadlog
                     break;
-                case preg_match('/^[A-Z]{2}[0-9]{9}BR$/', $trackingNumber):
+                case preg_match('/^[A-Z]{2}\d{9}BR$/', $trackingNumber):
                     $carrierCode = 'brazil-correios';
+                    break;
+                case preg_match('/^LP00516\d{9}/', $trackingNumber);
+                    $carrierCode = 'ltexp';
                     break;
                 default:
                     $carrierCode = "cainiao";

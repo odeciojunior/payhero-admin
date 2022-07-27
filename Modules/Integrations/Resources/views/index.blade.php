@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-4 text-right">
-                        <a href="https://documenter.getpostman.com/view/15800813/Tzz7PdVU" class="font-weight-bold d-flex justify-content-end align-items-center" style="line-height: 46px;">
+                        <a href="https://docs.cloudfox.net/" target="_blank" class="font-weight-bold d-flex justify-content-end align-items-center" style="line-height: 46px;">
                             <span>Acesse a documentação da API</span>
                             <span class="o-arrow-right-1 ml-15" style="color: #2E85EC;" aria-hidden="true"></span>
                         </a>

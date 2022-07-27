@@ -11,7 +11,7 @@ label {
     margin: 8px auto;
 }
 
-a, 
+a,
 a:hover,
 .o-arrow-right-1::before {
     text-decoration: none;
@@ -48,7 +48,7 @@ a:hover,
 }
 
 .btn-cancelar:hover,
-.btn-excluir:hover, 
+.btn-excluir:hover,
 .btn-converter:hover {
     background-color: #FFF;
 }
@@ -59,7 +59,7 @@ a:hover,
 }
 
 #modal-converte h3, #modal-converte p.title{
-    color: #707070;
+    color: #464646;
     font-style: normal;
     font-weight: 700;
     line-height: 32px;
@@ -71,22 +71,26 @@ a:hover,
 }
 
 #modal-converte p.title{
-    font-size: 24px;
+    font-size: 22px;
     margin-top: 16px;
 }
 
 #modal-converte p.aviso{
-    color: #87898E;
-    font-size: 16px;
+    color: #5B5B5B;
+    font-size: 14px;
     font-style: Medium;
-    line-height: 24px;
+    line-height: 20px;
+}
+
+#modal-converte .close:focus {
+    outline: none;
 }
 
 .o-bin-1::before {
 	-webkit-text-stroke: 1px;
 }
 
-.form-group input, 
+.form-group input,
 .form-group textarea,
 .form-group select,
 .input-group-text {
@@ -207,7 +211,7 @@ a:hover,
     font-weight: bold;
 }
 
-.input-file-trigger {    
+.input-file-trigger {
     color: #3B8CED;
     cursor: pointer;
     background-color: #F8FDFF;

@@ -8,25 +8,69 @@
     @endpush
 
         <div class="page">
-            <div style="display: none" class="page-header container">
-                <div class="row align-items-center justify-content-between" style="min-height: 50px;">
+            <div style="display: none" class="page-header container inner-header">
+                @can('report_sales')
+                <header class="top-system">
+                    <a href="{!! route('reports.marketing') !!}" class="back">
+                        <svg style="margin-right: 10px;" width="27" height="16" viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M26 9C26.5523 9 27 8.55228 27 8C27 7.44772 26.5523 7 26 7V9ZM0.292892 7.29289C-0.0976315 7.68342 -0.0976315 8.31658 0.292892 8.70711L6.65685 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928932C7.68054 0.538408 7.04738 0.538408 6.65685 0.928932L0.292892 7.29289ZM26 7L1 7V9L26 9V7Z" fill="#636363"/>
+                        </svg>
+                        Voltar para Marketing
+                    </a>
+                </header>
+                @endcan
+
+                <div class="row align-items-center justify-content-between top-inner-reports">
                     <div class="col-8">
-                        <h1 class="page-title">Utilização de Cupons</h1>
-                        <span type="hidden" class="error-data"></span>
+                        <h1 class="d-flex title-system">
+                            <span class="box-title ico-cupons">Cupons</span>
+                            Cupons
+                        </h1>
+                        <!-- <h1 class="page-title">Cupons</h1>
+                        <span type="hidden" class="error-data"></span> -->
                     </div>
                 </div>
             </div>
             <div id="project-not-empty" style="display: none">
-                <div id="reports-content" class="page-content container" style="padding-top: 0">
+
+                <section class="container box-inner-reports" id="reports-content">
+                    <div class="row" style="display: none;">
+                        <div class="col-12 box-items-finance pending">
+                            <div class="row mb-20 pending-blocked">
+                            @if(!auth()->user()->hasRole('attendance'))
+                                <div class="fianance-items box-inner-items col-md-3 col-6 pr-5 pr-md-15">
+                                    <div class="finance-card border orange mb-10 block-result">
+                                        <span class="title">Total pendente</span>
+                                        <div class="d-flex">
+                                            <span class="detail"></span>
+                                            <strong class="number" id='total-pending'>0</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="fianance-items box-inner-items col-md-3 col-6 pr-5 pr-md-15">
+                                    <div class="finance-card border blue mb-10 block-result">
+                                        <span class="title">Quantidade de vendas</span>
+                                        <div class="d-flex">
+                                            <strong class="number" id="total_sales">0</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div id="reports-content" class="page-content container inner-reports-content">
                     <div class="row justify-content-between">
                         <div class="col-lg-12">
                             <form id='filter_form'>
                                 <div id="" class="card shadow p-20">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                            <label for="projeto">Lojas</label>
+                                            <label for="projeto">Loja</label>
                                             <select name='select_project' id="projeto" class="sirius-select">
-                                                <option value="">Todas lojas</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -45,13 +89,19 @@
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                             <div class="form-icons">
                                                 <label for="date_range" >Data</label>
-                                                <i style="right: 25px;bottom: 21px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-20"></i>
-                                                <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly style="height: 49px;">
+                                                <div class="col-12 mb-10 date-report">
+                                                    <div class="row align-items-center form-icons box-select coupons">
+                                                        <input id="date-filter" type="text" name="daterange" class="font-size-14" value="" readonly>
+                                                        <i style="right:16px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                            <button id="bt_filtro" class="btn btn-primary w-full" style="padding: 14px 15px;margin-top: 27px !important;">
-                                                <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar filtros
+                                            <button id="bt_filtro" class="btn btn-primary w-full coupons-btn">
+                                                <img style="height: 12px; margin-right: 4px; visibility: hidden;" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">
+                                                Aplicar filtros
+                                                <img style="height: 12px; margin-right: 4px; visibility: hidden;" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">
                                             </button>
                                         </div>
                                     </div>
@@ -87,9 +137,9 @@
                                     <table class="table-coupons table table-striped" style="width:100%;margin: auto;">
                                         <thead>
                                         <tr>
-                                            <td class="table-title">Código cupom</td>
+                                            <td class="table-title">Cupom</td>
                                             <td class="table-title">Loja</td>
-                                            <td class="table-title">Quantidade utilizada</td>
+                                            <td class="table-title">Utilizados</td>
                                         </tr>
                                         </thead>
                                         <tbody id="body-table-coupons"  img-empty="{!! mix('build/global/img/geral-1.svg')!!}">

@@ -27,30 +27,34 @@
                         <div class="col-md-9 pl-10">
                             <div class="card-body">
                                 <div class="row justify-content-between align-items-baseline">
-                                    <div class="col-md-6">
-                                        <div class="row row-flex row-title">
+                                    <div class="col-md-12">
+                                        <!-- <div class="row row-flex row-title">
                                             <h4 class="title-pad mr-5"></h4>
                                             <span id="show-status"
                                                   class="text-white details-text md p-2 pr-4 pl-4 badge-pill"></span>
+                                        </div> -->
+                                        <div class="row d-flex row-title justify-content-between pt-0 align-items-start">
+                                            <div class="col-9 title-pad s-title pl-10 pl-sm-0"></div>
+                                            <div id="show-status" class="col-2 text-white text-center details-text my-5 ml-10 ml-sm-0 badge-pill badge-success"></div>
                                         </div>
-                                        <small class="card-text gray" id="created_at"></small>
+                                        <small class="card-text gray font-size-14" id="created_at"></small>
                                     </div>
                                 </div>
                                 <div class='row'>
                                     <div class='col-md-6'>
                                         <h5 class=""><strong> Descrição </strong></h5>
-                                        <p id="show-description" class="card-text sm"></p>
+                                        <p id="show-description" class="card-text sm font-size-14"></p>
                                         <h5 class=""><strong> Produtor </strong></h5>
-                                        <p id="show-producer" class="card-text sm"></p>
+                                        <p id="show-producer" class="card-text sm font-size-14"></p>
                                         <h5 class=""><strong> Comissão </strong></h5>
-                                        <p id="show-commission" class="card-text sm"></p>
+                                        <p id="show-commission" class="card-text sm font-size-14"></p>
                                     </div>
                                     <div class='col-md-6'>
                                         <h5 class=""><strong> Dias para liberar dinheiro </strong></h5>
-                                        <p class="card-text sm"><span id='show-billet-release'></span></p>
+                                        <p class="card-text sm font-size-14"><span id='show-billet-release'></span></p>
 
                                         <h5 class=""><strong> Duração do cookie </strong></h5>
-                                        <p id="show-cookie-duration" class="card-text sm"></p>
+                                        <p id="show-cookie-duration" class="card-text sm font-size-14"></p>
                                     </div>
                                 </div>
                             </div>
@@ -70,14 +74,14 @@
                                 Links
                             </a>
                         </li>
-                        <li class="nav-item tab_settings_affiliate-panel" role="presentation"
-                            style="margin-left: auto;margin-right: 10px">
-                            <a id="tab_settings_affiliate" class="nav-link"
-                               data-toggle="tab" href="#tab_settings_affiliate-panel"
-                               aria-controls="tab_settings_affiliate" role="tab">
-                                <img height="15" src="{{ mix('build/global/img/svg/settings.svg') }}"/>
-                            </a>
-                        </li>
+{{--                        <li class="nav-item tab_settings_affiliate-panel" role="presentation"--}}
+{{--                            style="margin-left: auto;margin-right: 10px">--}}
+{{--                            <a id="tab_settings_affiliate" class="nav-link"--}}
+{{--                               data-toggle="tab" href="#tab_settings_affiliate-panel"--}}
+{{--                               aria-controls="tab_settings_affiliate" role="tab">--}}
+{{--                                <img height="15" src="{{ mix('build/global/img/svg/settings.svg') }}"/>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
                     </ul>
                 </div>
             </div>
@@ -86,16 +90,16 @@
                     <div class="tab-content">
                         <!-- Painel de Pixels -->
                         <div class="tab-pane active" id="tab_pixels-panel" role="tabpanel">
-                            @include('pixels::index')
+                            @include('pixels::affiliates')
                         </div>
                         <!--- Painel de Planos -->
                         <div class="tab-pane" id="tab_links-panel" role="tabpanel">
                             @include('affiliates::links')
                         </div>
                         <!--- Painel de Configurações -->
-                        <div class="tab-pane" id="tab_settings_affiliate-panel" role="tabpanel">
-                            @include('projects::editprojectaffiliate')
-                        </div>
+{{--                        <div class="tab-pane" id="tab_settings_affiliate-panel" role="tabpanel">--}}
+{{--                            @include('projects::editprojectaffiliate')--}}
+{{--                        </div>--}}
                     </div>
                 </div>
             </div>

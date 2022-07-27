@@ -83,7 +83,7 @@ class UpdateTransactionsReleaseDate extends Command
                             }
                             if ($user->has_security_reserve && is_null($transaction->invitation_id)) {
                                 //reserva de segurança
-                                if ($releaseCount == 20) {
+                                if ($releaseCount >= $user->security_reserve_rule) {
                                     $releaseDate = now()->addDays(90);
                                     $transaction->is_security_reserve = true;
                                     $releaseCount = 0;

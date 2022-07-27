@@ -12,7 +12,8 @@ const srcPlatforms = {
     'taboola': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola',
     'pinterest': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest',
     'uol_ads': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads',
-    'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok'
+    'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok',
+    'kwai': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai'
 }
 
 $(function () {
@@ -313,25 +314,9 @@ $(function () {
         }
     });
 
-    $("#modal-edit-pixel .img-edit-selected").on('click', function () {
-        openModalEditPixel(true);
-    });
-
-    function openModalEditPixel(selectPlatform = false) {
-        if (selectPlatform) {
-            $("#modal-edit-pixel #configure-edit-pixel").hide();
-            $("#modal-edit-pixel #select-platform-edit-pixel").show();
-        } else {
-            $("#modal-edit-pixel #select-platform-edit-pixel").hide();
+    function openModalEditPixel() {
             $("#modal-edit-pixel #configure-edit-pixel").show();
-        }
     }
-
-    $("#modal-edit-pixel img.logo-pixels-edit").on('click', function () {
-        renderModalPixelEdit(pixelEdit, $(this).data('value'));
-        openModalEditPixel();
-    });
-
 
     function inputCodeByPlatform(platform, code, conversional = '', explode = false) {
 
@@ -345,6 +330,7 @@ $(function () {
             case "outbrain":
             case 'uol_ads':
             case 'tiktok':
+            case 'kwai':
             default:
                 return code;
         }
@@ -537,6 +523,12 @@ $(function () {
                 multipleEvent.removeClass('d-none')
                 break;
             case 'tiktok':
+                inputPlatform.attr("placeholder", 'C5OSDKKVNBDLN9M5C6UG');
+                inputPlatform.parent().parent().find('label').html('ID');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
+                break;
+            case 'kwai':
                 inputPlatform.attr("placeholder", 'C5OSDKKVNBDLN9M5C6UG');
                 inputPlatform.parent().parent().find('label').html('ID');
                 singleEvent.addClass('d-none');

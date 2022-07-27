@@ -127,7 +127,6 @@ class WooCommerceService
     {
         // Will loop through pages until it finishes;
         $page = 1;
-
         ImportWooCommerceProducts::dispatch($projectId, $userId, $page);
 
     }
@@ -140,7 +139,7 @@ class WooCommerceService
             if($_product->status != 'publish') continue;
 
             ImportWooCommerceProduct::dispatch($projectId, $userId, $_product);
-
+            sleep(10);
         }
 
         return;
@@ -166,8 +165,10 @@ class WooCommerceService
             }else{
 
                 foreach($_product->variations as $variationId){
-
+                    
                     ImportWooCommerceProductVariation::dispatch($projectId, $userId, $_product, $variationId);
+                    
+                    sleep(10);
 
                 }
 
@@ -206,6 +207,8 @@ class WooCommerceService
     {
 
         $hashedProjectId = Hashids::encode($projectId);
+
+        if($variationId) $variationId .= '-' . $hashedProjectId;
 
         $planModel = new Plan();
 
@@ -696,11 +699,13 @@ class WooCommerceService
                     $id = explode('-', $product->shopify_variant_id);
 
                     if (empty($product->shopify_id)) {
+                        if(stristr($id[0], '-')) $id[0] = explode('-', $id[0])[0];
                         $item = [
                             "product_id" => $id[0],
                             "quantity" => $productsPlanSale->amount
                         ];
                     } else {
+                        if(stristr($product->shopify_id, '-')) $product->shopify_id = explode('-', $product->shopify_id)[0];
                         $item = [
                             "product_id" => $product->shopify_id,
                             "variation_id" => $id[0],

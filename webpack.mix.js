@@ -598,7 +598,7 @@ mix.babel([
     'Modules/Plans/Resources/assets/js/plans.js',
     'Modules/Shipping/Resources/assets/js/shipping.js',
     'Modules/Pixels/Resources/assets/js/pixels.js',
-    'resources/modules/projectupsell/js/index.js',
+    'Modules/ProjectUpsellRule/Resources/assets/js/index.js',
     'Modules/OrderBump/Resources/assets/js/index.js',
     'Modules/ProjectReviews/Resources/assets/js/index.js',
     'Modules/ProjectNotification/Resources/assets/js/projectNotification.js',
@@ -700,7 +700,8 @@ mix.styles([
  * Modules/Reports/Resources/views/blockedbalance.blade.php
  */
 mix.styles([
-    'Modules/Sales/Resources/assets/css/index.css',
+    'Modules/Reports/Resources/assets/css/reports.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
     'resources/modules/global/css/empty.css',
     'resources/modules/global/css/switch.css',
     'resources/modules/global/css/new-dashboard.css',
@@ -709,7 +710,7 @@ mix.styles([
 mix.babel([
     'Modules/Reports/Resources/assets/js/report-blockedbalance.js',
     'resources/modules/global/js-extra/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
     'resources/cdn/select2.min.js'
 ], 'public/build/layouts/reports/blockedbalance.min.js');
 /**
@@ -736,43 +737,95 @@ mix.styles([
     'resources/modules/global/css/table.css',
     'Modules/Reports/Resources/assets/css/coupons.css',
     'Modules/Reports/Resources/assets/css/reports.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
     'resources/modules/global/css/empty.css'
 ], 'public/build/layouts/reports/coupons.min.css');
 mix.babel([
     'Modules/Reports/Resources/assets/js/report-coupons.js',
     'resources/modules/global/js-extra/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
 ], 'public/build/layouts/reports/coupons.min.js');
+
 /**
- * Modules/Reports/Resources/views/index.blade.php
+ * Modules/Reports/Resources/views/new.blade.php
  */
  mix.styles([
     'Modules/Reports/Resources/assets/css/chartist.min.css',
     'Modules/Reports/Resources/assets/css/chartist-plugin-tooltip.min.css',
     'Modules/Reports/Resources/assets/css/reports.css',
-    'resources/modules/global/css/empty.css'
+    'resources/modules/global/css/empty.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
 ], 'public/build/layouts/reports/index.min.css');
 mix.babel([
+    'Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js',
     'Modules/Reports/Resources/assets/js/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
+    // 'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
     'Modules/Reports/Resources/assets/js/chartist.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',
+    'Modules/Reports/Resources/assets/js/chartjs-plugin-datalabels.min.js',
     'Modules/Reports/Resources/assets/js/reports.js'
 ], 'public/build/layouts/reports/index.min.js');
+
+/**
+ * Modules/Reports/Resources/views/sales.blade.php
+ */
+mix.babel([
+    'Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js',
+    'Modules/Reports/Resources/assets/js/moment.min.js',
+    // 'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
+    'Modules/Reports/Resources/assets/js/chartist.min.js',
+    'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
+    'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',
+    // 'Modules/Reports/Resources/assets/js/reports.js',
+    'Modules/Reports/Resources/assets/js/reports-sales.js'
+], 'public/build/layouts/reports/sales.min.js');
+
+
+/**
+ * Modules/Reports/Resources/views/finances.blade.php
+ */
+ mix.babel([
+    'Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js',
+    'Modules/Reports/Resources/assets/js/moment.min.js',
+    // 'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
+    'Modules/Reports/Resources/assets/js/chartist.min.js',
+    'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
+    'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',
+    'Modules/Reports/Resources/assets/js/reports-finance.js'
+], 'public/build/layouts/reports/finances.min.js');
+
+/**
+ * Modules/Reports/Resources/views/marketing.blade.php
+ */
+ mix.babel([
+    'Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js',
+    'Modules/Reports/Resources/assets/js/moment.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
+    'Modules/Reports/Resources/assets/js/chartist.min.js',
+    'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
+    'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',
+    'Modules/Reports/Resources/assets/js/reports-marketing.js'
+], 'public/build/layouts/reports/marketing.min.js');
+
 /**
  * Modules/Reports/Resources/views/pending.blade.php
  */
 mix.styles([
     'Modules/Reports/Resources/assets/css/reports.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
     'resources/modules/global/css/empty.css',
     'resources/modules/global/css/new-dashboard.css',
     'resources/modules/global/css/switch.css'
 ], 'public/build/layouts/reports/pending.min.css');
 mix.babel([
+    'Modules/Reports/Resources/assets/js/moment.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
+    // 'Modules/Reports/Resources/assets/js/reports.js',
     'Modules/Reports/Resources/assets/js/report-pending.js',
-    'resources/modules/global/js-extra/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
 ], 'public/build/layouts/reports/pending.min.js');
 
 /**
@@ -859,10 +912,17 @@ mix.babel([
 ],'public/build/layouts/salesrecovery/index.min.js')
 
 /**
+ * Modules/Shipping/Resources/views/create.blade.php
+ */
+mix.styles([
+    'Modules/Shipping/Resources/assets/css/create.css'
+],'public/build/layouts/shipping/create.min.css')
+
+/**
  * Modules/Shipping/Resources/views/edit.blade.php
  */
  mix.styles([
-    'Modules/Shipping/Resources/assets/css/shipping-edit.css'
+    'Modules/Shipping/Resources/assets/css/edit.css'
 ],'public/build/layouts/shipping/edit.min.css')
 
 /**
@@ -987,6 +1047,8 @@ mix.styles([
     'resources/modules/global/adminremark/global/fonts/orion-icons/iconfont.css',
     // New CSS
     'resources/modules/global/css/new-site.css',
+    // Bonus Balance Donut Progress
+    'resources/modules/global/css/mk_charts.css',
     'resources/modules/global/css/global.css',
     'resources/modules/global/adminremark/global/vendor/asscrollable/asScrollable.css',
 ],'public/build/layouts/master/master.min.css');
@@ -1015,7 +1077,8 @@ mix.babel([
     'resources/modules/global/js/global.js',
     'resources/modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js',
     'resources/modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js',
-    'resources/modules/global/js/announcekit-global.js'
+    'resources/modules/global/js/announcekit-global.js',
+    'resources/modules/global/js/mk_charts.js',
 ],'public/build/layouts/master/plugins.min.js')
 mix.babel([
     'resources/modules/global/js-extra/pusher.min.js',
@@ -1092,6 +1155,9 @@ mix.copy(
  mix.copy(
      'resources/modules/global/img/projects',
 'public/build/global/img/projects');
+mix.copy(
+    'resources/modules/global/img/reports',
+'public/build/global/img/reports');
  mix.copy(
      'resources/modules/global/img/svg',
 'public/build/global/img/svg');
@@ -1099,3 +1165,6 @@ mix.copy(
 if (mix.inProduction()) {
     mix.version();
 }
+
+const proxy = process.env.APP_URL || 'localhost:8000';
+mix.browserSync(proxy);

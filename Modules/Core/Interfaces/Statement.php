@@ -24,5 +24,9 @@ interface Statement
 
     public function createWithdrawal($value);
 
-    public function getGatewayId();
+    public function getGatewayId(): int;
+
+    public function refundEnabled(): bool;
+
+    public function canRefund(Sale $sale): bool;
 }

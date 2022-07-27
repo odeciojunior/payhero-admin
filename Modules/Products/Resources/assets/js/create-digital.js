@@ -20,7 +20,7 @@ $(document).ready(function () {
             $("#description").focus();
         }
         if ($.trim($('#digital_product_url').val()) === '') {
-            alertCustom('error', 'Selecione o produto digital');
+            alertCustom('error', 'Envie o arquivo digital');
             ver = false;
             $('#digital_product_url').focus();
         }
@@ -87,6 +87,7 @@ $(document).ready(function () {
                     loadOnAny('.page', true);
 
                     alertCustom('success', response.message);
+                    localStorage.removeItem('page')
                     window.location = "/products";
                 }
             });

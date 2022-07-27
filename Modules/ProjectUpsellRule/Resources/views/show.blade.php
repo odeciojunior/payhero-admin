@@ -11,6 +11,11 @@
             <td class='text-left upsell-discount'></td>
         </tr>
         <tr>
+            <td class="table-title">Ao selecionar os fretes</td>
+            <td style='width: 20px'></td>
+            <td class='text-left upsell-apply-shipping'></td>
+        </tr>
+        <tr>
             <td class="table-title">Ao comprar planos</td>
             <td style='width: 20px'></td>
             <td class='text-left upsell-apply-plans'></td>

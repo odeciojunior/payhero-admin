@@ -77,17 +77,35 @@ class ProductsApiController extends Controller
 
             $productsSearch = $productsModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id);
 
+            // Shopify products
             if (isset($filters['shopify']) && $filters['shopify'] == 1) {
                 $productsSearch->where('shopify', $filters['shopify']);
-            } else {
+            }
+            // Woocommerce products
+            else if (isset($filters['shopify']) && $filters['shopify'] == 2) {
                 $productsSearch->where('shopify', 0);
+                $productsSearch->where(
+                    function($query) {
+                        $query->whereRaw(
+                            "(shopify_id IS NOT NULL AND shopify_variant_id IS NOT NULL) OR
+                            (shopify_id IS NULL AND shopify_variant_id IS NOT NULL) OR
+                            (shopify_id IS NOT NULL AND shopify_variant_id IS NULL)"
+                        );
+                    }
+                );
+            }
+            // Sirius products
+            else {
+                $productsSearch->where('shopify', 0)
+                ->whereNull('shopify_id')
+                ->whereNull('shopify_variant_id');
             }
 
             if (isset($filters['name'])) {
                 $productsSearch->where('name', 'LIKE', '%' . $filters['name'] . '%');
             }
 
-            if (isset($filters['project']) && $filters['shopify'] == 1) {
+            if (isset($filters['project']) && ($filters['shopify'] == 1 || $filters['shopify'] == 2)) {
                 $projectId = current(Hashids::decode($filters['project']));
                 $productsSearch->where('project_id', $projectId);
             }
@@ -165,6 +183,7 @@ class ProductsApiController extends Controller
                     report($e);
                 }
             }
+
             if (!empty($data['digital_product_url'])) {
                 try {
                     $this->getAmazonFileService()->changeDisk('s3_digital_product');

@@ -38,6 +38,7 @@ class AffiliateLink extends Model
         'campaign_id',
         'plan_id',
         'parameter',
+        'name',
         'link',
         'clicks_amount',
         'created_at',

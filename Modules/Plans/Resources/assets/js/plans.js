@@ -219,6 +219,9 @@ $(function () {
         removeProductArraySelecteds(modal);
 
         if (type == 'edit') {
+            $(modal).find('.box-photos-products').mCustomScrollbar('destroy');
+            $(modal).find('.box-photos-products').mCustomScrollbar('update');
+
             $(modal).find('.nav-tabs-horizontal').css('display', 'none');
 
             $(modal).find('.modal-footer').html(
@@ -356,7 +359,8 @@ $(function () {
                         $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                             $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                 $(modal).find(find_stage).addClass('show active').promise().done(function() {
-                                    var autoHeight = $(modal).find('.height-auto').height() + 18;
+                                    var autoHeight = $(modal).find('.height-auto').stop(true, true).height() + (type == 'edit' && selected_products.length > 8 ? 88 : 18);
+
                                     $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
                                 });
                             });
@@ -399,6 +403,7 @@ $(function () {
                     $.ajax({
                         method: "GET",
                         url: "/api/product/" + product.id,
+                        async: false,
                         data: {
                             plan_id: plan
                         },
@@ -511,7 +516,7 @@ $(function () {
                                                     <input type="checkbox" id="check-values" name="check-values" class="check" value="0">
                                                     <span class="slider round"></span>
                                                 </label>
-                                                <label for="product_amount_selector" style="margin: 0;">Todos os produtos têm o mesmo custo</label>
+                                                <label for="product_amount_selector" style="margin: 0;">Todos os produtos têm a mesma qtd, custo e moeda</label>
                                             </div>`
                                         ).css({'margin-top': '25px'});
                                     } else {
@@ -1178,7 +1183,7 @@ $(function () {
 
                     getCustom(modal, false);
 
-                    alertCustom("success", "Configurações do plano atualizado com sucesso");
+                    alertCustom("success", "Configurações do plano atualizadas com sucesso");
                 }
             });
         });
@@ -1475,18 +1480,32 @@ $(function () {
         if (checkbox_value == 0) {
             $(this).val(1);
 
-            var first_value = $('.box-products').find('.product').first().find('.form-control[name="value"]').val();
-            $('.box-products .form-control[name="value"]').val(first_value);
+            var first_qtd = $('.box-products').find('.product').first().find('.form-control[name="amount"]').val();
+            var first_cost = $('.box-products').find('.product').first().find('.form-control[name="value"]').val();
+            var first_currency = $('.box-products').find('.product').first().find('select[name="currency_type_enum"]').val();
+
+            $('.box-products .form-control[name="amount"]').val(first_qtd);
+            $('.box-products .form-control[name="value"]').val(first_cost);
+            $('.box-products select[name="currency_type_enum"]').val(first_currency);
+            $('.box-products select[name="currency_type_enum"]').change();
         } else if (checkbox_value == 1) {
             $(this).val(0);
         }
     });
 
     // Change values products
-    $('body').on('keyup', '.form-control[name="value"]', function(e) {
+    $('body').on('keyup', '.form-control[name="value"]', function() {
         var same_cost = $('#check-values').val();
         if (same_cost == 1) {
-            $('.box-products .form-control[name="value"]').val($(this).val());
+            $('.box-products').find('.form-control[name="value"]').val($(this).val());
+        }
+    });
+
+    $('body').on('click', '.sirius-select-options div', function() {
+        var same_cost = $('#check-values').val();
+        if (same_cost == 1) {
+            $('.box-products select[name="currency_type_enum"]').val($(this).data('value'));
+            $('.box-products select[name="currency_type_enum"]').trigger('change');
         }
     });
 
@@ -2551,6 +2570,7 @@ $(function () {
         $('#check-custom').hide();
         if ($('#cost_currency_type_all_plans').val() == 1) {
             $('#check-custom').find('.switch').trigger('click');
+            $('#cost_currency_type_all_plans').val(0);
         }
 
         $(modal).find('#cost_plan').val('');
@@ -2667,11 +2687,24 @@ $(function () {
 
     $('body').on('click', '.input-number button', function () {
         var input = $(this).parent().find('input');
+        var same_cost = $('#check-values').val();
 
         if ($(this).hasClass('btn-add')) {
-            input[0].stepUp();
+            if (same_cost == 1) {
+                $('.input-number').find('input').each(function() {
+                    $(this)[0].stepUp();
+                });
+            } else {
+                input[0].stepUp();
+            }
         } else if ($(this).hasClass('btn-sub')) {
-            input[0].stepDown();
+            if (same_cost == 1) {
+                $('.input-number').find('input').each(function() {
+                    $(this)[0].stepDown();
+                });
+            } else {
+                input[0].stepDown();
+            }
         }
 
         changeProductAmount(input);

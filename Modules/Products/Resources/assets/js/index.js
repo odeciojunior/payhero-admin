@@ -1,4 +1,4 @@
-$(document).ready(function () {
+jQuery(function () {
     let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
     let lastPage = document.referrer;
     if (!lastPage.match(regexp)) {
@@ -16,28 +16,17 @@ $(document).ready(function () {
         2: "Aprovado",
         3: "Recusado",
     };
+    let appsList = {
+        1: "Produtos Shopify",
+        2: "Produtos Woocommerce",
+    };
 
-    //VERIFICA SE HA FILTRO E PEGA O TIPO
     let storeTypeProduct = () => {
-        if(localStorage.getItem("filtersApplied")){
+        if (localStorage.getItem("filtersApplied")) {
             let getProductValue = JSON.parse(localStorage.getItem("filtersApplied"));
             return getProductValue;
-
-        }else{
+        } else {
             return 0;
-        }
-    }
-
-    //REGASTA O FILTRO E O APLICA
-    function handleLocalStorage() {
-        if (localStorage.getItem('filtersApplied') != null) {
-            let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApplied'));
-
-            $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
-
-            $("#select-projects").val(parseLocalStorage.getProject);
-            $("#name").val(parseLocalStorage.getName);
-            $("#btn-filtro").trigger("click");
         }
     }
 
@@ -45,7 +34,10 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "api/projects?select=true",
+            url: "/api/projects?select=true",
+            data: {
+                status: "active",
+            },
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -64,43 +56,45 @@ $(document).ready(function () {
                     } else {
                         $("#div-create").show();
                     }
-                    //talvez verificar se ha filtro aqui
-                    updateProducts();
-
-                } else {
-                    $("#project-empty").show();
-                    $("#project-not-empty").hide();
-                    $("#div-create").hide();
-                }
-
-                loadingOnScreenRemove();
-            },
-        });
-    }
-
-    function getTypeProducts() {
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            data: {
-                status: "active",
-            },
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function (response) {
-                if (response.data) {
-                    let has_shopify = false;
-                    $("#select-projects").html("");
+                    $.each(appsList, function (index, value) {
+                        let exist_shopify = 'n';
+                        let exist_woocommerce = 'n';
+                        $.each(response.data, function (index, value) {
+                            if (value.shopify) {
+                                exist_shopify = 's';
+                            }
+                            else if (value.woocommerce) {
+                                exist_woocommerce = 's';
+                            }
+                        });
+                        if (index == 1 && exist_shopify == 's') {
+                            $("#type-products").append(
+                                $("<option>", {
+                                    value: index,
+                                    text: value,
+                                })
+                            );
+                        }
+                        if (index == 2 && exist_woocommerce == 's') {
+                            $("#type-products").append(
+                                $("<option>", {
+                                    value: index,
+                                    text: value,
+                                })
+                            );
+                        }
+                    });
                     $.each(response.data, function (index, value) {
                         if (value.shopify) {
-                            has_shopify = true
-                            $("#select-projects").append(
+                            $("#select-projects-1").append(
+                                $("<option>", {
+                                    value: value.id,
+                                    text: value.name,
+                                })
+                            );
+                        }
+                        else if (value.woocommerce) {
+                            $("#select-projects-2").append(
                                 $("<option>", {
                                     value: value.id,
                                     text: value.name,
@@ -108,67 +102,70 @@ $(document).ready(function () {
                             );
                         }
                     })
-
-                    if (has_shopify) {
-                        $("#select-projects").addClass('has_shopify')
-                    }
+                    handleLocalStorage();
+                    updateProducts();
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                    $("#div-create").hide();
                 }
-                handleLocalStorage();
+                loadingOnScreenRemove();
             },
         });
     }
 
     function updateProducts(link = null) {
         pageCurrent = link
-
-        //RETONA O FILTRO SE HOUVER SENAO RETORNA NULL
         let existFilters = () => {
-            if(localStorage.getItem('filtersApplied') != null){
+            if (localStorage.getItem('filtersApplied') != null) {
                 let getFilters = JSON.parse(localStorage.getItem('filtersApplied'))
                 return getFilters;
-            }else {
+            } else {
                 return null;
             };
         };
-
-        //GUARDA QUALQUER PAGINA DEPOIS DA 1
-        if(link != null){
+        if (link != null) {
             let getPage = {
                 atualPage: pageCurrent
             };
             localStorage.setItem("page", JSON.stringify(getPage));
         }
-
-        //RESGATA PAGINA, SE HOUVER FILTRO SET PAGINA PARA NULL
-        if(localStorage.getItem("page") != null){
+        if (localStorage.getItem("page") != null) {
             let parsePage = JSON.parse(localStorage.getItem("page"));
-
-            if(existFilters() != null && existFilters().getName != ""){
-                if(localStorage.getItem("page") != null){
+            if (existFilters() != null && existFilters().getName != "") {
+                if (localStorage.getItem("page") != null) {
                     localStorage.setItem("page", JSON.stringify(parsePage));
                 }
-            }else{
+            } else {
                 pageCurrent = parsePage.atualPage;
-
             }
             parsePage = JSON.parse(localStorage.getItem("page"));
             pageCurrent = parsePage.atualPage;
         }
-
         link = pageCurrent
         loadOnAny(".page-content");
-
         let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
         let name = existFilters() != null ? existFilters().getName : $("#name").val();
-        let project = existFilters() != null ? existFilters().getProject : $("#select-projects").val();
-
+        let project = '';
+        if (existFilters() != null) {
+            if (type == 1 && existFilters().getProject_1){
+                project = existFilters().getProject_1;
+            }
+            else if (type == 2 && existFilters().getProject_2){
+                project = existFilters().getProject_2;
+            }
+        }
+        else {
+            if ($('#select-projects-1 option:selected').val() != '')
+                project = $('#select-projects-1 option:selected').val();
+            else if ($('#select-projects-2 option:selected').val() != '')
+                project = $('#select-projects-2 option:selected').val();
+        }
         if (link == null) {
             link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
-
         } else {
             link = "/api/products" + link + "&shopify=" + type + "&project=" + project + "&name=" + name;
         }
-
         $.ajax({
             method: "GET",
             url: link,
@@ -186,9 +183,8 @@ $(document).ready(function () {
                     $(".products-is-empty").hide();
                     $("#data-table-products").html("");
                     let dados = "";
-
                     $.each(response.data, function (index, value) {
-                        shopifyProduct = value.id != value.id_view;
+                        shopifyProduct = value.id_view; //value.id != value.id_view;
                         dados = `
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
                             <div class="card shadow mb-20 mx-0" style="flex: 1 1 100%">
@@ -224,7 +220,6 @@ $(document).ready(function () {
                         `;
                         $("#data-table-products").append(dados);
                     });
-
                     $(".product-image").off("click");
                     $(".product-image").on("click", function () {
                         window.location.href = $(this).attr('data-link');
@@ -243,36 +238,26 @@ $(document).ready(function () {
                     $('.menu_product').off('click');
                     $('.menu_product').on('click', function () {
                         var tooltip = $(`.menu_product_tooltip[data-id="${this.dataset.id}"]`)
-
                         closeTooltips(tooltip);
-
                         tooltip.toggle();
                     });
-
                     $('.menu_product').off('focusout');
                     $('.menu_product').on('focusout', function (event) {
                         if ($(event.relatedTarget).hasClass('menu_product')) {
                             return;
                         }
-
                         setTimeout(() => closeTooltips(), 200);
                     });
-
                     $('.bt_excluir').off('click');
                     $('.bt_excluir').on('click', function (event) {
                         event.preventDefault();
-
                         $(".bt_excluir_modal").attr('data-id', this.dataset.id);
-
                         $("#modal-delete").modal();
                     });
-
                     $('.bt_excluir_modal').off('click');
                     $('.bt_excluir_modal').on('click', function (event) {
                         event.preventDefault();
-
                         loadingOnScreen();
-
                         $.ajax({
                             method: 'DELETE',
                             url: '/api/products/' + this.dataset.id,
@@ -294,24 +279,19 @@ $(document).ready(function () {
                             }
                         });
                     });
-
                     $("img").on("error", function () {
                         $(this).attr(
                             "src",
                             "https://cloudfox-files.s3.amazonaws.com/produto.svg"
                         );
                     });
-
                     pagination(response, "products", updateProducts);
-
                     $(".products-is-empty").hide();
                 } else {
-
-                    if(localStorage.getItem('filtersApplied') != null && localStorage.getItem('page') != null){
+                    if (localStorage.getItem('filtersApplied') != null && localStorage.getItem('page') != null) {
                         localStorage.removeItem('page');
                         $("#btn-filtro").trigger("click");
-
-                    }else {
+                    } else {
                         $("#data-table-products, #pagination-products").html("");
                         $(".products-is-empty").show();
                     }
@@ -323,56 +303,97 @@ $(document).ready(function () {
         });
     }
 
-    //PRECIONAR ENTER ATIVA O "APLICAR FILTRO"
+    function handleLocalStorage() {
+        if (localStorage.getItem('filtersApplied') != null) {
+            let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApplied'));
+            $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
+            $("#select-projects-1").val(parseLocalStorage.getProject_1).trigger("change");
+            $("#select-projects-2").val(parseLocalStorage.getProject_2).trigger("change");
+            $("#name").val(parseLocalStorage.getName);
+            $("#projects-list, .box-projects").addClass("d-none");
+            type = parseLocalStorage.getTypeProducts;
+            if (type != 0) {
+                $("#projects-list #select-projects-" + type).prop("disabled", false).removeClass("disabled");
+                //$("#projects-list #box-projects-" + type + " .opcao-vazia").remove();
+                $("#box-projects-" + type).removeClass('d-none');
+                $("#projects-list").removeClass('d-none');
+            }
+        }
+    }
+
     $(document).on("keypress", function (e) {
         if (e.key == "Enter") {
             $("#btn-filtro").trigger("click");
         }
     });
 
-    //EXIBI OU ESCONDE O CAMPO PROJETO
-    $("#type-products").on("change", function () {
-        const type = $(this).val();
-        const $selectProject = $('#select-projects');
-        console.log($selectProject.hasClass('has_shopify'))
-        if (type === "1" && $selectProject.hasClass('has_shopify')) {
-            $('#projects-list').removeClass('d-none');
-            $("#projects-list select").prop("disabled", false).removeClass("disabled");
-            $("#opcao-vazia").remove();
-        } else {
-            console.log('entrei')
+    $("#type-products").on("change",
+        function () {
+            $("#name").val('');
+            //$("#select-projects-1 .opcao-vazia, #select-projects-2 .opcao-vazia").remove();
+            //$("#select-projects-1, #select-projects-2").prepend("<option class='opcao-vazia'>");
+            $("#select-projects-1").val($("#select-projects-1 option:first").val());
+            $("#select-projects-2").val($("#select-projects-2 option:first").val());
             $("#projects-list select").prop("disabled", true).addClass("disabled");
-            $("#projects-list").addClass("d-none");
-        }
-    });
-
-    //SE ALGUM CAMPO FOR ALTERADO ZERA A PAGINA E GUARDA O NOVO FILTRO
-    $("#btn-filtro").on("click", function () {
-        if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getName != $('#name').val() || storeTypeProduct().getProject != $('#select-projects').val()){
-
-            if(localStorage.getItem("page") != null){
-                let getPageStored = JSON.parse(localStorage.getItem("page"));
-                getPageStored.atualPage = null;
-                localStorage.setItem("page", JSON.stringify(getPageStored));
+            $("#projects-list, .box-projects").addClass("d-none");
+            const type = $(this).val();
+            if (type != 0) {
+                $('#projects-list').removeClass('d-none');
+                $('#box-projects-' + type).removeClass('d-none');
+                $("#box-projects-" + type + " select").prop("disabled", false).removeClass("disabled");
+                //$("#select-projects-" + type + " .opcao-vazia").remove();
+            }
+            else {
+                $("#projects-list select").prop("disabled", true).addClass("disabled");
+                $("#projects-list").addClass("d-none");
             }
         }
-
-        //GUARDA O NOVO FILTRO
-        let filtersApplied = {
-            getTypeProducts: $("#type-products option:selected").val(),
-            getProject: $("#select-projects option:selected").val(),
-            getName: $("#name").val()
-        };
-        localStorage.setItem('filtersApplied', JSON.stringify(filtersApplied));
-        updateProducts();
-    });
+    );
 
     $('#new-product-button').on('click', function (event) {
         event.preventDefault();
         $('#new-product-modal').show();
     });
 
+    $('.new-product-btn').on('click', function () {
+        $('.new-product-btn').removeClass('active');
+        $(this).addClass('active');
+
+        if ($(this).attr('data-add-url') === '/products/create/physical') {
+            $('#selected-option-desc').text('Em vendas de produtos físicos, será solicitado o rastreio para liberação da comissão da venda.');
+        }
+
+        if ($(this).attr('data-add-url') === '/products/create/digital') {
+            $('#selected-option-desc').text('Ao selecionar produto digital, avance e preencha os dados.');
+        }
+
+        $('#selected-option-url').attr('href', $(this).attr('data-add-url'));
+
+        $('#next-btn-container').addClass('d-flex flex-column')
+            .show();
+    });
+
+    $("#btn-filtro").on("click", function () {
+        if (storeTypeProduct().getTypeProducts != $("#type-products option:selected").val()
+            || storeTypeProduct().getName != $('#name').val()
+            || storeTypeProduct().getProject_1 != $('#select-projects-1 option:selected').val()
+            || storeTypeProduct().getProject_2 != $('#select-projects-2 option:selected').val()
+        ) {
+            if (localStorage.getItem("page") != null) {
+                let getPageStored = JSON.parse(localStorage.getItem("page"));
+                getPageStored.atualPage = null;
+                localStorage.setItem("page", JSON.stringify(getPageStored));
+            }
+        }
+        let filtersApplied = {
+            getTypeProducts: $("#type-products option:selected").val(),
+            getProject_1: $('#select-projects-1 option:selected').val(),
+            getProject_2: $('#select-projects-2 option:selected').val(),
+            getName: $("#name").val()
+        };
+        localStorage.setItem('filtersApplied', JSON.stringify(filtersApplied));
+        updateProducts();
+    });
+
     getProjects();
-    getTypeProducts();
-    //updateProducts(); //Funcao de update chamda pela 2x
 });

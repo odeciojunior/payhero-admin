@@ -6,45 +6,66 @@ use Illuminate\Support\Facades\Log;
 
 class LinkShortenerService
 {
-    private $apiUrl;
+    const BASE_URL = 'https://api.short.io';
 
-    public function __construct()
+    public function shorten($url, $path = null)
     {
-        $this->apiUrl = "https://mud.ae/api/?key=" . getenv('MUD_AE_API_KEY');
-    }
-
-    function shorten($url)
-    {
-        $url = trim($url);
-
-        // Validate URL
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             return false;
-        } else {
-            $url = urlencode($url);
-
-            $apiCall = $this->apiUrl . "&url={$url}&format=text";
-
-            $linkValidate = $this->http($apiCall);
-
-            if ($linkValidate == '') {
-                Log::warning('Link URL invalido (LinkShortenerService - shorten) - ' . $url);
-
-                return $linkValidate;
-            } else {
-                return $linkValidate;
-            }
         }
+
+        $data = [
+            'domain' => 'mud.ae',
+            'originalURL' => $url,
+            'allowDuplicates' => false,
+        ];
+        if (isset($path)) {
+            $data['path'] = $path;
+        }
+
+        $result = $this->doRequest('/links', 'POST', $data);
+
+        if (empty($result)) {
+            Log::warning('Link URL invalido (LinkShortenerService - shorten) - ' . $url);
+        }
+
+        return $result->secureShortURL ?? false;
     }
 
-    public function http(string $url)
+    private function doRequest(string $uri = "/", string $method = "GET", array $data = null, array $headers = [])
     {
         $curl = curl_init();
+
+        $url = self::BASE_URL . $uri;
+        $method = strtoupper($method);
+        $headers = array_merge($headers, [
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'Authorization: ' . env('SHORTIO_API_KEY'),
+        ]);
+
+        if (!empty($data)) {
+            if ($method === "GET") {
+                $url = sprintf("%s?%s", $url, http_build_query($data));
+            } else {
+                $data = json_encode($data, JSON_UNESCAPED_SLASHES);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            }
+        }
+
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $resp = curl_exec($curl);
+
+        $result = curl_exec($curl);
+        $info = curl_getinfo($curl);
         curl_close($curl);
 
-        return $resp;
+        if (isset($info['http_code']) && $info['http_code'] != 200) {
+            return false;
+        }
+
+        return json_decode($result);
     }
 }

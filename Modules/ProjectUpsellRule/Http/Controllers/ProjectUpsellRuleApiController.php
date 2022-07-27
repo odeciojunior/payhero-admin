@@ -56,30 +56,39 @@ class ProjectUpsellRuleApiController extends Controller
         $data               = $request->validated();
         $projectId          = current(Hashids::decode($data['project_id']));
         if ($projectId) {
+            $applyShippingArray = [];
+            if (in_array('all', $data['apply_on_shipping'])) {
+                $applyShippingArray[] = 'all';
+            } else {
+                foreach ($data['apply_on_shipping'] as $value) {
+                    $applyShippingArray[] = current(Hashids::decode($value));
+                }
+            }
+
             $applyPlanArray = [];
-            $offerPlanArray = [];
             if (in_array('all', $data['apply_on_plans'])) {
                 $applyPlanArray[] = 'all';
             } else {
-                foreach ($data['apply_on_plans'] as $key => $value) {
+                foreach ($data['apply_on_plans'] as $value) {
                     $applyPlanArray[] = current(Hashids::decode($value));
                 }
             }
 
-            foreach ($data['offer_on_plans'] as $key => $value) {
+            $offerPlanArray = [];
+            foreach ($data['offer_on_plans'] as $value) {
                 $offerPlanArray[] = current(Hashids::decode($value));
             }
-            $applyPlanEncoded = json_encode($applyPlanArray);
-            $offerPlanEncoded = json_encode($offerPlanArray);
 
             $projectUpsellModel->create([
-                                            'project_id'     => $projectId,
-                                            'description'    => $data['description'],
-                                            'discount'       => !empty($data['discount']) ? $data['discount'] : 0,
-                                            'active_flag'    => !empty($data['active_flag']) ? $data['active_flag'] : 0,
-                                            'apply_on_plans' => $applyPlanEncoded,
-                                            'offer_on_plans' => $offerPlanEncoded,
-                                        ]);
+                'project_id' => $projectId,
+                'description' => $data['description'],
+                'discount' => !empty($data['discount']) ? $data['discount'] : 0,
+                'active_flag' => !empty($data['active_flag']) ? $data['active_flag'] : 0,
+                'use_variants' => !empty($data['use_variants']) ? $data['use_variants'] : 0,
+                'apply_on_shipping' => json_encode($applyShippingArray),
+                'apply_on_plans' => json_encode($applyPlanArray),
+                'offer_on_plans' => json_encode($offerPlanArray),
+            ]);
 
             CacheService::forget(CacheService::UPSELL_DATA, $projectId);
 
@@ -142,28 +151,38 @@ class ProjectUpsellRuleApiController extends Controller
         $upsellId           = current(Hashids::decode($id));
         if ($upsellId) {
             $upsell         = $projectUpsellModel->find($upsellId);
+            $applyShippingArray = [];
+            if (in_array('all', $data['apply_on_shipping'])) {
+                $applyShippingArray[] = 'all';
+            } else {
+                foreach ($data['apply_on_shipping'] as $value) {
+                    $applyShippingArray[] = current(Hashids::decode($value));
+                }
+            }
+
             $applyPlanArray = [];
-            $offerPlanArray = [];
             if (in_array('all', $data['apply_on_plans'])) {
                 $applyPlanArray[] = 'all';
             } else {
-                foreach ($data['apply_on_plans'] as $key => $value) {
+                foreach ($data['apply_on_plans'] as $value) {
                     $applyPlanArray[] = current(Hashids::decode($value));
                 }
             }
-            foreach ($data['offer_on_plans'] as $key => $value) {
+
+            $offerPlanArray = [];
+            foreach ($data['offer_on_plans'] as $value) {
                 $offerPlanArray[] = current(Hashids::decode($value));
             }
-            $applyPlanEncoded = json_encode($applyPlanArray);
-            $offerPlanEncoded = json_encode($offerPlanArray);
 
             $upsellUpdated = $upsell->update([
-                                                 'description'    => $data['description'],
-                                                 'discount'       => !empty($data['discount']) ? $data['discount'] : 0,
-                                                 'active_flag'    => !empty($data['active_flag']) ? $data['active_flag'] : 0,
-                                                 'apply_on_plans' => $applyPlanEncoded,
-                                                 'offer_on_plans' => $offerPlanEncoded,
-                                             ]);
+                'description' => $data['description'],
+                'discount' => !empty($data['discount']) ? $data['discount'] : 0,
+                'active_flag' => !empty($data['active_flag']) ? $data['active_flag'] : 0,
+                'use_variants' => !empty($data['use_variants']) ? $data['use_variants'] : 0,
+                'apply_on_shipping' => json_encode($applyShippingArray),
+                'apply_on_plans' => json_encode($applyPlanArray),
+                'offer_on_plans' => json_encode($offerPlanArray),
+            ]);
 
             CacheService::forget(CacheService::UPSELL_DATA, $upsell->project_id);
 

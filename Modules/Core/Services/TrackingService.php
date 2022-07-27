@@ -15,6 +15,7 @@ use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
+use Modules\Core\Events\ReportanaTrackingEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -123,7 +124,7 @@ class TrackingService
                 if ($postDate->lt($productPlanSale->created_at)) {
                     $systemStatusEnum = Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE;
                 }
-            } else {
+            } elseif($apiResult->status !== 'delivered') {
                 $systemStatusEnum = Tracking::SYSTEM_STATUS_NO_TRACKING_INFO;
             }
         } else {
@@ -237,8 +238,11 @@ class TrackingService
                 event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
             }
 
-            if (!empty($tracking) && $notify) {
-                event(new TrackingCodeUpdatedEvent($tracking->id));
+            if (!empty($tracking)) {
+                if($notify)  {
+                    event(new TrackingCodeUpdatedEvent($tracking->id));
+                }
+                event(new ReportanaTrackingEvent($productPlanSale->sale_id));
             }
 
             return $tracking;

@@ -2,7 +2,6 @@
 
 namespace Modules\Sales\Exports\Reports;
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -14,10 +13,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
-use Vinkla\Hashids\Facades\Hashids;
 
 class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
 {
@@ -39,7 +35,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
     public function query()
     {
 
-        $dateRange = FoxUtils::validateDateRange($this->filters['date_range']);
+        $dateRange = foxutils()->validateDateRange($this->filters['date_range']);
         $startDate = null;
         $endDate   = null;
 
@@ -58,7 +54,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             })->leftJoin('customers as customer', function($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
             })->whereIn('sales.status', [5])->where([
-                ['sales.payment_method', Sale::BOLETO_PAYMENT],
+                ['sales.payment_method', Sale::BILLET_PAYMENT],
                 ])->with([
                     'project',
                     'customer',
@@ -78,7 +74,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
         $projectIds = [];
         if (!empty($parseProjectIds) && !in_array("all", $parseProjectIds)) {
             foreach($parseProjectIds as $projectId){
-                array_push($projectIds, FoxUtils::decodeHash($projectId));
+                array_push($projectIds, foxutils()->decodeHash($projectId));
             }
             $salesExpired->whereIn('sales.project_id', $projectIds);
         } else {
@@ -94,7 +90,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
         }
 
         if (!empty($this->filters['client_document'])) {
-            $customerSearch = Customer::where('document', FoxUtils::onlyNumbers($this->filters['client_document']))->pluck('id');
+            $customerSearch = Customer::where('document', foxutils()->onlyNumbers($this->filters['client_document']))->pluck('id');
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
 
@@ -102,7 +98,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
         $planIds = [];
         if (!empty($parsePlanIds) && !in_array("all", $parsePlanIds)) {
             foreach($parsePlanIds as $planId){
-                array_push($planIds, Hashids::decode($planId));
+                array_push($planIds,  hashids_decode($planId));
             }
             $salesExpired->whereHas('plansSales', function ($query) use ($planIds) {
                 $query->whereIn('plan_id', $planIds);
@@ -138,7 +134,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
         $domain = Domain::select('name')->where('project_id', $sale->project_id)->where('status', 3)->first();
         $domainName = $domain->name??'cloudfox.net';
-        $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
+        $boletoLink = "https://checkout.{$domainName}/order/".hashids_encode($sale->id, 'sale_id')."/download-boleto";
 
 
         $saleData = [];
@@ -146,10 +142,10 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
             $productName = $product->name . ($product->description ? ' (' . $product->description . ')' : '');
 
-            
+
             $data = [
                 //sale
-                'sale_code'                  => '#' . Hashids::connection('sale_id')->encode($sale->id),
+                'sale_code'                  => '#' . hashids_encode($sale->id, 'sale_id'),
                 'shopify_order'              => strval($sale->shopify_order),
                 'payment_form'               => $sale->present()->getPaymentForm(),
                 'boleto_link'                => $boletoLink ?? '',
@@ -164,7 +160,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 'project_name'               => $sale->project->name ?? '',
                 'plan'                       => $product->plan_name,
                 'price'                      => $product->plan_price,
-                'product_id'                 => '#' . Hashids::encode($product->id),
+                'product_id'                 => '#' . hashids_encode($product->id),
                 'product'                    => $productName,
                 'product_shopify_id'         => $product->shopify_id,
                 'product_shopify_variant_id' => $product->shopify_variant_id,

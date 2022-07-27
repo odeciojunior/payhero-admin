@@ -952,16 +952,6 @@ input[type=radio] {
     border-bottom: 1px solid #efefef;
 }
 
-#modal-title {
-    font-size: 24px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.17;
-    letter-spacing: 0.08px;
-    color: black;
-}
-
 .material-icons.btn-fix {
     margin-top: -2px !important;
 }

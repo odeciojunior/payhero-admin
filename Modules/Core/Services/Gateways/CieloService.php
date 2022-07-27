@@ -15,7 +15,6 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
@@ -74,6 +73,26 @@ class CieloService implements Statement
             })->sum('transactions.value');
     }
 
+    public function getPendingBalanceCount(): int
+    {
+        if (!$this->company->user->show_old_finances) {
+            return 0;
+        }
+
+        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+        })
+        ->whereNull('brs.id')
+        ->where('transactions.company_id', $this->company->id)
+        ->where('transactions.status_enum', Transaction::STATUS_PAID)
+        ->where(function ($query) {
+            $query->whereIn('transactions.gateway_id', $this->gatewayIds)->orWhere(function ($query) {
+                $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
+            });
+        })
+        ->count();
+    }
+
     public function getBlockedBalance(): int
     {
         if (!$this->company->user->show_old_finances) {
@@ -86,6 +105,48 @@ class CieloService implements Statement
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
+    }
+
+    public function getBlockedBalanceCount(): int
+    {
+        if (!$this->company->user->show_old_finances) {
+            return 0;
+        }
+
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
+    }
+
+    public function getBlockedBalancePending(): int
+    {
+        if (!$this->company->user->show_old_finances) {
+            return 0;
+        }
+
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->sum('value');
+    }
+
+    public function getBlockedBalancePendingCount(): int
+    {
+        if (!$this->company->user->show_old_finances) {
+            return 0;
+        }
+
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
     }
 
     public function getPendingDebtBalance(): int
@@ -292,8 +353,18 @@ class CieloService implements Statement
         return !empty($lastTransaction) ? ['Cielo'] : [];
     }
 
-    public function getGatewayId()
+    public function getGatewayId(): int
     {
-        return FoxUtils::isProduction() ? Gateway::CIELO_PRODUCTION_ID : Gateway::CIELO_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::CIELO_PRODUCTION_ID : Gateway::CIELO_SANDBOX_ID;
+    }
+
+    public function refundEnabled(): bool
+    {
+        return false;
+    }
+
+    public function canRefund(Sale $sale): bool
+    {
+        return false;
     }
 }

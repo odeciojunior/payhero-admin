@@ -53,6 +53,10 @@
                                         <span id="file_return" class="ml-20 pt-10"></span>
                                     </div>
                                     <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
+                                    <div class="d-flex flex-row align-items-center mt-10 px-2 py-1 rounded" style="width: fit-content; background: #F4F6FB;">
+                                        <img src="{{ mix('build/global/img/icon-info-plans-c.svg') }}" width="9" height="9" />
+                                        <span class="font-size-10 ml-2" style="color: #636363">Essa opção é exclusiva para produtos digitais.</span>
+                                    </div>
                                 </div>
 
                                 <div class="col-12 col-md-5 div-expiration-time">
@@ -69,15 +73,16 @@
                     </div>
                 </div>
 
-                <div class="form-buttons">
-                    <div>
+                <div class="form-buttons" style="display: block; text-align: right">
+                    <div style="float: left">
                         <a class="btn btn-lg btn-excluir delete-product" data-toggle="modal" data-target="#modal-delete" href="#"><span class="o-bin-1 mr-2"></span>Excluir produto</a>
                     </div>
 
-                    <div>
+                    <div style="float: right">
                         <a class="btn btn-lg btn-cancelar" href="/products">Cancelar</a>
                         <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Salvar</button>
                     </div>
+                    <div style="clear:both"></div>
                 </div>
             </form>
 

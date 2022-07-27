@@ -29,7 +29,7 @@
         <!-- access token used for api ajax requests -->
         <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
         <meta name="current-url" content="{{ env('APP_URL') }}">
-        <meta name="user-id" content="{{ \Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id) }}">
+        <meta name="user-id" content="{{ hashids_encode(auth()->user()->id) }}">
         <!-- Favicon -->
         <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
@@ -57,6 +57,8 @@
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
 
+        @include("layouts.bonus-balance")
+
         @include("layouts.loading")
 
         @include("layouts.menu-principal")
@@ -80,27 +82,19 @@
 
         <input type="hidden" id="accountStatus">
 
+        @php
+            $userModel = new \Modules\Core\Entities\User();
+            $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+        @endphp
+
         @if(!auth()->user()->account_is_approved)
-            <div class="new-register-page-open-modal-container">
-                <div class="page-header container">
-                    <div class="row align-items-center justify-content-between">
-                        <div class="col-lg-6">
-                            <div class="new-register-page-open-modal">
-                                <!--
-                                <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
-                                -->
-                                <span class="new-register-open-modal-btn">Clique aqui para começar</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('utils.new-register-link')
         @endif
 
         @yield('content')
 
-        @if(!auth()->user()->account_is_approved)
-            @include('utils.documents-pending');
+        @if(!auth()->user()->account_is_approved && $account_type === 'admin')
+            @include('utils.documents-pending')
         @endif
 
         <!-- Plugins -->

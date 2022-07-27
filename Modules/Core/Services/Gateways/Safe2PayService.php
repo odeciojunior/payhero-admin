@@ -9,6 +9,7 @@ use Modules\Core\Services\TaskService;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
+use Modules\Core\Entities\BonusBalance;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
@@ -19,8 +20,6 @@ use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
-use Modules\Core\Services\CompanyBalanceService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
@@ -67,6 +66,18 @@ class Safe2PayService implements Statement
                                         ->sum('transactions.value');
     }
 
+    public function getPendingBalanceCount(): int
+    {
+        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+        })
+        ->whereNull('brs.id')
+        ->where('transactions.company_id', $this->company->id)
+        ->where('transactions.status_enum', Transaction::STATUS_PAID)
+        ->whereIn('transactions.gateway_id', $this->gatewayIds)
+        ->count();
+    }
+
     public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
@@ -75,6 +86,36 @@ class Safe2PayService implements Statement
                             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
                             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
                             ->sum('value');
+    }
+
+    public function getBlockedBalanceCount(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
+    }
+
+    public function getBlockedBalancePending(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->sum('value');
+    }
+
+    public function getBlockedBalancePendingCount(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
     }
 
     public function getPendingDebtBalance(): int
@@ -88,7 +129,7 @@ class Safe2PayService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        if ($sale->payment_method == Sale::BOLETO_PAYMENT) {
+        if ($sale->payment_method == Sale::BILLET_PAYMENT) {
             return $availableBalance >= (int)foxutils()->onlyNumbers($sale->total_paid_value);
         } else {
             $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
@@ -242,6 +283,7 @@ class Safe2PayService implements Statement
             }
 
             foreach ($transactions->cursor() as $transaction) {
+
                 $company = $transaction->company;
 
                 Transfer::create(
@@ -263,6 +305,55 @@ class Safe2PayService implements Statement
                 $transaction->update([
                     'status' => 'transfered',
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
+                ]);
+
+                if($transaction->type != Transaction::TYPE_PRODUCER) {
+                    continue;
+                }
+
+                $bonusBalance = BonusBalance::where('user_id', $company->user_id)
+                    ->where('expires_at', '>=', today())
+                    ->where('current_value', '>', 0)
+                    ->first();
+
+                if(empty($bonusBalance)) {
+                    continue;
+                }
+
+                $cloudfoxTransaction = Transaction::where('sale_id', $transaction->sale_id)
+                                                    ->whereNull('company_id')
+                                                    ->first();
+
+                $taxValue = $cloudfoxTransaction->value - $transaction->sale->interest_total_value;
+
+                if($bonusBalance->current_value >= $taxValue) {
+                    $bonusBalance->update([
+                        'current_value' => $bonusBalance->current_value - $taxValue
+                    ]);
+                }
+                else {
+                    $taxValue = $bonusBalance->current_value;
+
+                    $bonusBalance->update([
+                        'current_value' => 0
+                    ]);
+                }
+
+                Transfer::create(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $company->user_id,
+                        'company_id' => $company->id,
+                        'type_enum' => Transfer::TYPE_IN,
+                        'value' => $taxValue,
+                        'type' => 'in',
+                        'reason' => 'Saldo bônus da transação ',
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID,
+                    ]
+                );
+
+                $company->update([
+                    'safe2pay_balance' => $company->safe2pay_balance + $taxValue
                 ]);
             }
 
@@ -328,9 +419,9 @@ class Safe2PayService implements Statement
 
     }
 
-    public function getGatewayId()
+    public function getGatewayId(): int
     {
-        return FoxUtils::isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -339,6 +430,7 @@ class Safe2PayService implements Statement
             DB::beginTransaction();
             $responseGateway = $response->response ?? [];
             $statusGateway = $response->status_gateway ?? '';
+            $saleIdEncode = hashids_encode($sale->id, 'sale_id');
 
             SaleRefundHistory::create(
                 [
@@ -408,7 +500,7 @@ class Safe2PayService implements Statement
                     'value' => $refundValue,
                     'type' => 'out',
                     'type_enum' => Transfer::TYPE_OUT,
-                    'reason' => 'refunded',
+                    'reason' => "Estorno #{$saleIdEncode}",
                     'is_refunded_tax' => 0
                 ]);
 
@@ -444,6 +536,35 @@ class Safe2PayService implements Statement
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function refundEnabled(): bool
+    {
+        return true;
+    }
+
+    public function canRefund(Sale $sale): bool
+    {
+        if ($sale->status != Sale::STATUS_APPROVED) return false;
+
+        switch ($sale->payment_method) {
+            case Sale::CREDIT_CARD_PAYMENT:
+                    return true;
+                break;
+
+            case Sale::BILLET_PAYMENT:
+                    return false;
+                break;
+
+            case Sale::PIX_PAYMENT:
+                    return (Carbon::now()->diffInDays($sale->end_date) < 90);
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        return false;
     }
 
 }

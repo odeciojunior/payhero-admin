@@ -50,6 +50,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int|null $account_owner_id
  * @property int $deleted_project_filter
  * @property mixed|null $id_wall_result
+ * @property mixed|null $bureau_result
  * @property string|null $sex
  * @property string|null $mother_name
  * @property bool $has_sale_before_getnet
@@ -147,11 +148,13 @@ class User extends Authenticable
         'date_birth',
         'address_document_status',
         'personal_document_status',
+        'date_last_document_notification',
         'invites_amount',
         'last_login',
         'account_owner_id',
         'deleted_project_filter',
         'id_wall_result',
+        'bureau_result',
         'sex',//
         'mother_name',//
         'has_sale_before_getnet',//
@@ -166,6 +169,7 @@ class User extends Authenticable
         'get_faster',
         'release_count',
         'has_security_reserve',
+        'security_reserve_rule',
         'level',
         'ignore_automatic_benefits_updates',
         'total_commission_value',
@@ -367,6 +371,14 @@ class User extends Authenticable
     public function userNotification()
     {
         return $this->hasOne(UserNotification::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function userInformations()
+    {
+        return $this->belongsTo(UserInformation::class, 'document', 'document');
     }
 
     /**

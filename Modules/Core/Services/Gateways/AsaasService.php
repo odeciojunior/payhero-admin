@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\AsaasAnticipationRequests;
@@ -17,20 +16,15 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
-use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
-
-use function Clue\StreamFilter\fun;
 
 class AsaasService implements Statement
 {
@@ -73,6 +67,15 @@ class AsaasService implements Statement
             ->sum('transactions.value');
     }
 
+    public function getPendingBalanceCount(): int
+    {
+        return Transaction::where('transactions.company_id', $this->company->id)
+            ->where('transactions.status_enum', Transaction::STATUS_PAID)
+            ->whereIn('transactions.gateway_id', $this->gatewayIds)
+            ->where('transactions.created_at', '>', '2021-09-20')
+            ->count();
+    }
+
     public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
@@ -81,6 +84,36 @@ class AsaasService implements Statement
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
+    }
+
+    public function getBlockedBalanceCount(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
+    }
+
+    public function getBlockedBalancePending(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->sum('value');
+    }
+
+    public function getBlockedBalancePendingCount(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
     }
 
     public function getPendingDebtBalance(): int
@@ -427,9 +460,9 @@ class AsaasService implements Statement
         );
     }
 
-    public function getGatewayId()
+    public function getGatewayId(): int
     {
-        return FoxUtils::isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -568,6 +601,16 @@ class AsaasService implements Statement
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function refundEnabled(): bool
+    {
+        return false;
+    }
+
+    public function canRefund(Sale $sale): bool
+    {
+        return false;
     }
 
 }
