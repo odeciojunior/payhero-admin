@@ -226,7 +226,7 @@ class DomainRecordsApiController extends Controller
                 );
             }
 
-            $record = (new DomainRecord())->with(['domain', 'domain.project'])->find($recordId);
+            $record = DomainRecord::with(['domain', 'domain.project'])->find($recordId);
 
             if (empty($record->domain->project) || !Gate::allows('edit', [$record->domain->project])) {
                 return response()->json(
