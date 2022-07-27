@@ -449,7 +449,6 @@ class SaleService
 
         if (!empty($userTransaction->checkout_tax) && $userTransaction->checkout_tax > 0) {
             $taxaCheckout = FoxUtils::onlyNumbers($userTransaction->checkout_tax);
-            $taxaReal += $taxaCheckout;
             $totalTax += $taxaCheckout;
         }
 
