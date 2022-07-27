@@ -42,11 +42,12 @@ class AutomaticTicketCreation extends Command
                     ->where('transactions.type', Transaction::TYPE_PRODUCER);
             })->join('companies', 'companies.id', '=', 'transactions.company_id')
             ->where('sales.status', Sale::STATUS_APPROVED)
-            ->where('start_date', '<', now()->subDays($daysWithoutTracking))
-            ->where('start_date', '>', '2022-05-19 15:00:00')
+            ->where('sales.start_date', '<', now()->subDays($daysWithoutTracking))
+            ->where('sales.start_date', '>', '2022-05-19 15:00:00')
             ->where('users.block_attendance_balance', true)
             ->whereNull('trackings.id')
             ->whereNull('tickets.id')
+            ->whereNotNull('sales.delivery_id')
             ->groupBy('sales.id', 'sales.customer_id', 'transactions.company_id', 'companies.safe2pay_balance');
 
         $total = $sales->count();
