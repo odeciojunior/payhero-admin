@@ -443,6 +443,11 @@ class SaleService
             $taxaReal -= $affiliateValue;
         }
 
+        if (!empty($userTransaction->checkout_tax) && $userTransaction->checkout_tax > 0) {
+            $taxaCheckout = FoxUtils::onlyNumbers($userTransaction->checkout_tax);
+            $totalTax += $taxaCheckout;
+        }
+
         if ($sale->status == Sale::STATUS_REFUNDED) {
             $comission = foxutils()->formatMoney(0);
         }
@@ -481,6 +486,7 @@ class SaleService
             'transaction_rate' => foxutils()->formatMoney($transactionRate / 100),
             'tax' => ($userTransaction->tax) ? (($userTransaction->tax_type == 1) ? $userTransaction->tax.'%' : foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->tax) / 100)) : 0,
             'tax_type' => $userTransaction->tax_type ?? 0,
+            'checkout_tax' => (foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0) ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100) : null,
             'totalTax' => foxutils()->formatMoney($totalTax / 100),
             'total' => foxutils()->formatMoney($total / 100),
             'subTotal' => foxutils()->formatMoney(intval($subTotal) / 100),
