@@ -5,14 +5,21 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\DataTransferObjects\BureauUserDataInterface;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PromotionalTax;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserDocument;
-use Modules\Core\Entities\UserInformation;
 
 class UserService
 {
+    private $bureauService;
+
+    public function __construct()
+    {
+        $this->bureauService = new BigBoostService();
+    }
+
     public function isDocumentValidated($userId = null): bool
     {
         $userModel = new User();
@@ -343,6 +350,20 @@ class UserService
         } catch (Exception $e) {
             report($e);
             DB::rollback();
+        }
+    }
+
+    /**
+     * @param $cpf
+     * @return false|mixed
+     */
+    public function getBureauUserData($cpf): BureauUserDataInterface
+    {
+        try {
+            return $this->bureauService->getUserData($cpf);
+        } catch (\Exception $e) {
+            report($e);
+            throw $e;
         }
     }
 }

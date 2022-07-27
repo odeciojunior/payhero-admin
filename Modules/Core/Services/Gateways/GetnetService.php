@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
@@ -23,7 +22,6 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\SaleService;
 use Modules\Transfers\Services\GetNetStatementService;
@@ -470,9 +468,9 @@ class GetnetService implements Statement
         return !empty($lastTransaction) ? ['Getnet'] : [];
     }
 
-    public function getGatewayId()
+    public function getGatewayId(): int
     {
-        return FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -537,6 +535,16 @@ class GetnetService implements Statement
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function refundEnabled(): bool
+    {
+        return false;
+    }
+
+    public function canRefund(Sale $sale): bool
+    {
+        return false;
     }
 
 }

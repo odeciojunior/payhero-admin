@@ -6,16 +6,15 @@ use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
-use Modules\Core\Events\BilletRefundedEvent;
+use Modules\Core\Events\ManualRefundEvent;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
- * Class BilletRefundedSendEmailListener
+ * Class ManualRefundedSendEmailListener
  * @package Modules\Core\Listeners
  */
-class BilletRefundedSendEmailListener implements ShouldQueue
+class ManualRefundedSendEmailListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -27,10 +26,10 @@ class BilletRefundedSendEmailListener implements ShouldQueue
     }
 
     /**
-     * @param BilletRefundedEvent $event
+     * @param ManualRefundEvent $event
      * @return bool
      */
-    public function handle(BilletRefundedEvent $event)
+    public function handle(ManualRefundEvent $event)
     {
         try {
             $sale = $event->sale;
@@ -52,7 +51,7 @@ class BilletRefundedSendEmailListener implements ShouldQueue
                 return false;
             }
 
-            $saleCode = Hashids::connection('sale_id')->encode($sale->id);
+            $saleCode = hashids_encode($sale->id, 'sale_id');
             $products = $saleService->getEmailProducts($sale->id);
 
             $sale->total_paid_value = preg_replace(

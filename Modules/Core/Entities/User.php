@@ -50,6 +50,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int|null $account_owner_id
  * @property int $deleted_project_filter
  * @property mixed|null $id_wall_result
+ * @property mixed|null $bureau_result
  * @property string|null $sex
  * @property string|null $mother_name
  * @property bool $has_sale_before_getnet
@@ -153,6 +154,7 @@ class User extends Authenticable
         'account_owner_id',
         'deleted_project_filter',
         'id_wall_result',
+        'bureau_result',
         'sex',//
         'mother_name',//
         'has_sale_before_getnet',//
