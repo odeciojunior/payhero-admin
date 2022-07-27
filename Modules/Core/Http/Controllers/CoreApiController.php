@@ -4,6 +4,7 @@ namespace Modules\Core\Http\Controllers;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\BonusBalance;
@@ -11,6 +12,7 @@ use Modules\Core\Entities\Ticket;
 use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
 use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
 use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Events\UserRegistrationFinishedEvent;
 use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
@@ -335,5 +337,19 @@ class CoreApiController extends Controller
             'expires_at' => Carbon::parse($bonusBalance->expires_at)->format('d/m/Y'),
             'used_percentage' => floor(100 - ($bonusBalance->current_value * 100 / $bonusBalance->total_value))
         ]);
+    }
+
+    public function checkDocumentOnBureau(string $userId) {
+        try {
+            $user = User::findOrFail(hashids_decode($userId));
+            event(new UserRegistrationFinishedEvent($user));
+            return response('', Response::HTTP_NO_CONTENT);
+        } catch (ModelNotFoundException $e) {
+            report($e);
+            return response('User not found.', 404);
+        } catch (Exception $e) {
+            report($e);
+            return response('Internal server error.', 500);
+        }
     }
 }
