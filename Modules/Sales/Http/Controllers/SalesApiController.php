@@ -25,6 +25,7 @@ use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SalesApiController extends Controller
 {

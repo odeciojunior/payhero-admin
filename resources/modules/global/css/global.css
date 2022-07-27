@@ -2002,8 +2002,9 @@ tbody td{
 
 .sirius-select-container .sirius-select-options div.disabled {
     opacity: 0.5;
-    background: #F6F7F9;
+    background: white; /*#F6F7F9;*/
     cursor: none !important;
+    color:#ccc;
 }
 
 #company-select .sirius-select-container {
