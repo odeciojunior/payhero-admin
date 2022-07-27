@@ -605,7 +605,7 @@ class AsaasService implements Statement
 
     public function refundEnabled(): bool
     {
-        return false;
+        return true;
     }
 
     public function canRefund(Sale $sale): bool
