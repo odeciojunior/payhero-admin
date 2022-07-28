@@ -273,7 +273,8 @@ class GerencianetService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+        $accountOwnerId = auth()->user()->account_owner_id??$sale->owner_id;
+        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->accountOwnerId)->first();
 
         return $availableBalance >= $transaction->value;
     }
