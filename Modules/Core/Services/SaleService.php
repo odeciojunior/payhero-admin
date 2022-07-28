@@ -53,7 +53,6 @@ class SaleService
                     ->get()
                     ->pluck('id')
                     ->toArray();
-
             } else {
                 $userCompanies = [];
                 $companies = explode(',', $filters["company"]);
@@ -82,10 +81,10 @@ class SaleService
             }
 
             $transactions = $transactionModel
-                            ->with($relationsArray)
-                            ->whereIn('company_id', $userCompanies)
-                            ->join('sales', 'sales.id', 'transactions.sale_id')
-                            ->whereNull('invitation_id');
+                ->with($relationsArray)
+                ->whereIn('company_id', $userCompanies)
+                ->join('sales', 'sales.id', 'transactions.sale_id')
+                ->whereNull('invitation_id');
 
             if (!$withCashback) {
                 $transactions->where('type', '<>', $transactionModel->present()->getType('cashback'));
@@ -291,7 +290,7 @@ class SaleService
                     $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )->selectRaw('transactions.*, sales.start_date')
-            ->orderByDesc('sales.start_date');
+                ->orderByDesc('sales.start_date');
 
             return $transactions;
         } catch (Exception $e) {
@@ -411,18 +410,17 @@ class SaleService
         $totalToCalcTaxReal = $total + $cashbackValue;
 
         if ($userTransaction->tax > 0) {
-            if($userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX) {
+            if ($userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX) {
                 $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->tax / 100));
                 $totalTax += $totalTaxPercentage;
-            }
-            else {
+            } else {
                 $totalTaxPercentage = foxutils()->onlyNumbers($userTransaction->tax);
                 $totalTax += $totalTaxPercentage;
             }
         }
 
-        if ($userTransaction->transaction_rate > 0) {
-            $transactionRate = foxutils()->onlyNumbers($userTransaction->transaction_rate);
+        if ($userTransaction->transaction_tax > 0) {
+            $transactionRate = foxutils()->onlyNumbers($userTransaction->transaction_tax);
             $totalTax += $transactionRate;
         }
 
@@ -483,8 +481,8 @@ class SaleService
 
         //add details to sale
         $sale->details = (object)[
-            'transaction_rate' => foxutils()->formatMoney($transactionRate / 100),
-            'tax' => ($userTransaction->tax) ? (($userTransaction->tax_type == 1) ? $userTransaction->tax.'%' : foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->tax) / 100)) : 0,
+            'transaction_tax' => foxutils()->formatMoney($transactionRate / 100),
+            'tax' => ($userTransaction->tax) ? (($userTransaction->tax_type == 1) ? $userTransaction->tax . '%' : foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->tax) / 100)) : 0,
             'tax_type' => $userTransaction->tax_type ?? 0,
             'checkout_tax' => (foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0) ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100) : null,
             'totalTax' => foxutils()->formatMoney($totalTax / 100),
@@ -677,7 +675,7 @@ class SaleService
             DB::beginTransaction();
             $safe2payBalance = 0;
             $saleIdEncode = hashids_encode($sale->id, 'sale_id');
-            $isBillet = $sale->payment_method==Sale::BILLET_PAYMENT;
+            $isBillet = $sale->payment_method == Sale::BILLET_PAYMENT;
 
             SaleRefundHistory::create(
                 [
@@ -796,12 +794,13 @@ class SaleService
 
     public function getResumeBlocked($filters)
     {
-        $cacheName = 'blocked-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 120, function() use ($filters) {
+        $cacheName = 'blocked-resume-' . json_encode($filters);
+        return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactionModel = new Transaction;
             $filters['invite'] = 1;
             $transactions = $this->getSalesBlockedBalance($filters);
-            $transactionStatus = implode(',',
+            $transactionStatus = implode(
+                ',',
                 [
                     Transaction::STATUS_TRANSFERRED,
                     Transaction::STATUS_PAID
@@ -932,7 +931,6 @@ class SaleService
                 ->orderByDesc('sales.start_date');
 
             return $transactions;
-
         } catch (Exception $e) {
             report($e);
 
@@ -942,19 +940,19 @@ class SaleService
 
     public function getResumePending($filters)
     {
-        $cacheName = 'pending-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 120, function() use ($filters) {
+        $cacheName = 'pending-resume-' . json_encode($filters);
+        return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactions = $this->getSalesPendingBalance($filters);
-            $transactionStatus = implode(',', [ Transaction::STATUS_PAID ]);
+            $transactionStatus = implode(',', [Transaction::STATUS_PAID]);
 
             $resume = $transactions->without(['sale'])
-            ->select(
-                DB::raw(
-                    "count(sales.id) as total_sales, sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
+                ->select(
+                    DB::raw(
+                        "count(sales.id) as total_sales, sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
+                    )
                 )
-            )
-            ->first()
-            ->toArray();
+                ->first()
+                ->toArray();
 
             $resume['commission'] = foxutils()->formatMoney($resume['commission']);
 
@@ -1015,25 +1013,25 @@ class SaleService
                         $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Asaas'))
                             ->where('transactions.created_at', '>', '2021-09-20');
                     })
-                    ->orWhere(function ($qr2) {
-                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
-                    })
-                    ->orWhere(function ($qr2) {
-                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Gerencianet'))
-                            ->where('is_waiting_withdrawal', 0);
-                    })
-                    ->orWhere(function ($qr3) {
-                        $qr3->where('is_waiting_withdrawal', 0)
-                            ->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Getnet'));
-                    })
-                    ->orWhere(function ($qr2) {
-                        if (auth()->user()->show_old_finances) {
-                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
-                                ->orWhere(function ($query) {
-                                    $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
-                                });
-                        }
-                    });
+                        ->orWhere(function ($qr2) {
+                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
+                        })
+                        ->orWhere(function ($qr2) {
+                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Gerencianet'))
+                                ->where('is_waiting_withdrawal', 0);
+                        })
+                        ->orWhere(function ($qr3) {
+                            $qr3->where('is_waiting_withdrawal', 0)
+                                ->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Getnet'));
+                        })
+                        ->orWhere(function ($qr2) {
+                            if (auth()->user()->show_old_finances) {
+                                $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
+                                    ->orWhere(function ($query) {
+                                        $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
+                                    });
+                            }
+                        });
                 });
             }
 
@@ -1049,8 +1047,8 @@ class SaleService
                     $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )
-            ->selectRaw('transactions.*, sales.start_date')
-            ->orderByDesc('sales.start_date');
+                ->selectRaw('transactions.*, sales.start_date')
+                ->orderByDesc('sales.start_date');
 
             // Projeto
             if (!empty($filters["project"])) {
@@ -1066,7 +1064,7 @@ class SaleService
             // Código de Venda
             if (!empty($filters["sale_code"])) {
                 $saleId = !empty(hashids_decode($filters["sale_code"], 'sale_id')) ?
-                hashids_decode($filters["sale_code"], 'sale_id') : 0;
+                    hashids_decode($filters["sale_code"], 'sale_id') : 0;
 
                 $transactions->whereHas(
                     'sale',
@@ -1133,8 +1131,8 @@ class SaleService
 
     public function getPendingBalance($filters)
     {
-        $cacheName = 'pending-'.json_encode($filters);
-        return cache()->remember($cacheName, 120, function() use ($filters) {
+        $cacheName = 'pending-' . json_encode($filters);
+        return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactions = $this->getSalesPendingBalance($filters);
             return $transactions->paginate(10);
         });
@@ -1142,8 +1140,8 @@ class SaleService
 
     public function getPaginetedBlocked($filters)
     {
-        $cacheName = 'blocked-'.json_encode($filters);
-        return cache()->remember($cacheName, 120, function() use ($filters) {
+        $cacheName = 'blocked-' . json_encode($filters);
+        return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactions = $this->getSalesBlockedBalance($filters);
             return $transactions->paginate(10);
         });
@@ -1301,7 +1299,7 @@ class SaleService
     public function refund(Sale $sale, $refundObservation = null)
     {
 
-        if ($sale->status != Sale::STATUS_APPROVED){
+        if ($sale->status != Sale::STATUS_APPROVED) {
             return [
                 'status' => 'error',
                 'message' => 'Somente vendas aprovadas podem ser estornada.'
@@ -1336,7 +1334,7 @@ class SaleService
 
         $message = null;
 
-        if($gatewayService->canRefund($sale)) {
+        if ($gatewayService->canRefund($sale)) {
 
             $result = (new CheckoutService())->cancelPaymentCheckout($sale);
             if ($result['status'] != 'success') {
@@ -1347,19 +1345,16 @@ class SaleService
                 ];
             }
 
-            $gatewayService->cancel($sale,$result['response'], $refundObservation);
+            $gatewayService->cancel($sale, $result['response'], $refundObservation);
 
-            if (!$sale->api_flag ) {
+            if (!$sale->api_flag) {
                 event(new SaleRefundedEvent($sale));
             }
 
             $message = $result['message'];
-
-
         } else {
 
             $message = $this->manualRefund($sale, $refundObservation);
-
         }
 
         return [

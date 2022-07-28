@@ -133,8 +133,8 @@ class Company extends Model
         'complement',
         'neighborhood',
         'number',
-        //'support_email',
-        //'support_telephone',
+        'support_email',
+        'support_telephone',
         'cielo_balance',
         'asaas_balance',
         'safe2pay_balance',
@@ -143,11 +143,8 @@ class Company extends Model
         'date_last_document_notification',
         'company_type',
         'order_priority',
-        //'account_type',
-        //'extra_document',
-        //'document_issue_date',
-        //'document_issuer',
-        //'document_issuer_state',
+        'capture_transaction_enabled',
+        'account_type',
         'active_flag',
         'gateway_tax',
         'tax_default',
@@ -160,14 +157,21 @@ class Company extends Model
         'installment_tax',
         'checkout_tax',
         'gateway_release_money_days',
+        'document_issue_date',
+        'document_issuer',
+        'document_issuer_state',
+        'extra_document',
+        'id_wall_result',
+        'id_wall_date_update',
+        'bureau_result',
         'transaction_rate',
-        'deleted_at',
+        'block_checkout',
+        'annual_income',
         'created_at',
         'updated_at',
-        'id_wall_result',
-        'block_checkout',
-        //'annual_income'
-];
+        'deleted_at',
+    ];
+
     /**
      * @var bool
      */
@@ -259,32 +263,38 @@ class Company extends Model
         return $this->hasMany('Modules\Core\Entities\GatewaysCompaniesCredential');
     }
 
-    public function gatewayCredential($gateway_id){
-        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()??null;
+    public function gatewayCredential($gateway_id)
+    {
+        return $this->gatewayCompanyCredential->where('gateway_id', $gateway_id)->first() ?? null;
     }
 
-    public function getGatewayStatus($gateway_id){
-        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_status??null;
+    public function getGatewayStatus($gateway_id)
+    {
+        return $this->gatewayCompanyCredential->where('gateway_id', $gateway_id)->first()->gateway_status ?? null;
     }
 
-    public function getGatewaySubsellerId($gateway_id){
-        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_subseller_id??null;
+    public function getGatewaySubsellerId($gateway_id)
+    {
+        return $this->gatewayCompanyCredential->where('gateway_id', $gateway_id)->first()->gateway_subseller_id ?? null;
     }
 
-    public function getGatewayApiKey($gatewayId){
-        return $this->gatewayCompanyCredential->where('gateway_id',$gatewayId)->first()->gateway_api_key ?? null;
+    public function getGatewayApiKey($gatewayId)
+    {
+        return $this->gatewayCompanyCredential->where('gateway_id', $gatewayId)->first()->gateway_api_key ?? null;
     }
 
-    public function gatewayBackofficeRequests (): HasMany
+    public function gatewayBackofficeRequests(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\GatewaysBackofficeRequests');
     }
 
-    public function getDefaultBankAccount(){
-        return $this->companyBankAccounts->where('is_default',true)->where('status','VERIFIED')->first()??null;
+    public function getDefaultBankAccount()
+    {
+        return $this->companyBankAccounts->where('is_default', true)->where('status', 'VERIFIED')->first() ?? null;
     }
 
-    public function getBankAccountTED(){
-        return $this->companyBankAccounts->where('transfer_type','TED')->where('status','VERIFIED')->first()??null;
+    public function getBankAccountTED()
+    {
+        return $this->companyBankAccounts->where('transfer_type', 'TED')->where('status', 'VERIFIED')->first() ?? null;
     }
 }
