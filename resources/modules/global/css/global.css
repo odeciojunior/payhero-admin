@@ -2881,6 +2881,9 @@ tbody td{
     #top-vertical-bar{
         display: none;
     }
+    .hamburger-desk{
+        display: none;
+    }
 }
 
 @-webkit-keyframes fade-in {
