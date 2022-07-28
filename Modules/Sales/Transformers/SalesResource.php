@@ -94,6 +94,7 @@ class SalesResource extends JsonResource
             'transaction_rate' => $this->details->transaction_rate ?? null,
             'tax' => $this->details->tax ?? null,
             'tax_type' => $this->details->tax_type ?? null,
+            'checkout_tax' => $this->details->checkout_tax ?? null,
             //extra info
             'total' => $this->details->total ?? null,
             'subTotal' => $this->details->subTotal ?? null,
