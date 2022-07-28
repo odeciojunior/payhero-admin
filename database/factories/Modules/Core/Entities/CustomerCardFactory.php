@@ -33,6 +33,8 @@ class CustomerCardFactory extends Factory
             'last_four_digits' => $lastFourDigits,
             'card_token' => $this->faker->sha256(),
             'association_code' => '',
+            'created_at'=>now(),
+            'updated_at'=>now()
         ];
     }    
 }

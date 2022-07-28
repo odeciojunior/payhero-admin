@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Demo;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
@@ -55,11 +56,12 @@ class CreateFakeCheckout extends Command
         Config::set('database.default', 'demo');
         
         try{
-            $attemps = 1;
+            $isRandomData = true;
+            $attemps = 500;
             $counter = 1;
         
             do{
-                $this->createCheckout()
+                $this->createCheckout($isRandomData)
                 ->createCheckoutPlan();
                 $this->line($counter.'/'.$attemps);
                 $counter++;
@@ -71,16 +73,19 @@ class CreateFakeCheckout extends Command
         }
     }
 
-    public function createCheckout(){
+    public function createCheckout($isRandomData=false){
         
         $this->project = DB::table('projects')->select('id')->inRandomOrder()->first();
         $checkoutConfig = DB::table('checkout_configs')->select('checkout_type_enum')->where('project_id',$this->project->id)->first();
-        
+        $data = $isRandomData?Carbon::now()->subDays(rand(1,60)):now();
+
         $this->checkout = Checkout::factory()
         ->count(1)
         ->create([                
             'project_id'=>$this->project->id,
-            'template_type'=>(int)$checkoutConfig->checkout_type_enum
+            'template_type'=>(int)$checkoutConfig->checkout_type_enum,
+            'created_at'=>$data,
+            'updated_at'=>$data
         ])->first();
         
         return $this;
@@ -96,6 +101,8 @@ class CreateFakeCheckout extends Command
             CheckoutPlan::factory(1)->for($this->checkout)->create([
                 'plan_id'=>$plan->id,
                 'amount'=>1,
+                'created_at'=>$this->checkout->created_at,
+                'updated_at'=>$this->checkout->created_at
             ]);            
         }
 

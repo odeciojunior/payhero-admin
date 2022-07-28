@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Demo;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Console\Command;
 
-class MigrateDemo extends Command
+class DemoMigrate extends Command
 {
     /**
      * The name and signature of the console command.

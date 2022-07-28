@@ -410,7 +410,7 @@ class ReportFinanceService
         } else if ($variation < 0) {
             $color = 'pink';
         }
-
+        
         return [
             'chart' => [
                 'labels' => $labelList,

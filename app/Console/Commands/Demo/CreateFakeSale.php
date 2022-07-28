@@ -44,33 +44,43 @@ class CreateFakeSale extends Command
         Config::set('database.default', 'demo');
 
         $this->company = Company::find(Company::DEMO_ID);
+        $isRandomData = true;
+        $attemps = 500;
+        $counter = 1;
                 
-        $this->nextIsUpsell = mt_rand(1,10)==7;
         do{
-            $this->resetVars()                
-                ->validateCheckoutLogs()                
-                ->preparePlans()        
-                ->prepareOrderBump()
-                ->prepareData()
-                ->checkAutomaticDiscount()
-                ->checkDiscountCoupon()
-                ->setCustomer()
-                ->setShipping()    
-                ->checkProgressiveDiscount()        
-                ->calculateValues()
-                ->setSale()
-                ->executePayment()
-                ->setTransactions()
-                ->setTranking();
-            
-            $this->upsellPreviousSaleId = $this->sale->id;
+            $this->nextIsUpsell = mt_rand(1,10)==7;
+            do{
+                $this->resetVars()
+                    ->validateCheckoutLogs()                
+                    ->preparePlans()        
+                    ->prepareOrderBump()
+                    ->prepareData()
+                    ->checkAutomaticDiscount()
+                    ->checkDiscountCoupon()
+                    ->setCustomer()
+                    ->setShipping()    
+                    ->checkProgressiveDiscount()        
+                    ->calculateValues()
+                    ->setSale($isRandomData)
+                    ->executePayment()
+                    ->setTransactions()
+                    ->setTranking();
+                
+                $this->upsellPreviousSaleId = $this->sale->id;
 
-            if($this->isUpsell){
-                $this->isUpsell = false;
-            }else{
-                $this->isUpsell = $this->nextIsUpsell;          
-            }
+                if($this->isUpsell){
+                    $this->isUpsell = false;
+                }else{
+                    $this->isUpsell = $this->nextIsUpsell;          
+                }
 
-        }while($this->isUpsell);
+                $counter++;
+            }while($this->isUpsell);
+
+            $this->line("$counter/$attemps");
+        }while($counter <= $attemps);
+
+        
     }
 }

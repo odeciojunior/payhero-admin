@@ -25,7 +25,9 @@ class CheckoutPlanFactory extends Factory
         return [
             'checkout_id'=>Checkout::factory(),
             'plan_id'=>null,
-            'amount'=>1
+            'amount'=>1,
+            'created_at'=>now(),
+            'updated_at'=>now()
         ];
     }    
 }

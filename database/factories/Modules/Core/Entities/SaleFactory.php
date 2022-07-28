@@ -61,7 +61,9 @@ class SaleFactory extends Factory
             'boleto_digitable_line'=>null,
             'gateway_billet_identificator'=>null,
             'boleto_due_date'=>null,
-            'has_valid_tracking'=>$this->faker->boolean()
+            'has_valid_tracking'=>$this->faker->boolean(),
+            'created_at'=>now(),
+            'updated_at'=>now()
         ];
     }   
 

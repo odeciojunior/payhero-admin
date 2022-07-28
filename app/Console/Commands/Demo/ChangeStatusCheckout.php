@@ -58,7 +58,7 @@ class ChangeStatusCheckout extends Command
                 'status_enum'=>$status['enum']
             ]);
             
-            $this->line('Atualizando checjout '.$checkout->id);
+            $this->line('Atualizando checkout '.$checkout->id);
         }        
     }
 
