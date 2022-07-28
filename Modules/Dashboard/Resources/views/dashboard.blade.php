@@ -17,18 +17,9 @@
         <div style="display: none" class="page-header container mb-15 mb-sm-0">
 
             <div class="row align-items-center justify-content-between" style="min-height:50px">
-
                 <div class="col-lg-6 mb-25">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
-
-                <div class="announcekit-widget-mobile col-lg-2 mb-25 font-size-14 text-primary d-sm-none" name="Qkw3C">
-                    <span id="announcekit-news" class="p-5">
-                        <b>NOVO</b>
-                    </span>
-                    <b>Clique para ver as novidades</b>
-                </div>
-
             </div>
 
         </div>
