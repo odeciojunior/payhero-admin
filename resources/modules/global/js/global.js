@@ -411,7 +411,7 @@ function loading(elementId, loaderClass) {
 
 function loadingOnScreen() {
     $('#loadingOnScreen').append(
-        `<div class="sirius-loading">
+        `<div class="sirius-loading" style="padding-left:64px;">
             <img style="height: 125px; width: 125px" src="/build/global/img/logos/2021/svg/icon-secundary.svg"
                  class="img-responsive"/>
         </div>`
