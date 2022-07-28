@@ -1458,9 +1458,11 @@ $(document).ready(function () {
         if (toggle.hasClass('hided')) {
             $('#logoIconSirius').fadeOut().addClass('d-none');
             $('#logoSirius').fadeIn().removeClass('d-none');
+            $('.hamburger-desk').css('margin-left','240px');
         } else {
             $('#logoIconSirius').fadeIn().removeClass('d-none');
             $('#logoSirius').fadeOut().addClass('d-none');
+            $('.hamburger-desk').css('margin-left','70px');
         }
     })
 

@@ -8,7 +8,7 @@
     </button>
 
     <!-- CLOUDFOX LOGO -->
-    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop" data-toggle="gridmenu" style="background-color: #0e0233">
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop site-menubar" data-toggle="gridmenu" style="background-color: #0e0233; overflow: hidden; top:0px">
         <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
         <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" height="26" style="margin: 0px 2rem 0px 1rem;">
     </div>
@@ -17,9 +17,9 @@
         <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-secundary.svg') }}" style="height:  2.7rem;">
     </div>
 
-    <!-- BOTAO HAMBURGUER NO DESKTOP-->
+    <!-- BOTAO HAMBURGUER NO DESKTOP -->
     <div>
-        <ul class="nav navbar-toolbar">
+        <ul class="nav navbar-toolbar hamburger-desk" style="margin-left:70px">
             <li class="nav-item hidden-float" id="toggleMenubar">
                 <a class="nav-link" data-toggle="menubar" href="#" role="button" onclick=" if($(this).hasClass('hided')) $('#logoSirius').css('margin-right','2rem'); else $('#logoSirius').css('margin-right','1rem') ">
                     <i class="icon hamburger hamburger-arrow-left">
@@ -72,7 +72,7 @@
             <!-- NAVERBAR FILHA DA CONTAINER -->
             <div class="row no-gutters d-flex" id="site-navbar-collapse">
 
-                
+
 
                 @include('layouts.company-select')
 
