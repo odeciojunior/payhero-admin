@@ -467,6 +467,7 @@ trait DemoPaymentFlowTrait
                 'interest_total_value' => $this->totalInterestValue ?? 0,
                 'has_order_bump' => $this->hasOrderBump,                
                 'status'=>$this->nextIsUpsell || $this->isUpsell ? Sale::STATUS_APPROVED : FoxUtilsFakeService::getRandomSaleStatus($this->payment_method),
+                'start_date'=>$data,
                 'created_at'=>$data,
                 'updated_at'=>$data
             ]            
