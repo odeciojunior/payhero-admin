@@ -11,7 +11,9 @@ const srcPlatforms = {
     'outbrain': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain',
     'taboola': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola',
     'pinterest': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest',
-    'uol_ads': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads'
+    'uol_ads': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads',
+    'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok',
+    'kwai': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai'
 }
 
 $(function () {
@@ -218,6 +220,7 @@ $(function () {
         const inputPlatformEdit = $("#modal-edit-pixel .platform-edit").val();
         const isApi = $("#modal-edit-pixel input[type=radio]:checked").val();
         const inputCodeEdit = $("#modal-edit-pixel .code-edit").val();
+        const inputConversionalEdit = $("#modal-edit-pixel .conversional-edit").val();
         const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value-edit").val();
         const facebookTokenApi = $("#modal-edit-pixel #facebook-token-api-edit").val();
         const inputPurchaseEventName = $("#modal-edit-pixel .input-purchase-event-name-edit").val();
@@ -228,6 +231,7 @@ $(function () {
             'platform': inputPlatformEdit,
             'is_api': isApi,
             'code': inputCodeEdit,
+            'conversional': inputConversionalEdit,
             'value_percentage_purchase_boleto': valuePercentagePurchaseBoleto,
             'facebook_token_api': facebookTokenApi,
             'purchase_event_name': inputPurchaseEventName,
@@ -250,9 +254,18 @@ $(function () {
                 platform: inputPlatformEdit,
                 status: $("#modal-edit-pixel .status-edit").is(':checked'),
                 checkout: $("#modal-edit-pixel .checkout-edit").is(':checked'),
+                basic_data: true,
+                delivery: true,
+                coupon: true,
+                payment_info: true,
                 purchase_card: $("#modal-edit-pixel .purchase-card-edit").is(':checked'),
                 purchase_boleto: $("#modal-edit-pixel .purchase-boleto-edit").is(':checked'),
                 purchase_pix: $("#modal-edit-pixel .purchase-pix-edit").is(':checked'),
+                purchase_all: false,
+                upsell: true,
+                purchase_upsell: true,
+                event_select: $("#modal-edit-pixel #single-event-edit").val(),
+                send_value_checkout: $("#modal-edit-pixel .send-value-edit").is(':checked'),
                 edit_pixel_plans: plansApply,
                 purchase_event_name: inputPurchaseEventName,
                 is_api: isApi,
@@ -276,6 +289,11 @@ $(function () {
 
         const imgPlatform = $(".img-edit-selected");
         const codeEditInput = $(".code-edit");
+        const conversionalEditInput = $(".conversional-edit");
+        const singleEvent = $('.single-event-edit');
+        const multipleEvent = $('.multiple-event-edit');
+
+        let code =  inputCodeByPlatform(pixel.platform, pixel.code, '', true);
 
         if (newPlatform == null) {
             newPlatform = pixel.platform;
@@ -284,9 +302,15 @@ $(function () {
 
         imgPlatform.attr('src', srcPlatforms[newPlatform]);
 
-
         $(".description-edit").val(pixel.name);
-        codeEditInput.val(pixel.code);
+
+        if (Array.isArray(code)) {
+            codeEditInput.val(code[0]);
+            conversionalEditInput.val(code[1]);
+        } else {
+            codeEditInput.val(code);
+            conversionalEditInput.val('');
+        }
 
         $(".percentage-boleto-value-edit").val(pixel.value_percentage_purchase_boleto);
 
@@ -308,9 +332,24 @@ $(function () {
         // Run Pixel
         isChecked($(".status-edit"), pixel.status);
         isChecked($(".checkout-edit"), pixel.checkout);
+        isChecked($(".basic-data-edit"), pixel.basic_data);
+        isChecked($(".delivery-edit"), pixel.delivery);
+        isChecked($(".coupon-edit"), pixel.coupon);
+        isChecked($(".payment-info-edit"), pixel.payment_info);
         isChecked($(".purchase-boleto-edit"), pixel.purchase_boleto);
         isChecked($(".purchase-card-edit"), pixel.purchase_card);
         isChecked($(".purchase-pix-edit"), pixel.purchase_pix);
+        isChecked($(".purchase-all-edit"), pixel.purchase_all);
+        isChecked($(".upsell-edit"), pixel.upsell);
+        isChecked($(".purchase-upsell-edit"), pixel.purchase_upsell);
+        isChecked($(".send-value-edit"), pixel.send_value_checkout);
+        $("#single-event-edit").val(pixel.event_select).change();
+
+        if (pixel.send_value_checkout == 'true') {
+            $(".send-value-edit").addClass('is-checked');
+        } else {
+            $(".send-value-edit").removeClass('is-checked');
+        }
 
         // Manipulation Modal pixel
         changePlaceholderInput(newPlatform, codeEditInput, $("#text-type-code-edit"));
@@ -323,6 +362,24 @@ $(function () {
             case 'outbrain':
                 pixelTaboolaOutbrain(pixel);
                 break;
+        }
+    }
+
+    function inputCodeByPlatform(platform, code, conversional = '', explode = false) {
+
+        switch (platform) {
+            case "google_adwords":
+                return explode ? code.split('/') : `${code}/${conversional}`
+            case "facebook":
+            case "google_analytics":
+            case "google_analytics_four":
+            case "taboola":
+            case "outbrain":
+            case 'uol_ads':
+            case 'tiktok':
+            case 'kwai':
+            default:
+                return code;
         }
     }
 
@@ -463,9 +520,18 @@ $(function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
         formData.append('status', $("#modal-create-pixel .pixel-status").is(':checked'));
         formData.append('checkout', $("#modal-create-pixel .checkout").is(':checked'));
+        formData.append('basic_data', true) // $("#modal-create-pixel .basic-data").is(':checked'));
+        formData.append('delivery', true) // $("#modal-create-pixel .delivery").is(':checked'));
+        formData.append('coupon', true) // $("#modal-create-pixel .coupon").is(':checked'));
+        formData.append('payment_info', true) // $("#modal-create-pixel .payment-info").is(':checked'));
         formData.append('purchase_card', $("#modal-create-pixel .purchase-card").is(':checked'));
         formData.append('purchase_boleto', $("#modal-create-pixel .purchase-boleto").is(':checked'));
         formData.append('purchase_pix', $("#modal-create-pixel .purchase-pix").is(':checked'));
+        formData.append('purchase_all', false)//$("#modal-create-pixel .purchase-all").is(':checked'));
+        formData.append('upsell', true) // $("#modal-create-pixel .upsell").is(':checked'));
+        formData.append('purchase_upsell', true) // $("#modal-create-pixel .purchase-upsell").is(':checked'));
+        formData.append('event_select', $("#modal-create-pixel #single-event").val());
+        formData.append('send_value_checkout', $("#modal-create-pixel .send-value").is(':checked'));
         formData.append('affiliate_id', affiliateId);
 
         if (!validateDataPixelForm({

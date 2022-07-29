@@ -162,7 +162,7 @@ class NotazzService
                             //plataforma
                             $trasactionRate = preg_replace("/[^0-9]/", "", $transaction->transaction_rate);
                             $costTotal += (int)$trasactionRate;
-                            $costTotal += (int)(($subTotal + $shippingCost) * ($transaction->percentage_rate / 100));
+                            $costTotal += (int)(($subTotal + $shippingCost) * ($transaction->tax / 100));
 
                             $installmentTaxValue = $sale->installment_tax_value ?? 0;
                             $costTotal += (int)($installmentTaxValue);

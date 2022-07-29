@@ -37,7 +37,7 @@ class ReportanaSaleListener implements ShouldQueue
                     if (in_array($sale->status, [Sale::STATUS_REFUSED, Sale::STATUS_CANCELED_ANTIFRAUD])) {
                         $column = $eventName = 'credit_card_refused';
                     }
-                } else if ($sale->payment_method == Sale::BOLETO_PAYMENT) {
+                } else if ($sale->payment_method == Sale::BILLET_PAYMENT) {
                     if ($sale->status == Sale::STATUS_APPROVED) {
                         $column = $eventName = 'billet_paid';
                     }
