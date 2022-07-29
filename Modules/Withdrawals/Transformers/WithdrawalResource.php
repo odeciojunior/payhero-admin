@@ -41,8 +41,8 @@ class WithdrawalResource extends JsonResource
         ];
 
         if (request('is_mobile')) {
-            $data['request_datetime'] = $this->created_at->format('Y-m-d H:i:s');
-            $data['release_datetime'] = $this->release_date->format('Y-m-d H:i:s');
+            $data['request_datetime'] = ($this->created_at) ? $this->created_at->format('Y-m-d H:i:s') : null;
+            $data['release_datetime'] = ($this->release_date) ? $this->release_date->format('Y-m-d H:i:s') : null;
         }
 
         return $data;
