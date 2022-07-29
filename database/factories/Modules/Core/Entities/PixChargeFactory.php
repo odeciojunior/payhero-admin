@@ -34,6 +34,8 @@ class PixChargeFactory extends Factory
             'qrcode_image'=>$this->faker->imageUrl(60,60),
             'status'=>'ATIVA',
             'expiration_date'=>Carbon::now()->addDay(),
+            'created_at'=>now(),
+            'updated_at'=>now()
         ];
     }    
 

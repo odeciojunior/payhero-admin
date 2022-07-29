@@ -410,7 +410,7 @@ class ReportFinanceService
         } else if ($variation < 0) {
             $color = 'pink';
         }
-
+        
         return [
             'chart' => [
                 'labels' => $labelList,
@@ -857,7 +857,7 @@ class ReportFinanceService
             $date['endDate'] = $dateRange[1];
 
             $countCashbacks = $cashbacks->count();
-
+\Log::info(str_replace_array('?',$cashbacks->getBindings(),$cashbacks->toSql()));
             if ($date['startDate'] == $date['endDate']) {
                 return $this->getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters);
             } elseif ($date['startDate'] != $date['endDate']) {

@@ -36,6 +36,7 @@ class CheckoutFactory extends Factory
                 return FoxUtils::getCookieAffiliate($attributes['project_id']);
             } ,
             'ip' => $this->faker->ipv4,
+            'id_state'=>FoxUtilsFakeService::getRandomUf(),
             'country' => '',
             'city' => '',
             'state' => '',
@@ -55,7 +56,8 @@ class CheckoutFactory extends Factory
             'utm_content' => null,
             'src' => $this->getRandomSrc(),
             'template_type' => 0,
-            'created_at'=>now()//Carbon::now()->subDays(rand(1,30))
+            'created_at'=>now(),
+            'updated_at'=>now()
         ];
     }    
 

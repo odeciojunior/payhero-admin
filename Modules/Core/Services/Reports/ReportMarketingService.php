@@ -144,7 +144,7 @@ class ReportMarketingService
                         ->whereIn('transaction.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
                         ->whereBetween('sale.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                         ->where('sale.project_id', $projectId)
-                        ->where('transaction.user_id', auth()->user()->account_owner_id)
+                        ->where('transaction.user_id', auth()->user()->getAccountOwnerId())
                         ->whereNull('invitation_id')
                         ->groupBy('plans.id')
                         ->orderBy('value', 'DESC')

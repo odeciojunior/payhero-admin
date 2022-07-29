@@ -436,8 +436,9 @@ trait DemoPaymentFlowTrait
         return User::DEMO_ID;
     }
 
-    public function setSale()
+    public function setSale($isRandomData=false)
     {        
+        $data = $isRandomData?Carbon::now()->subDays(rand(1,60)):now();
         $this->sale = Sale::factory()->create(
             [
                 'progressive_discount' => $this->progressiveDiscount,
@@ -465,7 +466,10 @@ trait DemoPaymentFlowTrait
                 'automatic_discount' => $this->automaticDiscount,
                 'interest_total_value' => $this->totalInterestValue ?? 0,
                 'has_order_bump' => $this->hasOrderBump,                
-                'status'=>$this->nextIsUpsell || $this->isUpsell ? Sale::STATUS_APPROVED : FoxUtilsFakeService::getRandomSaleStatus($this->payment_method)
+                'status'=>$this->nextIsUpsell || $this->isUpsell ? Sale::STATUS_APPROVED : FoxUtilsFakeService::getRandomSaleStatus($this->payment_method),
+                'start_date'=>$data,
+                'created_at'=>$data,
+                'updated_at'=>$data
             ]            
         );
 
@@ -477,6 +481,8 @@ trait DemoPaymentFlowTrait
                     'sale_id' => $this->sale->id,
                     'amount' => 1,
                     'plan_value' => $plan->price,
+                    'created_at'=>$data,
+                    'updated_at'=>$data
                 ]
             );
 
@@ -494,10 +500,22 @@ trait DemoPaymentFlowTrait
                         'cost' => $productPlan->cost ?? 0,
                         'name' => $product->name,
                         'digital_product_url' => $product->digital_product_url ?? null,
+                        'created_at'=>$data,
+                        'updated_at'=>$data
                     ]
                 );
             }
         }
+
+        $this->customer->update([
+            'created_at'=>$data,
+            'updated_at'=>$data
+        ]);
+
+        $this->delivery->update([
+            'created_at'=>$data,
+            'updated_at'=>$data
+        ]);
 
         return $this;
     }
@@ -509,13 +527,18 @@ trait DemoPaymentFlowTrait
             case Sale::PAYMENT_TYPE_CREDIT_CARD:
                 $card = CustomerCard::factory()
                     ->for($this->customer)
-                    ->create(); 
+                    ->create([
+                        'created_at'=>$this->sale->created_at,
+                        'updated_at'=>$this->sale->updated_at,
+                    ]); 
 
                 SaleInformation::factory()->for($this->sale)->create([
                     'installments'=>$this->sale->installments_amount,
                     'first_six_digits' => $card->first_six_digits,
                     'last_four_digits' => $card->last_four_digits,
                     'card_token' => $card->card_token,
+                    'created_at'=>$this->sale->created_at,
+                    'updated_at'=>$this->sale->updated_at
                 ]);
 
                 $this->sale->update([
@@ -524,7 +547,11 @@ trait DemoPaymentFlowTrait
                 ]);
             break;
             case Sale::PAYMENT_TYPE_BANK_SLIP:
-                SaleInformation::factory()->for($this->sale)->create();
+                SaleInformation::factory()->for($this->sale)
+                ->create([
+                    'created_at'=>$this->sale->created_at,
+                    'updated_at'=>$this->sale->updated_at
+                ]);
                 $this->sale->update([
                     'boleto_digitable_line'=>'99999999999999999999999999999999999999999999999',
                     'gateway_billet_identificator'=>'23793899400000171000558099999999999900139780',
@@ -532,9 +559,17 @@ trait DemoPaymentFlowTrait
                 ]);
                 break;
             case Sale::PAYMENT_TYPE_PIX:
-                SaleInformation::factory()->for($this->sale)->create();
+                SaleInformation::factory()->for($this->sale)
+                ->create([
+                    'created_at'=>$this->sale->created_at,
+                    'updated_at'=>$this->sale->updated_at
+                ]);
 
-                $pixCharge = PixCharge::factory()->for($this->sale)->create();
+                $pixCharge = PixCharge::factory()->for($this->sale)
+                ->create([
+                    'created_at'=>$this->sale->created_at,
+                    'updated_at'=>$this->sale->updated_at
+                ]);
                 $pixCharge->update([
                     'status'=>$this->sale->status ==Sale::STATUS_APPROVED ? 'RECEBIDO' : 'ATIVA'
                 ]);

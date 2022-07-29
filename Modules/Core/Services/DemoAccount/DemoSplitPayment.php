@@ -74,9 +74,9 @@ class DemoSplitPayment
             } else {
                 $this->transactionStatus = Transaction::STATUS_IN_PROCESS;
             }
-        } elseif ($this->sale->payment_method == Sale::DEBIT_CARD_PAYMENT) {
+        } elseif ($this->sale->payment_method == Sale::DEBIT_PAYMENT) {
             $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_IN_PROCESS;
-        } elseif ($this->sale->payment_method == Sale::BOLETO_PAYMENT) {
+        } elseif ($this->sale->payment_method == Sale::BILLET_PAYMENT) {
             $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_PENDING;
         } elseif ($this->sale->payment_method == Sale::PIX_PAYMENT) {
             $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_PENDING;
@@ -98,7 +98,7 @@ class DemoSplitPayment
     public function getCashbackValue(): int
     {   
         try {
-            if ($this->sale->payment_method == Sale::BOLETO_PAYMENT || $this->sale->installments_amount == 1) {
+            if ($this->sale->payment_method == Sale::BILLET_PAYMENT || $this->sale->installments_amount == 1) {
                 return 0;
             }
 
@@ -152,7 +152,7 @@ class DemoSplitPayment
         } else {
             $this->cloudfoxValue = (int)(($this->sale->original_total_paid_value / 100) * $this->producerCompany->gateway_tax);
 
-            if (FoxUtils::onlyNumbers($this->sale->total_paid_value) < 4000 && $this->sale->payment_method == Sale::BOLETO_PAYMENT) {
+            if (FoxUtils::onlyNumbers($this->sale->total_paid_value) < 4000 && $this->sale->payment_method == Sale::BILLET_PAYMENT) {
                 $transactionRate = 300;
             } else {
                 $transactionRate = $this->producerCompany->transaction_rate;
@@ -193,7 +193,9 @@ class DemoSplitPayment
                     'status_enum' =>  $this->transactionStatus,
                     'status' => (new Transaction())->present()->getStatusEnum($this->transactionStatus),
                     'type' => Transaction::TYPE_AFFILIATE,
-                    'release_date' => $this->getReleaseDate($affiliate->company)
+                    'release_date' => $this->getReleaseDate($affiliate->company),
+                    'created_at'=>$this->sale->created_at,
+                    'updated_at'=>$this->sale->updated_at
                 ]);
             }
         }
@@ -245,6 +247,8 @@ class DemoSplitPayment
                 'type' => Transaction::TYPE_INVITATION,
                 'release_date' => $this->getReleaseDate($invite->company),
                 'tracking_required' => $this->sale->user->get_faster ? false : true,
+                'created_at'=>$this->sale->created_at,
+                'updated_at'=>$this->sale->updated_at
             ]);
 
             $this->cloudfoxValue -= $inviteValue;            
@@ -276,7 +280,9 @@ class DemoSplitPayment
             'installment_tax' => $this->producerCompany->installment_tax,
             'release_date' => $this->getReleaseDate($this->producerCompany),
             'tracking_required' => $this->sale->user->get_faster ? false : true,
-            'is_security_reserve' => $this->isSecurityReserve($this->producerCompany)
+            'is_security_reserve' => $this->isSecurityReserve($this->producerCompany),
+            'created_at'=>$this->sale->created_at,
+            'updated_at'=>$this->sale->updated_at
         ]);
 
         if ($this->cashbackData['value']) {
@@ -287,6 +293,8 @@ class DemoSplitPayment
                 'sale_id' => $this->sale->id,
                 'value' => $this->cashbackData['value'],
                 'percentage' => $this->cashbackData['percentage'],
+                'created_at'=>$this->sale->created_at,
+                'updated_at'=>$this->sale->updated_at
             ]);
         }
 
@@ -302,6 +310,8 @@ class DemoSplitPayment
             'status_enum' => $this->transactionStatus,
             'status' => (new Transaction())->present()->getStatusEnum($this->transactionStatus),
             'type' => Transaction::TYPE_CLOUDFOX,
+            'created_at'=>$this->sale->created_at,
+            'updated_at'=>$this->sale->updated_at
         ]);
 
         return $this;
@@ -309,7 +319,7 @@ class DemoSplitPayment
 
     private function getTransactionData(Company $company)
     { 
-        if (FoxUtils::onlyNumbers($this->sale->total_paid_value) <= 4000 && $this->sale->payment_method == Sale::BOLETO_PAYMENT) {
+        if (FoxUtils::onlyNumbers($this->sale->total_paid_value) <= 4000 && $this->sale->payment_method == Sale::BILLET_PAYMENT) {
             $transactionRate = 300;
         } else {
             $transactionRate = $company->transaction_rate;
