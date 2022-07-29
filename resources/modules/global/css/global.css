@@ -2884,6 +2884,9 @@ tbody td{
     .hamburger-desk{
         display: none;
     }
+    #loadingOnScreen .sirius-loading{
+        padding-left:0px !important;
+    }
 }
 
 @-webkit-keyframes fade-in {
