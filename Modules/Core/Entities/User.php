@@ -161,6 +161,7 @@ class User extends Authenticable
         'observation',
         'account_is_approved',
         'chargeback_rate',
+        'contestation_rate',
         'account_score',
         'chargeback_score',
         'attendance_score',
