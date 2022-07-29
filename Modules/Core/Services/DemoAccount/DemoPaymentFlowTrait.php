@@ -141,7 +141,6 @@ trait DemoPaymentFlowTrait
         }
 
         $this->totalValue = $this->subTotal;
-
         return $this;
     }
 
@@ -254,7 +253,7 @@ trait DemoPaymentFlowTrait
 
         if ($rules->count()) {
             $this->hasOrderBump = true;
-            $this->totalValue = $this->subTotal;
+            $this->totalValue = $this->subTotal;            
         }
         
         return $this;
@@ -303,8 +302,7 @@ trait DemoPaymentFlowTrait
             break;
         }
 
-        $this->totalValue -= $this->automaticDiscount;        
-        
+        $this->totalValue -= $this->automaticDiscount;                
         return $this;
     }
 
@@ -312,8 +310,7 @@ trait DemoPaymentFlowTrait
     {
         $this->shipping = Shipping::select('value')->where('project_id',$this->project->id)->inRandomOrder()->first();
         $this->shippingPrice = FoxUtils::onlyNumbers($this->shipping->value);
-        $this->totalValue+= $this->shippingPrice;
-
+        $this->totalValue+= $this->shippingPrice;                
         return $this;
     } 
     
@@ -342,11 +339,11 @@ trait DemoPaymentFlowTrait
             return $this;
         }
         
-        $this->progressiveDiscount = (mt_rand(1,30)/100)*$this->subTotal;
+        $this->progressiveDiscount = intval((mt_rand(1,30)/100)*$this->subTotal);
 
         if($this->progressiveDiscount > 0){
             if($this->totalValue - $this->progressiveDiscount > 500){
-                $this->totalValue -= $this->progressiveDiscount;
+                $this->totalValue -= $this->progressiveDiscount;                                
             }else{
                 $this->progressiveDiscount = 0;
             }
@@ -378,7 +375,7 @@ trait DemoPaymentFlowTrait
             if ($installments_interest_free > 1 && $this->installment_amount <= $installments_interest_free) {
                 $this->installmentFreeTaxValue = $installmentsData['total_value_with_tax'] - $this->totalValue;
             } else {
-                $interestValue = $installmentsData['total_value_with_tax'] - $this->totalValue;
+                $interestValue = $installmentsData['total_value_with_tax'] - $this->totalValue;                                
                 $this->totalInterestValue = $installmentsData['total_value_with_tax'] - $this->totalValue;
                 $this->totalValue = $installmentsData['total_value_with_tax'];
             }
@@ -449,7 +446,7 @@ trait DemoPaymentFlowTrait
                 'checkout_id' => $this->checkout ? $this->checkout->id : null,
                 'affiliate_id' => $this->project ? FoxUtils::getCookieAffiliate($this->project->id) : null,
                 'payment_method' => $this->payment_method,
-                'total_paid_value' => intval($this->totalValue)/100,
+                'total_paid_value' => number_format(intval($this->totalValue)/100,2,'.',''),
                 'original_total_paid_value' => $this->totalValue,
                 'sub_total' => FoxUtils::floatFormat($this->subTotal),
                 'shipment_value' => FoxUtils::floatFormat($this->shippingPrice),

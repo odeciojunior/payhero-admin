@@ -15,6 +15,7 @@ use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\WooCommerceService;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class SalesResource

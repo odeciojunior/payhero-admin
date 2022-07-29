@@ -66,21 +66,33 @@ class DemoSplitPayment
 
         if ($this->sale->status == Sale::STATUS_IN_REVIEW) {
             $this->transactionStatus = Transaction::STATUS_PENDING_ANTIFRAUD;
-        } elseif ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-            if ($this->sale->status == Sale::STATUS_APPROVED) {
-                $this->transactionStatus = Transaction::STATUS_PAID;
-            } elseif ($this->sale->status == Sale::STATUS_CANCELED_ANTIFRAUD) {
-                $this->transactionStatus = Transaction::STATUS_CANCELED_ANTIFRAUD;
-            } else {
-                $this->transactionStatus = Transaction::STATUS_IN_PROCESS;
-            }
-        } elseif ($this->sale->payment_method == Sale::DEBIT_PAYMENT) {
-            $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_IN_PROCESS;
-        } elseif ($this->sale->payment_method == Sale::BILLET_PAYMENT) {
-            $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_PENDING;
-        } elseif ($this->sale->payment_method == Sale::PIX_PAYMENT) {
-            $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_PENDING;
+            return $this;
         }
+        
+        switch ($this->sale->payment_method) {
+            case Sale::CREDIT_CARD_PAYMENT:
+                switch ($this->sale->status) {
+                    case Sale::STATUS_APPROVED:
+                        $this->transactionStatus = Transaction::STATUS_PAID;
+                    break;
+                    case Sale::STATUS_CANCELED_ANTIFRAUD:
+                        $this->transactionStatus = Transaction::STATUS_CANCELED_ANTIFRAUD;
+                        break;
+                    default:
+                        $this->transactionStatus = Transaction::STATUS_IN_PROCESS;
+                    break;
+                }
+                break;            
+            case  Sale::DEBIT_PAYMENT:
+                $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_IN_PROCESS;
+                break;
+            case Sale::BILLET_PAYMENT:
+                $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_PENDING;
+                break;
+            case Sale::PIX_PAYMENT:
+                $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_PENDING;
+                break;
+        }    
 
         return $this;
     }
@@ -116,11 +128,11 @@ class DemoSplitPayment
             $installmentsAmount = $this->sale->installments_amount - 1;
 
             $cashbackPercentage = $installmentsAmount * $user->installment_cashback;
-
+            
             $saleValueWithoutTax = (FoxUtils::onlyNumbers($this->sale->total_paid_value) - FoxUtils::onlyNumbers($this->sale->interest_total_value));
 
             $cashbackValue = (int)($saleValueWithoutTax / 100 * $cashbackPercentage);
-           
+                       
             return $cashbackValue;
             
         } catch (Exception $e) {
@@ -141,14 +153,15 @@ class DemoSplitPayment
 
     private function setCloudfoxValue()
     { 
-        if ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+        if ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT)
+        {
             $total = $this->sale->original_total_paid_value - $this->sale->interest_total_value + $this->cashbackData['value'];
             
             $this->cloudfoxValue = (int)(($total/100) * $this->producerCompany->gateway_tax);
 
             $this->cloudfoxValue += FoxUtils::onlyNumbers($this->producerCompany->transaction_rate);
-
-            $this->cloudfoxValue += $this->sale->interest_total_value;
+            
+            $this->cloudfoxValue += $this->sale->interest_total_value;            
         } else {
             $this->cloudfoxValue = (int)(($this->sale->original_total_paid_value / 100) * $this->producerCompany->gateway_tax);
 
@@ -258,7 +271,7 @@ class DemoSplitPayment
     }
 
     private function createProducerTransaction()
-    { 
+    {         
         if ($this->cashbackData['value']) {
             $this->producerValue += $this->cashbackData['value'];
             $this->cloudfoxValue -= $this->cashbackData['value'];
