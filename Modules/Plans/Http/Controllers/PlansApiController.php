@@ -622,7 +622,7 @@ class PlansApiController extends Controller
             } else {
                 $plans = $plans->orderBy('name')
                     ->orderBy('description')
-                    ->paginate(20);
+                    ->paginate(50);
             }
 
             return PlansSelectResource::collection($plans);
