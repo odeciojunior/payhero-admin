@@ -26,6 +26,7 @@ use Modules\Plans\Http\Requests\PlanUpdateProductsRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
 use Modules\Plans\Transformers\PlansResource;
+use Modules\Plans\Transformers\PlansSelect2Resource;
 use Modules\Plans\Transformers\PlansSelectResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -461,11 +462,11 @@ class PlansApiController extends Controller
                         ]);
                     } else {
                         $productPlanModel->where('plan_id', $plan->id)->where('product_id', current(Hashids::decode($product['id'])))
-                        ->update([
-                            'amount'             => $product['amount'] ?? 1,
-                            'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
-                            'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
-                        ]);
+                            ->update([
+                                'amount' => $product['amount'] ?? 1,
+                                'cost' => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
+                                'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
+                            ]);
                     }
                 }
             } else {
@@ -612,16 +613,18 @@ class PlansApiController extends Controller
                 $plans->select('id', 'name', 'description');
             }
 
-            if (!empty($data['is_config'])) {
+            if (empty($data['is_config'])) {
                 $plans = $plans->orderBy('name')
                     ->orderBy('description')
-                    ->take(10)
-                    ->get();
-            } else {
-                $plans = $plans->orderBy('name')
-                    ->orderBy('description')
-                    ->paginate(10);
+                    ->paginate(50);
+
+                return PlansSelect2Resource::collection($plans);
             }
+
+            $plans = $plans->orderBy('name')
+                ->orderBy('description')
+                ->take(10)
+                ->get();
 
             return PlansSelectResource::collection($plans);
 
