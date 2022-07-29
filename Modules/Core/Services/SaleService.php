@@ -1179,7 +1179,6 @@ class SaleService
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
             ])
             ->whereBetween('start_date', [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59'])
             ->where(function ($query) use ($user) {
