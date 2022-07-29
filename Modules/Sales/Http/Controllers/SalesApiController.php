@@ -333,7 +333,7 @@ class SalesApiController extends Controller
             $planModel = new Plan();
             //$userProjectModel = new UserProject();
 
-            $projectIds = [hashids_decode($data['project_id'])];
+            //$projectIds = [hashids_decode($data['project_id'])];
 
             if(is_array($data['project_id'])){
                 $projectIds = [];
