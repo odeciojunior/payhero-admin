@@ -443,6 +443,11 @@ class SaleService
             $taxaReal -= $affiliateValue;
         }
 
+        if (!empty($userTransaction->checkout_tax) && $userTransaction->checkout_tax > 0) {
+            $taxaCheckout = FoxUtils::onlyNumbers($userTransaction->checkout_tax);
+            $totalTax += $taxaCheckout;
+        }
+
         if ($sale->status == Sale::STATUS_REFUNDED) {
             $comission = foxutils()->formatMoney(0);
         }
@@ -481,6 +486,7 @@ class SaleService
             'transaction_rate' => foxutils()->formatMoney($transactionRate / 100),
             'tax' => ($userTransaction->tax) ? (($userTransaction->tax_type == 1) ? $userTransaction->tax.'%' : foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->tax) / 100)) : 0,
             'tax_type' => $userTransaction->tax_type ?? 0,
+            'checkout_tax' => (foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0) ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100) : null,
             'totalTax' => foxutils()->formatMoney($totalTax / 100),
             'total' => foxutils()->formatMoney($total / 100),
             'subTotal' => foxutils()->formatMoney(intval($subTotal) / 100),
@@ -681,7 +687,7 @@ class SaleService
                     'gateway_response' => json_encode([]),
                     'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
                     'refund_observation' => $refundObservation,
-                    'user_id' => auth()->user()->account_owner_id,
+                    'user_id' => auth()->user()->account_owner_id??$sale->owner_id,
                 ]
             );
 
@@ -707,7 +713,7 @@ class SaleService
                             'type_enum' => Transfer::TYPE_IN,
                             'value' => $transaction->value,
                             'type' => 'in',
-                            'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
+                            'gateway_id' => $sale->gateway_id
                         ]
                     );
 
