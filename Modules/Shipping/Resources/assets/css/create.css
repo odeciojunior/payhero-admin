@@ -33,6 +33,8 @@
 }
 #modal-create-shipping .select2-container--default.select2-container--focus .select2-selection--multiple{
     border-color: #88BFFF !important;
+    max-height: 100px;
+    overflow-y: auto;
 }
 
 #modal-create-shipping .modal-footer {
