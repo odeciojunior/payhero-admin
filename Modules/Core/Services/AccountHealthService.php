@@ -206,7 +206,7 @@ class AccountHealthService
         return $score;
     }
 
-    public function updateAccountScore(User $user): bool
+    public function updateAccountScore(User $user)
     {
         try {
             if (!$this->userHasMinimumSalesAmount($user)) {
