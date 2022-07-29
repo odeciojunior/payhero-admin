@@ -73,7 +73,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string|null $checkout_tax
  //* @property string|null $extra_document
  * @property string|null $id_wall_date_update
- * @property string|null $transaction_rate
+ * @property string|null $transaction_tax
  * @property int $block_checkout
  //* @property int|null $annual_income
  * @property-read Collection|Activity[] $activities
@@ -164,7 +164,7 @@ class Company extends Model
         'id_wall_result',
         'id_wall_date_update',
         'bureau_result',
-        'transaction_rate',
+        'transaction_tax',
         'block_checkout',
         'annual_income',
         'created_at',

@@ -405,7 +405,7 @@ class SaleService
             }
         }
 
-        $taxa = $totalTaxPercentage = $totalTax = $transactionRate = 0;
+        $taxa = $totalTaxPercentage = $totalTax = $transactionTax = 0;
         //$totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         $totalToCalcTaxReal = $total + $cashbackValue;
 
@@ -420,8 +420,8 @@ class SaleService
         }
 
         if ($userTransaction->transaction_tax > 0) {
-            $transactionRate = foxutils()->onlyNumbers($userTransaction->transaction_tax);
-            $totalTax += $transactionRate;
+            $transactionTax = foxutils()->onlyNumbers($userTransaction->transaction_tax);
+            $totalTax += $transactionTax;
         }
 
 
@@ -481,7 +481,7 @@ class SaleService
 
         //add details to sale
         $sale->details = (object)[
-            'transaction_tax' => foxutils()->formatMoney($transactionRate / 100),
+            'transaction_tax' => foxutils()->formatMoney($transactionTax / 100),
             'tax' => ($userTransaction->tax) ? (($userTransaction->tax_type == 1) ? $userTransaction->tax . '%' : foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->tax) / 100)) : 0,
             'tax_type' => $userTransaction->tax_type ?? 0,
             'checkout_tax' => (foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0) ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100) : null,
@@ -685,7 +685,7 @@ class SaleService
                     'gateway_response' => json_encode([]),
                     'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
                     'refund_observation' => $refundObservation,
-                    'user_id' => auth()->user()->account_owner_id??$sale->owner_id,
+                    'user_id' => auth()->user()->account_owner_id ?? $sale->owner_id,
                 ]
             );
 

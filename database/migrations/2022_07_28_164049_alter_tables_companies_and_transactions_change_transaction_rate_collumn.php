@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTableTransactionsChangeTransactionRateCollumn extends Migration
+class AlterTablesCompaniesAndTransactionsChangeTransactionRateCollumn extends Migration
 {
     /**
      * Run the migrations.
@@ -14,6 +14,10 @@ class AlterTableTransactionsChangeTransactionRateCollumn extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
+            $table->renameColumn('transaction_rate', 'transaction_tax');
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
             $table->renameColumn('transaction_rate', 'transaction_tax');
         });
     }
@@ -26,6 +30,10 @@ class AlterTableTransactionsChangeTransactionRateCollumn extends Migration
     public function down()
     {
         Schema::table('transactions', function (Blueprint $table) {
+            $table->renameColumn('transaction_tax', 'transaction_rate');
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
             $table->renameColumn('transaction_tax', 'transaction_rate');
         });
     }
