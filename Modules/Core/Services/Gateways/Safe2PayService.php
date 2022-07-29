@@ -132,7 +132,8 @@ class Safe2PayService implements Statement
         if ($sale->payment_method == Sale::BILLET_PAYMENT) {
             return $availableBalance >= (int)foxutils()->onlyNumbers($sale->total_paid_value);
         } else {
-            $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+            $accountOwnerId = auth()->user()->account_owner_id??$sale->owner_id;
+            $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', $accountOwnerId)->first();
             return $availableBalance >= $transaction->value;
         }
 
