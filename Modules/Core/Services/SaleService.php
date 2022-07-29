@@ -686,7 +686,7 @@ class SaleService
                     'gateway_response' => json_encode([]),
                     'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
                     'refund_observation' => $refundObservation,
-                    'user_id' => auth()->user()->account_owner_id,
+                    'user_id' => auth()->user()->account_owner_id??$sale->owner_id,
                 ]
             );
 
@@ -712,7 +712,7 @@ class SaleService
                             'type_enum' => Transfer::TYPE_IN,
                             'value' => $transaction->value,
                             'type' => 'in',
-                            'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
+                            'gateway_id' => $sale->gateway_id
                         ]
                     );
 
@@ -1187,7 +1187,6 @@ class SaleService
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
             ])
             ->whereBetween('start_date', [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59'])
             ->where(function ($query) use ($user) {

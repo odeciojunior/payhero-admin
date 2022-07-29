@@ -4,6 +4,11 @@ $(() => {
         $('.site-navbar .sirius-select-container').addClass('disabled');
     });
 
+    $(document).on('select2:select', function (e) {
+        const selection = $(e.target).parent().find('.select2-selection--multiple')[0];
+        if (selection) selection.scrollTop = selection.scrollHeight;
+    });
+
     loadingOnScreen();
 
     let projectId = $(window.location.pathname.split('/')).get(-1);

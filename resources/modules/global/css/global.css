@@ -3244,6 +3244,10 @@ tbody td{
     to {background-position:left;}
 }
 
+.select2-selection.select2-selection--multiple {
+    max-height: 100px;
+    overflow-y: auto;
+}
 
 * {
     scrollbar-color: #9e9e9e d5d5d5; /* thumb and track color */
