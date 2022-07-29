@@ -217,23 +217,23 @@ class AccountHealthService
             $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
+            $contastationRate = $this->chargebackService->getContestationRateInPeriod($user, $startDate, $endDate);
             $attendanceScore = $this->getAttendanceScore($user);
             $chargebackScore = $this->getChargebackScore($user);
             $trackingScore = $this->getTrackingScore($user);
             $accountScore = round(($chargebackScore + $attendanceScore + $trackingScore) / 3, 2);
 
             $user->update([
-                'account_score'    => $accountScore,
-                'attendance_score' => $attendanceScore,
-                'chargeback_score' => $chargebackScore,
-                'chargeback_rate'  => $chargebackRate,
-                'tracking_score'   => $trackingScore
+                'account_score'     => $accountScore,
+                'attendance_score'  => $attendanceScore,
+                'chargeback_score'  => $chargebackScore,
+                'chargeback_rate'   => $chargebackRate,
+                'contestation_rate' => $contastationRate,
+                'tracking_score'    => $trackingScore
             ]);
 
-            return true;
         } catch (\Exception $e) {
             report($e);
-            return false;
         }
     }
 }
