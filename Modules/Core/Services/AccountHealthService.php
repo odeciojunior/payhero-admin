@@ -33,7 +33,9 @@ class AccountHealthService
             Sale::STATUS_APPROVED,
             Sale::STATUS_CHARGEBACK,
             Sale::STATUS_REFUNDED,
-            Sale::STATUS_IN_DISPUTE
+            Sale::STATUS_IN_DISPUTE,
+            Sale::STATUS_CANCELED_ANTIFRAUD,
+            Sale::STATUS_IN_REVIEW
         ])->where(function ($query) use ($user) {
             $query->where('owner_id', $user->id)
                 ->orWhere('affiliate_id', $user->id);
