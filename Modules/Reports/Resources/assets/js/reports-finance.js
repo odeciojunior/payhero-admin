@@ -79,7 +79,7 @@ function getProjects(companies) {
             $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
             $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
         }
-
+        
         company = $("#select_projects").val();
 
         updateReports();

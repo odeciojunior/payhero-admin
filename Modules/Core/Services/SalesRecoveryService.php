@@ -16,6 +16,8 @@ use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Log as CheckoutLog;
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\UserProject;
 
 class SalesRecoveryService
 {
@@ -71,13 +73,11 @@ class SalesRecoveryService
         array $plans = null,
         int $company_id = null
     ) {
-
-        $salesModel = new Sale();
+        
         $userProjectsModel = new UserProject();
         $customerModel = new Customer();
 
-        $salesExpired = $salesModel
-            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
+        $salesExpired = Sale::select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
                 'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
             ->leftJoin('plans_sales as plan_sale', function ($join) {
                 $join->on('plan_sale.sale_id', '=', 'sales.id');

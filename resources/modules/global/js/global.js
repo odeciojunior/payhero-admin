@@ -1918,7 +1918,7 @@ function getCompaniesAndProjects() {
                 "active_flag": 1,
                 "projects": [{
                     "id" : "v2RmA83EbZPVpYB",
-                    "name": "Cloudfox Demo Ltda",
+                    "name": "Loja Demonstrativa Cloudfox",
                     "order_p":1,
                     "status":1
                 }]
