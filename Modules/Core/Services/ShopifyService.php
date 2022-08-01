@@ -34,7 +34,6 @@ use Slince\Shopify\Manager\ProductVariant\Variant;
 use Slince\Shopify\Manager\Theme\Theme;
 use Slince\Shopify\Manager\Webhook\Webhook;
 use Slince\Shopify\PublicAppCredential;
-use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyService
 {
@@ -1116,7 +1115,7 @@ class ShopifyService
         $this->createShopWebhook(
             [
                 "topic" => "products/create",
-                "address" => $postbackUrl . Hashids::encode($projectId),
+                "address" => $postbackUrl . hashids_encode($projectId),
                 "format" => "json",
             ]
         );
@@ -1124,7 +1123,7 @@ class ShopifyService
         $this->createShopWebhook(
             [
                 "topic" => "products/update",
-                "address" => $postbackUrl . Hashids::encode($projectId),
+                "address" => $postbackUrl . hashids_encode($projectId),
                 "format" => "json",
             ]
         );
@@ -1132,7 +1131,7 @@ class ShopifyService
         $this->createShopWebhook(
             [
                 "topic" => "orders/updated",
-                "address" => $postbackUrl . Hashids::encode($projectId) . '/tracking',
+                "address" => $postbackUrl . hashids_encode($projectId) . '/tracking',
                 "format" => "json",
             ]
         );
@@ -1480,7 +1479,7 @@ class ShopifyService
             "billing_address" => $billingAddress,
             "shipping_lines" => $shipping,
             "note_attributes" => [
-                "token_cloudfox" => Hashids::encode($sale->checkout_id),
+                "token_cloudfox" => hashids_encode($sale->checkout_id),
             ],
             "total_price" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
         ];
@@ -1492,7 +1491,7 @@ class ShopifyService
                 "transactions" => [
                     [
                         "gateway" => "cloudfox",
-                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                        "authorization" => hashids_encode($sale->id, 'sale_id'),
                         "kind" => "sale",
                         "status" => "success",
                         "amount" => foxutils()->floatFormat($totalValue),
@@ -1500,7 +1499,7 @@ class ShopifyService
                 ],
             ];
         } else {
-            if ($sale->payment_method == Sale::BOLETO_PAYMENT || $sale->payment_method == Sale::PIX_PAYMENT) {
+            if ($sale->payment_method == Sale::BILLET_PAYMENT || $sale->payment_method == Sale::PIX_PAYMENT) {
                 //boleto
 
                 $orderData += [
@@ -1508,7 +1507,7 @@ class ShopifyService
                     "transactions" => [
                         [
                             "gateway" => "cloudfox",
-                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                            "authorization" => hashids_encode($sale->id, 'sale_id'),
                             "kind" => "sale",
                             "status" => $sale->status == 1 ? "success" : "pending",
                             "amount" => foxutils()->floatFormat($totalValue),
@@ -1700,7 +1699,7 @@ class ShopifyService
                 if ($sale->payment_method == 1) {
                     $orderData['transactions'][] = [
                         "gateway" => "cloudfox",
-                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                        "authorization" => hashids_encode($sale->id, 'sale_id'),
                         "kind" => "sale",
                         "status" => "success",
                         "amount" => $totalValue,
@@ -1793,7 +1792,7 @@ class ShopifyService
                 } else {
                     $transaction = [
                         "gateway" => "cloudfox",
-                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                        "authorization" => hashids_encode($sale->id, 'sale_id'),
                         "kind" => "refund",
                         "source" => "external",
                         "amount" => "",

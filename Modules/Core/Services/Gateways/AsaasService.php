@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\AsaasAnticipationRequests;
@@ -17,20 +16,15 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
-use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
-
-use function Clue\StreamFilter\fun;
 
 class AsaasService implements Statement
 {
@@ -133,7 +127,8 @@ class AsaasService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+        $accountOwnerId = auth()->user()->account_owner_id??$sale->owner_id;
+        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', $accountOwnerId)->first();
 
         return $availableBalance >= $transaction->value;
     }
@@ -466,9 +461,9 @@ class AsaasService implements Statement
         );
     }
 
-    public function getGatewayId()
+    public function getGatewayId(): int
     {
-        return FoxUtils::isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -607,6 +602,16 @@ class AsaasService implements Statement
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function refundEnabled(): bool
+    {
+        return true;
+    }
+
+    public function canRefund(Sale $sale): bool
+    {
+        return false;
     }
 
 }

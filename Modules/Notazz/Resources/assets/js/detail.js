@@ -166,7 +166,7 @@ $(() => {
         $("#desconto-value").html("R$ " + sale.discount);
         $("#total-value").html("R$ " + sale.total);
 
-        $('#taxas-label').text(sale.percentage_rate ? 'Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ' : 'Taxas');
+        $('#taxas-label').text(sale.tax ? 'Taxas (' + sale.tax + ' + ' + sale.transaction_rate + '): ' : 'Taxas');
         $('#taxareal-value').text(sale.taxaReal ? sale.taxaReal : '');
 
         $('#convertax-label, #convertax-value').hide();

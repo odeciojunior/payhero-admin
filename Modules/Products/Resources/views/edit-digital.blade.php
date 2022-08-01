@@ -53,6 +53,10 @@
                                         <span id="file_return" class="ml-20 pt-10"></span>
                                     </div>
                                     <small class="text-center text-muted mt-15">Este é o arquivo que será enviado ao cliente após a confirmação da venda.</small>
+                                    <div class="d-flex flex-row align-items-center mt-10 px-2 py-1 rounded" style="width: fit-content; background: #F4F6FB;">
+                                        <img src="{{ mix('build/global/img/icon-info-plans-c.svg') }}" width="9" height="9" />
+                                        <span class="font-size-10 ml-2" style="color: #636363">Essa opção é exclusiva para produtos digitais.</span>
+                                    </div>
                                 </div>
 
                                 <div class="col-12 col-md-5 div-expiration-time">

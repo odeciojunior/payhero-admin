@@ -14,10 +14,6 @@ use Illuminate\Contracts\View\Factory;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Log as CheckoutLog;
 use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
-use Vinkla\Hashids\Facades\Hashids;
 
 class SalesRecoveryService
 {
@@ -103,20 +99,20 @@ class SalesRecoveryService
         }
 
         if (!empty($customerDocument)) {
-            $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($customerDocument))->pluck('id');
+            $customerSearch = $customerModel->where('document', foxutils()->onlyNumbers($customerDocument))->pluck('id');
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
 
         if (!empty($plans)) {
             $plansIds = collect($plans)->map(function ($plan) {
-                return current(Hashids::decode($plan));
+                return hashids_decode($plan);
             })->toArray();
-            
+
             $salesExpired->whereHas('plansSales', function ($query) use ($plansIds) {
                 $query->whereIn('plan_id', $plansIds);
             });
         }
-        
+
         if (!empty($projectIds) && !in_array('all', $projectIds)) {
             $salesExpired->whereIn('sales.project_id', $projectIds);
 
@@ -164,7 +160,7 @@ class SalesRecoveryService
         if (!empty($log->telephone)) {
             $log['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '',
                     $log->telephone) . '&text=' . $whatsAppMsg;
-            $log->telephone = FoxUtils::getTelephone($log->telephone);
+            $log->telephone = foxutils()->getTelephone($log->telephone);
         } else {
             $log->telephone = 'Numero inválido';
         }
@@ -201,10 +197,10 @@ class SalesRecoveryService
             ['project_id', $checkout->project_id],
         ])->first();
 
-        if(FoxUtils::isProduction()) {
-            $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
+        if(foxutils()->isProduction()) {
+            $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . hashids_encode($checkout->id) : 'Domínio removido';
         } else {
-            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($checkout->id);
+            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . hashids_encode($checkout->id);
         }
 
         $checkout->id = '';
@@ -244,7 +240,7 @@ class SalesRecoveryService
             $customer->telephone = 'Numero Inválido';
         }
 
-        $checkout->sale_id = Hashids::connection('sale_id')->encode($sale->id);
+        $checkout->sale_id = hashids_encode($sale->id, 'sale_id');
 
         $checkout->hours = with(new Carbon($sale->created_at))->format('H:i:s');
         $checkout->date = with(new Carbon($sale->created_at))->format('d/m/Y');
@@ -292,34 +288,34 @@ class SalesRecoveryService
         ->where('status', $domainModel->present()->getStatus('approved'))->first();
 
         // if (!empty($domain)) {
-        //    $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
+        //    $link = "https://checkout." . $domain->name . "/recovery/" . hashids_encode($checkout->id);
         // }else {
         //    $link = 'Domínio removido';
         // }
 
         $link = '';
         if($sale->payment_method === Sale::PIX_PAYMENT) {
-            if(FoxUtils::isProduction()) {
-                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($sale->id) : 'Domínio removido';
+            if(foxutils()->isProduction()) {
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . hashids_encode($sale->id, 'sale_id') : 'Domínio removido';
             } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . Hashids::connection('sale_id')->encode($sale->id);
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . hashids_encode($sale->id, 'sale_id');
             }
 
         }else {
-            if(FoxUtils::isProduction()) {
-                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
+            if(foxutils()->isProduction()) {
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . hashids_encode($checkout->id) : 'Domínio removido';
             } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . Hashids::encode($checkout->id);
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . hashids_encode($checkout->id);
             }
         }
 
 
         $products = $saleService->getProducts($checkout->sale_id);
 
-        $customer->document = FoxUtils::getDocument($customer->document);
+        $customer->document = foxutils()->getDocument($customer->document);
 
         if(!empty($delivery)){
-            $delivery->zip_code = FoxUtils::getCep($delivery->zip_code);
+            $delivery->zip_code = foxutils()->getCep($delivery->zip_code);
         }
 
         return [

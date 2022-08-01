@@ -7,7 +7,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
 use Modules\Core\Events\BilletExpiredEvent;
-use Modules\Core\Events\BilletRefundedEvent;
+use Modules\Core\Events\ManualRefundEvent;
 use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\CheckTransactionReleasedEvent;
@@ -38,12 +38,13 @@ use Modules\Core\Events\TrackingsExportedEvent;
 use Modules\Core\Events\TrackingsImportedEvent;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 use Modules\Core\Events\UserRegisteredEvent;
+use Modules\Core\Events\UserRegistrationFinishedEvent;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Events\WithdrawalsExportedEvent;
 use Modules\Core\Listeners\AffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\AffiliateSendEmailListener;
 use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
-use Modules\Core\Listeners\BilletRefundedSendEmailListener;
+use Modules\Core\Listeners\ManualRefundedSendEmailListener;
 use Modules\Core\Listeners\BoletoPaidEmailNotifyUser;
 use Modules\Core\Listeners\BoletoPaidNotifyUser;
 use Modules\Core\Listeners\BoletoPaidPusherNotifyUser;
@@ -89,6 +90,7 @@ use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
+use Modules\Core\Listeners\UserDocumentBureauValidationListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -113,10 +115,11 @@ class EventServiceProvider extends ServiceProvider
             SaleRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
         ],
-        BilletRefundedEvent::class => [
-            BilletRefundedSendEmailListener::class,
+        ManualRefundEvent::class => [
+            ManualRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
         ],
+
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
             NotifyUserShopifyIntegrationStoreListener::class,
@@ -197,6 +200,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserRegisteredEvent::class => [
             SendEmailRegisteredListener::class,
+        ],
+        UserRegistrationFinishedEvent::class => [
+            UserDocumentBureauValidationListener::class,
         ],
         UpdateCompanyGetnetEvent::class => [
             UpdateCompanyGetnetSendEmailListener::class,

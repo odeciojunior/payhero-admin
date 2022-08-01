@@ -2,10 +2,8 @@
 
 namespace Modules\Core\Services\Gateways;
 
-use App\Jobs\ProcessWithdrawal;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
@@ -21,8 +19,6 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Core\Services\TaskService;
 use Modules\Withdrawals\Services\WithdrawalService;
@@ -277,7 +273,8 @@ class GerencianetService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+        $accountOwnerId = auth()->user()->account_owner_id??$sale->owner_id;
+        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', $accountOwnerId)->first();
 
         return $availableBalance >= $transaction->value;
     }
@@ -376,9 +373,9 @@ class GerencianetService implements Statement
         return !empty($lastTransaction) ? ['Gerencianet'] : [];
     }
 
-    public function getGatewayId()
+    public function getGatewayId(): int
     {
-        return FoxUtils::isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -435,5 +432,34 @@ class GerencianetService implements Statement
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function refundEnabled(): bool
+    {
+        return true;
+    }
+
+    public function canRefund(Sale $sale): bool
+    {
+        if ($sale->status != Sale::STATUS_APPROVED) return false;
+
+        switch ($sale->payment_method) {
+            case Sale::CREDIT_CARD_PAYMENT:
+                    return false;
+                break;
+
+            case Sale::BILLET_PAYMENT:
+                    return false;
+                break;
+
+            case Sale::PIX_PAYMENT:
+                    return !$sale->has_withdrawal and (Carbon::now()->diffInDays($sale->end_date) < 90);
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        return false;
     }
 }

@@ -89,7 +89,7 @@ class SystemStatusService
             $system['messages'][] = self::WARNING_MESSAGE;
         }
 
-        $bankSlipSales = Sale::where('payment_method', Sale::BOLETO_PAYMENT)
+        $bankSlipSales = Sale::where('payment_method', Sale::BILLET_PAYMENT)
             ->orderByDesc('id')
             ->limit(self::SALES_ANALYZED_AMOUNT)
             ->get();

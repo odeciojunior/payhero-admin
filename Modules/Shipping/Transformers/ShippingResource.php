@@ -46,7 +46,9 @@ class ShippingResource extends JsonResource
         $this->not_apply_on_plans = Plan::select($selectPlans)
             ->whereIn('id', $this->not_apply_on_plans)
             ->get();
-
+        if($this->regions_values){
+            $this->value = 'Por região';
+        }
         return [
             'id_code' => Hashids::encode($this->id),
             'shipping_id' => Hashids::encode($this->id),

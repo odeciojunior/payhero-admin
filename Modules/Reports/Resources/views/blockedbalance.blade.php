@@ -55,6 +55,7 @@
     <!-- Page -->
     <div class="page mb-0">
         <div style="display: none" class="page-header container inner-header">
+            @can('report_sales')
             <header class="top-system">
                 <a href="{!! route('reports.finances') !!}" class="back">
                     <svg style="margin-right: 10px;" width="27" height="16" viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -62,8 +63,9 @@
                     </svg>
                     Voltar para Financeiro
                 </a>
-            </header>       
-        
+            </header>
+            @endcan
+
             <div class="row align-items-center justify-content-between top-inner-reports">
                 <div class="col-8">
                     <h1 class="d-flex title-system">
@@ -97,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border blue mb-10">
                                     <span class="title">Quantidade de vendas</span>
@@ -142,7 +144,7 @@
                             <div class="col-sm-6 col-md-3">
                                 <label for="payment_method">Forma de pagamento</label>
                                 <select name='payment_method' id="payment_method" class="sirius-select">
-                                    <option value="">Boleto e cartão de crédito</option>
+                                    <option value="">Todas formas de pagamento</option>
                                     <option value="1">Cartão de crédito</option>
                                     <option value="2">Boleto</option>
                                     <option value="4">PIX</option>
@@ -213,17 +215,17 @@
                                      data-target="#bt_collapse"
                                      aria-expanded="false"
                                      aria-controls="bt_collapse">
-                                     <img 
-                                        style="visibility:hidden" 
-                                        id="icon-filtro" 
-                                        class="hidden-xs-down" 
+                                     <img
+                                        style="visibility:hidden"
+                                        id="icon-filtro"
+                                        class="hidden-xs-down"
                                         src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "
                                     />
                                     <span id="text-filtro">Filtros avançados</span>
-                                    <img 
-                                        style="visibility:hidden" 
-                                        id="icon-filtro" 
-                                        class="hidden-xs-down" 
+                                    <img
+                                        style="visibility:hidden"
+                                        id="icon-filtro"
+                                        class="hidden-xs-down"
                                         src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "
                                     />
                                 </div>
@@ -313,14 +315,14 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="row justify-content-center justify-content-md-end pb-50">
                         <ul id="pagination-sales" class="pagination-sm margin-chat-pagination pl-5 pr-md-15 mb-20 pagination" style="position:relative;float:right">
                             {{-- js carrega... --}}
                         </ul>
                     </div>
                 </div>
-               
+
             </div>
         </div>
         {{-- Quando não tem loja cadastrado  --}}
