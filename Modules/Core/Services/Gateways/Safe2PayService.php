@@ -282,7 +282,7 @@ class Safe2PayService implements Statement
             if (!empty($saleId)) {
                 $transactions->where('sale_id', $saleId);
             }
-//\Log::info(str_replace_array('?',$transactions->getBindings(),$transactions->toSql()));
+
             foreach ($transactions->cursor() as $transaction) {
 
                 $company = $transaction->company;

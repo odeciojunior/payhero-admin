@@ -36,7 +36,7 @@ class CheckoutFactory extends Factory
                 return FoxUtils::getCookieAffiliate($attributes['project_id']);
             } ,
             'ip' => $this->faker->ipv4,
-            'id_state'=>FoxUtilsFakeService::getRandomUf(),
+            'ip_state'=>FoxUtilsFakeService::getRandomUf(),
             'country' => '',
             'city' => '',
             'state' => '',

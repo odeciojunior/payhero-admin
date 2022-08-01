@@ -148,7 +148,6 @@ class SalesRecoveryService
             }
         }
 
-        //Log::info(str_replace_array('?',$salesExpired->getBindings(),$salesExpired->orderBy('sales.id', 'desc')->toSql()));
         return $salesExpired->orderBy('sales.id', 'desc')->paginate(10);
     }
 

@@ -198,8 +198,8 @@ class InvitesApiController extends Controller
                     'message' => 'Erro ao excluir convite',
                 ], 400
             );
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar excluir convite (InvitesApiController - destroy)');
+        } catch (Exception $e)
+        {            
             report($e);
 
             return response()->json(
@@ -246,6 +246,11 @@ class InvitesApiController extends Controller
             $commissionPaid = $transactionModel->whereIn('invitation_id', $userIdInvites)->where('user_id', $accountOwnerId)
                 ->where('company_id', Hashids::decode($request->company))
                 ->where('status_enum', $transactionModel->present()->getStatusEnum('transfered'))->sum('value');
+                
+            if($accountOwnerId == User::DEMO_ID){
+                $commissionPaid = date('ymd')*3;
+            }
+
             $commissionPending = $transactionModel->whereIn('invitation_id', $userIdInvites)->where('user_id', $accountOwnerId)
                 ->where('company_id', Hashids::decode($request->company))
                 ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))->sum('value');
@@ -262,8 +267,8 @@ class InvitesApiController extends Controller
                     ],
                 ], 200
             );
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar listar dados dos convites (InvitesApiController - getInvitationData)');
+        } catch (Exception $e)
+        {            
             report($e);
 
             return response()->json(

@@ -66,9 +66,9 @@ $(document).ready(function () {
         var cont = 0;
 
         if (link == null) {
-            link = '/api/invitations';
+            link = '/api/invitations'+ '?company='+ $('.company-navbar').val();
         } else {
-            link = '/api/invitations' + link;
+            link = '/api/invitations' + link+ '?company='+ $('.company-navbar').val();
         }
 
         $.ajax({
