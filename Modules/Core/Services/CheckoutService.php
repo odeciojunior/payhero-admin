@@ -41,7 +41,7 @@ class CheckoutService
 
         }
 
-        $dateRange = FoxUtils::validateDateRange(request('date_range'));
+        $dateRange = foxutils()->validateDateRange(request('date_range'));
 
         $abandonedCartsStatus = [
             Checkout::STATUS_RECOVERED,
@@ -137,7 +137,7 @@ class CheckoutService
     {
         try {
             $idEncoded = hashids_encode($sale->id, 'sale_id');
-            if (FoxUtils::isProduction()) {
+            if (foxutils()->isProduction()) {
                 $urlCancelPayment = "https://checkout.cloudfox.net/api/payment/cancel/{$idEncoded}";
             } else {
                 $urlCancelPayment = env('CHECKOUT_URL') . "/api/payment/cancel/{$idEncoded}";
@@ -145,26 +145,28 @@ class CheckoutService
 
             $response = $this->runCurl($urlCancelPayment, 'POST');
 
-            if (($response->status ?? '') != 'success') {
+            if (!empty($response) && ($response->status ?? '') == 'success') {
                 return [
-                    'status' => 'error',
-                    'message' => 'Error ao tentar cancelar venda.',
-                    'error' => $response->message,
+                    'status' => 'success',
+                    'message' => $response->message??'Venda estornada com sucesso.',
+                    'response' => $response
                 ];
             }
 
             return [
-                'response' => $response,
-                'status' => 'success',
-                'message' => 'Venda Estornada com sucesso.',
+                'status' => 'error',
+                'message' => $response->message??'Error ao tentar estornar venda.',
+                'response' => $response??[]
             ];
+
         } catch (Exception $ex) {
             report($ex);
 
             return [
                 'status' => 'error',
-                'message' => 'Error ao tentar cancelar venda.',
-                'error' => $ex->getMessage(),
+                'message' => 'Ocorreu algum erro, tente novamente em alguns minutos.',
+                'response' => [],
+                'error' => $ex->getMessage()
             ];
         }
     }
@@ -204,7 +206,7 @@ class CheckoutService
             }
 
             $domain = $sale->project->domains->where('status', 3)->first();
-            if (FoxUtils::isProduction()) {
+            if (foxutils()->isProduction()) {
                 $regenerateBilletUrl = 'https://checkout.cloudfox.net/api/payment/regeneratebillet';
             } else {
                 $regenerateBilletUrl = env(

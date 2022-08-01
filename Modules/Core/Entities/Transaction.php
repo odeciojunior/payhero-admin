@@ -27,8 +27,9 @@ use Modules\Core\Presenters\TransactionPresenter;
  * @property string $release_date
  * @property string $created_at
  * @property string $updated_at
- * @property string $percentage_rate
- * @property string $transaction_rate
+ * @property string $tax
+ 
+ 'tax_type',* @property string $transaction_rate
  * @property string $gateway_released_at
  * @property boolean $is_waiting_withdrawal
  * @property integer $withdrawal_id
@@ -57,6 +58,9 @@ class Transaction extends Model
     const TYPE_CONVERTAX = 6;
     const TYPE_REFUNDED = 7;
     const TYPE_CASHBACK = 8;
+
+    const TYPE_PERCENTAGE_TAX = 1;
+    const TYPE_VALUE_TAX = 2;
 
     const STATUS_TRANSFERRED = 1;
     const STATUS_PAID = 2;
@@ -92,11 +96,11 @@ class Transaction extends Model
         'status',
         'status_enum',
         'release_date',
-        'percentage_rate',
+        'tax',
+        'tax_type',
         'transaction_rate',
         'installment_tax',
-        'created_at',
-        'updated_at',
+        'checkout_tax',
         'gateway_released_at',
         'is_waiting_withdrawal',
         'withdrawal_id',
@@ -104,6 +108,8 @@ class Transaction extends Model
         'gateway_transferred_at',
         'tracking_required',
         'is_security_reserve',
+        'created_at',
+        'updated_at',
     ];
 
     protected static $logFillable = true;

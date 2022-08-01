@@ -20,8 +20,6 @@ use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
-use Modules\Core\Services\CompanyBalanceService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
@@ -131,10 +129,11 @@ class Safe2PayService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        if ($sale->payment_method == Sale::BOLETO_PAYMENT) {
+        if ($sale->payment_method == Sale::BILLET_PAYMENT) {
             return $availableBalance >= (int)foxutils()->onlyNumbers($sale->total_paid_value);
         } else {
-            $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+            $accountOwnerId = auth()->user()->account_owner_id??$sale->owner_id;
+            $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', $accountOwnerId)->first();
             return $availableBalance >= $transaction->value;
         }
 
@@ -421,9 +420,9 @@ class Safe2PayService implements Statement
 
     }
 
-    public function getGatewayId()
+    public function getGatewayId(): int
     {
-        return FoxUtils::isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -432,6 +431,7 @@ class Safe2PayService implements Statement
             DB::beginTransaction();
             $responseGateway = $response->response ?? [];
             $statusGateway = $response->status_gateway ?? '';
+            $saleIdEncode = hashids_encode($sale->id, 'sale_id');
 
             SaleRefundHistory::create(
                 [
@@ -501,7 +501,7 @@ class Safe2PayService implements Statement
                     'value' => $refundValue,
                     'type' => 'out',
                     'type_enum' => Transfer::TYPE_OUT,
-                    'reason' => 'refunded',
+                    'reason' => "Estorno #{$saleIdEncode}",
                     'is_refunded_tax' => 0
                 ]);
 
@@ -537,6 +537,35 @@ class Safe2PayService implements Statement
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function refundEnabled(): bool
+    {
+        return true;
+    }
+
+    public function canRefund(Sale $sale): bool
+    {
+        if ($sale->status != Sale::STATUS_APPROVED) return false;
+
+        switch ($sale->payment_method) {
+            case Sale::CREDIT_CARD_PAYMENT:
+                    return true;
+                break;
+
+            case Sale::BILLET_PAYMENT:
+                    return false;
+                break;
+
+            case Sale::PIX_PAYMENT:
+                    return (Carbon::now()->diffInDays($sale->end_date) < 90);
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        return false;
     }
 
 }

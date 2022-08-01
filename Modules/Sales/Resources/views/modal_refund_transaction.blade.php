@@ -1,6 +1,6 @@
 <div id="modal-refund-transaction" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content p-10" id="modal-refund">
+        <div id="modal-refund" class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title">Estornar transação</h4>
                 <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
@@ -35,8 +35,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="refund_observation">Causa do estorno</label>
-                <textarea class="form-control" id="refund_observation" rows="3"></textarea>
+                <label for="refund-observation-transaction">Causa do estorno</label>
+                <textarea class="form-control" id="refund-observation-transaction" rows="3"></textarea>
             </div>
             <div class="modal-footer">
                 <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">

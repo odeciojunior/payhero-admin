@@ -383,6 +383,7 @@ $(document).ready(function () {
         let configs = {
             placeholder: `Nome do ${targetName}`,
             multiple: true,
+            closeOnSelect: false,
             dropdownParent: $('#modal_add_upsell'),
             language: {
                 noResults: function () {

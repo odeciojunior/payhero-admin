@@ -166,6 +166,11 @@
                                         <td><div id="tax-fixed-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
+                                    <tr id="div_tax_checkout" style="display:none;">
+                                        <td><div id="tax-checkout" class="ft-12"></div></td>
+                                        <td><div id="tax-checkout-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
+                                    </tr>
+
                                     <tr>
                                         <td><div id="tax-total" class="ft-12"></div></td>
                                         <td><div id="tax-total-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
@@ -448,9 +453,9 @@
                             <div id='div_notazz_schedule'>
                             </div>
                         </div>
-                        <div id='div_refund_transaction' class='mt-20'></div>
-                        <div id='div_refund_billet' class='mt-20'></div>
-                        <div id='div_refund_receipt' class='mt-20'></div>
+
+                        <div id='div_refund' class='mt-20'></div>
+                        
                     </div>
                 </div>
             </div>

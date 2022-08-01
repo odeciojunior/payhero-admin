@@ -146,7 +146,7 @@
     <div id="project-not-empty" style="display:none !important;">
         <div class="page-content container">
             <!-- Filtro -->
-            <div id="" class="card shadow p-20">
+            <div id="filters" class="card shadow p-20">
                 <div class="row mb-xl-3">
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
                         <label for="project-select">Lojas</label>

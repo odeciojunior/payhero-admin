@@ -30,14 +30,14 @@ $(document).ready(function () {
                     $('.project-image').prop('src', `${response.data.photo ? response.data.photo : '/build/global/img/projeto.svg'}`);
                     $('#created_by').html(`Produtor: ${response.data.user_name}`);
                     $('.text-about-project').html(response.data.description);
-                    if (response.data.url_page != '' && response.data.url_page != null) {
+                    if (response.data.url_page != null && response.data.url_page != 'https://') {
                         $('.url_page').html(` <strong >URL da página principal: <a href='${response.data.url_page}' target='_blank'>${response.data.url_page}</a></strong>`);
                     } else {
-                        $('.url_page').html('');
+                        $('.url_page').html(` <strong >URL da página principal: Não configurado</strong>`);
                     }
                     $('.created_at').html(` <strong >Criado em: ${response.data.created_at}</strong>`);
                     if (!response.data.producer) {
-                        if (response.data.affiliatedMessage != '') {
+                        if (response.data.affiliatedMessage != "") {
                             $('.div-button').html(`<div class="alert alert-info">${response.data.affiliatedMessage}</div>`);
                             $('.div-button').toggleClass('text-center');
                         } else {
@@ -48,26 +48,34 @@ $(document).ready(function () {
                             }
                         }
                     }
-                    if (response.data.percentage_affiliates != '') {
+                    if (response.data.percentage_affiliates != null) {
                         $('.percentage-affiliate').html(`<strong>Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
+                    }else{
+                        $('.percentage-affiliate').html(`<strong>Porcentagem de afiliado: <span class='green-gradient'>Não configurado</span></strong>`);
                     }
-                    if (response.data.cookie_duration != '') {
+                    if (response.data.cookie_duration != null) {
                         if (response.data.cookie_duration == 0) {
                             $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>Eterno</span></strong>`);
                         } else if (response.data.cookie_duration >= 1) {
                             $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>${response.data.cookie_duration} dias</span></strong>`);
                         }
+                    }else{
+                        $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>Não configurado</span></strong>`);
                     }
-                    if (response.data.terms_affiliates != '') {
+                    if (response.data.terms_affiliates != null) {
                         $('.text-terms').html(response.data.terms_affiliates);
                     } else {
                         $('.text-terms').html('<strong >Não possui termos de afiliação.</strong>');
                     }
-                    if (response.data.contact != '') {
+                    if (response.data.contact != null) {
                         $('.contact').html(`<strong>E-mail: ${response.data.contact}</strong>`);
+                    }else{
+                        $('.contact').html(`<strong>E-mail: Não configurado</strong>`);
                     }
-                    if (response.data.support_phone != '') {
+                    if (response.data.support_phone != null) {
                         $('.support_phone').html(`<strong>Telefone: ${response.data.support_phone}</strong>`);
+                    }else{
+                        $('.support_phone').html(`<strong>Telefone: Não configurado</strong>`);
                     }
 
 
