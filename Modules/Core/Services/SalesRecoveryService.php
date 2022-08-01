@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
