@@ -160,6 +160,7 @@ class User extends Authenticable
         'has_sale_before_getnet',//
         'account_is_approved',
         'chargeback_rate',
+        'contestation_rate',
         'account_score',
         'chargeback_score',
         'attendance_score',
