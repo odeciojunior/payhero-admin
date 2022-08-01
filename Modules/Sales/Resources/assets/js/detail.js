@@ -545,14 +545,15 @@ $(() => {
 
         // Taxas detalhadas
         $("#taxas-label").html(
-            sale.tax
-                ? "Taxas (" +
-                sale.tax +
-                " + " +
-                sale.transaction_rate +
-                "): "
-                : "Taxas"
+            sale.tax ?
+                (
+                    sale.checkout_tax ?
+                        "Taxas (" + sale.tax + " + " + sale.transaction_tax + " + " + sale.checkout_tax + "): " :
+                        "Taxas (" + sale.tax + " + " + sale.transaction_tax + "): "
+                ) :
+                "Taxas"
         );
+
         $("#taxareal-value").html(sale.taxaReal ? sale.taxaReal : "");
 
         $("#tax-value-total").html(`Valor total: `);
@@ -568,7 +569,18 @@ $(() => {
         $("#tax-percentage-value").html(`${sale.taxaDiscount}`);
 
         $("#tax-fixed").html("Taxa fixa: ");
-        $("#tax-fixed-value").html(`${sale.transaction_rate}`);
+        $("#tax-fixed-value").html(`${sale.transaction_tax}`);
+
+        if (sale.checkout_tax) {
+            $("#tax-checkout").html("Taxa de checkout: ");
+            $("#tax-checkout-value").html(`${sale.checkout_tax}`);
+            $("#div_tax_checkout").show();
+        }
+        else {
+            $("#tax-checkout").html('');
+            $("#tax-checkout-value").html('');
+            $("#div_tax_checkout").hide();
+        }
 
         $("#tax-total").html(`Valor total das taxas: `);
         $("#tax-total-value").html(`- ${sale.totalTax}`);

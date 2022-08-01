@@ -145,26 +145,28 @@ class CheckoutService
 
             $response = $this->runCurl($urlCancelPayment, 'POST');
 
-            if (($response->status ?? '') != 'success') {
+            if (!empty($response) && ($response->status ?? '') == 'success') {
                 return [
-                    'status' => 'error',
-                    'message' => 'Error ao tentar cancelar venda.',
-                    'error' => $response->message,
+                    'status' => 'success',
+                    'message' => $response->message??'Venda estornada com sucesso.',
+                    'response' => $response
                 ];
             }
 
             return [
-                'response' => $response,
-                'status' => 'success',
-                'message' => 'Venda Estornada com sucesso.',
+                'status' => 'error',
+                'message' => $response->message??'Error ao tentar estornar venda.',
+                'response' => $response??[]
             ];
+
         } catch (Exception $ex) {
             report($ex);
 
             return [
                 'status' => 'error',
-                'message' => 'Error ao tentar cancelar venda.',
-                'error' => $ex->getMessage(),
+                'message' => 'Ocorreu algum erro, tente novamente em alguns minutos.',
+                'response' => [],
+                'error' => $ex->getMessage()
             ];
         }
     }
