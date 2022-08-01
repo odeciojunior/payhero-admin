@@ -28,8 +28,8 @@ use Modules\Core\Presenters\TransactionPresenter;
  * @property string $created_at
  * @property string $updated_at
  * @property string $tax
- 
- 'tax_type',* @property string $transaction_rate
+ * @property integer $tax_type
+ * @property string $transaction_rate
  * @property string $gateway_released_at
  * @property boolean $is_waiting_withdrawal
  * @property integer $withdrawal_id

@@ -8,7 +8,6 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
-use Vinkla\Hashids\Facades\Hashids;
 
 class ReportSaleService
 {
