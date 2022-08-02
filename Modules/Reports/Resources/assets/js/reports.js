@@ -102,7 +102,7 @@ function getProjects() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if (!isEmpty(response.data)) {
+            if (!isEmpty(response.data) && response.data != 'api sales') {
                 $(".div-filters").show();
                 $("#project-empty").hide();
                 $("#project-not-empty").show();
