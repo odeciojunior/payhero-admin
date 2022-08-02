@@ -239,7 +239,7 @@ $(document).ready(function () {
 
                     dados = "";
                     dados += `
-                        <tr ${value.expiration_user == "Ganha" ? "class='won-contestation'" : ""}>
+                        <tr ${value.status == 3 ? "class='won-contestation'" : ""}>
                             <td id='${value.id}'>
                                 <span>${value.sale_code}</span>
                             </td>
@@ -433,11 +433,15 @@ $(document).ready(function () {
             success: function (response) {
                 loadOnAny(".total-number", true);
 
-                $("#total-contestation").html(addZeroLeft(response.total_contestation));
-                $("#total-contestation-tax").html(" (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")");
-
+                $("#total-contestation").html(addZeroLeft(response.total_contestation));                
+                
                 $("#total-chargeback-tax-val").html(addZeroLeft(response.total_chargeback));
-                $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
+                
+                if($("#date_type").val() == 'transaction_date')
+                {
+                    $("#total-contestation-tax").html(" (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")");                
+                    $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
+                }
 
                 $("#total-contestation-value").html(response.total_contestation_value);
             },
