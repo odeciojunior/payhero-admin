@@ -40,23 +40,14 @@ class UpdateUserAccountHealth extends Command
      */
     public function handle()
     {
-
         try {
             $accountHealthService = new AccountHealthService();
             $users = User::whereRaw('id = account_owner_id')->get();
             foreach ($users as $user) {
-                $this->line($user->id . ' - ' . $user->account_owner_id . ' - ' . $user->name);
-                if (!$accountHealthService->updateAccountScore($user)) {
-                    $outputMessage = 'Não existem transações suficientes até a data de '
-                        . now()->format('d/m/Y')
-                        . ' para calcular o score do usuário ' . $user->name . '.';
-                    $this->line($outputMessage);
-                }
+                $accountHealthService->updateAccountScore($user);
             }
         } catch (Exception $e) {
             report($e);
         }
-
-        return 0;
     }
 }

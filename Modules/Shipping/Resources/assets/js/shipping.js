@@ -574,6 +574,7 @@ $(document).ready(function () {
         el.select2({
             placeholder: `Nome do ${targetName}`,
             multiple: true,
+            closeOnSelect: false,
             dropdownParent: $(dropdownParent),
             language: {
                 noResults: function () {

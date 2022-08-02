@@ -127,7 +127,8 @@ class AsaasService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+        $accountOwnerId = auth()->user()->account_owner_id??$sale->owner_id;
+        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', $accountOwnerId)->first();
 
         return $availableBalance >= $transaction->value;
     }
@@ -605,7 +606,7 @@ class AsaasService implements Statement
 
     public function refundEnabled(): bool
     {
-        return false;
+        return true;
     }
 
     public function canRefund(Sale $sale): bool

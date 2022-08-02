@@ -160,7 +160,7 @@ class NotazzService
                     foreach ($sale->transactions as $transaction) {
                         if ((!empty($transaction->company)) && ($transaction->company->user->id == $sale->owner_id)) {
                             //plataforma
-                            $trasactionRate = preg_replace("/[^0-9]/", "", $transaction->transaction_rate);
+                            $trasactionRate = preg_replace("/[^0-9]/", "", $transaction->transaction_tax);
                             $costTotal += (int)$trasactionRate;
                             $costTotal += (int)(($subTotal + $shippingCost) * ($transaction->tax / 100));
 
@@ -592,9 +592,9 @@ class NotazzService
 
                 $filters = [
                     'INITIAL_DATE' => $startDate ?? Carbon::now()
-                            ->toDateString(), // Data Inicial. Campo obrigatório, enviar no formato yyyy-mm-dd
+                        ->toDateString(), // Data Inicial. Campo obrigatório, enviar no formato yyyy-mm-dd
                     'FINAL_DATE' => $finalDate ?? Carbon::now()
-                            ->toDateString(), // Data Final. Campo obrigatório, enviar no formato yyyy-mm-dd
+                        ->toDateString(), // Data Final. Campo obrigatório, enviar no formato yyyy-mm-dd
                     'STATUS' => $status, // Status da nota fiscal. Campo opcional
                     'NUMBER' => $invoiceNumber, // Número da nota fiscal já autorizada ou cancelada. Campo opcional
                 ];
@@ -603,7 +603,7 @@ class NotazzService
 
                 $fields = json_encode(
                     [
-                        'METHOD' => 'consult_all_nfse',//Método a ser utilizado
+                        'METHOD' => 'consult_all_nfse', //Método a ser utilizado
                         'API_KEY' => $tokenApi,
                         'FILTER' => $filters,
                     ]
@@ -942,9 +942,9 @@ class NotazzService
 
                 $data = [
                     'message' => 'Integração com a Notazz para o projeto ' . $integration->project->name . ' foi concluida. As Notas fiscais apartir da data ' . Carbon::parse(
-                            $integration->start_date
-                        )
-                            ->format('d/m/Y') . ' foram agendadas para o envio',
+                        $integration->start_date
+                    )
+                        ->format('d/m/Y') . ' foram agendadas para o envio',
                     'user' => $integration->user->id,
                 ];
 

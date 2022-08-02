@@ -517,6 +517,7 @@ a.label {
 
 .menu-active > span > img {
     filter: brightness(0) invert(1);
+    height: 100%;
 }
 
 .bg-menu {
@@ -2929,7 +2930,7 @@ tbody td{
 
 .bonus-balance-button.mobile {
     display: none;
-}    
+}
 
 
 .bonus-balance-content,
@@ -3035,7 +3036,7 @@ tbody td{
     margin: 0;
     font-weight: 500;
     font-size: 12px;
-    line-height: 124%;    
+    line-height: 124%;
     color: #81859B;
 }
 
@@ -3074,11 +3075,11 @@ tbody td{
 @media (max-width: 768px) {
     .bonus-balance-button.desktop {
         display: none;
-    }    
+    }
 
     .bonus-balance-button.mobile {
         display: flex;
-    }    
+    }
 
     .bonus-balance-container {
         width: 100%;
@@ -3089,7 +3090,7 @@ tbody td{
         flex-direction: column;
         gap: 8px;
     }
-    
+
     .bonus-balance-background {
         padding: 10px;
     }
@@ -3105,7 +3106,7 @@ tbody td{
     .bonus-infos {
         justify-content: space-around;
     }
-    
+
 }
 
 
@@ -3175,6 +3176,10 @@ tbody td{
     to {background-position:left;}
 }
 
+.select2-selection.select2-selection--multiple {
+    max-height: 100px;
+    overflow-y: auto;
+}
 
 * {
     scrollbar-color: #9e9e9e d5d5d5; /* thumb and track color */
