@@ -1326,9 +1326,9 @@ class ReportFinanceService
     }
 
     public function getFinancesPendings()
-    {
-        $cacheName = 'pending-data-';
-        return cache()->remember($cacheName, 300, function() {
+    {        
+        $cacheName = 'pending-data-'.auth()->user()->getAccountOwnerId().'-';
+        return cache()->remember($cacheName, 300, function()  {
             $defaultGateways = [
                 Safe2PayService::class,
                 AsaasService::class,
@@ -1363,7 +1363,7 @@ class ReportFinanceService
 
     public function getFinancesBlockeds()
     {
-        $cacheName = 'blocked-data-';
+        $cacheName = 'blocked-data-'.auth()->user()->getAccountOwnerId().'-';
         return cache()->remember($cacheName, 300, function() {
             $defaultGateways = [
                 Safe2PayService::class,
@@ -1409,7 +1409,7 @@ class ReportFinanceService
 
     public function getFinancesDistribuitions()
     {
-        $cacheName = 'distribuitions-data-';
+        $cacheName = 'distribuitions-data-'.auth()->user()->getAccountOwnerId().'-';
         return cache()->remember($cacheName, 300, function() {
             $defaultGateways = [
                 Safe2PayService::class,
@@ -1467,7 +1467,7 @@ class ReportFinanceService
 
     public function getFinancesWithdrawals()
     {
-        $cacheName = 'withdrawals-data-';
+        $cacheName = 'withdrawals-data-'.auth()->user()->getAccountOwnerId().'-';
         return cache()->remember($cacheName, 300, function() {
             date_default_timezone_set('America/Sao_Paulo');
 

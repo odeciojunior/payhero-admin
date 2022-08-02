@@ -55,6 +55,9 @@ class SalesResource extends JsonResource
 
         if($user->company_default==Company::DEMO_ID){
             $urlCheckout = "https://demo.cloudfox.net/order/";
+            if(env('APP_ENV') == 'local'){
+                $urlCheckout = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/order/';
+            }
             $thankPageUrl = $urlCheckout . $hashSaleId;
         }
         // if($this->progressive_discount){
