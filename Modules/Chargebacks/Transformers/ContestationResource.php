@@ -109,7 +109,8 @@ class ContestationResource extends JsonResource
             'files' => $this->files ?  SaleContestationFileResource::collection($this->files) : '',
             'has_files' => $this->files->count() ? true:false,
             'is_file_user_completed' => $this->file_user_completed,
-            'files_types'=>$filesTypes
+            'files_types'=>$filesTypes,
+            'status'=>$this->status
         ];
     }
 
