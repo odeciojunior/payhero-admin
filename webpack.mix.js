@@ -630,6 +630,13 @@ mix.babel([
 ], 'public/build/layouts/projects/index.min.js');
 
 /**
+ * Modules/Projects/Resources/views/create-store-modal.blade.php
+ */
+mix.styles([
+    'resources/modules/global/css/create-store-modal.css'
+], 'public/build/layouts/projects/create-store-modal.min.css');
+
+/**
  * Modules/Projects/Resources/views/empty.blade.php
  */
 mix.styles([
