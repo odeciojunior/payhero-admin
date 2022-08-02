@@ -60,22 +60,26 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
-                    $("#content").html("");
-                    $("#select_projects").html("");
-                    fillSelectProject(companiesAndProjects,'#select_projects')
-                    if (isEmpty(response)) {
-                        $("#no-integration-found").show();
+                    //$("#content").html("");
+                    if (isEmpty(response.projects)) {
+                        $("#project-empty").show();
+                        $("#integration-actions").hide();
                     } else {
-                        $("#content").html("");
-                        let integrations = response.data;
-                        for (let i = 0; i < integrations.length; i++) {
-                            renderIntegration(integrations[i]);
+                        $("#select_projects").html("");
+                        fillSelectProject(companiesAndProjects,'#select_projects')
+                        if (isEmpty(response.data)) {
+                            $("#no-integration-found").show();
+                        } else {
+                            $("#content").html("");
+                            let integrations = response.data;
+                            for (let i = 0; i < integrations.length; i++) {
+                                renderIntegration(integrations[i]);
+                            }
+                            $("#no-integration-found").hide();
                         }
-                        $("#no-integration-found").hide();
+                        $("#project-empty").hide();
+                        $("#integration-actions").show();
                     }
-                    $("#project-empty").hide();
-                    $("#integration-actions").show();
-
                     if(loading=='y')
                         loadingOnScreenRemove();
                     loadOnAny('#content',true);
@@ -311,7 +315,7 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    index();
+                    index('n');
                     alertCustom("success", response.message);
                 },
             });

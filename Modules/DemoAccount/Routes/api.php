@@ -26,14 +26,14 @@ Route::group([
     });
 
     //ChekoutEditor
-    Route::group([],function(){                
-        Route::get('/checkouteditor/{id}', 'CheckoutEditorApiDemoController@show');        
+    Route::group([],function(){
+        Route::get('/checkouteditor/{id}', 'CheckoutEditorApiDemoController@show');
     });
 
     //Pixels
     Route::group([],function(){
         Route::get('/project/{projectId}/pixels', 'PixelsApiDemoController@index');
-        Route::get("/projects/{projectId}/pixels/configs", 'PixelsApiDemoController@getPixelConfigs')->name('pixels.getconfig');        
+        Route::get("/projects/{projectId}/pixels/configs", 'PixelsApiDemoController@getPixelConfigs')->name('pixels.getconfig');
         Route::get('/project/{projectId}/pixels/{id}', 'PixelsApiDemoController@show');
         Route::get('/project/{projectId}/pixels/{id}/edit', 'PixelsApiDemoController@edit');
     });
@@ -49,7 +49,7 @@ Route::group([
     Route::group([],function(){
         Route::post('/products/topselling', 'ProductsApiDemoController@getTopSellingProducts')
         ->name('api.products.topselling');
-        
+
         Route::get('/products', 'ProductsApiDemoController@index');
         Route::get('/products/{id}', 'ProductsApiDemoController@show');
         Route::get('/products/{id}/edit', 'ProductsApiDemoController@edit');
@@ -126,7 +126,7 @@ Route::group([
     });
 
     //Checkout
-    Route::group([],function(){        
+    Route::group([],function(){
         Route::get('/checkout', 'CheckoutApiDemoController@index');
         Route::get('/checkout/{id}', 'CheckoutApiDemoController@show');
     });
@@ -159,8 +159,8 @@ Route::group([
     });
 
     //Domains
-    Route::group([],function(){   
-        Route::get('/project/{projectId}/domains', 'DomainsApiDemoController@index');        
+    Route::group([],function(){
+        Route::get('/project/{projectId}/domains', 'DomainsApiDemoController@index');
         Route::get('/project/{projectId}/domains/{domainId}', 'DomainsApiDemoController@show');
     });
 
@@ -229,7 +229,7 @@ Route::group([
     });
 
     //Projects
-    Route::group([],function(){        
+    Route::group([],function(){
         Route::get('/projects', 'ProjectsApiDemoController@index');
         Route::get('/projects/{id}', 'ProjectsApiDemoController@show');
         Route::get('/projects/{id}/edit', 'ProjectsApiDemoController@edit');
@@ -259,7 +259,7 @@ Route::group([
     Route::group([],function(){
         Route::get('/projectreviewsconfig', 'ProjectReviewsConfigApiDemoController@index');
         Route::get('/projectreviewsconfig/{id}', 'ProjectReviewsConfigApiDemoController@show');
-        Route::get('/projectreviewsconfig/{id}/edit', 'ProjectReviewsConfigApiDemoController@edit');        
+        Route::get('/projectreviewsconfig/{id}/edit', 'ProjectReviewsConfigApiDemoController@edit');
     });
 
     //ProjectUpsellConfig
@@ -335,7 +335,7 @@ Route::group([
         Route::get('/reports/projects-with-checkouts', 'ReportsApiDemoController@getProjectsWithCheckouts');
         Route::get('/reports/projects-with-coupons', 'ReportsApiDemoController@getProjectsWithCoupons');
         Route::get('/reports/projects-with-pending-balance', 'ReportsApiDemoController@getProjectsWithPendingBalance');
-    });        
+    });
 
     //SalesRecovery
     Route::group([],function(){
@@ -350,6 +350,8 @@ Route::group([
         Route::get('recovery/get-pix', 'SalesRecoveryApiDemoController@getPixOverdue');
 
         Route::post('recovery/details', 'SalesRecoveryApiDemoController@getDetails');
+
+        Route::get('/recovery/projects-with-recovery', 'SalesRecoveryApiDemoController@getProjectsWithRecovery');
     });
 
     //Shippings
@@ -369,10 +371,10 @@ Route::group([
         Route::get('apps/smartfunnel/{id}', 'SmartfunnelApiDemoController@show');
         Route::get('apps/smartfunnel/{id}/edit', 'SmartfunnelApiDemoController@edit');
     });
-        
+
     //Tickets
     Route::group([],function(){
-        Route::get('tickets/getvalues', 'TicketsApiDemoController@getTotalValues')->name('api.tickets.getvalues');    
+        Route::get('tickets/getvalues', 'TicketsApiDemoController@getTotalValues')->name('api.tickets.getvalues');
         Route::get('/tickets', 'TicketsApiDemoController@index');
         Route::get('/tickets/{id}', 'TicketsApiDemoController@show');
     });
@@ -381,9 +383,9 @@ Route::group([
     Route::group([],function(){
         Route::get('/tracking/resume', 'TrackingsApiDemoController@resume');
         Route::get('/tracking/blockedbalance', 'TrackingsApiDemoController@getBlockedBalance');
-        
+
         Route::get('/tracking', 'TrackingsApiDemoController@index');
-        Route::get('/tracking/{id}', 'TrackingsApiDemoController@show');        
+        Route::get('/tracking/{id}', 'TrackingsApiDemoController@show');
     });
 
     //Transfers
@@ -400,7 +402,7 @@ Route::group([
     });
 
     //Whatsapp2
-    Route::group([],function(){        
+    Route::group([],function(){
         Route::get('apps/whatsapp2', 'Whatsapp2ApiDemoController@index');
         Route::get('apps/whatsapp2/{id}', 'Whatsapp2ApiDemoController@show');
         Route::get('apps/whatsapp2/{id}/edit', 'Whatsapp2ApiDemoController@edit');
@@ -408,7 +410,7 @@ Route::group([
 
     //Withdrawals
     Route::group([],function(){
-        Route::get('/withdrawals', 'WithdrawalsApiDemoController@index');        
+        Route::get('/withdrawals', 'WithdrawalsApiDemoController@index');
         Route::post('/withdrawals/getaccountinformation', 'WithdrawalsApiDemoController@getAccountInformation');
 
         Route::post('/withdrawals/getWithdrawalValues', 'WithdrawalsApiDemoController@getWithdrawalValues');

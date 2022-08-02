@@ -65,8 +65,19 @@ $(() => {
         loadOnAny('.number', false, resumeLoader);
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
-                index()
-                getResume()
+                if(!isEmpty(data2.company_default_projects)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    for (let project of data2.company_default_projects) {
+                        $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+                    }
+                    index()
+                    getResume()
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
             })
         })
     })

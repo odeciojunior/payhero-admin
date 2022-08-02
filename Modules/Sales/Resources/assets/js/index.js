@@ -415,8 +415,16 @@ $('.company-navbar').change(function () {
     loadOnTable("#dados_tabela", "#tabela_vendas");
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            window.fillProjectsSelect(data2.companies)
-            atualizar();
+            if(!isEmpty(data2.company_default_projects)){
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                window.fillProjectsSelect(data2.companies)
+                atualizar();
+            }
+            else{
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+            }
         });
 	});
 });
@@ -647,14 +655,20 @@ $(document).ready(function () {
     function getProjects(data) {
         loadingOnScreen();
 
-        $("#project-empty").hide();
-        $("#project-not-empty").show();
-        $("#export-excel > div >").show();
-        window.fillProjectsSelect(data.companies)
-        $("#projeto option:first").attr('selected','selected');
-        atualizar();
-
-        loadingOnScreenRemove();
+        if(!isEmpty(data.company_default_projects)){
+            $("#project-empty").hide();
+            $("#project-not-empty").show();
+            $("#export-excel > div >").show();
+            window.fillProjectsSelect(data.companies)
+            $("#projeto option:first").attr('selected','selected');
+            atualizar();
+            loadingOnScreenRemove();
+        }
+        else{
+            $("#project-not-empty").hide();
+            $("#project-empty").show();
+            loadingOnScreenRemove();
+        }
 
         // $.ajax({
         //     method: "GET",

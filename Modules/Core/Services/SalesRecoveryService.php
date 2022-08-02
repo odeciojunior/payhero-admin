@@ -73,7 +73,7 @@ class SalesRecoveryService
         array $plans = null,
         int $company_id = null
     ) {
-        
+
         $userProjectsModel = new UserProject();
         $customerModel = new Customer();
 
@@ -355,18 +355,19 @@ class SalesRecoveryService
     public static function getProjectsWithRecovery(){
         $first = Sale::select('project_id')
             ->distinct()
-            ->where('owner_id',auth()->user()->account_owner_id)
+            ->where('owner_id',auth()->user()->getAccountOwnerId())
             ->where('status',3);
 
-        $second = Checkout::select('checkouts.project_id')
+        $s = Checkout::select('checkouts.project_id')
             ->distinct()
             ->leftjoin('checkout_configs','checkout_configs.project_id','checkouts.project_id')
             ->join('companies','companies.id','checkout_configs.company_id')
-            ->where('companies.user_id',auth()->user()->account_owner_id)
+            ->where('companies.user_id',auth()->user()->getAccountOwnerId())
             ->where('checkouts.status_enum',2)
-            ->union($first)
-            ->get();
-
+            ->union($first);
+            //->get();
+            Log::info(str_replace_array('?',$s->getBindings(),$s->toSql()));
+            $second = $s->get();
         return $second;
     }
 }

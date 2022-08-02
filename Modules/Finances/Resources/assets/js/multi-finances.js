@@ -2,22 +2,32 @@ $(document).ready(function(){
 
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        updateCompanyDefault().done( function(){
-            if($('#container-config').is(':visible')){
-                hiddenConfig()
-            }
-            $("#extract_company_select").val( $('.company-navbar').val() );
-            $('#gateway-skeleton').show();
-            $('#container-all-gateways').html('');
-            $('#val-skeleton').show();
-            $('#container_val').css('display','none');
-            $('.skeleton-withdrawal').show();
-            $('#container-withdraw').html('');
-            $('#empty-history').hide();
-            $('.asScrollable').hide();
-            $('.container-history').css('padding-top','42px');
-            window.updateStatements();
-            window.updateWithdrawals();
+        updateCompanyDefault().done( function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                if(!isEmpty(data2.company_default_projects)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    if($('#container-config').is(':visible')){
+                        hiddenConfig()
+                    }
+                    $("#extract_company_select").val( $('.company-navbar').val() );
+                    $('#gateway-skeleton').show();
+                    $('#container-all-gateways').html('');
+                    $('#val-skeleton').show();
+                    $('#container_val').css('display','none');
+                    $('.skeleton-withdrawal').show();
+                    $('#container-withdraw').html('');
+                    $('#empty-history').hide();
+                    $('.asScrollable').hide();
+                    $('.container-history').css('padding-top','42px');
+                    window.updateStatements();
+                    window.updateWithdrawals();
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            });
         });
     });
 

@@ -9,15 +9,25 @@ $(document).ready(function () {
         $("#project").val($("#project option:first").val());
         $("#plan").val($("#plan option:first").val());
         loadOnTable("#table_data", "#carrinhoAbandonado");
-        updateCompanyDefault().done(function(data1){
+        updateCompanyDefault().done(function(data){
             getCompaniesAndProjects().done(function(data2){
-                fillProjectsSelect(data2.companies)
-                updateSalesRecovery();
+                if(!isEmpty(data2.company_default_projects)){
+                    $('#export-excel').show();
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    fillProjectsSelect(data2.companies)
+                    updateSalesRecovery();
+                }
+                else{
+                    $('#export-excel').hide();
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
             });
         });
     });
 
-    fillProjectsSelect = function(data){
+    function fillProjectsSelect(data){
         $.ajax({
             method: "GET",
             url: "/api/recovery/projects-with-recovery",
@@ -27,7 +37,7 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                console.log('error')
+                console.log('erro')
                 console.log(response)
             },
             success: function success(response) {
@@ -45,8 +55,17 @@ $(document).ready(function () {
         });
     }
 
-    getCompaniesAndProjects().done( function (data){
-        getProjects(data);
+    getCompaniesAndProjects().done( function (data){console.log(data)
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
+
     });
 
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)

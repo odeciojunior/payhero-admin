@@ -25,10 +25,23 @@ $('.company-navbar').change(function () {
     $('#scoreLineToMonth').html('')
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            window.updateValues();
-            window.updateChart();
-            window.updatePerformance();
-            window.updateAccountHealth();
+            if(!isEmpty(data2.company_default_projects)){
+                if( $("#project-empty").css('display')!='none' ){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    window.getDataDashboard();
+                }
+                else{
+                    window.updateValues();
+                    window.updateChart();
+                    window.updatePerformance();
+                    window.updateAccountHealth();
+                }
+            }
+            else{
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+            }
         });
 	});
 });
@@ -159,7 +172,7 @@ $(document).ready(function () {
 
     }
 
-    function getDataDashboard() {
+    window.getDataDashboard = function() {
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -272,7 +285,7 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    getDataDashboard();
+                    window.getDataDashboard();
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();

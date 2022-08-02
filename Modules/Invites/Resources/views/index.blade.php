@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-        <div id="content-error" class='content-error text-center' style="display:none !important;">
+        <div id="content-error" class='content-error text-center' style="display:none !important; margin-top: -40px;">
                 <img src="build/global/img/convites.svg" width="156px"/>
                 <h4 class="big gray">Você ainda não enviou convites!</h4> <br>
                 <p class="desc gray">Envie convites, e

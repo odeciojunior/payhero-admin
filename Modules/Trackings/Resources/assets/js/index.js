@@ -52,8 +52,18 @@ $('.company-navbar').change(function () {
     window.showLoading(loadOnAny, loadingSelector, loadingSettings);
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            window.fillProjectsSelect(data2.companies)
-            window.loadData();
+            if(!isEmpty(data2.company_default_projects)){
+                $('#export-excel').show();
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                window.fillProjectsSelect(data2.companies)
+                window.loadData();
+            }
+            else{
+                $('#export-excel').hide();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+            }
         });
 	});
 });
@@ -247,7 +257,15 @@ $(() => {
     }
 
     getCompaniesAndProjects().done( function (data){
-        getProjects(data);
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
     });
 
     /**

@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\UserProject;
 use Modules\Notazz\Http\Requests\NotazzStoreRequest;
 use Modules\Notazz\Http\Requests\NotazzUpdateRequest;
 use Modules\Notazz\Transformers\NotazzInvoiceResource;
 use Modules\Notazz\Transformers\NotazzResource;
+use Modules\Projects\Transformers\ProjectsSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -30,6 +32,8 @@ class NotazzApiController extends Controller
     public function index(Request $request)
     {
         try {
+            $user = auth()->user();
+
             $notazzIntegrations = NotazzIntegration::with(['project', 'project.usersProjects'])
             ->whereHas(
                 'project.usersProjects',
@@ -40,7 +44,34 @@ class NotazzApiController extends Controller
                 }
             )->get();
 
-            return NotazzResource::collection($notazzIntegrations);
+            $projects     = collect();
+            $userProjects = UserProject::where([[
+                'user_id', $user->getAccountOwnerId()],[
+                'company_id', $user->company_default
+            ]])->get();
+            if ($userProjects->count() > 0) {
+                foreach ($userProjects as $userProject) {
+                    $project = $userProject
+                        ->project()
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
+                    if (!empty($project)) {
+                        $projects->add($userProject->project);
+                    }
+                }
+            }
+            return response()->json([
+                'data' => NotazzResource::collection($notazzIntegrations),
+                'projects' => ProjectsSelectResource::collection($projects),
+            ]);
+
         } catch (Exception $e) {
             report($e);
 

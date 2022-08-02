@@ -512,12 +512,12 @@ span.font-size-16 {
 hr{
     margin: 0;
 }
-.menu-active span:first-child {
+/* .menu-active span:first-child {
     padding: 11px 10px 10px 15px;
 }
 .menu-active span:first-child {
     padding: 11px 10px 10px 15px;
-}
+} */
 #container-withdraw .row.mx-0:nth-child(even), #skeleton-withdrawal2 {
     background-color: #F6F7F9;
 }

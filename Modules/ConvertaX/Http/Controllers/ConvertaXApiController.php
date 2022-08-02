@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\ConvertaxIntegration;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\UserProject;
 use Modules\ConvertaX\Transformers\ConvertaxResource;
+use Modules\Projects\Transformers\ProjectsSelectResource;
 
 class ConvertaXApiController extends Controller
 {
@@ -23,6 +26,8 @@ class ConvertaXApiController extends Controller
     {
 
         try {
+            $user = auth()->user();
+
             activity()->on(new ConvertaxIntegration())->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações do ConvertaX');
@@ -37,7 +42,35 @@ class ConvertaXApiController extends Controller
                 }
             )->get();
 
-            return ConvertaxResource::collection($convertaxIntegrations);
+            $projects     = collect();
+            $userProjects = UserProject::where([[
+                'user_id', $user->getAccountOwnerId()],[
+                'company_id', $user->company_default
+            ]])->get();
+            if ($userProjects->count() > 0) {
+                foreach ($userProjects as $userProject) {
+                    $project = $userProject
+                        ->project()
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
+                    if (!empty($project)) {
+                        $projects->add($userProject->project);
+                    }
+                }
+            }
+            return response()->json([
+                'data' => ConvertaxResource::collection($convertaxIntegrations),
+                'projects' => ProjectsSelectResource::collection($projects),
+            ]);
+
+            //return ConvertaxResource::collection($convertaxIntegrations);
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }

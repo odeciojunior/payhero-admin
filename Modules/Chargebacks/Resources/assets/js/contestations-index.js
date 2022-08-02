@@ -1,31 +1,39 @@
-$('.company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault($(this).val())) return;
-    $("#project").find('option').not(':first').remove();
-    $("#project").val($("#project option:first").val());
-    loadOnTable("#chargebacks-table-data", "#chargebacks-table");
-    loadOnAny(".total-number", false, {
-        styles: {
-            container: {
-                minHeight: "32px",
-                height: "auto",
-            },
-            loader: {
-                width: "20px",
-                height: "20px",
-                borderWidth: "4px",
-            },
-        },
-    });
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.fillProjectsSelect(data2.companies)
-            window.atualizar();
-            window.getTotalValues();
-        });
-	});
-});
-
 $(document).ready(function () {
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project").find('option').not(':first').remove();
+        $("#project").val($("#project option:first").val());
+        loadOnTable("#chargebacks-table-data", "#chargebacks-table");
+        loadOnAny(".total-number", false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                if(!isEmpty(data2.company_default_projects)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    fillProjectsSelect(data2.companies)
+                    atualizar();
+                    getTotalValues();
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            });
+        });
+    });
+
     let statusObject = {
         1: "Aprovada",
         2: "Pendente",
@@ -145,7 +153,7 @@ $(document).ready(function () {
         }
 
         $("#primeira_pagina").on("click", function () {
-            window.atualizar("?page=1");
+            atualizar("?page=1");
         });
 
         for (x = 3; x > 0; x--) {
@@ -164,7 +172,7 @@ $(document).ready(function () {
             $("#pagina_" + (response.meta.current_page - x)).on(
                 "click",
                 function () {
-                    window.atualizar("?page=" + $(this).html());
+                    atualizar("?page=" + $(this).html());
                 }
             );
         }
@@ -200,7 +208,7 @@ $(document).ready(function () {
             $("#pagina_" + (response.meta.current_page + x)).on(
                 "click",
                 function () {
-                    window.atualizar("?page=" + $(this).html());
+                    atualizar("?page=" + $(this).html());
                 }
             );
         }
@@ -220,7 +228,7 @@ $(document).ready(function () {
             }
 
             $("#ultima_pagina").on("click", function () {
-                window.atualizar("?page=" + response.meta.last_page);
+                atualizar("?page=" + response.meta.last_page);
             });
         }
     }
@@ -255,7 +263,7 @@ $(document).ready(function () {
         });
     }
 
-    window.atualizar = function(link = null) {
+    function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
 
         if (link == null) {
@@ -450,7 +458,7 @@ $(document).ready(function () {
         });
     }
 
-    window.getTotalValues = function() {
+    function getTotalValues() {
         loadOnAny(".total-number", false, {
             styles: {
                 container: {
@@ -496,8 +504,8 @@ $(document).ready(function () {
         loadingOnScreen();
         $("#project-empty").hide();
         $("#project-not-empty").show();
-        window.fillProjectsSelect(data.companies)
-        window.atualizar();
+        fillProjectsSelect(data.companies)
+        atualizar();
         loadingOnScreenRemove();
 
         // $.ajax({
@@ -541,8 +549,8 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        window.atualizar();
-        window.getTotalValues();
+        atualizar();
+        getTotalValues();
     });
 
     $('#transaction').on('change paste keyup select', function () {
@@ -614,17 +622,17 @@ $(document).ready(function () {
 
     $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
-            window.atualizar();
-            window.getTotalValues();
+            atualizar();
+            getTotalValues();
         }
     });
 
     $("#pagination").css({ marginBottom: "100px" });
 
     //window.atualizar();
-    window.getTotalValues();
+    getTotalValues();
 
-    window.fillProjectsSelect = function(data){
+    function fillProjectsSelect(data){
         $.ajax({
             method: "GET",
             url: "/api/contestations/projects-with-contestations",
@@ -653,7 +661,15 @@ $(document).ready(function () {
     }
 
     getCompaniesAndProjects().done( function (data){
-        getProjects(data);
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
     });
 
 });

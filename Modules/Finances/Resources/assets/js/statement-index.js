@@ -98,12 +98,20 @@ $(window).on("load", function(){
         $("#available-in-period").html('');
         updateCompanyDefault().done( function(data1){
             getCompaniesAndProjects().done(function(data2){
-                window.gatewayCode = window.location.href.split('/')[4];
-                getGateway(window.gatewayCode);
-                checkBlockedWithdrawal();
-                updateBalances();
-                loadStatementTable();
-                $("#nav-statement").css('display', '');
+                if(!isEmpty(data2.company_default_projects)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    window.gatewayCode = window.location.href.split('/')[4];
+                    getGateway(window.gatewayCode);
+                    checkBlockedWithdrawal();
+                    updateBalances();
+                    loadStatementTable();
+                    $("#nav-statement").css('display', '');
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
             });
         });
     });
