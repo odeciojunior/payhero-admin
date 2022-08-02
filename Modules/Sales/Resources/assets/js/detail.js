@@ -547,8 +547,8 @@ $(() => {
             sale.tax ?
                 (
                     sale.checkout_tax ?
-                        "Taxas (" + sale.tax + " + " + sale.transaction_rate + " + " + sale.checkout_tax + "): " :
-                        "Taxas (" + sale.tax + " + " + sale.transaction_rate + "): "
+                        "Taxas (" + sale.tax + " + " + sale.transaction_tax + " + " + sale.checkout_tax + "): " :
+                        "Taxas (" + sale.tax + " + " + sale.transaction_tax + "): "
                 ) :
                 "Taxas"
         );
@@ -568,7 +568,7 @@ $(() => {
         $("#tax-percentage-value").html(`${sale.taxaDiscount}`);
 
         $("#tax-fixed").html("Taxa fixa: ");
-        $("#tax-fixed-value").html(`${sale.transaction_rate}`);
+        $("#tax-fixed-value").html(`${sale.transaction_tax}`);
 
         if (sale.checkout_tax) {
             $("#tax-checkout").html("Taxa de checkout: ");

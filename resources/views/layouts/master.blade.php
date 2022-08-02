@@ -100,7 +100,9 @@
 
         <!-- Plugins -->
         <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
-        <script> verifyDocumentPending(); </script>
+        <script>
+            verifyDocumentPending();
+        </script>
 
         @stack('scripts')
         @stack('scriptsModal')
@@ -125,29 +127,19 @@
             </script>
 
             @if(\Auth::user())
-                <script>
-                    (function (o, c, t, a, d, e, s, k) {
-                    o.octadesk = o.octadesk || {};
-                    s = c.getElementsByTagName("body")[0];
-                    k = c.createElement("script");
-                    k.async = 1;
-                    k.src = t + '/' + a + '?showButton=' +  d + '&openOnMessage=' + e;
-                    s.appendChild(k);
-                    })(window, document, 'https://chat.octadesk.services/api/widget', 'cloudfoxpagamentos',  true, true);
-                </script>
+                <!-- Start of cloudfoxhelp Zendesk Widget script -->
+                <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=bb493a85-feac-4ede-b26e-1fd8c8cc9010"></script>
+                <!-- End of cloudfoxhelp Zendesk Widget script -->
 
-                <script>
-                    window.addEventListener('onOctaChatReady', function(e) {
-                        octadesk.chat.login({
-                            user: {
-                                name: '{{ auth()->user()->name }}',
-                                email: '{{ auth()->user()->email }}'
-                            },
-                        })
-                    })
+                <script type="text/javascript">
+                    var signedToken = generateJwt('{{ auth()->user()->id }}', '{{ auth()->user()->name }}', '{{ auth()->user()->email }}');
+
+                    zE('messenger', 'close');
+                    zE('messenger', 'loginUser', function (callback) {
+                        callback(signedToken);
+                    });
                 </script>
             @endif
-
         @endif
 
         <!-- Announcekiit configuracoes -->

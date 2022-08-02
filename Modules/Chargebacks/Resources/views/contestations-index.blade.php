@@ -113,7 +113,7 @@
                                         <option value="">Todas lojas</option>
                                     </select>
                                 </div>
-
+                                {{--
                                 <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="is_contested">Concluído</label>
                                     <br>
@@ -123,7 +123,7 @@
                                         <option value="2">Não concluído</option>
                                     </select>
                                 </div>
-
+                                --}}
                                 <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="contestation_situation">Situação</label>
                                     <select name='contestation_situation' id="contestation_situation" class="sirius-select">
@@ -139,7 +139,7 @@
                                     <input id="customer" name="customer" class="input-pad" placeholder="Nome do cliente">
                                 </div>
                             </div>
-
+                            {{--
                             <div class="row no-gutters justify-content-between justify-content-sm-end mt-20">
                                 <div class="mr-10">
                                     <label for="sale_approve" class=''>
@@ -153,8 +153,8 @@
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
-
                             </div>
+                            --}}
                         </div>
 
                         <div class="row" style="height: 30px">

@@ -29,7 +29,7 @@ class ReportMarketingService
 
     public function getResumeMarketing($filters)
     {
-        $cacheName = 'marketing-resume-'.json_encode($filters);
+        $cacheName = 'marketing-resume-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -67,7 +67,7 @@ class ReportMarketingService
 
     public function getSalesByState($filters)
     {
-        $cacheName = 'sales-by-state-'.json_encode($filters);
+        $cacheName = 'sales-by-state-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -124,7 +124,7 @@ class ReportMarketingService
 
     public function getMostFrequentSales($filters)
     {
-        $cacheName = 'frequent-sales-'.json_encode($filters);
+        $cacheName = 'frequent-sales-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -167,7 +167,7 @@ class ReportMarketingService
 
     public function getDevices($filters)
     {
-        $cacheName = 'devices-'.json_encode($filters);
+        $cacheName = 'devices-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -246,7 +246,7 @@ class ReportMarketingService
 
     public function getOperationalSystems($filters)
     {
-        $cacheName = 'operational-systems-'.json_encode($filters);
+        $cacheName = 'operational-systems-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -295,7 +295,7 @@ class ReportMarketingService
 
     public function getStateDetail($filters)
     {
-        $cacheName = 'state-detail-'.json_encode($filters);
+        $cacheName = 'state-detail-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -339,7 +339,7 @@ class ReportMarketingService
 
     public function getResumeCoupons($filters)
     {
-        $cacheName = 'coupons-resume-' . json_encode($filters);
+        $cacheName = 'coupons-resume-'.auth()->user()->getAccountOwnerId().'-' . json_encode($filters);
         return cache()->remember($cacheName, 180, function() use($filters){
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
@@ -381,7 +381,7 @@ class ReportMarketingService
 
     public function getResumeRegions($filters)
     {
-        $cacheName = 'regions-resume-'.json_encode($filters);
+        $cacheName = 'regions-resume-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = current(Hashids::decode($filters['project_id']));
