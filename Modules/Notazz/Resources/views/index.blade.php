@@ -30,8 +30,10 @@
             </div>
         </div>
         <div class='page-content container' id='project-integrated'>
-            <div class="row" id="content">
-                {{-- js load dynamically --}}
+            <div class='col-md-12'>
+                <div class="row" id="content">
+                    {{-- js load dynamically --}}
+                </div>
             </div>
 
             {{-- Modal add-edit integration --}}
