@@ -29,6 +29,8 @@ use Modules\Core\Presenters\TransactionPresenter;
  * @property string $installment_tax
  * @property string $checkout_tax
  * @property string $tax
+ * @property integer $tax_type
+ * @property string $transaction_rate
  * @property int $tax_type
  * @property string $transaction_tax
  * @property string $gateway_released_at
