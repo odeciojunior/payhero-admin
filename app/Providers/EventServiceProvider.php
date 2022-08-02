@@ -8,7 +8,6 @@ use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
 use Modules\Core\Events\BilletExpiredEvent;
 use Modules\Core\Events\ManualRefundEvent;
-use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\CheckTransactionReleasedEvent;
 use Modules\Core\Events\DomainApprovedEvent;
@@ -45,9 +44,6 @@ use Modules\Core\Listeners\AffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\AffiliateSendEmailListener;
 use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
 use Modules\Core\Listeners\ManualRefundedSendEmailListener;
-use Modules\Core\Listeners\BoletoPaidEmailNotifyUser;
-use Modules\Core\Listeners\BoletoPaidNotifyUser;
-use Modules\Core\Listeners\BoletoPaidPusherNotifyUser;
 use Modules\Core\Listeners\CheckSaleHasValidTrackingListener;
 use Modules\Core\Listeners\CheckTransactionReleasedListener;
 use Modules\Core\Listeners\CreateChargebackDebitListener;
@@ -129,11 +125,6 @@ class EventServiceProvider extends ServiceProvider
             DomainApprovedNotifyUserListener::class,
             DomainApprovedEmailNotifyUserListener::class,
         ],
-        BoletoPaidEvent::class => [
-            BoletoPaidPusherNotifyUser::class,
-            BoletoPaidNotifyUser::class,
-            BoletoPaidEmailNotifyUser::class,
-        ],
         TrackingsImportedEvent::class => [
             NotifyTrackingsImportedListener::class,
         ],
@@ -171,7 +162,7 @@ class EventServiceProvider extends ServiceProvider
         SendEmailEvent::class => [
             SendEmailListener::class,
         ],
-        SendEmailPendingDocumentEvent::class=>[
+        SendEmailPendingDocumentEvent::class => [
             SendEmailPedingDocumentoListener::class
         ],
         SendSmsEvent::class => [

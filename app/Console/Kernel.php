@@ -100,7 +100,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:boleto2')->dailyAt('11:15');
         $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
-        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');        
+        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');
 
         $schedule->command('safe2pay:update-reason-sale-contestations')->dailyAt('19:30');
 
@@ -112,8 +112,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
         $schedule->command('verify:promotional-tax')->dailyAt('23:45');
-
-        // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
     }
 
 

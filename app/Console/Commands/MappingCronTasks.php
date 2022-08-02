@@ -245,7 +245,6 @@ class MappingCronTasks extends Command
             ['command'=>'getnet:check-withdrawals-released','time'=>'22:30','repeat'=>1,'frequently'=>'day'],
             ['command'=>'getnet:check-withdrawals-liquidated-cloudfox','time'=>'22:30','repeat'=>1,'frequently'=>'day'],
             ['command'=>'user:benefits:update','time'=>'22:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'verify:boletopaid','time'=>'10:30','repeat'=>1,'frequently'=>'day'],
             ['command'=>'asaas:transfers-chargebacks','time'=>'00:20','repeat'=>1,'frequently'=>'day'],
             ['command'=>'available-balance:update','time'=>'06:15','repeat'=>1,'frequently'=>'day'],
             ['command'=>'command:WoocommerceRetryFailedRequests','time'=>'04:15','repeat'=>1,'frequently'=>'day'],
