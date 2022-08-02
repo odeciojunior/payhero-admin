@@ -338,7 +338,9 @@ class SalesApiController extends Controller
             if(is_array($data['project_id'])){
                 $projectIds = [];
                 foreach($data['project_id'] as $project){
-                    array_push($projectIds, hashids_decode($project));
+                    if(!empty($project)){
+                        array_push($projectIds, hashids_decode($project));
+                    }
                 };
             }
 
@@ -381,7 +383,8 @@ class SalesApiController extends Controller
                 //$plans = null;
 
                 if (!empty($data['search'])) {
-                    $plans = $planModel
+                    $plans = Plan::
+                        select('plans.*')
                         ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
                         ->join('companies as c', 'c.id', '=', 'cc.company_id')
                         ->where('plans.name', 'like', '%' . $data['search'] . '%')
@@ -391,7 +394,8 @@ class SalesApiController extends Controller
                         ->get();
 
                 } else {
-                    $plans = $planModel
+                    $plans = Plan::
+                        select('plans.*')
                         ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
                         ->join('companies as c', 'c.id', '=', 'cc.company_id')
                         ->where('cc.company_id', $user->company_default)
