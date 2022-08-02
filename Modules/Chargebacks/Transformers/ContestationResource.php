@@ -74,12 +74,13 @@ class ContestationResource extends JsonResource
             break;
         }
 
+        $fantasy_name = $userProject->company->fantasy_name ??  '';
         return [
             'id' => Hashids::encode($this->id) ,
             'transaction_id' => $sale_encode,
             'sale_code' => '#' . $sale_encode,
-            'company' => $userProject->company->fantasy_name ??  '',
-            'company_limit' => $userProject->company->fantasy_name ? Str::limit($userProject->company->fantasy_name, '20') :  '',
+            'company' => $fantasy_name,
+            'company_limit' => Str::limit($fantasy_name, '20'),
             'user' => $this->user_name ?? '',
             'project' => $project->name ?? '',
             'sale_id' => Hashids::connection('sale_id')->encode($this->sale_id),
