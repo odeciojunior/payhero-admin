@@ -106,7 +106,7 @@ class CompanyResource extends JsonResource
             //'extra_document' => $this->extra_document ?? '',
             'active_flag' => $this->active_flag,
             'has_project' => !empty($project),
-            'transaction_rate' => $this->transaction_rate,
+            'transaction_tax' => $this->transaction_tax,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,
             'gateway_release_money_days' => $this->gateway_release_money_days,

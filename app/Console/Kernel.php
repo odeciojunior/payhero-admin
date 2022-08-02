@@ -113,8 +113,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('demo:create-fake-ticket')->dailyAt('16:50');
         $schedule->command('demo:create-fake-contestation')->dailyAt('17:00');
 
-        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');
-        $schedule->command('safe2pay:manual-anticipation')->dailyAt('18:40');
+        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');        
 
         $schedule->command('safe2pay:update-reason-sale-contestations')->dailyAt('19:30');
 

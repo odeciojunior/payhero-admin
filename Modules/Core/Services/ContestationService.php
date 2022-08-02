@@ -23,7 +23,7 @@ class ContestationService
     public function getTotalValueContestations($filters)
     {
         $qrConstestations = $this->getQuery($filters);
-        $total = $qrConstestations->sum('transactions.value')/100;// sales.sub_total
+        $total = $qrConstestations->sum('transactions.value') / 100; // sales.sub_total
         $shipmentValue = $qrConstestations->sum('sales.shipment_value');
         $shopifyDiscount = $qrConstestations->sum('sales.shopify_discount');
         $automaticDiscount = $qrConstestations->sum('sales.automatic_discount');
@@ -36,22 +36,29 @@ class ContestationService
 
         // $total -= $automaticDiscount/100;
 
-        return trim(str_replace("R$", "", FoxUtils::formatMoney($total)));// transactions.value/100
+        return trim(str_replace("R$", "", FoxUtils::formatMoney($total))); // transactions.value/100
     }
 
     function getQuery($filters)
     {
         $account_owner_id = auth()->user()->getAccountOwnerId();
-
-        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name',
-        'sales.total_paid_value','sales.sub_total','sales.shipment_value',\DB::Raw("CAST(sales.shopify_discount as DECIMAL) AS shopify_discount"))
-            ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '". Carbon::now()->addDay(2)->endOfDay()."' THEN 1 ELSE 0 END) as custom_expired"))
+        
+        $contestations = SaleContestation::select(
+            'sale_contestations.*',
+            'sales.start_date',
+            'customers.name as customer_name',
+            'sales.total_paid_value',
+            'sales.sub_total',
+            'sales.shipment_value',
+            \DB::Raw("CAST(sales.shopify_discount as DECIMAL) AS shopify_discount")
+        )
+            ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '" . Carbon::now()->addDay(2)->endOfDay() . "' THEN 1 ELSE 0 END) as custom_expired"))
             ->join('sales', 'sales.id', 'sale_contestations.sale_id')
             ->leftJoin('users', 'users.id', '=', 'sales.owner_id')
-             ->join('transactions', function ($query) {
-                  $query->on('sales.id', '=', 'transactions.sale_id')
-                 ->where('transactions.type', '=', 2);
-             })
+            ->join('transactions', function ($query) {
+                $query->on('sales.id', '=', 'transactions.sale_id')
+                    ->where('transactions.type', '=', 2);
+            })
             ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
             ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
             ->where('checkout_configs.company_id', hashids_decode(request('company')))
@@ -76,7 +83,7 @@ class ContestationService
                 $search_input_date = 'sale_contestations.expiration_date';
             }
 
-            if(request('transaction')){
+            if (request('transaction')) {
                 return $query;
             }
 
@@ -84,7 +91,6 @@ class ContestationService
                 $search_input_date,
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
             );
-
         });
 
         $contestations->when(request('transaction'), function ($query, $search) {
@@ -105,21 +111,21 @@ class ContestationService
         });
 
         $contestations->when(request('is_contested'), function ($query, $val) {
-            if($val == 1){
+            if ($val == 1) {
                 return $query->where('sale_contestations.file_user_completed', 1);
             }
 
-            if($val == 2){
+            if ($val == 2) {
                 return $query->where('sale_contestations.file_user_completed', 0);
             }
         });
 
         $contestations->when(request('is_expired'), function ($query, $val) {
             $date = Carbon::now()->addDay(2);
-            if($val == 1){
+            if ($val == 1) {
                 return $query->whereDate('sale_contestations.expiration_date', '<=', $date);
             }
-            if($val == 2){
+            if ($val == 2) {
                 return $query->whereDate('sale_contestations.expiration_date', '>', $date);
             }
         });
@@ -140,7 +146,6 @@ class ContestationService
 
             if ($data_type == 'expiration_date')
                 return $query->orderBy('sale_contestations.expiration_date', 'asc');
-
         });
 
         $contestations->when(request('project'), function ($query, $search) {
@@ -161,7 +166,7 @@ class ContestationService
             );
         });
         $contestations->when(request('sale_approve'), function ($query, $val) {
-            if($val==1){
+            if ($val == 1) {
                 return $query->where('sales.status', Sale::STATUS_APPROVED);
             }
         });
@@ -326,7 +331,7 @@ class ContestationService
             'boleto_due_date' => $sale->boleto_due_date,
             'attempts' => $sale->attempts,
             'shipment_value' => $sale->shipment_value,
-            'transaction_rate' => $sale->details->transaction_rate ?? null,
+            'transaction_tax' => $sale->details->transaction_tax ?? null,
             'tax' => $sale->details->tax ?? null,
             'total' => $sale->details->total ?? null,
             'subTotal' => $sale->details->subTotal ?? null,
@@ -364,7 +369,6 @@ class ContestationService
         $pdf = PDF::loadView('chargebacks::contestchargeback', compact('dataSale', 'contestation', 'products', 'tracking', 'sale_details'));
 
         return $this->uploadPdfToS3($pdf, $pdf_name);
-
     }
 
     private function uploadPdfToS3($pdf, $pdf_name)
@@ -384,7 +388,6 @@ class ContestationService
             'file_path' => $path,
             'file_name' => $pdf_name
         ];
-
     }
 
     public function sendContestationFiles($files)
@@ -409,37 +412,32 @@ class ContestationService
             );
 
             $paths[] = $amazonFileService->getPath($pathamz);
-
         }
 
         return $paths;
-
-
     }
 
-    public function removeFile(SaleContestationFile $saleContestationFile )
+    public function removeFile(SaleContestationFile $saleContestationFile)
     {
 
         try {
 
             $sDrive = Storage::disk('s3_documents');
-            if($sDrive->exists($saleContestationFile->file)){
+            if ($sDrive->exists($saleContestationFile->file)) {
                 $sDrive->delete($saleContestationFile->file);
                 $saleContestationFile->delete();
             }
-
         } catch (Exception $e) {
             Log::warning('DeleteTemporaryFiles - Error command ');
             report($e);
         }
-
     }
 
     public static function getprojectsWithContestations(){
         return Sale::select('sales.project_id')
             ->distinct()
             ->leftjoin('sale_contestations','sale_contestations.sale_id','sales.id')
-            ->where('sales.owner_id',auth()->user()->account_owner_id)
+            ->where('sales.owner_id',auth()->user()->getAccountOwnerId())
             ->whereIn('sale_contestations.status',[1,2,3])
             ->get();
     }

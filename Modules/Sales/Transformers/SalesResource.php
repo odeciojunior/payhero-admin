@@ -33,7 +33,7 @@ class SalesResource extends JsonResource
 
         $user = auth()->user();
         $userPermissionRefunded = false;
-        if ($user->hasAnyPermission(['sales_manage','finances_manage'])) {
+        if ($user->hasAnyPermission(['sales_manage', 'finances_manage'])) {
             $userPermissionRefunded = true;
         }
 
@@ -43,13 +43,13 @@ class SalesResource extends JsonResource
         $thankLabelText = 'Link página de obrigado:';
 
         $domain = Domain::select('name')->where('project_id', $this->project_id)->where('status', 3)->first();
-        $domainName = $domain->name??'cloudfox.net';
+        $domainName = $domain->name ?? 'cloudfox.net';
 
         $urlCheckout ="https://checkout.{$domainName}/order/";
         if (!empty($domain->name)) {
             $thankPageUrl = "https://checkout.{$domain->name}/order/" . hashids_encode($this->id, 'sale_id');
         }
-        if(!foxutils()->isProduction()) {
+        if (!foxutils()->isProduction()) {
             $thankPageUrl = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/order/' . hashids_encode($this->id, 'sale_id');
         }
 
@@ -62,10 +62,10 @@ class SalesResource extends JsonResource
         //     $this->details->total = $total;
         // }
 
-        $boletoLink = "https://checkout.{$domainName}/order/".hashids_encode($this->id, 'sale_id'). "/download-boleto";
+        $boletoLink = "https://checkout.{$domainName}/order/" . hashids_encode($this->id, 'sale_id') . "/download-boleto";
 
-        if(!foxutils()->isProduction()) {
-            $boletoLink = env('CHECKOUT_URL', 'http://dev.checkout.com').'/order/'.hashids_encode($this->id, 'sale_id')."/download-boleto";
+        if (!foxutils()->isProduction()) {
+            $boletoLink = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/order/' . hashids_encode($this->id, 'sale_id') . "/download-boleto";
         }
 
         $data = [
@@ -92,7 +92,7 @@ class SalesResource extends JsonResource
             //invoices
             'invoices' => $this->details->invoices ?? null,
             //transaction
-            'transaction_rate' => $this->details->transaction_rate ?? null,
+            'transaction_tax' => $this->details->transaction_tax ?? null,
             'tax' => $this->details->tax ?? null,
             'tax_type' => $this->details->tax_type ?? null,
             'checkout_tax' => $this->details->checkout_tax ?? null,
@@ -125,59 +125,54 @@ class SalesResource extends JsonResource
             'thank_label_text' => $thankLabelText,
             'company_name' => $this->details->company_name,
             'has_order_bump' => $this->has_order_bump,
-            'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? foxutils()->formatMoney($this->cashback->value / 100) : 0):0,
+            'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? foxutils()->formatMoney($this->cashback->value / 100) : 0) : 0,
             'has_cashback' => $this->cashback->value ?? false,
             'api_flag' => $this->api_flag,
             'refund_enabled' => ($this->status == Sale::STATUS_APPROVED and (Gateway::getServiceById($this->gateway_id)->refundEnabled()) and $userPermissionRefunded),
-            'refund_url' => env('APP_URL', 'http://dev.checkout.com'). '/api/sales/refund/'.hashids_encode($this->id, 'sale_id'),
+            'refund_url' => env('APP_URL', 'http://dev.checkout.com') . '/api/sales/refund/' . hashids_encode($this->id, 'sale_id'),
             'already_refunded' => (new SaleService)->alreadyRefunded($sale)
         ];
 
         $shopifyIntegrations = [];
-        if(!empty($this->project)){
+        if (!empty($this->project)) {
             $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         }
 
         $data['asaas_amount_refund'] = '';
-        if(in_array($this->gateway_id,[Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]))
-        {
+        if (in_array($this->gateway_id, [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID])) {
             $data['asaas_amount_refund'] = $this->getSalesTaxesChargeback();
         }
 
         $data['has_shopify_integration'] = null;
-        if (count($shopifyIntegrations) > 0 && foxutils()->isProduction())
-        {
+        if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;
         }
 
         $woocommerceIntegrations = [];
-        if(!empty($this->project)){
+        if (!empty($this->project)) {
             $woocommerceIntegrations = $this->project->woocommerceIntegrations->where('status', 2);
         }
         $data['has_woocommerce_integration'] = null;
-        if (count($woocommerceIntegrations) > 0)
-        {
+        if (count($woocommerceIntegrations) > 0) {
             $data['has_woocommerce_integration'] = true;
 
-            if(!empty($this->woocommerce_order)){
-                try{
+            if (!empty($this->woocommerce_order)) {
+                try {
 
                     $integration = WooCommerceIntegration::where('project_id', $this->project_id)->first();
                     $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-                    $order = $service->woocommerce->get('orders/'.$this->woocommerce_order);
+                    $order = $service->woocommerce->get('orders/' . $this->woocommerce_order);
                     $data['woocommerce_order'] = $order;
-                }catch(Exception $e){
-                    $data['woocommerce_order'] = ['status'=>'Pedido não encontrado'];
-
+                } catch (Exception $e) {
+                    $data['woocommerce_order'] = ['status' => 'Pedido não encontrado'];
                 }
-
-            }else{
+            } else {
                 $request = SaleWoocommerceRequests::where('sale_id', $this->id)
-                ->where('method', 'CreatePendingOrder')
-                ->where('status', 0)
-                ->first();
+                    ->where('method', 'CreatePendingOrder')
+                    ->where('status', 0)
+                    ->first();
 
-                if(!empty($request) && $this->status == 1){
+                if (!empty($request) && $this->status == 1) {
                     $data['woocommerce_retry_order'] = true;
                 }
             }
@@ -202,8 +197,8 @@ class SalesResource extends JsonResource
 
     public function getSalesTaxesChargeback()
     {
-        $cashbackValue = !empty($this->cashback) ? $this->cashback->value:0;
-        $saleTax = (new SaleService)->getSaleTaxRefund($this,$cashbackValue);
+        $cashbackValue = !empty($this->cashback) ? $this->cashback->value : 0;
+        $saleTax = (new SaleService)->getSaleTaxRefund($this, $cashbackValue);
 
         return foxutils()->formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100);
     }
