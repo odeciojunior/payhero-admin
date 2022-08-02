@@ -172,7 +172,7 @@ class User extends Authenticable
         'release_count',
         'has_security_reserve',
         'security_reserve_rule',
-        'constestation_penalty',
+        'contestation_penalty',
         'level',
         'ignore_automatic_benefits_updates',
         'total_commission_value',

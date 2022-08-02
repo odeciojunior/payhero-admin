@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTableUsersAddConstestationPenaltyColumn extends Migration
+class AlterTableUsersAddContestationPenaltyColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AlterTableUsersAddConstestationPenaltyColumn extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('constestation_penalty')->after('security_reserve_rule')->default(true);
+            $table->boolean('contestation_penalty')->after('security_reserve_rule')->default(true);
         });
     }
 
@@ -26,7 +26,7 @@ class AlterTableUsersAddConstestationPenaltyColumn extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['constestation_penalty']);
+            $table->dropColumn(['contestation_penalty']);
         });
     }
 }
