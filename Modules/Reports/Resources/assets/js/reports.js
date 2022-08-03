@@ -47,11 +47,11 @@ $(function () {
         $(this).siriusSelect();
     });
 
-    $('.sirius-select1').on('click', function() {
+    $('.sirius-select1').on('click', function () {
         $('.sirius-select1 .sirius-select-text').toggleClass('on');
     });
 
-    if(sessionStorage.info) {
+    if (sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
     }
@@ -79,7 +79,7 @@ function changeCompany() {
         if (company !== $(this).val()) {
             company = $(this).val();
 
-            updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+            updateStorage({ company: $(this).val(), companyName: $(this).find('option:selected').text() });
             updateReports();
         }
     });
@@ -108,25 +108,25 @@ function changeCalendar() {
             }
         }
     })
-    .on('datepicker-change', function () {
-        $.ajaxQ.abortAll();
+        .on('datepicker-change', function () {
+            $.ajaxQ.abortAll();
 
         if (dateRange !== $(this).val()) {
             dateRange = $(this).val();
 
-            updateStorage({calendar: $(this).val()});
-            updateReports();
-        }
-    })
-    .on('datepicker-open', function () {
-        $('.filter-badge-input').removeClass('show');
-    })
-    .on('datepicker-close', function () {
-        $(this).removeClass('focused');
-        if ($(this).data('value')) {
-            $(this).addClass('active');
-        }
-    });
+                updateStorage({ calendar: $(this).val() });
+                updateReports();
+            }
+        })
+        .on('datepicker-open', function () {
+            $('.filter-badge-input').removeClass('show');
+        })
+        .on('datepicker-close', function () {
+            $(this).removeClass('focused');
+            if ($(this).data('value')) {
+                $(this).addClass('active');
+            }
+        });
 
     dateRange = $('input[name="daterange"]').val();
 }
@@ -232,14 +232,14 @@ function updateReports()
         getRegions(),
         updateSalesByOrigin()
     ])
-    .then(() => {
-        $('.sirius-select-container').removeClass('disabled');
-        $('input[name="daterange"]').removeAttr('disabled');
-    })
-    .catch(() => {
-        $('.sirius-select-container').removeClass('disabled');
-        $('input[name="daterange"]').removeAttr('disabled');
-    });
+        .then(() => {
+            $('.sirius-select-container').removeClass('disabled');
+            $('input[name="daterange"]').removeAttr('disabled');
+        })
+        .catch(() => {
+            $('.sirius-select-container').removeClass('disabled');
+            $('input[name="daterange"]').removeAttr('disabled');
+        });
 }
 
 function getCashback() {
@@ -255,7 +255,7 @@ function getCashback() {
             <p class="noone-data">Não há dados suficientes</p>
         </div>
     `;
-    $('#card-cashback .onPreLoad *' ).remove();
+    $('#card-cashback .onPreLoad *').remove();
     $("#block-cash").html(skeLoad);
 
     return $.ajax({
@@ -280,7 +280,7 @@ function getCashback() {
             //     ${variation.value}
             // </em>
 
-            if(response.data.count > 0) {
+            if (response.data.count > 0) {
                 let { chart, count, total, variation } = response.data;
 
                 cashHtml = `
@@ -300,7 +300,7 @@ function getCashback() {
                 let series = [...chart.values];
                 newGraphCashback(series, labels);
 
-                $(window).on("resize", function() {
+                $(window).on("resize", function () {
                     $('.new-graph-cashback').width($("#block-cash").width());
                 });
 
@@ -324,7 +324,7 @@ function getPending() {
             <p class="noone-data">Não há dados suficientes</p>
         </div>
     `;
-    $('#card-pending .onPreLoad *' ).remove();
+    $('#card-pending .onPreLoad *').remove();
     $("#block-pending").html(skeLoad);
 
     return $.ajax({
@@ -348,9 +348,9 @@ function getPending() {
             //     ${variation.value}
             // </em>
 
-            if(response.data !== null) {
+            if (response.data !== null) {
                 let { chart, total, variation } = response.data;
-                if(total !== null || total > '0,00') {
+                if (total !== null || total > '0,00') {
                     pendHtml = `
                         <div class="container d-flex value-price">
                             <h4 id='cashback' class="font-size-24 bold grey">
@@ -365,8 +365,8 @@ function getPending() {
                     $('.new-graph-pending').html('<canvas id=graph-pending></canvas>')
                     let labels = [...chart.labels];
                     let series = [...chart.values];
-                    newGraphPending(series,labels);
-                    $(window).on("resize", function() {
+                    newGraphPending(series, labels);
+                    $(window).on("resize", function () {
                         $('.new-graph-pending').width($('#block-pending').width());
                     });
                 } else {
@@ -392,7 +392,7 @@ function getCommission() {
             <p class="noone-data">Não há dados suficientes</p>
         </div>
     `;
-    $('#card-comission .onPreLoad *' ).remove();
+    $('#card-comission .onPreLoad *').remove();
     $("#block-comission").html(skeLoad);
 
     return $.ajax({
@@ -416,7 +416,7 @@ function getCommission() {
             //     ${variation.value}
             // </em>
 
-            if(response.data != null) {
+            if (response.data != null) {
                 let { chart, total, variation } = response.data;
 
                 comissionhtml = `
@@ -435,7 +435,7 @@ function getCommission() {
                 let series = [...chart.values];
                 graphComission(series, labels);
 
-                $(window).on("resize", function() {
+                $(window).on("resize", function () {
                     $('.new-graph').width($('#block-comission').width());
                 });
 
@@ -458,7 +458,7 @@ function getSales() {
             <p class="noone-data">Não há dados suficientes</p>
         </div>
     `;
-    $('#card-sales .onPreLoad *' ).remove();
+    $('#card-sales .onPreLoad *').remove();
     $("#block-sales").html(skeLoad);
 
     return $.ajax({
@@ -484,7 +484,7 @@ function getSales() {
             //     ${variation.value}
             // </em>
 
-            if(total > 0) {
+            if (total > 0) {
                 salesHtml = `
                     <div class="container d-flex value-price">
                         <h4 id='sales' class=" font-size-24 bold">
@@ -500,7 +500,7 @@ function getSales() {
                 let series = [...chart.values];
                 newGraphSell(series, labels);
 
-                $(window).on("resize", function() {
+                $(window).on("resize", function () {
                     $('.new-graph-sell').width($('#block-sales').width());
                 });
 
@@ -523,7 +523,7 @@ function getProducts() {
             <p class="noone">Nenhum produto vendido</p>
         </div>
     `;
-    $('#card-products .onPreLoad *' ).remove();
+    $('#card-products .onPreLoad *').remove();
     $("#block-products").html(skeLoad);
 
     return $.ajax({
@@ -542,7 +542,7 @@ function getProducts() {
         success: function success(response) {
             let { total, products } = response.data;
 
-            if(total > 0) {
+            if (total > 0) {
                 $("#block-products").prepend(`
                     <footer class="footer-products scroll-212">
                         <ul class="list-products container"></ul>
@@ -552,7 +552,7 @@ function getProducts() {
                 $.each(products, function (i, product) {
                     let { color, amount, image, name, description, percentage } = product;
 
-                    if(amount) {
+                    if (amount) {
                         lista = `
                             <li>
                                 <div class="box-list-products">
@@ -565,9 +565,9 @@ function getProducts() {
                                         <img class="photo" src="${image}" width="16px" height="16px" />
                                     </figure>
                                     <div class="bars ${color}" style="width:${percentage}">
-                                        <span>${Number(percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? amount: ''}</span>
+                                        <span>${Number(percentage.replaceAll('%', '')) > Number('6.2%'.replaceAll('%', '')) ? amount : ''}</span>
                                     </div>
-                                    <span style="color: #636363;">${Number(percentage.replaceAll('%','')) > Number('6.2%'.replaceAll('%','')) ? '': amount}</span>
+                                    <span style="color: #636363;">${Number(percentage.replaceAll('%', '')) > Number('6.2%'.replaceAll('%', '')) ? '' : amount}</span>
                                 </div>
                             </li>
                         `;
@@ -576,13 +576,13 @@ function getProducts() {
                         $('[data-toggle="tooltip"]').tooltip({
                             container: '.list-products'
                         });
-                        $('.photo').on('error', function() {
+                        $('.photo').on('error', function () {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
                         });
                     }
                 });
 
-                if(products.length < 4) {
+                if (products.length < 4) {
                     lista = `<li>${noListProducts}</li>`;
                     $("#block-products .list-products").append(lista);
                 }
@@ -625,7 +625,7 @@ function getCoupons() {
         success: function success(response) {
             let { coupons, total } = response.data;
 
-            if(total > 0) {
+            if (total > 0) {
                 cuponsHtml = `
                     <div class="container d-flex justify-content-between box-donut">
                         <div class="new-graph-pie graph" style="height: 117px;"></div>
@@ -641,8 +641,8 @@ function getCoupons() {
                     arr.push(coupon);
                 });
 
-                for(let i = 0; i < arr.length; i++) {
-                    if(arr[i].amount != undefined) {
+                for (let i = 0; i < arr.length; i++) {
+                    if (arr[i].amount != undefined) {
                         seriesArr.push(arr[i].amount);
                         $('.data-pie ul').append(
                             `
@@ -663,18 +663,18 @@ function getCoupons() {
                 }
 
                 new Chartist.Pie('.graph-pie',
-                {
-                    series: seriesArr
-                },
-                {
-                    donut: true,
-                    donutWidth: 20,
-                    donutSolid: true,
-                    startAngle: 270,
-                    showLabel: false,
-                    chartPadding: 0,
-                    labelOffset: 0,
-                });
+                    {
+                        series: seriesArr
+                    },
+                    {
+                        donut: true,
+                        donutWidth: 20,
+                        donutSolid: true,
+                        startAngle: 270,
+                        showLabel: false,
+                        chartPadding: 0,
+                        labelOffset: 0,
+                    });
             } else {
                 $("#block-coupons").html(cuponsHtml);
             }
@@ -696,7 +696,7 @@ function getTypePayments() {
             <p class="noone-data">Não há dados suficientes</p>
         </div>
     `;
-    $('#card-typepayments .onPreLoad *' ).remove();
+    $('#card-typepayments .onPreLoad *').remove();
     $("#block-payments").html(skeLoad);
 
     let card = `
@@ -751,29 +751,27 @@ function getTypePayments() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data !== null ) {
+            if (response.data !== null) {
                 var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]);
                 paymentsHtml = `<div id="payment-type-items" class="custom-table pb-0 pt-0"><div class="row container-payment" id="type-payment">`;
-                    arrJson.forEach((element, index) => {
-                        var percentage = index == 0 ? '100%' : element[1].percentage;
-                        paymentsHtml += `
+                arrJson.forEach((element, index) => {
+                    var percentage = index == 0 ? '100%' : element[1].percentage;
+                    paymentsHtml += `
                             <div
-                                class="container ${
-                                    element[0] == 'credit_card' ? 'creditCard'
-                                    : element[0] == 'pix' ? 'cardPix'
-                                    : element[0] == 'boleto'? 'cardBoleto' : ''
-                                }"
+                                class="container ${element[0] == 'credit_card' ? 'creditCard'
+                            : element[0] == 'pix' ? 'cardPix'
+                                : element[0] == 'boleto' ? 'cardBoleto' : ''
+                        }"
                             >
                                 <div class="data-holder b-bottom">
                                     <div class="box-payment-option">
                                         <div class="col-payment grey box-image-payment ico-pay">
                                             <div class="box-ico">
-                                                ${
-                                                    element[0] == 'credit_card' ? card
-                                                    : element[0] == 'pix' ? cardPix
-                                                    : element[0] == 'boleto'? cardBoleto : ''
-                                                }
-                                            </div>${element[0] == 'credit_card' ? 'Cartão': element[0]}
+                                                ${element[0] == 'credit_card' ? card
+                            : element[0] == 'pix' ? cardPix
+                                : element[0] == 'boleto' ? cardBoleto : ''
+                        }
+                                            </div>${element[0] == 'credit_card' ? 'Cartão' : element[0]}
                                         </div>
 
                                         <div class="box-payment-option option">
@@ -795,7 +793,7 @@ function getTypePayments() {
                                 </div>
                             </div>
                         `;
-                    });
+                });
 
                 paymentsHtml += `</div></div>`;
 
@@ -836,7 +834,7 @@ function getRegions() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data.length > 0) {
+            if (response.data.length > 0) {
                 regionsHtml = `
                     <footer class="container footer-regions">
                         <ul class="states"></ul>
@@ -858,16 +856,16 @@ function getRegions() {
 
                 $("#block-regions").html(regionsHtml);
 
-                let regionArr       = [];
-                let conversionArr   = [];
-                let accessArr       = [];
-                let statesArr       = [];
+                let regionArr = [];
+                let conversionArr = [];
+                let accessArr = [];
+                let statesArr = [];
 
-                $.each(response.data, function(i, v) {
+                $.each(response.data, function (i, v) {
                     regionArr.push(v);
                 });
 
-                for(let i = 0; i < regionArr.length; i++) {
+                for (let i = 0; i < regionArr.length; i++) {
                     conversionArr.push(regionArr[i].percentage_conversion);
                     accessArr.push(regionArr[i].access);
                     statesArr.push(regionArr[i].region);
@@ -891,7 +889,7 @@ function getRegions() {
 
 
 // show/hide modal de exportar relatórios
-$(".lk-export").on('click', function(e) {
+$(".lk-export").on('click', function (e) {
     e.preventDefault();
     $('.inner-reports').addClass('focus');
     $('.line-reports').addClass('d-flex');
@@ -904,7 +902,7 @@ $('.reports-remove').on('click', function (e) {
 });
 
 function loadReports() {
-    $('#payment-type-items .bar').css('width','100%');
+    $('#payment-type-items .bar').css('width', '100%');
     $('#payment-type-items .bar').removeClass('blue');
     $('#payment-type-items .bar').removeClass('pink');
     $('#payment-type-items .bar').removeClass('purple');
@@ -913,7 +911,7 @@ function loadReports() {
     ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
     loadOnTable("#origins-table-itens", ".table-vendas-itens");
 
-    if($('.ske-load').is(':hidden')) {
+    if ($('.ske-load').is(':hidden')) {
         $('.ske-load').show();
         $('.no-graph').remove();
         $('.graph *').remove();
@@ -1003,9 +1001,9 @@ function updateSalesByOrigin() {
 
                 $.each(response.data, function (index, data) {
                     table_data += "<tr>";
-                        table_data += "<td>" + (data.origin.length > 10 ? '<div data-placement="top" data-toggle="tooltip" title="'+ data.origin +'">'+data.origin.substring(0,10)+'...</div>' : data.origin) + "</td>";
-                        table_data += "<td>" + data.sales_amount + "</td>";
-                        table_data += "<td style='text-align: right;'>" + data.value + "</td>";
+                    table_data += "<td>" + (data.origin.length > 10 ? '<div data-placement="top" data-toggle="tooltip" title="' + data.origin + '">' + data.origin.substring(0, 10) + '...</div>' : data.origin) + "</td>";
+                    table_data += "<td>" + data.sales_amount + "</td>";
+                    table_data += "<td style='text-align: right;'>" + data.value + "</td>";
                     table_data += "</tr>";
                 });
 
@@ -1101,21 +1099,21 @@ function updateGraph(chartData) {
         scoreChart
             .on("created", function (data) {
                 var defs =
-                        data.svg.querySelector("defs") ||
-                        data.svg.elem("defs"),
+                    data.svg.querySelector("defs") ||
+                    data.svg.elem("defs"),
                     filter =
                         (data.svg.width(),
-                        data.svg.height(),
-                        defs.elem(
-                            "filter",
-                            {
-                                x: 0,
-                                y: "-10%",
-                                id: "shadow" + id,
-                            },
-                            "",
-                            !0
-                        ));
+                            data.svg.height(),
+                            defs.elem(
+                                "filter",
+                                {
+                                    x: 0,
+                                    y: "-10%",
+                                    id: "shadow" + id,
+                                },
+                                "",
+                                !0
+                            ));
                 return (
                     filter.elem("feGaussianBlur", {
                         in: "SourceAlpha",
@@ -1136,51 +1134,51 @@ function updateGraph(chartData) {
             .on("draw", function (data) {
                 "line" === data.type
                     ? data.element.attr({
-                            filter: "url(#shadow" + id + ")",
-                        })
+                        filter: "url(#shadow" + id + ")",
+                    })
                     : "point" === data.type &&
-                        new Chartist.Svg(
-                            data.element._node.parentNode
-                        ).elem("line", {
-                            x1: data.x,
-                            y1: data.y,
-                            x2: data.x + 0.01,
-                            y2: data.y,
-                            class: "ct-point-content",
-                        }),
+                    new Chartist.Svg(
+                        data.element._node.parentNode
+                    ).elem("line", {
+                        x1: data.x,
+                        y1: data.y,
+                        x2: data.x + 0.01,
+                        y2: data.y,
+                        class: "ct-point-content",
+                    }),
                     ("line" !== data.type && "area" != data.type) ||
-                        data.element.animate({
-                            d: {
-                                begin: 1e3 * data.index,
-                                dur: 1e3,
-                                from: data.path
-                                    .clone()
-                                    .scale(1, 0)
-                                    .translate(
-                                        0,
-                                        data.chartRect.height()
-                                    )
-                                    .stringify(),
-                                to: data.path.clone().stringify(),
-                                easing:
-                                    Chartist.Svg.Easing.easeOutQuint,
-                            },
-                        });
+                    data.element.animate({
+                        d: {
+                            begin: 1e3 * data.index,
+                            dur: 1e3,
+                            from: data.path
+                                .clone()
+                                .scale(1, 0)
+                                .translate(
+                                    0,
+                                    data.chartRect.height()
+                                )
+                                .stringify(),
+                            to: data.path.clone().stringify(),
+                            easing:
+                                Chartist.Svg.Easing.easeOutQuint,
+                        },
+                    });
             });
     },
-    labelList = chartData.label_list,
-    creditCardSalesData = {
-        name: "Cartão de crédito",
-        data: chartData.boleto_data,
-    },
-    boletoSalesData = {
-        name: "Boleto",
-        data: chartData.credit_card_data,
-    },
-    pixSalesData = {
-        name: "PIX",
-        data: chartData.pix_data,
-    };
+        labelList = chartData.label_list,
+        creditCardSalesData = {
+            name: "Cartão de crédito",
+            data: chartData.boleto_data,
+        },
+        boletoSalesData = {
+            name: "Boleto",
+            data: chartData.credit_card_data,
+        },
+        pixSalesData = {
+            name: "PIX",
+            data: chartData.pix_data,
+        };
     (createChart = function createChart(button) {
         scoreChart(
             "scoreLineToDay",
@@ -1190,10 +1188,10 @@ function updateGraph(chartData) {
             pixSalesData
         );
     }),
-    createChart(),
-    $(".chart-action li a").on("click", function () {
-        createChart($(this));
-    });
+        createChart(),
+        $(".chart-action li a").on("click", function () {
+            createChart($(this));
+        });
 }
 
 function newGraphSell(series, labels) {
@@ -1226,7 +1224,7 @@ function newGraphSell(series, labels) {
                 {
                     label: 'Legenda',
                     data: series,
-                    color:'#636363',
+                    color: '#636363',
                     backgroundColor: gradient,
                     borderColor: "#2E85EC",
                     borderWidth: 4,
@@ -1240,8 +1238,8 @@ function newGraphSell(series, labels) {
             tension: 0.5,
             maintainAspectRatio: false,
             plugins: {
-                legend: {display: false},
-                title: {display: false},
+                legend: { display: false },
+                title: { display: false },
             },
             responsive: true,
             scales: {
@@ -1252,7 +1250,7 @@ function newGraphSell(series, labels) {
                     display: false,
                 },
             },
-            pointBackgroundColor:"#2E85EC",
+            pointBackgroundColor: "#2E85EC",
             radius: 0.1,
             interaction: {
                 intersect: false,
@@ -1275,7 +1273,7 @@ function newGraphSell(series, labels) {
                     }
                 }
             }
-            },
+        },
     });
 }
 
@@ -1310,7 +1308,7 @@ function newGraphCashback(series, labels) {
                 {
                     label: 'Legenda',
                     data: series,
-                    color:'#636363',
+                    color: '#636363',
                     backgroundColor: gradient,
                     borderColor: "#1BE4A8",
                     borderWidth: 4,
@@ -1324,8 +1322,8 @@ function newGraphCashback(series, labels) {
             tension: 0.5,
             maintainAspectRatio: false,
             plugins: {
-                legend: {display: false},
-                title: {display: false},
+                legend: { display: false },
+                title: { display: false },
             },
             responsive: true,
             scales: {
@@ -1336,7 +1334,7 @@ function newGraphCashback(series, labels) {
                     display: false,
                 },
             },
-            pointBackgroundColor:"#1BE4A8",
+            pointBackgroundColor: "#1BE4A8",
             radius: 0.1,
             interaction: {
                 intersect: false,
@@ -1347,9 +1345,9 @@ function newGraphCashback(series, labels) {
                 padding: 10,
                 titleSpacing: 10,
                 callbacks: {
-                label: function (tooltipItem) {
-                    return convertToReal(tooltipItem);
-                },
+                    label: function (tooltipItem) {
+                        return convertToReal(tooltipItem);
+                    },
                     labelPointStyle: function (context) {
                         return {
                             pointStyle: 'rect',
@@ -1359,7 +1357,7 @@ function newGraphCashback(series, labels) {
                     }
                 }
             }
-            },
+        },
     });
 }
 
@@ -1393,7 +1391,7 @@ function newGraphPending(series, labels) {
                 {
                     label: 'Legenda',
                     data: series,
-                    color:'#636363',
+                    color: '#636363',
                     backgroundColor: gradient,
                     borderColor: "#FF7900",
                     borderWidth: 4,
@@ -1407,8 +1405,8 @@ function newGraphPending(series, labels) {
             tension: 0.5,
             maintainAspectRatio: false,
             plugins: {
-                legend: {display: false},
-                title: {display: false},
+                legend: { display: false },
+                title: { display: false },
             },
             responsive: true,
             scales: {
@@ -1419,7 +1417,7 @@ function newGraphPending(series, labels) {
                     display: false,
                 },
             },
-            pointBackgroundColor:"#FF7900",
+            pointBackgroundColor: "#FF7900",
             radius: 0.1,
             interaction: {
                 intersect: false,
@@ -1441,7 +1439,7 @@ function newGraphPending(series, labels) {
                         }
                     }
                 }
-                }
+            }
         },
     });
 }
@@ -1476,7 +1474,7 @@ function graphComission(series, labels) {
                 {
                     label: 'Legenda',
                     data: series,
-                    color:'#636363',
+                    color: '#636363',
                     backgroundColor: gradient,
                     borderColor: "#2E85EC",
                     borderWidth: 4,
@@ -1490,8 +1488,8 @@ function graphComission(series, labels) {
             tension: 0.5,
             maintainAspectRatio: false,
             plugins: {
-                legend: {display: false},
-                title: {display: false},
+                legend: { display: false },
+                title: { display: false },
             },
             responsive: true,
             scales: {
@@ -1502,7 +1500,7 @@ function graphComission(series, labels) {
                     display: false,
                 },
             },
-            pointBackgroundColor:"#2E85EC",
+            pointBackgroundColor: "#2E85EC",
             radius: 0.1,
             interaction: {
                 intersect: false,
@@ -1539,7 +1537,7 @@ function graphRegions(labels, conversion, access) {
                 {
                     label: '',
                     data: conversion,
-                    color:'#ffffff',
+                    color: '#ffffff',
                     backgroundColor: [
                         'rgba(46, 133, 236, 1)',
                         'rgba(102, 95, 232, 1)',
@@ -1553,7 +1551,7 @@ function graphRegions(labels, conversion, access) {
                 {
                     label: '',
                     data: access,
-                    color:'#ffffff',
+                    color: '#ffffff',
                     backgroundColor: [
                         'rgba(46, 133, 236, .2)',
                         'rgba(102, 95, 232, .2)',
@@ -1570,8 +1568,8 @@ function graphRegions(labels, conversion, access) {
             maintainAspectRatio: false,
             indexAxis: 'y',
             plugins: {
-                legend: {display: false},
-                title: {display: false},
+                legend: { display: false },
+                title: { display: false },
             },
 
             responsive: true,
@@ -1620,7 +1618,7 @@ function convertToReal(tooltipItem) {
 }
 
 function getInfo() {
-    $('.box-link').on('click', function(e) {
+    $('.box-link').on('click', function (e) {
         let calendar = $('input[name=daterange]').val();
         let company = $('#select_projects').val();
         let companyName = $('#select_projects').find('option:selected').text();
@@ -1637,28 +1635,28 @@ function getInfo() {
 function updateStorage(v) {
     var existing = sessionStorage.getItem('info');
     existing = existing ? JSON.parse(existing) : {};
-    Object.keys(v).forEach(function(val, key){
+    Object.keys(v).forEach(function (val, key) {
         existing[val] = v[val];
     })
     sessionStorage.setItem('info', JSON.stringify(existing));
 }
 
 // abort all ajax
-$.ajaxQ = (function() {
+$.ajaxQ = (function () {
     var id = 0, Q = {};
 
-    $(document).ajaxSend(function(e, jqx){
+    $(document).ajaxSend(function (e, jqx) {
         jqx._id = ++id;
         Q[jqx._id] = jqx;
     });
-    $(document).ajaxComplete(function(e, jqx){
+    $(document).ajaxComplete(function (e, jqx) {
         delete Q[jqx._id];
     });
 
     return {
-        abortAll: function() {
+        abortAll: function () {
             var r = [];
-            $.each(Q, function(i, jqx) {
+            $.each(Q, function (i, jqx) {
                 r.push(jqx._id);
                 jqx.abort();
             });

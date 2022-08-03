@@ -296,6 +296,10 @@ Route::group([
 
         Route::get('/reports/blockedresume', 'ReportsApiDemoController@resumeBlockedBalance');
 
+        Route::get('/reports/blocked-balance', 'ReportsApiDemoController@blockedBalance');
+        Route::get('/reports/resume-blocked-balance', 'ReportsApiDemoController@resumeblockedBalance');
+        Route::get('/reports/block-reasons', 'ReportsApiDemoController@getBlockReasons');
+
         Route::get('/reports/resume/commissions', 'ReportsFinanceApiDemoController@getResumeCommissions');
         Route::get('/reports/resume/pendings', 'ReportsFinanceApiDemoController@getResumePendings');
         Route::get('/reports/resume/cashbacks', 'ReportsFinanceApiDemoController@getResumeCashbacks');

@@ -216,7 +216,7 @@ function blockedResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            //loadOnAny('.number', true);
+            loadOnAny('.number', true);
             //$('#total_sales').text('0');
 
             if (response.total_sales) {
