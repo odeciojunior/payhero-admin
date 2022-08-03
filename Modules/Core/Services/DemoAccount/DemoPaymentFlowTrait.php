@@ -584,6 +584,16 @@ trait DemoPaymentFlowTrait
             $this->sale->update([
                 'end_date'=>Carbon::now()
             ]);
+
+            if($this->checkout->status_enum == Checkout::STATUS_ABANDONED_CART ){
+                $this->checkout->update([
+                    'status_enum'=>Checkout::STATUS_RECOVERED
+                ]);
+            }else{
+                $this->checkout->update([
+                    'status_enum'=>Checkout::STATUS_SALE_FINALIZED
+                ]);
+            }
         }
         return $this;
     }

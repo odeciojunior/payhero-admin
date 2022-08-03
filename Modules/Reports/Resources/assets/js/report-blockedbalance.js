@@ -25,7 +25,7 @@ $('.company-navbar').change(function () {
     });
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            getProjects(data2.companies);
+            window.getProjects(data2.companies);
         });
 	});
 });
@@ -336,7 +336,7 @@ $(document).ready(function () {
     }
 
     getCompaniesAndProjects().done( function (data2){
-        getProjects(data2.companies);
+        window.getProjects(data2.companies);
     });
 
     window.fillProjectsSelect = function(){
@@ -358,7 +358,7 @@ $(document).ready(function () {
         });
     }
 
-    function getProjects(companies) {
+    window.getProjects = function(companies) {
         loadingOnScreen();
         $("#project-empty").hide();
         $("#project-not-empty").show();
