@@ -369,11 +369,13 @@ class DemoSplitPayment
     {
         if(in_array($this->sale->payment_method,  [Sale::CREDIT_CARD_PAYMENT, Sale::PIX_PAYMENT]) && !in_array($this->sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])) {
 
+            $today = Carbon::parse($this->sale->start_date);
+
             if ($company->user->has_security_reserve) {
                 $releaseCount = $company->user->release_count + 1;
 
                 if ($releaseCount == 20) {
-                    $releaseDate = now()->addDays(90)->format('Y-m-d');
+                    $releaseDate = $today->addDays(90)->format('Y-m-d');
                     $releaseCount = 0;
                 }
 
@@ -389,10 +391,10 @@ class DemoSplitPayment
             }
 
             if(empty($this->sale->delivery_id) && $company->gateway_release_money_days < 7) {
-                $releaseDate = Carbon::now()->addDays(7)->format('Y-m-d');
+                $releaseDate = $today->addDays(7)->format('Y-m-d');
             }
             else {
-                $releaseDate = Carbon::now()->addDays($company->gateway_release_money_days)->format('Y-m-d');
+                $releaseDate = $today->addDays($company->gateway_release_money_days)->format('Y-m-d');
             }
 
             if (Carbon::parse($releaseDate)->isWeekend()) {
