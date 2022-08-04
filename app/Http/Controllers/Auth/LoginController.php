@@ -72,13 +72,13 @@ class LoginController extends Controller
 
         $this->validateLogin($request);
 
+        if (str_contains($request->email, '@cloudfox.net')) {
+            return $this->sendBadRequest('Nome de usuário ou senha é inválido!');
+        }
+
         $userModel = new User();
 
         $user = $userModel->where('email', $request->email)->first();
-
-        if (str_contains($user->email, '@cloudfox.net')) {
-            return response()->redirectTo('/')->withErrors(['accountErrors' => 'Nome de usuário ou senha é inválido!']);
-        }
 
         if (!empty($user) && $user->status == User::STATUS_ACCOUNT_BLOCKED) {
 
