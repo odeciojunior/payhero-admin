@@ -343,10 +343,13 @@ class ReportMarketingService
         return cache()->remember($cacheName, 180, function() use($filters){
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
+            $companyId = hashids_decode($filters['company_id']);
 
             $coupons = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
-                            ->where('status', Sale::STATUS_APPROVED)
-                            ->where('project_id', $projectId)
+                            ->join('transactions as t', 't.sale_id', '=', 'sales.id')
+                            ->where('t.company_id', $companyId)
+                            ->where('sales.status', Sale::STATUS_APPROVED)
+                            ->where('sales.project_id', $projectId)
                             ->where('sales.cupom_code', '<>', '')
                             ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                             ->groupBy('sales.cupom_code')
@@ -385,14 +388,18 @@ class ReportMarketingService
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = current(Hashids::decode($filters['project_id']));
+            $companyId = current(Hashids::decode($filters['company_id']));
 
             $regions = Checkout::select(
                 DB::raw('
                     ip_state as region,
                     COUNT(*) as access,
-                    COUNT(CASE WHEN status_enum in (4, 3) then 1 end) as conversion
+                    COUNT(CASE WHEN checkouts.status_enum in (4, 3) then 1 end) as conversion
                 ')
             )
+            ->leftJoin('sales as s', 's.checkout_id', '=', 'checkouts.id')
+            ->join('transactions as t', 't.sale_id', '=', 's.id')
+            ->where('t.company_id', $companyId)
             ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
             ->where('checkouts.project_id', $projectId)
             ->whereNotNull('checkouts.ip_state')
@@ -421,15 +428,17 @@ class ReportMarketingService
     public function getResumeOrigins($filters)
     {
         $projectId = hashids_decode($filters['project_id']);
+        $companyId = hashids_decode($filters['company_id']);
 
         $userId = auth()->user()->account_owner_id;
         $status = Sale::STATUS_APPROVED;
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
         $originsData = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
-        ->leftJoin('transactions as transaction', function ($join) use ($userId) {
+        ->leftJoin('transactions as transaction', function ($join) use ($userId,$companyId) {
             $join->on('transaction.sale_id', '=', 'sales.id');
             $join->where('transaction.user_id', $userId);
+            $join->where('transaction.company_id', $companyId);
         })
         ->leftJoin('checkouts as checkout', function ($join) {
             $join->on('checkout.id', '=', 'sales.checkout_id');

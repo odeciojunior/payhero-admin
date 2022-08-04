@@ -19,7 +19,13 @@ class ReportSaleService
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
 
-            $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
+            $companyId = hashids_decode($filters['company_id']);
+
+            $sales = Sale::select('sales.*')
+                        ->join('transactions', 'transactions.sale_id', 'sales.id')
+                        ->where('project_id', current(Hashids::decode($filters['project_id'])))
+                        ->where('transactions.company_id', $companyId)
+            //$sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
                         ->where('owner_id', auth()->user()->getAccountOwnerId())
                         ->whereBetween($dateFilter, [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
@@ -34,9 +40,9 @@ class ReportSaleService
                         Sale::STATUS_REFUNDED,
                         Sale::STATUS_CHARGEBACK
                     ];
-                    $sales->whereNotIn('status', $statusNotIn);
+                    $sales->whereNotIn('sales.status', $statusNotIn);
                 } else {
-                    $sales->where('status', $salesModel->present()->getStatus($filters['status']));
+                    $sales->where('sales.status', $salesModel->present()->getStatus($filters['status']));
                 }
             }
 
@@ -421,10 +427,12 @@ class ReportSaleService
         $cacheName = 'payment-type-resume-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $projectId = hashids_decode($filters['project_id']);
+            $companyId = hashids_decode($filters['company_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $query = Sale::join('transactions', 'transactions.sale_id', 'sales.id')
                             ->where('transactions.user_id', auth()->user()->getAccountOwnerId())
+                            ->where('transactions.company_id', $companyId)
                             ->where('project_id', $projectId)
                             ->where('sales.status', Sale::STATUS_APPROVED)
                             ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
@@ -479,10 +487,13 @@ class ReportSaleService
         $cacheName = 'products-resume-'.auth()->user()->getAccountOwnerId().'-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $projectId = hashids_decode($filters['project_id']);
+            $companyId = hashids_decode($filters['company_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $products = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
             ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
+            ->join('transactions as t', 't.sale_id', '=', 'sales.id')
+            ->where('t.company_id', $companyId)
             ->where('sales.status', Sale::STATUS_APPROVED)
             ->where('sales.project_id', $projectId)
             ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])

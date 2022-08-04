@@ -153,7 +153,8 @@ class ReportsMarketingApiController extends Controller
         try{
             $request->validate([
                 'date_range' => 'required',
-                'project_id' => 'required'
+                'project_id' => 'required',
+                'company_id' => 'required'
             ]);
 
             $data = $request->all();
@@ -175,7 +176,8 @@ class ReportsMarketingApiController extends Controller
         try {
             $request->validate([
                 'date_range' => 'required',
-                'project_id' => 'required'
+                'project_id' => 'required',
+                'company_id' => 'required'
             ]);
 
             $data = $request->all();
@@ -201,6 +203,7 @@ class ReportsMarketingApiController extends Controller
                 'date_range' => 'required',
                 'origin' => 'required',
                 'project_id' => 'required',
+                'company_id' => 'required'
             ]);
 
             $data = $request->all();

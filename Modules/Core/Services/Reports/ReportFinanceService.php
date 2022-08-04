@@ -22,11 +22,13 @@ class ReportFinanceService
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
+            $companyId = hashids_decode($filters['company_id']);
             $userId = auth()->user()->getAccountOwnerId();
 
 
             $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
                                         ->where('user_id', $userId)
+                                        ->where('company_id', $companyId)
                                         ->where('sales.project_id', $projectId)
                                         ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
                                         ->whereNull('transactions.invitation_id')
@@ -410,7 +412,7 @@ class ReportFinanceService
         } else if ($variation < 0) {
             $color = 'pink';
         }
-        
+
         return [
             'chart' => [
                 'labels' => $labelList,
@@ -429,12 +431,14 @@ class ReportFinanceService
         $cacheName = 'pendings-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $projectId = hashids_decode($filters['project_id']);
+            $companyId = hashids_decode($filters['company_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
 
             $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
                                         ->where('user_id', auth()->user()->getAccountOwnerId())
+                                        ->where('company_id', $companyId)
                                         ->join('sales', 'sales.id', 'transactions.sale_id')
                                         ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
                                         ->where('sales.project_id', $projectId);
@@ -846,12 +850,14 @@ class ReportFinanceService
         $cacheName = 'cashback-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $projectId = hashids_decode($filters['project_id']);
+            $companyId = hashids_decode($filters['company_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $cashbacks = Cashback::with('sale')
                                     ->join('sales', 'sales.id', 'cashbacks.sale_id')
                                     ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
-                                    ->where('sales.project_id', $projectId);
+                                    ->where('sales.project_id', $projectId)
+                                    ->where('company_id', $companyId);
 
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
@@ -1326,7 +1332,7 @@ class ReportFinanceService
     }
 
     public function getFinancesPendings()
-    {        
+    {
         $cacheName = 'pending-data-'.auth()->user()->getAccountOwnerId().'-';
         return cache()->remember($cacheName, 300, function()  {
             $defaultGateways = [
