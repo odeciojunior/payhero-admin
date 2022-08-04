@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
@@ -794,7 +795,7 @@ class SaleService
 
     public function getResumeBlocked($filters)
     {
-        $cacheName = 'blocked-resume-' . json_encode($filters);
+        $cacheName = 'blocked-resume-'.(Auth::user()->getAccountOwnerId()).'-' . json_encode($filters);
         return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactionModel = new Transaction;
             $filters['invite'] = 1;

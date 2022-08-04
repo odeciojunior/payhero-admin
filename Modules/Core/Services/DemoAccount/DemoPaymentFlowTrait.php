@@ -581,9 +581,22 @@ trait DemoPaymentFlowTrait
         DemoSplitPayment::perform($this->sale);
 
         if($this->sale->status == Sale::STATUS_APPROVED){
+            $nextDay = $this->sale->start_date->addDays(rand(0,2))->format('Y-m-d H:i:s');
+            $today = Carbon::now();
+
             $this->sale->update([
-                'end_date'=>Carbon::now()
+                'end_date'=>$nextDay<$today? $nextDay:$today
             ]);
+
+            if($this->checkout->status_enum == Checkout::STATUS_ABANDONED_CART ){
+                $this->checkout->update([
+                    'status_enum'=>Checkout::STATUS_RECOVERED
+                ]);
+            }else{
+                $this->checkout->update([
+                    'status_enum'=>Checkout::STATUS_SALE_FINALIZED
+                ]);
+            }
         }
         return $this;
     }
@@ -624,16 +637,22 @@ trait DemoPaymentFlowTrait
         {
             $productPlanSales = DB::table('products_plans_sales')->select('id','product_id')->where('sale_id',$this->sale->id)->get();
             foreach($productPlanSales as $item){
-                Tracking::factory()
-                ->count(1)
+                $tracking = Tracking::factory()                
                 ->for($this->sale)
                 ->create([
                     'product_plan_sale_id'=>$item->id,
                     'product_id'=>$item->product_id,
                     'amount'=>$this->sale->shipment_value*100,
                     'delivery_id'=>$this->sale->delivery_id,
-                ]);
+                ]);  
+                
+                if($tracking->system_status_enum == Tracking::SYSTEM_STATUS_VALID){
+                    $this->sale->update([
+                        'has_valid_tracking'=>true
+                    ]);
+                }
             }
+
         }
 
         return $this;

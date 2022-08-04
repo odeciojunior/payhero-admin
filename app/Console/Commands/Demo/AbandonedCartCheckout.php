@@ -4,19 +4,18 @@ namespace App\Console\Commands\Demo;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
 
-class ChangeStatusCheckout extends Command
+class AbandonedCartCheckout extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'demo:change-status-checkout';
+    protected $signature = 'demo:abandoned-cart-checkout';
 
     /**
      * The console command description.
@@ -50,23 +49,13 @@ class ChangeStatusCheckout extends Command
         ->get();
         
         foreach ($checkouts as $checkout)
-        {
-            $status = $this->getRandomStatus();
-            
+        {                        
             Checkout::find($checkout->id)->update([
-                'status'=>$status['status'],
-                'status_enum'=>$status['enum']
+                'status'=>'abandoned cart',
+                'status_enum'=>Checkout::STATUS_ABANDONED_CART
             ]);
             
             $this->line('Atualizando checkout '.$checkout->id);
-        }        
-    }
-
-    public function getRandomStatus(){
-        $status = [
-            ['enum'=>Checkout::STATUS_ABANDONED_CART,'status'=>'abandoned cart'],
-            ['enum'=>Checkout::STATUS_RECOVERED,'status'=>'recovered']
-        ];
-        return Arr::random($status);
+        }  
     }
 }

@@ -364,11 +364,9 @@ class SalesRecoveryService
             ->join('companies','companies.id','checkout_configs.company_id')
             ->where('companies.user_id',auth()->user()->getAccountOwnerId())
             ->where('checkouts.status_enum',2)
-            ->union($first);
-            //->get();
-            Log::info(str_replace_array('?',$s->getBindings(),$s->toSql()));
-            $second = $s->get();
-        return $second;
+            ->union($first)
+            ->get();
+        return $s;
     }
 }
 

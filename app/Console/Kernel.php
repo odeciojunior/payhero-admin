@@ -85,7 +85,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:UpdateListsFoxActiveCampaign')->dailyAt('05:10');
         $schedule->command('change:boletopendingtocanceled')->dailyAt('05:20');
         $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('05:30');
-        $schedule->command('demo:change-status-checkout')->dailyAt('05:35');
+        $schedule->command('demo:abandoned-cart-checkout')->dailyAt('05:35');
         $schedule->command('check:gateway-tax-company-after-month')->dailyAt('05:40');
         $schedule->command('getnet:get-all-statement-chargebacks')->dailyAt('05:45');
 

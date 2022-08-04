@@ -430,7 +430,7 @@ class ReportMarketingService
         $projectId = hashids_decode($filters['project_id']);
         $companyId = hashids_decode($filters['company_id']);
 
-        $userId = auth()->user()->account_owner_id;
+        $userId = auth()->user()->getAccountOwnerId();
         $status = Sale::STATUS_APPROVED;
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 

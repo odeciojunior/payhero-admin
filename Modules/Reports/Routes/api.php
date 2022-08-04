@@ -51,7 +51,7 @@ Route::group(
         Route::get('/reports/pending-balance', 'ReportsApiController@pendingBalance');
         Route::get('/reports/resume-pending-balance', 'ReportsApiController@resumePendingBalance');
         Route::get('/reports/blocked-balance', 'ReportsApiController@blockedBalance');
-        Route::get('/reports/resume-blocked-balance', 'ReportsApiController@resumeblockedBalance');
+        Route::get('/reports/resume-blocked-balance', 'ReportsApiController@resumeBlockedBalance');
         Route::get('/reports/block-reasons', 'ReportsApiController@getBlockReasons');
 
         Route::get('/reports/projects-with-blocked-balance', 'ReportsApiController@getProjectsWithBlockedBalance')->middleware('permission:report_blockedbalance');
