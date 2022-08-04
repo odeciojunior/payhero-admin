@@ -1,16 +1,19 @@
-$('.company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault($(this).val())) return;
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            companiesAndProjects = data2
-            if(companiesAndProjects.company_default_fullname.length > 40)
-                $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
-            else
-                $('.company_name').val( companiesAndProjects.company_default_fullname );
-            $('.company_id').val( companiesAndProjects.company_default );
-        });
-	});
+getCompaniesAndProjects().done( function (data){
+    $('.site-navbar .sirius-select-container').addClass('disabled');
 });
+// $('.company-navbar').change(function () {
+//     if (verifyIfCompanyIsDefault($(this).val())) return;
+//     updateCompanyDefault().done(function(data1){
+//         getCompaniesAndProjects().done(function(data2){
+//             companiesAndProjects = data2
+//             if(companiesAndProjects.company_default_fullname.length > 40)
+//                 $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
+//             else
+//                 $('.company_name').val( companiesAndProjects.company_default_fullname );
+//             $('.company_id').val( companiesAndProjects.company_default );
+//         });
+// 	});
+// });
 
 $(document).ready(function () {
 
