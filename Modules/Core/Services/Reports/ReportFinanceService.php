@@ -3,6 +3,7 @@
 namespace Modules\Core\Services\Reports;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
@@ -18,22 +19,23 @@ class ReportFinanceService
 {
     public function getResumeCommissions($filters)
     {
-        $cacheName = 'comissions-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters) {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
-            $companyId = hashids_decode($filters['company_id']);
-            $userId = auth()->user()->getAccountOwnerId();
+        $user = Auth::user();        
+        $filters['company_id'] = $user->company_default;
+        $ownerId = $user->getAccountOwnerId();
 
+        $cacheName = 'comissions-resume-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);       
 
             $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                                        ->where('user_id', $userId)
-                                        ->where('company_id', $companyId)
-                                        ->where('sales.project_id', $projectId)
-                                        ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                                        ->whereNull('transactions.invitation_id')
-                                        ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ])
-                                        ->whereNull('invitation_id');
+                            ->where('user_id', $ownerId)
+                            ->where('company_id', $filters['company_id'])
+                            ->where('sales.project_id', $projectId)
+                            ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                            ->whereNull('transactions.invitation_id')
+                            ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ])
+                            ->whereNull('invitation_id');
 
             if ($transactions->count() == 0) {
                 return null;
@@ -44,20 +46,25 @@ class ReportFinanceService
 
             if ($date['startDate'] == $date['endDate']) {
                 return $this->getResumeCommissionsByHours($transactions, $filters);
-            } elseif ($date['startDate'] != $date['endDate']) {
+            }
+            if ($date['startDate'] != $date['endDate']) {
                 $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
                 $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
                     return $this->getResumeCommissionsByDays($transactions, $filters);
-                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                } 
+                if ($diffInDays > 20 && $diffInDays <= 40) {
                     return $this->getResumeCommissionsByTwentyDays($transactions, $filters);
-                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                }
+                if ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getResumeCommissionsByFortyDays($transactions, $filters);
-                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                }
+                if ($diffInDays > 60 && $diffInDays <= 140) {
                     return $this->getResumeCommissionsByWeeks($transactions, $filters);
-                } elseif ($diffInDays > 140) {
+                }
+                if ($diffInDays > 140) {
                     return $this->getResumeCommissionsByMonths($transactions, $filters);
                 }
             }
@@ -428,8 +435,12 @@ class ReportFinanceService
 
     public function getResumePendings($filters)
     {
+        $user = Auth::user();        
+        $filters['company_id'] = $user->company_default;
+        $ownerId = $user->getAccountOwnerId();
+
         $cacheName = 'pendings-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters) {
+        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $projectId = hashids_decode($filters['project_id']);
             $companyId = hashids_decode($filters['company_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
@@ -437,11 +448,11 @@ class ReportFinanceService
             $date['endDate'] = $dateRange[1];
 
             $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
-                                        ->where('user_id', auth()->user()->getAccountOwnerId())
-                                        ->where('company_id', $companyId)
-                                        ->join('sales', 'sales.id', 'transactions.sale_id')
-                                        ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
-                                        ->where('sales.project_id', $projectId);
+                            ->where('user_id', $ownerId)
+                            ->where('company_id', $filters['company_id'])
+                            ->join('sales', 'sales.id', 'transactions.sale_id')
+                            ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
+                            ->where('sales.project_id', $projectId);
 
             if ($transactions->count() == 0) {
                 return null;
@@ -449,20 +460,25 @@ class ReportFinanceService
 
             if ($date['startDate'] == $date['endDate']) {
                 return $this->getResumePendingsByHours($transactions, $filters);
-            } elseif ($date['startDate'] != $date['endDate']) {
+            }
+            if ($date['startDate'] != $date['endDate']) {
                 $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
                 $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
                     return $this->getResumePendingsByDays($transactions, $filters);
-                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                }
+                if ($diffInDays > 20 && $diffInDays <= 40) {
                     return $this->getResumePendingsByTwentyDays($transactions, $filters);
-                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                }
+                if ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getResumePendingsByFortyDays($transactions, $filters);
-                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                }
+                if ($diffInDays > 60 && $diffInDays <= 140) {
                     return $this->getResumePendingsByWeeks($transactions, $filters);
-                } elseif ($diffInDays > 140) {
+                }
+                if ($diffInDays > 140) {
                     return $this->getResumePendingsByMonths($transactions, $filters);
                 }
             }
@@ -854,10 +870,10 @@ class ReportFinanceService
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $cashbacks = Cashback::with('sale')
-                                    ->join('sales', 'sales.id', 'cashbacks.sale_id')
-                                    ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
-                                    ->where('sales.project_id', $projectId)
-                                    ->where('company_id', $companyId);
+                        ->join('sales', 'sales.id', 'cashbacks.sale_id')
+                        ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
+                        ->where('sales.project_id', $projectId)
+                        ->where('company_id', $companyId);
 
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
@@ -866,20 +882,26 @@ class ReportFinanceService
 
             if ($date['startDate'] == $date['endDate']) {
                 return $this->getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters);
-            } elseif ($date['startDate'] != $date['endDate']) {
+            }
+            
+            if ($date['startDate'] != $date['endDate']) {
                 $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
                 $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
                     return $this->getResumeCashbacksByDays($cashbacks, $countCashbacks, $filters);
-                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                }
+                if ($diffInDays > 20 && $diffInDays <= 40) {
                     return $this->getResumeCashbacksByTwentyDays($cashbacks, $countCashbacks, $filters);
-                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                }
+                if ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getResumeCashbacksByFortyDays($cashbacks, $countCashbacks, $filters);
-                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                }
+                if ($diffInDays > 60 && $diffInDays <= 140) {
                     return $this->getResumeCashbacksByWeeks($cashbacks, $countCashbacks, $filters);
-                } elseif ($diffInDays > 140) {
+                }
+                if ($diffInDays > 140) {
                     return $this->getResumeCashbacksByMonths($cashbacks, $countCashbacks, $filters);
                 }
             }
@@ -1274,19 +1296,22 @@ class ReportFinanceService
 
     public function getFinancesResume($filters)
     {
+        $user = Auth::user();        
+        $filters['company_id'] = $user->company_default;
+        $ownerId = $user->getAccountOwnerId();
+
         $cacheName = 'finances-balances-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters) {
+        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
 
-            $userId = auth()->user()->getAccountOwnerId();
-
-            $transactions = Transaction::where('user_id', $userId)
-                                        ->join('sales', 'sales.id', 'transactions.sale_id')
-                                        ->where('sales.project_id', $projectId)
-                                        ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                                        ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                                        ->whereNull('invitation_id');
+            $transactions = Transaction::where('user_id', $ownerId)                                    
+                            ->join('sales', 'sales.id', 'transactions.sale_id')
+                            ->where('company_id',$filters['company_id'])
+                            ->where('sales.project_id', $projectId)
+                            ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                            ->whereNull('invitation_id');
 
             $queryCount = $transactions->count();
 
@@ -1294,14 +1319,15 @@ class ReportFinanceService
 
             $queryComission = $transactions->sum('transactions.value');
 
-            $queryChargeback = Transaction::where('user_id', $userId)
-                                            ->join('sales', 'sales.id', 'transactions.sale_id')
-                                            ->where('sales.project_id', $projectId)
-                                            ->where('sales.status', Sale::STATUS_CHARGEBACK)
-                                            ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                                            ->whereNull('invitation_id')
-                                            ->where('status_enum', Transaction::STATUS_CHARGEBACK)
-                                            ->sum('transactions.value');
+            $queryChargeback = Transaction::where('user_id', $ownerId)
+                                ->join('sales', 'sales.id', 'transactions.sale_id')
+                                ->where('company_id',$filters['company_id'])
+                                ->where('sales.project_id', $projectId)
+                                ->where('sales.status', Sale::STATUS_CHARGEBACK)
+                                ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                ->whereNull('invitation_id')
+                                ->where('status_enum', Transaction::STATUS_CHARGEBACK)
+                                ->sum('transactions.value');
 
             return [
                 'transactions' => $queryCount,
@@ -1314,12 +1340,17 @@ class ReportFinanceService
 
     public function getFinancesCashbacks($filters)
     {
-        $cacheName = 'cashback-data-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters) {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $userId = auth()->user()->getAccountOwnerId();
+        $user = Auth::user();        
+        $filters['company_id'] = $user->company_default;
+        $ownerId = $user->getAccountOwnerId();
 
-            $cashbacks = Cashback::where('user_id', $userId)->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+        $cacheName = 'cashback-data-'.json_encode($filters);
+        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+
+            $cashbacks =    Cashback::where('user_id',$ownerId)
+                            ->where('company_id',$filters['company_id'])
+                            ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
 
             $cashbacksValue = $cashbacks->sum('value');
             $cashbacksCount = $cashbacks->count();
@@ -1333,8 +1364,10 @@ class ReportFinanceService
 
     public function getFinancesPendings()
     {
-        $cacheName = 'pending-data-'.auth()->user()->getAccountOwnerId().'-';
-        return cache()->remember($cacheName, 300, function()  {
+        $user = Auth::user();
+
+        $cacheName = 'pending-data-'.$user->company_default;
+        return cache()->remember($cacheName, 300, function() use($user) {
             $defaultGateways = [
                 Safe2PayService::class,
                 AsaasService::class,
@@ -1346,16 +1379,15 @@ class ReportFinanceService
             $balancesPendingValue = [];
             $balancesPendingCount = [];
 
-            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())->get();
-            foreach($companies as $company) {
-                foreach($defaultGateways as $gatewayClass) {
-                    $gateway = app()->make($gatewayClass);
-                    $gateway->setCompany($company);
+            $company = Company::find($user->company_default);
+            
+            foreach($defaultGateways as $gatewayClass) {
+                $gateway = app()->make($gatewayClass);
+                $gateway->setCompany($company);
 
-                    $balancesPendingValue[] = $gateway->getPendingBalance();
-                    $balancesPendingCount[] = $gateway->getPendingBalanceCount();
-                }
-            }
+                $balancesPendingValue[] = $gateway->getPendingBalance();
+                $balancesPendingCount[] = $gateway->getPendingBalanceCount();
+            }            
 
             $totalPendingValue = array_sum($balancesPendingValue);
             $totalPendingCount = array_sum($balancesPendingCount);
@@ -1369,8 +1401,10 @@ class ReportFinanceService
 
     public function getFinancesBlockeds()
     {
-        $cacheName = 'blocked-data-'.auth()->user()->getAccountOwnerId().'-';
-        return cache()->remember($cacheName, 300, function() {
+        $user = Auth::user();
+
+        $cacheName = 'blocked-data-'.$user->company_default;
+        return cache()->remember($cacheName, 300, function() use($user) {
             $defaultGateways = [
                 Safe2PayService::class,
                 AsaasService::class,
@@ -1385,19 +1419,18 @@ class ReportFinanceService
             $balancesBlockedPendingValue = [];
             $balancesBlockedPendinCount = [];
 
-            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())->get();
-            foreach($companies as $company) {
-                foreach($defaultGateways as $gatewayClass) {
-                    $gateway = app()->make($gatewayClass);
-                    $gateway->setCompany($company);
+            $company = Company::find($user->company_default);
+            
+            foreach($defaultGateways as $gatewayClass) {
+                $gateway = app()->make($gatewayClass);
+                $gateway->setCompany($company);
 
-                    $balancesBlockedValue[] = $gateway->getBlockedBalance();
-                    $balancesBlockedCount[] = $gateway->getBlockedBalanceCount();
+                $balancesBlockedValue[] = $gateway->getBlockedBalance();
+                $balancesBlockedCount[] = $gateway->getBlockedBalanceCount();
 
-                    $balancesBlockedPendingValue[] = $gateway->getBlockedBalancePending();
-                    $balancesBlockedPendinCount[] = $gateway->getBlockedBalancePendingCount();
-                }
-            }
+                $balancesBlockedPendingValue[] = $gateway->getBlockedBalancePending();
+                $balancesBlockedPendinCount[] = $gateway->getBlockedBalancePendingCount();
+            }            
 
             if (count($balancesBlockedCount) == 0 && count($balancesBlockedPendinCount) == 0) {
                 return null;
@@ -1415,8 +1448,10 @@ class ReportFinanceService
 
     public function getFinancesDistribuitions()
     {
-        $cacheName = 'distribuitions-data-'.auth()->user()->getAccountOwnerId().'-';
-        return cache()->remember($cacheName, 300, function() {
+        $user = Auth::user();
+
+        $cacheName = 'distribuitions-data-'.$user->company_default;
+        return cache()->remember($cacheName, 300, function() use($user) {
             $defaultGateways = [
                 Safe2PayService::class,
                 AsaasService::class,
@@ -1430,18 +1465,18 @@ class ReportFinanceService
             $balancesBlocked = [];
             $balancesBlockedPending = [];
 
-            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())->get();
-            foreach($companies as $company) {
-                foreach($defaultGateways as $gatewayClass) {
-                    $gateway = app()->make($gatewayClass);
-                    $gateway->setCompany($company);
+            $company = Company::find($user->company_default);
+            
+            foreach($defaultGateways as $gatewayClass) {
+                $gateway = app()->make($gatewayClass);
+                $gateway->setCompany($company);
 
-                    $balancesAvailable[] = $gateway->getAvailableBalance();
-                    $balancesPending[] = $gateway->getPendingBalance();
-                    $balancesBlocked[] = $gateway->getBlockedBalance();
-                    $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
-                }
+                $balancesAvailable[] = $gateway->getAvailableBalance();
+                $balancesPending[] = $gateway->getPendingBalance();
+                $balancesBlocked[] = $gateway->getBlockedBalance();
+                $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
             }
+            
 
             $availableBalance = array_sum($balancesAvailable);
             $pendingBalance = array_sum($balancesPending);
@@ -1473,23 +1508,24 @@ class ReportFinanceService
 
     public function getFinancesWithdrawals()
     {
-        $cacheName = 'withdrawals-data-'.auth()->user()->getAccountOwnerId().'-';
-        return cache()->remember($cacheName, 300, function() {
+        $user = Auth::user();                
+
+        $cacheName = 'withdrawals-data-'.$user->company_default;
+        return cache()->remember($cacheName, 300, function() use($user) {
             date_default_timezone_set('America/Sao_Paulo');
 
             $dateEnd = date('Y-m-d');
             $dateStart = date('Y-m-d', strtotime($dateEnd . ' -5 month'));
 
-            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())->get()->pluck('id')->toArray();
-            $withdrawals = Withdrawal::whereIn('company_id', $companies)
-                                        ->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ])
-                                        ->where('status', Withdrawal::STATUS_TRANSFERRED);
+            $withdrawals =  Withdrawal::where('company_id', $user->company_default)
+                            ->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ])
+                            ->where('status', Withdrawal::STATUS_TRANSFERRED);
 
-            $transactions = Transaction::whereIn('transactions.company_id', $companies)
-                                        ->where('user_id', auth()->user()->getAccountOwnerId())
-                                        ->join('sales', 'transactions.sale_id', 'sales.id')
-                                        ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                                        ->whereBetween('sales.start_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
+            $transactions = Transaction::where('transactions.company_id', $user->company_default)
+                            ->where('user_id', $user->getAccountOwnerId())
+                            ->join('sales', 'transactions.sale_id', 'sales.id')
+                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                            ->whereBetween('sales.start_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
 
             $dateStart = Carbon::parse($dateStart);
             $dateEnd = Carbon::parse($dateEnd);
