@@ -60,7 +60,7 @@ class ContestationResource extends JsonResource
         $reason = '';
         switch($this->gateway_id){
             case Gateway::SAFE2PAY_PRODUCTION_ID:
-                $reason = $this->reason;
+                $reason = $this->reason??'';
             break;
             case Gateway::ASAAS_PRODUCTION_ID:
                 $reason = $this->reason;
@@ -74,12 +74,13 @@ class ContestationResource extends JsonResource
             break;
         }
 
+        $fantasy_name = $userProject->company->fantasy_name ??  '';
         return [
             'id' => Hashids::encode($this->id) ,
             'transaction_id' => $sale_encode,
             'sale_code' => '#' . $sale_encode,
-            'company' => $userProject->company->fantasy_name ??  '',
-            'company_limit' => $userProject->company->fantasy_name ? Str::limit($userProject->company->fantasy_name, '20') :  '',
+            'company' => $fantasy_name,
+            'company_limit' => Str::limit($fantasy_name, '20'),
             'user' => $this->user_name ?? '',
             'project' => $project->name ?? '',
             'sale_id' => Hashids::connection('sale_id')->encode($this->sale_id),
@@ -99,7 +100,7 @@ class ContestationResource extends JsonResource
             'request_date' => $this->request_date ? with(new Carbon($this->request_date))->format('d/m/Y') : '',
             'expiration' => $expiration_date ? $expiration_date->format('d/m/Y') : '',
             'has_expired' => $has_expired,
-            'expiration_user' => !$has_expired ? ($deadline_in_days == 0 ? "Expira hoje" : ($deadline_in_days > 1 ? $deadline_in_days . ' dias' : $deadline_in_days . ' dia')) : ($this->sale->status == Sale::STATUS_CHARGEBACK ? 'Perdida' : ($this->status == SaleContestation::STATUS_WIN ? 'Ganha' : 'Expirado')),
+            'expiration_user' => !$has_expired ? ($deadline_in_days == 0 ? "Expira hoje" : ($deadline_in_days > 1 ? $deadline_in_days . ' dias' : $deadline_in_days . ' dia')) : 'Expirado',//($this->sale->status == Sale::STATUS_CHARGEBACK ? 'Perdida' : ($this->status == SaleContestation::STATUS_WIN ? 'Ganha' : 'Expirado')
             'reason' =>  $reason,
             'observation' =>  $this->observation ?? '',
             'is_contested' =>  $this->is_contested ?? '',
@@ -109,7 +110,8 @@ class ContestationResource extends JsonResource
             'files' => $this->files ?  SaleContestationFileResource::collection($this->files) : '',
             'has_files' => $this->files->count() ? true:false,
             'is_file_user_completed' => $this->file_user_completed,
-            'files_types'=>$filesTypes
+            'files_types'=>$filesTypes,
+            'status'=>$this->status
         ];
     }
 

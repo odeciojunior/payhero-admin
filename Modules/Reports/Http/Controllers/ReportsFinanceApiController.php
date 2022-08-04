@@ -16,12 +16,12 @@ class ReportsFinanceApiController extends Controller
                 'date_range' => 'required',
                 'project_id' => 'required'
             ]);
-    
+
             $data = $request->all();
-    
+
             $reportService = new ReportFinanceService();
             $comission = $reportService->getResumeCommissions($data);
-    
+
             return response()->json(['data' => $comission]);
         }
         catch(Exception $e) {
