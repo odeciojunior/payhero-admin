@@ -20,9 +20,9 @@ class AlterTableUsersAddContestationPenaltiesTaxesColumn extends Migration
 
         // Default penalty values
         $data = [
-            'contestation_penalty_level_1' => 2000,
-            'contestation_penalty_level_2' => 3000,
-            'contestation_penalty_level_3' => 5000,
+            'contestation_penalty_level_1' => '2000',
+            'contestation_penalty_level_2' => '3000',
+            'contestation_penalty_level_3' => '5000',
         ];
 
         // Update records with default values
