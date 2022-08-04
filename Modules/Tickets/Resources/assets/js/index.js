@@ -57,6 +57,8 @@ $(() => {
 
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
         loadOnAny('.tickets-container', false, ticketLoader);
         $("#project-select").find('option').not(':first').remove()
         $('#ticket-open .detail').html('');
@@ -65,6 +67,7 @@ $(() => {
         loadOnAny('.number', false, resumeLoader);
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
                 if(!isEmpty(data2.company_default_projects)){
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
@@ -73,6 +76,7 @@ $(() => {
                     }
                     index()
                     getResume()
+
                 }
                 else{
                     $("#project-empty").show();
@@ -82,6 +86,8 @@ $(() => {
         })
     })
 
+    var companiesAndProjects = ''
+
     //fill the filter if the parameter comes in the url
     const params = new URLSearchParams(window.location.search);
     if(params.has('sale_id')){
@@ -90,41 +96,72 @@ $(() => {
         $("#input-transaction input").val(params.get('sale_id'));
     }
     getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
         getProjects();
     });
 
-    function getProjects() {
-        loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: resp => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(resp);
-            },
-            success: resp => {
-                if (resp.data.length) {
-                    for (let project of resp.data) {
-                        $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
-                    }
-                    index();
-                    getResume();
-                    $('.page-header').show();
-                    $("#project-not-empty").show();
-                    $("#project-empty").hide();
-                } else {
-                    $('.page-header').hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-                loadingOnScreenRemove();
-            }
-        });
+    function getProjects(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else{
+            $("#content").html("");
+        }
+
+        let hasProjects=false;
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                hasProjects=true;
+            });
+        }
+
+        if(!hasProjects){
+            $('.page-header').hide();
+            $("#project-not-empty").hide();
+            $("#project-empty").show();
+            loadingOnScreenRemove();
+        }
+        else{
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+            });
+            index();
+            getResume();
+            $('.page-header').show();
+            $("#project-not-empty").show();
+            $("#project-empty").hide();
+            loadingOnScreenRemove();
+        }
+
+        // $.ajax({
+        //     method: "GET",
+        //     url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
+        //     dataType: "json",
+        //     headers: {
+        //         'Authorization': $('meta[name="access-token"]').attr('content'),
+        //         'Accept': 'application/json',
+        //     },
+        //     error: resp => {
+        //         loadingOnScreenRemove();
+        //         errorAjaxResponse(resp);
+        //     },
+        //     success: resp => {
+        //         if (resp.data.length) {
+        //             for (let project of resp.data) {
+        //                 $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+        //             }
+        //             index();
+        //             getResume();
+        //             $('.page-header').show();
+        //             $("#project-not-empty").show();
+        //             $("#project-empty").hide();
+        //         } else {
+        //             $('.page-header').hide();
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
+        //         loadingOnScreenRemove();
+        //     }
+        // });
     }
 
     window.getFilters = function (page = 1) {
