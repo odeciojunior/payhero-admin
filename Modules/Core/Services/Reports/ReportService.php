@@ -13,8 +13,8 @@ class ReportService
 {
     public function getDashboardChartData($companyId)
     {
-        try {
-            $cacheName = 'dashboard-chart-'.auth()->user()->getAccountOwnerId().'-'.json_encode($companyId);
+        try {            
+            $cacheName = 'dashboard-chart-'.json_encode($companyId);
             return cache()->remember($cacheName, 60, function() use ($companyId) {
                 $labelList    = [];
                 $dataFormated = Carbon::now()->subMonth()->subDays(5);

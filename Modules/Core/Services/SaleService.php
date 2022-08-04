@@ -953,6 +953,7 @@ class SaleService
         $cacheName = 'pending-resume-' . json_encode($filters);
         return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactions = $this->getSalesPendingBalance($filters);
+            \Log::info(str_replace_array('?',$transactions->getBindings(),$transactions->toSql()));
             $transactionStatus = implode(',', [Transaction::STATUS_PAID]);
 
             $resume = $transactions->without(['sale'])
@@ -981,15 +982,16 @@ class SaleService
 
             $transactions = Transaction::with($relationsArray)
                 ->where('user_id', auth()->user()->getAccountOwnerId())
+                ->where('company_id',auth()->user()->company_default)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->where('transactions.status_enum', Transaction::STATUS_PAID)
                 ->whereNull('invitation_id');
 
             // Filtro Company
-            if (!empty($filters["company"])) {
-                $companyId = hashids_decode($filters["company"]);
-                $transactions->where('company_id', $companyId);
-            }
+            // if (!empty($filters["company"])) {
+            //     $companyId = hashids_decode($filters["company"]);
+            //     $transactions->where('company_id', $companyId);
+            // }
 
             $transactions->whereNull('withdrawal_id');
             if (!empty($filters['acquirer'])) {

@@ -25,7 +25,7 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            window.getCompanies(data2,'n');
+            window.getProjects(data2,'n');
         });
 	});
 });
@@ -236,13 +236,13 @@ $(document).ready(function () {
     let endDate = moment().format('YYYY-MM-DD');
 
     getCompaniesAndProjects().done( function (data){
-        window.getCompanies(data);
+        window.getProjects(data.companies);
     });
 
     window.fillProjectsSelect = function(){
         return $.ajax({
             method: "GET",
-            url: "/api/sales/projects-with-pending-balance",
+            url: "/api/reports/projects-with-pending-balance",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -295,7 +295,7 @@ $(document).ready(function () {
         });
     }
 
-    function getProjects(companies)
+    window.getProjects = function(companies)
     {
         loadingOnScreen();
         $(".div-filters").hide();
@@ -322,6 +322,8 @@ $(document).ready(function () {
             }
 
             company = $("#project").val();
+
+            getAcquirer();
 
         });
 
