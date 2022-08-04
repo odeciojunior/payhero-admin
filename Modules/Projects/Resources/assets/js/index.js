@@ -2,7 +2,10 @@ $(function () {
 
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#subtitle_drag_drop").hide();
         $("#data-table-projects").empty();
+        $("#project-empty").hide();
+        $("#new-store-button").hide();
         loadOnAny('#data-table-projects');
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
@@ -172,6 +175,9 @@ $(function () {
                 disabled: true,
             })
         }
+        else
+            $("#subtitle_drag_drop").show();
+
     }
 
     // Seta valor do filtro toggle(ALTERNANCIA) para exibir/esconder projetos
