@@ -39,11 +39,8 @@
 
                                     <div class='form-group col-12'>
                                         <label for='company'>Empresa</label>
-                                        <input type="text" disabled class="company_name">
+                                        <input type="text" disabled class="company_name" style="text-overflow: ellipsis;">
                                         <input type="hidden" name='company' id='company' class="company_id" required>
-                                        {{-- <select name='company' class='sirius-select' id='company' required>
-                                            <option value=''>Selecione</option>
-                                        </select> --}}
                                     </div>
 
                                     <div class="form-group col-12">

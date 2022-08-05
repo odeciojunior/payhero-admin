@@ -152,9 +152,7 @@
                                         <label for='company'>
                                             Empresa para receber
                                         </label>
-                                        <input type="text" disabled class="company_name">
-                                        {{-- <div id='company-list' class="mb-10"></div> --}}
-                                        {{-- Para enviar convites todos os documentos da empresa precisam estar aprovados --}}
+                                        <input type="text" disabled class="company_name" style="text-overflow: ellipsis;">
                                     </div>
                                 </div>
                                 <div class='row'>

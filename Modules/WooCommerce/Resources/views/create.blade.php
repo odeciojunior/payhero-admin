@@ -29,11 +29,8 @@
         <div class="row" style="margin-top:30px">
             <div class="col-12">
                 <label for="company">Empresa</label>
-                <input type="text" disabled class="company_name">
+                <input type="text" disabled class="company_name" style="text-overflow: ellipsis;">
                 <input type="hidden" name="company" id="company-navbar-value">
-                {{-- <select class="select-pad" id="select_companies" name="company"> --}}
-                    {{--           JS LOAD           --}}
-                {{-- </select> --}}
             </div>
         </div>
     </div>

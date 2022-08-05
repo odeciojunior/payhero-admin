@@ -5,10 +5,7 @@ $(document).ready(function () {
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
                 companiesAndProjects = data2
-                if(companiesAndProjects.company_default_fullname.length > 40)
-                    $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
-                else
-                    $('.company_name').val( companiesAndProjects.company_default_fullname );
+                $('.company_name').val( companiesAndProjects.company_default_fullname );
                 $("#company-navbar-value").val( $('.company-navbar').val() )
                 location.reload();
             })
@@ -19,10 +16,7 @@ $(document).ready(function () {
 
     getCompaniesAndProjects().done(function(data){
         companiesAndProjects = data
-        if(companiesAndProjects.company_default_fullname.length > 40)
-            $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
-        else
-            $('.company_name').val( companiesAndProjects.company_default_fullname );
+        $('.company_name').val( companiesAndProjects.company_default_fullname );
         $("#company-navbar-value").val( $('.company-navbar').val() )
     })
 
@@ -49,6 +43,7 @@ $(document).ready(function () {
         error: function error(response) {
             $("#modal-content").hide();
             errorAjaxResponse(response);
+            loadingOnScreenRemove();
         },
         success: function success(response) {
             create(response.data);
@@ -68,11 +63,10 @@ $(document).ready(function () {
             $('#button-information').hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
-
-
             $('#btn-integration-model').show();
             $('#button-information').show().addClass('d-flex').css('display', 'flex');
         }
+        loadingOnScreenRemove();
     }
 
     function index() {
@@ -96,6 +90,7 @@ $(document).ready(function () {
                     woocommerceIntegrationNotFound = true;
                     if (woocommerceIntegrationNotFound) {
                         $("#no-integration-found").show();
+                        loadingOnScreenRemove();
                     }else{
                         $("#no-integration-found").hide();
                     }
