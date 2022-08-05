@@ -10,6 +10,11 @@ class LinkShortenerService
 
     public function shorten($url, $path = null)
     {
+        /**
+         * TODO: remover após solucionar problema com domínio
+         */
+        return false;
+
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             return false;
         }
