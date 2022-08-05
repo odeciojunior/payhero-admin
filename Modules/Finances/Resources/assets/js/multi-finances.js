@@ -2,24 +2,44 @@ $(document).ready(function(){
 
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
+
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        if($('#container-config').is(':visible')){
+            hiddenConfig()
+        }
+        $("#extract_company_select").val( $('.company-navbar').val() );
+        $('#gateway-skeleton').show();
+        $('#container-all-gateways').html('');
+        $('#val-skeleton').show();
+        $('#container_val').css('display','none');
+        $('.skeleton-withdrawal').show();
+        $('#container-withdraw').html('');
+        $('#empty-history').hide();
+        $('.asScrollable').hide();
+        //$('.container-history').css('padding-top','42px'); 
+                    
+
         updateCompanyDefault().done( function(data1){
             getCompaniesAndProjects().done(function(data2){
                 if(!isEmpty(data2.company_default_projects)){
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    if($('#container-config').is(':visible')){
-                        hiddenConfig()
-                    }
-                    $("#extract_company_select").val( $('.company-navbar').val() );
-                    $('#gateway-skeleton').show();
-                    $('#container-all-gateways').html('');
-                    $('#val-skeleton').show();
-                    $('#container_val').css('display','none');
-                    $('.skeleton-withdrawal').show();
-                    $('#container-withdraw').html('');
-                    $('#empty-history').hide();
-                    $('.asScrollable').hide();
-                    $('.container-history').css('padding-top','42px');
+                    // $("#project-empty").hide();
+                    // $("#project-not-empty").show();
+                    // if($('#container-config').is(':visible')){
+                    //     hiddenConfig()
+                    // }
+                    // $("#extract_company_select").val( $('.company-navbar').val() );
+                    // $('#gateway-skeleton').show();
+                    // $('#container-all-gateways').html('');
+                    // $('#val-skeleton').show();
+                    // $('#container_val').css('display','none');
+                    // $('.skeleton-withdrawal').show();
+                    // $('#container-withdraw').html('');
+                    // $('#empty-history').hide();
+                    // $('.asScrollable').hide();
+                    // $('.container-history').css('padding-top','42px'); 
+
+                    getSettings($('.company-navbar').val());
                     window.updateStatements();
                     window.updateWithdrawals();
                 }
@@ -56,7 +76,11 @@ $(document).ready(function(){
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
 
-                    getCompanies();
+                    //getCompanies();
+                    getSettings($('.company-navbar').val());
+                    updateStatements();
+                    updateWithdrawals();
+            
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
@@ -88,6 +112,7 @@ $(document).ready(function(){
     const GETNET = 'w7YL9jZD6gp4qmv';
     const GERENCIA_NET = 'oXlqv13043xbj4y';
 
+    /*
     function getCompanies() {
         $.ajax({
             method: "GET",
@@ -127,6 +152,7 @@ $(document).ready(function(){
             }
         });
     }
+    */
 
     $(document).on("change","#transfers_company_select", function () {
         $("#extract_company_select").val($(this).val());
