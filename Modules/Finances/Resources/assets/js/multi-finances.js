@@ -23,8 +23,9 @@ $(document).ready(function(){
                     window.updateStatements();
                     window.updateWithdrawals();
                 }
-                else{
+                else{                    
                     $("#project-empty").show();
+                    $("#project-empty-title").show();
                     $("#project-not-empty").hide();
                 }
             });
