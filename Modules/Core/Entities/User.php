@@ -61,7 +61,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property string $transaction_rate
  * @property int $chargeback_rate
  * @property int $account_score
  * @property int $chargeback_score
@@ -109,6 +108,7 @@ class User extends Authenticable
     public const STATUS_WITHDRAWAL_BLOCKED = 2;
     public const STATUS_ACCOUNT_BLOCKED = 3;
     public const STATUS_ACCOUNT_FROZEN = 4;
+    public const STATUS_ACCOUNT_EXCLUDED = 5;
 
     public const DOCUMENT_STATUS_PENDING = 1;
     public const DOCUMENT_STATUS_ANALYZING = 2;
@@ -149,15 +149,17 @@ class User extends Authenticable
         'address_document_status',
         'personal_document_status',
         'date_last_document_notification',
-        'invites_amount',
         'last_login',
+        'invites_amount',
         'account_owner_id',
         'deleted_project_filter',
         'id_wall_result',
         'bureau_result',
-        'sex',//
-        'mother_name',//
-        'has_sale_before_getnet',//
+        'sex',
+        'mother_name',
+        'has_sale_before_getnet',
+        'onboarding',
+        'observation',
         'account_is_approved',
         'chargeback_rate',
         'contestation_rate',
@@ -174,7 +176,7 @@ class User extends Authenticable
         'level',
         'ignore_automatic_benefits_updates',
         'total_commission_value',
-        'show_old_finances',//
+        'show_old_finances',
         'mkt_information',
         'block_attendance_balance',
         'created_at',

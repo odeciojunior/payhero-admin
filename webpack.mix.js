@@ -1062,6 +1062,7 @@ mix.babel([
     'resources/modules/global/js-extra/jquery.mask.min.js',
     'resources/modules/global/js-extra/jquery.maskMoney.js',
     'resources/modules/global/js-extra/sweetalert2.all.min.js',
+    'resources/modules/global/js-extra/crypto-js.min.js',
     'resources/modules/global/adminremark/global/js/Component.js',
     'resources/modules/global/adminremark/global/js/Plugin.js',
     'resources/modules/global/adminremark/global/js/Base.js',

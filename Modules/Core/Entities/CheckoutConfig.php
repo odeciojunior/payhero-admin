@@ -22,7 +22,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $checkout_banner
  * @property boolean $countdown_enabled
  * @property integer $countdown_time
- * @property string $countdown_description
  * @property string $countdown_finish_message
  * @property boolean $topbar_enabled
  * @property string $topbar_content
@@ -118,7 +117,7 @@ class CheckoutConfig extends Model
         'checkout_banner',
         'countdown_enabled',
         'countdown_time',
-        'countdown_description',
+        
         'countdown_finish_message',
         'topbar_enabled',
         'topbar_content',

@@ -79,13 +79,13 @@ class SmartfunnelService
 
             $planSale = $planSales->first();
 
-            if($eventSale == 'billet_pending') {
+            if ($eventSale == 'billet_pending') {
                 $status      = 'pending';
                 $paymentType = 'billet';
-            } elseif($eventSale == 'credit_card_paid') {
+            } elseif ($eventSale == 'credit_card_paid') {
                 $status      = 'approved';
                 $paymentType = 'credit_card';
-            } elseif($eventSale == 'billet_paid') {
+            } elseif ($eventSale == 'billet_paid') {
                 $status      = 'approved';
                 $paymentType = 'billet';
             }
@@ -141,7 +141,7 @@ class SmartfunnelService
                 ->where('project_id', $sale->project_id)->first()->company;
 
             $foxvalue = (int) (($sale->original_total_paid_value - $sale->interest_total_value) / 100 * $producerCompany->gateway_tax);
-            $foxvalue += FoxUtils::onlyNumbers($producerCompany->transaction_rate);
+            $foxvalue += FoxUtils::onlyNumbers($producerCompany->transaction_tax);
             $foxvalue += $sale->interest_total_value;
         } else {
 
@@ -152,12 +152,12 @@ class SmartfunnelService
             $foxvalue = (int) (($sale->original_total_paid_value / 100) * $producerCompany->gateway_tax);
 
             if (FoxUtils::onlyNumbers($sale->total_paid_value) < 4000) {
-                $transactionRate = 300;
+                $transactionTax = 300;
             } else {
-                $transactionRate = $producerCompany->transaction_rate;
+                $transactionTax = $producerCompany->transaction_tax;
             }
 
-            $foxvalue += FoxUtils::onlyNumbers($transactionRate);
+            $foxvalue += FoxUtils::onlyNumbers($transactionTax);
         }
 
         $producerValue = (int) $sale->original_total_paid_value - $foxvalue;

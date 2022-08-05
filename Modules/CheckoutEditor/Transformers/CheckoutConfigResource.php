@@ -58,7 +58,6 @@ class CheckoutConfigResource extends JsonResource
             'checkout_banner' => $this->checkout_banner,
             'countdown_enabled' => $this->countdown_enabled,
             'countdown_time' => $this->countdown_time,
-            'countdown_description' => $this->countdown_description,
             'countdown_finish_message' => $this->countdown_finish_message,
             'topbar_enabled' => $this->topbar_enabled,
             'topbar_content' => $this->topbar_content,

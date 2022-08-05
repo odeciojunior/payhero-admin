@@ -59,6 +59,8 @@ class UserPresenter extends Presenter
                     return 'account blocked';
                 case 4:
                     return 'account frozen';
+                case 5:
+                    return 'account excluded';
             }
 
             return '';
@@ -72,6 +74,8 @@ class UserPresenter extends Presenter
                     return 3;
                 case 'account frozen':
                     return 4;
+                case 'account excluded':
+                    return 5;
             }
 
             return '';

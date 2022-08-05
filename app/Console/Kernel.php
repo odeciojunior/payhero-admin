@@ -100,8 +100,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:boleto2')->dailyAt('11:15');
         $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
-        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');
-        $schedule->command('safe2pay:manual-anticipation')->dailyAt('18:40');
+        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');        
 
         $schedule->command('safe2pay:update-reason-sale-contestations')->dailyAt('19:30');
 

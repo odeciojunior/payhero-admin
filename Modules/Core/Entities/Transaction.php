@@ -14,27 +14,34 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TransactionPresenter;
 
 /**
- * Modules\Core\Entities\Transaction
- *
- * @property integer $id
- * @property integer $sale_id
- * @property integer $gateway_id
- * @property integer $company_id
- * @property integer $user_id
+ * @property int $id
+ * @property int $sale_id
+ * @property int $gateway_id
+ * @property int $company_id
+ * @property int $user_id
+ * @property int $withdrawal_id
+ * @property int $invitation_id
  * @property string $value
- * @property integer $type
+ * @property int $type
  * @property string $status
- * @property string $release_date
- * @property string $created_at
- * @property string $updated_at
+ * @property int $status_enum
+ * @property date $release_date
+ * @property string $installment_tax
+ * @property string $checkout_tax
  * @property string $tax
- 
- 'tax_type',* @property string $transaction_rate
+ * @property integer $tax_type
+ * @property string $transaction_rate
+ * @property int $tax_type
+ * @property string $transaction_tax
  * @property string $gateway_released_at
+ * @property boolean $gateway_transferred
+ * @property datetime $gateway_transferred_at
  * @property boolean $is_waiting_withdrawal
- * @property integer $withdrawal_id
  * @property boolean $tracking_required
  * @property boolean $is_security_reserve
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $deleted_at
  * @property Company $company
  * @property Sale $sale
  * @property Gateway $gateway
@@ -90,26 +97,27 @@ class Transaction extends Model
         'gateway_id',
         'company_id',
         'user_id',
+        'withdrawal_id',
         'invitation_id',
         'value',
         'type',
         'status',
         'status_enum',
         'release_date',
-        'tax',
-        'tax_type',
-        'transaction_rate',
         'installment_tax',
         'checkout_tax',
+        'tax',
+        'tax_type',
+        'transaction_tax',
         'gateway_released_at',
-        'is_waiting_withdrawal',
-        'withdrawal_id',
         'gateway_transferred',
         'gateway_transferred_at',
+        'is_waiting_withdrawal',
         'tracking_required',
         'is_security_reserve',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     protected static $logFillable = true;
