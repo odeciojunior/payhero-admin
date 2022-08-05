@@ -517,6 +517,7 @@ a.label {
 
 .menu-active > span > img {
     filter: brightness(0) invert(1);
+    height: 100%;
 }
 
 .bg-menu {

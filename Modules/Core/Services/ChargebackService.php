@@ -136,6 +136,16 @@ class ChargebackService
             );
         }
 
+        if (!empty($filters['contestation_situation'])) {
+            $status = $filters['contestation_situation'];
+            $getnetChargebacks->whereHas(
+                'sale.contestations',
+                function ($query) use ($status) {
+                    $query->where('status', $status);
+                }
+            );
+        }        
+
         return $getnetChargebacks;
 
     }

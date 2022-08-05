@@ -3,7 +3,6 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
 
-
     showBonusBalance()
 
     $('.bonus-balance-button').on('click', function() {
@@ -1771,7 +1770,6 @@ const toggleBonusContent = function() {
     $('.bonus-balance-history').fadeToggle();
 };
 
-
 function showBonusBalance() {
 
     if(getCookie($('meta[name="user-id"]').attr('content') + '_bonus_balance')) {
@@ -1817,7 +1815,52 @@ function showBonusBalance() {
             },
         });
     }
+}
 
+function generateJwt(userId, userName, userEmail) {
+    var header = {
+        "alg": "HS256",
+        "typ": "JWT",
+        "kid": "app_62e44ebe3f1d5c00ef1c6d40"
+    };
+
+    var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
+    var encodedHeader = base64url(stringifiedHeader);
+
+    var data = {
+        external_id: userId,
+        name: userName,
+        email: userEmail,
+        exp: new Date().getTime(),
+        scope: "user"
+    };
+
+    var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
+    var encodedData = base64url(stringifiedData);
+
+    var token = encodedHeader + "." + encodedData;
+
+    var secret = "iA4US5NugWzhYMdpVXY9uH9TPxWhtmyDVkIoxJ1jUhRHGts4Lrkl2SrjsbmbncnDd-_UVMQSMbwkJT_tjuVfvQ";
+
+    var signature = CryptoJS.HmacSHA256(token, secret);
+    signature = base64url(signature);
+
+    var signedToken = token + "." + signature;
+    return signedToken;
+}
+
+function base64url(source) {
+    // Encode in classical base64
+    encodedSource = CryptoJS.enc.Base64.stringify(source);
+
+    // Remove padding equal characters
+    encodedSource = encodedSource.replace(/=+$/, '');
+
+    // Replace characters according to base64url specifications
+    encodedSource = encodedSource.replace(/\+/g, '-');
+    encodedSource = encodedSource.replace(/\//g, '_');
+
+    return encodedSource;
 }
 
 const loadSkeletonBonus = `

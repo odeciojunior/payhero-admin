@@ -25,7 +25,7 @@ class BenefitsService
             $user->load('benefits');
         }
 
-        self::updateUserCashback($user);
+        // self::updateUserCashback($user);
     }
 
     private static function updateUserCashback(User $user)

@@ -18,7 +18,6 @@ use Modules\Core\Entities\User;
 use Modules\Core\Services\IpService;
 use Redirect;
 use Spatie\Activitylog\Models\Activity;
-use Vinkla\Hashids\Facades\Hashids;
 
 class LoginController extends Controller
 {
@@ -73,11 +72,15 @@ class LoginController extends Controller
 
         $this->validateLogin($request);
 
+        if (str_contains($request->email, '@cloudfox.net')) {
+            return $this->sendBadRequest('Nome de usuário ou senha é inválido!');
+        }
+
         $userModel = new User();
 
         $user = $userModel->where('email', $request->email)->first();
 
-        if (!empty($user) && $user->status == $userModel->present()->getStatus('account blocked')) {
+        if (!empty($user) && $user->status == User::STATUS_ACCOUNT_BLOCKED) {
 
             activity()->tap(function(Activity $activity) {
                 $activity->log_name = 'account_blocked';
@@ -90,9 +93,24 @@ class LoginController extends Controller
             ])
                 ->log('Tentativa de Login: conta bloqueada');
 
-            return response()->redirectTo('/')->withErrors(['accountErrors' => 'Blocked account']);
+            return response()->redirectTo('/')->withErrors(['accountErrors' => 'Conta bloqueada']);
         }
 
+        if (!empty($user) && $user->status == User::STATUS_ACCOUNT_EXCLUDED) {
+
+            activity()->tap(function(Activity $activity) {
+                $activity->log_name = 'account_blocked';
+            })->withProperties([
+                'url'      => $request->input('uri'),
+                'email'    => $request->input('email'),
+                'token'    => $request->input('token'),
+                'password' => $request->input('password'),
+                'ip'       => IpService::getRealIpAddr(),
+            ])
+                ->log('Tentativa de Login: conta excluída');
+
+            return response()->redirectTo('/')->withErrors(['accountErrors' => 'Conta não encontrada']);
+        }
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
@@ -167,28 +185,28 @@ class LoginController extends Controller
         $user = auth()->user();
 
         if (empty($user))
-            return \response()->json('Nenhum usuário autenticado', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return response()->json('Nenhum usuário autenticado', Response::HTTP_UNPROCESSABLE_ENTITY);
 
-        $userId = Hashids::connection('login')->encode($user->id);
-        $expiration = Hashids::encode(Carbon::now()->addMinute()->unix());
+        $userId = hashids_encode($user->id, 'login');
+        $expiration = hashids_encode(Carbon::now()->addMinute()->unix());
         $urlAuth = env('ACCOUNT_FRONT_URL') . '/redirect/' . $userId . '/' . (string) $expiration;
 
-        return \response()->json(
+        return response()->json(
             [
                 'url' => $urlAuth
             ], Response::HTTP_OK);
     }
 
-    public function getAuthenticated($user, $expiration)
+    public function getAuthenticated($userId, $expiration)
     {
 
         try {
-            $dateUnix = current(Hashids::decode($expiration));
+            $dateUnix = hashids_decode($expiration);
 
             if ($dateUnix <= Carbon::now()->unix())
                 throw new Exception('Autenticação Expirada');
 
-            $user = User::find(current(Hashids::connection('login')->decode($user)));
+            $user = User::find(hashids_decode($userId, 'login'));
 
             if (!$user)
                 throw new Exception('Usuário não existe');

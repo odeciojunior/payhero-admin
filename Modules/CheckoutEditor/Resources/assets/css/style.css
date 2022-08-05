@@ -799,7 +799,7 @@ textarea:focus {
 /* ---------- Select Sirius ---------- */
 
 #checkout_editor .sirius-select-container {
-    max-width: 400px;
+    max-width: 570px;
 }
 
 #checkout_editor .sirius-select-text {

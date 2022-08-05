@@ -40,24 +40,24 @@ class Safe2payManualAnticipation extends Command
      */
     public function handle()
     {
-        $attemps = 0;
-        $maxAttemps = 2;
-        $service = new CheckoutGateway(Gateway::SAFE2PAY_PRODUCTION_ID);
+        //DEATIVADO ATE AVISO PREVIO 
+        // $attemps = 0;
+        // $maxAttemps = 2;
+        // $service = new CheckoutGateway(Gateway::SAFE2PAY_PRODUCTION_ID);
         
-        while($attemps < $maxAttemps){
+        // while($attemps < $maxAttemps){
             
-            $response = $service->safe2payAnticipation(); 
-            $attemps++;
+        //     $response = $service->safe2payAnticipation(); 
+        //     $attemps++;
             
-            if(empty($response) || !isset($response->HasError) || $response->HasError){ 
-                if($attemps == $maxAttemps){
-                    report(new Exception("Error Safe2pay anticipation: ".($response->Error??'não informado')));
-                }
-                continue;
-            }
+        //     if(empty($response) || !isset($response->HasError) || $response->HasError){ 
+        //         if($attemps == $maxAttemps){
+        //             report(new Exception("Error Safe2pay anticipation: ".($response->Error??'não informado')));
+        //         }
+        //         continue;
+        //     }
 
-            break;
-        }
-
+        //     break;
+        // }
     }
 }

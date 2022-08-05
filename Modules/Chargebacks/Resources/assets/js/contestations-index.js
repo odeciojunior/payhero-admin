@@ -1,41 +1,19 @@
 $(document).ready(function () {
     let statusObject = {
-        1: "Aprovada",
-        2: "Pendente",
-        3: "Recusado",
-        4: "ChargeBack",
-        5: "Cancelada",
-        6: "Em processo",
-        7: "Estornada",
-        8: "Estorno Parcial",
-        10: "BlackList",
-        20: "Revisão Antifraude",
-        21: "Cancelada Antifraude",
-        22: "Estornado",
-        24: "Em disputa",
-        99: "Erro Sistema",
+        1: "Em andamento",
+        2: "Perdido",
+        3: "Ganho",        
         null: "Em Processo",
     };
 
     let badgeObject = {
-        1: "badge-success",
-        2: "badge-pendente",
-        3: "badge-danger",
-        4: "badge-danger",
-        5: "badge-danger",
-        6: "badge-secondary",
-        7: "badge-danger",
-        8: "badge-warning",
-        10: "badge-dark",
-        20: "badge-antifraude",
-        21: "badge-danger",
-        22: "badge-danger",
-        24: "badge-antifraude",
-        99: "badge-danger",
+        1: "badge-pendente",
+        2: "badge-danger",
+        3: "badge-success",        
         null: "badge-primary",
     };
 
-    $('#date_range').val(moment().subtract(29, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY')).
+    $('#date_range').val(moment().format('DD/MM/YYYY') + ' - ' + moment().add(30, 'days').format('DD/MM/YYYY')).
     dateRangePicker({
         format: 'DD/MM/YYYY',
         endDate: moment().add(30, 'days'),
@@ -80,9 +58,9 @@ $(document).ready(function () {
             date_type: $("#date_type").val() ?? "",
             order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
             contestation_situation: $("#contestation_situation").val() ?? "",
-            is_contested: $("#is_contested").val() ?? "",
+            //is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
-            sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
+            //sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
         };
         if (urlParams) {
             let params = "";
@@ -261,7 +239,7 @@ $(document).ready(function () {
 
                     dados = "";
                     dados += `
-                        <tr ${value.expiration_user == "Ganha" ? "class='won-contestation'" : ""}>
+                        <tr ${value.status == 3 ? "class='won-contestation'" : ""}>
                             <td id='${value.id}'>
                                 <span>${value.sale_code}</span>
                             </td>
@@ -281,17 +259,19 @@ $(document).ready(function () {
                                     Pagamento em ${value.adjustment_date}
                                 </small>
                             </td>`;
-
-                            if (value.sale_status in statusObject) {
+                            
+                            /*
+                            ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
+                                ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
+                                : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
+                            */
+                            if (value.status in statusObject) {
                                 dados +=`
                                     <td class='copy_link'>
                                         <div class="d-flex justify-content-center align-items-center text-center" >
-                                            <span class='badge ${badgeObject[value.sale_status]} ${value.sale_status === 10 ? "pointer" : "cursor-default"} font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">
-                                                ${statusObject[value.sale_status]}
+                                            <span class='badge ${badgeObject[value.status]} ${value.sale_status === 10 ? "pointer" : "cursor-default"} font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${statusObject[value.status]}">
+                                                ${statusObject[value.status]}
                                             </span>
-                                            ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
-                                                ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
-                                                : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
                                             ${value.sale_is_chargeback_recovered ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">' : ""}
                                         </div>
                                     </td>`
@@ -305,6 +285,7 @@ $(document).ready(function () {
                                     </td>`
                                 ;
                             }
+
                             dados+=`
                                     <td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
                                 `;
@@ -452,11 +433,15 @@ $(document).ready(function () {
             success: function (response) {
                 loadOnAny(".total-number", true);
 
-                $("#total-contestation").html(addZeroLeft(response.total_contestation));
-                $("#total-contestation-tax").html(" (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")");
-
+                $("#total-contestation").html(addZeroLeft(response.total_contestation));                
+                
                 $("#total-chargeback-tax-val").html(addZeroLeft(response.total_chargeback));
-                $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
+                
+                if($("#date_type").val() == 'transaction_date')
+                {
+                    $("#total-contestation-tax").html(" (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")");                
+                    $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
+                }
 
                 $("#total-contestation-value").html(response.total_contestation_value);
             },
