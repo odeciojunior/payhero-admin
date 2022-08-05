@@ -25,6 +25,6 @@ class Broadcast
             return response()->json(\Illuminate\Support\Facades\Broadcast::auth($request));
         }
 
-        return response()->json('Unauthorized.', 500);
+        return response()->json('Unauthorized.', 401);
     }
 }

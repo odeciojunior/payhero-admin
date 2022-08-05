@@ -14,6 +14,8 @@ use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Middleware\VerifyShopifyPostback;
 use App\Http\Middleware\DemoAccount;
+use App\Http\Middleware\CheckAccountStatusWeb;
+use App\Http\Middleware\CheckAccountStatusApi;
 use Fruitcake\Cors\HandleCors;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
@@ -64,12 +66,14 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
+            CheckAccountStatusWeb::class,
             VerifyFrozenAccountWeb::class,
         ],
 
         'api' => [
             'throttle:500,1',
             'bindings',
+            CheckAccountStatusApi::class,
             VerifyFrozenAccountApi::class,
         ],
 

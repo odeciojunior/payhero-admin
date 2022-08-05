@@ -132,12 +132,14 @@
                 <!-- End of cloudfoxhelp Zendesk Widget script -->
 
                 <script type="text/javascript">
-                    var signedToken = generateJwt('{{ auth()->user()->id }}', '{{ auth()->user()->name }}', '{{ auth()->user()->email }}');
-
                     zE('messenger', 'close');
+
+                    /*
+                    var signedToken = generateJwt('{{ auth()->user()->id }}', '{{ auth()->user()->name }}', '{{ auth()->user()->email }}');
                     zE('messenger', 'loginUser', function (callback) {
                         callback(signedToken);
                     });
+                    */
                 </script>
             @endif
         @endif
