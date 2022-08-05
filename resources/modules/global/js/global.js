@@ -410,30 +410,29 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    $('#loadingOnScreen').append(
-        `<div class="sirius-loading" style="padding-left:64px;">
-            <img style="height: 125px; width: 125px" src="/build/global/img/logos/2021/svg/icon-secundary.svg"
-                 class="img-responsive"/>
-        </div>`
-    ).fadeIn()
-
+    loadOnAnyPage('.page');
     $('body').css('overflow-y', 'hidden')
 }
 
 function loadingOnChart(target) {
     $(target).fadeIn().append(
         `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading bg-white">
-            <img style="height: 125px; width: 125px;" src="/build/global/img/logos/2021/svg/icon-secundary.svg"
-                 class="img-responsive"/>
+        <span class="loader-any" style="margin-top: 150px"></span>
         </div>`
     )
 }
 
-function loadingOnAccountsHealth(target) {
+function loadingOnAccountsHealth(target,margin='80px') {
     $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center bg-white">
-            <img style="height: 125px; width: 125px; top: auto;" src="/build/global/img/logos/2021/svg/icon-secundary.svg"
-                 class="img-responsive"/>
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="d-flex justify-content-center align-items-center align-self-center bg-white"
+        style="background-color: #f4f4f4;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        ">
+            <span class="loader-any" style="margin-top: `+margin+`"></span>
         </div>`
     )
 }
@@ -445,7 +444,7 @@ function loadingOnChartRemove(target) {
 }
 
 function loadingOnAccountsHealthRemove(target) {
-    $(target).remove();
+    $('.loader-any').remove();
 }
 
 function loadOnAnyEllipsis(target, remove = false, options = {}) {
@@ -500,13 +499,9 @@ function heightAnimate(element, height) {
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        $('#loadingOnScreen').fadeOut(function () {
-            $(this).html('')
-            $('body').css('overflow-y', 'unset')
-        });
+        loadOnAnyPage('.page',true);
+        $('body').css('overflow-y', 'unset')
     }, 2000)
-
-
     $('.page-header').fadeIn();
     $('#btn-modal').fadeIn();
 }
@@ -587,6 +582,55 @@ function loadOnAny(target, remove = false, options = {}) {
         //create elements
         let container = $('<div class="loader-any-container"></div>');
         let loader = $('<span class="loader-any"></span>');
+
+        //apply styles or use default
+        options.styles = options.styles ? options.styles : {};
+        options.styles.container = options.styles.container ? options.styles.container : {};
+        options.styles.container.minWidth = options.styles.container.minWidth ? options.styles.container.minWidth : $(target).css('width');
+        options.styles.container.minHeight = options.styles.container.minHeight ? options.styles.container.minHeight : $(window.top).height() * 0.7; //70% of visible window area
+        container.css(options.styles.container);
+        if (options.styles.loader) {
+            loader.css(options.styles.loader);
+        }
+
+        //add message load
+        if (options.message) {
+            container.append(`<p class='mb-30'>${options.message}</p>`);
+            container.addClass('d-flex').addClass('flex-column');
+        }
+
+        //add loader to container
+        container.append(loader);
+
+        //add loader to screen
+        target.hide();
+        if (options.insertBefore) {
+            container.insertBefore(target.parent().find(options.insertBefore));
+        } else {
+            target.parent().append(container);
+        }
+    } else {
+        // show target again with fix to Bootstrap tabs
+        if (!target.hasClass('tab-pane') ||
+            (target.hasClass('tab-pane') &&
+                target.hasClass('active'))) {
+            $(target).fadeIn();
+        }
+    }
+}
+
+function loadOnAnyPage(target, remove = false, options = {}) {
+    //cleanup
+    target = $(target);
+    target.parent()
+        .find('.loader-any-container-page')
+        .remove();
+
+    if (!remove) {
+
+        //create elements
+        let container = $('<div class="loader-any-container-page"></div>');
+        let loader = $('<span class="loader-any-page"></span>');
 
         //apply styles or use default
         options.styles = options.styles ? options.styles : {};

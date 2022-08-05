@@ -94,8 +94,8 @@ $(document).ready(function () {
         });
     }
 
-    window.updateAccountHealth = function () {
-        loadingOnAccountsHealth('.sirius-account > .card');
+    window.updateAccountHealth = function (margin='150px') {
+        loadingOnAccountsHealth('.sirius-account > .card',margin);
 
         $.ajax({
             method: "GET",

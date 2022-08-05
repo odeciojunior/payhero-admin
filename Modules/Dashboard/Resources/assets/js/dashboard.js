@@ -19,7 +19,7 @@ $('.company-navbar').change(function () {
 
         }
     });
-    loadingOnAccountsHealth('.sirius-performance > .card');
+    loadingOnAccountsHealth('.sirius-performance > .card','150px');
     loadingOnAccountsHealth('.sirius-account > .card');
     loadingOnChart('#chart-loading');
     $('#scoreLineToMonth').html('')
@@ -35,7 +35,7 @@ $('.company-navbar').change(function () {
                     window.updateValues();
                     window.updateChart();
                     window.updatePerformance();
-                    window.updateAccountHealth();
+                    window.updateAccountHealth('80px');
                 }
             }
             else{
