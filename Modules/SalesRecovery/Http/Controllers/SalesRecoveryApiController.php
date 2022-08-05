@@ -356,7 +356,7 @@ class SalesRecoveryApiController extends Controller
             $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
             ->encode($sale->id), $totalPaidValue, $dueDate);
             
-            $message = 'Ocorreu um erro tente novamente mais tarde. [359]';
+            $message = $boletoRegenerated['message']??'Ocorreu um erro tente novamente mais tarde. [359]';
             $status  = 400;                
             if ($boletoRegenerated['status'] == 'success') {
                 $message = 'Boleto regenerado com sucesso';
