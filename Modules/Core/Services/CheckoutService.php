@@ -196,7 +196,7 @@ class CheckoutService
                 ->limit(6)
                 ->get();
 
-            if ($billets->where('sale_id', $saleIdDecode)->count() > 1) {
+            if ($billets->where('sale_id', $saleIdDecode)->count() > 4) {
                 return [
                     'status' => 'error',
                     'error' => 'error',
@@ -248,7 +248,15 @@ class CheckoutService
                     'message' => print_r($response->message, true) ?? '',
                     'response' => $response,
                 ];
-            } else {
+                // } else {
+                //     $result = [
+                //         'status'   => 'error',
+                //         'error'    => 'error',
+                //         'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
+                //         'response' => $response,
+                //     ];
+                // }
+            } else {                
                 $result = [
                     'status' => 'error',
                     'error' => 'error',

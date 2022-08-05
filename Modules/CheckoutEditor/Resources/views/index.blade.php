@@ -770,13 +770,14 @@
                     <div class="billing-content">
 
                         <div class="row-flex">
+{{--
                             <div class="input-container" style="flex: 3; min-width: 200px;">
                                 <label for="invoice_description" class="checkout-label">Descrição na fatura <span
                                         class="observation-span">Opcional</span></label>
                                 <input type="text" class="checkout-input-text" id="invoice_description" name="invoice_description" style="width: 184px" />
                             </div>
-
-                            <div class="input-container" style="flex: 4">
+--}}
+                            <div id="payments" class="input-container" style="flex: 7">
                                 <label for="company_billing" class="checkout-label">Empresa responsável pelo
                                     faturamento</label>
                                 <div class='form-group'>
@@ -789,7 +790,6 @@
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="row-flex">
                             <div class="input-container" style="flex: 2">

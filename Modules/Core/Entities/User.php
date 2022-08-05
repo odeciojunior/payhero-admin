@@ -110,6 +110,7 @@ class User extends Authenticable
     public const STATUS_WITHDRAWAL_BLOCKED = 2;
     public const STATUS_ACCOUNT_BLOCKED = 3;
     public const STATUS_ACCOUNT_FROZEN = 4;
+    public const STATUS_ACCOUNT_EXCLUDED = 5;
 
     public const DOCUMENT_STATUS_PENDING = 1;
     public const DOCUMENT_STATUS_ANALYZING = 2;
