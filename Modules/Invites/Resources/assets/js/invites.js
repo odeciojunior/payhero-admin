@@ -19,6 +19,7 @@ $(document).ready(function () {
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $("#content-error").hide();
+        $("#store-invite").attr('disabled','disabled');
         loadOnTable('#table-body-invites', '#table_invites');
         loadOnAny('.number', false, {
             styles: {
@@ -36,10 +37,8 @@ $(document).ready(function () {
         updateCompanyDefault().done( function(data){
             getCompaniesAndProjects().done(function(data2){
                 companiesAndProjects = data2
-                if(companiesAndProjects.company_default_fullname.length > 40)
-                    $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
-                else
-                    $('.company_name').val( companiesAndProjects.company_default_fullname );
+                $("#store-invite").removeAttr('disabled');
+                $('.company_name').val( companiesAndProjects.company_default_fullname );
                 getInvitationData();
                 updateInvitesAfterChangeCompany();
             })
@@ -50,10 +49,7 @@ $(document).ready(function () {
 
     getCompaniesAndProjects().done( function (data){
         companiesAndProjects = data
-        if(companiesAndProjects.company_default_fullname.length > 40)
-            $('.company_name').val( companiesAndProjects.company_default_fullname.substring(0, 40)+'...' );
-        else
-            $('.company_name').val( companiesAndProjects.company_default_fullname );
+        $('.company_name').val( companiesAndProjects.company_default_fullname );
         updateInvites();
     });
 
