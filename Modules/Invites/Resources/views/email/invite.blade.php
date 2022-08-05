@@ -11,8 +11,8 @@
 <table style="width:600px; text-align:center" align="center" cellpadding="0" cellspacing="0">
     <table style="padding: 20px 5px;text-align:center" align="center">
         <tr>
-            <td style="width:100px;height:100px;text-align:center">
-                <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/logo.png" height="80">
+            <td style="width:100px;text-align:center">
+                <img src="http://cdn.mcauto-images-production.sendgrid.net/1b082ee166c12f3d/444211e2-b0ef-4df6-a7fa-ecb86b760c35/261x44.png" width="120px">
             </td>
         </tr>
     </table>

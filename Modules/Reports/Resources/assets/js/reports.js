@@ -87,47 +87,6 @@ function changeCalendar() {
     data = $('input[name="daterange"]').val();
 }
 
-function getProjects1() {
-    loadingOnScreen();
-    $.ajax({
-        method: 'GET',
-        url: '/api/projects?select=true&affiliate=false',
-        dataType: 'json',
-        headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json'
-        },
-        error: function error(response) {
-            errorAjaxResponse(response);
-            loadingOnScreenRemove();
-        },
-        success: function success(response) {
-            if (!isEmpty(response.data)) {
-                $("#project-empty").hide();
-                $("#project-not-empty").show();
-                $("#export-excel").show();
-
-                if (response.data != 'api sales') {
-                    $.each(response.data, function (i, project) {
-                        $("#project-select").append($('<option>', {
-                            value: project.id,
-                            text: project.name
-                        }));
-                    });
-                }
-
-                loadData();
-            } else {
-                $("#export-excel").hide();
-                $("#project-not-empty").hide();
-                $("#project-empty").show();
-            }
-
-            loadingOnScreenRemove();
-        }
-    });
-}
-
 function getProjects() {
     $.ajax({
         method: "GET",
@@ -151,7 +110,7 @@ function getProjects() {
 
                 if (response.data != 'api sales') {
                     $.each(response.data, function (i, project) {
-                        $("#project-select").append(
+                        $("#select_projects").append(
                             $('<option>', {
                                 value: project.id,
                                 text: project.name
@@ -159,15 +118,6 @@ function getProjects() {
                         );
                     });
                 }
-
-                // $.each(response.data, function (i, project) {
-                //     $("#select_projects").append(
-                //         $("<option>", {
-                //             value: project.id,
-                //             text: project.name,
-                //         })
-                //     );
-                // });
 
                 if (sessionStorage.info) {
                     $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);

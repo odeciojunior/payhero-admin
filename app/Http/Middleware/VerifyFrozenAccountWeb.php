@@ -19,7 +19,7 @@ class VerifyFrozenAccountWeb
         if (str_starts_with($request->getRequestUri(),'/register/login')) {
             return $next($request);
         }
-        if((auth()->user()->status ?? null) == (new User)->present()->getStatus('account frozen') &&
+        if((auth()->user()->status ?? null) == User::STATUS_ACCOUNT_FROZEN &&
             $this->inExceptArray($request) == false) {
 
             return response()->redirectTo('/dashboard')->withErrors(['accountErrors' => 'Conta congelada']);
