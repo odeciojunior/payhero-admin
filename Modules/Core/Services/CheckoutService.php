@@ -270,9 +270,7 @@ class CheckoutService
                 //         'response' => $response,
                 //     ];
                 // }
-            } else {
-                \Log::info(__FUNCTION__);
-                \Log::info((array)($response??[]));
+            } else {                
                 $result = [
                     'status' => 'error',
                     'error' => 'error',
