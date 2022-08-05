@@ -315,14 +315,14 @@ class SalesRecoveryApiController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'message' => "Preencha os dados corretamente",
+                    'message' => "Preencha os dados corretamente.",
                 ], 400);
             }
 
             $sale = Sale::find(current(Hashids::decode($request->saleId)));
             if (empty($sale)) {
                 return response()->json([
-                    'message' => "Ocorreu um erro, tente novamente mais tarde",
+                    'message' => "Ocorreu um erro, tente novamente mais tarde. [325]",
                 ], 400);
             }
 
@@ -356,7 +356,7 @@ class SalesRecoveryApiController extends Controller
             $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
             ->encode($sale->id), $totalPaidValue, $dueDate);
             
-            $message = 'Ocorreu um erro tente novamente mais tarde';
+            $message = 'Ocorreu um erro tente novamente mais tarde. [359]';
             $status  = 400;                
             if ($boletoRegenerated['status'] == 'success') {
                 $message = 'Boleto regenerado com sucesso';
@@ -371,7 +371,7 @@ class SalesRecoveryApiController extends Controller
             report($e);            
 
             return response()->json([
-                'message' => "Ocorreu um erro, tente novamente mais tarde",
+                'message' => "Ocorreu um erro, tente novamente mais tarde. [374]",
             ], 400);
         }
     }
