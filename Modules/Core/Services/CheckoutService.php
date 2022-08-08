@@ -189,7 +189,7 @@ class CheckoutService
                 ->limit(6)
                 ->get();
 
-            if ($billets->where('sale_id', $saleIdDecode)->count() > 1) {
+            if ($billets->where('sale_id', $saleIdDecode)->count() > 4) {
                 return [
                     'status' => 'error',
                     'error' => 'error',
@@ -270,7 +270,7 @@ class CheckoutService
                 //         'response' => $response,
                 //     ];
                 // }
-            } else {
+            } else {                
                 $result = [
                     'status' => 'error',
                     'error' => 'error',

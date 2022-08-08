@@ -802,9 +802,13 @@ textarea:focus {
     max-width: 400px;
 }
 
+#checkout_editor #payments .sirius-select-container {
+    max-width: none !important;
+}
+
 #checkout_editor .sirius-select-text {
     height: 43px !important;
-    padding: 5px 41px 10px 16px !important;
+    padding: 10px 35px 12px 16px !important;
 }
 
 .quantity-selector-label {
