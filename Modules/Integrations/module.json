@@ -1,14 +1,12 @@
 {
-    "name"       : "Integrations",
-    "alias"      : "integrations",
+    "name": "Integrations",
+    "alias": "integrations",
     "description": "",
-    "keywords"   : [],
-    "active"     : 1,
-    "order"      : 0,
-    "providers"  : [
-        "Modules\\Integrations\\Providers\\IntegrationsServiceProvider"
-    ],
-    "aliases"    : {},
-    "files"      : [],
-    "requires"   : []
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": ["Modules\\Integrations\\Providers\\IntegrationsServiceProvider"],
+    "aliases": {},
+    "files": [],
+    "requires": []
 }

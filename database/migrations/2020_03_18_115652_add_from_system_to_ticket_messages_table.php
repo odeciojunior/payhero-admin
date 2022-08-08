@@ -13,10 +13,11 @@ class AddFromSystemToTicketMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->boolean('from_system')
+        Schema::table("ticket_messages", function (Blueprint $table) {
+            $table
+                ->boolean("from_system")
                 ->default(false)
-                ->after('from_admin');
+                ->after("from_admin");
         });
     }
 
@@ -27,8 +28,8 @@ class AddFromSystemToTicketMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->dropColumn('from_system');
+        Schema::table("ticket_messages", function (Blueprint $table) {
+            $table->dropColumn("from_system");
         });
     }
 }

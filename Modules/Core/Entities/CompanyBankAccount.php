@@ -22,25 +22,25 @@ class CompanyBankAccount extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'company_id',
-        'transfer_type',
-        'type_key_pix',
-        'key_pix',
-        'bank',
-        'agency',
-        'agency_digit',
-        'account',
-        'account_digit',
-        'is_default',
-        'status',
-        'gateway_transaction_id',
-        'created_at',
-        'updated_at',
+        "company_id",
+        "transfer_type",
+        "type_key_pix",
+        "key_pix",
+        "bank",
+        "agency",
+        "agency_digit",
+        "account",
+        "account_digit",
+        "is_default",
+        "status",
+        "gateway_transaction_id",
+        "created_at",
+        "updated_at",
     ];
 
     /**
@@ -49,5 +49,5 @@ class CompanyBankAccount extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
-    } 
+    }
 }

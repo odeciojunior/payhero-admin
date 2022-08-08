@@ -16,18 +16,13 @@ class GetnetPostBack extends Model
     /**
      * @var string
      */
-    protected $table = 'getnet_postbacks';
+    protected $table = "getnet_postbacks";
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var string[]
      */
-    protected $fillable = [
-        'data',
-        'created_at',
-        'updated_at'
-    ];
-
+    protected $fillable = ["data", "created_at", "updated_at"];
 }

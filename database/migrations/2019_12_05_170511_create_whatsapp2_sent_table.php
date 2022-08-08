@@ -13,20 +13,32 @@ class CreateWhatsapp2SentTable extends Migration
      */
     public function up()
     {
-        Schema::create('whatsapp2_sent', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->text('data');
-            $table->text('response');
-            $table->integer('sent_status')->nullable();
-            $table->integer('event_sale')->unsigned()->nullable();
-            $table->bigInteger('instance_id')->unsigned()->nullable();
-            $table->string('instance')->nullable();
-            $table->bigInteger('whatsapp2_integration_id')->unsigned()->nullable();
+        Schema::create("whatsapp2_sent", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->text("data");
+            $table->text("response");
+            $table->integer("sent_status")->nullable();
+            $table
+                ->integer("event_sale")
+                ->unsigned()
+                ->nullable();
+            $table
+                ->bigInteger("instance_id")
+                ->unsigned()
+                ->nullable();
+            $table->string("instance")->nullable();
+            $table
+                ->bigInteger("whatsapp2_integration_id")
+                ->unsigned()
+                ->nullable();
             $table->timestamps();
         });
 
-        Schema::table('whatsapp2_sent', function(Blueprint $table) {
-            $table->foreign('whatsapp2_integration_id')->references('id')->on('whatsapp2_integrations');
+        Schema::table("whatsapp2_sent", function (Blueprint $table) {
+            $table
+                ->foreign("whatsapp2_integration_id")
+                ->references("id")
+                ->on("whatsapp2_integrations");
         });
     }
 
@@ -37,6 +49,6 @@ class CreateWhatsapp2SentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('whatsapp2_sent');
+        Schema::dropIfExists("whatsapp2_sent");
     }
 }

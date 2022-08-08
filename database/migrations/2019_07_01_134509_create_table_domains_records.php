@@ -12,19 +12,22 @@ class CreateTableDomainsRecords extends Migration
      */
     public function up()
     {
-        Schema::create('domains_records', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('domain_id')->index();
-            $table->string('type');
-            $table->string('name');
-            $table->string('content');
-            $table->tinyInteger('system_flag')->default(1);
+        Schema::create("domains_records", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("domain_id")->index();
+            $table->string("type");
+            $table->string("name");
+            $table->string("content");
+            $table->tinyInteger("system_flag")->default(1);
 
             $table->timestamps();
         });
 
-        Schema::table('domains_records', function(Blueprint $table) {
-            $table->foreign('domain_id')->references('id')->on('domains');
+        Schema::table("domains_records", function (Blueprint $table) {
+            $table
+                ->foreign("domain_id")
+                ->references("id")
+                ->on("domains");
         });
     }
 
@@ -34,10 +37,10 @@ class CreateTableDomainsRecords extends Migration
      */
     public function down()
     {
-        Schema::table('domains_records', function(Blueprint $table) {
-            $table->dropForeign(['domain_id']);
+        Schema::table("domains_records", function (Blueprint $table) {
+            $table->dropForeign(["domain_id"]);
         });
 
-        Schema::dropIfExists('domains_records');
+        Schema::dropIfExists("domains_records");
     }
 }

@@ -12,8 +12,11 @@ class AlterCodeColumnPlansTable extends Migration
      */
     public function up()
     {
-        Schema::table('plans', function(Blueprint $table) {
-            $table->string('code')->nullable()->change();
+        Schema::table("plans", function (Blueprint $table) {
+            $table
+                ->string("code")
+                ->nullable()
+                ->change();
         });
     }
 
@@ -23,8 +26,11 @@ class AlterCodeColumnPlansTable extends Migration
      */
     public function down()
     {
-        Schema::table('plans', function(Blueprint $table) {
-            $table->string('code', 8)->nullable()->change();
+        Schema::table("plans", function (Blueprint $table) {
+            $table
+                ->string("code", 8)
+                ->nullable()
+                ->change();
         });
     }
 }

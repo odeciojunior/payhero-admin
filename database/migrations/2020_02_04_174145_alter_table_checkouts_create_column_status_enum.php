@@ -14,8 +14,11 @@ class AlterTableCheckoutsCreateColumnStatusEnum extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function (Blueprint $table) {
-            $table->integer('status_enum')->default(0)->after('status');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table
+                ->integer("status_enum")
+                ->default(0)
+                ->after("status");
         });
     }
 
@@ -26,11 +29,8 @@ class AlterTableCheckoutsCreateColumnStatusEnum extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function (Blueprint $table) {
-            $table->dropColumn('status_enum');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("status_enum");
         });
     }
-
 }
-
-

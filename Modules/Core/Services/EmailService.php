@@ -19,13 +19,12 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class EmailService
 {
-    public const EMAIL_HELP_CLOUDFOX = 'help@cloudfox.net';
+    public const EMAIL_HELP_CLOUDFOX = "help@cloudfox.net";
 
     public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-ed70ee0df3a04153aa835e8e4f652434";
     public const TEMPLATE_ID_EMAIL_UNDER_ATTACK = "d-d2cc6518bd8d4a88b5e4d58bb25711e6";
     public const TEMPLATE_ID_EMAIL_CLIENT_SALE_BOLETO = "d-c521a65b247645a9b5f7be6b9b0db262";
     public const TEMPLATE_ID_EMAIL_CLIENT_SALE_CREDIT_CARD = "d-b80c0854a9d342428532d8d4b0e2f654";
-
 
     private SendgridService $sendgridService;
 
@@ -42,32 +41,26 @@ class EmailService
     public function sendInvite($to, $parameter)
     {
         try {
-            $emailLayout = view(
-                'invites::email.invite',
-                [
-                    'link' => env('ACCOUNT_FRONT_URL') . '/signup?i=' . $parameter,
-                ]
-            );
+            $emailLayout = view("invites::email.invite", [
+                "link" => env("ACCOUNT_FRONT_URL") . "/signup?i=" . $parameter,
+            ]);
 
-            if (env('APP_ENV') == 'local') {
-                $to = env('APP_EMAIL_TEST');
+            if (env("APP_ENV") == "local") {
+                $to = env("APP_EMAIL_TEST");
             }
 
             $email = new Mail();
             $email->setFrom("help@cloudfox.net", "Cloudfox");
             $email->setSubject("Convite para o CloudFox");
             $email->addTo($to, "CloudFox");
-            $email->addContent(
-                "text/html",
-                $emailLayout->render()
-            );
-            $sendgrid = new SendGrid(getenv('SENDGRID_API_KEY'));
+            $email->addContent("text/html", $emailLayout->render());
+            $sendgrid = new SendGrid(getenv("SENDGRID_API_KEY"));
 
             return $sendgrid->send($email);
         } catch (Exception | Throwable $e) {
             report($e);
 
-            return 'error';
+            return "error";
         }
     }
 
@@ -81,14 +74,16 @@ class EmailService
             $domainModel = new Domain();
             $domainPresent = $domainModel->present();
 
-            $domain = $domainModel->where('project_id', $sale->project_id)
-                ->where('status', $domainPresent->getStatus('approved'))->first();
+            $domain = $domainModel
+                ->where("project_id", $sale->project_id)
+                ->where("status", $domainPresent->getStatus("approved"))
+                ->first();
             if (empty($domain)) {
                 return false;
             }
 
             $sale->loadMissing(["customer", "project"]);
-            if (stristr($sale->customer->email, 'invalido') !== false) {
+            if (stristr($sale->customer->email, "invalido") !== false) {
                 return false;
             }
 
@@ -96,33 +91,32 @@ class EmailService
             $productsSale = $sale->present()->getProducts();
 
             $subTotal = $sale->present()->getSubTotal();
-            $subTotal = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+            $subTotal = substr_replace($subTotal, ",", strlen($subTotal) - 2, 0);
 
             $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
             if ($discount == 0 || $discount == null) {
-                $discount = '';
+                $discount = "";
             }
-            if ($discount != '') {
-                $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
+            if ($discount != "") {
+                $discount = substr_replace($discount, ",", strlen($discount) - 2, 0);
             }
 
             $data = [
-                'transaction' => Hashids::connection('sale_id')->encode($sale->id),
-                'products' => $productsSale,
-                'subtotal' => $subTotal,
-                'shipment_value' => $sale->shipment_value,
-                'discount' => $discount,
-                'installments_amount' => $sale->installments_amount,
-                'installments_value' => number_format($sale->installments_value, 2, ',', '.'),
+                "transaction" => Hashids::connection("sale_id")->encode($sale->id),
+                "products" => $productsSale,
+                "subtotal" => $subTotal,
+                "shipment_value" => $sale->shipment_value,
+                "discount" => $discount,
+                "installments_amount" => $sale->installments_amount,
+                "installments_value" => number_format($sale->installments_value, 2, ",", "."),
             ];
 
             $sendEmail->sendEmail(
-                'noreply@' . $domain->name,
+                "noreply@" . $domain->name,
                 $sale->project->name,
                 $sale->customer->email,
-                $sale->customer->present()
-                    ->getFirstName(),
-                'd-ed70ee0df3a04153aa835e8e4f652434',
+                $sale->customer->present()->getFirstName(),
+                "d-ed70ee0df3a04153aa835e8e4f652434",
                 $data
             );
 
@@ -145,42 +139,47 @@ class EmailService
             $domainModel = new Domain();
             $domainPresent = $domainModel->present();
 
-            $domain = $domainModel->where('project_id', $sale->project_id)
-                ->where('status', $domainPresent->getStatus('approved'))->first();
+            $domain = $domainModel
+                ->where("project_id", $sale->project_id)
+                ->where("status", $domainPresent->getStatus("approved"))
+                ->first();
 
             if (empty($domain)) {
                 return false;
             }
 
-            if (stristr($customer->email, 'invalido') !== false) {
+            if (stristr($customer->email, "invalido") !== false) {
                 return false;
             }
 
             $sendEmail = new SendgridService();
             $productsSale = $sale->present()->getProducts();
-            $saleCode = Hashids::connection('sale_id')->encode($sale->id);
+            $saleCode = Hashids::connection("sale_id")->encode($sale->id);
 
             $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
             if ($discount == 0 || $discount == null) {
-                $discount = '';
+                $discount = "";
             }
-            if ($discount != '') {
-                $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
+            if ($discount != "") {
+                $discount = substr_replace($discount, ",", strlen($discount) - 2, 0);
             }
 
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
-            $totalPaidValue = substr_replace($totalPaidValue, ',', strlen($totalPaidValue) - 2, 0);
+            $totalPaidValue = substr_replace($totalPaidValue, ",", strlen($totalPaidValue) - 2, 0);
 
             $subTotal = $sale->present()->getSubTotal();
-            $subTotal = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+            $subTotal = substr_replace($subTotal, ",", strlen($subTotal) - 2, 0);
 
             $shipmentValue = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-            $shipmentValue = substr_replace($shipmentValue, ',', strlen($shipmentValue) - 2, 0);
+            $shipmentValue = substr_replace($shipmentValue, ",", strlen($shipmentValue) - 2, 0);
 
-            $domainName = $domain->name??'cloudfox.net';
-            $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
+            $domainName = $domain->name ?? "cloudfox.net";
+            $boletoLink =
+                "https://checkout.{$domainName}/order/" .
+                Hashids::connection("sale_id")->encode($sale->id) .
+                "/download-boleto";
 
-            if ($sale->payment_method == $sale->present()->getPaymentType('boleto')) {
+            if ($sale->payment_method == $sale->present()->getPaymentType("boleto")) {
                 $boletoDigitableLine = [];
                 $boletoDigitableLine[0] = substr($sale->boleto_digitable_line, 0, 24);
                 $boletoDigitableLine[1] = substr(
@@ -190,46 +189,45 @@ class EmailService
                 );
 
                 $data = [
-                    'first_name' => $customer->present()->getFirstName(),
-                    'boleto_link' => $boletoLink,
-                    'digitable_line' => $boletoDigitableLine,
-                    'expiration_date' => Carbon::parse($sale->boleto_due_date)->format('d/m/Y'),
-                    'total_value' => $totalPaidValue,
-                    'products' => $productsSale,
-                    'shipment_value' => $shipmentValue,
-                    'subtotal' => $subTotal,
-                    'store_logo' => $project->checkoutConfig->checkout_logo,
-                    'discount' => $discount,
-                    'sale_code' => $saleCode,
+                    "first_name" => $customer->present()->getFirstName(),
+                    "boleto_link" => $boletoLink,
+                    "digitable_line" => $boletoDigitableLine,
+                    "expiration_date" => Carbon::parse($sale->boleto_due_date)->format("d/m/Y"),
+                    "total_value" => $totalPaidValue,
+                    "products" => $productsSale,
+                    "shipment_value" => $shipmentValue,
+                    "subtotal" => $subTotal,
+                    "store_logo" => $project->checkoutConfig->checkout_logo,
+                    "discount" => $discount,
+                    "sale_code" => $saleCode,
                 ];
                 $sendEmail->sendEmail(
-                    'noreply@' . $domain->name,
+                    "noreply@" . $domain->name,
                     $project->name ?? null,
                     $customer->email,
-                    $customer->present()
-                        ->getFirstName(),
-                    'd-c521a65b247645a9b5f7be6b9b0db262',
+                    $customer->present()->getFirstName(),
+                    "d-c521a65b247645a9b5f7be6b9b0db262",
                     $data
                 );
             } else {
                 $data = [
-                    'first_name' => $customer->present()->getFirstName(),
-                    'installments_amount' => $sale->installments_amount,
-                    'installments_value' => number_format($sale->installments_value, 2, ',', '.'),
-                    'products' => $productsSale,
-                    'shipment_value' => $sale->shipment_value,
-                    'subtotal' => $subTotal,
-                    'store_logo' => $project->checkoutConfig->checkout_logo,
-                    'discount' => $discount,
-                    'sale_code' => $saleCode,
+                    "first_name" => $customer->present()->getFirstName(),
+                    "installments_amount" => $sale->installments_amount,
+                    "installments_value" => number_format($sale->installments_value, 2, ",", "."),
+                    "products" => $productsSale,
+                    "shipment_value" => $sale->shipment_value,
+                    "subtotal" => $subTotal,
+                    "store_logo" => $project->checkoutConfig->checkout_logo,
+                    "discount" => $discount,
+                    "sale_code" => $saleCode,
                 ];
 
                 $sendEmail->sendEmail(
-                    'noreply@' . $domain->name,
+                    "noreply@" . $domain->name,
                     $project->name ?? null,
                     $customer->email,
                     $customer->present()->getFirstName(),
-                    'd-b80c0854a9d342428532d8d4b0e2f654',
+                    "d-b80c0854a9d342428532d8d4b0e2f654",
                     $data
                 );
             }
@@ -256,13 +254,16 @@ class EmailService
         try {
             $sendGridService = new SendgridService();
 
-            if (getenv('APP_ENV') != 'production') {
-                $fromEmail = getenv('APP_EMAIL_TEST');
+            if (getenv("APP_ENV") != "production") {
+                $fromEmail = getenv("APP_EMAIL_TEST");
             }
 
-            if (stristr($fromEmail, 'invalido') === false &&
-                !empty($fromName) && !empty($toEmail) &&
-                !empty($toName) && !empty($templateId)
+            if (
+                stristr($fromEmail, "invalido") === false &&
+                !empty($fromName) &&
+                !empty($toEmail) &&
+                !empty($toName) &&
+                !empty($templateId)
             ) {
                 return $sendGridService->sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data);
             } else {
@@ -278,20 +279,20 @@ class EmailService
     public function sendEmailUnderAttack($systemsStatus)
     {
         $emailList = [
-            'julioleichtweis@gmail.com',
-            'felixlorram@gmail.com',
-            'jeanvcastro1@gmail.com',
-            'murillogomes@cloudfox.net',
-            'henriquebrites@live.com'
+            "julioleichtweis@gmail.com",
+            "felixlorram@gmail.com",
+            "jeanvcastro1@gmail.com",
+            "murillogomes@cloudfox.net",
+            "henriquebrites@live.com",
         ];
 
         foreach ($emailList as $email) {
             (new SendgridService())->sendEmail(
-                'help@cloudfox.net',
-                'CloudFox',
+                "help@cloudfox.net",
+                "CloudFox",
                 $email,
-                'Admin/Dev',
-                'd-d2cc6518bd8d4a88b5e4d58bb25711e6',
+                "Admin/Dev",
+                "d-d2cc6518bd8d4a88b5e4d58bb25711e6",
                 $systemsStatus
             );
         }
@@ -302,24 +303,24 @@ class EmailService
         $salePresenter = $sale->present();
 
         if (empty($sale->user)) {
-            $sale->load(['user']);
+            $sale->load(["user"]);
         }
 
         $user = $sale->user;
 
         $data = [
-            'transaction' => hashids_encode($sale->id, 'sale_id'),
-            'products' => $salePresenter->getProducts(),
-            'subtotal' => $salePresenter->getFormattedSubTotal(),
-            'shipment_value' => $salePresenter->getFormattedShipmentValue(),
-            'discount' => $salePresenter->getFormattedDiscount(),
-            'project_contact' => self::EMAIL_HELP_CLOUDFOX,
-            'total_value' => $salePresenter->getTotalPaidValueWithoutInstallmentTax(),
+            "transaction" => hashids_encode($sale->id, "sale_id"),
+            "products" => $salePresenter->getProducts(),
+            "subtotal" => $salePresenter->getFormattedSubTotal(),
+            "shipment_value" => $salePresenter->getFormattedShipmentValue(),
+            "discount" => $salePresenter->getFormattedDiscount(),
+            "project_contact" => self::EMAIL_HELP_CLOUDFOX,
+            "total_value" => $salePresenter->getTotalPaidValueWithoutInstallmentTax(),
         ];
 
         $this->sendgridService->sendEmail(
             self::EMAIL_HELP_CLOUDFOX,
-            'CloudFox',
+            "CloudFox",
             $user->email,
             $user->name,
             self::TEMPLATE_ID_EMAIL_CHARGEBACK,
@@ -327,4 +328,3 @@ class EmailService
         );
     }
 }
-

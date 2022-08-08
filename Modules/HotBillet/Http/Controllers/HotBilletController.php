@@ -14,7 +14,7 @@ class HotBilletController extends Controller
      */
     public function index()
     {
-        return view('hotbillet::index');
+        return view("hotbillet::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class HotBilletController extends Controller
      */
     public function create()
     {
-        return view('hotbillet::create');
+        return view("hotbillet::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class HotBilletController extends Controller
      */
     public function show($id)
     {
-        return view('hotbillet::show');
+        return view("hotbillet::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class HotBilletController extends Controller
      */
     public function edit($id)
     {
-        return view('hotbillet::edit');
+        return view("hotbillet::edit");
     }
 
     /**

@@ -13,8 +13,8 @@ class AddColumnChargebackRecoveredFlagOnSalesTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->boolean('is_chargeback_recovered')->default(false);
+        Schema::table("sales", function (Blueprint $table) {
+            $table->boolean("is_chargeback_recovered")->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnChargebackRecoveredFlagOnSalesTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('is_chargeback_recovered');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("is_chargeback_recovered");
         });
     }
 }

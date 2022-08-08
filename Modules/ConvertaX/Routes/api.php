@@ -15,14 +15,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        "middleware" => ["auth:api", "scopes:admin"],
     ],
-    function() {
-        Route::get('/apps/convertax', 'ConvertaXApiController@index');
-        Route::get('/apps/convertax/{id}', 'ConvertaXApiController@show');
-        Route::apiResource('/apps/convertax', 'ConvertaXApiController')
-            ->only('store', 'update', 'destroy')->middleware('permission:apps_manage');
+    function () {
+        Route::get("/apps/convertax", "ConvertaXApiController@index");
+        Route::get("/apps/convertax/{id}", "ConvertaXApiController@show");
+        Route::apiResource("/apps/convertax", "ConvertaXApiController")
+            ->only("store", "update", "destroy")
+            ->middleware("permission:apps_manage");
 
-        Route::get('/getconvertaxintegrations', 'ConvertaXController@getIntegrations');
+        Route::get("/getconvertaxintegrations", "ConvertaXController@getIntegrations");
     }
 );

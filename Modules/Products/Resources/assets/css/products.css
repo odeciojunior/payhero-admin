@@ -37,7 +37,7 @@ label {
     font-size: 16px;
     border-radius: 8px;
     margin-top: 8px;
-    border-color: #7070704D;
+    border-color: #7070704d;
     height: auto;
 }
 
@@ -52,8 +52,8 @@ label {
     align-content: center;
     justify-content: center;
     border-radius: 50%;
-    border: 2px solid #4C4C4C;
-    color: #4C4C4C;
+    border: 2px solid #4c4c4c;
+    color: #4c4c4c;
     padding: 12px;
 }
 .new-product-icon:hover img {
@@ -61,8 +61,8 @@ label {
 }
 .new-product-icon:hover {
     border-radius: 50%;
-    border: 2px solid #2DA6F6;
-    color: #2DA6F6;
+    border: 2px solid #2da6f6;
+    color: #2da6f6;
 }
 .new-product-icon img {
     display: flex;
@@ -115,22 +115,22 @@ button.menu_product {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(#414856, 0.05);
-    transition: opacity .15s ease-in, top .15s ease-in, width .15s ease-in;
+    transition: opacity 0.15s ease-in, top 0.15s ease-in, width 0.15s ease-in;
 }
 
 .menu_product_tooltip a,
 .menu_product_tooltip a span {
-    color: #4C4C4C;
+    color: #4c4c4c;
     vertical-align: middle;
 }
 
 .menu_product_tooltip a:hover,
 .menu_product_tooltip a span:hover {
-    color: #4C4C4C;
+    color: #4c4c4c;
 }
 
 .menu_product_tooltip a span {
-    -webkit-text-stroke: .5px;
+    -webkit-text-stroke: 0.5px;
 }
 
 .new-product-modal-body {
@@ -146,25 +146,25 @@ button.menu_product {
 .new-product-modal-option button {
     width: 115px;
     height: 115px;
-    border: 1px solid #2E85EC;
+    border: 1px solid #2e85ec;
     border-radius: 8px;
-    background: #F4F6FB;
+    background: #f4f6fb;
     cursor: pointer;
 }
 .new-product-modal-option button:hover {
-    border: 2px solid #2E85EC;
-    background: #CBE0FA;
+    border: 2px solid #2e85ec;
+    background: #cbe0fa;
 }
 .new-product-modal-option button:focus {
     outline: none;
 }
 .new-product-modal-option .active {
-    border: 2px solid #2E85EC;
-    background: #CBE0FA;
+    border: 2px solid #2e85ec;
+    background: #cbe0fa;
 }
 .new-product-modal-option span {
     font-weight: 400;
-    color: #5B5B5B;
+    color: #5b5b5b;
     margin-top: 12px;
     font-size: 16px;
 }

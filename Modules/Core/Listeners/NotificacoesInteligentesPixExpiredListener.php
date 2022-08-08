@@ -16,7 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
  */
 class NotificacoesInteligentesPixExpiredListener implements ShouldQueue
 {
-    public $queue = 'default';
+    public $queue = "default";
 
     /**
      * NotificacoesInteligentesPixExpiredListener constructor.
@@ -34,26 +34,16 @@ class NotificacoesInteligentesPixExpiredListener implements ShouldQueue
         try {
             $sale = $event->sale;
 
+            $integration = NotificacoesInteligentesIntegration::where("project_id", $sale->project_id)
+                ->where("pix_expired", true)
+                ->first();
 
-            $integration = NotificacoesInteligentesIntegration::where('project_id', $sale->project_id)
-                ->where('pix_expired', true)->first();
-            
             if (!empty($integration)) {
                 $service = new NotificacoesInteligentesService($integration->link);
                 $service->pixExpired($sale);
             }
-
-
-            
-            
         } catch (Exception $e) {
-            
             report($e);
         }
-        
-
-        
     }
 }
-
-

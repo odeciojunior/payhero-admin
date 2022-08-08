@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Notazz\\Providers\\NotazzServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

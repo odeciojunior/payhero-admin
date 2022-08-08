@@ -9,9 +9,9 @@ use Modules\Core\Entities\GatewayPostback;
 
 class ProcessGatewayPostbacksCommand extends Command
 {
-    protected $signature = 'gatewaypostbacks:process';
+    protected $signature = "gatewaypostbacks:process";
 
-    protected $description = 'Verifica os postbacks dos gateways GETNET, ASAAS';
+    protected $description = "Verifica os postbacks dos gateways GETNET, ASAAS";
 
     public function __construct()
     {
@@ -23,35 +23,31 @@ class ProcessGatewayPostbacksCommand extends Command
      */
     public function handle()
     {
-
         try {
-
             $this->processPostBackGetnet();
             $this->processPostbackAsaas();
             $this->processPostbackSafe2pay();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 
     private function processPostBackGetnet()
     {
         try {
-            $postbacks = GatewayPostback::select('id')
-                        ->where('processed_flag', false)
-                        ->where('gateway_id', 15)
-                        ->orderBy('id', 'desc')
-                        ->limit(100)
-                        ->get()->toArray();
+            $postbacks = GatewayPostback::select("id")
+                ->where("processed_flag", false)
+                ->where("gateway_id", 15)
+                ->orderBy("id", "desc")
+                ->limit(100)
+                ->get()
+                ->toArray();
 
-            $url = getenv('CHECKOUT_URL') . '/api/postback/process/getnet';
+            $url = getenv("CHECKOUT_URL") . "/api/postback/process/getnet";
 
             foreach ($postbacks as $postback) {
-                $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback['id'])]);
+                $this->runCurl($url, "POST", ["postback_id" => hashids_encode($postback["id"])]);
             }
-
         } catch (Exception $e) {
             report($e);
         }
@@ -63,20 +59,19 @@ class ProcessGatewayPostbacksCommand extends Command
     private function processPostbackAsaas()
     {
         try {
-            $postbacks = GatewayPostback::select('id')
-                        ->where('processed_flag', false)
-                        ->where('gateway_id', 8)
-                        ->orderBy('id', 'asc')
-                        ->limit(100)
-                        ->get()->toArray();
+            $postbacks = GatewayPostback::select("id")
+                ->where("processed_flag", false)
+                ->where("gateway_id", 8)
+                ->orderBy("id", "asc")
+                ->limit(100)
+                ->get()
+                ->toArray();
 
-            $url = getenv('CHECKOUT_URL') . '/api/postback/process/asaas';
+            $url = getenv("CHECKOUT_URL") . "/api/postback/process/asaas";
 
-            foreach ($postbacks as $postback)
-            {
-                $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback['id'])]);
+            foreach ($postbacks as $postback) {
+                $this->runCurl($url, "POST", ["postback_id" => hashids_encode($postback["id"])]);
             }
-
         } catch (Exception $e) {
             report($e);
         }
@@ -88,26 +83,25 @@ class ProcessGatewayPostbacksCommand extends Command
     private function processPostbackSafe2pay()
     {
         try {
-            $postbacks = GatewayPostback::select('id')
-                        ->where('processed_flag', false)
-                        ->where('gateway_id', 21)
-                        ->orderBy('id', 'asc')
-                        ->limit(100)
-                        ->get()->toArray();
+            $postbacks = GatewayPostback::select("id")
+                ->where("processed_flag", false)
+                ->where("gateway_id", 21)
+                ->orderBy("id", "asc")
+                ->limit(100)
+                ->get()
+                ->toArray();
 
-            $url = getenv('CHECKOUT_URL') . '/api/postback/process/safe2pay';
+            $url = getenv("CHECKOUT_URL") . "/api/postback/process/safe2pay";
 
-            foreach ($postbacks as $postback)
-            {
-                $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback['id'])]);
+            foreach ($postbacks as $postback) {
+                $this->runCurl($url, "POST", ["postback_id" => hashids_encode($postback["id"])]);
             }
-
         } catch (Exception $e) {
             report($e);
         }
     }
 
-    private function runCurl($url, $method = 'GET', $data = null): void
+    private function runCurl($url, $method = "GET", $data = null): void
     {
         try {
             $ch = curl_init($url);

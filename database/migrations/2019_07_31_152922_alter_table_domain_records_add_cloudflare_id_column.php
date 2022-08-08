@@ -12,8 +12,8 @@ class AlterTableDomainRecordsAddCloudflareIdColumn extends Migration
      */
     public function up()
     {
-        Schema::table('domains_records', function(Blueprint $table) {
-            $table->string('cloudflare_record_id')->after('domain_id');
+        Schema::table("domains_records", function (Blueprint $table) {
+            $table->string("cloudflare_record_id")->after("domain_id");
         });
     }
 
@@ -23,8 +23,8 @@ class AlterTableDomainRecordsAddCloudflareIdColumn extends Migration
      */
     public function down()
     {
-        Schema::table('domains_records', function(Blueprint $table) {
-            $table->dropColumn('cloudflare_record_id');
+        Schema::table("domains_records", function (Blueprint $table) {
+            $table->dropColumn("cloudflare_record_id");
         });
     }
 }

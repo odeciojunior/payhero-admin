@@ -12,9 +12,15 @@ class AlterUsersTableAddVerifiedDataColumns extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->boolean("cellphone_verified")->after("cellphone")->default(false);
-            $table->boolean("email_verified")->after("email")->default(false);
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("cellphone_verified")
+                ->after("cellphone")
+                ->default(false);
+            $table
+                ->boolean("email_verified")
+                ->after("email")
+                ->default(false);
         });
     }
 
@@ -24,7 +30,7 @@ class AlterUsersTableAddVerifiedDataColumns extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
+        Schema::table("users", function (Blueprint $table) {
             $table->dropColumn(["cellphone_verified", "email_verified"]);
         });
     }

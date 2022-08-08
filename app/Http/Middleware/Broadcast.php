@@ -20,11 +20,11 @@ class Broadcast
      */
     public function handle($request, Closure $next)
     {
-        $web = Auth::guard('web')->user();
+        $web = Auth::guard("web")->user();
         if ($web) {
             return response()->json(\Illuminate\Support\Facades\Broadcast::auth($request));
         }
 
-        return response()->json('Unauthorized.', 401);
+        return response()->json("Unauthorized.", 401);
     }
 }

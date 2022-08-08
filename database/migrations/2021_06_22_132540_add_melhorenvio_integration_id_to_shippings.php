@@ -13,14 +13,18 @@ class AddMelhorenvioIntegrationIdToShippings extends Migration
      */
     public function up()
     {
-        Schema::table('shippings', function (Blueprint $table) {
-            $table->unsignedBigInteger('melhorenvio_integration_id')
+        Schema::table("shippings", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("melhorenvio_integration_id")
                 ->nullable()
-                ->after('zip_code_origin');
+                ->after("zip_code_origin");
         });
 
-        Schema::table('shippings', function(Blueprint $table) {
-            $table->foreign('melhorenvio_integration_id')->references('id')->on('melhorenvio_integrations');
+        Schema::table("shippings", function (Blueprint $table) {
+            $table
+                ->foreign("melhorenvio_integration_id")
+                ->references("id")
+                ->on("melhorenvio_integrations");
         });
     }
 
@@ -31,8 +35,8 @@ class AddMelhorenvioIntegrationIdToShippings extends Migration
      */
     public function down()
     {
-        Schema::table('shippings', function (Blueprint $table) {
-            $table->dropColumn('melhorenvio_integration_id');
+        Schema::table("shippings", function (Blueprint $table) {
+            $table->dropColumn("melhorenvio_integration_id");
         });
     }
 }

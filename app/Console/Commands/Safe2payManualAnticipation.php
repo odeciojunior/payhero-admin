@@ -14,14 +14,14 @@ class Safe2payManualAnticipation extends Command
      *
      * @var string
      */
-    protected $signature = 'safe2pay:manual-anticipation';
+    protected $signature = "safe2pay:manual-anticipation";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Anticipa as vendas no safe2pay';
+    protected $description = "Anticipa as vendas no safe2pay";
 
     /**
      * Create a new command instance.
@@ -40,17 +40,17 @@ class Safe2payManualAnticipation extends Command
      */
     public function handle()
     {
-        //DEATIVADO ATE AVISO PREVIO 
+        //DEATIVADO ATE AVISO PREVIO
         // $attemps = 0;
         // $maxAttemps = 2;
         // $service = new CheckoutGateway(Gateway::SAFE2PAY_PRODUCTION_ID);
-        
+
         // while($attemps < $maxAttemps){
-            
-        //     $response = $service->safe2payAnticipation(); 
+
+        //     $response = $service->safe2payAnticipation();
         //     $attemps++;
-            
-        //     if(empty($response) || !isset($response->HasError) || $response->HasError){ 
+
+        //     if(empty($response) || !isset($response->HasError) || $response->HasError){
         //         if($attemps == $maxAttemps){
         //             report(new Exception("Error Safe2pay anticipation: ".($response->Error??'não informado')));
         //         }

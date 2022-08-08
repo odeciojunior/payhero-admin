@@ -26,144 +26,137 @@ class PostBackEbanxController extends Controller
 {
     public function postBackListener(Request $request)
     {
-        $saleModel        = new Sale();
+        $saleModel = new Sale();
         $postbackLogModel = new PostbackLog();
 
         $requestData = $request->all();
 
         $postbackLogModel->create([
-                                      'origin'      => 1,
-                                      'data'        => json_encode($requestData),
-                                      'description' => 'ebanx',
-                                  ]);
+            "origin" => 1,
+            "data" => json_encode($requestData),
+            "description" => "ebanx",
+        ]);
 
         Config::set([
-                        'integrationKey' => 'live_ik_mTLNBPdU-RmtpVW6FTF0Ug',
-                        'testMode'       => false,
-                    ]);
+            "integrationKey" => "live_ik_mTLNBPdU-RmtpVW6FTF0Ug",
+            "testMode" => false,
+        ]);
 
-        $sale = $saleModel->where('gateway_transaction_id', $requestData['hash_codes'])->first();
+        $sale = $saleModel->where("gateway_transaction_id", $requestData["hash_codes"])->first();
 
         if (!$sale) {
-            Log::warning('Venda não encontrada no retorno do Ebanx com código ' . $requestData['hash_codes']);
+            Log::warning("Venda não encontrada no retorno do Ebanx com código " . $requestData["hash_codes"]);
 
-            return response()->json(['message' => 'sale not found'], 200);
+            return response()->json(["message" => "sale not found"], 200);
         }
 
-        if (!empty($request->input('notification_type')) && $request->input('notification_type') == 'chargeback') {
+        if (!empty($request->input("notification_type")) && $request->input("notification_type") == "chargeback") {
             $sale->update([
-                              'status'         => 4,
-                              'gateway_status' => 'chargedback',
-                          ]);
+                "status" => 4,
+                "gateway_status" => "chargedback",
+            ]);
         }
 
         $response = \Ebanx\Ebanx::doQuery([
-                                              'hash' => $requestData['hash_codes'],
-                                          ]);
+            "hash" => $requestData["hash_codes"],
+        ]);
 
         if (!isset($response->payment->status)) {
-            Log::warning('Erro com response do ebanx ' . print_r($response, true));
+            Log::warning("Erro com response do ebanx " . print_r($response, true));
 
-            return response()->json(['message' => 'success'], 200);
+            return response()->json(["message" => "success"], 200);
         }
 
         if ($response->payment->status != $sale->gateway_status) {
-
             $sale->update([
-                              'gateway_status' => $response->payment->status,
-                          ]);
+                "gateway_status" => $response->payment->status,
+            ]);
 
             $transactionModel = new Transaction();
-            $companyModel     = new Company();
-            $userModel        = new User();
+            $companyModel = new Company();
+            $userModel = new User();
 
-            $transactions = $transactionModel->where('sale_id', $sale->id)->get();
+            $transactions = $transactionModel->where("sale_id", $sale->id)->get();
 
-            if ($response->payment->status == 'CA') {
+            if ($response->payment->status == "CA") {
                 if ($sale->payment_method == 2) {
                     $sale->update([
-                                      'status' => 5,
-                                  ]);
+                        "status" => 5,
+                    ]);
                 } else {
                     $sale->update([
-                                      'status' => 3,
-                                  ]);
+                        "status" => 3,
+                    ]);
                 }
 
                 foreach ($transactions as $transaction) {
                     $transaction->update([
-                                             'status' => 'canceled',
-                                         ]);
+                        "status" => "canceled",
+                    ]);
                 }
-            } else if ($response->payment->status == 'CO') {
-
-                date_default_timezone_set('America/Sao_Paulo');
+            } elseif ($response->payment->status == "CO") {
+                date_default_timezone_set("America/Sao_Paulo");
 
                 $sale->update([
-                                  'end_date'       => \Carbon\Carbon::now(),
-                                  'gateway_status' => 'CO',
-                                  'status'         => '1',
-                              ]);
+                    "end_date" => \Carbon\Carbon::now(),
+                    "gateway_status" => "CO",
+                    "status" => "1",
+                ]);
 
                 foreach ($transactions as $transaction) {
-
                     if ($transaction->company != null) {
-
                         $company = $companyModel->find($transaction->company_id);
 
-                        $user = $userModel->find($company['user_id']);
+                        $user = $userModel->find($company["user_id"]);
 
                         $transaction->update([
-                                                 'status'            => 'paid',
-                                                 'release_date'      => Carbon::now()
-                                                                              ->addDays($user->release_money_days)
-                                                                              ->format('Y-m-d'),
-                                             ]);
+                            "status" => "paid",
+                            "release_date" => Carbon::now()
+                                ->addDays($user->release_money_days)
+                                ->format("Y-m-d"),
+                        ]);
                     } else {
                         $transaction->update([
-                                                 'status' => 'paid',
-                                             ]);
+                            "status" => "paid",
+                        ]);
                     }
                 }
 
-                if ($sale['shopify_order'] != '') {
-
-                    $planSaleModel           = new PlanSale();
-                    $planModel               = new Plan();
+                if ($sale["shopify_order"] != "") {
+                    $planSaleModel = new PlanSale();
+                    $planModel = new Plan();
                     $shopifyIntegrationModel = new ShopifyIntegration();
 
-                    $plansSale = $planSaleModel->where('sale_id', $sale['id'])->first();
+                    $plansSale = $planSaleModel->where("sale_id", $sale["id"])->first();
 
                     $plan = $planModel->find($plansSale->plan_id);
 
-                    $shopifyIntegration = $shopifyIntegrationModel->where('project_id', $plan['project_id'])->first();
+                    $shopifyIntegration = $shopifyIntegrationModel->where("project_id", $plan["project_id"])->first();
 
                     try {
-                        $credential = new PublicAppCredential($shopifyIntegration['token']);
+                        $credential = new PublicAppCredential($shopifyIntegration["token"]);
 
-                        $client            = new Client($credential, $shopifyIntegration['url_store'], [
-                            'metaCacheDir' => './tmp',
+                        $client = new Client($credential, $shopifyIntegration["url_store"], [
+                            "metaCacheDir" => "./tmp",
                         ]);
                         $transactionUpdate = [
-                            "kind"   => "sale",
+                            "kind" => "sale",
                             "source" => "external",
                             "gateway" => "cloudfox",
-                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                            "authorization" => Hashids::connection("sale_id")->encode($sale->id),
                         ];
-//                        if ($sale['payment_method'] == 2) {
-//                            $transactionUpdate['gateway'] = 'Boleto';
-//                        }
+                        //                        if ($sale['payment_method'] == 2) {
+                        //                            $transactionUpdate['gateway'] = 'Boleto';
+                        //                        }
                         $client->getTransactionManager()->create($sale->shopify_order, $transactionUpdate);
                     } catch (\Exception $e) {
-                        Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $sale['id']);
+                        Log::warning("erro ao alterar estado do pedido no shopify com a venda " . $sale["id"]);
                         report($e);
                     }
                 }
             }
         }
 
-        return response()->json(['message' => 'success'], 200);
+        return response()->json(["message" => "success"], 200);
     }
 }
-
-

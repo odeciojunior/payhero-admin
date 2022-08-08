@@ -13,8 +13,11 @@ class AddTransactionToChargebacks extends Migration
      */
     public function up()
     {
-        Schema::table('chargebacks', function (Blueprint $table) {
-            $table->json('transaction')->nullable()->after('status_enum');
+        Schema::table("chargebacks", function (Blueprint $table) {
+            $table
+                ->json("transaction")
+                ->nullable()
+                ->after("status_enum");
         });
     }
 
@@ -25,8 +28,8 @@ class AddTransactionToChargebacks extends Migration
      */
     public function down()
     {
-        Schema::table('chargebacks', function (Blueprint $table) {
-            $table->dropColumn('transaction');
+        Schema::table("chargebacks", function (Blueprint $table) {
+            $table->dropColumn("transaction");
         });
     }
 }

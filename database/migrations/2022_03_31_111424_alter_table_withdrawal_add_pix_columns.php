@@ -13,10 +13,22 @@ class AlterTableWithdrawalAddPixColumns extends Migration
      */
     public function up()
     {
-        Schema::table('withdrawals',function(Blueprint $table){
-            $table->string('transfer_type',15)->nullable()->default(null)->after('currency');
-            $table->string('type_key_pix',15)->nullable()->default(null)->after('transfer_type');
-            $table->string('key_pix',50)->nullable()->default(null)->after('type_key_pix');
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table
+                ->string("transfer_type", 15)
+                ->nullable()
+                ->default(null)
+                ->after("currency");
+            $table
+                ->string("type_key_pix", 15)
+                ->nullable()
+                ->default(null)
+                ->after("transfer_type");
+            $table
+                ->string("key_pix", 50)
+                ->nullable()
+                ->default(null)
+                ->after("type_key_pix");
         });
     }
 

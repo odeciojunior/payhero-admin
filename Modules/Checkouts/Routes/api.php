@@ -4,9 +4,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        "middleware" => ["auth:api", "scopes:admin"],
     ],
-    function() {
-        Route::apiResource('checkout', 'CheckoutApiController')->only('index', 'show')->names('api.checkout');
+    function () {
+        Route::apiResource("checkout", "CheckoutApiController")
+            ->only("index", "show")
+            ->names("api.checkout");
     }
 );

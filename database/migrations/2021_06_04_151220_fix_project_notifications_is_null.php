@@ -18,13 +18,13 @@ class FixProjectNotificationsIsNull extends Migration
     {
         $projectNotificationService = new ProjectNotificationService();
 
-        $projects = Project::leftJoin('project_notifications', 'project_notifications.project_id', 'projects.id')
-            ->whereNull('project_notifications.id')
-            ->get('projects.id');
+        $projects = Project::leftJoin("project_notifications", "project_notifications.project_id", "projects.id")
+            ->whereNull("project_notifications.id")
+            ->get("projects.id");
 
         foreach ($projects as $project) {
             $projectNotificationService->createProjectNotificationDefault($project->id);
-        };
+        }
     }
 
     /**

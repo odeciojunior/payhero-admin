@@ -29,17 +29,24 @@ class DomainApprovedEmailNotifyUserListener implements ShouldQueue
     {
         $sendGridService = new SendgridService();
 
-        $users  = $event->users;
+        $users = $event->users;
         $domain = $event->domain;
 
         $data = [];
         foreach ($users as $user) {
             $data = [
-                'domain_name' => $domain->name,
-                'first_name'  => $user->name,
+                "domain_name" => $domain->name,
+                "first_name" => $user->name,
             ];
 
-            $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-b387f185f29a45b6a2009ba94f63ed1a', $data);
+            $sendGridService->sendEmail(
+                "help@cloudfox.net",
+                "cloudfox",
+                $user->email,
+                $user->name,
+                "d-b387f185f29a45b6a2009ba94f63ed1a",
+                $data
+            );
         }
     }
 }

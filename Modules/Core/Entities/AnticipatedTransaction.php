@@ -21,22 +21,31 @@ class AnticipatedTransaction extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
-    protected $fillable = ['anticipation_id', 'transaction_id', 'value', 'tax', 'tax_value', 'days_to_release', 'created_at', 'updated_at'];
+    protected $fillable = [
+        "anticipation_id",
+        "transaction_id",
+        "value",
+        "tax",
+        "tax_value",
+        "days_to_release",
+        "created_at",
+        "updated_at",
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function anticipation()
     {
-        return $this->belongsTo('Modules\Core\Entities\Anticipation');
+        return $this->belongsTo("Modules\Core\Entities\Anticipation");
     }
 
     /**
@@ -44,6 +53,6 @@ class AnticipatedTransaction extends Model
      */
     public function transaction()
     {
-        return $this->belongsTo('Modules\Core\Entities\Transaction');
+        return $this->belongsTo("Modules\Core\Entities\Transaction");
     }
 }

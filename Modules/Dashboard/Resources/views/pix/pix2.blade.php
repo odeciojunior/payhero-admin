@@ -1,11 +1,13 @@
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
-        <img src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
+        <img src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}"
+             width="40"
              alt="Image"> <span>Novidades</span>
     </div>
     <div class="pages">
         <span id="page-gamification"></span>
-        <span id="page-account-health" class="active"></span>
+        <span id="page-account-health"
+              class="active"></span>
         <span id="page-news-summary"></span>
     </div>
 </div>
@@ -13,11 +15,14 @@
     <div class="row">
 
         <div class="col-12 col-lg-7 order-lg-1 h-p100">
-            <div id="title-onboarding-2" class="text-lg-left text-center text-primary">CONVERSÃO INSTANTÂNEA</div>
-            <div id="sub-title-onboarding-2" class="text-center text-lg-left">
+            <div id="title-onboarding-2"
+                 class="text-lg-left text-center text-primary">CONVERSÃO INSTANTÂNEA</div>
+            <div id="sub-title-onboarding-2"
+                 class="text-center text-lg-left">
                 Um ambiente prático, seguro e de alta conversão
             </div>
-            <div id="description-onboarding-2" class="text-center text-lg-left">
+            <div id="description-onboarding-2"
+                 class="text-center text-lg-left">
                 Para finalizar transações via Pix, criamos o ambiente PIX, o último passo da conversão em venda.
             </div>
 
@@ -26,7 +31,8 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image"
+                                <img class="img-fluid"
+                                     alt="Image"
                                      src="{{ mix('build/global/img/pix/pix-landing.svg') }}">
                             </div>
                         </div>
@@ -38,7 +44,8 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image"
+                                <img class="img-fluid"
+                                     alt="Image"
                                      src="{{ mix('build/global/img/pix/pix-qr-code.svg') }}">
                             </div>
                         </div>
@@ -50,7 +57,8 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image"
+                                <img class="img-fluid"
+                                     alt="Image"
                                      src="{{ mix('build/global/img/pix/pix-info.svg') }}">
                             </div>
                         </div>
@@ -68,7 +76,9 @@
         </div>
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center mt-lg-5 mt-0">
-            <img class="img-fluid" alt="Image" id="img-onboarding"
+            <img class="img-fluid"
+                 alt="Image"
+                 id="img-onboarding"
                  src="{{ mix('build/global/img/pix/pix-environment.png') }}">
         </div>
     </div>

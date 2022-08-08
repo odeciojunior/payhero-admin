@@ -14,16 +14,14 @@ class DomainDestroyRecordRequest extends FormRequest
     public function rules()
     {
         switch ($this->method()) {
-            case 'POST':
-
+            case "POST":
                 return [
-                    'id_record' => 'required|string|max:255',
-                    'id_domain' => 'required|string|max:255',
+                    "id_record" => "required|string|max:255",
+                    "id_domain" => "required|string|max:255",
                 ];
 
                 break;
             default:
-
                 break;
         }
     }

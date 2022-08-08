@@ -35,35 +35,42 @@ class EvaluateAffiliateRequestSendEmailListener implements ShouldQueue
     public function handle(EvaluateAffiliateRequestEvent $event)
     {
         try {
-            $sendGridService           = new SendgridService();
-            $affiliateRequest          = $event->affiliateRequest->load('user', 'project');
+            $sendGridService = new SendgridService();
+            $affiliateRequest = $event->affiliateRequest->load("user", "project");
             $affiliateRequestPresenter = $affiliateRequest->present();
-            $user                      = $affiliateRequest->user;
-            $project                   = $affiliateRequest->project;
-            $idEncoded                 = Hashids::encode($project->id);
-            $data                      = [
-                'name'         => $user->name,
-                'project_name' => $project->name,
-                'date'         => $affiliateRequest->created_at->format('d/m/Y'),
-                'link'         => env('APP_URL') . '/projects',
+            $user = $affiliateRequest->user;
+            $project = $affiliateRequest->project;
+            $idEncoded = Hashids::encode($project->id);
+            $data = [
+                "name" => $user->name,
+                "project_name" => $project->name,
+                "date" => $affiliateRequest->created_at->format("d/m/Y"),
+                "link" => env("APP_URL") . "/projects",
             ];
 
-            if ($affiliateRequest->status == $affiliateRequestPresenter->getStatus('approved')) {
-                $templateId = 'd-f777e4ed8416473b8b2673923139db60';
+            if ($affiliateRequest->status == $affiliateRequestPresenter->getStatus("approved")) {
+                $templateId = "d-f777e4ed8416473b8b2673923139db60";
             } else {
-                $templateId = 'd-14c40a9bd9704f9e8999a5d8fdc9cf7c';
+                $templateId = "d-14c40a9bd9704f9e8999a5d8fdc9cf7c";
             }
 
-            $user->load('userNotification');
+            $user->load("userNotification");
 
             /**
              * Verifica se o usuario habilitou notificação email
              */
             if ($user->userNotification->affiliation) {
-                $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $user->email, $user->name, $templateId, $data);
+                $sendGridService->sendEmail(
+                    "help@cloudfox.net",
+                    "cloudfox",
+                    $user->email,
+                    $user->name,
+                    $templateId,
+                    $data
+                );
             }
         } catch (Exception $e) {
-            Log::warning('erro ao enviar email de avaliação de afiliado para o projeto ' . $project->id);
+            Log::warning("erro ao enviar email de avaliação de afiliado para o projeto " . $project->id);
             report($e);
         }
     }

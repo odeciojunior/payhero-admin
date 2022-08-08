@@ -16,14 +16,14 @@ class UpdateReasonSafe2payContestations extends Command
      *
      * @var string
      */
-    protected $signature = 'safe2pay:update-reason-sale-contestations';
+    protected $signature = "safe2pay:update-reason-sale-contestations";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -49,56 +49,56 @@ class UpdateReasonSafe2payContestations extends Command
         $total = 0;
         $itens = 0;
 
-        $saleContestations = DB::table('sale_contestations as c')->select('c.id','s.gateway_transaction_id')
-        ->join('sales as s','s.id','=','c.sale_id')
-        ->where('c.gateway_id',Gateway::SAFE2PAY_PRODUCTION_ID)->whereNull('c.reason')->get();
+        $saleContestations = DB::table("sale_contestations as c")
+            ->select("c.id", "s.gateway_transaction_id")
+            ->join("sales as s", "s.id", "=", "c.sale_id")
+            ->where("c.gateway_id", Gateway::SAFE2PAY_PRODUCTION_ID)
+            ->whereNull("c.reason")
+            ->get();
 
-        if(count($saleContestations) == 0){
-            exit;
+        if (count($saleContestations) == 0) {
+            exit();
         }
 
         do {
             $response = $safe->listChargebacks([
-                'PageNumber'=>$pageNumber,
-                'RowsPerPage'=>$limit,
+                "PageNumber" => $pageNumber,
+                "RowsPerPage" => $limit,
             ]);
 
             $total = 0;
-            if(!empty($response->ResponseDetail)){
+            if (!empty($response->ResponseDetail)) {
                 $total = $response->ResponseDetail->TotalItems;
                 $pageNumber++;
 
-                foreach($response->ResponseDetail->Objects as $row){
-
+                foreach ($response->ResponseDetail->Objects as $row) {
                     $this->line($row->IdTransaction);
                     $itens++;
 
-                    foreach($saleContestations as $key=>$contestation){
-                        if($contestation->gateway_transaction_id == $row->IdTransaction)
-                        {
+                    foreach ($saleContestations as $key => $contestation) {
+                        if ($contestation->gateway_transaction_id == $row->IdTransaction) {
                             $saleContestation = SaleContestation::find($contestation->id);
                             $saleContestation->update([
-                                'request_date'=>$row->ChargebackDate,
-                                'reason'=>$row->ReasonMessage,
-                                'nsu'=>$row->IdTransaction,
-                                'gateway_case_number'=>$row->CaseNumber,
-                                'data'=>json_encode($row),
-                                'expiration_date'=>$row->DisputeDueDate, //Data final para defesa da contestação.
+                                "request_date" => $row->ChargebackDate,
+                                "reason" => $row->ReasonMessage,
+                                "nsu" => $row->IdTransaction,
+                                "gateway_case_number" => $row->CaseNumber,
+                                "data" => json_encode($row),
+                                "expiration_date" => $row->DisputeDueDate, //Data final para defesa da contestação.
                             ]);
-                            $this->comment('Atualizando sale contestation '.$contestation->id);
+                            $this->comment("Atualizando sale contestation " . $contestation->id);
 
                             unset($saleContestations[$key]);
                         }
                     }
 
-                    if(count($saleContestations) == 0){
-                        exit;
+                    if (count($saleContestations) == 0) {
+                        exit();
                     }
                 }
 
-                $this->line($itens.'/'.$total);
+                $this->line($itens . "/" . $total);
             }
-
         } while ($itens < $total);
     }
 }

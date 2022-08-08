@@ -16,16 +16,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class CheckoutApiPostback extends Model
 {
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $fillable = [
-        'company_id',
-        'user_id',
-        'sent_data',
-        'response',
-        'created_at',
-        'updated_at'
-    ];
+    protected $fillable = ["company_id", "user_id", "sent_data", "response", "created_at", "updated_at"];
 
     /**
      * @return BelongsTo

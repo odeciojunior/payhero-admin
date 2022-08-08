@@ -14,17 +14,22 @@ class UpdateStatusCompanyDocumentsTable extends Migration
     public function up()
     {
         $companyDocumentModel = new CompanyDocument();
-        $companyModel         = new Company();
+        $companyModel = new Company();
 
-        $documents = $companyDocumentModel->with('company')->where('status', '=', null)->whereHas('company')->get();
+        $documents = $companyDocumentModel
+            ->with("company")
+            ->where("status", "=", null)
+            ->whereHas("company")
+            ->get();
         foreach ($documents as $document) {
-            if ($document->document_type_enum == $companyModel->present()->getDocumentType('bank_document_status')) {
-                $document->update(['status' => $document->company->bank_document_status]);
-            } else if ($document->document_type_enum == $companyModel->present()
-                                                                     ->getDocumentType('address_document_status')) {
-                $document->update(['status' => $document->company->address_document_status]);
+            if ($document->document_type_enum == $companyModel->present()->getDocumentType("bank_document_status")) {
+                $document->update(["status" => $document->company->bank_document_status]);
+            } elseif (
+                $document->document_type_enum == $companyModel->present()->getDocumentType("address_document_status")
+            ) {
+                $document->update(["status" => $document->company->address_document_status]);
             } else {
-                $document->update(['status' => $document->company->contract_document_status]);
+                $document->update(["status" => $document->company->contract_document_status]);
             }
         }
     }

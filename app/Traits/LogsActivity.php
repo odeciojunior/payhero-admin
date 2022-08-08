@@ -18,8 +18,8 @@ trait LogsActivity
 
     protected static function bootLogsActivity()
     {
-        static::eventsToBeRecorded()->each(function($eventName) {
-            return static::$eventName(function(Model $model) use ($eventName) {
+        static::eventsToBeRecorded()->each(function ($eventName) {
+            return static::$eventName(function (Model $model) use ($eventName) {
                 if (!$model->shouldLogEvent($eventName)) {
                     return;
                 }
@@ -28,7 +28,7 @@ trait LogsActivity
 
                 $logName = $model->getLogNameToUse($eventName);
 
-                if ($description == '') {
+                if ($description == "") {
                     return;
                 }
 
@@ -43,8 +43,8 @@ trait LogsActivity
                     ->performedOn($model)
                     ->withProperties($attrs);
 
-                if (method_exists($model, 'tapActivity')) {
-                    $logger->tap([$model, 'tapActivity'], $eventName);
+                if (method_exists($model, "tapActivity")) {
+                    $logger->tap([$model, "tapActivity"], $eventName);
                 }
 
                 $logger->log($description);
@@ -59,7 +59,7 @@ trait LogsActivity
 
     public function isLogEmpty($attrs): bool
     {
-        return empty($attrs['attributes'] ?? []) && empty($attrs['old'] ?? []);
+        return empty($attrs["attributes"] ?? []) && empty($attrs["old"] ?? []);
     }
 
     public function disableLogging()
@@ -78,7 +78,7 @@ trait LogsActivity
 
     public function activities(): MorphMany
     {
-        return $this->morphMany(ActivitylogServiceProvider::determineActivityModel(), 'subject');
+        return $this->morphMany(ActivitylogServiceProvider::determineActivityModel(), "subject");
     }
 
     public function getDescriptionForEvent(string $eventName): string
@@ -86,14 +86,14 @@ trait LogsActivity
         return $eventName;
     }
 
-    public function getLogNameToUse(string $eventName = ''): string
+    public function getLogNameToUse(string $eventName = ""): string
     {
         if (isset(static::$logName)) {
             return static::$logName;
-        } else if (!empty($eventName)) {
+        } elseif (!empty($eventName)) {
             return $eventName;
         } else {
-            return config('activitylog.default_log_name');
+            return config("activitylog.default_log_name");
         }
     }
 
@@ -106,14 +106,10 @@ trait LogsActivity
             return collect(static::$recordEvents);
         }
 
-        $events = collect([
-                              'created',
-                              'updated',
-                              'deleted',
-                          ]);
+        $events = collect(["created", "updated", "deleted"]);
 
         if (collect(class_uses_recursive(static::class))->contains(SoftDeletes::class)) {
-            $events->push('restored');
+            $events->push("restored");
         }
 
         return $events;
@@ -134,12 +130,12 @@ trait LogsActivity
             return false;
         }
 
-        if (!in_array($eventName, ['created', 'updated'])) {
+        if (!in_array($eventName, ["created", "updated"])) {
             return true;
         }
 
-        if (Arr::has($this->getDirty(), 'deleted_at')) {
-            if ($this->getDirty()['deleted_at'] === null) {
+        if (Arr::has($this->getDirty(), "deleted_at")) {
+            if ($this->getDirty()["deleted_at"] === null) {
                 return false;
             }
         }

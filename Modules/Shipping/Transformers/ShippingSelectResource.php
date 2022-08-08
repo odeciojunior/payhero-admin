@@ -9,10 +9,10 @@ class ShippingSelectResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => hashids_encode($this->id),
-            'name' => $this->name,
-            'information' => $this->information,
-            'type' => $this->type,
+            "id" => hashids_encode($this->id),
+            "name" => $this->name,
+            "information" => $this->information,
+            "type" => $this->type,
         ];
     }
 }

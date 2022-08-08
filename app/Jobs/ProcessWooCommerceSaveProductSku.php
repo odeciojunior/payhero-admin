@@ -28,7 +28,7 @@ class ProcessWooCommerceSaveProductSku implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(int $projectId, int $productId, int $variationId, array $data, int $tries=1)
+    public function __construct(int $projectId, int $productId, int $variationId, array $data, int $tries = 1)
     {
         $this->projectId = $projectId;
         $this->productId = $productId;
@@ -39,23 +39,20 @@ class ProcessWooCommerceSaveProductSku implements ShouldQueue
 
     public function handle()
     {
-        try{
-            
-            $integration = WooCommerceIntegration::where('project_id',$this->projectId)->first();
-            $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-            
-            $service->woocommerce->post('products/'.$this->productId.'/variations/'.$this->variationId.'/', $this->data);
-            
+        try {
+            $integration = WooCommerceIntegration::where("project_id", $this->projectId)->first();
+            $service = new WooCommerceService(
+                $integration->url_store,
+                $integration->token_user,
+                $integration->token_pass
+            );
 
-        }catch(Exception $e){
-            
+            $service->woocommerce->post(
+                "products/" . $this->productId . "/variations/" . $this->variationId . "/",
+                $this->data
+            );
+        } catch (Exception $e) {
             //report($e);
-            
-            
         }
-
-
     }
-
-    
 }

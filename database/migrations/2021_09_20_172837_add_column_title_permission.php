@@ -13,7 +13,6 @@ class AddColumnTitlePermission extends Migration
      */
     public function up()
     {
-
         DB::statement("ALTER TABLE permissions ADD COLUMN title VARCHAR(100) NULL DEFAULT NULL AFTER name;");
 
         DB::statement("UPDATE `permissions` SET title = 'Vendas - Gerenciar' WHERE id = 1");

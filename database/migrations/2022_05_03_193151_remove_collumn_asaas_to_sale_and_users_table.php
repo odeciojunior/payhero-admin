@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class RemoveCollumnAsaasToSaleAndUsersTable extends Migration
 {
-     /**
+    /**
      * Run the migrations.
      *
      * @return void
@@ -14,14 +14,13 @@ class RemoveCollumnAsaasToSaleAndUsersTable extends Migration
     public function up()
     {
         //asaas_alert e anticipation_id 'anticipation_status', 'anticipation_id' antifraud_observation
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn(['anticipation_status', 'anticipation_id']);
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn(["anticipation_status", "anticipation_id"]);
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('asaas_alert');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("asaas_alert");
         });
-
     }
 
     /**
@@ -31,14 +30,22 @@ class RemoveCollumnAsaasToSaleAndUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->string('anticipation_status')->nullable()->after('antifraud_observation');
-            $table->string('anticipation_id')->nullable()->after('anticipation_status');;
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->string("anticipation_status")
+                ->nullable()
+                ->after("antifraud_observation");
+            $table
+                ->string("anticipation_id")
+                ->nullable()
+                ->after("anticipation_status");
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('asaas_alert')->default(false)->after('mkt_information');;
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("asaas_alert")
+                ->default(false)
+                ->after("mkt_information");
         });
-
     }
 }

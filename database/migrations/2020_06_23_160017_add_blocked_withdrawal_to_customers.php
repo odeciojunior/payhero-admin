@@ -13,10 +13,11 @@ class AddBlockedWithdrawalToCustomers extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->boolean('blocked_withdrawal')
+        Schema::table("customers", function (Blueprint $table) {
+            $table
+                ->boolean("blocked_withdrawal")
                 ->default(0)
-                ->after('balance');
+                ->after("balance");
         });
     }
 
@@ -27,8 +28,8 @@ class AddBlockedWithdrawalToCustomers extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn('blocked_withdrawal');
+        Schema::table("customers", function (Blueprint $table) {
+            $table->dropColumn("blocked_withdrawal");
         });
     }
 }

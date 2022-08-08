@@ -14,12 +14,16 @@ class AddPurchaseAllInPixels extends Migration
      */
     public function up()
     {
-        Schema::table('pixels', function (Blueprint $table) {
-            $table->boolean('purchase_all')->default(true)->after('send_value_checkout');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->boolean("purchase_all")
+                ->default(true)
+                ->after("send_value_checkout");
         });
 
-        foreach(Pixel::where('platform', 'google_adwords')->get() as  $pixel) {
-            $sum = $pixel->checkout +
+        foreach (Pixel::where("platform", "google_adwords")->get() as $pixel) {
+            $sum =
+                $pixel->checkout +
                 $pixel->send_value_checkout +
                 $pixel->purchase_all +
                 $pixel->basic_data +
@@ -34,18 +38,18 @@ class AddPurchaseAllInPixels extends Migration
 
             if ($sum > 1) {
                 $pixel->update([
-                    'checkout' => false,
-                    'send_value_checkout' => false,
-                    'purchase_all' => true,
-                    'basic_data' => false,
-                    'delivery' => false,
-                    'coupon' => false,
-                    'payment_info' => false,
-                    'purchase_card' => false,
-                    'purchase_boleto' => false,
-                    'purchase_pix' => false,
-                    'upsell' => false,
-                    'purchase_upsell' => false,
+                    "checkout" => false,
+                    "send_value_checkout" => false,
+                    "purchase_all" => true,
+                    "basic_data" => false,
+                    "delivery" => false,
+                    "coupon" => false,
+                    "payment_info" => false,
+                    "purchase_card" => false,
+                    "purchase_boleto" => false,
+                    "purchase_pix" => false,
+                    "upsell" => false,
+                    "purchase_upsell" => false,
                 ]);
             }
         }
@@ -58,8 +62,8 @@ class AddPurchaseAllInPixels extends Migration
      */
     public function down()
     {
-        Schema::table('pixels', function (Blueprint $table) {
-            $table->dropColumn('purchase_all');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn("purchase_all");
         });
     }
 }

@@ -13,9 +13,15 @@ class AddColumnPurchasePixAndValuePercentagePurchasePixToPixels extends Migratio
      */
     public function up()
     {
-        Schema::table('pixels', function (Blueprint $table) {
-            $table->string('purchase_pix')->nullable()->after('purchase_card');
-            $table->integer('value_percentage_purchase_pix')->default(100)->after('value_percentage_purchase_boleto');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->string("purchase_pix")
+                ->nullable()
+                ->after("purchase_card");
+            $table
+                ->integer("value_percentage_purchase_pix")
+                ->default(100)
+                ->after("value_percentage_purchase_boleto");
         });
     }
 
@@ -26,8 +32,8 @@ class AddColumnPurchasePixAndValuePercentagePurchasePixToPixels extends Migratio
      */
     public function down()
     {
-        Schema::table('pixels', function (Blueprint $table) {
-            $table->dropColumn(['purchase_pix', 'value_percentage_purchase_pix']);
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn(["purchase_pix", "value_percentage_purchase_pix"]);
         });
     }
 }

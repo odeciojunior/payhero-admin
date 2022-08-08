@@ -13,8 +13,11 @@ class AddColumnRefusedReasonTableUserDocuments extends Migration
      */
     public function up()
     {
-        Schema::table('user_documents', function(Blueprint $table) {
-            $table->string('refused_reason')->nullable()->after('status');
+        Schema::table("user_documents", function (Blueprint $table) {
+            $table
+                ->string("refused_reason")
+                ->nullable()
+                ->after("status");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnRefusedReasonTableUserDocuments extends Migration
      */
     public function down()
     {
-        Schema::table('user_documents', function(Blueprint $table) {
-            $table->dropColumn('refused_reason');
+        Schema::table("user_documents", function (Blueprint $table) {
+            $table->dropColumn("refused_reason");
         });
     }
 }

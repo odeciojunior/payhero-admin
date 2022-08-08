@@ -23,17 +23,11 @@ class NethoneAntifraudTransaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'nethone_antifraud_transaction';
+    protected $table = "nethone_antifraud_transaction";
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $fillable = [
-        'sale_id',
-        'transaction_id',
-        'result',
-        'created_at',
-        'updated_at'
-    ];
+    protected $fillable = ["sale_id", "transaction_id", "result", "created_at", "updated_at"];
 
     public function sale(): BelongsTo
     {

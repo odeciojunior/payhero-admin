@@ -13,9 +13,9 @@ class Colonizer extends Achievement implements AchievementCheck
 
     public function userAchieved(User $user): bool
     {
-        $activeInvites = Invitation::join('users', 'user_invited', '=', 'users.id')
-            ->where('invite', $user->id)
-            ->where('invitations.status', Invitation::INVITATION_ACCEPTED)
+        $activeInvites = Invitation::join("users", "user_invited", "=", "users.id")
+            ->where("invite", $user->id)
+            ->where("invitations.status", Invitation::INVITATION_ACCEPTED)
             ->count();
 
         return $activeInvites >= 10;

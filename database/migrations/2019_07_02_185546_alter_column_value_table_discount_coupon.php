@@ -12,8 +12,8 @@ class AlterColumnValueTableDiscountCoupon extends Migration
      */
     public function up()
     {
-        Schema::table('discount_coupons', function(Blueprint $table) {
-            $table->string('value')->change();
+        Schema::table("discount_coupons", function (Blueprint $table) {
+            $table->string("value")->change();
         });
     }
 
@@ -23,8 +23,8 @@ class AlterColumnValueTableDiscountCoupon extends Migration
      */
     public function down()
     {
-        Schema::table('discount_coupons', function(Blueprint $table) {
-            $table->integer('value');
+        Schema::table("discount_coupons", function (Blueprint $table) {
+            $table->integer("value");
         });
     }
 }

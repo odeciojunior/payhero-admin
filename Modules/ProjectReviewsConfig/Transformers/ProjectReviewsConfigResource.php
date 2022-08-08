@@ -17,9 +17,9 @@ class ProjectReviewsConfigResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'                        => Hashids::encode($this->id),
-            'reviews_config_icon_type'  => $this->reviews_config_icon_type,
-            'reviews_config_icon_color' => $this->reviews_config_icon_color
+            "id" => Hashids::encode($this->id),
+            "reviews_config_icon_type" => $this->reviews_config_icon_type,
+            "reviews_config_icon_color" => $this->reviews_config_icon_color,
         ];
     }
 }

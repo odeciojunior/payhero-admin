@@ -10,7 +10,6 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PushNotificationPresenter;
 use App\Traits\LogsActivity;
 
-
 /**
  * @property int $id
  * @property int $sale_id
@@ -34,17 +33,17 @@ class PushNotification extends Model
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'user_id',
-        'withdrawal_id',
-        'postback_data',
-        'onesignal_response',
-        'processed_flag',
-        'postback_valid_flag',
-        'machine_result',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "sale_id",
+        "user_id",
+        "withdrawal_id",
+        "postback_data",
+        "onesignal_response",
+        "processed_flag",
+        "postback_valid_flag",
+        "machine_result",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool

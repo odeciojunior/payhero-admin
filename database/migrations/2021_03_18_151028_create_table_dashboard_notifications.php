@@ -13,20 +13,26 @@ class CreateTableDashboardNotifications extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('dashboard_notifications');
+        Schema::dropIfExists("dashboard_notifications");
 
-        Schema::create('dashboard_notifications', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('user_id')->unsigned()->index();
-            $table->bigInteger('subject_id');
-            $table->string('subject_type');
-            $table->timestamp('read_at')->nullable();
+        Schema::create("dashboard_notifications", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table
+                ->integer("user_id")
+                ->unsigned()
+                ->index();
+            $table->bigInteger("subject_id");
+            $table->string("subject_type");
+            $table->timestamp("read_at")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('dashboard_notifications', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("dashboard_notifications", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -37,6 +43,6 @@ class CreateTableDashboardNotifications extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dashboard_notifications');
+        Schema::dropIfExists("dashboard_notifications");
     }
 }

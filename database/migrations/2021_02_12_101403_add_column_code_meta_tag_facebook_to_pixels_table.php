@@ -13,8 +13,11 @@ class AddColumnCodeMetaTagFacebookToPixelsTable extends Migration
      */
     public function up()
     {
-        Schema::table('pixels', function (Blueprint $table) {
-            $table->string('code_meta_tag_facebook')->nullable()->after('apply_on_plans');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->string("code_meta_tag_facebook")
+                ->nullable()
+                ->after("apply_on_plans");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnCodeMetaTagFacebookToPixelsTable extends Migration
      */
     public function down()
     {
-        Schema::table('pixels', function (Blueprint $table) {
-            $table->dropColumn(['code_meta_tag_facebook']);
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn(["code_meta_tag_facebook"]);
         });
     }
 }

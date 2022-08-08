@@ -13,8 +13,11 @@ class AlterTableTrackingsProductId extends Migration
      */
     public function up()
     {
-        Schema::table('trackings', function (Blueprint $table) {
-            $table->unsignedBigInteger('product_id')->nullable()->change();
+        Schema::table("trackings", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("product_id")
+                ->nullable()
+                ->change();
         });
     }
 

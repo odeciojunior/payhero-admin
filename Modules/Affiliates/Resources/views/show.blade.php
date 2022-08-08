@@ -1,4 +1,5 @@
-<table class='table-hover table-striped' style='width: 100%'>
+<table class='table-hover table-striped'
+       style='width: 100%'>
     <tbody>
         <tr>
             <td class="table-title">Nome</td>

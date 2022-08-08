@@ -13,8 +13,12 @@ class ChangeColumnDomainToUnderAttacksTable extends Migration
      */
     public function up()
     {
-        Schema::table('under_attacks', function (Blueprint $table) {
-            $table->integer('domain_id')->unsigned()->nullable()->change();
+        Schema::table("under_attacks", function (Blueprint $table) {
+            $table
+                ->integer("domain_id")
+                ->unsigned()
+                ->nullable()
+                ->change();
         });
     }
 
@@ -25,8 +29,12 @@ class ChangeColumnDomainToUnderAttacksTable extends Migration
      */
     public function down()
     {
-        Schema::table('under_attacks', function (Blueprint $table) {
-            $table->integer('domain_id')->unsigned()->nullable(false)->change();
+        Schema::table("under_attacks", function (Blueprint $table) {
+            $table
+                ->integer("domain_id")
+                ->unsigned()
+                ->nullable(false)
+                ->change();
         });
     }
 }

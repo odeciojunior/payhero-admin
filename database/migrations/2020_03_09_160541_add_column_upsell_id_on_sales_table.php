@@ -13,10 +13,11 @@ class AddColumnUpsellIdOnSalesTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->unsignedBigInteger('upsell_id')
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("upsell_id")
                 ->nullable()
-                ->after('gateway_status');
+                ->after("gateway_status");
         });
     }
 
@@ -27,8 +28,8 @@ class AddColumnUpsellIdOnSalesTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('upsell_id');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("upsell_id");
         });
     }
 }

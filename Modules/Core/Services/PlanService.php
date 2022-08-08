@@ -7,12 +7,11 @@ use Modules\Core\Entities\Project;
 
 class PlanService
 {
-
     function getCheckoutLink(Plan $plan)
     {
-        return count(
-            $plan->project->domains
-        ) > 0 ? 'https://checkout.' . $plan->project->domains[0]->name . '/' . $plan->code : '';
+        return count($plan->project->domains) > 0
+            ? "https://checkout." . $plan->project->domains[0]->name . "/" . $plan->code
+            : "";
     }
 
     public function getPlansFilter(int $projectId, string $plan)
@@ -21,25 +20,25 @@ class PlanService
 
         if (!empty($plan)) {
             return $planModel
-            ->with('productsPlans')
-            ->where('project_id', $projectId)
-            ->where('name', 'like', '%'. $plan .'%')
-            ->take(12)
-            ->get();
+                ->with("productsPlans")
+                ->where("project_id", $projectId)
+                ->where("name", "like", "%" . $plan . "%")
+                ->take(12)
+                ->get();
         } else {
             return $planModel
-            ->with('productsPlans')
-            ->where('project_id', $projectId)
-            ->take(12)
-            ->get();
+                ->with("productsPlans")
+                ->where("project_id", $projectId)
+                ->take(12)
+                ->get();
         }
     }
 
     public function getPlansApplyDecoded($plans): array
     {
         $applyPlanArray = [];
-        if (in_array('all', $plans)) {
-            $applyPlanArray[] = 'all';
+        if (in_array("all", $plans)) {
+            $applyPlanArray[] = "all";
         } else {
             foreach ($plans as $value) {
                 $applyPlanArray[] = hashids_decode($value);

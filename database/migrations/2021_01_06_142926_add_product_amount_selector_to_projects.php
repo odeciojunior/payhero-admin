@@ -13,8 +13,8 @@ class AddProductAmountSelectorToProjects extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->boolean('product_amount_selector')->default(true);
+        Schema::table("projects", function (Blueprint $table) {
+            $table->boolean("product_amount_selector")->default(true);
         });
     }
 
@@ -25,8 +25,8 @@ class AddProductAmountSelectorToProjects extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->dropColumn('product_amount_selector');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("product_amount_selector");
         });
     }
 }

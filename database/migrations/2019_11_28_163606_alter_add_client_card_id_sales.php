@@ -12,11 +12,17 @@ class AlterAddClientCardIdSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->unsignedBigInteger('client_card_id')->nullable()->after('client_id');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("client_card_id")
+                ->nullable()
+                ->after("client_id");
         });
-        Schema::table('sales', function(Blueprint $table) {
-            $table->foreign('client_card_id')->references('id')->on('client_cards');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->foreign("client_card_id")
+                ->references("id")
+                ->on("client_cards");
         });
     }
 
@@ -26,8 +32,8 @@ class AlterAddClientCardIdSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dropColumn('client_card_id');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("client_card_id");
         });
     }
 }

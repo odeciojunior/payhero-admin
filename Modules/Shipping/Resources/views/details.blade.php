@@ -1,7 +1,10 @@
-<table id="shipping-details-table" class='table' style='width: 100%'>
+<table id="shipping-details-table"
+       class='table'
+       style='width: 100%'>
     <tbody>
         <tr>
-            <td style='width: 265px' class="table-title">Tipo</td>
+            <td style='width: 265px'
+                class="table-title">Tipo</td>
             <td style='width: 20px'></td>
             <td class='text-left shipping-type'></td>
         </tr>

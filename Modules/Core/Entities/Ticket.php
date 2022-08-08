@@ -69,27 +69,27 @@ class Ticket extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'customer_id',
-        'subject',
-        'subject_enum',
-        'description',
-        'ticket_category_enum',
-        'ticket_status_enum',
-        'last_message_type_enum',
-        'last_message_date',
-        'mediation_notified',
-        'ignore_balance_block',
-        'classification_enum',
-        'average_response_time',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "sale_id",
+        "customer_id",
+        "subject",
+        "subject_enum",
+        "description",
+        "ticket_category_enum",
+        "ticket_status_enum",
+        "last_message_type_enum",
+        "last_message_date",
+        "mediation_notified",
+        "ignore_balance_block",
+        "classification_enum",
+        "average_response_time",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -116,12 +116,12 @@ class Ticket extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'O chamado foi deletado.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'O chamado foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Chamado criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "O chamado foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "O chamado foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Chamado criado.";
         } else {
             $activity->description = $eventName;
         }

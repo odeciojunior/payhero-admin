@@ -13,17 +13,16 @@ class ChangeUsersTableAddAnticipationData extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table("users", function (Blueprint $table) {
+            $table->integer("debit_card_antecipation_money_days")->default(5);
+            $table->boolean("antecipation_enabled_flag")->default(false);
 
-            $table->integer('debit_card_antecipation_money_days')->default(5);
-            $table->boolean('antecipation_enabled_flag')->default(false);
-
-            $table->dropColumn('release_money_days');
-            $table->dropColumn('call_amount');
-            $table->dropColumn('email_amount');
-            $table->dropColumn('foxcoin');
-            $table->dropColumn('sms_zenvia_amount');
-            $table->dropColumn('score');
+            $table->dropColumn("release_money_days");
+            $table->dropColumn("call_amount");
+            $table->dropColumn("email_amount");
+            $table->dropColumn("foxcoin");
+            $table->dropColumn("sms_zenvia_amount");
+            $table->dropColumn("score");
         });
     }
 
@@ -34,9 +33,9 @@ class ChangeUsersTableAddAnticipationData extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('debit_card_antecipation_money_days');
-            $table->dropColumn('antecipation_enabled_flag');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("debit_card_antecipation_money_days");
+            $table->dropColumn("antecipation_enabled_flag");
         });
     }
 }

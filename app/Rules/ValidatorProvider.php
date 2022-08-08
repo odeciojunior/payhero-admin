@@ -21,7 +21,7 @@ class ValidatorProvider extends ServiceProvider
     public function boot()
     {
         $me = $this;
-        $this->app['validator']->resolver(function ($translator, $data, $rules, $messages, $attributes) use ($me) {
+        $this->app["validator"]->resolver(function ($translator, $data, $rules, $messages, $attributes) use ($me) {
             $messages += $me->getMessages();
 
             return new Validator($translator, $data, $rules, $messages, $attributes);
@@ -31,9 +31,10 @@ class ValidatorProvider extends ServiceProvider
     protected function getMessages()
     {
         return [
-            'cnpj' => 'CNPJ inválido',
-            'cpf' => 'CPF inválido',
-            'template_string_min_visitor_in_finalizing_purchase_config' => 'É necessario ter o template {visitantes} no texto.'
+            "cnpj" => "CNPJ inválido",
+            "cpf" => "CPF inválido",
+            "template_string_min_visitor_in_finalizing_purchase_config" =>
+                "É necessario ter o template {visitantes} no texto.",
         ];
     }
 

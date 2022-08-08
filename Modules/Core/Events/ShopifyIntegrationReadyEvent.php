@@ -31,7 +31,7 @@ class ShopifyIntegrationReadyEvent
      */
     public function __construct(User $user, Project $project)
     {
-        $this->user    = $user;
+        $this->user = $user;
         $this->project = $project;
     }
 
@@ -41,6 +41,6 @@ class ShopifyIntegrationReadyEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel("channel-name");
     }
 }

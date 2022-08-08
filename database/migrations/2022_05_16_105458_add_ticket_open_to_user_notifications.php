@@ -13,8 +13,11 @@ class AddTicketOpenToUserNotifications extends Migration
      */
     public function up()
     {
-        Schema::table('user_notifications', function (Blueprint $table) {
-            $table->boolean('ticket_open')->default(true)->after('shopify');
+        Schema::table("user_notifications", function (Blueprint $table) {
+            $table
+                ->boolean("ticket_open")
+                ->default(true)
+                ->after("shopify");
         });
     }
 
@@ -25,8 +28,8 @@ class AddTicketOpenToUserNotifications extends Migration
      */
     public function down()
     {
-        Schema::table('user_notifications', function (Blueprint $table) {
-            $table->dropColumn(['ticket_open']);
+        Schema::table("user_notifications", function (Blueprint $table) {
+            $table->dropColumn(["ticket_open"]);
         });
     }
 }

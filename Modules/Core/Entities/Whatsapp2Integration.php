@@ -33,29 +33,29 @@ class Whatsapp2Integration extends Model
 {
     use SoftDeletes, LogsActivity;
 
-    public const STATUS_PENDING = 'pending';
-    public const STATUS_PAID = 'paid';
-    public const STATUS_CANCELLED = 'order_cancelled';
-    public const STATUS_VOIDED = 'voided';
+    public const STATUS_PENDING = "pending";
+    public const STATUS_PAID = "paid";
+    public const STATUS_CANCELLED = "order_cancelled";
+    public const STATUS_VOIDED = "voided";
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     protected $fillable = [
-        'user_id',
-        'project_id',
-        'api_token',
-        'url_order',
-        'url_checkout',
-        'billet_generated',
-        'billet_paid',
-        'credit_card_refused',
-        'credit_card_paid',
-        'abandoned_cart',
-        'pix_expired',
-        'pix_paid',
-        'deleted_at',
-        'created_at',
-        'updated_at',
+        "user_id",
+        "project_id",
+        "api_token",
+        "url_order",
+        "url_checkout",
+        "billet_generated",
+        "billet_paid",
+        "credit_card_refused",
+        "credit_card_paid",
+        "abandoned_cart",
+        "pix_expired",
+        "pix_paid",
+        "deleted_at",
+        "created_at",
+        "updated_at",
     ];
 
     protected static $logFillable = true;
@@ -75,13 +75,13 @@ class Whatsapp2Integration extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
+            case "deleted":
                 $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi deletedo.";
                 break;
-            case 'created':
+            case "created":
                 $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi criado";
                 break;
-            case 'updated':
+            case "updated":
                 $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi atualizada.";
                 break;
             default:

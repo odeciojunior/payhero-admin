@@ -13,17 +13,20 @@ class CreateGatewayFlagTaxesTable extends Migration
      */
     public function up()
     {
-        Schema::create('gateway_flag_taxes', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('card_flag_id');
-            $table->integer('installments');
-            $table->tinyInteger('type_enum')->comment('1 - credit  2 - debit');
-            $table->decimal('percent', 8, 2);
-            $table->boolean('active_flag')->default(1);
+        Schema::create("gateway_flag_taxes", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedBigInteger("card_flag_id");
+            $table->integer("installments");
+            $table->tinyInteger("type_enum")->comment("1 - credit  2 - debit");
+            $table->decimal("percent", 8, 2);
+            $table->boolean("active_flag")->default(1);
             $table->timestamps();
         });
-        Schema::table('gateway_flag_taxes', function(Blueprint $table) {
-            $table->foreign('card_flag_id')->references('id')->on('card_flags');
+        Schema::table("gateway_flag_taxes", function (Blueprint $table) {
+            $table
+                ->foreign("card_flag_id")
+                ->references("id")
+                ->on("card_flags");
         });
         //Zoop - Card(Padrão)
         $sql = "INSERT INTO gateway_flag_taxes (card_flag_id,installments,percent,type_enum,created_at, updated_at) ";
@@ -98,6 +101,6 @@ class CreateGatewayFlagTaxesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gateway_flag_taxes');
+        Schema::dropIfExists("gateway_flag_taxes");
     }
 }

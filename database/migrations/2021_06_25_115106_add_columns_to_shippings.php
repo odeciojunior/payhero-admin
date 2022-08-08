@@ -13,13 +13,15 @@ class AddColumnsToShippings extends Migration
      */
     public function up()
     {
-        Schema::table('shippings', function (Blueprint $table) {
-            $table->boolean('receipt')
+        Schema::table("shippings", function (Blueprint $table) {
+            $table
+                ->boolean("receipt")
                 ->default(false)
-                ->after('melhorenvio_integration_id');
-            $table->boolean('own_hand')
+                ->after("melhorenvio_integration_id");
+            $table
+                ->boolean("own_hand")
                 ->default(false)
-                ->after('receipt');
+                ->after("receipt");
         });
     }
 
@@ -30,8 +32,8 @@ class AddColumnsToShippings extends Migration
      */
     public function down()
     {
-        Schema::table('shippings', function (Blueprint $table) {
-            $table->dropColumn(['receipt', 'own_hand']);
+        Schema::table("shippings", function (Blueprint $table) {
+            $table->dropColumn(["receipt", "own_hand"]);
         });
     }
 }

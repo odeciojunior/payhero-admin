@@ -24,20 +24,11 @@ class SiteInvitationRequest extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'site_invitations_requests';
+    protected $table = "site_invitations_requests";
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'surname',
-        'email',
-        'billing',
-        'celphone',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ["name", "surname", "email", "billing", "celphone", "created_at", "updated_at", "deleted_at"];
     /**
      * @var bool
      */

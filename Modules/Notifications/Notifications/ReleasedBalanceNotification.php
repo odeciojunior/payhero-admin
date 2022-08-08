@@ -38,7 +38,7 @@ class ReleasedBalanceNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ["database"];
     }
 
     /**
@@ -48,7 +48,7 @@ class ReleasedBalanceNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->message,
+            "message" => $this->message,
         ];
     }
 }

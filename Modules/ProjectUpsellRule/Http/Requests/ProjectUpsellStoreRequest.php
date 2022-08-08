@@ -14,14 +14,14 @@ class ProjectUpsellStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required',
-            'description' => 'required',
-            'discount' => 'nullable',
-            'active_flag' => 'nullable',
-            'use_variants' => 'nullable',
-            'apply_on_shipping' => 'required|array',
-            'apply_on_plans' => 'required|array',
-            'offer_on_plans' => 'required|array|max:5',
+            "project_id" => "required",
+            "description" => "required",
+            "discount" => "nullable",
+            "active_flag" => "nullable",
+            "use_variants" => "nullable",
+            "apply_on_shipping" => "required|array",
+            "apply_on_plans" => "required|array",
+            "offer_on_plans" => "required|array|max:5",
         ];
     }
 
@@ -37,12 +37,12 @@ class ProjectUpsellStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'description.required' => 'O campo Descrição é obrigatório',
-            'discount.required' => 'O campo Desconto é obrigatório',
-            'apply_on_shipping.required' => 'O campo Ao selecionar o frete é obrigatório',
-            'apply_on_plans.required' => 'O campo Ao comprar o plano é obrigatório',
-            'offer_on_plans.required' => 'O campo Oferecer o plano é obrigatório',
-            'offer_on_plans.max' => 'O campo Oferecer o plano não pode ter mais de 5 planos',
+            "description.required" => "O campo Descrição é obrigatório",
+            "discount.required" => "O campo Desconto é obrigatório",
+            "apply_on_shipping.required" => "O campo Ao selecionar o frete é obrigatório",
+            "apply_on_plans.required" => "O campo Ao comprar o plano é obrigatório",
+            "offer_on_plans.required" => "O campo Oferecer o plano é obrigatório",
+            "offer_on_plans.max" => "O campo Oferecer o plano não pode ter mais de 5 planos",
         ];
     }
 }

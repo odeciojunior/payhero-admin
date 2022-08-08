@@ -6,87 +6,60 @@ class BrazilStatesService
 {
     public static function getStatePopulation($state)
     {
-        if($state == "RR"){
+        if ($state == "RR") {
             return 652713;
-        }
-        elseif($state == "AP"){
+        } elseif ($state == "AP") {
             return 877613;
-        }
-        elseif($state == "AM"){
+        } elseif ($state == "AM") {
             return 4269995;
-        }
-        elseif($state == "PA"){
+        } elseif ($state == "PA") {
             return 8777124;
-        }
-        elseif($state == "AC"){
+        } elseif ($state == "AC") {
             return 906876;
-        }
-        elseif($state == "RO"){
+        } elseif ($state == "RO") {
             return 1815278;
-        }
-        elseif($state == "TO"){
+        } elseif ($state == "TO") {
             return 1607363;
-        }
-        elseif($state == "MA"){
+        } elseif ($state == "MA") {
             return 7153262;
-        }
-        elseif($state == "PI"){
+        } elseif ($state == "PI") {
             return 3289290;
-        }
-        elseif($state == "CE"){
+        } elseif ($state == "CE") {
             return 9240580;
-        }
-        elseif($state == "RN"){
+        } elseif ($state == "RN") {
             return 3560903;
-        }
-        elseif($state == "PB"){
+        } elseif ($state == "PB") {
             return 4059905;
-        }
-        elseif($state == "PE"){
+        } elseif ($state == "PE") {
             return 9674793;
-        }
-        elseif($state == "AL"){
+        } elseif ($state == "AL") {
             return 3365351;
-        }
-        elseif($state == "SE"){
+        } elseif ($state == "SE") {
             return 2338474;
-        }
-        elseif($state == "BA"){
+        } elseif ($state == "BA") {
             return 14985284;
-        }
-        elseif($state == "MT"){
+        } elseif ($state == "MT") {
             return 3567234;
-        }
-        elseif($state == "DF"){
+        } elseif ($state == "DF") {
             return 3094325;
-        }
-        elseif($state == "GO"){
+        } elseif ($state == "GO") {
             return 7206589;
-        }
-        elseif($state == "MS"){
+        } elseif ($state == "MS") {
             return 2839188;
-        }
-        elseif($state == "MG"){
+        } elseif ($state == "MG") {
             return 21411923;
-        }
-        elseif($state == "ES"){
+        } elseif ($state == "ES") {
             return 4108508;
-        }
-        elseif($state == "RJ"){
+        } elseif ($state == "RJ") {
             return 17463349;
-        }
-        elseif($state == "SP"){
+        } elseif ($state == "SP") {
             return 46649132;
-        }
-        elseif($state == "PR"){
+        } elseif ($state == "PR") {
             return 11597484;
-        }
-        elseif($state == "SC"){
+        } elseif ($state == "SC") {
             return 7338473;
-        }
-        elseif($state == "RS"){
+        } elseif ($state == "RS") {
             return 11466630;
         }
     }
 }
-

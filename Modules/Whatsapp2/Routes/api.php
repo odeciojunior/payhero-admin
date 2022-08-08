@@ -13,13 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => ['auth:api', 'scopes:admin','permission:apps']], function() {
+Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:apps"]], function () {
+    Route::get("apps/whatsapp2", "Whatsapp2ApiController@index");
+    Route::get("apps/whatsapp2/{id}", "Whatsapp2ApiController@show");
+    Route::get("apps/whatsapp2/{id}/edit", "Whatsapp2ApiController@edit");
 
-    Route::get('apps/whatsapp2', 'Whatsapp2ApiController@index');
-    Route::get('apps/whatsapp2/{id}', 'Whatsapp2ApiController@show');
-    Route::get('apps/whatsapp2/{id}/edit', 'Whatsapp2ApiController@edit');
-
-    Route::apiResource('apps/whatsapp2', 'Whatsapp2ApiController')
-         ->only('create', 'store', 'update', 'destroy')->middleware('permission:apps_manage');
-
+    Route::apiResource("apps/whatsapp2", "Whatsapp2ApiController")
+        ->only("create", "store", "update", "destroy")
+        ->middleware("permission:apps_manage");
 });

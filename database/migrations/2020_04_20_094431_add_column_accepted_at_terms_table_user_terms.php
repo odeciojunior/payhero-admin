@@ -12,10 +12,11 @@ class AddColumnAcceptedAtTermsTableUserTerms extends Migration
      */
     public function up()
     {
-        Schema::table('user_terms', function(Blueprint $table) {
-            $table->dateTime('accepted_at_terms')
-                  ->nullable()
-                  ->after('accepted_at');
+        Schema::table("user_terms", function (Blueprint $table) {
+            $table
+                ->dateTime("accepted_at_terms")
+                ->nullable()
+                ->after("accepted_at");
         });
     }
 
@@ -25,8 +26,8 @@ class AddColumnAcceptedAtTermsTableUserTerms extends Migration
      */
     public function down()
     {
-        Schema::table('user_terms', function(Blueprint $table) {
-            $table->dropColumn('accepted_at_terms');
+        Schema::table("user_terms", function (Blueprint $table) {
+            $table->dropColumn("accepted_at_terms");
         });
     }
 }

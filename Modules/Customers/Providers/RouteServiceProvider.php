@@ -11,7 +11,7 @@ class RouteServiceProvider extends ServiceProvider
      * The module namespace to assume when generating URLs to actions.
      * @var string
      */
-    protected $moduleNamespace = 'Modules\Customers\Http\Controllers';
+    protected $moduleNamespace = "Modules\Customers\Http\Controllers";
 
     /**
      * Called before routes are registered.
@@ -41,9 +41,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware('web')
-             ->namespace($this->moduleNamespace)
-             ->group(__DIR__ . '/../Routes/web.php');
+        Route::middleware("web")
+            ->namespace($this->moduleNamespace)
+            ->group(__DIR__ . "/../Routes/web.php");
     }
 
     /**
@@ -53,9 +53,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->moduleNamespace)
-             ->group(__DIR__ . '/../Routes/api.php');
+        Route::prefix("api")
+            ->middleware("api")
+            ->namespace($this->moduleNamespace)
+            ->group(__DIR__ . "/../Routes/api.php");
     }
 }

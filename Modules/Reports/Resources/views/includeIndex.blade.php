@@ -1,15 +1,30 @@
 <div class="nav-tabs-line">
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-vendas-tab" data-toggle="tab" href="#nav-vendas"
-           role="tab" aria-controls="nav-vendas" aria-selected="true">Vendas
+    <div class="nav nav-tabs"
+         id="nav-tab"
+         role="tablist">
+        <a class="nav-item nav-link active"
+           id="nav-vendas-tab"
+           data-toggle="tab"
+           href="#nav-vendas"
+           role="tab"
+           aria-controls="nav-vendas"
+           aria-selected="true">Vendas
         </a>
-        <a class="nav-item nav-link" id="nav-visitas-tab" data-toggle="tab" href="#nav-visitas"
-           role="tab" aria-controls="nav-visitas" aria-selected="false">Visitas
+        <a class="nav-item nav-link"
+           id="nav-visitas-tab"
+           data-toggle="tab"
+           href="#nav-visitas"
+           role="tab"
+           aria-controls="nav-visitas"
+           aria-selected="false">Visitas
         </a>
     </div>
 </div>
-<div class="tab-content gutter_top mt-15 gutter_bottom mb-30" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-vendas" role="tabpanel">
+<div class="tab-content gutter_top mt-15 gutter_bottom mb-30"
+     id="nav-tabContent">
+    <div class="tab-pane fade show active"
+         id="nav-vendas"
+         role="tabpanel">
         <div class="row justify-content-between">
             <div class="col-lg-12">
                 <div class="card shadow">
@@ -211,7 +226,9 @@
         </div>
     </div>
     <!-- VISITAS -->
-    <div class="tab-pane fade" id="nav-visitas" role="tabpanel">
+    <div class="tab-pane fade"
+         id="nav-visitas"
+         role="tabpanel">
         <div class="row justify-content-between">
             <div class="col-lg-12">
                 <div class="card shadow">

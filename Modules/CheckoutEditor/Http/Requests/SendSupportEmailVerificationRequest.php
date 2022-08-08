@@ -9,8 +9,8 @@ class SendSupportEmailVerificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|string',
-            'support_email' => 'required|email',
+            "id" => "required|string",
+            "support_email" => "required|email",
         ];
     }
 

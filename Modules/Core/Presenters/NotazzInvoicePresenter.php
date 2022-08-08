@@ -19,45 +19,45 @@ class NotazzInvoicePresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'send';
+                    return "send";
                 case 3:
-                    return 'completed';
+                    return "completed";
                 case 4:
-                    return 'error';
+                    return "error";
                 case 5:
-                    return 'in_process';
+                    return "in_process";
                 case 6:
-                    return 'error_max_attempts';
+                    return "error_max_attempts";
                 case 7:
-                    return 'canceled';
+                    return "canceled";
                 case 8:
-                    return 'rejected';
+                    return "rejected";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'pending':
+                case "pending":
                     return 1;
-                case 'send':
+                case "send":
                     return 2;
-                case 'completed':
+                case "completed":
                     return 3;
-                case 'error':
+                case "error":
                     return 4;
-                case 'in_process':
+                case "in_process":
                     return 5;
-                case 'error_max_attempts':
+                case "error_max_attempts":
                     return 6;
-                case 'canceled':
+                case "canceled":
                     return 7;
-                case 'rejected':
+                case "rejected":
                     return 8;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -70,21 +70,21 @@ class NotazzInvoicePresenter extends Presenter
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:
-                    return 'service';
+                    return "service";
                 case 2:
-                    return 'product';
+                    return "product";
             }
 
-            return '';
+            return "";
         } else {
             switch ($type) {
-                case 'service':
+                case "service":
                     return 1;
-                case 'product':
+                case "product":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 }

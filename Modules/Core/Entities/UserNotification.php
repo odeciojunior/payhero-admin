@@ -30,23 +30,23 @@ class UserNotification extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'new_affiliation',
-        'new_affiliation_request',
-        'approved_affiliation',
-        'boleto_compensated',
-        'sale_approved',
-        'notazz',
-        'withdrawal_approved',
-        'domain_approved',
-        'shopify',
-        'billet_generated',
-        'ticket_open'
+        "user_id",
+        "new_affiliation",
+        "new_affiliation_request",
+        "approved_affiliation",
+        "boleto_compensated",
+        "sale_approved",
+        "notazz",
+        "withdrawal_approved",
+        "domain_approved",
+        "shopify",
+        "billet_generated",
+        "ticket_open",
     ];
     /**
      * @var bool

@@ -22,11 +22,11 @@ class DashboardResumeCollection extends ResourceCollection
     {
         /** @var User $user */
         $user = auth()->user();
-        $user->loadMissing('companies');
+        $user->loadMissing("companies");
 
         return [
-            'data'      => DashboardResumeResource::collection($this->collection),
-            'companies' => CompanyResource::collection($user->companies),
+            "data" => DashboardResumeResource::collection($this->collection),
+            "companies" => CompanyResource::collection($user->companies),
             //            'links'  => [
             //                'self' => 'link-value',
             //            ],

@@ -18,7 +18,7 @@ class ProjectUpsellRuleServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class ProjectUpsellRuleServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('projectupsellrule.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'projectupsellrule'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("projectupsellrule.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "projectupsellrule");
     }
 
     /**
@@ -53,17 +54,26 @@ class ProjectUpsellRuleServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/projectupsellrule');
+        $viewPath = resource_path("views/modules/projectupsellrule");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/projectupsellrule';
-        }, \Config::get('view.paths')), [$sourcePath]), 'projectupsellrule');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/projectupsellrule";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "projectupsellrule"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class ProjectUpsellRuleServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/projectupsellrule');
+        $langPath = resource_path("lang/modules/projectupsellrule");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'projectupsellrule');
+            $this->loadTranslationsFrom($langPath, "projectupsellrule");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'projectupsellrule');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "projectupsellrule");
         }
     }
 
@@ -89,8 +99,8 @@ class ProjectUpsellRuleServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

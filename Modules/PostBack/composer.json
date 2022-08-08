@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\PostBack\\Providers\\PostBackServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

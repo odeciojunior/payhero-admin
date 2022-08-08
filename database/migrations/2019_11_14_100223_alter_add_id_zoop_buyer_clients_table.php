@@ -12,8 +12,11 @@ class AlterAddIdZoopBuyerClientsTable extends Migration
      */
     public function up()
     {
-        Schema::table('clients', function(Blueprint $table) {
-            $table->string('id_zoop_buyer', 255)->nullable()->after('id_kapsula_client');
+        Schema::table("clients", function (Blueprint $table) {
+            $table
+                ->string("id_zoop_buyer", 255)
+                ->nullable()
+                ->after("id_kapsula_client");
         });
     }
 
@@ -23,8 +26,8 @@ class AlterAddIdZoopBuyerClientsTable extends Migration
      */
     public function down()
     {
-        Schema::table('clients', function(Blueprint $table) {
-            $table->dropColumn('id_zoop_buyer');
+        Schema::table("clients", function (Blueprint $table) {
+            $table->dropColumn("id_zoop_buyer");
         });
     }
 }

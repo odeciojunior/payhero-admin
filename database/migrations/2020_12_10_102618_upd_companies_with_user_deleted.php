@@ -13,7 +13,9 @@ class UpdCompaniesWithUserDeleted extends Migration
      */
     public function up()
     {
-        $users = \Modules\Core\Entities\User::onlyTrashed()->whereRaw('id', 'account_owner_id')->get();
+        $users = \Modules\Core\Entities\User::onlyTrashed()
+            ->whereRaw("id", "account_owner_id")
+            ->get();
 
         foreach ($users as $user) {
             foreach ($user->companies as $company) {

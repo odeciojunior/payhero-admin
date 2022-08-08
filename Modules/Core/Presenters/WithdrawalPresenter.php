@@ -19,60 +19,60 @@ class WithdrawalPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'approved';
+                    return "approved";
                 case 3:
-                    return 'transfered';
+                    return "transfered";
                 case 4:
-                    return 'refused';
+                    return "refused";
                 case 5:
-                    return 'in_review';
+                    return "in_review";
                 case 6:
-                    return 'processing';
+                    return "processing";
                 case 7:
-                    return 'returned';
+                    return "returned";
                 case 8:
-                    return 'liquidating';
+                    return "liquidating";
                 case 9:
-                    return 'partially_liquidated';
+                    return "partially_liquidated";
             }
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'pending':
+                case "pending":
                     return 1;
-                case 'approved':
+                case "approved":
                     return 2;
-                case 'transfered':
+                case "transfered":
                     return 3;
-                case 'refused':
+                case "refused":
                     return 4;
-                case 'in_review':
+                case "in_review":
                     return 5;
-                case 'processing':
+                case "processing":
                     return 6;
-                case 'returned':
+                case "returned":
                     return 7;
-                case 'liquidating':
+                case "liquidating":
                     return 8;
-                case 'partially_liquidated':
+                case "partially_liquidated":
                     return 9;
             }
-            return '';
+            return "";
         }
     }
 
     public function getDateReleaseFormatted($releaseDate)
     {
         if (!empty($releaseDate)) {
-            if (strstr($releaseDate->format('d/m/Y H:i:s'), '00:00:00')) {
-                return $releaseDate->format('d/m/Y');
+            if (strstr($releaseDate->format("d/m/Y H:i:s"), "00:00:00")) {
+                return $releaseDate->format("d/m/Y");
             } else {
-                return $releaseDate->format('d/m/Y H:i:s');
+                return $releaseDate->format("d/m/Y H:i:s");
             }
         } else {
-            return '';
+            return "";
         }
     }
 }

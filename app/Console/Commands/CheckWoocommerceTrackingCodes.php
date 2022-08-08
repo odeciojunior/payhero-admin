@@ -15,14 +15,14 @@ class CheckWoocommerceTrackingCodes extends Command
      *
      * @var string
      */
-    protected $signature = 'woocommerce:check-tracking-codes';
+    protected $signature = "woocommerce:check-tracking-codes";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -41,33 +41,33 @@ class CheckWoocommerceTrackingCodes extends Command
      */
     public function handle()
     {
-
         try {
-
-            $sales = Sale::select('project_id')->whereNotNull('woocommerce_order')->where('has_valid_tracking', false)
-                ->where('status', Sale::STATUS_APPROVED)
-                ->groupBy('project_id')
+            $sales = Sale::select("project_id")
+                ->whereNotNull("woocommerce_order")
+                ->where("has_valid_tracking", false)
+                ->where("status", Sale::STATUS_APPROVED)
+                ->groupBy("project_id")
                 ->get();
 
-
-            foreach($sales as $sale) {
-
+            foreach ($sales as $sale) {
                 $projectId = $sale->project_id;
 
                 $doProducts = false;
                 $doTrackingCodes = true;
                 $doWebhooks = false;
-                $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
-                if(!empty($integration)) {
-                    $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                $integration = WooCommerceIntegration::where("project_id", $projectId)->first();
+                if (!empty($integration)) {
+                    $service = new WooCommerceService(
+                        $integration->url_store,
+                        $integration->token_user,
+                        $integration->token_pass
+                    );
 
                     $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
                 }
             }
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

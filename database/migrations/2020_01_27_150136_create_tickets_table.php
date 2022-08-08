@@ -13,16 +13,22 @@ class CreateTicketsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tickets', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('sale_id');
-            $table->foreign('sale_id')->references('id')->on('sales');
-            $table->unsignedBigInteger('customer_id');
-            $table->foreign('customer_id')->references('id')->on('customers');
-            $table->string('subject');
-            $table->string('description');
-            $table->integer('ticket_category_enum');
-            $table->integer('ticket_status_enum');
+        Schema::create("tickets", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedBigInteger("sale_id");
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
+            $table->unsignedBigInteger("customer_id");
+            $table
+                ->foreign("customer_id")
+                ->references("id")
+                ->on("customers");
+            $table->string("subject");
+            $table->string("description");
+            $table->integer("ticket_category_enum");
+            $table->integer("ticket_status_enum");
             $table->timestamps();
             $table->softDeletes();
         });
@@ -35,6 +41,6 @@ class CreateTicketsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists("tickets");
     }
 }

@@ -13,9 +13,10 @@ class AddSystemStatusEnumToTrackings extends Migration
      */
     public function up()
     {
-        Schema::table('trackings', function (Blueprint $table) {
-            $table->tinyInteger('system_status_enum')
-                ->after('tracking_status_enum')
+        Schema::table("trackings", function (Blueprint $table) {
+            $table
+                ->tinyInteger("system_status_enum")
+                ->after("tracking_status_enum")
                 ->default(1);
         });
     }
@@ -27,8 +28,8 @@ class AddSystemStatusEnumToTrackings extends Migration
      */
     public function down()
     {
-        Schema::table('trackings', function (Blueprint $table) {
-            $table->dropColumn('system_status_enum');
+        Schema::table("trackings", function (Blueprint $table) {
+            $table->dropColumn("system_status_enum");
         });
     }
 }

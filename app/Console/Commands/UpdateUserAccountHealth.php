@@ -14,7 +14,7 @@ class UpdateUserAccountHealth extends Command
      *
      * @var string
      */
-    protected $signature = 'account-health:update';
+    protected $signature = "account-health:update";
 
     /**
      * The console command description.
@@ -42,7 +42,7 @@ class UpdateUserAccountHealth extends Command
     {
         try {
             $accountHealthService = new AccountHealthService();
-            $users = User::whereRaw('id = account_owner_id')->get();
+            $users = User::whereRaw("id = account_owner_id")->get();
             foreach ($users as $user) {
                 $accountHealthService->updateAccountScore($user);
             }

@@ -14,7 +14,7 @@ class UpdateUserAchievements extends Command
      *
      * @var string
      */
-    protected $signature = 'achievements:update';
+    protected $signature = "achievements:update";
 
     /**
      * The console command description.
@@ -40,23 +40,20 @@ class UpdateUserAchievements extends Command
      */
     public function handle()
     {
-
         try {
-
             $achievementService = new AchievementService();
             $now = now();
-            $users = User::with('achievements')
-                ->whereRaw('id = account_owner_id')
+            $users = User::with("achievements")
+                ->whereRaw("id = account_owner_id")
                 ->get();
 
             foreach ($users as $user) {
-                $this->line($user->id . ' - ' . $user->name);
+                $this->line($user->id . " - " . $user->name);
                 $achievementService->checkUserAchievements($user);
             }
 
             $this->line($now);
             $this->line(now());
-
         } catch (Exception $e) {
             report($e);
         }

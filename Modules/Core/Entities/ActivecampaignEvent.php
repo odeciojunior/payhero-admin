@@ -36,20 +36,20 @@ class ActivecampaignEvent extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'activecampaign_integration_id',
-        'event_sale',
-        'add_tags',
-        'remove_tags',
-        'remove_list',
-        'add_list',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "activecampaign_integration_id",
+        "event_sale",
+        "add_tags",
+        "remove_tags",
+        "remove_list",
+        "add_list",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -76,12 +76,12 @@ class ActivecampaignEvent extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Evento foi deletado para ActivecampaignEvent';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Evento foi atualizado para ActivecampaignEvent';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Evento foi criado para ActivecampaignEvent';
+        if ($eventName == "deleted") {
+            $activity->description = "Evento foi deletado para ActivecampaignEvent";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Evento foi atualizado para ActivecampaignEvent";
+        } elseif ($eventName == "created") {
+            $activity->description = "Evento foi criado para ActivecampaignEvent";
         } else {
             $activity->description = $eventName;
         }
@@ -92,6 +92,6 @@ class ActivecampaignEvent extends Model
      */
     public function activecampaignIntegration()
     {
-        return $this->belongsTo('Modules\Core\Entities\ActivecampaignIntegration');
+        return $this->belongsTo("Modules\Core\Entities\ActivecampaignIntegration");
     }
 }

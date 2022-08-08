@@ -25,7 +25,7 @@ class ShippingServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -46,12 +46,13 @@ class ShippingServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('shipping.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'shipping'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("shipping.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "shipping");
     }
 
     /**
@@ -61,17 +62,26 @@ class ShippingServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/shipping');
+        $viewPath = resource_path("views/modules/shipping");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/shipping';
-        }, \Config::get('view.paths')), [$sourcePath]), 'shipping');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/shipping";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "shipping"
+        );
     }
 
     /**
@@ -81,12 +91,12 @@ class ShippingServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/shipping');
+        $langPath = resource_path("lang/modules/shipping");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'shipping');
+            $this->loadTranslationsFrom($langPath, "shipping");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'shipping');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "shipping");
         }
     }
 
@@ -96,8 +106,8 @@ class ShippingServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

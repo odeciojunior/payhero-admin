@@ -13,8 +13,11 @@ class ChangeExpirationToPromotionalTaxesTable extends Migration
      */
     public function up()
     {
-        Schema::table('promotional_taxes', function (Blueprint $table) {
-            $table->date('expiration')->nullable()->change();
+        Schema::table("promotional_taxes", function (Blueprint $table) {
+            $table
+                ->date("expiration")
+                ->nullable()
+                ->change();
         });
     }
 
@@ -25,8 +28,8 @@ class ChangeExpirationToPromotionalTaxesTable extends Migration
      */
     public function down()
     {
-        Schema::table('promotional_taxes', function (Blueprint $table) {
-            $table->date('expiration')->change();
+        Schema::table("promotional_taxes", function (Blueprint $table) {
+            $table->date("expiration")->change();
         });
     }
 }

@@ -13,8 +13,11 @@ class AlterNotazzIntegrationAddGenerateZeroInvoiceFlag extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->unsignedTinyInteger('generate_zero_invoice_flag')->after('pending_days')->default(1); // 0 - false, 1 - true
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table
+                ->unsignedTinyInteger("generate_zero_invoice_flag")
+                ->after("pending_days")
+                ->default(1); // 0 - false, 1 - true
         });
     }
 
@@ -25,8 +28,8 @@ class AlterNotazzIntegrationAddGenerateZeroInvoiceFlag extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->dropColumn('generate_zero_invoice_flag');
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table->dropColumn("generate_zero_invoice_flag");
         });
     }
 }

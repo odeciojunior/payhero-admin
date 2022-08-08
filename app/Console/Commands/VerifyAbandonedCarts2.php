@@ -13,12 +13,12 @@ class VerifyAbandonedCarts2 extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'verify:abandonedcarts2';
+    protected $signature = "verify:abandonedcarts2";
     /**
      * The console command description.
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -31,15 +31,11 @@ class VerifyAbandonedCarts2 extends Command
 
     public function handle()
     {
-
         try {
-
             $cartRecoveryService = new CartRecoveryService();
             $cartRecoveryService->verifyAbandonedCarts(true);
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

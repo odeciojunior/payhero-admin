@@ -12,8 +12,11 @@ class AlterProjectsTableAddBoletoDueDaysColumn extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->boolean("boleto_due_days")->after("boleto")->default(3);
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->boolean("boleto_due_days")
+                ->after("boleto")
+                ->default(3);
         });
     }
 
@@ -23,7 +26,7 @@ class AlterProjectsTableAddBoletoDueDaysColumn extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
+        Schema::table("projects", function (Blueprint $table) {
             $table->dropColumn(["boleto_due_days"]);
         });
     }

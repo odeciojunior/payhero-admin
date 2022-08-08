@@ -14,9 +14,12 @@ class AlterTableHotbilletChangeForeignKeyUser extends Migration
     public function up()
     {
         //
-        Schema::table('hotbillet_integrations', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("hotbillet_integrations", function (Blueprint $table) {
+            $table->dropForeign(["user_id"]);
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 

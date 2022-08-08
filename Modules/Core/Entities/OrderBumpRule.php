@@ -21,16 +21,16 @@ use Illuminate\Database\Eloquent\Model;
 class OrderBumpRule extends Model
 {
     protected $fillable = [
-        'project_id',
-        'description',
-        'discount',
-        'apply_on_shipping',
-        'use_variants',
-        'apply_on_plans',
-        'offer_plans',
-        'active_flag',
-        'created_at',
-        'updated_at'
+        "project_id",
+        "description",
+        "discount",
+        "apply_on_shipping",
+        "use_variants",
+        "apply_on_plans",
+        "offer_plans",
+        "active_flag",
+        "created_at",
+        "updated_at",
     ];
 
     /**

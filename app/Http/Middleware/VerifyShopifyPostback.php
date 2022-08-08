@@ -17,7 +17,7 @@ class VerifyShopifyPostback
      */
     function verify_webhook($data, $hmac_header, $myShopifyToken)
     {
-        $calculated_hmac = base64_encode(hash_hmac('sha256', $data, $myShopifyToken, true));
+        $calculated_hmac = base64_encode(hash_hmac("sha256", $data, $myShopifyToken, true));
 
         return hash_equals($hmac_header, $calculated_hmac);
     }

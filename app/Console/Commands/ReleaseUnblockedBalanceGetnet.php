@@ -17,14 +17,14 @@ class ReleaseUnblockedBalanceGetnet extends Command
      *
      * @var string
      */
-    protected $signature = 'getnet:release-unblocked-balance';
+    protected $signature = "getnet:release-unblocked-balance";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -43,34 +43,36 @@ class ReleaseUnblockedBalanceGetnet extends Command
      */
     public function handle()
     {
-
         try {
+            $dataSixMonthAgo = Carbon::create(date("Y-m-d"))
+                ->subMonths(6)
+                ->format("Y-m-d");
 
-            $dataSixMonthAgo = Carbon::create(date('Y-m-d'))->subMonths(6)->format('Y-m-d');
-
-            $contestations = SaleContestation::where('gateway_id',Gateway::GETNET_PRODUCTION_ID)->where('is_contested',true)
-                ->whereHas('sale',function($qr){
-                    $qr->where('status',Sale::STATUS_APPROVED);
+            $contestations = SaleContestation::where("gateway_id", Gateway::GETNET_PRODUCTION_ID)
+                ->where("is_contested", true)
+                ->whereHas("sale", function ($qr) {
+                    $qr->where("status", Sale::STATUS_APPROVED);
                 })
-                ->where('status',SaleContestation::STATUS_IN_PROGRESS)->whereDate('created_at','<=',$dataSixMonthAgo)->get();
+                ->where("status", SaleContestation::STATUS_IN_PROGRESS)
+                ->whereDate("created_at", "<=", $dataSixMonthAgo)
+                ->get();
 
-            foreach($contestations as $contestation){
-
-                $blockSales = BlockReasonSale::where('status',BlockReasonSale::STATUS_BLOCKED)->where('sale_id',$contestation->sale_id)->first();
-                if(!empty($blockSales)){
+            foreach ($contestations as $contestation) {
+                $blockSales = BlockReasonSale::where("status", BlockReasonSale::STATUS_BLOCKED)
+                    ->where("sale_id", $contestation->sale_id)
+                    ->first();
+                if (!empty($blockSales)) {
                     $blockSales->update([
-                        'status' => BlockReasonSale::STATUS_UNLOCKED
+                        "status" => BlockReasonSale::STATUS_UNLOCKED,
                     ]);
                 }
 
                 $contestation->update([
-                    'status'=>SaleContestation::STATUS_WIN
+                    "status" => SaleContestation::STATUS_WIN,
                 ]);
             }
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

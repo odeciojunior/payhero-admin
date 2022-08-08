@@ -13,8 +13,11 @@ class AddIsAnticipatedInSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->string('anticipation_status')->nullable()->after('antifraud_observation');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->string("anticipation_status")
+                ->nullable()
+                ->after("antifraud_observation");
         });
     }
 
@@ -25,8 +28,8 @@ class AddIsAnticipatedInSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('anticipation_status');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("anticipation_status");
         });
     }
 }

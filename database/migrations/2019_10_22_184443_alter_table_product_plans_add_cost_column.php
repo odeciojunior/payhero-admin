@@ -12,9 +12,9 @@ class AlterTableProductPlansAddCostColumn extends Migration
      */
     public function up()
     {
-        Schema::table('products_plans', function(Blueprint $table) {
-            $table->unsignedInteger('cost')->nullable();
-            $table->unsignedInteger('currency_type_enum')->default(1); //1- BRL, 2- USD
+        Schema::table("products_plans", function (Blueprint $table) {
+            $table->unsignedInteger("cost")->nullable();
+            $table->unsignedInteger("currency_type_enum")->default(1); //1- BRL, 2- USD
         });
     }
 
@@ -24,9 +24,9 @@ class AlterTableProductPlansAddCostColumn extends Migration
      */
     public function down()
     {
-        Schema::table('products_plans', function(Blueprint $table) {
-            $table->dropColumn('cost');
-            $table->dropColumn('currency_type_enum');
+        Schema::table("products_plans", function (Blueprint $table) {
+            $table->dropColumn("cost");
+            $table->dropColumn("currency_type_enum");
         });
     }
 }

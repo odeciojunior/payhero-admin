@@ -13,11 +13,11 @@ class CreateBenefitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('benefits', function (Blueprint $table) {
+        Schema::create("benefits", function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->text('description');
-            $table->integer('level');
+            $table->string("name", 100);
+            $table->text("description");
+            $table->integer("level");
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateBenefitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('benefits');
+        Schema::dropIfExists("benefits");
     }
 }

@@ -25,8 +25,8 @@ label.switch {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 .slider:before {
@@ -37,8 +37,8 @@ label.switch {
     left: -3px;
     top: -2px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
     box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.15);
 }
 
@@ -66,4 +66,7 @@ input:checked + .slider:before {
 }
 
 /* Page titles */
-.page-title > a, .page-title > a > span { color: #707070 }
+.page-title > a,
+.page-title > a > span {
+    color: #707070;
+}

@@ -15,22 +15,22 @@ class ProjectReviews extends Model
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'description',
-        'apply_on_plans',
-        'photo',
-        'name',
-        'stars',
-        'active_flag',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "description",
+        "apply_on_plans",
+        "photo",
+        "name",
+        "stars",
+        "active_flag",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**
@@ -41,4 +41,3 @@ class ProjectReviews extends Model
         return $this->belongsTo(Project::class);
     }
 }
-

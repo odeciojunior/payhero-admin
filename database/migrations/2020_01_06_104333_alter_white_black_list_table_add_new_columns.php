@@ -12,10 +12,19 @@ class AlterWhiteBlackListTableAddNewColumns extends Migration
      */
     public function up()
     {
-        Schema::table('white_black_list', function(Blueprint $table) {
-            $table->date('expires_at')->after('value')->nullable();
-            $table->text('description')->after('expires_at')->nullable();
-            $table->string("value")->comment("Valor a verificar na regra")->change();
+        Schema::table("white_black_list", function (Blueprint $table) {
+            $table
+                ->date("expires_at")
+                ->after("value")
+                ->nullable();
+            $table
+                ->text("description")
+                ->after("expires_at")
+                ->nullable();
+            $table
+                ->string("value")
+                ->comment("Valor a verificar na regra")
+                ->change();
             $table->softDeletes();
         });
     }
@@ -26,9 +35,13 @@ class AlterWhiteBlackListTableAddNewColumns extends Migration
      */
     public function down()
     {
-        Schema::table('white_black_list', function(Blueprint $table) {
-            $table->dropColumn(['expires_at', 'description']);
-            $table->string("value")->comment("Valor a verificar na regra")->nullable()->change();
+        Schema::table("white_black_list", function (Blueprint $table) {
+            $table->dropColumn(["expires_at", "description"]);
+            $table
+                ->string("value")
+                ->comment("Valor a verificar na regra")
+                ->nullable()
+                ->change();
         });
     }
 }

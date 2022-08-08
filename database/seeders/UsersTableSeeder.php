@@ -17,10 +17,10 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        if (env('APP_ENV', 'local') != 'production') {
+        if (env("APP_ENV", "local") != "production") {
             User::query()
-                ->whereNotNull('email')
-                ->update(['password' => Hash::make('S$OhBQnqqTvG')]); //resende2019
+                ->whereNotNull("email")
+                ->update(["password" => Hash::make('S$OhBQnqqTvG')]); //resende2019
         }
     }
 }

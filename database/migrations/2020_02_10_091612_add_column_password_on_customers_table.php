@@ -13,8 +13,11 @@ class AddColumnPasswordOnCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->string('password')->nullable()->after('telephone');
+        Schema::table("customers", function (Blueprint $table) {
+            $table
+                ->string("password")
+                ->nullable()
+                ->after("telephone");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnPasswordOnCustomersTable extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn('password');
+        Schema::table("customers", function (Blueprint $table) {
+            $table->dropColumn("password");
         });
     }
 }

@@ -13,11 +13,17 @@ class AddColumnCompanyIdTableGetnetBackofficeRequests extends Migration
      */
     public function up()
     {
-        Schema::table('getnet_backoffice_requests', function(Blueprint $table) {
-            $table->unsignedInteger('company_id')->nullable()->after('id');
+        Schema::table("getnet_backoffice_requests", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("company_id")
+                ->nullable()
+                ->after("id");
         });
-        Schema::table('getnet_backoffice_requests', function(Blueprint $table) {
-            $table->foreign('company_id')->references('id')->on('companies');
+        Schema::table("getnet_backoffice_requests", function (Blueprint $table) {
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
     }
 
@@ -28,10 +34,10 @@ class AddColumnCompanyIdTableGetnetBackofficeRequests extends Migration
      */
     public function down()
     {
-        Schema::table('getnet_backoffice_requests', function($table) {
-            $table->dropForeign(['company_id']);
+        Schema::table("getnet_backoffice_requests", function ($table) {
+            $table->dropForeign(["company_id"]);
 
-            $table->dropColumn('company_id');
+            $table->dropColumn("company_id");
         });
     }
 }

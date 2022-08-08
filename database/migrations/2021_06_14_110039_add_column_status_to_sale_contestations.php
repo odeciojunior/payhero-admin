@@ -13,8 +13,11 @@ class AddColumnStatusToSaleContestations extends Migration
      */
     public function up()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->integer('status')->after('sale_id')->default(1);
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table
+                ->integer("status")
+                ->after("sale_id")
+                ->default(1);
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnStatusToSaleContestations extends Migration
      */
     public function down()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->dropColumn('status');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table->dropColumn("status");
         });
     }
 }

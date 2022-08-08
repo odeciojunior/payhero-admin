@@ -38,23 +38,23 @@ class UnicodropIntegration extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'project_id',
-        'token',
-        'billet_generated',
-        'billet_paid',
-        'credit_card_refused',
-        'credit_card_paid',
-        'abandoned_cart',
-        'pix',
-        'deleted_at',
-        'created_at',
-        'updated_at',
+        "user_id",
+        "project_id",
+        "token",
+        "billet_generated",
+        "billet_paid",
+        "credit_card_refused",
+        "credit_card_paid",
+        "abandoned_cart",
+        "pix",
+        "deleted_at",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -81,12 +81,12 @@ class UnicodropIntegration extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Integração Unicodrop para o projeto ' . $this->project->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Integração Unicodrop para o projeto ' . $this->project->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Integração Unicodrop para o projeto ' . $this->project->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Integração Unicodrop para o projeto " . $this->project->name . " foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Integração Unicodrop para o projeto " . $this->project->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Integração Unicodrop para o projeto " . $this->project->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }

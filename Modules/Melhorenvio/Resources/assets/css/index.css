@@ -8,7 +8,7 @@
 }
 
 .btn-authorize {
-    background: #F41C1C;
+    background: #f41c1c;
     color: white;
     padding: 2px 5px;
     font-size: 10px;
@@ -18,8 +18,11 @@
 }
 
 .btn-authorize:hover {
-    background: #B41c1c;
+    background: #b41c1c;
 }
 
 /* Page titles */
-.page-title > a, .page-title > a > span { color: #707070 }
+.page-title > a,
+.page-title > a > span {
+    color: #707070;
+}

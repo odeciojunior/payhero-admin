@@ -13,20 +13,26 @@ class CreatePendingDebtsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pending_debts', function (Blueprint $table) {
+        Schema::create("pending_debts", function (Blueprint $table) {
             $table->id();
-            $table->integer('company_id')->unsigned();
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table->integer("company_id")->unsigned();
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
             $table->unsignedBigInteger("sale_id")->nullable();
-            $table->foreign('sale_id')->references('id')->on('sales');
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
 
-            $table->enum('type', ['REVERSED', 'ADJUSTMENT']);
+            $table->enum("type", ["REVERSED", "ADJUSTMENT"]);
 
             $table->dateTime("request_date")->nullable();
             $table->date("confirm_date")->nullable();
             $table->date("payment_date")->nullable();
             $table->string("reason")->nullable();
-            $table->unsignedInteger('value');
+            $table->unsignedInteger("value");
             $table->timestamps();
         });
     }
@@ -38,6 +44,6 @@ class CreatePendingDebtsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pending_debts');
+        Schema::dropIfExists("pending_debts");
     }
 }

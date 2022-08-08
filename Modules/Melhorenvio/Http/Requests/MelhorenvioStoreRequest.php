@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Melhorenvio\Http\Requests;
-
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -16,7 +14,7 @@ class MelhorenvioStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            "name" => "required",
         ];
     }
 
@@ -26,7 +24,7 @@ class MelhorenvioStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'O campo nome é obrigatório',
+            "name.required" => "O campo nome é obrigatório",
         ];
     }
 }

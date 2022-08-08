@@ -13,23 +13,20 @@ class CreatePixelConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'pixel_configs',
-            function (Blueprint $table) {
-                $table->id();
-                $table->text('metatags_facebook')->nullable();
-                $table->unsignedInteger('project_id')->index();
-                $table->timestamps();
-                $table->softDeletes();
-            }
-        );
+        Schema::create("pixel_configs", function (Blueprint $table) {
+            $table->id();
+            $table->text("metatags_facebook")->nullable();
+            $table->unsignedInteger("project_id")->index();
+            $table->timestamps();
+            $table->softDeletes();
+        });
 
-        Schema::table(
-            'pixel_configs',
-            function (Blueprint $table) {
-                $table->foreign('project_id')->references('id')->on('projects');
-            }
-        );
+        Schema::table("pixel_configs", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
+        });
     }
 
     /**
@@ -39,6 +36,6 @@ class CreatePixelConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pixel_configs');
+        Schema::dropIfExists("pixel_configs");
     }
 }

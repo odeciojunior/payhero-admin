@@ -26,27 +26,38 @@ class TrackingCodeUpdatedActiveCampaignListener implements ShouldQueue
     {
         try {
             $trackingModel = new Tracking();
-            $activeCampaignService = new ActiveCampaignService;
+            $activeCampaignService = new ActiveCampaignService();
 
-            $tracking = $trackingModel->with([
-                'sale.project',
-                'sale.customer',
-                'sale.productsPlansSale.tracking',
-                'sale.productsPlansSale.product',
-            ])->find($event->trackingId);
+            $tracking = $trackingModel
+                ->with([
+                    "sale.project",
+                    "sale.customer",
+                    "sale.productsPlansSale.tracking",
+                    "sale.productsPlansSale.product",
+                ])
+                ->find($event->trackingId);
 
             if ($tracking && $tracking->sale && $tracking->sale->project) {
-
                 $sale = $tracking->sale;
                 $customer = $sale->customer;
 
                 $dataCustom = [
-                    'url_boleto' => $sale->boleto_link,
-                    'sub_total' => $sale->sub_total,
-                    'frete' => $sale->shipment_value,
+                    "url_boleto" => $sale->boleto_link,
+                    "sub_total" => $sale->sub_total,
+                    "frete" => $sale->shipment_value,
                 ];
 
-                $activeCampaignService->execute($sale->id, 6, $customer->name, $customer->telephone, $customer->email, $sale->project_id, 'sale', $dataCustom, $sale->checkout_id); // 6 - tracking
+                $activeCampaignService->execute(
+                    $sale->id,
+                    6,
+                    $customer->name,
+                    $customer->telephone,
+                    $customer->email,
+                    $sale->project_id,
+                    "sale",
+                    $dataCustom,
+                    $sale->checkout_id
+                ); // 6 - tracking
             }
         } catch (Exception $e) {
             report($e);

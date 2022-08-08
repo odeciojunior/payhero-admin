@@ -13,8 +13,12 @@ class AlterSalesAddRefundValue extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->integer('refund_value')->unsigned()->default(0)->after('interest_total_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->integer("refund_value")
+                ->unsigned()
+                ->default(0)
+                ->after("interest_total_value");
         });
     }
 
@@ -25,8 +29,8 @@ class AlterSalesAddRefundValue extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('refund_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("refund_value");
         });
     }
 }

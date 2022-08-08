@@ -45,44 +45,38 @@ class Withdrawal extends Model
 
     protected $presenter = WithdrawalPresenter::class;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $dates = [
-        'release_date',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'release_date_new'
-    ];
+    protected $dates = ["release_date", "created_at", "updated_at", "deleted_at", "release_date_new"];
 
     protected $fillable = [
-        'company_id',
-        'gateway_id',
-        'gateway_transfer_id',
-        'value',
-        'release_date',
-        'status',
-        'currency',
-        'currency_quotation',
-        'value_transferred',
-        'tax',
-        'transfer_type',
-        'type_key_pix',
-        'key_pix',
-        'bank',
-        'agency',
-        'agency_digit',
-        'account',
-        'account_digit',
-        'release_date_new',
-        'file',
-        'observation',
-        'automatic_liquidation',
-        'is_released',
-        'debt_pending_value',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "company_id",
+        "gateway_id",
+        "gateway_transfer_id",
+        "value",
+        "release_date",
+        "status",
+        "currency",
+        "currency_quotation",
+        "value_transferred",
+        "tax",
+        "transfer_type",
+        "type_key_pix",
+        "key_pix",
+        "bank",
+        "agency",
+        "agency_digit",
+        "account",
+        "account_digit",
+        "release_date_new",
+        "file",
+        "observation",
+        "automatic_liquidation",
+        "is_released",
+        "debt_pending_value",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**
@@ -106,12 +100,12 @@ class Withdrawal extends Model
 
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Pedido saque foi deletedo.';
-        } elseif ($eventName == 'updated') {
-            $activity->description = 'Pedido saque foi atualizado.';
-        } elseif ($eventName == 'created') {
-            $activity->description = 'Pedido saque foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Pedido saque foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Pedido saque foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Pedido saque foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -119,17 +113,17 @@ class Withdrawal extends Model
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 
     public function gateway(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Gateway');
+        return $this->belongsTo("Modules\Core\Entities\Gateway");
     }
 
     public function pendingDebts(): BelongsToMany
     {
-        return $this->belongsToMany(PendingDebt::class, 'pending_debt_withdrawals');
+        return $this->belongsToMany(PendingDebt::class, "pending_debt_withdrawals");
     }
 
     public function transactions(): HasMany

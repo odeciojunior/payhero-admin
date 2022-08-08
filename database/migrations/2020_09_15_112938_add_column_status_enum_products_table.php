@@ -13,8 +13,8 @@ class AddColumnStatusEnumProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->tinyInteger('status_enum')->nullable();
+        Schema::table("products", function (Blueprint $table) {
+            $table->tinyInteger("status_enum")->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnStatusEnumProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('status_enum');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropColumn("status_enum");
         });
     }
 }

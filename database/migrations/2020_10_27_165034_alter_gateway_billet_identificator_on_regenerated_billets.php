@@ -13,9 +13,12 @@ class AlterGatewayBilletIdentificatorOnRegeneratedBillets extends Migration
      */
     public function up()
     {
-        Schema::table('regenerated_billets', function (Blueprint $table) {
-            $table->string('gateway_billet_identificator')->nullable()->change();
-            $table->index('gateway_billet_identificator');
+        Schema::table("regenerated_billets", function (Blueprint $table) {
+            $table
+                ->string("gateway_billet_identificator")
+                ->nullable()
+                ->change();
+            $table->index("gateway_billet_identificator");
         });
     }
 
@@ -26,9 +29,12 @@ class AlterGatewayBilletIdentificatorOnRegeneratedBillets extends Migration
      */
     public function down()
     {
-        Schema::table('regenerated_billets', function (Blueprint $table) {
-            $table->bigInteger('gateway_billet_identificator')->nullable()->change();
-            $table->dropIndex(['gateway_billet_identificator']);
+        Schema::table("regenerated_billets", function (Blueprint $table) {
+            $table
+                ->bigInteger("gateway_billet_identificator")
+                ->nullable()
+                ->change();
+            $table->dropIndex(["gateway_billet_identificator"]);
         });
     }
 }

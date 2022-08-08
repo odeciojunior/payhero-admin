@@ -12,8 +12,11 @@ class AlterNotazzInvoiceTableAddReturnStatusColumn extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_invoices', function(Blueprint $table) {
-            $table->string('return_status')->after('return_message')->nullable();
+        Schema::table("notazz_invoices", function (Blueprint $table) {
+            $table
+                ->string("return_status")
+                ->after("return_message")
+                ->nullable();
         });
     }
 
@@ -23,8 +26,8 @@ class AlterNotazzInvoiceTableAddReturnStatusColumn extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_invoices', function(Blueprint $table) {
-            $table->dropColumn('return_status');
+        Schema::table("notazz_invoices", function (Blueprint $table) {
+            $table->dropColumn("return_status");
         });
     }
 }

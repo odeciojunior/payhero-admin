@@ -24,18 +24,26 @@ class Anticipation extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = ['company_id', 'value', 'tax', 'percentage_tax', 'percentage_anticipable', 'created_at', 'updated_at'];
+    protected $fillable = [
+        "company_id",
+        "value",
+        "tax",
+        "percentage_tax",
+        "percentage_anticipable",
+        "created_at",
+        "updated_at",
+    ];
 
     /**
      * @return BelongsTo
      */
     public function company()
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 
     /**
@@ -43,7 +51,7 @@ class Anticipation extends Model
      */
     public function anticipatedTransactions()
     {
-        return $this->hasMany('Modules\Core\Entities\AnticipatedTransaction');
+        return $this->hasMany("Modules\Core\Entities\AnticipatedTransaction");
     }
 
     /**
@@ -51,6 +59,6 @@ class Anticipation extends Model
      */
     public function transfers()
     {
-        return $this->hasMany('Modules\Core\Entities\Transfer');
+        return $this->hasMany("Modules\Core\Entities\Transfer");
     }
 }

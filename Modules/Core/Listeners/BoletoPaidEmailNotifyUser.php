@@ -21,7 +21,6 @@ class BoletoPaidEmailNotifyUser implements ShouldQueue
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -33,8 +32,15 @@ class BoletoPaidEmailNotifyUser implements ShouldQueue
     {
         /** @var SendgridService $sendGridService */
         $sendGridService = new SendgridService();
-        $user            = $event->data['user'];
-        $data            = $event->data;
-        $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
+        $user = $event->data["user"];
+        $data = $event->data;
+        $sendGridService->sendEmail(
+            "help@cloudfox.net",
+            "cloudfox",
+            $user->email,
+            $user->name,
+            "d-4ce62be1218d4b258c8d1ab139d4d664",
+            $data
+        );
     }
 }

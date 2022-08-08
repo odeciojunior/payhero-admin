@@ -12,8 +12,8 @@ class RenameProjectShippingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('shippings', function(Blueprint $table) {
-            $table->renameColumn('project', 'project_id');
+        Schema::table("shippings", function (Blueprint $table) {
+            $table->renameColumn("project", "project_id");
         });
     }
 
@@ -23,8 +23,8 @@ class RenameProjectShippingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('shippings', function(Blueprint $table) {
-            $table->renameColumn('project_id', 'project');
+        Schema::table("shippings", function (Blueprint $table) {
+            $table->renameColumn("project_id", "project");
         });
     }
 }

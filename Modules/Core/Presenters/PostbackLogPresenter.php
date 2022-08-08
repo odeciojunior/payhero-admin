@@ -11,41 +11,40 @@ class PostbackLogPresenter extends Presenter
      */
     public function getOrigin($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'ebanx';
+                    return "ebanx";
                 case 2:
-                    return 'pagarme';
+                    return "pagarme";
                 case 3:
-                    return 'shopify-products';
+                    return "shopify-products";
                 case 4:
-                    return 'mercado-pago';
+                    return "mercado-pago";
                 case 5:
-                    return 'shopify-tracking';
+                    return "shopify-tracking";
                 case 6:
-                    return 'notazz';
+                    return "notazz";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'ebanx':
+                case "ebanx":
                     return 1;
-                case 'pagarme':
+                case "pagarme":
                     return 2;
-                case 'shopify-products':
+                case "shopify-products":
                     return 3;
-                case 'mercado-pago':
+                case "mercado-pago":
                     return 4;
-                case 'shopify-tracking':
+                case "shopify-tracking":
                     return 5;
-                case 'notazz':
+                case "notazz":
                     return 6;
             }
 
-            return '';
+            return "";
         }
     }
 }

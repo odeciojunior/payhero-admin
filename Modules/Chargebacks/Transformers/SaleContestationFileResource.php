@@ -28,38 +28,35 @@ class SaleContestationFileResource extends JsonResource
      */
     public function toArray($request)
     {
-        $expiration = now()->addMinutes(config('session.lifetime'));
-        $url = Storage::disk('s3_documents')->temporaryUrl($this->file, $expiration);
+        $expiration = now()->addMinutes(config("session.lifetime"));
+        $url = Storage::disk("s3_documents")->temporaryUrl($this->file, $expiration);
 
         return [
-            'id' => Hashids::encode($this->id),
-            'sale_hash' => Hashids::connection('sale_id')->encode($this->contestation->sale_id),
-            'user_id' => Hashids::encode($this->user_id),
-            'contestation_sale_id' => Hashids::encode($this->contestation_sale_id),
-            'type' => $this->type,
-            'type_str' => $this->typeStr($this->type),
-            'file' => $url,
-            'remove_route' => route('contestations.removeContestationFiles', Hashids::encode($this->id)),
-            'created_at' => with(new Carbon($this->created_at))->format('d/m/Y') ,
+            "id" => Hashids::encode($this->id),
+            "sale_hash" => Hashids::connection("sale_id")->encode($this->contestation->sale_id),
+            "user_id" => Hashids::encode($this->user_id),
+            "contestation_sale_id" => Hashids::encode($this->contestation_sale_id),
+            "type" => $this->type,
+            "type_str" => $this->typeStr($this->type),
+            "file" => $url,
+            "remove_route" => route("contestations.removeContestationFiles", Hashids::encode($this->id)),
+            "created_at" => with(new Carbon($this->created_at))->format("d/m/Y"),
         ];
     }
 
-    private function typeStr($type){
-
-        switch ($type)
-        {
-            case 'NOTA_FISCAL':
-                return 'Nota fiscal';
-            case 'POLITICA_VENDA':
-                return 'Politica de venda';
-            case 'ENTREGA':
-                return 'Entrega';
-            case 'INFO_ACORDO':
-                return 'Informação do acordo';
+    private function typeStr($type)
+    {
+        switch ($type) {
+            case "NOTA_FISCAL":
+                return "Nota fiscal";
+            case "POLITICA_VENDA":
+                return "Politica de venda";
+            case "ENTREGA":
+                return "Entrega";
+            case "INFO_ACORDO":
+                return "Informação do acordo";
             default:
-                return 'Outros';
+                return "Outros";
         }
     }
-
-
 }
