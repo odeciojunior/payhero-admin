@@ -190,6 +190,30 @@ $(document).ready(function () {
         });
     }
 
+    function searchIsLocked(elementButton) {
+        return elementButton.attr('block_search');
+    }
+
+    function lockSearch(elementButton) {
+        elementButton.attr('block_search', 'true');
+        //set layout do button block
+    }
+
+    function unlockSearch(elementButton) {
+        elementButton.attr('block_search', 'false');
+        //layout do button block
+    }
+
+    function loadData() {
+        elementButton = $('#bt_filtro');
+        if (searchIsLocked(elementButton) != 'true') {
+            lockSearch(elementButton);
+            console.log(elementButton.attr('block_search'));
+            atualizar();
+            getTotalValues();
+        };
+    }
+
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
 
@@ -377,6 +401,9 @@ $(document).ready(function () {
                     });
                 });
             },
+            complete: response => {
+                unlockSearch($('#bt_filtro'));
+            }
         });
     }
 
@@ -470,8 +497,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
-        getTotalValues();
+        loadData();
     });
 
     $("#transaction").on("change paste keyup select", function () {
