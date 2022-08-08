@@ -45,7 +45,7 @@ class WooCommerceApiController extends Controller
 
             $woocommerceIntegrations = $woocommerceIntegrationModel
             ->join('checkout_configs as cc', 'cc.project_id', '=', 'woo_commerce_integrations.project_id')
-            ->where('cc.company_id', hashids_decode($request->company))
+            ->where('cc.company_id',auth()->user()->company_default)
             ->where('user_id',auth()->user()->getAccountOwnerId())
             ->get();
 

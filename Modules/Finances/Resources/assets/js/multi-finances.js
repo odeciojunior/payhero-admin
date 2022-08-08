@@ -29,18 +29,18 @@ $(document).ready(function(){
         if($('#container-config').is(':visible')){
             hiddenConfig()
         }
-        
-        resetSkeleton();                    
+
+        resetSkeleton();
 
         updateCompanyDefault().done( function(data1){
             getCompaniesAndProjects().done(function(data2){
                 if(!isEmpty(data2.company_default_projects)){
-                    
+
                     getSettings($('.company-navbar').val());
                     window.updateStatements();
                     window.updateWithdrawals();
                 }
-                else{                    
+                else{
                     $("#project-empty").show();
                     $("#project-empty-title").show();
                     $("#project-not-empty").hide();
@@ -49,7 +49,7 @@ $(document).ready(function(){
         });
     });
 
-    
+
 
     function getProjects()
     {
@@ -68,7 +68,7 @@ $(document).ready(function(){
             },
             success: function success(response) {
                 loadingOnScreenRemove();
-                
+
                 if (!isEmpty(response.data)) {
                     $("#project-empty-title").hide();
                     $("#project-empty").hide();
@@ -79,14 +79,14 @@ $(document).ready(function(){
                     getSettings($('.company-navbar').val());
                     window.updateStatements();
                     window.updateWithdrawals();
-            
+
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                     $("#project-empty-title").show();
                 }
 
-                
+
             }
         });
     }
@@ -310,7 +310,7 @@ $(document).ready(function(){
                                     $("#container-withdrawal-" + data.name).fadeIn();
                                     $("#new-withdrawal-" + data.name).fadeIn();
                                     $("#cancel-withdrawal-" + data.name).fadeIn();
-                                }, 400)
+                                }, 500)
                             });
 
                             $(document).off("click","#cancel-withdrawal-" + data.name);
@@ -411,15 +411,15 @@ $(document).ready(function(){
                         'flex-direction':'column',
                     }).addClass('px-10');
             },
-            success: function (response) 
-            {                
-                if(response.data.length){ 
+            success: function (response)
+            {
+                if(response.data.length){
                     $('#empty-history').hide();
                     $('.skeleton-withdrawal').hide();
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
                     $('.asScrollable').show();
-                    
+
                     let c = 1;
                     $.each(response.data, function(index, data) {
                         let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());
@@ -476,10 +476,10 @@ $(document).ready(function(){
                     `);
 
                     if (response.data.length > 3) {
-                        setTimeout(() => {                            
+                        setTimeout(() => {
                             $('#container-withdraw').asScrollable();
                         }, 400);
-                    }                                        
+                    }
 
                     $('.asScrollable-container').scroll(() => {
                         if ($('.list-linear-gradient-top').css('display') === 'none') {
@@ -566,7 +566,7 @@ $(document).ready(function(){
         $('#container-withdraw').html('');
         $('#empty-history').hide();
         $('.asScrollable').hide();
-        $('.container-history').css('padding-top','28px'); 
+        $('.container-history').css('padding-top','28px');
     }
 
     function createCarousel() {
@@ -597,8 +597,8 @@ $(document).ready(function(){
     }
 
     loadingOnScreen();
-    getCompaniesAndProjects().done( function (data){      
-        loadingOnScreenRemove();         
+    getCompaniesAndProjects().done( function (data){
+        loadingOnScreenRemove();
         getProjects();
     });
 

@@ -33,10 +33,10 @@ class HotBilletApiController extends Controller
             $hotBilletIntegrations = HotbilletIntegration::with('project', 'project.usersProjects')
             ->whereHas(
                 'project.usersProjects',
-                function ($query) {
+                function ($query) use($ownerId) {
                     $query
                     ->where('company_id', auth()->user()->company_default)
-                    ->where('user_id', auth()->user()->account_owner_id);
+                    ->where('user_id', $ownerId);
                 }
             )->get();
 
