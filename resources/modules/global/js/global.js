@@ -937,7 +937,9 @@ $('.top-alert-close').on('click', function () {
 
 sessionStorage.removeItem('documentsPending');
 
-function verifyDocumentPending() {
+function verifyDocumentPending()
+{
+    changeNewRegisterLayoutOnWindowResize();
     $.ajax({
         method: 'GET',
         url: '/api/core/verify-account/' + $('meta[name="user-id"]').attr('content'),
