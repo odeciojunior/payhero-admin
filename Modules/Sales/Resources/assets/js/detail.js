@@ -1374,7 +1374,7 @@ $(() => {
         partial = 0
     ) {
         $(".btn-confirm-refund-transaction").prop('disabled', true);
-        loadingOnChart("#modal-refund-transaction");
+        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: refundUrl,
@@ -1389,14 +1389,14 @@ $(() => {
                 Accept: "application/json",
             },
             error: (response) => {
-                loadingOnChartRemove(".sirius-loading");
+                loadingOnScreenRemove();
                 $("#modal-refund-transaction").modal('toggle')
                 errorAjaxResponse(response);
                 //atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop('disabled', false);
             },
             success: (response) => {
-                loadingOnChartRemove(".sirius-loading");
+                loadingOnScreenRemove();
                 $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
                 $("#refund-observation-transaction").val("");
