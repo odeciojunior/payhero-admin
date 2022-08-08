@@ -2242,6 +2242,7 @@ tbody td{
 }
 
 .new-register-page-open-modal-container {
+    display: none;
     margin-left: 65px;
     transition: all .25s;
 }
