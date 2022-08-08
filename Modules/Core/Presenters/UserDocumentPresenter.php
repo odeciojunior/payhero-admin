@@ -8,33 +8,32 @@ class UserDocumentPresenter extends Presenter
 {
     public function getTypeEnum($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'analyzing';
+                    return "analyzing";
                 case 3:
-                    return 'approved';
+                    return "approved";
                 case 4:
-                    return 'refused';
+                    return "refused";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'pending':
+                case "pending":
                     return 1;
-                case 'analyzing':
+                case "analyzing":
                     return 2;
-                case 'approved':
+                case "approved":
                     return 3;
-                case 'refused':
+                case "refused":
                     return 4;
             }
 
-            return '';
+            return "";
         }
     }
 }

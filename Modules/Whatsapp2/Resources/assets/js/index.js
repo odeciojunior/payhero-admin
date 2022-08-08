@@ -26,7 +26,9 @@ $(document).ready(function () {
                     $("#inputTokenWhats2").val(response.token_whatsapp2);
 
                     for (let project of response.projects) {
-                        $("#project_id, #select_projects_edit").append(`<option value="${project.id}">${project.name}</option>`);
+                        $("#project_id, #select_projects_edit").append(
+                            `<option value="${project.id}">${project.name}</option>`
+                        );
                     }
 
                     if (isEmpty(response.integrations)) {
@@ -76,27 +78,27 @@ $(document).ready(function () {
             `
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project=` +
-            data.id +
-            ` style='cursor:pointer;'>
+                data.id +
+                ` style='cursor:pointer;'>
                                     <img class="card-img-top img-fluid w-full" src=` +
-            data.project_photo +
-            ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` +
-            data.project_name +
-            `"/>
+                data.project_photo +
+                ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` +
+                data.project_name +
+                `"/>
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>
                                                 <h4 class="card-title">` +
-            data.project_name +
-            `</h4>
+                data.project_name +
+                `</h4>
                                                 <p class="card-text sm">Criado em ` +
-            data.created_at +
-            `</p>
+                data.created_at +
+                `</p>
                                             </div>
                                             <div class='col-md-2'>
                                                 <a role='button' title='Excluir' class='delete-integration float-right mt-35' project=` +
-            data.id +
-            `>
+                data.id +
+                `>
                                                     <span class='o-bin-1 pointer'></span>
                                                 </a>
                                             </div>
@@ -148,36 +150,19 @@ $(document).ready(function () {
                 $("#url_order_edit").val(response.data.url_order);
 
                 $("#boleto_generated_edit").val(response.data.boleto_generated);
-                $("#boleto_generated_edit").prop(
-                    "checked",
-                    $("#boleto_generated_edit").val() == "1"
-                );
+                $("#boleto_generated_edit").prop("checked", $("#boleto_generated_edit").val() == "1");
 
                 $("#boleto_paid_edit").val(response.data.boleto_paid);
-                $("#boleto_paid_edit").prop(
-                    "checked",
-                    $("#boleto_paid_edit").val() == "1"
-                );
+                $("#boleto_paid_edit").prop("checked", $("#boleto_paid_edit").val() == "1");
 
-                $("#credit_card_refused_edit").val(
-                    response.data.credit_card_refused
-                );
-                $("#credit_card_refused_edit").prop(
-                    "checked",
-                    $("#credit_card_refused_edit").val() == "1"
-                );
+                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
+                $("#credit_card_refused_edit").prop("checked", $("#credit_card_refused_edit").val() == "1");
 
                 $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                $("#credit_card_paid_edit").prop(
-                    "checked",
-                    $("#credit_card_paid_edit").val() == "1"
-                );
+                $("#credit_card_paid_edit").prop("checked", $("#credit_card_paid_edit").val() == "1");
 
                 $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                $("#abandoned_cart_edit").prop(
-                    "checked",
-                    $("#abandoned_cart_edit").val() == "1"
-                );
+                $("#abandoned_cart_edit").prop("checked", $("#abandoned_cart_edit").val() == "1");
 
                 $("#pix_expired_edit").val(response.data.pix_expired);
                 $("#pix_expired_edit").prop("checked", $("#pix_expired_edit").val() == "1");
@@ -253,41 +238,31 @@ $(document).ready(function () {
         $("#modal-delete-integration").modal("show");
     });
     //destroy
-    $(document).on(
-        "click",
-        "#modal-delete-integration .btn-delete",
-        function (e) {
-            e.stopPropagation();
-            var project = $(this).attr("project");
-            var card = $(
-                "a[class='delete-integration float-right mt-35'][project='" +
-                project +
-                "']"
-            )
-                .parent()
-                .parent()
-                .parent()
-                .parent()
-                .parent();
-            card.find(".card-edit").unbind("click");
-            $.ajax({
-                method: "DELETE",
-                url: "/api/apps/whatsapp2/" + project,
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                error: (response) => {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    index();
-                    alertCustom("success", response.message);
-                },
-            });
-        }
-    );
+    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
+        e.stopPropagation();
+        var project = $(this).attr("project");
+        var card = $("a[class='delete-integration float-right mt-35'][project='" + project + "']")
+            .parent()
+            .parent()
+            .parent()
+            .parent()
+            .parent();
+        card.find(".card-edit").unbind("click");
+        $.ajax({
+            method: "DELETE",
+            url: "/api/apps/whatsapp2/" + project,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                index();
+                alertCustom("success", response.message);
+            },
+        });
+    });
 });

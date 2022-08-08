@@ -2,7 +2,6 @@
     cursor: pointer;
 }
 
-
 .custom-popover {
     position: absolute;
     z-index: 999;
@@ -14,35 +13,36 @@
     top: -130%;
 }
 
-.custom-popover:after, .custom-popover:before {
-	right: 100%;
-	top: 50%;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
+.custom-popover:after,
+.custom-popover:before {
+    right: 100%;
+    top: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
 }
 
 .custom-popover:after {
-	border-color: rgba(214, 214, 214, 0);
-	border-right-color: #eeeeee;
-	border-width: 15px;
-	margin-top: -30px;
-}
-.custom-popover:before {
-	border-color: rgba(0, 0, 0, 0);
-	border-right-color: transparent;
-	border-width: 36px;
-	margin-top: -36px;
+    border-color: rgba(214, 214, 214, 0);
+    border-right-color: #eeeeee;
+    border-width: 15px;
+    margin-top: -30px;
 }
 
+.custom-popover:before {
+    border-color: rgba(0, 0, 0, 0);
+    border-right-color: transparent;
+    border-width: 36px;
+    margin-top: -36px;
+}
 
 .text-filtros {
     font-size: 16px;
     font-weight: 700;
-    color: #ee5261!important;
+    color: #ee5261 !important;
     cursor: pointer;
 }
 
@@ -60,6 +60,7 @@
 .input-group-text {
     background-color: transparent;
 }
+
 .card {
     border: none;
 }
@@ -80,7 +81,6 @@
     font-weight: 700;
     font-size: 25px;
     display: inline;
-    
 }
 
 .link-antecipar {
@@ -89,12 +89,11 @@
     color: purple;
     margin-left: 5px;
     padding-top: 5px;
-
 }
 
 .svg-antecipar {
     margin-top: -5px;
-    fill:   #8E2DE2;
+    fill: #8e2de2;
     width: 18px;
     height: 18px;
 }
@@ -113,23 +112,21 @@
 }
 
 .grad-border.purple {
-    background-image:  linear-gradient(to right, #8E2DE2, #4A00E0);
+    background-image: linear-gradient(to right, #8e2de2, #4a00e0);
 }
 
 .grad-border.blue {
-    background-image:  linear-gradient(to right, rgb(88, 73, 226), rgb(81, 196, 236));
+    background-image: linear-gradient(to right, rgb(88, 73, 226), rgb(81, 196, 236));
 }
 
 .grad-border.green {
     background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);
 }
 
-
 .sub-pad {
     font-size: 12px;
     color: #aaa;
 }
-
 
 .wrap {
     padding: 30px;
@@ -189,7 +186,6 @@
     font-weight: 700;
     font-size: 12px;
 }
-
 
 .fill-red {
     fill: #cb4a2d;

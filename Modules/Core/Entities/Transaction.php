@@ -84,40 +84,36 @@ class Transaction extends Model
 
     protected $presenter = TransactionPresenter::class;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["created_at", "updated_at", "deleted_at"];
 
     protected $fillable = [
-        'sale_id',
-        'gateway_id',
-        'company_id',
-        'user_id',
-        'withdrawal_id',
-        'invitation_id',
-        'value',
-        'type',
-        'status',
-        'status_enum',
-        'release_date',
-        'installment_tax',
-        'checkout_tax',
-        'tax',
-        'tax_type',
-        'transaction_tax',
-        'gateway_released_at',
-        'gateway_transferred',
-        'gateway_transferred_at',
-        'is_waiting_withdrawal',
-        'tracking_required',
-        'is_security_reserve',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "sale_id",
+        "gateway_id",
+        "company_id",
+        "user_id",
+        "withdrawal_id",
+        "invitation_id",
+        "value",
+        "type",
+        "status",
+        "status_enum",
+        "release_date",
+        "installment_tax",
+        "checkout_tax",
+        "tax",
+        "tax_type",
+        "transaction_tax",
+        "gateway_released_at",
+        "gateway_transferred",
+        "gateway_transferred_at",
+        "is_waiting_withdrawal",
+        "tracking_required",
+        "is_security_reserve",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     protected static $logFillable = true;
@@ -180,7 +176,7 @@ class Transaction extends Model
 
     public function productPlanSales(): HasMany
     {
-        return $this->hasMany(ProductPlanSale::class, 'sale_id', 'sale_id');
+        return $this->hasMany(ProductPlanSale::class, "sale_id", "sale_id");
     }
 
     public function gateway(): BelongsTo
@@ -195,6 +191,6 @@ class Transaction extends Model
 
     public function blockReasonSale(): HasMany
     {
-        return $this->hasMany(BlockReasonSale::class, 'sale_id', 'sale_id');
+        return $this->hasMany(BlockReasonSale::class, "sale_id", "sale_id");
     }
 }

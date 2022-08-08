@@ -13,21 +13,27 @@ class CreateSmartfunnelIntegrationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('smartfunnel_integrations', function (Blueprint $table) {
+        Schema::create("smartfunnel_integrations", function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id')->index();
-            $table->unsignedInteger('project_id')->index();
-            $table->string('api_url');
+            $table->unsignedInteger("user_id")->index();
+            $table->unsignedInteger("project_id")->index();
+            $table->string("api_url");
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('smartfunnel_integrations', function(Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
+        Schema::table("smartfunnel_integrations", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
 
-        Schema::table('smartfunnel_integrations', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("smartfunnel_integrations", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -38,6 +44,6 @@ class CreateSmartfunnelIntegrationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('smartfunnel_integrations');
+        Schema::dropIfExists("smartfunnel_integrations");
     }
 }

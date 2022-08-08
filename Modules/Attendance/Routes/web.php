@@ -13,12 +13,12 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth','permission:attendance'],
+        "middleware" => ["web", "auth", "permission:attendance"],
     ],
-    function() {
-
+    function () {
         //role:account_owner|admin|attendance
-        Route::Resource('/customer-service', 'AttendanceController')
-             ->only('index')->names('attendance');
+        Route::Resource("/customer-service", "AttendanceController")
+            ->only("index")
+            ->names("attendance");
     }
 );

@@ -17,22 +17,22 @@ class UpdateAccountIsApprovedInUsers extends Migration
     {
         foreach (User::all() as $user) {
             if ($user->address_document_status == 3 && $user->personal_document_status == 3) {
-                $hasCompanyPfApproved = Company::where('user_id', $user->id)
-                                               ->where('company_type', 1)
-                                               ->where('bank_document_status', 3)
-                                               ->where('capture_transaction_enabled', 1)
-                                               ->exists();
+                $hasCompanyPfApproved = Company::where("user_id", $user->id)
+                    ->where("company_type", 1)
+                    ->where("bank_document_status", 3)
+                    ->where("capture_transaction_enabled", 1)
+                    ->exists();
 
-                $hasCompanyPjApproved = Company::where('user_id', $user->id)
-                                               ->where('company_type', 2)
-                                               ->where('address_document_status', 3)
-                                               ->where('contract_document_status', 3)
-                                               ->where('bank_document_status', 3)
-                                               ->where('capture_transaction_enabled', 1)
-                                               ->exists();
+                $hasCompanyPjApproved = Company::where("user_id", $user->id)
+                    ->where("company_type", 2)
+                    ->where("address_document_status", 3)
+                    ->where("contract_document_status", 3)
+                    ->where("bank_document_status", 3)
+                    ->where("capture_transaction_enabled", 1)
+                    ->exists();
 
                 if ($hasCompanyPjApproved || $hasCompanyPfApproved) {
-                    $user->update(['account_is_approved' => true]);
+                    $user->update(["account_is_approved" => true]);
                 }
             }
         }
@@ -45,6 +45,5 @@ class UpdateAccountIsApprovedInUsers extends Migration
      */
     public function down()
     {
-
     }
 }

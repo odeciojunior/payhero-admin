@@ -12,8 +12,11 @@ class ChangeConvertaxIntegrationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('convertax_integrations', function(Blueprint $table) {
-            $table->boolean('abandoned_cart')->after('credit_card_paid')->default(true);
+        Schema::table("convertax_integrations", function (Blueprint $table) {
+            $table
+                ->boolean("abandoned_cart")
+                ->after("credit_card_paid")
+                ->default(true);
         });
     }
 
@@ -23,8 +26,8 @@ class ChangeConvertaxIntegrationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('convertax_integrations', function(Blueprint $table) {
-            $table->dropColumn('abandoned_cart');
+        Schema::table("convertax_integrations", function (Blueprint $table) {
+            $table->dropColumn("abandoned_cart");
         });
     }
 }

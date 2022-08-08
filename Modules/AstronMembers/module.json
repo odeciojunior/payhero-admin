@@ -4,9 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
-    "providers": [
-        "Modules\\AstronMembers\\Providers\\AstronMembersServiceProvider"
-    ],
+    "providers": ["Modules\\AstronMembers\\Providers\\AstronMembersServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

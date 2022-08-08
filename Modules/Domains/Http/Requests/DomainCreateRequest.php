@@ -13,16 +13,14 @@ class DomainCreateRequest extends FormRequest
     public function rules()
     {
         switch ($this->method()) {
-            case 'GET':
-
+            case "GET":
                 return [
-                    'project_id' => 'required|string|max:255',
-                    'domain_ip'  => 'nullable',
+                    "project_id" => "required|string|max:255",
+                    "domain_ip" => "nullable",
                 ];
 
                 break;
             default:
-
                 break;
         }
     }

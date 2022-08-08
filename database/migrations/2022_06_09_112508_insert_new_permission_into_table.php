@@ -19,9 +19,9 @@ class InsertNewPermissionIntoTable extends Migration
          * Insert the permission into the database
          */
         Permission::create([
-            'name' => 'extract_reports',
-            'title' => 'Extração de Relatórios',
-            'guard' => 'web'
+            "name" => "extract_reports",
+            "title" => "Extração de Relatórios",
+            "guard" => "web",
         ]);
     }
 
@@ -32,6 +32,6 @@ class InsertNewPermissionIntoTable extends Migration
      */
     public function down()
     {
-        Permission::where('name', 'extract_reports')->delete();
+        Permission::where("name", "extract_reports")->delete();
     }
 }

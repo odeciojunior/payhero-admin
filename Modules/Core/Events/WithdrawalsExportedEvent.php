@@ -17,10 +17,10 @@ class WithdrawalsExportedEvent
      * @param User $user
      * @param string $filename
      */
-    public function __construct(User $user, string $filename, string $email = '')
+    public function __construct(User $user, string $filename, string $email = "")
     {
-        $this->user     = $user;
+        $this->user = $user;
         $this->filename = $filename;
-        $this->email    = $email;
+        $this->email = $email;
     }
 }

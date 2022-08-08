@@ -13,9 +13,12 @@ class AddColumnGatewayTransferredAtAfterGatewayTransferredToTransactions extends
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
+        Schema::table("transactions", function (Blueprint $table) {
             //
-            $table->dateTime('gateway_transferred_at')->after('gateway_transferred')->nullable();
+            $table
+                ->dateTime("gateway_transferred_at")
+                ->after("gateway_transferred")
+                ->nullable();
         });
     }
 
@@ -26,8 +29,8 @@ class AddColumnGatewayTransferredAtAfterGatewayTransferredToTransactions extends
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('gateway_transferred_at');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("gateway_transferred_at");
         });
     }
 }

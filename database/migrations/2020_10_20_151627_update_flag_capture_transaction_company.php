@@ -11,13 +11,13 @@ class UpdateFlagCaptureTransactionCompany extends Migration
         $companies = $companyModel->all();
 
         foreach ($companies as $company) {
-            if ($company->get_net_status == $companyModel->present()->getStatusGetnet('approved')) {
+            if ($company->get_net_status == $companyModel->present()->getStatusGetnet("approved")) {
                 $company->update([
-                    'capture_transaction_enabled' => true
+                    "capture_transaction_enabled" => true,
                 ]);
             } else {
                 $company->update([
-                    'capture_transaction_enabled' => false
+                    "capture_transaction_enabled" => false,
                 ]);
             }
         }

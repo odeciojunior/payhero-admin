@@ -12,11 +12,10 @@ class RemoveColumnsTrackingTable extends Migration
      */
     public function up()
     {
-        Schema::table('trackings', function($table) {
-
-            $table->dropColumn('tracking_code');
-            $table->dropColumn('tracking_type_enum');
-            $table->dropColumn('tracking_status_enum');
+        Schema::table("trackings", function ($table) {
+            $table->dropColumn("tracking_code");
+            $table->dropColumn("tracking_type_enum");
+            $table->dropColumn("tracking_status_enum");
         });
     }
 
@@ -26,11 +25,10 @@ class RemoveColumnsTrackingTable extends Migration
      */
     public function down()
     {
-        Schema::table('trackings', function($table) {
-
-            $table->string('tracking_code');
-            $table->tinyInteger('tracking_type_enum');
-            $table->tinyInteger('tracking_status_enum');
+        Schema::table("trackings", function ($table) {
+            $table->string("tracking_code");
+            $table->tinyInteger("tracking_type_enum");
+            $table->tinyInteger("tracking_status_enum");
         });
     }
 }

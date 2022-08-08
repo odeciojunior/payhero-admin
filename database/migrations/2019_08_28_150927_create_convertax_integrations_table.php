@@ -12,21 +12,27 @@ class CreateConvertaxIntegrationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('convertax_integrations', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('link');
-            $table->integer('value');
+        Schema::create("convertax_integrations", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("link");
+            $table->integer("value");
 
-            $table->boolean('boleto_generated')->default(true);
-            $table->boolean('boleto_paid')->default(true);
-            $table->boolean('credit_card_refused')->default(true);
-            $table->boolean('credit_card_paid')->default(true);
+            $table->boolean("boleto_generated")->default(true);
+            $table->boolean("boleto_paid")->default(true);
+            $table->boolean("credit_card_refused")->default(true);
+            $table->boolean("credit_card_paid")->default(true);
 
-            $table->integer('project_id')->unsigned();
-            $table->foreign('project_id')->references('id')->on('projects');
+            $table->integer("project_id")->unsigned();
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
 
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer("user_id")->unsigned();
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
 
             $table->timestamps();
             $table->softDeletes();
@@ -39,6 +45,6 @@ class CreateConvertaxIntegrationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('convertax_integrations');
+        Schema::dropIfExists("convertax_integrations");
     }
 }

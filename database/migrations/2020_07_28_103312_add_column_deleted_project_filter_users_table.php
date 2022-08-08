@@ -13,8 +13,11 @@ class AddColumnDeletedProjectFilterUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->boolean('deleted_project_filter')->after('antecipation_enabled_flag')->default(true);
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("deleted_project_filter")
+                ->after("antecipation_enabled_flag")
+                ->default(true);
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnDeletedProjectFilterUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('deleted_project_filter');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("deleted_project_filter");
         });
     }
 }

@@ -34,16 +34,15 @@ class DomainRecordsService
             $record->delete();
 
             return [
-                'message' => 'DNS removido com sucesso!',
-                'success' => true,
+                "message" => "DNS removido com sucesso!",
+                "success" => true,
             ];
-
         } catch (\Exception $e) {
             report($e);
 
             return [
-                'message' => 'Ocorreu um erro!',
-                'success' => false
+                "message" => "Ocorreu um erro!",
+                "success" => false,
             ];
         }
     }

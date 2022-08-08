@@ -42,12 +42,11 @@ class DomainApprovedNotifyUserListener implements ShouldQueue
     public function handle(DomainApprovedEvent $event)
     {
         try {
-
             $project = $event->project;
-            $users   = $event->users;
-            $message = '';
+            $users = $event->users;
+            $message = "";
             foreach ($users as $user) {
-                $message = 'Domínio aprovado com sucesso para o projeto ' . $project->name . '.';
+                $message = "Domínio aprovado com sucesso para o projeto " . $project->name . ".";
 
                 /** @var UserNotificationService $userNotificationService */
                 $userNotificationService = app(UserNotificationService::class);
@@ -56,7 +55,7 @@ class DomainApprovedNotifyUserListener implements ShouldQueue
                 }
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar salvar notificação dominio aprovado');
+            Log::warning("Erro ao tentar salvar notificação dominio aprovado");
             report($e);
         }
     }

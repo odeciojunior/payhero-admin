@@ -32,24 +32,24 @@ class SmartfunnelSent extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'smartfunnel_sent';
+    protected $table = "smartfunnel_sent";
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'smartfunnel_integration_id',
-        'data',
-        'response',
-        'sent_status',
-        'event_sale',
-        'created_at',
-        'updated_at',
+        "sale_id",
+        "smartfunnel_integration_id",
+        "data",
+        "response",
+        "sent_status",
+        "event_sale",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -76,12 +76,12 @@ class SmartfunnelSent extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'SmartfunnelSent foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'SmartfunnelSent foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'SmartfunnelSent foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "SmartfunnelSent foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "SmartfunnelSent foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "SmartfunnelSent foi criado.";
         } else {
             $activity->description = $eventName;
         }

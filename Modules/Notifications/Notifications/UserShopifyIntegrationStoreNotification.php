@@ -31,7 +31,7 @@ class UserShopifyIntegrationStoreNotification extends Notification
      */
     public function __construct(User $user, Project $project)
     {
-        $this->user    = $user;
+        $this->user = $user;
         $this->project = $project;
     }
 
@@ -42,7 +42,7 @@ class UserShopifyIntegrationStoreNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ["database"];
     }
 
     /**
@@ -52,10 +52,9 @@ class UserShopifyIntegrationStoreNotification extends Notification
      */
     public function toArray($notifiable)
     {
-
         return [
-            'message' => 'Integração do seu projeto ' . $this->project->name . ' com o shopify está concluida',
-            'link'    => Hashids::encode($this->project->id),
+            "message" => "Integração do seu projeto " . $this->project->name . " com o shopify está concluida",
+            "link" => Hashids::encode($this->project->id),
         ];
     }
 }

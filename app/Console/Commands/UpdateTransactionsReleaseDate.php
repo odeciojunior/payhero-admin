@@ -12,9 +12,9 @@ use Modules\Core\Services\GetnetBackOfficeService;
 
 class UpdateTransactionsReleaseDate extends Command
 {
-    protected $signature = 'updateTransactionsReleaseDate';
+    protected $signature = "updateTransactionsReleaseDate";
 
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     public function __construct()
     {
@@ -23,26 +23,24 @@ class UpdateTransactionsReleaseDate extends Command
 
     public function handle()
     {
-
         try {
-
             $getnetService = new GetnetBackOfficeService();
 
             $transactions = Transaction::with([
-                                                  'company',
-                                                  'user',
-                                                  'sale' => function ($query) {
-                                                      $query->withCount([
-                                                                            'products as digital_products_count' => function ($query) {
-                                                                                $query->where('products.type_enum', Product::TYPE_DIGITAL);
-                                                                            }
-                                                                        ]);
-                                                  }
-                                              ])->whereIn('gateway_id',
-                                                          [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
-                ->where('status_enum', Transaction::STATUS_PAID)
-                ->whereNotNull('company_id')
-                ->whereNull('release_date');
+                "company",
+                "user",
+                "sale" => function ($query) {
+                    $query->withCount([
+                        "products as digital_products_count" => function ($query) {
+                            $query->where("products.type_enum", Product::TYPE_DIGITAL);
+                        },
+                    ]);
+                },
+            ])
+                ->whereIn("gateway_id", [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
+                ->where("status_enum", Transaction::STATUS_PAID)
+                ->whereNotNull("company_id")
+                ->whereNull("release_date");
 
             $total = $transactions->count();
 
@@ -56,7 +54,8 @@ class UpdateTransactionsReleaseDate extends Command
                         $user = $transaction->user;
                         $sale = $transaction->sale;
 
-                        $statement = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                        $statement = $getnetService
+                            ->setStatementSaleHashId(hashids_encode($sale->id, "sale_id"))
                             ->setStatementSubSellerId($company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID))
                             ->getStatement($sale->gateway_order_id);
 
@@ -71,7 +70,7 @@ class UpdateTransactionsReleaseDate extends Command
                             //se for produto digital, o prazo mínimo é 7 dias
                             if ($sale->digital_products_count) {
                                 $transactionDate = Carbon::parse($details->transaction_date);
-                                $transactionDate->setTimeFrom('00:00:00');
+                                $transactionDate->setTimeFrom("00:00:00");
                                 $diffInDays = $releaseDate->diffInDays($transactionDate);
                                 if ($diffInDays < 7) {
                                     $releaseDate->addDays(7 - $diffInDays);
@@ -95,8 +94,10 @@ class UpdateTransactionsReleaseDate extends Command
                             $transaction->save();
                         } else {
                             $getnetSale = $getnetService
-                                ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-                                ->setStatementSubSellerId($company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID))
+                                ->setStatementSaleHashId(hashids_encode($sale->id, "sale_id"))
+                                ->setStatementSubSellerId(
+                                    $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID)
+                                )
                                 ->getStatement($sale->gateway_order_id);
 
                             $getnetTransaction = $getnetSale->list_transactions[0] ?? null;
@@ -106,7 +107,7 @@ class UpdateTransactionsReleaseDate extends Command
                                 //se for produto digital, o prazo mínimo é 7 dias
                                 if ($sale->digital_products_count) {
                                     $transactionDate = Carbon::parse($details->transaction_date);
-                                    $transactionDate->setTimeFrom('00:00:00');
+                                    $transactionDate->setTimeFrom("00:00:00");
                                     $diffInDays = $releaseDate->diffInDays($transactionDate);
                                     if ($diffInDays < 7) {
                                         $releaseDate->addDays(7 - $diffInDays);
@@ -116,7 +117,6 @@ class UpdateTransactionsReleaseDate extends Command
                                 $transaction->save();
                             }
                         }
-
                     } catch (Exception $e) {
                         report($e);
                     }
@@ -125,10 +125,8 @@ class UpdateTransactionsReleaseDate extends Command
             });
 
             $bar->finish();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

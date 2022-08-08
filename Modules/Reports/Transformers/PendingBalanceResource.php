@@ -19,15 +19,15 @@ class PendingBalanceResource extends JsonResource
         $sale = $this->sale;
 
         $data = [
-            'id' => Hashids::connection('sale_id')->encode($sale->id),
-            'sale_code' => '#' . Hashids::connection('sale_id')->encode($sale->id),
-            'brand' => !empty($sale->flag)?$sale->flag:$this->sale->present()->getPaymentFlag(), 
-            'project' => $sale->project->name ?? '',
-            'client' => $sale->customer->name ?? '',
-            'start_date' => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
-            'end_date' => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
-            'total_paid' => 'R$ ' . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
-            'is_security_reserve' => intval($this->is_security_reserve),
+            "id" => Hashids::connection("sale_id")->encode($sale->id),
+            "sale_code" => "#" . Hashids::connection("sale_id")->encode($sale->id),
+            "brand" => !empty($sale->flag) ? $sale->flag : $this->sale->present()->getPaymentFlag(),
+            "project" => $sale->project->name ?? "",
+            "client" => $sale->customer->name ?? "",
+            "start_date" => $sale->start_date ? Carbon::parse($sale->start_date)->format("d/m/Y H:i:s") : "",
+            "end_date" => $sale->end_date ? Carbon::parse($sale->end_date)->format("d/m/Y H:i:s") : "",
+            "total_paid" => 'R$ ' . substr_replace(@$this->value, ",", strlen(@$this->value) - 2, 0),
+            "is_security_reserve" => intval($this->is_security_reserve),
         ];
 
         return $data;

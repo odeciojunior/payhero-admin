@@ -12,9 +12,12 @@ class AddColumnApplyOnTablePixels extends Migration
      */
     public function up()
     {
-        Schema::table('pixels', function(Blueprint $table) {
-            $table->json('apply_on_plans')->nullable()->nullable()
-                  ->after('campaign_id');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->json("apply_on_plans")
+                ->nullable()
+                ->nullable()
+                ->after("campaign_id");
         });
     }
 
@@ -24,8 +27,8 @@ class AddColumnApplyOnTablePixels extends Migration
      */
     public function down()
     {
-        Schema::table('pixels', function(Blueprint $table) {
-            $table->dropColumn('apply_on_plans');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn("apply_on_plans");
         });
     }
 }

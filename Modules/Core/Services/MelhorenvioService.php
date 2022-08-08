@@ -7,16 +7,15 @@ use Modules\Core\Entities\MelhorenvioIntegration;
 
 class MelhorenvioService
 {
-
     private const BASE_URL = "https://www.melhorenvio.com.br";
 
     private const BASE_URL_SANDBOX = "https://sandbox.melhorenvio.com.br";
 
     private const SCOPES = [
-        'cart-read', // Visualização dos itens do carrinho
-        'cart-write', // Cadastro e edição dos itens do carrinho
-        'orders-read', // Visualização das etiquetas
-        'shipping-calculate', // Cotação de fretes
+        "cart-read", // Visualização dos itens do carrinho
+        "cart-write", // Cadastro e edição dos itens do carrinho
+        "orders-read", // Visualização das etiquetas
+        "shipping-calculate", // Cotação de fretes
     ];
 
     private string $baseUrl;
@@ -41,8 +40,8 @@ class MelhorenvioService
     {
         if ($integration) {
             $this->setIntegration($integration)
-                ->setClientId(env('MELHORENVIO_CLIENT_ID'))
-                ->setClientSecret(env('MELHORENVIO_CLIENT_SECRET'))
+                ->setClientId(env("MELHORENVIO_CLIENT_ID"))
+                ->setClientSecret(env("MELHORENVIO_CLIENT_SECRET"))
                 ->setAccessToken($integration->access_token)
                 ->setRefreshToken($integration->refresh_token);
         }
@@ -132,9 +131,7 @@ class MelhorenvioService
 
     private function setBaseUrl(): MelhorenvioService
     {
-        $this->baseUrl = env("MELHORENVIO_SANDBOX", false) === true
-            ? self::BASE_URL_SANDBOX
-            : self::BASE_URL;
+        $this->baseUrl = env("MELHORENVIO_SANDBOX", false) === true ? self::BASE_URL_SANDBOX : self::BASE_URL;
         return $this;
     }
 
@@ -145,10 +142,7 @@ class MelhorenvioService
 
     private function setDefaultHeaders(): MelhorenvioService
     {
-        $this->defaultHeaders = [
-            "User-Agent: Cloudfox Sirius (help@cloudfox.net)",
-            "Accept: application/json",
-        ];
+        $this->defaultHeaders = ["User-Agent: Cloudfox Sirius (help@cloudfox.net)", "Accept: application/json"];
 
         if ($this->getExpiration() > 0 && $this->getExpiration() < time()) {
             $this->refreshToken();
@@ -170,29 +164,29 @@ class MelhorenvioService
 
     private function setCallbackUrl(): void
     {
-        $this->callbackUrl = route('melhorenvio.finish');
+        $this->callbackUrl = route("melhorenvio.finish");
     }
 
     public function getScopes(): string
     {
-        return implode(' ', self::SCOPES);
+        return implode(" ", self::SCOPES);
     }
 
     public function getAuthorizationUrl()
     {
         $data = [
-            'client_id' => $this->getClientId(),
-            'redirect_uri' => $this->getCallbackUrl(),
-            'response_type' => 'code',
-            'scope' => $this->getScopes()
+            "client_id" => $this->getClientId(),
+            "redirect_uri" => $this->getCallbackUrl(),
+            "response_type" => "code",
+            "scope" => $this->getScopes(),
         ];
 
         $integration = $this->getIntegration();
         if ($integration) {
-            $data['state'] = hashids_encode($integration->id);
+            $data["state"] = hashids_encode($integration->id);
         }
 
-        return $this->getBaseUrl() . '/oauth/authorize?' . http_build_query($data);
+        return $this->getBaseUrl() . "/oauth/authorize?" . http_build_query($data);
     }
 
     private function doRequest(string $uri = "/", array $data = null, string $method = "GET", array $headers = [])
@@ -229,7 +223,6 @@ class MelhorenvioService
     private function updateCredentials(object $credentials): bool
     {
         if (!empty($credentials->access_token) && !empty($credentials->refresh_token)) {
-
             $this->setAccessToken($credentials->access_token);
             $this->setRefreshToken($credentials->refresh_token);
 
@@ -247,14 +240,14 @@ class MelhorenvioService
     public function requestAccessToken(string $code): bool
     {
         $data = [
-            'grant_type' => 'authorization_code',
-            'client_id' => $this->getClientId(),
-            'client_secret' => $this->getClientSecret(),
-            'redirect_uri' => $this->getCallbackUrl(),
-            'code' => $code
+            "grant_type" => "authorization_code",
+            "client_id" => $this->getClientId(),
+            "client_secret" => $this->getClientSecret(),
+            "redirect_uri" => $this->getCallbackUrl(),
+            "code" => $code,
         ];
 
-        $result = $this->doRequest('/oauth/token', $data, 'POST');
+        $result = $this->doRequest("/oauth/token", $data, "POST");
 
         return $this->updateCredentials($result);
     }
@@ -278,6 +271,3 @@ class MelhorenvioService
         return $this->doRequest("/api/v2/me/orders/{$orderId}");
     }
 }
-
-
-

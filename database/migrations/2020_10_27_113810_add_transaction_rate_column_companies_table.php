@@ -13,8 +13,11 @@ class AddTransactionRateColumnCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('transaction_rate')->nullable()->default('1.00');
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->string("transaction_rate")
+                ->nullable()
+                ->default("1.00");
         });
     }
 
@@ -25,8 +28,8 @@ class AddTransactionRateColumnCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function(Blueprint $table) {
-            $table->dropColumn('transaction_rate');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("transaction_rate");
         });
     }
 }

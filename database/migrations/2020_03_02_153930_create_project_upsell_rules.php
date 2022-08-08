@@ -12,19 +12,22 @@ class CreateProjectUpsellRules extends Migration
      */
     public function up()
     {
-        Schema::create('project_upsell_rules', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('project_id')->index();
-            $table->text('description')->nullable();
-            $table->json('apply_on_plans')->nullable();
-            $table->json('offer_on_plans')->nullable();
-            $table->boolean('active_flag')->default(0);
+        Schema::create("project_upsell_rules", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("project_id")->index();
+            $table->text("description")->nullable();
+            $table->json("apply_on_plans")->nullable();
+            $table->json("offer_on_plans")->nullable();
+            $table->boolean("active_flag")->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('project_upsell_rules', function(Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
+        Schema::table("project_upsell_rules", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
     }
 
@@ -34,6 +37,6 @@ class CreateProjectUpsellRules extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_upsell_rules');
+        Schema::dropIfExists("project_upsell_rules");
     }
 }

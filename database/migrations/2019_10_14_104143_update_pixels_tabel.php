@@ -14,13 +14,13 @@ class UpdatePixelsTabel extends Migration
      */
     public function up()
     {
-        $pixels = Pixel::where('platform', 'like', '%google%')->get();
+        $pixels = Pixel::where("platform", "like", "%google%")->get();
 
         foreach ($pixels as $pixel) {
             $pixel->update([
-                               'platform' => 'google_adwords',
-                           ]);
-        }    
+                "platform" => "google_adwords",
+            ]);
+        }
     }
 
     /**

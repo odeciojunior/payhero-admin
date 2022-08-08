@@ -24,22 +24,20 @@ class UpdateGatewayIdOnWithdrawalsTable extends Migration
         $progress = new ProgressBar($output, $total);
         $progress->start();
 
-        foreach($withdrawals as $withdrawal)
-        {
-            if($withdrawal->automatic_liquidation) {
+        foreach ($withdrawals as $withdrawal) {
+            if ($withdrawal->automatic_liquidation) {
                 $withdrawal->update([
-                    'gateway_id' => Gateway::GETNET_PRODUCTION_ID
+                    "gateway_id" => Gateway::GETNET_PRODUCTION_ID,
                 ]);
-            }
-            else {
+            } else {
                 $withdrawal->update([
-                    'gateway_id' => Gateway::CIELO_PRODUCTION_ID
+                    "gateway_id" => Gateway::CIELO_PRODUCTION_ID,
                 ]);
             }
             $progress->advance();
         }
         $progress->finish();
-        $output->writeln('');    
+        $output->writeln("");
     }
 
     /**

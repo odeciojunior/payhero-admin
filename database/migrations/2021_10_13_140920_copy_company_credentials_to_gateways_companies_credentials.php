@@ -18,7 +18,6 @@ class CopyCompanyCredentialsToGatewaysCompaniesCredentials extends Migration
      */
     public function up()
     {
-
         DB::statement("TRUNCATE gateways_companies_credentials;");
 
         $companies = Company::get();
@@ -28,36 +27,46 @@ class CopyCompanyCredentialsToGatewaysCompaniesCredentials extends Migration
         $progress = new ProgressBar($output, $total);
         $progress->start();
 
-        foreach($companies as $company)
-        {
-            if(!empty($company->subseller_getnet_id)){
-                $this->createCredentials($company,Gateway::GETNET_PRODUCTION_ID,'subseller_getnet_id','get_net_status','capture_transaction_enabled');
+        foreach ($companies as $company) {
+            if (!empty($company->subseller_getnet_id)) {
+                $this->createCredentials(
+                    $company,
+                    Gateway::GETNET_PRODUCTION_ID,
+                    "subseller_getnet_id",
+                    "get_net_status",
+                    "capture_transaction_enabled"
+                );
             } else {
-                $this->createCredentialsEmpty($company,Gateway::GETNET_PRODUCTION_ID, 0);
+                $this->createCredentialsEmpty($company, Gateway::GETNET_PRODUCTION_ID, 0);
             }
 
-            if(!empty($company->subseller_getnet_homolog_id)){
-                $this->createCredentials($company,Gateway::GETNET_SANDBOX_ID,'subseller_getnet_homolog_id','get_net_status');
+            if (!empty($company->subseller_getnet_homolog_id)) {
+                $this->createCredentials(
+                    $company,
+                    Gateway::GETNET_SANDBOX_ID,
+                    "subseller_getnet_homolog_id",
+                    "get_net_status"
+                );
             } else {
-                $this->createCredentialsEmpty($company,Gateway::GETNET_SANDBOX_ID, 0);
+                $this->createCredentialsEmpty($company, Gateway::GETNET_SANDBOX_ID, 0);
             }
 
-            if(!empty($company->asaas_id)){
-                $this->createCredentials($company,Gateway::ASAAS_PRODUCTION_ID,'asaas_id',null);
+            if (!empty($company->asaas_id)) {
+                $this->createCredentials($company, Gateway::ASAAS_PRODUCTION_ID, "asaas_id", null);
             } else {
-                $this->createCredentialsEmpty($company,Gateway::ASAAS_PRODUCTION_ID);
+                $this->createCredentialsEmpty($company, Gateway::ASAAS_PRODUCTION_ID);
             }
 
-            if(!empty($company->asaas_homolog_id)){
-                $this->createCredentials($company,Gateway::ASAAS_SANDBOX_ID,'asaas_homolog_id',null);
+            if (!empty($company->asaas_homolog_id)) {
+                $this->createCredentials($company, Gateway::ASAAS_SANDBOX_ID, "asaas_homolog_id", null);
             } else {
-                $this->createCredentialsEmpty($company,Gateway::ASAAS_SANDBOX_ID);
+                $this->createCredentialsEmpty($company, Gateway::ASAAS_SANDBOX_ID);
             }
 
             $progress->advance();
         }
         $progress->finish();
-        $output->writeln('');
+        $output->writeln("");
     }
 
     /**
@@ -70,24 +79,33 @@ class CopyCompanyCredentialsToGatewaysCompaniesCredentials extends Migration
         DB::statement("TRUNCATE gateways_companies_credentials;");
     }
 
-    public function createCredentials($company,$gatewayId,$fieldSubseller,$fieldStatus,$fielCaptureTransaction=null,$gatewayApiKey=null){
+    public function createCredentials(
+        $company,
+        $gatewayId,
+        $fieldSubseller,
+        $fieldStatus,
+        $fielCaptureTransaction = null,
+        $gatewayApiKey = null
+    ) {
         GatewaysCompaniesCredential::create([
-            'company_id'=>$company->id,
-            'gateway_id'=>$gatewayId,
-            'gateway_status'=>!empty($fieldStatus) ? $company->$fieldStatus : GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING,
-            'gateway_subseller_id'=>$company->$fieldSubseller,
-            'gateway_api_key'=>$gatewayApiKey,
-            'capture_transaction_enabled'=>!empty($fielCaptureTransaction) ? $company->$fielCaptureTransaction : null
+            "company_id" => $company->id,
+            "gateway_id" => $gatewayId,
+            "gateway_status" => !empty($fieldStatus)
+                ? $company->$fieldStatus
+                : GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING,
+            "gateway_subseller_id" => $company->$fieldSubseller,
+            "gateway_api_key" => $gatewayApiKey,
+            "capture_transaction_enabled" => !empty($fielCaptureTransaction) ? $company->$fielCaptureTransaction : null,
         ]);
     }
 
-    public function createCredentialsEmpty($company,$gatewayId,$captureTransaction = null){
-
+    public function createCredentialsEmpty($company, $gatewayId, $captureTransaction = null)
+    {
         GatewaysCompaniesCredential::create([
-            'company_id'=>$company->id,
-            'gateway_id'=>$gatewayId,
-            'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING,
-            'capture_transaction_enabled'=> $captureTransaction
+            "company_id" => $company->id,
+            "gateway_id" => $gatewayId,
+            "gateway_status" => GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING,
+            "capture_transaction_enabled" => $captureTransaction,
         ]);
     }
 }

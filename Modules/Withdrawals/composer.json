@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Withdrawals\\Providers\\WithdrawalsServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

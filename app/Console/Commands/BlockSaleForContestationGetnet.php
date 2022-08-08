@@ -18,14 +18,14 @@ class BlockSaleForContestationGetnet extends Command
      *
      * @var string
      */
-    protected $signature = 'getnet:block-sale-for-contestation';
+    protected $signature = "getnet:block-sale-for-contestation";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -44,30 +44,30 @@ class BlockSaleForContestationGetnet extends Command
      */
     public function handle()
     {
-        $sales =  Sale::select('sales.id')
-        ->join('sale_contestations as c','sales.id','=','c.sale_id')
-        ->leftJoin('block_reason_sales as b','sales.id','=','b.sale_id')
-        ->where('sales.gateway_id',Gateway::GETNET_PRODUCTION_ID)
-        ->where('sales.status',Sale::STATUS_APPROVED)
-        ->where('c.status',SaleContestation::STATUS_IN_PROGRESS)
-        ->whereNull('b.sale_id')->get();
+        $sales = Sale::select("sales.id")
+            ->join("sale_contestations as c", "sales.id", "=", "c.sale_id")
+            ->leftJoin("block_reason_sales as b", "sales.id", "=", "b.sale_id")
+            ->where("sales.gateway_id", Gateway::GETNET_PRODUCTION_ID)
+            ->where("sales.status", Sale::STATUS_APPROVED)
+            ->where("c.status", SaleContestation::STATUS_IN_PROGRESS)
+            ->whereNull("b.sale_id")
+            ->get();
 
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, count($sales));
         $progress->start();
 
-        foreach($sales as $sale)
-        {
+        foreach ($sales as $sale) {
             BlockReasonSale::create([
-                'sale_id'=>$sale->id,
-                'blocked_reason_id'=>BlockReason::IN_DISPUTE,
-                'status'=>BlockReasonSale::STATUS_BLOCKED,
-                'observation'=>'Em disputa'
+                "sale_id" => $sale->id,
+                "blocked_reason_id" => BlockReason::IN_DISPUTE,
+                "status" => BlockReasonSale::STATUS_BLOCKED,
+                "observation" => "Em disputa",
             ]);
 
             $progress->advance();
         }
 
-       $progress->finish();
+        $progress->finish();
     }
 }

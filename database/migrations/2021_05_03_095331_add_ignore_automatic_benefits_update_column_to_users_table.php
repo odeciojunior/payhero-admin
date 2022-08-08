@@ -13,8 +13,11 @@ class AddIgnoreAutomaticBenefitsUpdateColumnToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('ignore_automatic_benefits_updates')->after('level')->default(false);
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("ignore_automatic_benefits_updates")
+                ->after("level")
+                ->default(false);
         });
     }
 
@@ -25,8 +28,8 @@ class AddIgnoreAutomaticBenefitsUpdateColumnToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('ignore_automatic_benefits_updates');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("ignore_automatic_benefits_updates");
         });
     }
 }

@@ -13,20 +13,20 @@ class CreateAntifraudWarningsTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'antifraud_warnings',
-            function (Blueprint $table) {
-                $table->id();
-                $table->unsignedBigInteger("sale_id")->nullable();
-                $table->foreign('sale_id')->references('id')->on('sales');
-                $table->tinyInteger('status')->index();
-                $table->string('column')->index();
-                $table->string('value');
-                $table->string('level', 20);
-                $table->timestamps();
-                $table->unique(['sale_id', 'column', 'value']);
-            }
-        );
+        Schema::create("antifraud_warnings", function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger("sale_id")->nullable();
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
+            $table->tinyInteger("status")->index();
+            $table->string("column")->index();
+            $table->string("value");
+            $table->string("level", 20);
+            $table->timestamps();
+            $table->unique(["sale_id", "column", "value"]);
+        });
     }
 
     /**
@@ -36,11 +36,8 @@ class CreateAntifraudWarningsTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'antifraud_warnings',
-            function (Blueprint $table) {
-                Schema::dropIfExists('antifraud_warnings');
-            }
-        );
+        Schema::table("antifraud_warnings", function (Blueprint $table) {
+            Schema::dropIfExists("antifraud_warnings");
+        });
     }
 }

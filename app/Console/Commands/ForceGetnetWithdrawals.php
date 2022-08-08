@@ -18,14 +18,14 @@ class ForceGetnetWithdrawals extends Command
      *
      * @var string
      */
-    protected $signature = 'getnet:force-withdrawals';
+    protected $signature = "getnet:force-withdrawals";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -44,13 +44,11 @@ class ForceGetnetWithdrawals extends Command
      */
     public function handle()
     {
-
         try {
-
             $getnetService = new GetnetService();
 
-            $companies = Company::whereHas('transactions', function($q) {
-                $q->where('gateway_id', Gateway::GETNET_PRODUCTION_ID);
+            $companies = Company::whereHas("transactions", function ($q) {
+                $q->where("gateway_id", Gateway::GETNET_PRODUCTION_ID);
             })->get();
 
             $output = new ConsoleOutput();
@@ -59,19 +57,18 @@ class ForceGetnetWithdrawals extends Command
 
             $count = 0;
             $pendingDebtsSum = 0;
-            foreach($companies as $company) {
-
+            foreach ($companies as $company) {
                 $progress->advance();
 
                 $getnetService->setCompany($company);
                 $availableBalance = 0;
                 $pendingDebts = $getnetService->getPendingDebtBalance();
-                if($pendingDebts > 0) {
+                if ($pendingDebts > 0) {
                     $availableBalance = $getnetService->getAvailableBalance();
                 }
 
-                if($pendingDebts > 0 && $availableBalance > $pendingDebts) {
-                    Log::info($company->user->name . ' - ' . $company->fantasy_name);
+                if ($pendingDebts > 0 && $availableBalance > $pendingDebts) {
+                    Log::info($company->user->name . " - " . $company->fantasy_name);
                     Log::info("Saldo disponível: " . foxutils()->formatMoney($availableBalance / 100));
                     Log::info("Débitos pendentes: " . foxutils()->formatMoney($pendingDebts / 100));
                     $count++;
@@ -114,11 +111,9 @@ class ForceGetnetWithdrawals extends Command
             //     Log::info("----------------------------------------");
 
             // }
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 
     public function getSubsellerIds()

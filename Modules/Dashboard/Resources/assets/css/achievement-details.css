@@ -1,5 +1,5 @@
 .achievement-details-style {
-    top: 10vh
+    top: 10vh;
 }
 
 .achievement-details-style .modal-content {
@@ -9,7 +9,7 @@
     background-position: -30px 0;
     border-radius: 20px;
     margin: 0 auto;
-    max-width: 500px
+    max-width: 500px;
 }
 
 .achievement-details-style .modal-header {
@@ -30,13 +30,13 @@
     cursor: pointer;
 }
 
-.achievement-details-style .close span{
+.achievement-details-style .close span {
     background-color: rgba(255, 255, 255, 0.3);
 
     border-radius: 50px;
     padding: 5px;
 
-    font-size: 20px
+    font-size: 20px;
 }
 
 .achievement-details-style .modal-body {
@@ -56,17 +56,17 @@
     top: 40px;
     z-index: 1;
 
-    height: 160px
+    height: 160px;
 }
 
 .achievement-details-style #description {
     font: normal normal bold 16px Muli;
 
-    margin-bottom: 0.5rem
+    margin-bottom: 0.5rem;
 }
 
 .achievement-details-style #description-achievement {
-    color: #ABABAB;
+    color: #ababab;
 
     font: normal normal normal 12px Muli;
     text-transform: uppercase;
@@ -78,25 +78,24 @@
     display: block;
 
     margin: 1rem auto;
-    border-bottom: 1px solid #E5E5E5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .achievement-details-style #name {
     font: normal normal bold 25px Muli;
-    color: #2E85EC;
+    color: #2e85ec;
 
-    margin-bottom: 2rem
+    margin-bottom: 2rem;
 }
 
 .achievement-details-style #name-title {
     font: normal normal bold 25px Muli;
-    color: #2E85EC;
+    color: #2e85ec;
 }
 
 .achievement-details-style #storytelling {
     font: normal normal normal 14px Muli;
     color: #919191;
-
 }
 
 .achievement-details-style #benefits-title {
@@ -107,7 +106,7 @@
 }
 
 .achievement-details-style #benefits .material-icons {
-    background-color: #5EE2A1;
+    background-color: #5ee2a1;
 
     color: white;
     font-size: 15px;
@@ -122,15 +121,15 @@
 }
 
 .achievement-details-style #benefits-data {
-    color: #5E5E5E;
+    color: #5e5e5e;
     font: normal normal bold 14px Muli;
 }
 
-.achievement-details-style [id*=reward-check-data-] {
+.achievement-details-style [id*="reward-check-data-"] {
     position: relative;
     top: 35px;
 
-    background-color: #00A6FF;
+    background-color: #00a6ff;
 
     padding: 15px;
     border-radius: 5px;
@@ -150,12 +149,12 @@ body.blurred .page {
     -o-filter: blur(2px);
     -ms-filter: blur(2px);
     filter: blur(2px);
-    transition: all .5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 
 #title-achievement {
     color: #707070;
-    font: normal normal normal 16px Muli
+    font: normal normal normal 16px Muli;
 }
 
 @media (max-width: 767px) {
@@ -169,4 +168,3 @@ body.blurred .page {
         top: 15vh;
     }
 }
-

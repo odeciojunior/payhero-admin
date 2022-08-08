@@ -15,28 +15,27 @@ class UpdatePhoneNumbers extends Migration
      */
     public function up()
     {
-
-        User::whereNotNull('cellphone')->chunk(100, function($users) {
+        User::whereNotNull("cellphone")->chunk(100, function ($users) {
             foreach ($users as $user) {
                 $user->update([
-                                  'cellphone' => '+55' . preg_replace("/[^0-9]/", "", $user->cellphone),
-                              ]);
+                    "cellphone" => "+55" . preg_replace("/[^0-9]/", "", $user->cellphone),
+                ]);
             }
         });
 
-        Company::whereNotNull('support_telephone')->chunk(100, function($companies) {
+        Company::whereNotNull("support_telephone")->chunk(100, function ($companies) {
             foreach ($companies as $company) {
                 $company->update([
-                                     'support_telephone' => '+55' . preg_replace("/[^0-9]/", "", $company->support_telephone),
-                                 ]);
+                    "support_telephone" => "+55" . preg_replace("/[^0-9]/", "", $company->support_telephone),
+                ]);
             }
         });
 
-        Client::whereNotNull('telephone')->chunk(100, function($clients) {
+        Client::whereNotNull("telephone")->chunk(100, function ($clients) {
             foreach ($clients as $client) {
                 $client->update([
-                                    'telephone' => '+55' . preg_replace("/[^0-9]/", "", $client->telephone),
-                                ]);
+                    "telephone" => "+55" . preg_replace("/[^0-9]/", "", $client->telephone),
+                ]);
             }
         });
     }
@@ -49,5 +48,4 @@ class UpdatePhoneNumbers extends Migration
     {
         //
     }
-
 }

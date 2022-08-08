@@ -13,16 +13,16 @@ class ProjectReviewsUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'apply_on_plans' => 'required|array',
-            'photo'          => 'nullable',
-            'name'           => 'required',
-            'description'    => 'required',
-            'stars'          => 'required',
-            'active_flag'    => 'required',
-            'photo_w'        => 'nullable',
-            'photo_h'        => 'nullable',
-            'photo_x1'       => 'nullable',
-            'photo_y1'       => 'nullable',
+            "apply_on_plans" => "required|array",
+            "photo" => "nullable",
+            "name" => "required",
+            "description" => "required",
+            "stars" => "required",
+            "active_flag" => "required",
+            "photo_w" => "nullable",
+            "photo_h" => "nullable",
+            "photo_x1" => "nullable",
+            "photo_y1" => "nullable",
         ];
     }
 
@@ -38,9 +38,9 @@ class ProjectReviewsUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'description.required'    => 'O campo Descrição é obrigatório',
-            'discount.required'       => 'O campo Desconto é obrigatório',
-            'apply_on_plans.required' => 'O campo Ao comprar o plano é obrigatório'
+            "description.required" => "O campo Descrição é obrigatório",
+            "discount.required" => "O campo Desconto é obrigatório",
+            "apply_on_plans.required" => "O campo Ao comprar o plano é obrigatório",
         ];
     }
 }

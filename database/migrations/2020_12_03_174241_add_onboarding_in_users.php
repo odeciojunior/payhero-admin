@@ -13,8 +13,11 @@ class AddOnboardingInUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('onboarding')->default(false)->after('has_sale_before_getnet');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("onboarding")
+                ->default(false)
+                ->after("has_sale_before_getnet");
         });
     }
 
@@ -25,8 +28,8 @@ class AddOnboardingInUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('onboarding');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("onboarding");
         });
     }
 }

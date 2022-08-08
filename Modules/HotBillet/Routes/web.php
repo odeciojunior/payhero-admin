@@ -13,10 +13,10 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth','permission:apps'],
-        'as' => 'hotbillet'
+        "middleware" => ["web", "auth", "permission:apps"],
+        "as" => "hotbillet",
     ],
-    function() {
-        Route::resource('/apps/hotbillet', 'HotBilletController')->only('index');
+    function () {
+        Route::resource("/apps/hotbillet", "HotBilletController")->only("index");
     }
 );

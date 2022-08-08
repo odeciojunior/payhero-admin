@@ -12,10 +12,19 @@ class AlterNotazzInvoiceTableAddDateCanceledRejectedColumn extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_invoices', function(Blueprint $table) {
-            $table->string('date_canceled')->after('return_message')->nullable();
-            $table->string('date_rejected')->after('return_message')->nullable();
-            $table->string('postback_message')->after('return_message')->nullable();
+        Schema::table("notazz_invoices", function (Blueprint $table) {
+            $table
+                ->string("date_canceled")
+                ->after("return_message")
+                ->nullable();
+            $table
+                ->string("date_rejected")
+                ->after("return_message")
+                ->nullable();
+            $table
+                ->string("postback_message")
+                ->after("return_message")
+                ->nullable();
         });
     }
 
@@ -25,10 +34,10 @@ class AlterNotazzInvoiceTableAddDateCanceledRejectedColumn extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_invoices', function(Blueprint $table) {
-            $table->dropColumn('date_canceled');
-            $table->dropColumn('date_rejected');
-            $table->dropColumn('postback_message');
+        Schema::table("notazz_invoices", function (Blueprint $table) {
+            $table->dropColumn("date_canceled");
+            $table->dropColumn("date_rejected");
+            $table->dropColumn("postback_message");
         });
     }
 }

@@ -13,12 +13,12 @@ class AddColumnsToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('get_faster')
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("get_faster")
                 ->default(false)
-                ->after('installment_cashback');
-            $table->integer('release_count')
-                ->after('get_faster');
+                ->after("installment_cashback");
+            $table->integer("release_count")->after("get_faster");
         });
     }
 
@@ -29,8 +29,8 @@ class AddColumnsToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['get_faster', 'release_count']);
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn(["get_faster", "release_count"]);
         });
     }
 }

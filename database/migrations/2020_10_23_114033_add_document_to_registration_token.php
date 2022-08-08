@@ -13,8 +13,11 @@ class AddDocumentToRegistrationToken extends Migration
      */
     public function up()
     {
-        Schema::table('registration_token', function (Blueprint $table) {
-            $table->string('document')->nullable()->after('token');
+        Schema::table("registration_token", function (Blueprint $table) {
+            $table
+                ->string("document")
+                ->nullable()
+                ->after("token");
         });
     }
 
@@ -25,8 +28,8 @@ class AddDocumentToRegistrationToken extends Migration
      */
     public function down()
     {
-        Schema::table('registration_token', function (Blueprint $table) {
-            $table->dropColumn('document');
+        Schema::table("registration_token", function (Blueprint $table) {
+            $table->dropColumn("document");
         });
     }
 }

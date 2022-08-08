@@ -12,14 +12,17 @@ class CreateTableSuspectBotCheckout extends Migration
      */
     public function up()
     {
-        Schema::create('suspect_bots', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('checkout_id')->index();
+        Schema::create("suspect_bots", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedBigInteger("checkout_id")->index();
             $table->timestamps();
         });
 
-        Schema::table('suspect_bots', function(Blueprint $table) {
-            $table->foreign('checkout_id')->references('id')->on('checkouts');
+        Schema::table("suspect_bots", function (Blueprint $table) {
+            $table
+                ->foreign("checkout_id")
+                ->references("id")
+                ->on("checkouts");
         });
     }
 
@@ -29,6 +32,6 @@ class CreateTableSuspectBotCheckout extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_suspect_bot_checkout');
+        Schema::dropIfExists("table_suspect_bot_checkout");
     }
 }

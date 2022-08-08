@@ -13,15 +13,17 @@ class AddCompanyIdToApiTokensTable extends Migration
      */
     public function up()
     {
-        Schema::table('api_tokens', function (Blueprint $table) {
-            $table->unsignedInteger('company_id')
-                ->after('user_id')
+        Schema::table("api_tokens", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("company_id")
+                ->after("user_id")
                 ->nullable();
 
-            $table->foreign('company_id')
-                ->references('id')
-                ->on('companies')
-                ->onDelete('cascade');
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies")
+                ->onDelete("cascade");
         });
     }
 
@@ -32,9 +34,9 @@ class AddCompanyIdToApiTokensTable extends Migration
      */
     public function down()
     {
-        Schema::table('api_tokens', function (Blueprint $table) {
-            $table->dropForeign(['company_id']);
-            $table->dropColumn('company_id');
+        Schema::table("api_tokens", function (Blueprint $table) {
+            $table->dropForeign(["company_id"]);
+            $table->dropColumn("company_id");
         });
     }
 }

@@ -25,19 +25,19 @@ class GatewayFlagTax extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'gateway_id',
-        'gateway_flag_id',
-        'installments',
-        'type_enum',
-        'percent',
-        'active_flag',
-        'created_at',
-        'updated_at',
+        "gateway_id",
+        "gateway_flag_id",
+        "installments",
+        "type_enum",
+        "percent",
+        "active_flag",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -63,6 +63,6 @@ class GatewayFlagTax extends Model
      */
     public function gatewayFlag()
     {
-        return $this->belongsTo('Modules\Core\Entities\CardFlag');
+        return $this->belongsTo("Modules\Core\Entities\CardFlag");
     }
 }

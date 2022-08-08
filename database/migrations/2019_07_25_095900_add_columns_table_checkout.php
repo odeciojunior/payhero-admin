@@ -12,9 +12,9 @@ class AddColumnsTableCheckout extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->integer('email_sent_amount')->nullable();
-            $table->integer('sms_sent_amount')->nullable();
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->integer("email_sent_amount")->nullable();
+            $table->integer("sms_sent_amount")->nullable();
         });
     }
 
@@ -24,9 +24,9 @@ class AddColumnsTableCheckout extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->dropColumn('email_sent_amount');
-            $table->dropColumn('sms_sent_amount');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("email_sent_amount");
+            $table->dropColumn("sms_sent_amount");
         });
     }
 }

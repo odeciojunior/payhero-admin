@@ -13,13 +13,15 @@ class AddCollumnAsaasAlertToUsersTable extends Migration
      */
     public function up()
     {
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('asaas_alert')->default(false)->after('mkt_information');;
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("asaas_alert")
+                ->default(false)
+                ->after("mkt_information");
         });
 
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('asaas_alert');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("asaas_alert");
         });
     }
 
@@ -30,8 +32,8 @@ class AddCollumnAsaasAlertToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('asaas_alert');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("asaas_alert");
         });
     }
 }

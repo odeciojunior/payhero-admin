@@ -74,7 +74,7 @@ class Checkout extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var string
      */
@@ -83,41 +83,41 @@ class Checkout extends Model
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'affiliate_id',
-        'status',
-        'status_enum',
-        'operational_system',
-        'os_enum',
-        'browser',
-        'id_log_session',
-        'ip',
-        'ip_localization',
-        'ip_state',
-        'city',
-        'state',
-        'state_name',
-        'zip_code',
-        'country',
-        'parameter',
-        'currency',
-        'lat',
-        'lon',
-        'src',
-        'is_mobile',
-        'utm_source',
-        'utm_medium',
-        'utm_campaign',
-        'utm_term',
-        'utm_content',
-        'email_sent_amount',
-        'sms_sent_amount',
-        'client_name',
-        'client_telephone',
-        'template_type',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "affiliate_id",
+        "status",
+        "status_enum",
+        "operational_system",
+        "os_enum",
+        "browser",
+        "id_log_session",
+        "ip",
+        "ip_localization",
+        "ip_state",
+        "city",
+        "state",
+        "state_name",
+        "zip_code",
+        "country",
+        "parameter",
+        "currency",
+        "lat",
+        "lon",
+        "src",
+        "is_mobile",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_term",
+        "utm_content",
+        "email_sent_amount",
+        "sms_sent_amount",
+        "client_name",
+        "client_telephone",
+        "template_type",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -143,7 +143,7 @@ class Checkout extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo("Modules\Core\Entities\Project");
     }
 
     /**
@@ -151,7 +151,7 @@ class Checkout extends Model
      */
     public function affiliate()
     {
-        return $this->belongsTo('Modules\Core\Entities\Affiliate');
+        return $this->belongsTo("Modules\Core\Entities\Affiliate");
     }
 
     /**
@@ -159,7 +159,7 @@ class Checkout extends Model
      */
     public function checkoutPlans()
     {
-        return $this->hasMany('Modules\Core\Entities\CheckoutPlan');
+        return $this->hasMany("Modules\Core\Entities\CheckoutPlan");
     }
 
     /**
@@ -167,7 +167,7 @@ class Checkout extends Model
      */
     public function logs()
     {
-        return $this->hasMany('Modules\Core\Entities\Log');
+        return $this->hasMany("Modules\Core\Entities\Log");
     }
 
     /**
@@ -175,6 +175,6 @@ class Checkout extends Model
      */
     public function sales()
     {
-        return $this->hasMany('Modules\Core\Entities\Sale');
+        return $this->hasMany("Modules\Core\Entities\Sale");
     }
 }

@@ -12,9 +12,15 @@ class AddColumnUserIdTableHotzappIntegrations extends Migration
      */
     public function up()
     {
-        Schema::table('hotzapp_integrations', function(Blueprint $table) {
-            $table->integer('user_id')->unsigned()->after('project_id');
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("hotzapp_integrations", function (Blueprint $table) {
+            $table
+                ->integer("user_id")
+                ->unsigned()
+                ->after("project_id");
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -24,8 +30,8 @@ class AddColumnUserIdTableHotzappIntegrations extends Migration
      */
     public function down()
     {
-        Schema::table('hotzapp_integrations', function(Blueprint $table) {
-            $table->dropForeign('user_id');
+        Schema::table("hotzapp_integrations", function (Blueprint $table) {
+            $table->dropForeign("user_id");
         });
     }
 }

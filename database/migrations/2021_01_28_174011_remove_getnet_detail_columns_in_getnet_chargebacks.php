@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class RemoveGetnetDetailColumnsInGetnetChargebacks extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,9 +13,9 @@ class RemoveGetnetDetailColumnsInGetnetChargebacks extends Migration
      */
     public function up()
     {
-        Schema::table('getnet_chargebacks', function (Blueprint $table) {
-            $table->dropForeign(['getnet_chargeback_detail_id']);
-            $table->dropColumn('getnet_chargeback_detail_id');
+        Schema::table("getnet_chargebacks", function (Blueprint $table) {
+            $table->dropForeign(["getnet_chargeback_detail_id"]);
+            $table->dropColumn("getnet_chargeback_detail_id");
         });
     }
 
@@ -27,9 +26,8 @@ class RemoveGetnetDetailColumnsInGetnetChargebacks extends Migration
      */
     public function down()
     {
-        Schema::table('getnet_chargebacks', function (Blueprint $table) {
-            $table->unsignedBigInteger('getnet_chargeback_detail_id')->index();
+        Schema::table("getnet_chargebacks", function (Blueprint $table) {
+            $table->unsignedBigInteger("getnet_chargeback_detail_id")->index();
         });
     }
-
 }

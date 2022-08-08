@@ -13,8 +13,8 @@ class AlterUsersTableAddAbroadTransferTaxColumn extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->float('abroad_transfer_tax')->default(2.0);
+        Schema::table("users", function (Blueprint $table) {
+            $table->float("abroad_transfer_tax")->default(2.0);
         });
     }
 
@@ -25,11 +25,8 @@ class AlterUsersTableAddAbroadTransferTaxColumn extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropColumn('abroad_transfer_tax');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("abroad_transfer_tax");
         });
     }
-
 }
-
-

@@ -13,24 +13,30 @@ class CreateUserBiometryResultsTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'user_biometry_results',
-            function (Blueprint $table) {
-                $table->id();
-                $table->integer('user_id')->unsigned();
-                $table->foreign('user_id')->references('id')->on('users');
-                $table->string('vendor')->index();
-                $table->string('biometry_id')->nullable()->index();
-                $table->string('score')->nullable();
-                $table->string('status')->nullable()->index();
-                $table->json('request_data')->nullable();
-                $table->json('response_data')->nullable();
-                $table->json('postback_data')->nullable();
-                $table->json('api_data')->nullable();
-                $table->softDeletes();
-                $table->timestamps();
-            }
-        );
+        Schema::create("user_biometry_results", function (Blueprint $table) {
+            $table->id();
+            $table->integer("user_id")->unsigned();
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
+            $table->string("vendor")->index();
+            $table
+                ->string("biometry_id")
+                ->nullable()
+                ->index();
+            $table->string("score")->nullable();
+            $table
+                ->string("status")
+                ->nullable()
+                ->index();
+            $table->json("request_data")->nullable();
+            $table->json("response_data")->nullable();
+            $table->json("postback_data")->nullable();
+            $table->json("api_data")->nullable();
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -40,6 +46,6 @@ class CreateUserBiometryResultsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_biometry_results');
+        Schema::dropIfExists("user_biometry_results");
     }
 }

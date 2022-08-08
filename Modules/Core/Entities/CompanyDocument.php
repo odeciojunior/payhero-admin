@@ -34,9 +34,9 @@ class CompanyDocument extends Model
     public const DOCUMENT_TYPE_ADDRESS_ENUM = 2;
     public const DOCUMENT_TYPE_CONTRACT_ENUM = 3;
 
-    public const DOCUMENT_TYPE_BANK = 'bank_document';
-    public const DOCUMENT_TYPE_ADDRESS = 'address_document';
-    public const DOCUMENT_TYPE_CONTRACT = 'contract_document';
+    public const DOCUMENT_TYPE_BANK = "bank_document";
+    public const DOCUMENT_TYPE_ADDRESS = "address_document";
+    public const DOCUMENT_TYPE_CONTRACT = "contract_document";
 
     /**
      * @var string
@@ -46,18 +46,18 @@ class CompanyDocument extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'company_id',
-        'document_url',
-        'document_type_enum',
-        'status',
-        'refused_reason',
-        'created_at',
-        'updated_at',
+        "company_id",
+        "document_url",
+        "document_type_enum",
+        "status",
+        "refused_reason",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -84,12 +84,12 @@ class CompanyDocument extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Documento da empresa foi deletado.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Documento da empresa foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Documento da empresa foi criado';
+        if ($eventName == "deleted") {
+            $activity->description = "Documento da empresa foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Documento da empresa foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Documento da empresa foi criado";
         } else {
             $activity->description = $eventName;
         }
@@ -100,6 +100,6 @@ class CompanyDocument extends Model
      */
     public function company()
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 }

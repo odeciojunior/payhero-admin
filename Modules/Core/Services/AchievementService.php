@@ -18,7 +18,7 @@ class AchievementService
 
     public function checkAchievement(User $user, Achievement $achievement): bool
     {
-        $hasAchievement = $user->achievements->contains('id', $achievement->id);
+        $hasAchievement = $user->achievements->contains("id", $achievement->id);
         if ($hasAchievement) {
             return true;
         }
@@ -45,8 +45,13 @@ class AchievementService
 
     public function getCurrentUserAchievements(User $user): array
     {
-        return Achievement::select('id', 'name', 'description', 'icon', 'storytelling')
-            ->selectRaw('EXISTS(SELECT user_id FROM achievement_user WHERE user_id = ' . $user->id . ' AND achievement_id = achievements.id) AS active')
-            ->get([$user->id])->toArray();
+        return Achievement::select("id", "name", "description", "icon", "storytelling")
+            ->selectRaw(
+                "EXISTS(SELECT user_id FROM achievement_user WHERE user_id = " .
+                    $user->id .
+                    " AND achievement_id = achievements.id) AS active"
+            )
+            ->get([$user->id])
+            ->toArray();
     }
 }

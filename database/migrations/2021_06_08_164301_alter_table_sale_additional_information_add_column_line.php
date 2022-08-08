@@ -13,7 +13,9 @@ class AlterTableSaleAdditionalInformationAddColumnLine extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE sale_additional_customer_informations ADD COLUMN line tinyint default 1 after value;");
+        DB::statement(
+            "ALTER TABLE sale_additional_customer_informations ADD COLUMN line tinyint default 1 after value;"
+        );
     }
 
     /**

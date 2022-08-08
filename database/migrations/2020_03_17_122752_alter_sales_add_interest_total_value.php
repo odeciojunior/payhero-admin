@@ -13,8 +13,12 @@ class AlterSalesAddInterestTotalValue extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->integer('interest_total_value')->unsigned()->after('automatic_discount')->nullable();
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->integer("interest_total_value")
+                ->unsigned()
+                ->after("automatic_discount")
+                ->nullable();
         });
     }
 
@@ -25,8 +29,8 @@ class AlterSalesAddInterestTotalValue extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('interest_total_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("interest_total_value");
         });
     }
 }

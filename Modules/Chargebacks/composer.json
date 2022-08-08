@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Chargebacks\\Providers\\ChargebacksServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

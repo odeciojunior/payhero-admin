@@ -12,10 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  **/
 class PixelConfig extends Model
 {
-    protected $fillable = [
-        'project_id',
-        'metatags_facebook'
-    ];
+    protected $fillable = ["project_id", "metatags_facebook"];
 
     public function project(): BelongsTo
     {

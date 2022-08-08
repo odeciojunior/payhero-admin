@@ -14,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        "App\Model" => "App\Policies\ModelPolicy",
     ];
 
     /**
@@ -25,13 +25,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         Passport::routes();
-        Passport::loadKeysFrom(app_path() . '/Credentials/Passport');
+        Passport::loadKeysFrom(app_path() . "/Credentials/Passport");
         Passport::tokensCan(ApiToken::$tokenScopes);
         $expireAt = now()->addDays(1);
         Passport::personalAccessTokensExpireIn($expireAt);
 
         Gate::after(function ($user, $ability) {
-            return $user->hasRole('admin') ? true : null;
+            return $user->hasRole("admin") ? true : null;
         });
     }
 }

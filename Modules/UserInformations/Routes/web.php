@@ -11,6 +11,6 @@
 |
 */
 
-Route::prefix('userinformations')->group(function() {
-    Route::get('/', 'UserInformationsController@index');
+Route::prefix("userinformations")->group(function () {
+    Route::get("/", "UserInformationsController@index");
 });

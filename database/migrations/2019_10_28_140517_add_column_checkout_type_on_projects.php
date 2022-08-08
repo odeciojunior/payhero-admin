@@ -13,8 +13,8 @@ class AddColumnCheckoutTypeOnProjects extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->integer('checkout_type')->default(1);
+        Schema::table("projects", function (Blueprint $table) {
+            $table->integer("checkout_type")->default(1);
         });
     }
 
@@ -24,9 +24,8 @@ class AddColumnCheckoutTypeOnProjects extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('checkout_type');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("checkout_type");
         });
     }
 }
-

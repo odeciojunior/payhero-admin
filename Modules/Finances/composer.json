@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Finances\\Providers\\FinancesServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

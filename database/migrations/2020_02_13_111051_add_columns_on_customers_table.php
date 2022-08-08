@@ -13,11 +13,12 @@ class AddColumnsOnCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->rememberToken()->after('password');
-            $table->boolean('email_verified')
+        Schema::table("customers", function (Blueprint $table) {
+            $table->rememberToken()->after("password");
+            $table
+                ->boolean("email_verified")
                 ->default(false)
-                ->after('email');
+                ->after("email");
         });
     }
 
@@ -28,9 +29,9 @@ class AddColumnsOnCustomersTable extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table("customers", function (Blueprint $table) {
             $table->dropRememberToken();
-            $table->dropColumn('email_verified');
+            $table->dropColumn("email_verified");
         });
     }
 }

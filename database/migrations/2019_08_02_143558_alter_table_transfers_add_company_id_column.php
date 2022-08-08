@@ -12,9 +12,15 @@ class AlterTableTransfersAddCompanyIdColumn extends Migration
      */
     public function up()
     {
-        Schema::table('transfers', function(Blueprint $table) {
-            $table->unsignedInteger('company_id')->nullable()->after('user');
-            $table->foreign('company_id')->references('id')->on('companies');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("company_id")
+                ->nullable()
+                ->after("user");
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
     }
 
@@ -24,8 +30,8 @@ class AlterTableTransfersAddCompanyIdColumn extends Migration
      */
     public function down()
     {
-        Schema::table('transfers', function(Blueprint $table) {
-            $table->dropColumn('company_id');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->dropColumn("company_id");
         });
     }
 }

@@ -14,8 +14,11 @@ class AlterTableWoocommerceintegrationsAddSyncedAt extends Migration
     public function up()
     {
         //
-        Schema::table('woo_commerce_integrations', function (Blueprint $table) {
-            $table->dateTime('synced_at')->nullable()->after('status');
+        Schema::table("woo_commerce_integrations", function (Blueprint $table) {
+            $table
+                ->dateTime("synced_at")
+                ->nullable()
+                ->after("status");
         });
     }
 

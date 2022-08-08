@@ -13,9 +13,9 @@ use Modules\Core\Services\Email\Gmail\GmailService;
 
 class CheckSaleContestationsTxtFormat extends Command
 {
-    protected $signature = 'getnet:import-sale-contestations-txt-format';
+    protected $signature = "getnet:import-sale-contestations-txt-format";
 
-    protected $description = 'Import sale contestation from gmail';
+    protected $description = "Import sale contestation from gmail";
 
     protected $cloudfoxCode = "7762088";
 
@@ -34,7 +34,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 $replace = str_replace("storage", "", $file);
                 $aArray = file(storage_path("app") . $replace, FILE_IGNORE_NEW_LINES);
                 $arr_getnet = [];
-                $file_date = '';
+                $file_date = "";
 
                 foreach ($aArray as $key => $sLine) {
                     $codes = $this->updateCodeByLine($sLine);
@@ -64,37 +64,45 @@ class CheckSaleContestationsTxtFormat extends Command
                         "protocol_number" => $this->returnByStartLine($codes, 8),
                     ];
 
-                    if (!empty($arr['store_code']) && $arr['store_code'] == $this->cloudfoxCode) {
+                    if (!empty($arr["store_code"]) && $arr["store_code"] == $this->cloudfoxCode) {
                         $arr_getnet[] = $arr;
                     }
                 }
 
                 foreach ($arr_getnet as $contestation_arr) {
-                    $transaction_date = Carbon::createFromFormat("dmY", $contestation_arr['transaction_date']);
-                    $saleGatewayRequests = SaleGatewayRequest::where("gateway_result->credit->terminal_nsu", "=",
-                        $contestation_arr["nsu"])
+                    $transaction_date = Carbon::createFromFormat("dmY", $contestation_arr["transaction_date"]);
+                    $saleGatewayRequests = SaleGatewayRequest::where(
+                        "gateway_result->credit->terminal_nsu",
+                        "=",
+                        $contestation_arr["nsu"]
+                    )
                         ->whereHas("sale", function ($query) use ($contestation_arr, $transaction_date) {
-                            $query->where("original_total_paid_value", "=",
-                                foxutils()->onlyNumbers($contestation_arr['transaction_amount']))
+                            $query
+                                ->where(
+                                    "original_total_paid_value",
+                                    "=",
+                                    foxutils()->onlyNumbers($contestation_arr["transaction_amount"])
+                                )
                                 ->whereDate("start_date", $transaction_date->format("Y-m-d"));
-                        })->get();
+                        })
+                        ->get();
 
                     if ($saleGatewayRequests->count() == 0) {
-                        $message = 'Nsu ' . $contestation_arr["nsu"] . ' não encontrado ';
+                        $message = "Nsu " . $contestation_arr["nsu"] . " não encontrado ";
                         report(new Exception($message));
                         $this->error($message);
                         continue;
                     }
 
                     if ($saleGatewayRequests->count() > 1) {
-                        $message = 'Nsu ' . $contestation_arr["nsu"] . ' com mais de uma venda';
+                        $message = "Nsu " . $contestation_arr["nsu"] . " com mais de uma venda";
                         report(new Exception($message));
                         $this->error($message);
                         continue;
                     }
 
                     $sale_id = $saleGatewayRequests->first()->sale->id ?? null;
-                    $sale_contestation = SaleContestation::where('sale_id', $sale_id)->first();
+                    $sale_contestation = SaleContestation::where("sale_id", $sale_id)->first();
 
                     if (empty($sale_contestation)) {
                         $sale_contestation = new SaleContestation();
@@ -103,22 +111,37 @@ class CheckSaleContestationsTxtFormat extends Command
                     $sale_contestation->sale_id = $sale_id;
                     $sale_contestation->data = json_encode($contestation_arr);
                     $sale_contestation->nsu = $contestation_arr["nsu"];
-                    $sale_contestation->file_date = Carbon::createFromFormat("dmY",
-                        $contestation_arr['file_date']);
-                    $sale_contestation->transaction_date = isset($contestation_arr['transaction_date']) ?
-                        Carbon::createFromFormat("dmY", $contestation_arr['transaction_date']) : null;
-                    $sale_contestation->expiration_date = isset($contestation_arr['return_date']) ?
-                        Carbon::createFromFormat("dmY", $contestation_arr['return_date']) : null;
-                    $sale_contestation->request_date = isset($contestation_arr['request_date']) ?
-                        Carbon::createFromFormat("dmY", $contestation_arr['request_date']) : null;
-                    $sale_contestation->reason = isset($contestation_arr['reason_dispute']) ? $contestation_arr['reason_dispute'] : null;
+                    $sale_contestation->file_date = Carbon::createFromFormat("dmY", $contestation_arr["file_date"]);
+                    $sale_contestation->transaction_date = isset($contestation_arr["transaction_date"])
+                        ? Carbon::createFromFormat("dmY", $contestation_arr["transaction_date"])
+                        : null;
+                    $sale_contestation->expiration_date = isset($contestation_arr["return_date"])
+                        ? Carbon::createFromFormat("dmY", $contestation_arr["return_date"])
+                        : null;
+                    $sale_contestation->request_date = isset($contestation_arr["request_date"])
+                        ? Carbon::createFromFormat("dmY", $contestation_arr["request_date"])
+                        : null;
+                    $sale_contestation->reason = isset($contestation_arr["reason_dispute"])
+                        ? $contestation_arr["reason_dispute"]
+                        : null;
                     $sale_contestation->save();
 
                     try {
-                        if (in_array(
-                            $sale_contestation->reason,
-                            ['4837', '4863', '81', '83', '74', '103', '104', '4540', '4755', '4840', '57']
-                        )) {
+                        if (
+                            in_array($sale_contestation->reason, [
+                                "4837",
+                                "4863",
+                                "81",
+                                "83",
+                                "74",
+                                "103",
+                                "104",
+                                "4540",
+                                "4755",
+                                "4840",
+                                "57",
+                            ])
+                        ) {
                             $sale = $saleGatewayRequests->first()->sale;
                             (new CloudfoxAntifraudService())->updateConfirmedFraudData($sale);
                         }
@@ -130,7 +153,6 @@ class CheckSaleContestationsTxtFormat extends Command
         } catch (Exception $e) {
             report($e);
         }
-
     }
 
     private function updateCodeByLine($line)
@@ -139,9 +161,9 @@ class CheckSaleContestationsTxtFormat extends Command
         $codes = $this->codes();
 
         foreach ($codes as $code) {
-            $value = substr($line, intval($code['start']) - 1);
-            $value = trim(substr($value, 0, intval($code['length'])));
-            $code['value'] = $value;
+            $value = substr($line, intval($code["start"]) - 1);
+            $value = trim(substr($value, 0, intval($code["length"])));
+            $code["value"] = $value;
 
             $collect->push($code);
         }
@@ -159,7 +181,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "2",
                 "length" => "2",
                 "type" => "A",
-                "comments" => "Fixo \"01\" Header"
+                "comments" => "Fixo \"01\" Header",
             ],
             [
                 "id" => "2",
@@ -168,7 +190,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "10",
                 "length" => "8",
                 "type" => "N",
-                "comments" => "Formato: DDMMA A A A"
+                "comments" => "Formato: DDMMA A A A",
             ],
             [
                 "id" => "3",
@@ -177,7 +199,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "13",
                 "length" => "3",
                 "type" => "A",
-                "comments" => "Fixo “V 01”"
+                "comments" => "Fixo “V 01”",
             ],
             [
                 "id" => "4",
@@ -186,7 +208,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "30",
                 "length" => "17",
                 "type" => "A",
-                "comments" => "Fixo “GETNETLA C REQUEST”"
+                "comments" => "Fixo “GETNETLA C REQUEST”",
             ],
             [
                 "id" => "5",
@@ -195,7 +217,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "260",
                 "length" => "230",
                 "type" => "A",
-                "comments" => "Reservado para uso f uturo (brancos)"
+                "comments" => "Reservado para uso f uturo (brancos)",
             ],
             [
                 "id" => "4",
@@ -204,7 +226,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "2",
                 "length" => "2",
                 "type" => "A",
-                "comments" => "Fixo \"02\" Detalhes"
+                "comments" => "Fixo \"02\" Detalhes",
             ],
             [
                 "id" => "5",
@@ -213,7 +235,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "7",
                 "length" => "5",
                 "type" => "N",
-                "comments" => "Sequência das solicitações de documentos"
+                "comments" => "Sequência das solicitações de documentos",
             ],
             [
                 "id" => "6",
@@ -222,7 +244,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "37",
                 "length" => "30",
                 "type" => "N",
-                "comments" => "Número do protocolo GetNet *** UPDA TED de 8 para 30"
+                "comments" => "Número do protocolo GetNet *** UPDA TED de 8 para 30",
             ],
             [
                 "id" => "7",
@@ -231,7 +253,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "56",
                 "length" => "19",
                 "type" => "A",
-                "comments" => "Formato: 999999XXXXXX9999"
+                "comments" => "Formato: 999999XXXXXX9999",
             ],
             [
                 "id" => "9",
@@ -240,7 +262,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "76",
                 "length" => "10",
                 "type" => "A",
-                "comments" => "Reservado para uso f uturo"
+                "comments" => "Reservado para uso f uturo",
             ],
             [
                 "id" => "10",
@@ -249,7 +271,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "84",
                 "length" => "8",
                 "type" => "N",
-                "comments" => "Formato: DDMMA A A A"
+                "comments" => "Formato: DDMMA A A A",
             ],
             [
                 "id" => "11",
@@ -258,7 +280,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "96",
                 "length" => "12",
                 "type" => "A",
-                "comments" => "RV  *** UPDA TED de 7 para 12"
+                "comments" => "RV  *** UPDA TED de 7 para 12",
             ],
             [
                 "id" => "12",
@@ -267,7 +289,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "119",
                 "length" => "23",
                 "type" => "A",
-                "comments" => "Número de Ref erência"
+                "comments" => "Número de Ref erência",
             ],
             [
                 "id" => "13",
@@ -276,7 +298,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "134",
                 "length" => "15",
                 "type" => "A",
-                "comments" => "Motivo da disputa/contestação"
+                "comments" => "Motivo da disputa/contestação",
             ],
             [
                 "id" => "14",
@@ -285,7 +307,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "140",
                 "length" => "6",
                 "type" => "A",
-                "comments" => "Código da autorização"
+                "comments" => "Código da autorização",
             ],
             [
                 "id" => "15",
@@ -294,7 +316,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "148",
                 "length" => "8",
                 "type" => "N",
-                "comments" => "Formato: DDMMA A A A"
+                "comments" => "Formato: DDMMA A A A",
             ],
             [
                 "id" => "16",
@@ -303,7 +325,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "156",
                 "length" => "8",
                 "type" => "N",
-                "comments" => "Formato: DDMMA A A A"
+                "comments" => "Formato: DDMMA A A A",
             ],
             [
                 "id" => "17",
@@ -312,7 +334,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "159",
                 "length" => "3",
                 "type" => "N",
-                "comments" => "Nº  Sequencial do lote (controle GetNet)"
+                "comments" => "Nº  Sequencial do lote (controle GetNet)",
             ],
             [
                 "id" => "18",
@@ -321,7 +343,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "173",
                 "length" => "14",
                 "type" => "A",
-                "comments" => "Reservado para uso f uturo"
+                "comments" => "Reservado para uso f uturo",
             ],
             [
                 "id" => "19",
@@ -330,7 +352,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "213",
                 "length" => "40",
                 "type" => "A",
-                "comments" => "Reservado para uso f uturo"
+                "comments" => "Reservado para uso f uturo",
             ],
             [
                 "id" => "20",
@@ -339,7 +361,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "223",
                 "length" => "10",
                 "type" => "A",
-                "comments" => "Zeros"
+                "comments" => "Zeros",
             ],
             [
                 "id" => "21",
@@ -348,7 +370,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "240",
                 "length" => "17",
                 "type" => "A",
-                "comments" => "Composto com inteiro (N14) + separador (A 1) + decimal (N2)"
+                "comments" => "Composto com inteiro (N14) + separador (A 1) + decimal (N2)",
             ],
             [
                 "id" => "22",
@@ -357,7 +379,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "250",
                 "length" => "10",
                 "type" => "A",
-                "comments" => "NSU"
+                "comments" => "NSU",
             ],
             [
                 "id" => "23",
@@ -366,7 +388,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "260",
                 "length" => "10",
                 "type" => "A",
-                "comments" => "Código do Terminal onde f oi realizada a transação"
+                "comments" => "Código do Terminal onde f oi realizada a transação",
             ],
             [
                 "id" => "24",
@@ -375,7 +397,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "2",
                 "length" => "2",
                 "type" => "A",
-                "comments" => "Fixo \"99\" - Trailer"
+                "comments" => "Fixo \"99\" - Trailer",
             ],
             [
                 "id" => "25",
@@ -384,7 +406,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "10",
                 "length" => "8",
                 "type" => "N",
-                "comments" => "Formato: DDMMA A A A"
+                "comments" => "Formato: DDMMA A A A",
             ],
             [
                 "id" => "26",
@@ -393,7 +415,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "16",
                 "length" => "6",
                 "type" => "N",
-                "comments" => "Quantidade de Registros no arquivo"
+                "comments" => "Quantidade de Registros no arquivo",
             ],
             [
                 "id" => "27",
@@ -402,7 +424,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "260",
                 "length" => "244",
                 "type" => "A",
-                "comments" => "Reservado para uso f uturo (brancos)"
+                "comments" => "Reservado para uso f uturo (brancos)",
             ],
             [
                 "id" => "Tipo de Registro",
@@ -411,7 +433,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "2",
                 "length" => "A",
                 "type" => "Fixo \"01\" Header",
-                "comments" => "2"
+                "comments" => "2",
             ],
             [
                 "id" => "Data de Criação do A rquivo",
@@ -420,7 +442,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "8",
                 "length" => "N",
                 "type" => "Formato: DDMMA A A A",
-                "comments" => "3"
+                "comments" => "3",
             ],
             [
                 "id" => "Versão do layout",
@@ -429,7 +451,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "3",
                 "length" => "A",
                 "type" => "Fixo “V 01”",
-                "comments" => "4"
+                "comments" => "4",
             ],
             [
                 "id" => "Identif icação do layout",
@@ -438,7 +460,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "17",
                 "length" => "A",
                 "type" => "Fixo “GETNETLA C REQUEST”",
-                "comments" => "5"
+                "comments" => "5",
             ],
             [
                 "id" => "Espaços",
@@ -447,7 +469,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "342",
                 "length" => "A",
                 "type" => "Reservado para uso f uturo (brancos)",
-                "comments" => "4"
+                "comments" => "4",
             ],
             [
                 "id" => "Tipo de Registro",
@@ -456,7 +478,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "2",
                 "length" => "A",
                 "type" => "Fixo \"02\" Detalhes",
-                "comments" => "MENSAGEM*"
+                "comments" => "MENSAGEM*",
             ],
             [
                 "id" => "5",
@@ -465,7 +487,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "7",
                 "length" => "5",
                 "type" => "N",
-                "comments" => "Sequência das solicitações de documentos"
+                "comments" => "Sequência das solicitações de documentos",
             ],
             [
                 "id" => "6",
@@ -474,7 +496,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "37",
                 "length" => "30",
                 "type" => "N",
-                "comments" => "Número do protocolo GetNet *** UPDA TED de 8 para 30"
+                "comments" => "Número do protocolo GetNet *** UPDA TED de 8 para 30",
             ],
             [
                 "id" => "7",
@@ -483,7 +505,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "56",
                 "length" => "19",
                 "type" => "A",
-                "comments" => "Formato: 999999XXXXXX9999"
+                "comments" => "Formato: 999999XXXXXX9999",
             ],
             [
                 "id" => "8",
@@ -492,7 +514,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "66",
                 "length" => "10",
                 "type" => "A",
-                "comments" => "Nº  estabelecimento cadastro GetNet"
+                "comments" => "Nº  estabelecimento cadastro GetNet",
             ],
             [
                 "id" => "9",
@@ -501,7 +523,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "76",
                 "length" => "10",
                 "type" => "A",
-                "comments" => "Reservado para uso f uturo"
+                "comments" => "Reservado para uso f uturo",
             ],
             [
                 "id" => "10",
@@ -510,7 +532,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "84",
                 "length" => "8",
                 "type" => "N",
-                "comments" => "Formato: DDMMA A A A"
+                "comments" => "Formato: DDMMA A A A",
             ],
             [
                 "id" => "receberá um arquivo como ilustrado abaixo.",
@@ -519,7 +541,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "85",
                 "length" => "96",
                 "type" => "12",
-                "comments" => "A"
+                "comments" => "A",
             ],
             [
                 "id" => "RV  *** UPDA TED de 7 para 12",
@@ -528,7 +550,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "97",
                 "length" => "119",
                 "type" => "23",
-                "comments" => "A"
+                "comments" => "A",
             ],
             [
                 "id" => "Número de Ref erência",
@@ -537,7 +559,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "120",
                 "length" => "134",
                 "type" => "15",
-                "comments" => "A"
+                "comments" => "A",
             ],
             [
                 "id" => "Motivo da disputa/contestação",
@@ -546,7 +568,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "135",
                 "length" => "140",
                 "type" => "6",
-                "comments" => "A"
+                "comments" => "A",
             ],
             [
                 "id" => "Código da autorização",
@@ -555,7 +577,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "141",
                 "length" => "148",
                 "type" => "8",
-                "comments" => "N"
+                "comments" => "N",
             ],
             [
                 "id" => "Formato: DDMMA A A A",
@@ -564,7 +586,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "149",
                 "length" => "156",
                 "type" => "8",
-                "comments" => "N"
+                "comments" => "N",
             ],
             [
                 "id" => "Formato: DDMMA A A A",
@@ -573,7 +595,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "157",
                 "length" => "159",
                 "type" => "3",
-                "comments" => "N"
+                "comments" => "N",
             ],
             [
                 "id" => "Nº  Sequencial do lote (controle GetNet)",
@@ -582,7 +604,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "160",
                 "length" => "173",
                 "type" => "14",
-                "comments" => "A"
+                "comments" => "A",
             ],
             [
                 "id" => "Reservado para uso futuro",
@@ -591,7 +613,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "174",
                 "length" => "213",
                 "type" => "40",
-                "comments" => "A"
+                "comments" => "A",
             ],
             [
                 "id" => "Reservado para uso f uturo",
@@ -600,7 +622,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "214",
                 "length" => "223",
                 "type" => "10",
-                "comments" => "A"
+                "comments" => "A",
             ],
             [
                 "id" => "Zeros",
@@ -609,7 +631,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "224",
                 "length" => "240",
                 "type" => "17",
-                "comments" => "A"
+                "comments" => "A",
             ],
             [
                 "id" => "Composto com inteiro (N14) + separador (A 1) + decimal (N2)",
@@ -618,7 +640,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "22",
                 "length" => "NSU",
                 "type" => "241",
-                "comments" => "250"
+                "comments" => "250",
             ],
             [
                 "id" => "10",
@@ -627,7 +649,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "23",
                 "length" => "Código do Terminal",
                 "type" => "251",
-                "comments" => "260"
+                "comments" => "260",
             ],
             [
                 "id" => "10",
@@ -636,7 +658,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "24",
                 "length" => "Mensagem",
                 "type" => "261",
-                "comments" => "360"
+                "comments" => "360",
             ],
             [
                 "id" => "100",
@@ -645,7 +667,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "01-MC Crédito; 01-Mastercard; 02-Maestro; 03-Visa; 04-Visa Electron; 05-",
                 "length" => "25",
                 "type" => "Produto",
-                "comments" => "361"
+                "comments" => "361",
             ],
             [
                 "id" => "362",
@@ -654,7 +676,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "A mex; 11-Elo Crédito; 12-Elo Débito; 13-Hiper-Hipercard.",
                 "length" => "26",
                 "type" => "Processo (Tipo de carta)",
-                "comments" => "363"
+                "comments" => "363",
             ],
             [
                 "id" => "363",
@@ -663,7 +685,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "Chargegack / Request.",
                 "length" => "27",
                 "type" => "Reinteração",
-                "comments" => "364"
+                "comments" => "364",
             ],
             [
                 "id" => "364",
@@ -672,7 +694,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "Reservado para uso f uturo",
                 "length" => "*Escolha um entre os dois layouts de arquivos.txt (EDI) disponíveis de acordo com a",
                 "type" => "28",
-                "comments" => "Data Disputa"
+                "comments" => "Data Disputa",
             ],
             [
                 "id" => "365",
@@ -681,7 +703,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "N",
                 "length" => "Data que iniciou a disputa",
                 "type" => "necessidade da sua Empresa.",
-                "comments" => "#"
+                "comments" => "#",
             ],
             [
                 "id" => "29",
@@ -690,7 +712,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "2",
                 "length" => "2",
                 "type" => "A",
-                "comments" => "Fixo \"99\" - Trailer"
+                "comments" => "Fixo \"99\" - Trailer",
             ],
             [
                 "id" => "30",
@@ -699,7 +721,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "10",
                 "length" => "8",
                 "type" => "N",
-                "comments" => "Formato: DDMMA A A A"
+                "comments" => "Formato: DDMMA A A A",
             ],
             [
                 "id" => "31",
@@ -708,7 +730,7 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "16",
                 "length" => "6",
                 "type" => "N",
-                "comments" => "Quantidade de Registros no arquivo"
+                "comments" => "Quantidade de Registros no arquivo",
             ],
             [
                 "id" => "32",
@@ -717,14 +739,14 @@ class CheckSaleContestationsTxtFormat extends Command
                 "end" => "372",
                 "length" => "356",
                 "type" => "A",
-                "comments" => "Reservado para uso f uturo (brancos)"
+                "comments" => "Reservado para uso f uturo (brancos)",
             ],
         ]);
     }
 
     private function returnByStartLine($codes, $line_number)
     {
-        $arr = $codes->where('start', $line_number)->first();
-        return $arr['value'];
+        $arr = $codes->where("start", $line_number)->first();
+        return $arr["value"];
     }
 }

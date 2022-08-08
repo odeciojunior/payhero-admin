@@ -12,7 +12,7 @@ class AddSoftDeletesToTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function(Blueprint $table) {
+        Schema::table("transactions", function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -23,7 +23,7 @@ class AddSoftDeletesToTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function(Blueprint $table) {
+        Schema::table("transactions", function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
     }

@@ -14,18 +14,11 @@ class SaleWhiteBlackListResult extends Model
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'sale_id',
-        'whitelist',
-        'blacklist',
-        'whiteblacklist_json',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ["sale_id", "whitelist", "blacklist", "whiteblacklist_json", "created_at", "updated_at"];
 
     /**
      * @return BelongsTo

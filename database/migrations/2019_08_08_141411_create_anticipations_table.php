@@ -12,16 +12,19 @@ class CreateAnticipationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('anticipations', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('value');
-            $table->string('tax');
-            $table->string('percentage_tax');
-            $table->string('release_money_days');
-            $table->integer('company_id')->unsigned();
+        Schema::create("anticipations", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("value");
+            $table->string("tax");
+            $table->string("percentage_tax");
+            $table->string("release_money_days");
+            $table->integer("company_id")->unsigned();
             $table->timestamps();
 
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
     }
 
@@ -31,9 +34,9 @@ class CreateAnticipationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('anticipations', function(Blueprint $table) {
-            $table->dropForeign(['company_id']);
+        Schema::table("anticipations", function (Blueprint $table) {
+            $table->dropForeign(["company_id"]);
         });
-        Schema::dropIfExists('anticipations');
+        Schema::dropIfExists("anticipations");
     }
 }

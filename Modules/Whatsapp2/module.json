@@ -5,9 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\Whatsapp2\\Providers\\Whatsapp2ServiceProvider"
-    ],
+    "providers": ["Modules\\Whatsapp2\\Providers\\Whatsapp2ServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

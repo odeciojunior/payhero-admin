@@ -13,8 +13,8 @@ class AlterTicketsDropClassificationEnum extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('classification_enum');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table->dropColumn("classification_enum");
         });
     }
 
@@ -25,9 +25,10 @@ class AlterTicketsDropClassificationEnum extends Migration
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->tinyInteger('classification_enum')
-                ->after('ignore_balance_block')
+        Schema::table("tickets", function (Blueprint $table) {
+            $table
+                ->tinyInteger("classification_enum")
+                ->after("ignore_balance_block")
                 ->nullable();
         });
     }

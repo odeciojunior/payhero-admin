@@ -13,16 +13,22 @@ class CreateSaleUnderAttacksTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_under_attacks', function (Blueprint $table) {
+        Schema::create("sale_under_attacks", function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('under_attack_id');
-            $table->unsignedBigInteger('sale_id');
+            $table->unsignedBigInteger("under_attack_id");
+            $table->unsignedBigInteger("sale_id");
             $table->timestamps();
         });
 
-        Schema::table('sale_under_attacks', function(Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
-            $table->foreign('under_attack_id')->references('id')->on('under_attacks');
+        Schema::table("sale_under_attacks", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
+            $table
+                ->foreign("under_attack_id")
+                ->references("id")
+                ->on("under_attacks");
         });
     }
 
@@ -33,6 +39,6 @@ class CreateSaleUnderAttacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_under_attacks');
+        Schema::dropIfExists("sale_under_attacks");
     }
 }

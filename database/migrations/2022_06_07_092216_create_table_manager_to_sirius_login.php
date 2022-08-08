@@ -13,17 +13,27 @@ class CreateTableManagerToSiriusLogin extends Migration
      */
     public function up()
     {
-        Schema::create('manager_to_sirius_logins', function (Blueprint $table) {
+        Schema::create("manager_to_sirius_logins", function (Blueprint $table) {
             $table->id();
 
-            $table->integer('manager_user_id')->unsigned();
-            $table->foreign('manager_user_id')->references('id')->on('users');
+            $table->integer("manager_user_id")->unsigned();
+            $table
+                ->foreign("manager_user_id")
+                ->references("id")
+                ->on("users");
 
-            $table->integer('sirius_user_id')->unsigned();
-            $table->foreign('sirius_user_id')->references('id')->on('users');
+            $table->integer("sirius_user_id")->unsigned();
+            $table
+                ->foreign("sirius_user_id")
+                ->references("id")
+                ->on("users");
 
             $table->boolean("is_active")->default(true);
-            $table->string('token',60)->nullable()->unique()->default(null);
+            $table
+                ->string("token", 60)
+                ->nullable()
+                ->unique()
+                ->default(null);
 
             $table->timestamps();
         });
@@ -36,6 +46,6 @@ class CreateTableManagerToSiriusLogin extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manager_to_sirius_logins');
+        Schema::dropIfExists("manager_to_sirius_logins");
     }
 }

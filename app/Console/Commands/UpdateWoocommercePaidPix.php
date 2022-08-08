@@ -17,14 +17,14 @@ class UpdateWoocommercePaidPix extends Command
      *
      * @var string
      */
-    protected $signature = 'woocommerce:update-paid-pix';
+    protected $signature = "woocommerce:update-paid-pix";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -43,21 +43,26 @@ class UpdateWoocommercePaidPix extends Command
      */
     public function handle()
     {
-
         try {
-
-            $sales = Sale::whereNotNull('woocommerce_order')->where('payment_method', Sale::PIX_PAYMENT)->where('status', Sale::STATUS_APPROVED)->get();
+            $sales = Sale::whereNotNull("woocommerce_order")
+                ->where("payment_method", Sale::PIX_PAYMENT)
+                ->where("status", Sale::STATUS_APPROVED)
+                ->get();
 
             $output = new ConsoleOutput();
             $progress = new ProgressBar($output, count($sales));
             $progress->start();
 
-            foreach($sales as $sale) {
+            foreach ($sales as $sale) {
                 $projectId = $sale->project_id;
 
-                $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
-                if(!empty($integration)) {
-                    $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                $integration = WooCommerceIntegration::where("project_id", $projectId)->first();
+                if (!empty($integration)) {
+                    $service = new WooCommerceService(
+                        $integration->url_store,
+                        $integration->token_user,
+                        $integration->token_pass
+                    );
 
                     $service->approvePix($sale->woocommerce_order);
                 }
@@ -66,11 +71,9 @@ class UpdateWoocommercePaidPix extends Command
             }
 
             $progress->finish();
-            $output->writeln('');
-
+            $output->writeln("");
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

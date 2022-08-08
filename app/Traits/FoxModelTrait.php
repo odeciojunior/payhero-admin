@@ -38,28 +38,25 @@ trait FoxModelTrait
      */
     public function getEnumArray($enum = null, $translate = false)
     {
-        $enumArray = empty($enum) ? ($this->enum ?? null) : ($this->enum[$enum] ?? null);
+        $enumArray = empty($enum) ? $this->enum ?? null : $this->enum[$enum] ?? null;
 
-        return ($translate && !empty($enumArray)) ? array_combine(
-            array_keys($enumArray),
-            array_map(
-                function($enumItem) use ($enumArray, $enum) {
+        return $translate && !empty($enumArray)
+            ? array_combine(
+                array_keys($enumArray),
+                array_map(function ($enumItem) use ($enumArray, $enum) {
                     $items = $enumArray[$enumItem];
                     if (is_string($items)) {
-                        return Lang::get('definitions.enum.' . $enum . '.' . $items);
-                    } else if (is_array($items)) {
-                        return array_map(
-                            function($value) use ($enumItem) {
-                                return Lang::get('definitions.enum.' . $enumItem . '.' . $value);
-                            }, $items
-                        );
+                        return Lang::get("definitions.enum." . $enum . "." . $items);
+                    } elseif (is_array($items)) {
+                        return array_map(function ($value) use ($enumItem) {
+                            return Lang::get("definitions.enum." . $enumItem . "." . $value);
+                        }, $items);
                     } else {
                         return $items;
                     }
-                }
-                , array_keys($enumArray)
+                }, array_keys($enumArray))
             )
-        ) : $enumArray;
+            : $enumArray;
     }
 
     /**
@@ -71,9 +68,9 @@ trait FoxModelTrait
     public function getEnum($enum, $value = null, $translate = false)
     {
         if (is_numeric($value)) {
-            $value = $this->enum[$enum][$value] ?? '';
+            $value = $this->enum[$enum][$value] ?? "";
             if ($translate) {
-                $value = Lang::get('definitions.enum.' . $enum . '.' . $value);
+                $value = Lang::get("definitions.enum." . $enum . "." . $value);
             }
 
             return $value;

@@ -13,8 +13,11 @@ class AlterSaleLogsAddFkSaleId extends Migration
      */
     public function up()
     {
-        Schema::table('sale_logs', function(Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
+        Schema::table("sale_logs", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 

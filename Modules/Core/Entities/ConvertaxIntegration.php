@@ -32,23 +32,23 @@ class ConvertaxIntegration extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'user_id',
-        'link',
-        'value',
-        'boleto_generated',
-        'boleto_paid',
-        'credit_card_refused',
-        'credit_card_paid',
-        'abandoned_cart',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "user_id",
+        "link",
+        "value",
+        "boleto_generated",
+        "boleto_paid",
+        "credit_card_refused",
+        "credit_card_paid",
+        "abandoned_cart",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -75,12 +75,12 @@ class ConvertaxIntegration extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Integração ConvertaX para o projeto' . $this->project->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Integração ConvertaX para o projeto' . $this->project->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Integração ConvertaX para o projeto' . $this->project->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Integração ConvertaX para o projeto" . $this->project->name . " foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Integração ConvertaX para o projeto" . $this->project->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Integração ConvertaX para o projeto" . $this->project->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -91,7 +91,7 @@ class ConvertaxIntegration extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo("Modules\Core\Entities\Project");
     }
 
     /**
@@ -99,6 +99,6 @@ class ConvertaxIntegration extends Model
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 }

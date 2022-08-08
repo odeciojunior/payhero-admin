@@ -13,8 +13,11 @@ class AddColumnTypeEnumProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->unsignedInteger('type_enum')->default(1)->after('currency_type_enum'); //1- physical, 2- digital
+        Schema::table("products", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("type_enum")
+                ->default(1)
+                ->after("currency_type_enum"); //1- physical, 2- digital
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnTypeEnumProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('type_enum');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropColumn("type_enum");
         });
     }
 }

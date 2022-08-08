@@ -1,29 +1,40 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
 
     <title>Sirius - Login</title>
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('build/global/img/favicon-16x16.png') }}">
-    <link rel="mask-icon" href="{{ mix('build/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
-    <meta name="theme-color" content="#FF9000">
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="{{ mix('build/global/img/apple-touch-icon.png') }}">
+    <link rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="{{ mix('build/global/img/favicon-32x32.png') }}">
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="{{ mix('build/global/img/favicon-16x16.png') }}">
+    <link rel="mask-icon"
+          href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
+          color="#5bbad5">
+    <meta name="theme-color"
+          content="#FF9000">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap"
           rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;display=swap"
-        rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;1,400&amp;display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;1,400&amp;display=swap"
+          rel="stylesheet">
 
     <!-- Styles -->
     <style>
@@ -122,8 +133,8 @@
             border-bottom: 2px solid #2e2e2e;
         }
 
-        .input-pad input:focus + label,
-        .input-pad input:not(:placeholder-shown) + label {
+        .input-pad input:focus+label,
+        .input-pad input:not(:placeholder-shown)+label {
             top: 0;
             font-size: 12px;
             opacity: 1;
@@ -154,7 +165,7 @@
             border-color: #dd2f14;
         }
 
-        .input-pad.error input + label {
+        .input-pad.error input+label {
             opacity: 1 !important;
             color: #dd2f14;
         }
@@ -208,7 +219,7 @@
 
         @media (max-width: 768px) {
             .img-container {
-                display:none;
+                display: none;
             }
 
             .form-container {
@@ -216,93 +227,117 @@
                 padding: 20px;
             }
         }
-
     </style>
 
 </head>
+
 <body>
-<div class="container">
-    <div class="img-container"></div>
-    <div class="login-container">
-        <img class="content-logo" src="{{ mix('build/global/img/logo-secundary.svg') }}" alt=""
-             width="300">
-        <div class="form-container" id="form-login">
-            <p class="title">Acessar conta</p>
-            <p>Insira seus dados para continuar</p>
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-                <div class="input-pad @if($errors->has('email')) error @endif">
-                    <input id="email" name="email" type="email" placeholder="Email">
-                    <label for="email">Email</label>
-                    <div class="invalid-feedback">{{ $errors->first('email') }}</div>
+    <div class="container">
+        <div class="img-container"></div>
+        <div class="login-container">
+            <img class="content-logo"
+                 src="{{ mix('build/global/img/logo-secundary.svg') }}"
+                 alt=""
+                 width="300">
+            <div class="form-container"
+                 id="form-login">
+                <p class="title">Acessar conta</p>
+                <p>Insira seus dados para continuar</p>
+                <form method="POST"
+                      action="{{ route('login') }}">
+                    @csrf
+                    <div class="input-pad @if ($errors->has('email')) error @endif">
+                        <input id="email"
+                               name="email"
+                               type="email"
+                               placeholder="Email">
+                        <label for="email">Email</label>
+                        <div class="invalid-feedback">{{ $errors->first('email') }}</div>
+                    </div>
+                    <div class="input-pad @if ($errors->has('password')) error @endif">
+                        <input id="password"
+                               name="password"
+                               type="password"
+                               placeholder="Senha">
+                        <label for="password">Senha</label>
+                        <button class="btn-show"
+                                type="button"></button>
+                        <div class="invalid-feedback">{{ $errors->first('password') }}</div>
+                    </div>
+                    <button type="submit"
+                            class="btn-primary">Acessar</button>
+                </form>
+                <div class="links-container">
+                    <button id="btn-forgot-password"
+                            class="btn-link-secondary">Esqueci minha senha</button>
+                    <a class="btn-signup"
+                       href="https://cloudfox.net/sirius">
+                        <p>Não tem conta? CADASTRE-SE</p>
+                    </a>
                 </div>
-                <div class="input-pad @if($errors->has('password')) error @endif">
-                    <input id="password" name="password" type="password" placeholder="Senha">
-                    <label for="password">Senha</label>
-                    <button class="btn-show" type="button"></button>
-                    <div class="invalid-feedback">{{ $errors->first('password') }}</div>
-                </div>
-                <button type="submit" class="btn-primary">Acessar</button>
-            </form>
-            <div class="links-container">
-                <button id="btn-forgot-password" class="btn-link-secondary">Esqueci minha senha</button>
-                <a class="btn-signup" href="https://cloudfox.net/sirius"><p>Não tem conta? CADASTRE-SE</p></a>
             </div>
-        </div>
-        <div class="form-container" id="form-forgot">
-            <p class="title">Esqueceu a senha?</p>
-            <p>Não tem problema! Só precisamos do email que você usou ao criar seu cadastro na Cloudfox.</p>
-            <form method="POST" action="{{ route('password.email') }}">
-                @csrf
-                <div class="input-pad @if($errors->has('email')) error @endif">
-                    <input id="email-forgot" name="email" type="email" placeholder="Email">
-                    <label for="email-forgot">Email</label>
-                    <div class="invalid-feedback">{{ $errors->first('email') }}</div>
+            <div class="form-container"
+                 id="form-forgot">
+                <p class="title">Esqueceu a senha?</p>
+                <p>Não tem problema! Só precisamos do email que você usou ao criar seu cadastro na Cloudfox.</p>
+                <form method="POST"
+                      action="{{ route('password.email') }}">
+                    @csrf
+                    <div class="input-pad @if ($errors->has('email')) error @endif">
+                        <input id="email-forgot"
+                               name="email"
+                               type="email"
+                               placeholder="Email">
+                        <label for="email-forgot">Email</label>
+                        <div class="invalid-feedback">{{ $errors->first('email') }}</div>
+                    </div>
+                    <button type="submit"
+                            class="btn-primary">Enviar</button>
+                </form>
+                <div class="links-container">
+                    <button class="btn-link-primary"
+                            id="btn-signin">Fazer login</button>
                 </div>
-                <button type="submit" class="btn-primary">Enviar</button>
-            </form>
-            <div class="links-container">
-                <button class="btn-link-primary" id="btn-signin">Fazer login</button>
             </div>
         </div>
     </div>
-</div>
-<script>
-    window.onload = () => {
+    <script>
+        window.onload = () => {
 
-        Array.from(document.querySelectorAll('.input-pad input'))
-            .forEach(elem => {
-                elem.onclick = () => {
-                    Array.from(document.querySelectorAll('.input-pad.error'))
-                        .forEach(elem => {
-                            elem.classList.remove('error');
-                        });
-                }
-            });
+            Array.from(document.querySelectorAll('.input-pad input'))
+                .forEach(elem => {
+                    elem.onclick = () => {
+                        Array.from(document.querySelectorAll('.input-pad.error'))
+                            .forEach(elem => {
+                                elem.classList.remove('error');
+                            });
+                    }
+                });
 
-        Array.from(document.querySelectorAll('.input-pad .btn-show'))
-            .forEach(elem => {
-                elem.onclick = function() {
-                    let input = this.parentNode.querySelector('input');
-                    input.setAttribute('type', input.type === "password" ? "text" : "password");
-                }
-            });
+            Array.from(document.querySelectorAll('.input-pad .btn-show'))
+                .forEach(elem => {
+                    elem.onclick = function() {
+                        let input = this.parentNode.querySelector('input');
+                        input.setAttribute('type', input.type === "password" ? "text" : "password");
+                    }
+                });
 
-        document.querySelector('#btn-forgot-password').onclick = () => {
-            document.querySelector('#form-login').style.display = 'none';
-            document.querySelector('#form-forgot').style.display = 'block';
+            document.querySelector('#btn-forgot-password').onclick = () => {
+                document.querySelector('#form-login').style.display = 'none';
+                document.querySelector('#form-forgot').style.display = 'block';
+            }
+
+            document.querySelector('#btn-forgot-password').onclick = () => {
+                document.querySelector('#form-login').style.display = 'none';
+                document.querySelector('#form-forgot').style.display = 'block';
+            }
+
+            document.querySelector('#btn-signin').onclick = () => {
+                document.querySelector('#form-login').style.display = 'block';
+                document.querySelector('#form-forgot').style.display = 'none';
+            }
         }
-
-        document.querySelector('#btn-forgot-password').onclick = () => {
-            document.querySelector('#form-login').style.display = 'none';
-            document.querySelector('#form-forgot').style.display = 'block';
-        }
-
-        document.querySelector('#btn-signin').onclick = () => {
-            document.querySelector('#form-login').style.display = 'block';
-            document.querySelector('#form-forgot').style.display = 'none';
-        }
-    }
-</script>
+    </script>
 </body>
+
 </html>

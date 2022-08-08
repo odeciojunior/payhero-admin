@@ -12,8 +12,11 @@ class AlterAddActiveFlagNotazzIntegrationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->boolean('active_flag')->after('generate_zero_invoice_flag')->default(1);
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table
+                ->boolean("active_flag")
+                ->after("generate_zero_invoice_flag")
+                ->default(1);
         });
     }
 
@@ -23,8 +26,8 @@ class AlterAddActiveFlagNotazzIntegrationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->dropColumn('active_flag');
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table->dropColumn("active_flag");
         });
     }
 }

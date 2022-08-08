@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class ChangeTypeChargebackAmountColumnsInGetnetChargebacks extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,8 +13,8 @@ class ChangeTypeChargebackAmountColumnsInGetnetChargebacks extends Migration
      */
     public function up()
     {
-        Schema::table('getnet_chargebacks', function (Blueprint $table) {
-            $table->renameColumn('chargeback_amount', 'amount');
+        Schema::table("getnet_chargebacks", function (Blueprint $table) {
+            $table->renameColumn("chargeback_amount", "amount");
         });
     }
 
@@ -26,9 +25,8 @@ class ChangeTypeChargebackAmountColumnsInGetnetChargebacks extends Migration
      */
     public function down()
     {
-        Schema::table('getnet_chargebacks', function (Blueprint $table) {
-            $table->renameColumn('amount', 'chargeback_amount');
+        Schema::table("getnet_chargebacks", function (Blueprint $table) {
+            $table->renameColumn("amount", "chargeback_amount");
         });
     }
-
 }

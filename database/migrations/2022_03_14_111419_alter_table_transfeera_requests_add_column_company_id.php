@@ -13,16 +13,33 @@ class AlterTableTransfeeraRequestsAddColumnCompanyId extends Migration
      */
     public function up()
     {
-        Schema::table('transfeera_requests',function(Blueprint $table){
-            $table->unsignedInteger('company_id')->nullable()->default(null)->after('id');
-            $table->foreign('company_id')->references('id')->on('companies');
-                        
-            $table->enum('source',['payment','contacerta'])->default('payment')->after('response');
+        Schema::table("transfeera_requests", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("company_id")
+                ->nullable()
+                ->default(null)
+                ->after("id");
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
+
+            $table
+                ->enum("source", ["payment", "contacerta"])
+                ->default("payment")
+                ->after("response");
         });
 
-        Schema::table('transfeera_postbacks',function(Blueprint $table){
-            $table->unsignedInteger('company_id')->nullable()->default(null)->after('id');
-            $table->foreign('company_id')->references('id')->on('companies');
+        Schema::table("transfeera_postbacks", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("company_id")
+                ->nullable()
+                ->default(null)
+                ->after("id");
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
 
         DB::statement("ALTER TABLE `transfeera_requests`
@@ -36,14 +53,14 @@ class AlterTableTransfeeraRequestsAddColumnCompanyId extends Migration
      */
     public function down()
     {
-        Schema::table('transfeera_requests',function(Blueprint $table){
-            $table->dropForeign('company_id');
-            $table->dropColumn('company_id');            
+        Schema::table("transfeera_requests", function (Blueprint $table) {
+            $table->dropForeign("company_id");
+            $table->dropColumn("company_id");
         });
 
-        Schema::table('transfeera_postbacks',function(Blueprint $table){
-            $table->dropForeign('company_id');
-            $table->dropColumn('company_id');            
+        Schema::table("transfeera_postbacks", function (Blueprint $table) {
+            $table->dropForeign("company_id");
+            $table->dropColumn("company_id");
         });
     }
 }

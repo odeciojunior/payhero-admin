@@ -5,9 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\WooCommerce\\Providers\\WooCommerceServiceProvider"
-    ],
+    "providers": ["Modules\\WooCommerce\\Providers\\WooCommerceServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

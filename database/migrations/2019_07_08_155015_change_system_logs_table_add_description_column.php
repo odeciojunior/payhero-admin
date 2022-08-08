@@ -13,8 +13,8 @@ class ChangeSystemLogsTableAddDescriptionColumn extends Migration
      */
     public function up()
     {
-        Schema::table('postback_logs', function(Blueprint $table) {
-            $table->string('description')->nullable();
+        Schema::table("postback_logs", function (Blueprint $table) {
+            $table->string("description")->nullable();
         });
     }
 
@@ -24,10 +24,8 @@ class ChangeSystemLogsTableAddDescriptionColumn extends Migration
      */
     public function down()
     {
-        Schema::table('postback_logs', function(Blueprint $table) {
-            $table->dropColumn('description');
+        Schema::table("postback_logs", function (Blueprint $table) {
+            $table->dropColumn("description");
         });
     }
-
-
 }

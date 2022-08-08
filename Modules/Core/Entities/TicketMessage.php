@@ -25,8 +25,8 @@ class TicketMessage extends Model
     use PresentableTrait, LogsActivity;
 
     const TYPE_FROM_CUSTOMER = 1;
-    const TYPE_FROM_ADMIN    = 2;
-    const TYPE_FROM_SYSTEM   = 3;
+    const TYPE_FROM_ADMIN = 2;
+    const TYPE_FROM_SYSTEM = 3;
 
     protected $presenter = TicketMessagePresenter::class;
 
@@ -34,18 +34,11 @@ class TicketMessage extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'ticket_id',
-        'message',
-        'type_enum',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ["ticket_id", "message", "type_enum", "created_at", "updated_at", "deleted_at"];
     /**
      * @var bool
      */
@@ -71,12 +64,12 @@ class TicketMessage extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'A mensagem do chamado foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'A mensagem do chamado foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Mensagem do chamado criada.';
+        if ($eventName == "deleted") {
+            $activity->description = "A mensagem do chamado foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "A mensagem do chamado foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Mensagem do chamado criada.";
         } else {
             $activity->description = $eventName;
         }

@@ -4,7 +4,7 @@ $(document).ready(function () {
     let woocommerceIntegrationNotFound = false;
 
     loadingOnScreen();
-    $('#btn-integration-model').hide();
+    $("#btn-integration-model").hide();
 
     index();
 
@@ -13,8 +13,8 @@ $(document).ready(function () {
         url: "/api/core/companies?select=true",
         dataType: "json",
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: function error(response) {
             $("#modal-content").hide();
@@ -25,23 +25,21 @@ $(document).ready(function () {
 
             htmlAlertWooCommerce();
             loadingOnScreenRemove();
-        }
+        },
     });
 
     function htmlAlertWooCommerce() {
         if (!companyNotFound) {
-            $('#btn-integration-model').hide();
-            $('#button-information').hide();
+            $("#btn-integration-model").hide();
+            $("#button-information").hide();
             $("#empty-companies-error").show();
         } else if (allCompanyNotApproved) {
-            $('#btn-integration-model').hide();
-            $('#button-information').hide();
+            $("#btn-integration-model").hide();
+            $("#button-information").hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
-            
-
-            $('#btn-integration-model').show();
-            $('#button-information').show().addClass('d-flex').css('display', 'flex');
+            $("#btn-integration-model").show();
+            $("#button-information").show().addClass("d-flex").css("display", "flex");
         }
     }
 
@@ -51,8 +49,8 @@ $(document).ready(function () {
             url: "/api/apps/woocommerce",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
@@ -60,27 +58,27 @@ $(document).ready(function () {
             success: function success(response) {
                 let data = response.data;
 
-                $('#content').html("");
+                $("#content").html("");
 
                 if (isEmpty(data)) {
                     woocommerceIntegrationNotFound = true;
                     if (woocommerceIntegrationNotFound) {
                         $("#no-integration-found").show();
-                    }else{
+                    } else {
                         $("#no-integration-found").hide();
                     }
                     return;
                 }
 
                 $(data).each(function (index, data) {
-                    $('#content').append(`
+                    $("#content").append(`
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                             <div class="card shadow card-edit" project="${data.id}" >
 
 
                             <svg
                             class="open-cfg" app="${data.id}"
-                            data-img="${!data.project_photo ? '/build/global/img/produto.png' : data.project_photo}"
+                            data-img="${!data.project_photo ? "/build/global/img/produto.png" : data.project_photo}"
                             data-name="${data.project_name}"
                             style="position:absolute; top:8px; right:8px; cursor:pointer"
                             width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +96,9 @@ $(document).ready(function () {
                             </svg>
 
 
-                                <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/build/global/img/produto.png' : data.project_photo}"  alt="Photo Project"/>
+                                <img class="card-img-top img-fluid w-full" src="${
+                                    !data.project_photo ? "/build/global/img/produto.png" : data.project_photo
+                                }"  alt="Photo Project"/>
                                 <div class="card-body">
                                     <div class='row'>
                                         <div class='col-md-12'>
@@ -112,24 +112,21 @@ $(document).ready(function () {
                     `);
                 });
 
-                $('.open-cfg').on('click', openCfg)
-
-
-
-            }
+                $(".open-cfg").on("click", openCfg);
+            },
         });
     }
 
     function create(data) {
         let companyApproved = 0;
         if (isEmpty(data)) {
-            $('#integration-actions, .page-content').hide();
+            $("#integration-actions, .page-content").hide();
             return;
         }
 
         companyNotFound = true;
 
-        $('#integration-actions').show();
+        $("#integration-actions").show();
 
         $("#select_companies").empty();
         $(data).each(function (index, company) {
@@ -143,12 +140,12 @@ $(document).ready(function () {
             allCompanyNotApproved = true;
         }
 
-        $(".modal-title").html('Adicionar nova integração com WooCommerce');
-        $("#bt_integration").addClass('btn-save');
-        $("#bt_integration").text('Realizar integração');
+        $(".modal-title").html("Adicionar nova integração com WooCommerce");
+        $("#bt_integration").addClass("btn-save");
+        $("#bt_integration").text("Realizar integração");
 
-        $('.check').on('click', function () {
-            if ($(this).is(':checked')) {
+        $(".check").on("click", function () {
+            if ($(this).is(":checked")) {
                 $(this).val(1);
             } else {
                 $(this).val(0);
@@ -156,14 +153,14 @@ $(document).ready(function () {
         });
     }
 
-    $('#btn-integration-model').on('click', function () {
-        $("#modal_add_integracao").modal('show');
+    $("#btn-integration-model").on("click", function () {
+        $("#modal_add_integracao").modal("show");
         $("#form_add_integration").show();
     });
 
     $("#bt_integration").on("click", function () {
-        if ($('#token').val() == '' || $('#url_store').val() == '' || $('#company').val() == '') {
-            alertCustom('error', 'Dados informados inválidos');
+        if ($("#token").val() == "" || $("#url_store").val() == "" || $("#company").val() == "") {
+            alertCustom("error", "Dados informados inválidos");
             return false;
         }
 
@@ -171,10 +168,10 @@ $(document).ready(function () {
     });
 
     function saveIntegration() {
-        let form_data = new FormData(document.getElementById('form_add_integration'));
+        let form_data = new FormData(document.getElementById("form_add_integration"));
 
-        if (!form_data.get('company').length > 0) {
-            alertCustom('error', 'A empresa precisa estar aprovada transacionar para realizar a integração! ');
+        if (!form_data.get("company").length > 0) {
+            alertCustom("error", "A empresa precisa estar aprovada transacionar para realizar a integração! ");
             return false;
         }
 
@@ -185,8 +182,8 @@ $(document).ready(function () {
             url: "/api/apps/woocommerce",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             processData: false,
             contentType: false,
@@ -198,197 +195,166 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadingOnScreenRemove();
-                alertCustom('success', response.message);
-            }
+                alertCustom("success", response.message);
+            },
         });
     }
 
-    let projectId
+    let projectId;
     function openCfg() {
-        projectId = $(this).attr('app')
-        var img = $(this).attr('data-img')
-        var name = $(this).attr('data-name')
+        projectId = $(this).attr("app");
+        var img = $(this).attr("data-img");
+        var name = $(this).attr("data-name");
 
-        $("#modal_edit").modal('show');
+        $("#modal_edit").modal("show");
 
-        function imageFound() {
-
-        }
+        function imageFound() {}
 
         function imageNotFound() {
-
-            img = '/build/global/img/produto.png';
+            img = "/build/global/img/produto.png";
             $("#project-img").attr("src", img);
-
         }
 
-        var tester=new Image();
-        tester.onload=imageFound;
-        tester.onerror=imageNotFound;
-        tester.src=img;
+        var tester = new Image();
+        tester.onload = imageFound;
+        tester.onerror = imageNotFound;
+        tester.src = img;
 
         $("#project-img").attr("src", img);
-        img = null
+        img = null;
 
-        $('#project-name').html(name)
-
+        $("#project-name").html(name);
 
         $.ajax({
             method: "POST",
-            data:{projectId:projectId},
+            data: { projectId: projectId },
             url: "/api/apps/woocommerce/keys/get",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 $("#modal-content").hide();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-
-                if(response.status){
-                    $('#consumer-k').attr('placeholder', response.consumer_k+'...')
-                    $('#consumer-s').attr('placeholder', response.consumer_s+'...')
+                if (response.status) {
+                    $("#consumer-k").attr("placeholder", response.consumer_k + "...");
+                    $("#consumer-s").attr("placeholder", response.consumer_s + "...");
                 }
-            }
-        })
+            },
+        });
     }
 
+    $("#bt-update-keys").on("click", function () {
+        var consumer_key = $("#consumer-k").val();
+        var consumer_secret = $("#consumer-s").val();
 
-    $('#bt-update-keys').on('click', function () {
-
-
-        var consumer_key = $('#consumer-k').val()
-        var consumer_secret = $('#consumer-s').val()
-
-        if(!consumer_key || !consumer_secret){
-            alertCustom('error', 'Informe os novos valores das chaves de acesso!');
+        if (!consumer_key || !consumer_secret) {
+            alertCustom("error", "Informe os novos valores das chaves de acesso!");
             return false;
         }
 
         $.ajax({
             method: "POST",
-            data: {"consumer_key":consumer_key, "consumer_secret":consumer_secret},
-            url: "/api/apps/woocommerce/keys/update?projectId="+projectId,
+            data: { consumer_key: consumer_key, consumer_secret: consumer_secret },
+            url: "/api/apps/woocommerce/keys/update?projectId=" + projectId,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 $("#modal-content").hide();
                 errorAjaxResponse(response);
             },
             success: function success(r) {
+                $("#close-modal").click();
 
-
-                $('#close-modal').click()
-
-
-                if(r.status == true){
-                    alertCustom('success', 'Chaves de acesso atualizadas com sucesso!');
-
-
-
-                }else{
-                    alertCustom('error', 'Erro ao atualizar as chaves!');
-
+                if (r.status == true) {
+                    alertCustom("success", "Chaves de acesso atualizadas com sucesso!");
+                } else {
+                    alertCustom("error", "Erro ao atualizar as chaves!");
                 }
-
-            }
+            },
         });
 
-        $('#keys-content').slideUp()
-        $('#arrow-up').hide()
-        $('#arrow-down').show()
+        $("#keys-content").slideUp();
+        $("#arrow-up").hide();
+        $("#arrow-down").show();
 
-        $('#bt-update-keys').hide()
-        $('#bt-close').show()
+        $("#bt-update-keys").hide();
+        $("#bt-close").show();
 
-        $('#bt-close').trigger('click')
-    })
+        $("#bt-close").trigger("click");
+    });
 
-    $('#open-keys').on('click', function () {
-        if($('#keys-content').is(':visible')){
+    $("#open-keys").on("click", function () {
+        if ($("#keys-content").is(":visible")) {
+            $("#keys-content").slideUp();
+            $("#arrow-up").hide();
+            $("#arrow-down").show();
 
-            $('#keys-content').slideUp()
-            $('#arrow-up').hide()
-            $('#arrow-down').show()
+            $("#bt-update-keys").hide();
+            $("#bt-close").show();
+        } else {
+            $("#keys-content").slideDown();
+            $("#arrow-down").hide();
+            $("#arrow-up").show();
 
-            $('#bt-update-keys').hide()
-            $('#bt-close').show()
-        }else{
-
-            $('#keys-content').slideDown()
-            $('#arrow-down').hide()
-            $('#arrow-up').show()
-
-            $('#bt-close').hide()
-            $('#bt-update-keys').show()
+            $("#bt-close").hide();
+            $("#bt-update-keys").show();
         }
-    })
+    });
 
-    var prod = false
-    var track = false
-    var webhook = false
+    var prod = false;
+    var track = false;
+    var webhook = false;
 
-    $('.sync-products').click(function () {
+    $(".sync-products").click(function () {
+        prod = true;
+        track = false;
+        webhook = false;
 
-        prod = true
-        track = false
-        webhook = false
+        toggle_confirm("Produtos", "A sincronização pode demorar algumas horas.");
+    });
 
-        toggle_confirm('Produtos', 'A sincronização pode demorar algumas horas.')
+    $(".sync-tracking").click(function () {
+        prod = false;
+        track = true;
+        webhook = false;
 
+        toggle_confirm("Rastreios", "A sincronização pode demorar algumas horas.");
+    });
 
-    })
+    $("#bt-confirm").on("click", function () {
+        sync_data(prod, track, webhook);
+        $("#bt-cancel").trigger("click");
+        $("#bt-close").trigger("click");
+        $("#modal-confirm").modal("hide");
+    });
 
-    $('.sync-tracking').click(function () {
+    $("#bt-cancel").on("click", function () {
+        $("#bts-confirm").slideUp();
+    });
 
-        prod = false
-        track = true
-        webhook = false
+    $(".sync-webhooks").click(function () {
+        prod = false;
+        track = false;
+        webhook = true;
 
-        toggle_confirm('Rastreios', 'A sincronização pode demorar algumas horas.')
-
-
-    })
-
-    $('#bt-confirm').on('click', function () {
-        sync_data(prod, track, webhook)
-        $('#bt-cancel').trigger('click')
-        $('#bt-close').trigger('click')
-        $("#modal-confirm").modal('hide');
-
-    })
-
-    $('#bt-cancel').on('click', function () {
-        $("#bts-confirm").slideUp()
-    })
-
-    $('.sync-webhooks').click(function () {
-
-        prod = false
-        track = false
-        webhook = true
-
-        toggle_confirm('Webhooks', 'A sincronização pode demorar algumas horas.')
-    })
+        toggle_confirm("Webhooks", "A sincronização pode demorar algumas horas.");
+    });
 
     function toggle_confirm(name, desc) {
-
-        $("#modal_edit").modal('hide');
-        $("#modal-confirm").modal('show');
+        $("#modal_edit").modal("hide");
+        $("#modal-confirm").modal("show");
 
         function fill() {
-
             $("#sync-name").html(name);
             if (desc) {
-                $("#sync-desc").html(
-                    '<div style="padding:2px 0">' + desc + "</div>"
-                );
+                $("#sync-desc").html('<div style="padding:2px 0">' + desc + "</div>");
             } else {
                 $("#sync-desc").html("");
             }
@@ -398,51 +364,40 @@ $(document).ready(function () {
             //     fill()
             //     $("#bts-confirm").slideDown();
             // });
-            fill()
-
+            fill();
         } else {
-            fill()
+            fill();
             //$("#bts-confirm").show()
             //$("#bts-confirm").slideDown();
         }
     }
 
     function sync_data(prod, track, webhook) {
-        var data = {"opt_prod":prod, "opt_track":track, "opt_webhooks":webhook}
+        var data = { opt_prod: prod, opt_track: track, opt_webhooks: webhook };
 
         $.ajax({
             method: "POST",
             data: data,
-            url: "/api/apps/woocommerce/synchronize/products?projectId="+projectId,
+            url: "/api/apps/woocommerce/synchronize/products?projectId=" + projectId,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
-
                 errorAjaxResponse(response);
             },
             success: function success(r) {
-
-
-
-
-                if(r.status == true){
-                    alertCustom('success', 'Sincronização de dados foi iniciada!');
-
-                }else{
-                    alertCustom('error', 'Já existe uma sincronização de dados em andamento!');
-
+                if (r.status == true) {
+                    alertCustom("success", "Sincronização de dados foi iniciada!");
+                } else {
+                    alertCustom("error", "Já existe uma sincronização de dados em andamento!");
                 }
-
-            }
+            },
         });
     }
 
-
-    $('#bt-close-confirm').on('click', function () {
-        $("#modal_edit").modal('show');
-
-    })
+    $("#bt-close-confirm").on("click", function () {
+        $("#modal_edit").modal("show");
+    });
 });

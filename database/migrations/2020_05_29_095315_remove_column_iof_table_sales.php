@@ -13,12 +13,9 @@ class RemoveColumnIofTableSales extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'sales',
-            function (Blueprint $table) {
-                $table->dropColumn('iof');
-            }
-        );
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("iof");
+        });
     }
 
     /**
@@ -28,11 +25,8 @@ class RemoveColumnIofTableSales extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'sales',
-            function (Blueprint $table) {
-                $table->string('iof', 255);
-            }
-        );
+        Schema::table("sales", function (Blueprint $table) {
+            $table->string("iof", 255);
+        });
     }
 }

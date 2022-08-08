@@ -6,15 +6,18 @@
     list-style: none;
     text-align: center;
 }
+
 .ct-legend li {
     display: inline;
     margin: 40px;
 }
+
 .ct-legend .ct-series-0 {
-    color: #00FF7F;
+    color: #00ff7f;
 }
+
 .ct-legend .ct-series-1 {
-    color: #1E90FF;
+    color: #1e90ff;
 }
 
 .ct-point {
@@ -47,5 +50,3 @@
     -moz-box-shadow: none;
     box-shadow: none;
 }*/
-
-

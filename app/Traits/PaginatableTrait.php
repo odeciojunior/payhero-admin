@@ -20,9 +20,9 @@ trait PaginatableTrait
     {
         /** @var Model $instance */
         $instance = $this;
-        $perPage  = request('per_page', $instance->perPage);
+        $perPage = request("per_page", $instance->perPage);
 
-        if ($perPage === 'all') {
+        if ($perPage === "all") {
             $perPage = $instance->newQuery()->count();
         }
 

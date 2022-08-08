@@ -5,9 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\Withdrawals\\Providers\\WithdrawalsServiceProvider"
-    ],
+    "providers": ["Modules\\Withdrawals\\Providers\\WithdrawalsServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

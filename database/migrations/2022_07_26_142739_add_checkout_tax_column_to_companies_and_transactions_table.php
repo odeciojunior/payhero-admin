@@ -13,12 +13,18 @@ class AddCheckoutTaxColumnToCompaniesAndTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('checkout_tax')->default(0)->after('installment_tax');
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->string("checkout_tax")
+                ->default(0)
+                ->after("installment_tax");
         });
 
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->string('checkout_tax')->default(0)->after('installment_tax');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->string("checkout_tax")
+                ->default(0)
+                ->after("installment_tax");
         });
     }
 
@@ -29,12 +35,12 @@ class AddCheckoutTaxColumnToCompaniesAndTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('checkout_tax');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("checkout_tax");
         });
 
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('checkout_tax');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("checkout_tax");
         });
     }
 }

@@ -32,24 +32,23 @@ class CompanyBalanceService
         $this->company = $company;
     }
 
-    public function getResumes() : array
+    public function getResumes(): array
     {
         $gatewaysBalances = [];
 
         $totalAvailable = 0;
-        foreach($this->defaultGateways as $gatewayClass) 
-        {
+        foreach ($this->defaultGateways as $gatewayClass) {
             $gatewayService = app()->make($gatewayClass);
             $gatewayService->setCompany($this->company);
 
             $gatewayResume = $gatewayService->getResume();
-            if(!empty($gatewayResume)) {
+            if (!empty($gatewayResume)) {
                 $gatewaysBalances[] = $gatewayResume;
-                $totalAvailable += intval($gatewayResume['total_available']);
+                $totalAvailable += intval($gatewayResume["total_available"]);
             }
         }
 
-        $gatewaysBalances['total_gateways_available'] = foxutils()->formatMoney($totalAvailable / 100);
+        $gatewaysBalances["total_gateways_available"] = foxutils()->formatMoney($totalAvailable / 100);
 
         return $gatewaysBalances;
     }
@@ -57,15 +56,14 @@ class CompanyBalanceService
     public function getAcquirers()
     {
         $gatewayIds = [];
-        foreach($this->defaultGateways as $gatewayClass) {
+        foreach ($this->defaultGateways as $gatewayClass) {
             $gatewayService = app()->make($gatewayClass);
             $gatewayService->setCompany($this->company);
             $gatewayAvailable = $gatewayService->getGatewayAvailable();
-            if(!empty($gatewayAvailable)) {                
-                $gatewayIds = array_merge($gatewayIds,$gatewayAvailable);                
+            if (!empty($gatewayAvailable)) {
+                $gatewayIds = array_merge($gatewayIds, $gatewayAvailable);
             }
         }
         return $gatewayIds;
     }
-
 }

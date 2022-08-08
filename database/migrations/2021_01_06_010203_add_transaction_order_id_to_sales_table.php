@@ -13,11 +13,12 @@ class AddTransactionOrderIdToSalesTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->string('transaction_order_id', 50)
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->string("transaction_order_id", 50)
                 ->nullable()
                 ->default(null)
-                ->after('gateway_transaction_id');
+                ->after("gateway_transaction_id");
         });
     }
 
@@ -27,9 +28,8 @@ class AddTransactionOrderIdToSalesTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('transaction_order_id');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("transaction_order_id");
         });
-
     }
 }

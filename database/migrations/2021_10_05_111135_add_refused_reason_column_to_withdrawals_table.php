@@ -13,8 +13,11 @@ class AddRefusedReasonColumnToWithdrawalsTable extends Migration
      */
     public function up()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->string('refused_reason')->nullable()->after('file');
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table
+                ->string("refused_reason")
+                ->nullable()
+                ->after("file");
         });
     }
 
@@ -25,8 +28,8 @@ class AddRefusedReasonColumnToWithdrawalsTable extends Migration
      */
     public function down()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->dropColumn('refused_reason');
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->dropColumn("refused_reason");
         });
     }
 }

@@ -13,11 +13,11 @@ class AddColumnsTableProjects extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('url_redirect');
-            $table->string('boleto_redirect')->nullable();
-            $table->string('card_redirect')->nullable();
-            $table->string('analyzing_redirect')->nullable();
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("url_redirect");
+            $table->string("boleto_redirect")->nullable();
+            $table->string("card_redirect")->nullable();
+            $table->string("analyzing_redirect")->nullable();
         });
     }
 
@@ -28,11 +28,11 @@ class AddColumnsTableProjects extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->string('url_redirect')->nullable();
-            $table->dropColumn('boleto_redirect');
-            $table->dropColumn('card_redirect');
-            $table->dropColumn('analyzing_redirect');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->string("url_redirect")->nullable();
+            $table->dropColumn("boleto_redirect");
+            $table->dropColumn("card_redirect");
+            $table->dropColumn("analyzing_redirect");
         });
     }
 }

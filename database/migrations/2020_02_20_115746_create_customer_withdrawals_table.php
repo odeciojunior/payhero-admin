@@ -13,13 +13,16 @@ class CreateCustomerWithdrawalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('customer_withdrawals', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('customer_id')->unsigned();
-            $table->foreign('customer_id')->references('id')->on('customers');
-            $table->integer('value');
-            $table->integer('status');
-            $table->json('bank_account');
+        Schema::create("customer_withdrawals", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->bigInteger("customer_id")->unsigned();
+            $table
+                ->foreign("customer_id")
+                ->references("id")
+                ->on("customers");
+            $table->integer("value");
+            $table->integer("status");
+            $table->json("bank_account");
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +35,6 @@ class CreateCustomerWithdrawalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customer_withdrawals');
+        Schema::dropIfExists("customer_withdrawals");
     }
 }

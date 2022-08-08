@@ -88,14 +88,14 @@ class Pixel extends Model
     public const STATUS_ACTIVE = 1;
     public const STATUS_DISABLED = 0;
 
-    public const FACEBOOK_PLATFORM = 'facebook';
-    public const GOOGLE_ADWORDS_PLATFORM = 'google_adwords';
-    public const GOOGLE_ANALYTICS_PLATFORM = 'google_analytics';
-    public const GOOGLE_ANALYTICS_FOUR_PLATFORM = 'google_analytics_four';
-    public const TABOOLA_PLATFORM = 'taboola';
-    public const OUTBRAIN_PLATFORM = 'outbrain';
-    public const PINTEREST_PLATFORM = 'pinterest';
-    public const KWAI_PLATFORM = 'kwai';
+    public const FACEBOOK_PLATFORM = "facebook";
+    public const GOOGLE_ADWORDS_PLATFORM = "google_adwords";
+    public const GOOGLE_ANALYTICS_PLATFORM = "google_analytics";
+    public const GOOGLE_ANALYTICS_FOUR_PLATFORM = "google_analytics_four";
+    public const TABOOLA_PLATFORM = "taboola";
+    public const OUTBRAIN_PLATFORM = "outbrain";
+    public const PINTEREST_PLATFORM = "pinterest";
+    public const KWAI_PLATFORM = "kwai";
 
     /**
      * @var string
@@ -105,34 +105,34 @@ class Pixel extends Model
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'campaign_id',
-        'name',
-        'code',
-        'platform',
-        'status',
-        'checkout',
-        'send_value_checkout',
-        'purchase_all',
-        'basic_data',
-        'delivery',
-        'coupon',
-        'payment_info',
-        'purchase_card',
-        'purchase_boleto',
-        'purchase_pix',
-        'upsell',
-        'purchase_upsell',
-        'affiliate_id',
-        'apply_on_plans',
-        'purchase_event_name',
-        'is_api',
-        'facebook_token',
-        'url_facebook_domain',
-        'value_percentage_purchase_boleto',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "campaign_id",
+        "name",
+        "code",
+        "platform",
+        "status",
+        "checkout",
+        "send_value_checkout",
+        "purchase_all",
+        "basic_data",
+        "delivery",
+        "coupon",
+        "payment_info",
+        "purchase_card",
+        "purchase_boleto",
+        "purchase_pix",
+        "upsell",
+        "purchase_upsell",
+        "affiliate_id",
+        "apply_on_plans",
+        "purchase_event_name",
+        "is_api",
+        "facebook_token",
+        "url_facebook_domain",
+        "value_percentage_purchase_boleto",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -160,14 +160,14 @@ class Pixel extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
-                $activity->description = 'Pixel ' . $this->name . ' foi deletedo.';
+            case "deleted":
+                $activity->description = "Pixel " . $this->name . " foi deletedo.";
                 break;
-            case 'updated':
-                $activity->description = 'Pixel ' . $this->name . ' foi atualizado.';
+            case "updated":
+                $activity->description = "Pixel " . $this->name . " foi atualizado.";
                 break;
-            case 'created':
-                $activity->description = 'Pixel ' . $this->name . ' foi criado.';
+            case "created":
+                $activity->description = "Pixel " . $this->name . " foi criado.";
                 break;
             default:
                 $activity->description = $eventName;

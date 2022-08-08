@@ -6,5 +6,4 @@ use Illuminate\Routing\Controller;
 
 class PlansController extends Controller
 {
-
 }

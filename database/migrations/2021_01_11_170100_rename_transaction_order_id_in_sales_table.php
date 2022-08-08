@@ -13,9 +13,8 @@ class RenameTransactionOrderIdInSalesTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-
-            $table->renameColumn('transaction_order_id', 'gateway_order_id');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->renameColumn("transaction_order_id", "gateway_order_id");
         });
     }
 
@@ -25,9 +24,8 @@ class RenameTransactionOrderIdInSalesTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->renameColumn('gateway_order_id', 'transaction_order_id');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->renameColumn("gateway_order_id", "transaction_order_id");
         });
-
     }
 }

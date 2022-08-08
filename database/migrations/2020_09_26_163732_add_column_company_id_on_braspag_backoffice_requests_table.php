@@ -13,14 +13,16 @@ class AddColumnCompanyIdOnBraspagBackofficeRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::table('braspag_backoffice_requests', function (Blueprint $table) {
-            $table->integer('company_id')->unsigned();
+        Schema::table("braspag_backoffice_requests", function (Blueprint $table) {
+            $table->integer("company_id")->unsigned();
         });
 
-        Schema::table('braspag_backoffice_requests', function (Blueprint $table) {
-            $table->foreign('company_id')->references('id')->on('companies');
+        Schema::table("braspag_backoffice_requests", function (Blueprint $table) {
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
-
     }
 
     /**
@@ -30,8 +32,8 @@ class AddColumnCompanyIdOnBraspagBackofficeRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::table('braspag_backoffice_requests', function (Blueprint $table) {
-            $table->dropColumn('company_id');
+        Schema::table("braspag_backoffice_requests", function (Blueprint $table) {
+            $table->dropColumn("company_id");
         });
     }
 }

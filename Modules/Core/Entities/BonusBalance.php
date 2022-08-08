@@ -21,19 +21,19 @@ class BonusBalance extends Model
      *
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'total_value',
-        'current_value',
-        'expires_at',
-        'created_at',
-        'updated_at',
-        'deleted_at'
+        "user_id",
+        "total_value",
+        "current_value",
+        "expires_at",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     public function user()

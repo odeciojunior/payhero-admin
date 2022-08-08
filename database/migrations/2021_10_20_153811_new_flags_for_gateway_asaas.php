@@ -18,43 +18,42 @@ class NewFlagsForGatewayAsaas extends Migration
     public function up()
     {
         $flags = [
-            ['gateway_id'=>8,'slug'=>'visa','name'=>'Visa','card_flag_enum'=>2],
-            ['gateway_id'=>8,'slug'=>'mastercard','name'=>'Master Card','card_flag_enum'=>3],
-            ['gateway_id'=>8,'slug'=>'elo','name'=>'Elo','card_flag_enum'=>4],
-            ['gateway_id'=>8,'slug'=>'amex','name'=>'AMEX','card_flag_enum'=>5],
-            ['gateway_id'=>8,'slug'=>'discover','name'=>'Discover','card_flag_enum'=>22],
-            ['gateway_id'=>8,'slug'=>'hipercard','name'=>'Hipercard','card_flag_enum'=>12],
-            
-            ['gateway_id'=>20,'slug'=>'visa','name'=>'Visa','card_flag_enum'=>2],
-            ['gateway_id'=>20,'slug'=>'mastercard','name'=>'Master Card','card_flag_enum'=>3],
-            ['gateway_id'=>20,'slug'=>'elo','name'=>'Elo','card_flag_enum'=>4],
-            ['gateway_id'=>20,'slug'=>'amex','name'=>'AMEX','card_flag_enum'=>5],
-            ['gateway_id'=>20,'slug'=>'discover','name'=>'Discover','card_flag_enum'=>22],
-            ['gateway_id'=>20,'slug'=>'hipercard','name'=>'Hipercard','card_flag_enum'=>12],            
+            ["gateway_id" => 8, "slug" => "visa", "name" => "Visa", "card_flag_enum" => 2],
+            ["gateway_id" => 8, "slug" => "mastercard", "name" => "Master Card", "card_flag_enum" => 3],
+            ["gateway_id" => 8, "slug" => "elo", "name" => "Elo", "card_flag_enum" => 4],
+            ["gateway_id" => 8, "slug" => "amex", "name" => "AMEX", "card_flag_enum" => 5],
+            ["gateway_id" => 8, "slug" => "discover", "name" => "Discover", "card_flag_enum" => 22],
+            ["gateway_id" => 8, "slug" => "hipercard", "name" => "Hipercard", "card_flag_enum" => 12],
+
+            ["gateway_id" => 20, "slug" => "visa", "name" => "Visa", "card_flag_enum" => 2],
+            ["gateway_id" => 20, "slug" => "mastercard", "name" => "Master Card", "card_flag_enum" => 3],
+            ["gateway_id" => 20, "slug" => "elo", "name" => "Elo", "card_flag_enum" => 4],
+            ["gateway_id" => 20, "slug" => "amex", "name" => "AMEX", "card_flag_enum" => 5],
+            ["gateway_id" => 20, "slug" => "discover", "name" => "Discover", "card_flag_enum" => 22],
+            ["gateway_id" => 20, "slug" => "hipercard", "name" => "Hipercard", "card_flag_enum" => 12],
         ];
-        
+
         $total = count($flags);
 
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, $total);
         $progress->start();
 
-        foreach($flags as $flag){
-
+        foreach ($flags as $flag) {
             $flagRow = GatewayFlag::create($flag);
-            for ($i=1; $i <=12 ; $i++) {
-                $installmentTax = ($i==1?1.7:1.8)  + ($i+1)/2;
+            for ($i = 1; $i <= 12; $i++) {
+                $installmentTax = ($i == 1 ? 1.7 : 1.8) + ($i + 1) / 2;
                 GatewayFlagTax::create([
-                    'gateway_flag_id'=>$flagRow->id,
-                    'installments'=>$i,
-                    'type_enum'=>1,
-                    'percent'=>$installmentTax
+                    "gateway_flag_id" => $flagRow->id,
+                    "installments" => $i,
+                    "type_enum" => 1,
+                    "percent" => $installmentTax,
                 ]);
             }
             $progress->advance();
         }
         $progress->finish();
-        $output->writeln('');
+        $output->writeln("");
     }
 
     /**
@@ -64,10 +63,10 @@ class NewFlagsForGatewayAsaas extends Migration
      */
     public function down()
     {
-        $flags = GatewayFlag::where('gateway_id',8)->get();
-        foreach($flags as $flag){
+        $flags = GatewayFlag::where("gateway_id", 8)->get();
+        foreach ($flags as $flag) {
             DB::statement("DELETE FROM gateway_flag_taxes WHERE gateway_flag_id = {$flag->id}");
             $flag->delete();
-        }        
+        }
     }
 }

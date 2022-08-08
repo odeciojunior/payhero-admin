@@ -1,9 +1,9 @@
-@extends("layouts.master")
+@extends('layouts.master')
 
 @section('content')
-
     @push('css')
-        <link rel="stylesheet" href="{{ mix('build/layouts/notazz/show.min.css') }}">
+        <link rel="stylesheet"
+              href="{{ mix('build/layouts/notazz/show.min.css') }}">
         <style>
             .fas {
                 color: #9c47fc;
@@ -17,36 +17,50 @@
 
     <!-- Page -->
     <div class="page">
-        <div style="" class="page-header container">
-            <div class="row align-items-center justify-content-between" style="min-height:50px">
+        <div style=""
+             class="page-header container">
+            <div class="row align-items-center justify-content-between"
+                 style="min-height:50px">
                 <div class="col-sm-8 col-12">
                     <h1 class="page-title">
-                        <a href='/apps/notazz' class='o-arrow-right-1'></a>
+                        <a href='/apps/notazz'
+                           class='o-arrow-right-1'></a>
                         Notas fiscais da loja <span id="title_integration"></span>
                     </h1>
                 </div>
                 <div class="col-sm-4 col-12 text-right">
-                    <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
+                    <div class="justify-content-end align-items-center"
+                         id="export-excel"
+                         style="display:none">
                         <div class="p-2 align-items-center">
                             <span class="o-download-cloud-1 mr-2"></span>
-                            <div class="btn-group" role="group">
-                                <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                            <div class="btn-group"
+                                 role="group">
+                                <button id="bt_get_xls"
+                                        type="button"
+                                        class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                                <button id="bt_get_csv"
+                                        type="button"
+                                        class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="page-content container" style="display:none">
+        <div class="page-content container"
+             style="display:none">
             <!-- Filtro -->
             <div class="fixhalf"></div>
             <form id='filter_form'>
-                <div id="" class="card shadow p-20">
+                <div id=""
+                     class="card shadow p-20">
                     <div class="row align-items-baseline">
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="status">Status</label>
-                            <select name='sale_status' id="status" class="sirius-select">
+                            <select name='sale_status'
+                                    id="status"
+                                    class="sirius-select">
                                 <option value="">Todos status</option>
                                 <option value="1">Pendente</option>
                                 <option value="2">Enviado</option>
@@ -60,21 +74,33 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="comprador">Nome do cliente</label>
-                            <input name='client' id="comprador" class="input-pad" placeholder="cliente">
+                            <input name='client'
+                                   id="comprador"
+                                   class="input-pad"
+                                   placeholder="cliente">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="comprador">Transação</label>
-                            <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
+                            <input name='transaction'
+                                   id="transaction"
+                                   class="input-pad"
+                                   placeholder="transação">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="date_type">Data</label>
-                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
+                            <input name='date_range'
+                                   id="date_range"
+                                   class="select-pad"
+                                   placeholder="Clique para editar..."
+                                   readonly>
                         </div>
                     </div>
                     <div class="row mt-15">
                         <div class="offset-sm-6 col-sm-6 offset-md-6 col-md-6 offset-xl-9 col-xl-3 col-12">
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar
+                            <button id="bt_filtro"
+                                    class="btn btn-primary col-sm-12">
+                                <img style="height: 12px; margin-right: 4px"
+                                     src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar
                             </button>
                         </div>
                         <div class="col-2">
@@ -83,7 +109,7 @@
                 </div>
             </form>
             <!-- Resumo  (PODE SE TORNAR UM RESUMO GERAL DA INTEGRAÇÃO NO FUTURO) -->
-        {{--            <div class="fixhalf"></div>
+            {{-- <div class="fixhalf"></div>
                     <div class="card shadow p-20" style='display:block;'>
                         <div class="row justify-content-center">
                             <div class="col-md-4">
@@ -105,12 +131,15 @@
                                 </h4>
                             </div>
                         </div>
-                    </div>--}}
+                    </div> --}}
             <!-- Tabela -->
             <div class="fixhalf"></div>
-            <div class="card shadow " style="min-height: 300px">
+            <div class="card shadow "
+                 style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
-                    <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                    <table id="tabela_vendas"
+                           class="table-vendas table table-striped unify"
+                           style="">
                         <thead>
                             <tr>
                                 <td class="table-title display-sm-none display-m-none display-lg-none">Transação</td>
@@ -119,7 +148,8 @@
                                 <td class="table-title">Status</td>
                                 <td class="table-title display-sm-none display-m-none">Data</td>
                                 <td class="table-title">Valor</td>
-                                <td class="table-title" width="80px;"> &nbsp;</td>
+                                <td class="table-title"
+                                    width="80px;"> &nbsp;</td>
                             </tr>
                         </thead>
                         <tbody id="dados_tabela">
@@ -128,10 +158,12 @@
                     </table>
                 </div>
                 <!-- Modal detalhes da venda-->
-            @include('notazz::details')
-            <!-- End Modal -->
+                @include('notazz::details')
+                <!-- End Modal -->
             </div>
-            <ul id="pagination-invoices" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-invoices"
+                class="pagination-sm margin-chat-pagination"
+                style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>
@@ -183,12 +215,10 @@
                  </div>
              </div>
          </div>
-     </div>--}}
+     </div> --}}
     <!-- End Modal -->
 
     @push('scripts')
         <script src="{{ mix('build/layouts/notazz/show.min.js') }}"></script>
     @endpush
-
 @endsection
-

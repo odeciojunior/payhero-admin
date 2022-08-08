@@ -13,24 +13,23 @@ class NotazzUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'token_api_edit'           => 'required|string|max:255',
-            'token_webhook_edit'       => 'required|string|max:255',
-            'token_logistics_edit'     => 'nullable|string|max:255',
-            'select_pending_days_edit' => 'required|numeric|digits_between:1,70',
-            'remove_tax_edit'          => 'nullable|boolean',
-            'emit_zero_edit'           => 'nullable|boolean',
-            'active_flag'              => 'nullable|boolean',
+            "token_api_edit" => "required|string|max:255",
+            "token_webhook_edit" => "required|string|max:255",
+            "token_logistics_edit" => "nullable|string|max:255",
+            "select_pending_days_edit" => "required|numeric|digits_between:1,70",
+            "remove_tax_edit" => "nullable|boolean",
+            "emit_zero_edit" => "nullable|boolean",
+            "active_flag" => "nullable|boolean",
         ];
     }
 
     public function getValidatorInstance()
     {
-
         $this->merge([
-                         'remove_tax_edit' => $this->request->get('remove_tax_edit', false) == '1' ? 1 : 0,
-                         'emit_zero_edit'  => $this->request->get('emit_zero_edit', false) == '1' ? 1 : 0,
-                         'active_flag'     => $this->request->get('active_flag', false) == '1' ? 1 : 0,
-                     ]);
+            "remove_tax_edit" => $this->request->get("remove_tax_edit", false) == "1" ? 1 : 0,
+            "emit_zero_edit" => $this->request->get("emit_zero_edit", false) == "1" ? 1 : 0,
+            "active_flag" => $this->request->get("active_flag", false) == "1" ? 1 : 0,
+        ]);
 
         return parent::getValidatorInstance();
     }

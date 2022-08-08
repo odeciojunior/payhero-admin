@@ -19,12 +19,12 @@ class OldChargebackResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'                     => Hashids::encode($this->id),
-            'name'                   => $this->name,
-            'fantasy_name'           => $this->fantasy_name,
-            'count_sales_approved'   => $this->contSalesApproved ?? 0,
-            'count_sales_chargeback' => $this->contSalesChargeBack ?? 0,
-            'chargeback_tax'         => $this->chargebackTax ? $this->chargebackTax . '%' : '0,00%',
+            "id" => Hashids::encode($this->id),
+            "name" => $this->name,
+            "fantasy_name" => $this->fantasy_name,
+            "count_sales_approved" => $this->contSalesApproved ?? 0,
+            "count_sales_chargeback" => $this->contSalesChargeBack ?? 0,
+            "chargeback_tax" => $this->chargebackTax ? $this->chargebackTax . "%" : "0,00%",
         ];
     }
 

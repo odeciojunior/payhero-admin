@@ -12,12 +12,12 @@ class CreateTableQuotation extends Migration
      */
     public function up()
     {
-        Schema::create('currency_quotations', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('currency');
-            $table->unsignedTinyInteger('currency_type')->default(1); //1 - BRL, 2 - USD
-            $table->text('http_response')->nullable();
-            $table->string('value');
+        Schema::create("currency_quotations", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("currency");
+            $table->unsignedTinyInteger("currency_type")->default(1); //1 - BRL, 2 - USD
+            $table->text("http_response")->nullable();
+            $table->string("value");
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateTableQuotation extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('currency_quotations');
+        Schema::dropIfExists("currency_quotations");
     }
 }

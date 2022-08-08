@@ -16,7 +16,7 @@ class FixTaxCompanies extends Migration
      */
     public function up()
     {
-        $promotional_taxes = PromotionalTax::where('old_tax', 'like', '%3.9%')
+        $promotional_taxes = PromotionalTax::where("old_tax", "like", "%3.9%")
             ->withTrashed()
             ->get();
 
@@ -32,6 +32,5 @@ class FixTaxCompanies extends Migration
      */
     public function down()
     {
-
     }
 }

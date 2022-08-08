@@ -14,10 +14,10 @@ class UpdateUsersCountry extends Migration
      */
     public function up()
     {
-        User::chunk(100, function($users){
-            foreach($users as $user){
+        User::chunk(100, function ($users) {
+            foreach ($users as $user) {
                 $user->update([
-                    'country' => 'brazil'
+                    "country" => "brazil",
                 ]);
             }
         });

@@ -1,76 +1,81 @@
 $(document).ready(function () {
-
     let levelInfo = {
         1: {
-            name: 'Aventureiro',
-            description: 'Pronto para começar?',
-            icon: '/build/global/adminremark/assets/images/nivel-1.png',
-            storytelling: 'Nossa jornada está apenas começando. Você já pode começar a olhar o céu noturno e se imaginar navegando na imensidão do desconhecido, é hora de mirar as estrelas e se preparar para a maior aventura de sua vida empreendedora.',
-            billedStart: '0',
-            messageStart: '0K',
-            billedStop: '100000',
-            messageStop: '100K',
+            name: "Aventureiro",
+            description: "Pronto para começar?",
+            icon: "/build/global/adminremark/assets/images/nivel-1.png",
+            storytelling:
+                "Nossa jornada está apenas começando. Você já pode começar a olhar o céu noturno e se imaginar navegando na imensidão do desconhecido, é hora de mirar as estrelas e se preparar para a maior aventura de sua vida empreendedora.",
+            billedStart: "0",
+            messageStart: "0K",
+            billedStop: "100000",
+            messageStop: "100K",
         },
         2: {
-            name: 'Viajante Espacial',
-            description: 'Nível 2',
-            icon: '/build/global/adminremark/assets/images/nivel-2.png',
-            storytelling: 'Nosso foguete está saindo da Terra, este momento de fortes emoções foi experimentado por poucos! Quem diria, de tanto olhar para o céu estrelado, hoje você está navegando por ele, rumo à nossa primeira parada: a lua!',
-            billedStart: '100000',
-            messageStart: '100K',
-            billedStop: '1000000',
-            messageStop: '1M',
+            name: "Viajante Espacial",
+            description: "Nível 2",
+            icon: "/build/global/adminremark/assets/images/nivel-2.png",
+            storytelling:
+                "Nosso foguete está saindo da Terra, este momento de fortes emoções foi experimentado por poucos! Quem diria, de tanto olhar para o céu estrelado, hoje você está navegando por ele, rumo à nossa primeira parada: a lua!",
+            billedStart: "100000",
+            messageStart: "100K",
+            billedStop: "1000000",
+            messageStop: "1M",
         },
         3: {
-            name: 'Conquistador',
-            description: 'Nível 3',
-            icon: '/build/global/adminremark/assets/images/nivel-3.png',
-            storytelling: 'Nível 3? Você está avançando bem, daqui da lua você já consegue enxergar que a Terra é pequena demais para você. Aproveite a vista, faça pequenos reparos porque ainda temos bastante aventura pela frente e a próxima parada é Marte!',
-            billedStart: '1000000',
-            messageStart: '1M',
-            billedStop: '10000000',
-            messageStop: '10M',
+            name: "Conquistador",
+            description: "Nível 3",
+            icon: "/build/global/adminremark/assets/images/nivel-3.png",
+            storytelling:
+                "Nível 3? Você está avançando bem, daqui da lua você já consegue enxergar que a Terra é pequena demais para você. Aproveite a vista, faça pequenos reparos porque ainda temos bastante aventura pela frente e a próxima parada é Marte!",
+            billedStart: "1000000",
+            messageStart: "1M",
+            billedStop: "10000000",
+            messageStop: "10M",
         },
         4: {
-            name: 'Colonizador',
-            description: 'Nível 4',
-            icon: '/build/global/adminremark/assets/images/nivel-4.png',
-            storytelling: 'Elon Musk ficaria orgulhoso, pisar em Marte é para poucos, seja na vida real ou até mesmo no nosso game. 10 milhões de faturamento te coloca na mais alta patente, com os mais destemidos empreendedores da galáxia!',
-            billedStart: '10000000',
-            messageStart: '10M',
-            billedStop: '50000000',
-            messageStop: '50M',
+            name: "Colonizador",
+            description: "Nível 4",
+            icon: "/build/global/adminremark/assets/images/nivel-4.png",
+            storytelling:
+                "Elon Musk ficaria orgulhoso, pisar em Marte é para poucos, seja na vida real ou até mesmo no nosso game. 10 milhões de faturamento te coloca na mais alta patente, com os mais destemidos empreendedores da galáxia!",
+            billedStart: "10000000",
+            messageStart: "10M",
+            billedStop: "50000000",
+            messageStop: "50M",
         },
         5: {
-            name: 'Capitão Galáctico',
-            description: 'Nível 5',
-            icon: '/build/global/adminremark/assets/images/nivel-5.png',
-            storytelling: 'Existe vida fora da Terra e agora você é capaz de provar. Apesar de estarmos bem longe, nossa viagem deve continuar, mas se fosse para ficar... os nativos ficariam orgulhosos com sua história, de onde você veio e para onde está indo!',
-            billedStart: '50000000',
-            messageStart: '50M',
-            billedStop: '100000000',
-            messageStop: '100M',
+            name: "Capitão Galáctico",
+            description: "Nível 5",
+            icon: "/build/global/adminremark/assets/images/nivel-5.png",
+            storytelling:
+                "Existe vida fora da Terra e agora você é capaz de provar. Apesar de estarmos bem longe, nossa viagem deve continuar, mas se fosse para ficar... os nativos ficariam orgulhosos com sua história, de onde você veio e para onde está indo!",
+            billedStart: "50000000",
+            messageStart: "50M",
+            billedStop: "100000000",
+            messageStop: "100M",
         },
         6: {
-            name: 'Sirius Major',
-            description: 'Nível 6',
-            icon: '/build/global/adminremark/assets/images/nivel-6.png',
-            storytelling: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sirius, a estrela mais brilhante!',
-            billedStart: '100000000',
-            messageStart: '100M',
-            billedStop: '500000000',
-            messageStop: '500M',
+            name: "Sirius Major",
+            description: "Nível 6",
+            icon: "/build/global/adminremark/assets/images/nivel-6.png",
+            storytelling:
+                "Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sirius, a estrela mais brilhante!",
+            billedStart: "100000000",
+            messageStart: "100M",
+            billedStop: "500000000",
+            messageStop: "500M",
         },
     };
 
     function nextPerformance(data) {
         setTimeout(function () {
-            loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');
+            loadingOnAccountsHealthRemove(".sirius-performance > .card .sirius-loading");
         }, 500);
         $(".sirius-performance .card-indicators > .active").on("click", function () {
-            $('.sirius-performance > .card').html('');
-            loadingOnAccountsHealth('.sirius-performance > .card');
-            let card = $(this).data('slide-to');
+            $(".sirius-performance > .card").html("");
+            loadingOnAccountsHealth(".sirius-performance > .card");
+            let card = $(this).data("slide-to");
             switch (card) {
                 case 1:
                     updatePerformanceCard1(data);
@@ -86,36 +91,32 @@ $(document).ready(function () {
         });
     }
 
-
     window.updatePerformance = function () {
-
-        loadingOnAccountsHealth('.sirius-performance > .card');
+        loadingOnAccountsHealth(".sirius-performance > .card");
 
         $.ajax({
             method: "GET",
             url: "/api/dashboard/get-performance",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: {
-                company: $('#company').val(),
+                company: $("#company").val(),
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');
+                loadingOnAccountsHealthRemove(".sirius-performance > .card .sirius-loading");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-
                 updatePerformanceCard1(data);
-                if (data.money_cashback !== '0,00') {
-                    updateCashback(data.money_cashback)
+                if (data.money_cashback !== "0,00") {
+                    updateCashback(data.money_cashback);
                 }
-
-            }
+            },
         });
-    }
+    };
 
     function updatePerformanceCard1(data) {
         let currentLevel = levelInfo[data.level];
@@ -168,7 +169,7 @@ $(document).ready(function () {
 
         `;
 
-        $('.sirius-performance > .card').append(item);
+        $(".sirius-performance > .card").append(item);
 
         UpdateAchievements(data.achievements);
 
@@ -179,85 +180,88 @@ $(document).ready(function () {
         nextPerformance(data);
 
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="tooltip"]').tooltip();
         });
     }
 
     function UpdateAchievements(achievements) {
-
         if (!isEmpty(achievements)) {
-
             $.each(achievements, function (index, value) {
-
                 let item = `
-                                <div class="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 pr-0 pl-0 ${value.active ? '' : 'not-active'}"
+                                <div class="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 pr-0 pl-0 ${
+                                    value.active ? "" : "not-active"
+                                }"
                                     data-toggle="tooltip" title="${value.name}" >
                                     <img src="${value.icon}">
                                 </div>
                             `;
-                $('#achievements').append(item);
+                $("#achievements").append(item);
             });
         }
     }
 
     function updateTasks(level, tasks) {
-        const elementTask =  $('#tasks');
-        elementTask.first('div').html('');
+        const elementTask = $("#tasks");
+        elementTask.first("div").html("");
 
         if (!isEmpty(tasks)) {
-
             $.each(tasks, function (index, value) {
-
                 let item = `<div class="d-flex justify-content-start align-items-center align-self-start task">
-                                 <span class="task-icon ${value.status === 1 ? 'o-checkmark-1 task-icon-checked' : ''} d-flex justify-content-around align-items-center"></span>
-                                 <p class="m-0 ${value.status === 1 ? 'task-description-checked' : ''} ">${value.name}</p>
+                                 <span class="task-icon ${
+                                     value.status === 1 ? "o-checkmark-1 task-icon-checked" : ""
+                                 } d-flex justify-content-around align-items-center"></span>
+                                 <p class="m-0 ${value.status === 1 ? "task-description-checked" : ""} ">${
+                    value.name
+                }</p>
                             </div>`;
-                elementTask.first('div').append(item);
+                elementTask.first("div").append(item);
             });
 
-            elementTask.css({'margin-top': '20px'}).show();
+            elementTask.css({ "margin-top": "20px" }).show();
 
             if (tasks.length > 3) {
-                elementTask.css({'margin-top': '0'}).asScrollable();
-                $('#achievements').css({'margin-bottom': '20px'});
+                elementTask.css({ "margin-top": "0" }).asScrollable();
+                $("#achievements").css({ "margin-bottom": "20px" });
             }
-
         } else {
             elementTask.hide();
         }
     }
 
     function updateProgressBar(billed, currentLevel) {
-
-        $('#progress-message-1').text(`${currentLevel.messageStart}`);
-        $('#progress-bar').attr('data-original-title', `Total faturado ${(billed / 100).toLocaleString('pt-br', {
-            style: 'currency',
-            currency: 'BRL'
-        })}`);
-        $('#progress-message-2').text(`${currentLevel.messageStop}`);
+        $("#progress-message-1").text(`${currentLevel.messageStart}`);
+        $("#progress-bar").attr(
+            "data-original-title",
+            `Total faturado ${(billed / 100).toLocaleString("pt-br", {
+                style: "currency",
+                currency: "BRL",
+            })}`
+        );
+        $("#progress-message-2").text(`${currentLevel.messageStop}`);
 
         var percentage = billed / currentLevel.billedStop;
         percentage = percentage > 100 ? 99 : percentage;
 
         percentage = percentage > 10 ? percentage : parseFloat(percentage).toFixed(1);
-        $("#progress-bar > div").css({'width': `${percentage > 1 ? percentage : 1}%`});
+        $("#progress-bar > div").css({ width: `${percentage > 1 ? percentage : 1}%` });
         if (percentage > 13) {
-            $('#progress-bar > span').text(`${Math.trunc(percentage)}%`);
-            $('#progress-bar > span').css({'left': `${parseFloat(percentage) - 13}%`, 'color': '#FFFFFF'});
+            $("#progress-bar > span").text(`${Math.trunc(percentage)}%`);
+            $("#progress-bar > span").css({ left: `${parseFloat(percentage) - 13}%`, color: "#FFFFFF" });
         } else {
-            $('#progress-bar > span').text(`${percentage > 1 ? Math.trunc(percentage) : parseFloat(percentage).toFixed(1)}%`);
-            $('#progress-bar > span').css({'left': `${parseFloat(percentage) + 3}%`, 'color': '#2E85EC'});
+            $("#progress-bar > span").text(
+                `${percentage > 1 ? Math.trunc(percentage) : parseFloat(percentage).toFixed(1)}%`
+            );
+            $("#progress-bar > span").css({ left: `${parseFloat(percentage) + 3}%`, color: "#2E85EC" });
         }
-
     }
 
     function updateCashback(money) {
-        $('#cashback-container #cashback-container-money').text(`${money}`);
-        $(".sirius-cashback > .card").removeClass('d-none');
+        $("#cashback-container #cashback-container-money").text(`${money}`);
+        $(".sirius-cashback > .card").removeClass("d-none");
     }
 
     function updatePerformanceCard2(data) {
-        loadingOnAccountsHealth('.sirius-performance > .card');
+        loadingOnAccountsHealth(".sirius-performance > .card");
         let currentLevel = levelInfo[data.level];
 
         let item = `
@@ -316,33 +320,33 @@ $(document).ready(function () {
 
         `;
 
-        $('.sirius-performance > .card').append(item);
+        $(".sirius-performance > .card").append(item);
 
         $.each(levelInfo, function (index, value) {
             if (data.level == index) {
                 $("#level-current").show();
             }
 
-            let item = ` <div id="level-item-${index}" class="col-2  level-item ${data.level == index ? 'active' : ''}" data-level="${index}" data-level-current="${data.level}">
+            let item = ` <div id="level-item-${index}" class="col-2  level-item ${
+                data.level == index ? "active" : ""
+            }" data-level="${index}" data-level-current="${data.level}">
                            <img src="${value.icon}">
                        </div>
 
                     `;
-            $('#levels').append(item);
+            $("#levels").append(item);
         });
 
         $(".level-item").click(function () {
-
-            let level = $(this).data('level');
+            let level = $(this).data("level");
             let currentLevel = levelInfo[level];
-            $(this).data('level-current') === level ? $("#level-current").show() : $("#level-current").hide();
+            $(this).data("level-current") === level ? $("#level-current").show() : $("#level-current").hide();
             $(".level-item").removeClass("active");
             $(this).addClass("active");
 
-            $("#level-full").text('').text(`${currentLevel.name}`);
-            $("#level-message").text('').text(currentLevel.storytelling);
+            $("#level-full").text("").text(`${currentLevel.name}`);
+            $("#level-message").text("").text(currentLevel.storytelling);
             $("#billed-message").text(`R$${currentLevel.messageStart} - R$${currentLevel.messageStop}`);
-
         });
 
         updateBenefits(data.level, data.benefits);
@@ -351,51 +355,52 @@ $(document).ready(function () {
     }
 
     function updateBenefits(level, benefits) {
-        const elementBenefitsActiveContainer = $('#benefits-active-container');
+        const elementBenefitsActiveContainer = $("#benefits-active-container");
 
-        $('#benefits-container').html('');
+        $("#benefits-container").html("");
 
         if (!isEmpty(benefits.active)) {
-            elementBenefitsActiveContainer.html('').removeClass('benefits-empty').append('<div class="d-flex flex-column flex-nowrap justify-content-start"></div>');
+            elementBenefitsActiveContainer
+                .html("")
+                .removeClass("benefits-empty")
+                .append('<div class="d-flex flex-column flex-nowrap justify-content-start"></div>');
             $.each(benefits.active, function (index, value) {
-
                 let item = `<div class=" d-flex justify-content-start align-items-center align-self-start benefit">
-                                 <span class="benefits-button ${value.enabled ? 'benefits-button-checked' : 'benefits-button-blocked'} d-flex justify-content-around align-items-center">${value.enabled? 'Ativo' : 'Inativo'}</span>
+                                 <span class="benefits-button ${
+                                     value.enabled ? "benefits-button-checked" : "benefits-button-blocked"
+                                 } d-flex justify-content-around align-items-center">${
+                    value.enabled ? "Ativo" : "Inativo"
+                }</span>
                                  <p class="m-0">${value.name}</p>
                             </div>`;
                 elementBenefitsActiveContainer.append(item);
             });
 
             if (benefits.active.length > 2) {
-                $('#benefits-active-container').asScrollable();
+                $("#benefits-active-container").asScrollable();
             }
-
         }
 
         if (!isEmpty(benefits.next)) {
-
-            $("#benefits-next-container").addClass('d-flex');
+            $("#benefits-next-container").addClass("d-flex");
             $.each(benefits.next, function (index, value) {
-
                 let item = `<div class="d-flex justify-content-start align-items-center align-self-start">
                                  <span class="benefits-button d-flex justify-content-around align-items-center">NÍVEL ${value.level}</span>
                                  <p class="m-0">${value.name}</p>
                             </div>`;
-                $('#benefits-container').append(item);
+                $("#benefits-container").append(item);
             });
 
             if (benefits.next.length > 2) {
-                $('#benefits-container').asScrollable();
+                $("#benefits-container").asScrollable();
             }
+        } else {
+            $("#benefits-next-container").removeClass("d-flex").hide();
         }
-        else  {
-            $("#benefits-next-container").removeClass('d-flex').hide();
-        }
-
     }
 
     function updatePerformanceCard3(data) {
-        loadingOnAccountsHealth('.sirius-performance > .card');
+        loadingOnAccountsHealth(".sirius-performance > .card");
         let currentLevel = levelInfo[data.level];
 
         let item = `
@@ -419,7 +424,7 @@ $(document).ready(function () {
                 <div class="list-linear-gradient-bottom"></div>
         `;
 
-        $('.sirius-performance > .card').append(item);
+        $(".sirius-performance > .card").append(item);
 
         updateAchievementsCard(data.achievements);
 
@@ -428,36 +433,34 @@ $(document).ready(function () {
 
     function updateAchievementsCard(achievements) {
         if (!isEmpty(achievements)) {
-            const element = $('#card-achievements > div');
+            const element = $("#card-achievements > div");
             let item = "";
 
-            const isActiveAchievements = achievements => achievements.active;
+            const isActiveAchievements = (achievements) => achievements.active;
             const achievementsActive = achievements.filter(isActiveAchievements);
             item += achievementsList(achievementsActive);
 
-            if(achievementsActive.length) {
+            if (achievementsActive.length) {
                 item += `<div class="title-performance mt-20 mb-10 d-flex justify-content-start align-items-start align-self-start">Você ainda não conquistou:</div>`;
             }
 
-            const isNotActiveAchievements = achievements => !achievements.active;
+            const isNotActiveAchievements = (achievements) => !achievements.active;
             const achievementsNotActive = achievements.filter(isNotActiveAchievements);
             item += achievementsList(achievementsNotActive);
 
             element.append(item);
 
-            $('#card-achievements').asScrollable();
-
+            $("#card-achievements").asScrollable();
         }
     }
 
     function achievementsList(achievements) {
-
         const achievementsLength = achievements.length;
-        let item = '';
+        let item = "";
 
         $.each(achievements, function (index, value) {
             item += ` <div class="achievements-list ">
-                            <div class="achievements-list-icon  pr-0 pl-0 ${value.active ? '' : 'not-active'} ">
+                            <div class="achievements-list-icon  pr-0 pl-0 ${value.active ? "" : "not-active"} ">
                                 <img src="${value.icon}" alt="${value.name}">
                             </div>
                             <div class="ml-10 p-0 d-flex flex-column justify-content-center align-self-center">
@@ -466,7 +469,7 @@ $(document).ready(function () {
                             </div>
                         </div>`;
 
-            if (index < (achievementsLength - 1)) {
+            if (index < achievementsLength - 1) {
                 item += `<div class="hr-horizontal mt-10 mb-10 d-flex justify-content-center align-items-center align-self-center"></div>`;
             }
         });

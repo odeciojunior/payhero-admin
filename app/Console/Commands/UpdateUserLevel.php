@@ -16,14 +16,14 @@ class UpdateUserLevel extends Command
      *
      * @var string
      */
-    protected $signature = 'command:update-user-level';
+    protected $signature = "command:update-user-level";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -42,15 +42,17 @@ class UpdateUserLevel extends Command
      */
     public function handle()
     {
-
         try {
-
-            $transactionModel = new Transaction;
+            $transactionModel = new Transaction();
             $transactionPresent = $transactionModel->present();
-            $transactions = $transactionModel->join('companies', 'companies.id', 'transactions.company_id')
-                ->whereIn('transactions.status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
-                ->groupBy('companies.user_id')
-                ->selectRaw('companies.user_id, SUM(transactions.value) as value');
+            $transactions = $transactionModel
+                ->join("companies", "companies.id", "transactions.company_id")
+                ->whereIn("transactions.status_enum", [
+                    $transactionPresent->getStatusEnum("paid"),
+                    $transactionPresent->getStatusEnum("transfered"),
+                ])
+                ->groupBy("companies.user_id")
+                ->selectRaw("companies.user_id, SUM(transactions.value) as value");
 
             foreach ($transactions->cursor() as $transaction) {
                 if ($transaction->value > 10000000000) {
@@ -67,9 +69,11 @@ class UpdateUserLevel extends Command
                     $level = 1;
                 }
 
-                $user = User::with(['benefits' => function($query) {
-                    $query->where('benefit_id', '!=', 2); // r+r
-                }])->find($transaction->user_id);
+                $user = User::with([
+                    "benefits" => function ($query) {
+                        $query->where("benefit_id", "!=", 2); // r+r
+                    },
+                ])->find($transaction->user_id);
 
                 if (!empty($user)) {
                     $this->line("Verficando o usuário: {$user->name} ({$user->id})...");
@@ -77,21 +81,17 @@ class UpdateUserLevel extends Command
                     $previousLevel = $user->level;
 
                     $user->update([
-                                      'total_commission_value' => $transaction->value,
-                                      'level' => $level
-                                  ]);
+                        "total_commission_value" => $transaction->value,
+                        "level" => $level,
+                    ]);
 
                     if ($previousLevel != $level) {
                         $this->info("Nível {$previousLevel} -> {$level}");
                         //TODO: remove after running the first time in production
                         if ($previousLevel == 0) {
-                            $benefits = $user->benefits
-                                ->where('enabled', 0)
-                                ->where('level', '<=', $level);
+                            $benefits = $user->benefits->where("enabled", 0)->where("level", "<=", $level);
                         } else {
-                            $benefits = $user->benefits
-                                ->where('enabled', 0)
-                                ->where('level', $level);
+                            $benefits = $user->benefits->where("enabled", 0)->where("level", $level);
                         }
 
                         foreach ($benefits as $benefit) {
@@ -107,7 +107,6 @@ class UpdateUserLevel extends Command
                     }
                 }
             }
-
         } catch (Exception $e) {
             report($e);
         }

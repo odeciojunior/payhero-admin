@@ -13,14 +13,17 @@ class ChangeStatusColumnInvitationsTable extends Migration
      */
     public function up()
     {
-        $sql = 'UPDATE invitations SET status = null';
+        $sql = "UPDATE invitations SET status = null";
         DB::select($sql);
 
-        Schema::table('invitations', function(Blueprint $table) {
-            $table->integer('status')->default(2)->change();
+        Schema::table("invitations", function (Blueprint $table) {
+            $table
+                ->integer("status")
+                ->default(2)
+                ->change();
         });
 
-        $sql = 'UPDATE invitations SET status = 2';
+        $sql = "UPDATE invitations SET status = 2";
         DB::select($sql);
     }
 
@@ -30,8 +33,8 @@ class ChangeStatusColumnInvitationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('invitations', function(Blueprint $table) {
-            $table->string('status')->change();
+        Schema::table("invitations", function (Blueprint $table) {
+            $table->string("status")->change();
         });
 
         $sql = "UPDATE invitations SET status = 'Convite enviado'";

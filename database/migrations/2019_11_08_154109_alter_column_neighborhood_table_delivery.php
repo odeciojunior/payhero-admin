@@ -12,8 +12,8 @@ class AlterColumnNeighborhoodTableDelivery extends Migration
      */
     public function up()
     {
-        Schema::table('deliveries', function(Blueprint $table) {
-            $table->string('neighborhood', 255)->change();
+        Schema::table("deliveries", function (Blueprint $table) {
+            $table->string("neighborhood", 255)->change();
         });
     }
 
@@ -23,8 +23,8 @@ class AlterColumnNeighborhoodTableDelivery extends Migration
      */
     public function down()
     {
-        Schema::table('deliveries', function(Blueprint $table) {
-            $table->string('neighborhood', 60)->change();
+        Schema::table("deliveries", function (Blueprint $table) {
+            $table->string("neighborhood", 60)->change();
         });
     }
 }

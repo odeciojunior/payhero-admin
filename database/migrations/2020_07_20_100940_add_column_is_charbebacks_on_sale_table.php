@@ -13,8 +13,8 @@ class AddColumnIsCharbebacksOnSaleTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->boolean('is_chargeback')->default(false);
+        Schema::table("sales", function (Blueprint $table) {
+            $table->boolean("is_chargeback")->default(false);
         });
     }
 
@@ -25,10 +25,8 @@ class AddColumnIsCharbebacksOnSaleTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('is_chargeback');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("is_chargeback");
         });
     }
-
 }
-

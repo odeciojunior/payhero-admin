@@ -15,20 +15,20 @@ class ProjectUpsellConfig extends Model
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'header',
-        'title',
-        'description',
-        'countdown_time',
-        'countdown_flag',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "header",
+        "title",
+        "description",
+        "countdown_time",
+        "countdown_flag",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**
@@ -39,4 +39,3 @@ class ProjectUpsellConfig extends Model
         return $this->belongsTo(ProjectUpsellRule::class);
     }
 }
-

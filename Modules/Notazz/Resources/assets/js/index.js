@@ -11,7 +11,6 @@ $(document).ready(function () {
     });
 
     function index() {
-
         loadingOnScreen();
 
         $.ajax({
@@ -42,9 +41,7 @@ $(document).ready(function () {
                                 `>
                                     <a href='/apps/notazz/${data.id}' class=''>
                                         <img class="card-img-top img-fluid w-full" src="${
-                                            !data.project_photo
-                                                ? "/build/global/img/produto.png"
-                                                : data.project_photo
+                                            !data.project_photo ? "/build/global/img/produto.png" : data.project_photo
                                         }" style='cursor:pointer'/>
                                     </a>
                                     <div class="card-body">
@@ -76,90 +73,63 @@ $(document).ready(function () {
                         `
                         );
                         $("#active_flag_" + data.id).val(data.active_flag);
-                        $("#active_flag_" + data.id).prop(
-                            "checked",
-                            $("#active_flag_" + data.id).val() == "1"
-                        );
+                        $("#active_flag_" + data.id).prop("checked", $("#active_flag_" + data.id).val() == "1");
                     });
                     $(".delete-integration").unbind("click");
                     // load delete modal
-                    $(document).on(
-                        "click",
-                        ".delete-integration",
-                        function (e) {
-                            e.stopPropagation();
-                            let integration_id = $(this).attr("integration");
-                            $("#modal-delete-integration .btn-delete").attr(
-                                "integration",
-                                integration_id
-                            );
-                            $("#modal-delete-integration").modal("show");
-                        }
-                    );
-                    $("#modal-delete-integration .btn-delete").on(
-                        "click",
-                        function (e) {
-                            e.preventDefault();
-                            var integration_id = $(this).attr("integration");
-                            var card = $(
-                                "a[class='delete-integration pointer float-right mt-10'][integration='" +
-                                    integration_id +
-                                    "']"
-                            )
-                                .parent()
-                                .parent()
-                                .parent()
-                                .parent()
-                                .parent();
-                            card.find(".edit-integration").unbind("click");
-                            $.ajax({
-                                method: "DELETE",
-                                url: "/api/apps/notazz/" + integration_id,
-                                headers: {
-                                    Authorization: $(
-                                        'meta[name="access-token"]'
-                                    ).attr("content"),
-                                    Accept: "application/json",
-                                },
-                                dataType: "json",
-                                error: (function (_error2) {
-                                    function error(_x2) {
-                                        return _error2.apply(this, arguments);
-                                    }
+                    $(document).on("click", ".delete-integration", function (e) {
+                        e.stopPropagation();
+                        let integration_id = $(this).attr("integration");
+                        $("#modal-delete-integration .btn-delete").attr("integration", integration_id);
+                        $("#modal-delete-integration").modal("show");
+                    });
+                    $("#modal-delete-integration .btn-delete").on("click", function (e) {
+                        e.preventDefault();
+                        var integration_id = $(this).attr("integration");
+                        var card = $(
+                            "a[class='delete-integration pointer float-right mt-10'][integration='" +
+                                integration_id +
+                                "']"
+                        )
+                            .parent()
+                            .parent()
+                            .parent()
+                            .parent()
+                            .parent();
+                        card.find(".edit-integration").unbind("click");
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/api/apps/notazz/" + integration_id,
+                            headers: {
+                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Accept: "application/json",
+                            },
+                            dataType: "json",
+                            error: (function (_error2) {
+                                function error(_x2) {
+                                    return _error2.apply(this, arguments);
+                                }
 
-                                    error.toString = function () {
-                                        return _error2.toString();
-                                    };
+                                error.toString = function () {
+                                    return _error2.toString();
+                                };
 
-                                    return error;
-                                })(function (response) {
-                                    if (response.status === 422) {
-                                        for (error in response.responseJSON
-                                            .errors) {
-                                            alertCustom(
-                                                "error",
-                                                String(
-                                                    response.responseJSON
-                                                        .errors[error]
-                                                )
-                                            );
-                                        }
-                                    } else {
-                                        alertCustom(
-                                            "error",
-                                            String(
-                                                response.responseJSON.message
-                                            )
-                                        );
+                                return error;
+                            })(function (response) {
+                                if (response.status === 422) {
+                                    for (error in response.responseJSON.errors) {
+                                        alertCustom("error", String(response.responseJSON.errors[error]));
                                     }
-                                }),
-                                success: function success(response) {
-                                    index();
-                                    alertCustom("success", response.message);
-                                },
-                            });
-                        }
-                    );
+                                } else {
+                                    alertCustom("error", String(response.responseJSON.message));
+                                }
+                            }),
+                            success: function success(response) {
+                                index();
+                                alertCustom("success", response.message);
+                            },
+                        });
+                    });
 
                     $(".edit-integration").unbind("click");
                     $(".edit-integration").on("click", function () {
@@ -168,9 +138,7 @@ $(document).ready(function () {
                             method: "GET",
                             url: "/api/projects?select=true",
                             headers: {
-                                Authorization: $(
-                                    'meta[name="access-token"]'
-                                ).attr("content"),
+                                Authorization: $('meta[name="access-token"]').attr("content"),
                                 Accept: "application/json",
                             },
                             dataType: "json",
@@ -181,25 +149,17 @@ $(document).ready(function () {
                                 $("#select_projects_edit").html("");
                                 $(response.data).each(function (index, data) {
                                     $("#select_projects_edit").append(
-                                        "<option value='" +
-                                            data.id +
-                                            "'>" +
-                                            data.name +
-                                            "</option>"
+                                        "<option value='" + data.id + "'>" + data.name + "</option>"
                                     );
                                 });
 
-                                $(".modal-title").html(
-                                    "Editar Integração com Notazz"
-                                );
+                                $(".modal-title").html("Editar Integração com Notazz");
 
                                 $.ajax({
                                     method: "GET",
                                     url: "/api/apps/notazz/" + integration_id,
                                     headers: {
-                                        Authorization: $(
-                                            'meta[name="access-token"]'
-                                        ).attr("content"),
+                                        Authorization: $('meta[name="access-token"]').attr("content"),
                                         Accept: "application/json",
                                     },
                                     dataType: "json",
@@ -207,148 +167,84 @@ $(document).ready(function () {
                                         //
                                     },
                                     success: function success(response) {
-                                        $("#select_projects_edit").val(
-                                            response.data.project_id
-                                        );
-                                        $("#select_invoice_type_edit").val(
-                                            response.data.invoice_type
-                                        );
-                                        $("#integration_id").val(
-                                            response.data.id
-                                        );
-                                        $("#token_api_edit").val(
-                                            response.data.token_api
-                                        );
-                                        $("#token_webhook_edit").val(
-                                            response.data.token_webhook
-                                        );
-                                        $("#token_logistics_edit").val(
-                                            response.data.token_logistics
-                                        );
-                                        $("#start_date_edit").val(
-                                            response.data.start_date
-                                        );
-                                        $("#select_pending_days_edit").val(
-                                            response.data.pending_days
-                                        );
+                                        $("#select_projects_edit").val(response.data.project_id);
+                                        $("#select_invoice_type_edit").val(response.data.invoice_type);
+                                        $("#integration_id").val(response.data.id);
+                                        $("#token_api_edit").val(response.data.token_api);
+                                        $("#token_webhook_edit").val(response.data.token_webhook);
+                                        $("#token_logistics_edit").val(response.data.token_logistics);
+                                        $("#start_date_edit").val(response.data.start_date);
+                                        $("#select_pending_days_edit").val(response.data.pending_days);
 
-                                        $("#emit_zero_edit").val(
-                                            response.data.emit_zero
-                                        );
-                                        $("#emit_zero_edit").prop(
-                                            "checked",
-                                            $("#emit_zero_edit").val() == "1"
-                                        );
+                                        $("#emit_zero_edit").val(response.data.emit_zero);
+                                        $("#emit_zero_edit").prop("checked", $("#emit_zero_edit").val() == "1");
 
-                                        $("#remove_tax_edit").val(
-                                            response.data.remove_tax
-                                        );
-                                        $("#remove_tax_edit").prop(
-                                            "checked",
-                                            $("#remove_tax_edit").val() == "1"
-                                        );
+                                        $("#remove_tax_edit").val(response.data.remove_tax);
+                                        $("#remove_tax_edit").prop("checked", $("#remove_tax_edit").val() == "1");
 
-                                        $("#active_flag").val(
-                                            response.data.active_flag
-                                        );
-                                        $("#active_flag").prop(
-                                            "checked",
-                                            $("#active_flag").val() == "1"
-                                        );
+                                        $("#active_flag").val(response.data.active_flag);
+                                        $("#active_flag").prop("checked", $("#active_flag").val() == "1");
 
-                                        $("#modal_add_integracao").modal(
-                                            "show"
-                                        );
+                                        $("#modal_add_integracao").modal("show");
                                         $("#form_add_integration").hide();
                                         $("#form_update_integration").show();
-                                        $("#bt_integration").addClass(
-                                            "btn-update"
-                                        );
-                                        $("#bt_integration").removeClass(
-                                            "btn-save"
-                                        );
+                                        $("#bt_integration").addClass("btn-update");
+                                        $("#bt_integration").removeClass("btn-save");
                                         $("#bt_integration").text("Atualizar");
                                         $("#btn-modal").show();
 
                                         $(".btn-update").unbind("click");
-                                        $(".btn-update").on(
-                                            "click",
-                                            function () {
-                                                var integrationId = $(
-                                                    "#integration_id"
-                                                ).val();
-                                                var form_data = new FormData(
-                                                    document.getElementById(
-                                                        "form_update_integration"
-                                                    )
-                                                );
+                                        $(".btn-update").on("click", function () {
+                                            var integrationId = $("#integration_id").val();
+                                            var form_data = new FormData(
+                                                document.getElementById("form_update_integration")
+                                            );
 
-                                                $.ajax({
-                                                    method: "POST",
-                                                    url:
-                                                        "/api/apps/notazz/" +
-                                                        integrationId,
-                                                    headers: {
-                                                        Authorization: $(
-                                                            'meta[name="access-token"]'
-                                                        ).attr("content"),
-                                                        Accept:
-                                                            "application/json",
-                                                    },
-                                                    dataType: "json",
-                                                    processData: false,
-                                                    contentType: false,
-                                                    cache: false,
-                                                    data: form_data,
-                                                    error: (function (_error) {
-                                                        function error(_x) {
-                                                            return _error.apply(
-                                                                this,
-                                                                arguments
+                                            $.ajax({
+                                                method: "POST",
+                                                url: "/api/apps/notazz/" + integrationId,
+                                                headers: {
+                                                    Authorization: $('meta[name="access-token"]').attr("content"),
+                                                    Accept: "application/json",
+                                                },
+                                                dataType: "json",
+                                                processData: false,
+                                                contentType: false,
+                                                cache: false,
+                                                data: form_data,
+                                                error: (function (_error) {
+                                                    function error(_x) {
+                                                        return _error.apply(this, arguments);
+                                                    }
+
+                                                    error.toString = function () {
+                                                        return _error.toString();
+                                                    };
+
+                                                    return error;
+                                                })(function (response) {
+                                                    console.log(response);
+                                                    if (response.status === 422) {
+                                                        for (error in response.responseJSON.errors) {
+                                                            alertCustom(
+                                                                "error",
+                                                                String(response.responseJSON.errors[error])
                                                             );
                                                         }
-
-                                                        error.toString = function () {
-                                                            return _error.toString();
-                                                        };
-
-                                                        return error;
-                                                    })(function (response) {console.log(response);
-                                                        if (response.status === 422) {
-                                                            for (error in response
-                                                                .responseJSON
-                                                                .errors) {
-                                                                alertCustom(
-                                                                    "error",
-                                                                    String(
-                                                                        response
-                                                                            .responseJSON
-                                                                            .errors[
-                                                                            error
-                                                                        ]
-                                                                    )
-                                                                );
-                                                            }
-                                                        }else{
-                                                            if (response.status === 403) {
-                                                                alertCustom("error",response.responseJSON.message);
-                                                            } else {
-                                                                alertCustom("error",response.message);
-                                                            }
+                                                    } else {
+                                                        if (response.status === 403) {
+                                                            alertCustom("error", response.responseJSON.message);
+                                                        } else {
+                                                            alertCustom("error", response.message);
                                                         }
-                                                    }),
-                                                    success: function success(
-                                                        response
-                                                    ) {
-                                                        index();
-                                                        alertCustom(
-                                                            "success",
-                                                            response.message
-                                                        );
-                                                    },
-                                                });
-                                            }
-                                        );
+                                                    }
+                                                }),
+                                                success: function success(response) {
+                                                    index();
+                                                    alertCustom("success", response.message);
+                                                },
+                                            });
+                                        });
                                     },
                                 });
                             },
@@ -395,16 +291,10 @@ $(document).ready(function () {
                     $("#select_projects_create").html("");
                     $(response.data).each(function (index, data) {
                         $("#select_projects_create").append(
-                            "<option value='" +
-                                data.id +
-                                "'>" +
-                                data.name +
-                                "</option>"
+                            "<option value='" + data.id + "'>" + data.name + "</option>"
                         );
                     });
-                    $(".modal-title").html(
-                        "Adicionar nova Integração com Notazz"
-                    );
+                    $(".modal-title").html("Adicionar nova Integração com Notazz");
                     $("#bt_integration").addClass("btn-save");
                     $("#bt_integration").text("Adicionar integração");
                     $("#modal_add_integracao").modal("show");
@@ -414,40 +304,25 @@ $(document).ready(function () {
                     $(".btn-save").unbind("click");
                     $(".btn-save").on("click", function () {
                         if ($("#token_api_create").val() == "") {
-                            alertCustom(
-                                "error",
-                                "Datos invalidos, o campo Token Api é obrigatorio."
-                            );
+                            alertCustom("error", "Datos invalidos, o campo Token Api é obrigatorio.");
                             return false;
                         }
 
-                        var select_projects_create = $(
-                            "#select_projects_create"
-                        ).val();
-                        var select_invoice_type_create = $(
-                            "#select_invoice_type_create"
-                        ).val();
+                        var select_projects_create = $("#select_projects_create").val();
+                        var select_invoice_type_create = $("#select_invoice_type_create").val();
                         var token_api_create = $("#token_api_create").val();
-                        var token_webhook_create = $(
-                            "#token_webhook_create"
-                        ).val();
-                        var token_logistics_create = $(
-                            "#token_logistics_create"
-                        ).val();
+                        var token_webhook_create = $("#token_webhook_create").val();
+                        var token_logistics_create = $("#token_logistics_create").val();
                         var start_date_create = $("#start_date_create").val();
-                        var select_pending_days_create = $(
-                            "#select_pending_days_create"
-                        ).val();
+                        var select_pending_days_create = $("#select_pending_days_create").val();
                         var emit_zero = $("#emit_zero").is(":checked");
                         var remove_tax = $("#remove_tax").is(":checked");
 
                         if ($("#start_date_create").val() != "") {
                             swal({
-                                title:
-                                    "Data inicial de geração de notas fiscais foi definida.",
+                                title: "Data inicial de geração de notas fiscais foi definida.",
                                 type: "warning",
-                                text:
-                                    "Uma data inicial para geração de notas fiscais foi selecionada, será gerada as notas fiscais de todas as vendas aprovadas apartir da data selecionada, deseja continuar?",
+                                text: "Uma data inicial para geração de notas fiscais foi selecionada, será gerada as notas fiscais de todas as vendas aprovadas apartir da data selecionada, deseja continuar?",
                                 showCancelButton: true,
                                 confirmButtonColor: "#3085D6",
                                 cancelButtonColor: "#DD3333",
@@ -461,9 +336,7 @@ $(document).ready(function () {
                                         method: "POST",
                                         url: "/api/apps/notazz",
                                         headers: {
-                                            Authorization: $(
-                                                'meta[name="access-token"]'
-                                            ).attr("content"),
+                                            Authorization: $('meta[name="access-token"]').attr("content"),
                                             Accept: "application/json",
                                         },
                                         dataType: "json",
@@ -480,26 +353,15 @@ $(document).ready(function () {
                                         },
                                         error: function error(response) {
                                             if (response.status === 422) {
-                                                alertCustom(
-                                                    "error",
-                                                    response.responseJSON
-                                                        .message
-                                                );
+                                                alertCustom("error", response.responseJSON.message);
                                             } else {
-                                                alertCustom(
-                                                    "error",
-                                                    response.responseJSON
-                                                        .message
-                                                );
+                                                alertCustom("error", response.responseJSON.message);
                                             }
                                         },
                                         success: function success(response) {
                                             $("#no-integration-found").hide();
                                             index();
-                                            alertCustom(
-                                                "success",
-                                                response.message
-                                            );
+                                            alertCustom("success", response.message);
                                         },
                                     });
                                 } else {
@@ -511,9 +373,7 @@ $(document).ready(function () {
                                 method: "POST",
                                 url: "/api/apps/notazz",
                                 headers: {
-                                    Authorization: $(
-                                        'meta[name="access-token"]'
-                                    ).attr("content"),
+                                    Authorization: $('meta[name="access-token"]').attr("content"),
                                     Accept: "application/json",
                                 },
                                 dataType: "json",
@@ -530,21 +390,11 @@ $(document).ready(function () {
                                 },
                                 error: function error(response) {
                                     if (response.status === 422) {
-                                        for (let i in response.responseJSON
-                                            .errors) {
-                                            alertCustom(
-                                                "error",
-                                                String(
-                                                    response.responseJSON
-                                                        .errors[i]
-                                                )
-                                            );
+                                        for (let i in response.responseJSON.errors) {
+                                            alertCustom("error", String(response.responseJSON.errors[i]));
                                         }
                                     } else {
-                                        alertCustom(
-                                            "error",
-                                            response.responseJSON.message
-                                        );
+                                        alertCustom("error", response.responseJSON.message);
                                     }
                                 },
                                 success: function success(response) {

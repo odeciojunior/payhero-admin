@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\ProjectUpsellConfig\\Providers\\ProjectUpsellConfigServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

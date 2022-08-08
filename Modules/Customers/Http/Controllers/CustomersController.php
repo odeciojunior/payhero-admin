@@ -14,7 +14,7 @@ class CustomersController extends Controller
      */
     public function index()
     {
-        return view('clients::index');
+        return view("clients::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class CustomersController extends Controller
      */
     public function create()
     {
-        return view('clients::create');
+        return view("clients::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        return view('clients::show');
+        return view("clients::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class CustomersController extends Controller
      */
     public function edit($id)
     {
-        return view('customers::edit');
+        return view("customers::edit");
     }
 
     /**

@@ -12,14 +12,17 @@ class CreateCompanyBalanceLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_balance_logs', function(Blueprint $table) {
+        Schema::create("company_balance_logs", function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('company_id');
-            $table->foreign('company_id')->references('id')->on('companies');
-            $table->bigInteger('today_balance')->nullable();
-            $table->bigInteger('pending_balance')->nullable();
-            $table->bigInteger('available_balance')->nullable();
-            $table->bigInteger('total_balance')->nullable();
+            $table->unsignedInteger("company_id");
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
+            $table->bigInteger("today_balance")->nullable();
+            $table->bigInteger("pending_balance")->nullable();
+            $table->bigInteger("available_balance")->nullable();
+            $table->bigInteger("total_balance")->nullable();
 
             $table->timestamps();
         });
@@ -31,6 +34,6 @@ class CreateCompanyBalanceLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_balance_logs');
+        Schema::dropIfExists("company_balance_logs");
     }
 }

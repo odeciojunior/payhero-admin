@@ -13,9 +13,9 @@ class DropColumnReleaseDateAndRenewNameColumnRealeseDateNewToReleaseDateTableWit
      */
     public function up()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->dropColumn('release_date');
-            $table->renameColumn('release_date_new','release_date');
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->dropColumn("release_date");
+            $table->renameColumn("release_date_new", "release_date");
         });
     }
 
@@ -26,10 +26,9 @@ class DropColumnReleaseDateAndRenewNameColumnRealeseDateNewToReleaseDateTableWit
      */
     public function down()
     {
-        Schema::table('release_date_table_withdrawals', function (Blueprint $table) {
-            $table->renameColumn('release_date', 'release_date_new');
-            $table->string('release_date');
-
+        Schema::table("release_date_table_withdrawals", function (Blueprint $table) {
+            $table->renameColumn("release_date", "release_date_new");
+            $table->string("release_date");
         });
     }
 }

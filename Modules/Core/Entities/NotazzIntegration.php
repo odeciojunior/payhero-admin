@@ -25,31 +25,31 @@ class NotazzIntegration extends Model
     /**
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = ["deleted_at"];
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'user_id',
-        'token_webhook',
-        'token_api',
-        'token_logistics',
-        'start_date',   //data inicial da geracao das notas
-        'retroactive_generated_date',    //data da geração das notas retroativas
-        'invoice_type',
-        'pending_days',
-        'generate_zero_invoice_flag',
-        'discount_plataform_tax_flag',
-        'active_flag',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "user_id",
+        "token_webhook",
+        "token_api",
+        "token_logistics",
+        "start_date", //data inicial da geracao das notas
+        "retroactive_generated_date", //data da geração das notas retroativas
+        "invoice_type",
+        "pending_days",
+        "generate_zero_invoice_flag",
+        "discount_plataform_tax_flag",
+        "active_flag",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -75,7 +75,7 @@ class NotazzIntegration extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo("Modules\Core\Entities\Project");
     }
 
     /**
@@ -83,7 +83,7 @@ class NotazzIntegration extends Model
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 
     /**
@@ -91,6 +91,6 @@ class NotazzIntegration extends Model
      */
     public function invoices()
     {
-        return $this->hasMany('Modules\Core\Entities\NotazzInvoice');
+        return $this->hasMany("Modules\Core\Entities\NotazzInvoice");
     }
 }

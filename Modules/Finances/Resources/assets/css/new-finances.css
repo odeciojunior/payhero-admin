@@ -1,6 +1,6 @@
 *:focus,
 .bootstrap-select .dropdown-toggle:focus,
-.bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+.bootstrap-select > select.mobile-device:focus + .dropdown-toggle {
     outline: none !important;
 }
 
@@ -19,7 +19,8 @@
     top: -130%;
 }
 
-.custom-popover:after, .custom-popover:before {
+.custom-popover:after,
+.custom-popover:before {
     right: 100%;
     top: 50%;
     border: solid transparent;
@@ -43,7 +44,6 @@
     border-width: 36px;
     margin-top: -36px;
 }
-
 
 .text-filtros {
     font-size: 16px;
@@ -81,7 +81,7 @@
 .label-price {
     font-size: 14px;
     margin: 0;
-    color: #70707E;
+    color: #70707e;
 }
 
 .price {
@@ -95,12 +95,11 @@
     color: purple;
     margin-left: 5px;
     padding-top: 5px;
-
 }
 
 .svg-antecipar {
     margin-top: -5px;
-    fill: #8E2DE2;
+    fill: #8e2de2;
     width: 18px;
     height: 18px;
 }
@@ -122,7 +121,7 @@
 }
 
 .grad-border.purple {
-    background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
+    background-image: linear-gradient(to right, #8e2de2, #4a00e0);
 }
 
 .grad-border.blue {
@@ -133,13 +132,11 @@
     background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);
 }
 
-
 .sub-pad {
     font-size: 12px;
     color: #aaa;
-    color: #9E9E9E;
+    color: #9e9e9e;
 }
-
 
 .wrap {
     padding: 30px;
@@ -167,19 +164,19 @@
 }
 
 .badge.badge-success {
-    background-color: #5EE2A1;
+    background-color: #5ee2a1;
 }
 
 .badge.badge-warning {
-    background-color: #FFB400;
+    background-color: #ffb400;
 }
 
 .badge.badge-danger {
-    background-color: #F41C1C;
+    background-color: #f41c1c;
 }
 
 .btn-sacar {
-    background-color: #41DC8F;
+    background-color: #41dc8f;
     border-radius: 6px;
     margin-top: 20px;
     width: 100%;
@@ -223,31 +220,32 @@
     padding: 15px;
 }
 
-.nav-btn, #pagination-statement a {
+.nav-btn,
+#pagination-statement a {
     margin-right: 5px !important;
-    background: #FFF;
-    color: #3D4456;
+    background: #fff;
+    color: #3d4456;
     border-radius: 11px !important;
-    border: 1px solid #D2D2D2 !important;
+    border: 1px solid #d2d2d2 !important;
     font-weight: normal !important;
     display: inline-block;
     height: auto;
     width: auto;
     min-width: unset;
-    padding: .429rem 1rem;
+    padding: 0.429rem 1rem;
     font-size: 1rem;
 }
 
-.nav-btn.active, #pagination-statement .jp-current {
-    background: #FFF !important;
-    border: 1px solid #2E85EC !important;
+.nav-btn.active,
+#pagination-statement .jp-current {
+    background: #fff !important;
+    border: 1px solid #2e85ec !important;
     border-radius: 11px;
     opacity: 1 !important;
-    color: #2E85EC !important;
+    color: #2e85ec !important;
     font-weight: 700 !important;
     cursor: no-drop;
 }
-
 
 .fill-red {
     fill: #cb4a2d;
@@ -269,19 +267,21 @@
     text-align: center;
     color: #484848;
 }
-.modal-title-withdrawal.debit-pending h3{
-    color: #FF003D;
+.modal-title-withdrawal.debit-pending h3 {
+    color: #ff003d;
 }
 
-#text-title-debit-pending, #text-title-withdrawal-custom {
+#text-title-debit-pending,
+#text-title-withdrawal-custom {
     font-size: 16px;
     line-height: 20px;
     font-weight: bold;
     color: #747474;
-    padding: 0 10px
+    padding: 0 10px;
 }
 
-#text-description-debit-pending, #text-description-withdrawal-custom {
+#text-description-debit-pending,
+#text-description-withdrawal-custom {
     font-size: 12px;
     line-height: 15px;
     color: #959595;
@@ -290,16 +290,16 @@
     padding-right: 10px;
 }
 #text-description-debit-pending {
-    border-bottom: 1px solid #EDEDED;
+    border-bottom: 1px solid #ededed;
     padding-bottom: 20px;
     margin-bottom: 20px;
 }
 #text-description-withdrawal-custom small {
     display: block;
-    margin-top: 10px
+    margin-top: 10px;
 }
 
-#debit-items p{
+#debit-items p {
     font-size: 14px;
     line-height: 18px;
     color: #636363;
@@ -317,7 +317,7 @@
 }
 
 #modal-withdrawal-custom-footer {
-    border-top: 1px solid #EDEDED;
+    border-top: 1px solid #ededed;
     padding-top: 25px;
     margin-top: 20px;
 }
@@ -329,7 +329,7 @@
     border-radius: 8px;
 }
 
-#more-than-on-values-show .btn{
+#more-than-on-values-show .btn {
     font-size: 16px;
     line-height: 20px;
     font-weight: bold;
@@ -338,20 +338,20 @@
     border: 1px solid #959595;
     color: #959595;
 }
-#more-than-on-values-show .btn.green, #more-than-on-values-show .btn:hover{
+#more-than-on-values-show .btn.green,
+#more-than-on-values-show .btn:hover {
     border-color: transparent;
-    color: #FFF;
+    color: #fff;
 }
 #single-value {
     font-weight: bold;
     font-size: 24px;
     line-height: 30px;
-    color: #29DCA7;
+    color: #29dca7;
     margin-top: 8px;
-
 }
 #bt-cancel-withdrawal {
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
     color: #959595;
 }
 
@@ -365,7 +365,7 @@ strong span {
 }
 
 .nav-link.active:hover {
-    background-color: #FFF !important;
+    background-color: #fff !important;
 
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
@@ -375,24 +375,24 @@ strong span {
 }
 
 .input-custom-transfer {
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 8px;
-    border: 1px solid #DDD;
+    border: 1px solid #ddd;
 }
 
 .input-custom-transfer:focus-within {
-    border-color: #88BFFF;
+    border-color: #88bfff;
 }
-#custom-input-addon{
+#custom-input-addon {
     border-radius: 0 12px 12px 0;
     border: none !important;
-    border-top:0px;
-    border-right:0px;
-    border-bottom:0px;
-    border-left:1px solid #DDD !important;
+    border-top: 0px;
+    border-right: 0px;
+    border-bottom: 0px;
+    border-left: 1px solid #ddd !important;
 }
-#custom-input-addon:focus{
-    border-left:1px solid #88BFFF !important;
+#custom-input-addon:focus {
+    border-left: 1px solid #88bfff !important;
 }
 
 .input-moeda {
@@ -409,7 +409,6 @@ strong span {
     border-radius: 0 12px 12px 12px;
 }
 
-
 .s-config {
     margin-left: auto !important;
     margin-right: 15px !important;
@@ -425,7 +424,7 @@ strong span {
 .nav-tabs .nav-link {
     text-transform: none;
     font-weight: bold;
-    background-color: #FCFCFC;
+    background-color: #fcfcfc;
     padding: 15px;
     color: #767676;
 
@@ -453,7 +452,7 @@ strong span {
 }
 
 .nav-tabs .nav-link:hover {
-    background-color: #D9D9D9;
+    background-color: #d9d9d9;
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
@@ -462,9 +461,9 @@ strong span {
 }
 
 .nav-tabs .nav-link.active {
-    color: #2E85EC !important;
-    border-bottom-color: #599EF0;
-    background-color: #FFF !important;
+    color: #2e85ec !important;
+    border-bottom-color: #599ef0;
+    background-color: #fff !important;
 
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
@@ -473,7 +472,8 @@ strong span {
     transition: all 0.3s;
 }
 
-select, .select-pad {
+select,
+.select-pad {
     border-radius: 10px;
 }
 
@@ -483,7 +483,8 @@ select, .select-pad {
     text-overflow: ellipsis;
 }
 
-#nav-settings-tab:hover > img, .nav-tabs .nav-link.active > img {
+#nav-settings-tab:hover > img,
+.nav-tabs .nav-link.active > img {
     filter: invert(54%) sepia(87%) saturate(1211%) hue-rotate(188deg) brightness(98%) contrast(93%);
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
@@ -493,11 +494,12 @@ select, .select-pad {
 }
 
 .page-header {
-    padding: 15px 30px
+    padding: 15px 30px;
 }
 
-.table td, .table {
-    margin-bottom: 0
+.table td,
+.table {
+    margin-bottom: 0;
 }
 
 #modal_detalhes .nav-tabs .nav-link:not(.active) {
@@ -509,36 +511,37 @@ select, .select-pad {
 }
 
 .badge-money {
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 8px;
     padding: 9px 12px;
     display: inline-flex;
 }
 
-#header h6, #header .available-balance{
-    color: #70707E;
+#header h6,
+#header .available-balance {
+    color: #70707e;
 }
 #bt-withdrawal {
-    background-color: #1BE4A8;
+    background-color: #1be4a8;
     border-radius: 8px;
 }
 
-.balance-resume .card-body{
-    padding: 18px 24px
+.balance-resume .card-body {
+    padding: 18px 24px;
 }
 
-.balance-resume h5{
+.balance-resume h5 {
     margin-top: 0;
-    margin-bottom: 10px
+    margin-bottom: 10px;
 }
 
-.balance-resume h5{
+.balance-resume h5 {
     margin-top: 0;
-    margin-bottom: 6px
+    margin-bottom: 6px;
 }
 
 .form-group input {
-    padding: 10px 35px 12px 16px
+    padding: 10px 35px 12px 16px;
 }
 
 .title-withdrawals-table {
@@ -552,7 +555,7 @@ select, .select-pad {
     color: #000;
     padding-top: 5px;
     margin-top: 5px;
-    border-top: 1px solid #F4F4F4;
+    border-top: 1px solid #f4f4f4;
 }
 
 .page-title svg {
@@ -563,7 +566,7 @@ select, .select-pad {
 }
 
 .pagination-sm button {
-    margin-bottom: 5px
+    margin-bottom: 5px;
 }
 
 .transfers-sale {
@@ -571,7 +574,7 @@ select, .select-pad {
     font-weight: normal;
     font-size: 16px;
     line-height: 20px;
-    color: #2E85EC;
+    color: #2e85ec;
 }
 @media (min-width: 768px) {
     .pointer-md {
@@ -597,29 +600,32 @@ select, .select-pad {
         border: none;
         margin: 14px 0 !important;
         padding: 14px 16px !important;
-        background-color: #FFF !important;
+        background-color: #fff !important;
         border-radius: 8px !important;
     }
 
     .s-table.table-finance-schedule {
         grid-template-columns: 1fr 1fr;
-        grid-template-areas: "sale status"
-                             "value value"
-                             "date-start date-end";
+        grid-template-areas:
+            "sale status"
+            "value value"
+            "date-start date-end";
     }
 
     .s-table.table-finance-schedule-new {
         grid-template-columns: 1fr 1fr;
-        grid-template-areas: "sale value"
-                             "date-start date-end";
+        grid-template-areas:
+            "sale value"
+            "date-start date-end";
     }
 
     .s-table.table-finance-transfers {
-        grid-template-columns: 1fr 1fr ;
-        grid-template-areas: "status sale"
-                             "value value"
-                             "bank bank"
-                             "date-start date-end"
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "status sale"
+            "value value"
+            "bank bank"
+            "date-start date-end";
     }
 
     table.unify tr {
@@ -628,7 +634,7 @@ select, .select-pad {
     }
 
     .table td {
-        background-color: #FFF !important;
+        background-color: #fff !important;
         margin: 0;
     }
 
@@ -637,7 +643,7 @@ select, .select-pad {
     }
 
     .table-striped tbody tr:first-child {
-        border-radius: 16px 16px 0 0
+        border-radius: 16px 16px 0 0;
     }
 
     .popover {
@@ -645,15 +651,15 @@ select, .select-pad {
     }
 
     .table-striped tbody tr:last-child {
-        border-radius: 0 0 16px 16px
+        border-radius: 0 0 16px 16px;
     }
 
     .font-md-size-20 {
-        font-size: 20px !important
+        font-size: 20px !important;
     }
 
     .font-md-size-18 {
-        font-size: 18px !important
+        font-size: 18px !important;
     }
 
     .bold-mobile {
@@ -662,7 +668,7 @@ select, .select-pad {
     }
 
     .btn-sacar {
-        background: #1BE4A8;
+        background: #1be4a8;
         box-shadow: 0 1px 15px #00000017;
         border-radius: 12px;
         padding: 15px;
@@ -690,7 +696,9 @@ select, .select-pad {
         text-align: center !important;
     }
 
-    .withdrawals-table, .transfersTable, .table {
+    .withdrawals-table,
+    .transfersTable,
+    .table {
         background: transparent;
     }
 
@@ -700,10 +708,10 @@ select, .select-pad {
         margin-right: 10px !important;
     }
 
-    .sale-finance-transfers{
+    .sale-finance-transfers {
         font-size: 12px !important;
         line-height: 15px !important;
-        color: #9E9E9E !important;
+        color: #9e9e9e !important;
         padding: 0 !important;
         text-align: right !important;
         align-self: center;
@@ -716,7 +724,7 @@ select, .select-pad {
     .value-finance-transfers span {
         font-size: 14px !important;
         line-height: 18px;
-        color: #9E9E9E;
+        color: #9e9e9e;
         font-weight: normal;
     }
     .value-finance-transfers strong {
@@ -741,18 +749,20 @@ select, .select-pad {
 
     .date-start-finance-transfers,
     .date-end-finance-transfers {
-        padding: 0 !important
+        padding: 0 !important;
     }
     .date-start-finance-transfers *,
     .date-end-finance-transfers * {
         display: inline;
         font-size: 12px !important;
         line-height: 15px;
-        color: #9E9E9E;
+        color: #9e9e9e;
     }
-    .date-start-finance-transfers .bold-mobile, .date-start-finance-transfers small,
-    .date-end-finance-transfers .bold-mobile, .date-end-finance-transfers small {
-        color: #636363 !important
+    .date-start-finance-transfers .bold-mobile,
+    .date-start-finance-transfers small,
+    .date-end-finance-transfers .bold-mobile,
+    .date-end-finance-transfers small {
+        color: #636363 !important;
     }
 
     .sale-finance-schedule {
@@ -772,7 +782,7 @@ select, .select-pad {
     .value-finance-schedule span {
         font-size: 14px !important;
         line-height: 18px;
-        color: #9E9E9E;
+        color: #9e9e9e;
         font-weight: normal;
     }
     .value-finance-schedule strong {
@@ -785,15 +795,18 @@ select, .select-pad {
     }
 
     .font-md-size-18 {
-        font-size: 14px !important
+        font-size: 14px !important;
     }
 
-    .btn-light-1, .btn-primary-1, .btn-success-1 {
+    .btn-light-1,
+    .btn-primary-1,
+    .btn-success-1 {
         font-size: 12px !important;
         flex-wrap: wrap;
     }
 
-    .pr-xs-0, .pl-xs-0 {
+    .pr-xs-0,
+    .pl-xs-0 {
         padding-left: 0 !important;
         padding-right: 5px !important;
     }
@@ -803,7 +816,8 @@ select, .select-pad {
         margin: 2px 0 !important;
     }
 
-    .weekdays-container .btn, .day-container .btn {
+    .weekdays-container .btn,
+    .day-container .btn {
         width: 30% !important;
         margin: 2px 5px !important;
     }
@@ -878,7 +892,7 @@ select, .select-pad {
 
 .card.bg-light .input-group > .input-group-prepend span,
 .card.bg-light .input-group > input {
-    border-color: #8693b8
+    border-color: #8693b8;
 }
 
 #withdrawalsTable tr:last-of-type td:first-child {

@@ -14,7 +14,7 @@ class UserInformationsRequest extends FormRequest
     public function rules()
     {
         return [
-            "document" => "required"
+            "document" => "required",
         ];
     }
 
@@ -24,7 +24,7 @@ class UserInformationsRequest extends FormRequest
             "email.required" => "O email é obrigatório",
             "name.required" => "O nome é obrigatório",
             "document.required" => "O documento é obrigatório",
-            "phone.required" => "O telefone é obrigatório"
+            "phone.required" => "O telefone é obrigatório",
         ];
     }
 

@@ -18,40 +18,40 @@ class ProjectNotificationResource extends JsonResource
      */
     public function toArray($request)
     {
-        $arrayType = [1 => 'Email', 2 => 'SMS'];
+        $arrayType = [1 => "Email", 2 => "SMS"];
         $arrayEvent = [
-			1 => 'Boleto gerado',
-			2 => 'Boleto compensado',
-			3 => 'Compra no cartão',
-			4 => 'Carrinho abandonado',
-			5 => 'Boleto vencendo',
-            6 => 'Código de Rastreio',
-			7 => 'PIX gerado',
-			8 => 'PIX compensado',
-			9 => 'PIX expirado'
-		];
+            1 => "Boleto gerado",
+            2 => "Boleto compensado",
+            3 => "Compra no cartão",
+            4 => "Carrinho abandonado",
+            5 => "Boleto vencendo",
+            6 => "Código de Rastreio",
+            7 => "PIX gerado",
+            8 => "PIX compensado",
+            9 => "PIX expirado",
+        ];
 
         $arrayMessage = json_decode($this->message, true);
-        $subject = $arrayMessage['subject'] ?? '';
-        $title  = $arrayMessage['title'] ?? '';
-        $message = (is_array($arrayMessage)) ? ($arrayMessage['content'] ?? '') : $this->message;
+        $subject = $arrayMessage["subject"] ?? "";
+        $title = $arrayMessage["title"] ?? "";
+        $message = is_array($arrayMessage) ? $arrayMessage["content"] ?? "" : $this->message;
 
         return [
-            'id'                => $this->id_code,
-            'status' 	        => $this->status,
-            'status_translated' => ($this->status == 1) ? 'Ativo' : 'Inativo',
-            'notification_enum' => $this->notification_enum,
-            'type_enum'         => $this->type_enum,
-            'event_enum'        => $this->event_enum,
-            'time' 		        => $this->time,
-            'message'           => $message,
-            'message_html'      => preg_replace("/\r\n/", "<br/>", $message),
-            'subject'           => $subject,
-            'title'             => $title,
-            'type'   	        => $arrayType[$this->type_enum],
-            'event' 	        => $arrayEvent[$this->event_enum],
-            'project_name'      => $this->project_name ?? '',
-            'project_image'     => $this->project_image ?? '',
+            "id" => $this->id_code,
+            "status" => $this->status,
+            "status_translated" => $this->status == 1 ? "Ativo" : "Inativo",
+            "notification_enum" => $this->notification_enum,
+            "type_enum" => $this->type_enum,
+            "event_enum" => $this->event_enum,
+            "time" => $this->time,
+            "message" => $message,
+            "message_html" => preg_replace("/\r\n/", "<br/>", $message),
+            "subject" => $subject,
+            "title" => $title,
+            "type" => $arrayType[$this->type_enum],
+            "event" => $arrayEvent[$this->event_enum],
+            "project_name" => $this->project_name ?? "",
+            "project_image" => $this->project_image ?? "",
         ];
     }
 }

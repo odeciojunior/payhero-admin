@@ -25,7 +25,7 @@ class SalesServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -45,12 +45,13 @@ class SalesServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('sales.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'sales'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("sales.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "sales");
     }
 
     /**
@@ -60,17 +61,26 @@ class SalesServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/sales');
+        $viewPath = resource_path("views/modules/sales");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/sales';
-        }, \Config::get('view.paths')), [$sourcePath]), 'sales');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/sales";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "sales"
+        );
     }
 
     /**
@@ -80,12 +90,12 @@ class SalesServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/sales');
+        $langPath = resource_path("lang/modules/sales");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'sales');
+            $this->loadTranslationsFrom($langPath, "sales");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'sales');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "sales");
         }
     }
 
@@ -95,8 +105,8 @@ class SalesServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

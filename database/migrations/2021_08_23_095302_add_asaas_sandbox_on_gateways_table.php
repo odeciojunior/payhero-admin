@@ -20,16 +20,15 @@ class AddAsaasSandboxOnGatewaysTable extends Migration
                 "name" => "asaas_sandbox",
             ],
             [
-                "gateway_enum"    => 8,
-                "name"            => "asaas_sandbox",
-                "json_config"     => FoxUtils::xorEncrypt(
-                    json_encode(
-                        [
-                            "api_key"  => "38c00b1d6be707d39a31dd59404feb02ac6fbf6ab5b111669c8ed3263c5e3ac2",
-                        ]
-                    )),
+                "gateway_enum" => 8,
+                "name" => "asaas_sandbox",
+                "json_config" => FoxUtils::xorEncrypt(
+                    json_encode([
+                        "api_key" => "38c00b1d6be707d39a31dd59404feb02ac6fbf6ab5b111669c8ed3263c5e3ac2",
+                    ])
+                ),
                 "production_flag" => 0,
-                "enabled_flag"    => 1,
+                "enabled_flag" => 1,
             ]
         );
     }

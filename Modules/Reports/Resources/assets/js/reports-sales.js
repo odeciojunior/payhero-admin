@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     loadingOnScreen();
     exportReports();
 
@@ -8,38 +8,36 @@ $(function() {
     changeCalendar();
     changeSaleStatus();
 
-    if(sessionStorage.info) {
-        let info = JSON.parse(sessionStorage.getItem('info'));
-        $('input[name=daterange]').val(info.calendar);
+    if (sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem("info"));
+        $("input[name=daterange]").val(info.calendar);
     }
 });
 
-let salesUrl = '/api/reports/sales';
-let mktUrl = '/api/reports/marketing';
+let salesUrl = "/api/reports/sales";
+let mktUrl = "/api/reports/marketing";
 
-let company = '';
-let date = '';
-let sales_status = '';
+let company = "";
+let date = "";
+let sales_status = "";
 
 function changeSaleStatus() {
-    $("#status-graph").on('change', function() {
+    $("#status-graph").on("change", function () {
         if (sales_status !== $(this).val()) {
             sales_status = $(this).val();
 
-            $('.sirius-select-container').addClass('disabled');
-            $('input[name="daterange"]').attr('disabled', 'disabled');
+            $(".sirius-select-container").addClass("disabled");
+            $('input[name="daterange"]').attr("disabled", "disabled");
 
-            Promise.all([
-                salesStatus($(this).find('option:selected').val())
-            ])
-            .then(() => {
-                $('.sirius-select-container').removeClass('disabled');
-                $('input[name="daterange"]').removeAttr('disabled', 'disabled');
-            })
-            .catch(() => {
-                $('.sirius-select-container').removeClass('disabled');
-                $('input[name="daterange"]').removeAttr('disabled', 'disabled');
-            });
+            Promise.all([salesStatus($(this).find("option:selected").val())])
+                .then(() => {
+                    $(".sirius-select-container").removeClass("disabled");
+                    $('input[name="daterange"]').removeAttr("disabled", "disabled");
+                })
+                .catch(() => {
+                    $(".sirius-select-container").removeClass("disabled");
+                    $('input[name="daterange"]').removeAttr("disabled", "disabled");
+                });
         }
     });
 }
@@ -76,9 +74,11 @@ function getProjects() {
                     removeDuplcateItem("#select_projects option");
                 });
 
-                if(sessionStorage.info) {
-                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                if (sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem("info")).company);
+                    $("#select_projects")
+                        .find("option:selected")
+                        .text(JSON.parse(sessionStorage.getItem("info")).companyName);
                 }
 
                 company = $("#select_projects").val();
@@ -92,48 +92,48 @@ function getProjects() {
             }
 
             loadingOnScreenRemove();
-        }
+        },
     });
 }
 
 function barGraph(data, labels, total) {
     const titleTooltip = (tooltipItems) => {
-        return '';
-    }
+        return "";
+    };
 
     const legendMargin = {
-        id: 'legendMargin',
+        id: "legendMargin",
         beforeInit(chart, legend, options) {
             const fitValue = chart.legend.fit;
             chart.legend.fit = function () {
                 fitValue.bind(chart.legend)();
-                return this.height += 20;
-            }
-        }
+                return (this.height += 20);
+            };
+        },
     };
 
-    const ctx = document.getElementById('salesChart').getContext('2d');
+    const ctx = document.getElementById("salesChart").getContext("2d");
 
     const myChart = new Chart(ctx, {
         plugins: [legendMargin],
-        type: 'bar',
+        type: "bar",
         data: {
             labels,
             datasets: [
                 {
-                    axis: 'x',
-                    label: '',
+                    axis: "x",
+                    label: "",
                     data,
-                    color:'#E8EAEB',
-                    backgroundColor: ['rgba(46, 133, 236, 1)'],
+                    color: "#E8EAEB",
+                    backgroundColor: ["rgba(46, 133, 236, 1)"],
                     borderRadius: 4,
                     barThickness: 24,
-                    fill: false
+                    fill: false,
                 },
-            ]
+            ],
         },
         options: {
-            indexAxis: 'x',
+            indexAxis: "x",
             plugins: {
                 legend: {
                     display: false,
@@ -143,41 +143,41 @@ function barGraph(data, labels, total) {
                 },
                 subtitle: {
                     display: true,
-                    align: 'start',
+                    align: "start",
                     text: `${total} cliente(s) recorrente(s)`,
-                    color: '#E8EAEB',
+                    color: "#E8EAEB",
                     font: {
-                        size: '14',
+                        size: "14",
                         family: "'Muli'",
-                        weight: 'normal'
+                        weight: "normal",
                     },
                     padding: {
                         top: 0,
-                        bottom: 15
-                    }
-                }
+                        bottom: 15,
+                    },
+                },
             },
 
             responsive: true,
             scales: {
                 x: {
                     grid: {
-                        display: false
+                        display: false,
                     },
                     ticks: {
                         padding: 0,
                         color: "#747474",
-                        align: 'center',
+                        align: "center",
                         font: {
-                            family: 'Muli',
+                            family: "Muli",
                             size: 12,
                         },
                     },
                 },
                 y: {
                     grid: {
-                        color: '#ECE9F1',
-                        drawBorder: true
+                        color: "#ECE9F1",
+                        drawBorder: true,
                     },
                     min: 0,
                     max: 40,
@@ -185,35 +185,35 @@ function barGraph(data, labels, total) {
                         padding: 0,
                         stepSize: 10,
                         font: {
-                            family: 'Muli',
+                            family: "Muli",
                             size: 14,
                         },
-                        color: "#A2A3A5"
-                    }
-                }
+                        color: "#A2A3A5",
+                    },
+                },
             },
             interaction: {
                 mode: "index",
                 borderRadius: 4,
                 usePointStyle: true,
-                yAlign: 'bottom',
+                yAlign: "bottom",
                 padding: 15,
                 titleSpacing: 10,
                 callbacks: {
                     title: titleTooltip,
                     label: function (tooltipItem) {
-                        return tooltipItem.raw + ' recorrência(s)'
+                        return tooltipItem.raw + " recorrência(s)";
                     },
                     labelPointStyle: function (context) {
                         return {
-                            pointStyle: 'rect',
+                            pointStyle: "rect",
                             borderRadius: 4,
                             rotatio: 0,
-                        }
-                    }
-                }
+                        };
+                    },
+                },
             },
-        }
+        },
     });
 }
 
@@ -249,19 +249,23 @@ function salesResume() {
         </div>
     `;
 
-    $('#reports-content .onPreLoad *').remove();
+    $("#reports-content .onPreLoad *").remove();
     $("#sales-transactions,#sales-average-ticket,#sales-comission,#sales-number-chargeback").html(skeLoad);
 
     $.ajax({
         method: "GET",
-        url: salesUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            salesUrl +
+            "/resume?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
         },
         error: function error(response) {
-
             $("#sales-number-chargeback").html(salesNumberChargeback);
             $("#sales-comission").html(salesComission);
             $("#sales-average-ticket").html(salesAverageTicket);
@@ -269,13 +273,13 @@ function salesResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data != undefined) {
+            if (response.data != undefined) {
                 let { average_ticket, chargeback, comission, transactions } = response.data;
 
                 salesTransactions = `
                     <span class="title">N de transações</span>
                     <div class="d-flex">
-                        <strong class="number">${transactions == undefined ? 0: transactions}</strong>
+                        <strong class="number">${transactions == undefined ? 0 : transactions}</strong>
                     </div>
                 `;
 
@@ -283,7 +287,9 @@ function salesResume() {
                     <span class="title">Ticket Médio</span>
                     <div class="d-flex">
                         <span class="detail">R$</span>
-                        <strong class="number">${average_ticket == undefined ? '0,00': removeMoneyCurrency(average_ticket)}</strong>
+                        <strong class="number">${
+                            average_ticket == undefined ? "0,00" : removeMoneyCurrency(average_ticket)
+                        }</strong>
                     </div>
                 `;
 
@@ -291,7 +297,9 @@ function salesResume() {
                     <span class="title">Comissão total</span>
                     <div class="d-flex">
                         <span class="detail">R$</span>
-                        <strong class="number">${comission == undefined ? '0,00': removeMoneyCurrency(comission)}</strong>
+                        <strong class="number">${
+                            comission == undefined ? "0,00" : removeMoneyCurrency(comission)
+                        }</strong>
                     </div>
                 `;
 
@@ -299,7 +307,9 @@ function salesResume() {
                     <span class="title">Total em Chargebacks</span>
                     <div class="d-flex">
                         <span class="detail">R$</span>
-                        <strong class="number">${chargeback == undefined ? '0,00': removeMoneyCurrency(chargeback)}</strong>
+                        <strong class="number">${
+                            chargeback == undefined ? "0,00" : removeMoneyCurrency(chargeback)
+                        }</strong>
                     </div>
                 `;
             }
@@ -308,7 +318,7 @@ function salesResume() {
             $("#sales-comission").html(salesComission);
             $("#sales-average-ticket").html(salesAverageTicket);
             $("#sales-transactions").html(salesTransactions);
-        }
+        },
     });
 }
 
@@ -322,12 +332,17 @@ function distribution() {
             </div>
         </div>
     `;
-    $('#card-distribution .onPreLoadBig *').remove();
+    $("#card-distribution .onPreLoadBig *").remove();
     $("#block-distribution").html(skeLoadBig);
 
     return $.ajax({
         method: "GET",
-        url: salesUrl + "/distribuitions?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            salesUrl +
+            "/distribuitions?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -340,7 +355,7 @@ function distribution() {
         },
         success: function success(response) {
             let { approved, canceled, chargeback, other, pending, refunded, refused, total } = response.data;
-            if( total !== "0" ) {
+            if (total !== "0") {
                 let series = [
                     approved.percentage,
                     pending.percentage,
@@ -360,7 +375,9 @@ function distribution() {
                         </em>
                     </div>
                 </div>
-                <div class="d-flex box-distribution secondary" style="display: ${approved.percentage == '0.00' ? 'none': 'flex'}">
+                <div class="d-flex box-distribution secondary" style="display: ${
+                    approved.percentage == "0.00" ? "none" : "flex"
+                }">
                     <div class="distribution-area">
                         <div class="item">
                             <span>
@@ -376,7 +393,7 @@ function distribution() {
                         <div class="item right"><small class="grey font-size-14">${approved.percentage}%</small></div>
                     </div>
 
-                    <div class="distribution-area" style="display: ${pending.percentage == '0.00' ? 'none': 'flex'}">
+                    <div class="distribution-area" style="display: ${pending.percentage == "0.00" ? "none" : "flex"}">
                         <div class="item">
                             <span>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -393,7 +410,7 @@ function distribution() {
                         </div>
                     </div>
 
-                    <div class="distribution-area" style="display: ${canceled.percentage == '0.00' ? 'none': 'flex'}">
+                    <div class="distribution-area" style="display: ${canceled.percentage == "0.00" ? "none" : "flex"}">
                         <div class="item">
                             <span>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -410,7 +427,7 @@ function distribution() {
                         </div>
                     </div>
 
-                    <div class="distribution-area" style="display: ${refused.percentage == '0.00' ? 'none': 'flex'}">
+                    <div class="distribution-area" style="display: ${refused.percentage == "0.00" ? "none" : "flex"}">
                         <div class="item">
                             <span>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -427,7 +444,7 @@ function distribution() {
                         </div>
                     </div>
 
-                    <div class="distribution-area" style="display: ${refunded.percentage == '0.00' ? 'none': 'flex'}">
+                    <div class="distribution-area" style="display: ${refunded.percentage == "0.00" ? "none" : "flex"}">
                         <div class="item">
                             <span>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -444,7 +461,9 @@ function distribution() {
                         </div>
                     </div>
 
-                    <div class="distribution-area" style="display: ${chargeback.percentage == '0.00' ? 'none': 'flex'}">
+                    <div class="distribution-area" style="display: ${
+                        chargeback.percentage == "0.00" ? "none" : "flex"
+                    }">
                         <div class="item">
                             <span>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -461,7 +480,7 @@ function distribution() {
                         </div>
                     </div>
 
-                    <div class="distribution-area" style="display: ${other.percentage == '0.00' ? 'none': 'flex'}">
+                    <div class="distribution-area" style="display: ${other.percentage == "0.00" ? "none" : "flex"}">
                         <div class="item">
                             <span>
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -486,13 +505,15 @@ function distribution() {
             } else {
                 $("#block-distribution").html(distributionHtml);
             }
-        }
+        },
     });
 }
 
 function distributionGraph(series) {
-    new Chartist.Pie('.distribution-graph-seller', {
-            series
+    new Chartist.Pie(
+        ".distribution-graph-seller",
+        {
+            series,
         },
         {
             donut: true,
@@ -502,7 +523,7 @@ function distributionGraph(series) {
             showLabel: false,
             chartPadding: 0,
             labelOffset: 0,
-            height: 123
+            height: 123,
         }
     );
 }
@@ -519,12 +540,17 @@ function loadDevices() {
             <p class="noone">Sem dados</p>
         </div>
     `;
-    $('#card-devices .onPreLoad *' ).remove();
+    $("#card-devices .onPreLoad *").remove();
     $("#block-devices").html(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: mktUrl + "/devices?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            mktUrl +
+            "/devices?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -536,10 +562,10 @@ function loadDevices() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if( response.data !== null ) {
+            if (response.data !== null) {
                 let { desktop, mobile } = response.data;
 
-                if(desktop.total !== 0 || mobile.total !== 0) {
+                if (desktop.total !== 0 || mobile.total !== 0) {
                     deviceBlock = `
                      <div class="row container-payment gadgets">
                         <div class="container container-devices">
@@ -602,12 +628,10 @@ function loadDevices() {
                 } else {
                     $("#block-devices").html(deviceBlock);
                 }
-            }
-            else {
+            } else {
                 $("#block-devices").html(deviceBlock);
             }
-
-        }
+        },
     });
 }
 
@@ -624,7 +648,7 @@ function typePayments() {
         </div>
     `;
 
-    $('#card-payments .onPreLoad *' ).remove();
+    $("#card-payments .onPreLoad *").remove();
     $("#block-payments").html(skeLoad);
 
     let card = `
@@ -667,7 +691,11 @@ function typePayments() {
 
     return $.ajax({
         method: "GET",
-        url: "/api/reports/resume/type-payments?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            "/api/reports/resume/type-payments?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -679,17 +707,21 @@ function typePayments() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if( response.data !== null ) {
+            if (response.data !== null) {
                 var arrJson = Object.keys(response.data).map((key) => [key, response.data[key]]);
 
                 paymentsHtml = `<div class="row container-payment" id="type-payment">`;
-                    arrJson.forEach(element => {
-                        paymentsHtml += `
+                arrJson.forEach((element) => {
+                    paymentsHtml += `
                             <div
                                 class="container ${
-                                    element[0] == 'credit_card' ? 'creditCard'
-                                    : element[0] == 'pix' ? 'cardPix'
-                                    : element[0] == 'boleto'? 'cardBoleto' : ''
+                                    element[0] == "credit_card"
+                                        ? "creditCard"
+                                        : element[0] == "pix"
+                                        ? "cardPix"
+                                        : element[0] == "boleto"
+                                        ? "cardBoleto"
+                                        : ""
                                 }"
                             >
                                 <div class="data-holder b-bottom">
@@ -697,11 +729,15 @@ function typePayments() {
                                         <div class="col-payment grey box-image-payment ico-pay">
                                             <div class="box-ico">
                                                 ${
-                                                    element[0] == 'credit_card' ? card
-                                                    : element[0] == 'pix' ? cardPix
-                                                    : element[0] == 'boleto'? cardBoleto : ''
+                                                    element[0] == "credit_card"
+                                                        ? card
+                                                        : element[0] == "pix"
+                                                        ? cardPix
+                                                        : element[0] == "boleto"
+                                                        ? cardBoleto
+                                                        : ""
                                                 }
-                                            </div>${element[0] == 'credit_card' ? 'Cartão': element[0]}
+                                            </div>${element[0] == "credit_card" ? "Cartão" : element[0]}
                                         </div>
 
                                         <div class="box-payment-option option">
@@ -723,23 +759,28 @@ function typePayments() {
                                 </div>
                             </div>
                         `;
-                    });
+                });
                 paymentsHtml += `</div>`;
             }
 
             $("#block-payments").html(paymentsHtml);
-        }
+        },
     });
 }
 
 function loadFrequenteSales() {
-    let salesBlock = '';
-    $('#card-most-sales .onPreLoad *' ).remove();
+    let salesBlock = "";
+    $("#card-most-sales .onPreLoad *").remove();
     $("#block-sales").prepend(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: mktUrl + "/most-frequent-sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            mktUrl +
+            "/most-frequent-sales?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -747,16 +788,16 @@ function loadFrequenteSales() {
         },
         error: function error(response) {
             salesBlock = `${noSales}`;
-            $('#block-sales .ske-load' ).remove();
-            $('#block-sales').removeClass('scroll-212');
+            $("#block-sales .ske-load").remove();
+            $("#block-sales").removeClass("scroll-212");
             $("#block-sales").html(salesBlock);
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data !== null) {
+            if (response.data !== null) {
                 $.each(response.data, function (i, item) {
                     let value = removeMoneyCurrency(item.value);
-                    let newV = formatCash(String(parseFloat(value)).replace('.',''));
+                    let newV = formatCash(String(parseFloat(value)).replace(".", ""));
                     salesBlock = `
                         <div class="box-payment-option pad-0">
                             <div class="d-flex align-items list-sales">
@@ -782,30 +823,29 @@ function loadFrequenteSales() {
                             </div>
                         </div>
                     `;
-                    $('#block-sales .ske-load' ).remove();
-                    $('#block-sales').addClass('scroll-212');
+                    $("#block-sales .ske-load").remove();
+                    $("#block-sales").addClass("scroll-212");
                     $("#block-sales").append(salesBlock);
-                    $('.photo').on('error', function() {
-                        $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
+                    $(".photo").on("error", function () {
+                        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                     });
                     $('[data-toggle="tooltip"]').tooltip({
-                        container: '#block-sales'
+                        container: "#block-sales",
                     });
                 });
 
-                if(response.data.length < 4 ) {
-                    $('#card-most-sales .scrollbar, .scroll-212').height('auto');
+                if (response.data.length < 4) {
+                    $("#card-most-sales .scrollbar, .scroll-212").height("auto");
                     salesBlock = `<div>${noListProducts}</div>`;
                     $("#block-sales").append(salesBlock);
                 }
-
             } else {
                 salesBlock = `${noSales}`;
-                $('#block-sales .ske-load' ).remove();
-                $('#block-sales').removeClass('scroll-212');
+                $("#block-sales .ske-load").remove();
+                $("#block-sales").removeClass("scroll-212");
                 $("#block-sales").html(salesBlock);
             }
-        }
+        },
     });
 }
 
@@ -816,12 +856,17 @@ function abandonedCarts() {
             <p class="noone">Sem dados</p>
         </div>
     `;
-    $("#card-abandoned .onPreLoad *" ).remove();
+    $("#card-abandoned .onPreLoad *").remove();
     $("#block-abandoned").html(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: salesUrl + "/abandoned-carts?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            salesUrl +
+            "/abandoned-carts?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -833,7 +878,7 @@ function abandonedCarts() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data.percentage !== "0%") {
+            if (response.data.percentage !== "0%") {
                 let { percentage, value } = response.data;
 
                 abandonedBlock = `
@@ -869,7 +914,7 @@ function abandonedCarts() {
             }
 
             $("#block-abandoned").html(abandonedBlock);
-        }
+        },
     });
 }
 
@@ -892,14 +937,19 @@ function orderbump() {
             </div>
         </div>
     `;
-    $("#card-orderbump .onPreLoad *" ).remove();
+    $("#card-orderbump .onPreLoad *").remove();
     $("#block-orderbump").prepend(skeLoad);
 
-    $("#card-orderbump header").addClass('mt-0');
+    $("#card-orderbump header").addClass("mt-0");
 
     return $.ajax({
         method: "GET",
-        url: salesUrl + "/orderbump?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            salesUrl +
+            "/orderbump?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -911,7 +961,7 @@ function orderbump() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data.amount > 0) {
+            if (response.data.amount > 0) {
                 let { amount, value } = response.data;
                 value = removeMoneyCurrency(value);
 
@@ -939,20 +989,25 @@ function orderbump() {
             }
 
             $("#block-orderbump").html(orderbumpBlock);
-            $("#card-orderbump header").removeClass('mt-0');
-        }
+            $("#card-orderbump header").removeClass("mt-0");
+        },
     });
 }
 
 function upsell() {
-    let upsellBlock = '';
-    $("#card-upsell .onPreLoad *" ).remove();
+    let upsellBlock = "";
+    $("#card-upsell .onPreLoad *").remove();
     $("#block-upsell").prepend(skeLoad);
-    $("#card-upsell header").addClass('mt-0');
+    $("#card-upsell header").addClass("mt-0");
 
     return $.ajax({
         method: "GET",
-        url: salesUrl + "/upsell?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            salesUrl +
+            "/upsell?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -964,7 +1019,7 @@ function upsell() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data.amount > 0) {
+            if (response.data.amount > 0) {
                 let { value, amount } = response.data;
                 value = removeMoneyCurrency(value);
 
@@ -993,10 +1048,9 @@ function upsell() {
                 upsellBlock = `${noUpsell}`;
             }
             $("#block-upsell").html(upsellBlock);
-            $("#card-upsell header").removeClass('mt-0');
-        }
+            $("#card-upsell header").removeClass("mt-0");
+        },
     });
-
 }
 
 function conversion() {
@@ -1011,7 +1065,7 @@ function conversion() {
             <p class="noone">Sem dados</p>
         </div>
     `;
-    $("#card-conversion .onPreLoad *" ).remove();
+    $("#card-conversion .onPreLoad *").remove();
     $("#block-conversion").prepend(skeLoad);
 
     let card = `
@@ -1052,9 +1106,14 @@ function conversion() {
     </span>
     `;
 
-   return $.ajax({
+    return $.ajax({
         method: "GET",
-        url: salesUrl + "/conversion?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            salesUrl +
+            "/conversion?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -1066,9 +1125,11 @@ function conversion() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data !== null) {
+            if (response.data !== null) {
                 let { credit_card, pix, boleto } = response.data;
-                const numbers = [credit_card.total, pix.total, boleto.total].map(Number).reduce((prev, value) => prev + value,0);
+                const numbers = [credit_card.total, pix.total, boleto.total]
+                    .map(Number)
+                    .reduce((prev, value) => prev + value, 0);
 
                 var SortArr = function (j) {
                     var arr = [];
@@ -1078,10 +1139,8 @@ function conversion() {
                     arr.sort(function (a, b) {
                         var intA = parseInt(a.val.percentage),
                             intB = parseInt(b.val.percentage);
-                        if (intA > intB)
-                            return -1;
-                        if (intA < intB)
-                            return 1;
+                        if (intA > intB) return -1;
+                        if (intA < intB) return 1;
                         return 0;
                     });
                     return arr;
@@ -1097,11 +1156,15 @@ function conversion() {
                                     <div class="col-payment grey box-image-payment">
                                         <div class="box-ico">
                                             ${
-                                                arrJson[0].key == 'credit_card' ? card
-                                                : arrJson[0].key == 'pix' ? card_pix
-                                                : arrJson[0].key == 'boleto'? card_boleto : ''
+                                                arrJson[0].key == "credit_card"
+                                                    ? card
+                                                    : arrJson[0].key == "pix"
+                                                    ? card_pix
+                                                    : arrJson[0].key == "boleto"
+                                                    ? card_boleto
+                                                    : ""
                                             }
-                                        </div>${arrJson[0].key == 'credit_card' ? 'Cartão': arrJson[0].key}
+                                        </div>${arrJson[0].key == "credit_card" ? "Cartão" : arrJson[0].key}
                                     </div>
 
                                     <div class="box-payment-option option">
@@ -1127,11 +1190,15 @@ function conversion() {
                                     <div class="col-payment grey box-image-payment" style="text-transform: capitalize;">
                                         <div class="box-ico">
                                             ${
-                                                arrJson[1].key == 'credit_card' ? card
-                                                : arrJson[1].key == 'pix' ? card_pix
-                                                : arrJson[1].key == 'boleto'? card_boleto : ''
+                                                arrJson[1].key == "credit_card"
+                                                    ? card
+                                                    : arrJson[1].key == "pix"
+                                                    ? card_pix
+                                                    : arrJson[1].key == "boleto"
+                                                    ? card_boleto
+                                                    : ""
                                             }
-                                        </div> ${arrJson[1].key == 'credit_card' ? 'Cartão': arrJson[1].key}
+                                        </div> ${arrJson[1].key == "credit_card" ? "Cartão" : arrJson[1].key}
                                     </div>
                                     <div class="box-payment-option option">
                                         <div class="col-payment">
@@ -1156,11 +1223,15 @@ function conversion() {
                                     <div class="col-payment grey box-image-payment" style="text-transform: capitalize;">
                                         <div class="box-ico">
                                         ${
-                                            arrJson[2].key == 'credit_card' ? card
-                                            : arrJson[2].key == 'pix' ? card_pix
-                                            : arrJson[2].key == 'boleto'? card_boleto : ''
+                                            arrJson[2].key == "credit_card"
+                                                ? card
+                                                : arrJson[2].key == "pix"
+                                                ? card_pix
+                                                : arrJson[2].key == "boleto"
+                                                ? card_boleto
+                                                : ""
                                         }
-                                        </div> ${arrJson[2].key == 'credit_card' ? 'Cartão': arrJson[2].key}
+                                        </div> ${arrJson[2].key == "credit_card" ? "Cartão" : arrJson[2].key}
                                     </div>
                                     <div class="box-payment-option option">
                                         <div class="col-payment">
@@ -1183,29 +1254,29 @@ function conversion() {
             }
 
             $("#block-conversion").html(conversionBlock);
-        }
+        },
     });
 }
 
 function infoCard() {
-    let cardHtml = '';
-    $("#card-info .onPreLoad *" ).remove();
-    $('#card-info').show();
+    let cardHtml = "";
+    $("#card-info .onPreLoad *").remove();
+    $("#card-info").show();
     $("#block-info-card").html(skeLoad);
 
-    Promise.all([typePayments(),conversion()])
-    .then(result => {
-        if(result[0].data !== null) {
-            let { credit_card } = result[0].data;
-            let conversionCard = result[1].data;
+    Promise.all([typePayments(), conversion()])
+        .then((result) => {
+            if (result[0].data !== null) {
+                let { credit_card } = result[0].data;
+                let conversionCard = result[1].data;
 
-            if(conversionCard.credit_card.total == "0") {
-                $('#card-info').hide();
-            } else {
-                $('#card-info').show();
-            }
+                if (conversionCard.credit_card.total == "0") {
+                    $("#card-info").hide();
+                } else {
+                    $("#card-info").show();
+                }
 
-            cardHtml = `
+                cardHtml = `
                 <div style="padding: 0 24px;" class="d-flex align-items">
                     <div>
                         <span class="ico-coin seller">
@@ -1222,17 +1293,17 @@ function infoCard() {
                     </div>
                 </div>
             `;
-            $("#block-info-card").html(cardHtml);
-        } else {
-            $('#card-info').hide();
-        }
-    })
-    .catch(e => console.log('error =>' + e));
+                $("#block-info-card").html(cardHtml);
+            } else {
+                $("#card-info").hide();
+            }
+        })
+        .catch((e) => console.log("error =>" + e));
 }
 
 function recurrence() {
-    let recurrenceHtml = '';
-    $("#card-recurrence .onPreLoad *" ).remove();
+    let recurrenceHtml = "";
+    $("#card-recurrence .onPreLoad *").remove();
     $("#block-recurrence").prepend(skeLoad);
 
     return $.ajax({
@@ -1245,26 +1316,26 @@ function recurrence() {
         },
         error: function error(response) {
             recurrenceHtml = `${noRecurrence}`;
-            $('#block-recurrence').html(recurrenceHtml);
+            $("#block-recurrence").html(recurrenceHtml);
             errorAjaxResponse(response);
         },
         success: function success(response) {
             let { chart, total } = response.data;
 
-            if(chart) {
-                $('#block-recurrence').html('<canvas id="salesChart"></canvas>');
+            if (chart) {
+                $("#block-recurrence").html('<canvas id="salesChart"></canvas>');
                 let labels = [...chart.labels];
                 let series = [...chart.values];
                 barGraph(series, labels, total);
             } else {
                 recurrenceHtml = `${noRecurrence}`;
-                $('#block-recurrence').html(recurrenceHtml);
+                $("#block-recurrence").html(recurrenceHtml);
             }
-        }
+        },
     });
 }
 
-const formatCash = n => {
+const formatCash = (n) => {
     if (n < 1e3) return n;
     if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
     if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
@@ -1272,48 +1343,50 @@ const formatCash = n => {
     if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
 };
 
-
 function changeCalendar() {
-    $('.onPreLoad *, .onPreLoadBig *').remove();
+    $(".onPreLoad *, .onPreLoadBig *").remove();
 
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
-    data = sessionStorage.getItem('info') ? JSON.parse(sessionStorage.getItem('info')).calendar : `${startDate}-${endDate}`;
+    data = sessionStorage.getItem("info")
+        ? JSON.parse(sessionStorage.getItem("info")).calendar
+        : `${startDate}-${endDate}`;
 
-    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-    $('input[name="daterange"]').dateRangePicker({
-        setValue: function (s) {
-            if (s) {
-                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
-                $(this).html(s).data('value', normalize);
-                $('input[name="daterange"]').attr('value', normalize);
-                $('input[name="daterange"]').val(normalize);
-            } else {
-                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+    $('input[name="daterange"]')
+        .dateRangePicker({
+            setValue: function (s) {
+                if (s) {
+                    let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                    $(this).html(s).data("value", normalize);
+                    $('input[name="daterange"]').attr("value", normalize);
+                    $('input[name="daterange"]').val(normalize);
+                } else {
+                    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+                    $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+                }
+            },
+        })
+        .on("datepicker-change", function () {
+            $.ajaxQ.abortAll();
+
+            if (data !== $(this).val()) {
+                data = $(this).val();
+
+                updateStorage({ calendar: $(this).val() });
+                updateReports();
             }
-        }
-    })
-    .on('datepicker-change', function () {
-        $.ajaxQ.abortAll();
-
-        if (data !== $(this).val()) {
-            data = $(this).val();
-
-            updateStorage({calendar: $(this).val()});
-            updateReports();
-        }
-    })
-    .on('datepicker-open', function () {
-        $('.filter-badge-input').removeClass('show');
-    })
-    .on('datepicker-close', function () {
-        $(this).removeClass('focused');
-        if ($(this).data('value')) {
-            $(this).addClass('active');
-        }
-    });
+        })
+        .on("datepicker-open", function () {
+            $(".filter-badge-input").removeClass("show");
+        })
+        .on("datepicker-close", function () {
+            $(this).removeClass("focused");
+            if ($(this).data("value")) {
+                $(this).addClass("active");
+            }
+        });
 }
 
 function changeCompany() {
@@ -1323,15 +1396,15 @@ function changeCompany() {
         if (company !== $(this).val()) {
             company = $(this).val();
 
-            updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+            updateStorage({ company: $(this).val(), companyName: $(this).find("option:selected").text() });
             updateReports();
         }
     });
 }
 
 function updateReports() {
-    $('.sirius-select-container').addClass('disabled');
-    $('input[name="daterange"]').attr('disabled', 'disabled');
+    $(".sirius-select-container").addClass("disabled");
+    $('input[name="daterange"]').attr("disabled", "disabled");
 
     Promise.all([
         salesResume(),
@@ -1345,64 +1418,69 @@ function updateReports() {
         //recurrence();
         salesStatus(),
     ])
-    .then(() => {
-        $('.sirius-select-container').removeClass('disabled');
-        $('input[name="daterange"]').removeAttr('disabled');
-    })
-    .catch(() => {
-        $('.sirius-select-container').removeClass('disabled');
-        $('input[name="daterange"]').removeAttr('disabled');
-    });
+        .then(() => {
+            $(".sirius-select-container").removeClass("disabled");
+            $('input[name="daterange"]').removeAttr("disabled");
+        })
+        .catch(() => {
+            $(".sirius-select-container").removeClass("disabled");
+            $('input[name="daterange"]').removeAttr("disabled");
+        });
 }
 
 function convertToReal(tooltipItem) {
     let tooltipValue = tooltipItem.raw;
-        tooltipValue = tooltipValue + '';
-        tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
-        tooltipValue = tooltipValue + '';
-        tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
+    tooltipValue = tooltipValue + "";
+    tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ""));
+    tooltipValue = tooltipValue + "";
+    tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
 
-        if (tooltipValue.length > 6) {
-            tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-        }
+    if (tooltipValue.length > 6) {
+        tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+    }
 
-        return 'R$ ' + tooltipValue;
+    return "R$ " + tooltipValue;
 }
 
-function updateStorage(v){
-    var existing = sessionStorage.getItem('info');
+function updateStorage(v) {
+    var existing = sessionStorage.getItem("info");
     existing = existing ? JSON.parse(existing) : {};
-    Object.keys(v).forEach(function(val, key){
+    Object.keys(v).forEach(function (val, key) {
         existing[val] = v[val];
-   })
-    sessionStorage.setItem('info', JSON.stringify(existing));
+    });
+    sessionStorage.setItem("info", JSON.stringify(existing));
 }
 
 function exportReports() {
     // show/hide modal de exportar relatórios
-    $(".lk-export").on('click', function(e) {
+    $(".lk-export").on("click", function (e) {
         e.preventDefault();
-        $('.inner-reports').addClass('focus');
-        $('.line-reports').addClass('d-flex');
+        $(".inner-reports").addClass("focus");
+        $(".line-reports").addClass("d-flex");
     });
 
-    $('.reports-remove').on('click', function (e) {
+    $(".reports-remove").on("click", function (e) {
         e.preventDefault();
-        $('.inner-reports').removeClass('focus');
-        $('.line-reports').removeClass('d-flex');
+        $(".inner-reports").removeClass("focus");
+        $(".line-reports").removeClass("d-flex");
     });
-
 }
 
 function salesStatus(st) {
-    let status = (st == '' || st == undefined) ? $("#status-graph option:selected").val() : st;
-    let statusHtml = '';
-    $("#card-status .onPreLoadBig *" ).remove();
+    let status = st == "" || st == undefined ? $("#status-graph option:selected").val() : st;
+    let statusHtml = "";
+    $("#card-status .onPreLoadBig *").remove();
     $("#block-status").html(skeLoadBig);
 
     return $.ajax({
         method: "GET",
-        url: "/api/reports/resume/sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&status=" + status,
+        url:
+            "/api/reports/resume/sales?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val() +
+            "&status=" +
+            status,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -1451,9 +1529,9 @@ function salesStatus(st) {
                 </section>
             `;
 
-            if( total !== "0" ) {
+            if (total !== "0") {
                 $("#block-status").html(statusHtml);
-                $('.new-sell-graph').html('<canvas id=sales-graph></canvas>');
+                $(".new-sell-graph").html("<canvas id=sales-graph></canvas>");
                 let labels = [...chart.labels];
                 let series = [...chart.values];
                 newSellGraph(series, labels);
@@ -1476,154 +1554,154 @@ function salesStatus(st) {
                 `;
                 $("#block-status").html(statusHtml);
             }
-        }
+        },
     });
 }
 
 function newSellGraph(data, labels, variant = null) {
     const legendMargin = {
-        id: 'legendMargin',
+        id: "legendMargin",
         beforeInit(chart, legend, options) {
             const fitValue = chart.legend.fit;
             chart.legend.fit = function () {
                 fitValue.bind(chart.legend)();
-                return this.height += 20;
-            }
-        }
-   };
-   const ctx = document.getElementById('sales-graph').getContext('2d');
-   var gradient = ctx.createLinearGradient(0, 0, 0, 450);
-   gradient.addColorStop(0, 'rgba(54,216,119, 0.23)');
-   gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                return (this.height += 20);
+            };
+        },
+    };
+    const ctx = document.getElementById("sales-graph").getContext("2d");
+    var gradient = ctx.createLinearGradient(0, 0, 0, 450);
+    gradient.addColorStop(0, "rgba(54,216,119, 0.23)");
+    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
 
-   const myChart = new Chart(ctx, {
-       plugins: [legendMargin],
-       type: 'line',
-       data: {
-           labels,
-           datasets: [
-               {
-                   label: 'Legenda',
-                   data,
-                   color:'#636363',
-                   backgroundColor: gradient,
-                   borderColor: "#1BE4A8",
-                   borderWidth: 4,
-                   fill: true,
-                   borderRadius: 4,
-                   barThickness: 30,
-               }
-           ]
-       },
-       options: {
-           maintainAspectRatio: false,
-           plugins: {
-               legend: {display: false},
-               title: {display: false},
-           },
-           responsive: true,
-           layout: {
-               padding: 0
-           },
-           scales: {
-               x: {
-                   grid: {
-                       display: false
-                   },
-                   ticks: {
-                       font: {
-                           family: 'Muli',
+    const myChart = new Chart(ctx, {
+        plugins: [legendMargin],
+        type: "line",
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: "Legenda",
+                    data,
+                    color: "#636363",
+                    backgroundColor: gradient,
+                    borderColor: "#1BE4A8",
+                    borderWidth: 4,
+                    fill: true,
+                    borderRadius: 4,
+                    barThickness: 30,
+                },
+            ],
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: { display: false },
+            },
+            responsive: true,
+            layout: {
+                padding: 0,
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        font: {
+                            family: "Muli",
                             size: 12,
                         },
                         color: "#A2A3A5",
-                   }
-               },
-               y: {
-                   grid: {
-                       color: '#ECE9F1',
-                       drawBorder: false
-                   },
+                    },
+                },
+                y: {
+                    grid: {
+                        color: "#ECE9F1",
+                        drawBorder: false,
+                    },
 
-                   ticks: {
-                       padding: 15,
-                       font: {
-                           family: 'Muli',
-                           size: 12,
-                       },
-                       color: "#A2A3A5",
-                       callback: function(value){
-                           return formatCash(value);
-                       }
-                   }
-
-               },
-           },
-           pointBackgroundColor:"#1BE4A8",
-           // radius: (variant != '0%') ? 3 : 0,
-           interaction: {
-             intersect: false,
-             mode: "index",
-             borderRadius: 4,
-             usePointStyle: true,
-             yAlign: 'bottom',
-             padding: 10,
-             titleSpacing: 10,
-             callbacks: {
-                 label: function (tooltipItem) {
-                     return (tooltipItem.raw == 0 ? '0': tooltipItem.raw);
-                 },
-                 labelPointStyle: function (context) {
-                     return {
-                         pointStyle: 'rect',
-                         borderRadius: 4,
-                         rotatio: 0,
-                     }
-                 }
-             }
-           }
-         },
-   });
+                    ticks: {
+                        padding: 15,
+                        font: {
+                            family: "Muli",
+                            size: 12,
+                        },
+                        color: "#A2A3A5",
+                        callback: function (value) {
+                            return formatCash(value);
+                        },
+                    },
+                },
+            },
+            pointBackgroundColor: "#1BE4A8",
+            // radius: (variant != '0%') ? 3 : 0,
+            interaction: {
+                intersect: false,
+                mode: "index",
+                borderRadius: 4,
+                usePointStyle: true,
+                yAlign: "bottom",
+                padding: 10,
+                titleSpacing: 10,
+                callbacks: {
+                    label: function (tooltipItem) {
+                        return tooltipItem.raw == 0 ? "0" : tooltipItem.raw;
+                    },
+                    labelPointStyle: function (context) {
+                        return {
+                            pointStyle: "rect",
+                            borderRadius: 4,
+                            rotatio: 0,
+                        };
+                    },
+                },
+            },
+        },
+    });
 }
 
 function kConverter(num) {
-    return num <= 999 ? num : (0.1 * Math.floor(num / 100)).toFixed(1).replace('.0','');
+    return num <= 999 ? num : (0.1 * Math.floor(num / 100)).toFixed(1).replace(".0", "");
 }
 
 function removeDuplcateItem(item) {
     for (i = 0; i < $(item).length; i++) {
         text = $(item).get(i);
         for (j = i + 1; j < $(item).length; j++) {
-          text_to_compare = $(item).get(j);
-          if (text.innerHTML == text_to_compare.innerHTML) {
-            $(text_to_compare).remove();
-            j--;
-            maxlength = $(item).length;
-          }
+            text_to_compare = $(item).get(j);
+            if (text.innerHTML == text_to_compare.innerHTML) {
+                $(text_to_compare).remove();
+                j--;
+                maxlength = $(item).length;
+            }
         }
     }
 }
 
 // abort all ajax
-$.ajaxQ = (function(){
-    var id = 0, Q = {};
+$.ajaxQ = (function () {
+    var id = 0,
+        Q = {};
 
-    $(document).ajaxSend(function(e, jqx){
-      jqx._id = ++id;
-      Q[jqx._id] = jqx;
+    $(document).ajaxSend(function (e, jqx) {
+        jqx._id = ++id;
+        Q[jqx._id] = jqx;
     });
-    $(document).ajaxComplete(function(e, jqx){
-      delete Q[jqx._id];
+    $(document).ajaxComplete(function (e, jqx) {
+        delete Q[jqx._id];
     });
 
     return {
-      abortAll: function(){
-        var r = [];
-        $.each(Q, function(i, jqx){
-          r.push(jqx._id);
-          jqx.abort();
-        });
-        return r;
-      }
+        abortAll: function () {
+            var r = [];
+            $.each(Q, function (i, jqx) {
+                r.push(jqx._id);
+                jqx.abort();
+            });
+            return r;
+        },
     };
 })();
 
@@ -1723,7 +1801,6 @@ let noCart = `
 </svg>
 
 `;
-
 
 let noListProducts = `
 <svg width="200" height="90" viewBox="0 0 275 122" fill="none" xmlns="http://www.w3.org/2000/svg">

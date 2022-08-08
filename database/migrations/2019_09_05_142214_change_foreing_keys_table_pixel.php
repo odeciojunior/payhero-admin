@@ -12,8 +12,8 @@ class ChangeForeingKeysTablePixel extends Migration
      */
     public function up()
     {
-        Schema::table('pixels', function(Blueprint $table) {
-            $table->renameColumn('campaign', 'campaign_id');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->renameColumn("campaign", "campaign_id");
         });
     }
 
@@ -23,8 +23,8 @@ class ChangeForeingKeysTablePixel extends Migration
      */
     public function down()
     {
-        Schema::table('pixels', function(Blueprint $table) {
-            $table->renameColumn('campaign_id', 'campaign');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->renameColumn("campaign_id", "campaign");
         });
     }
 }

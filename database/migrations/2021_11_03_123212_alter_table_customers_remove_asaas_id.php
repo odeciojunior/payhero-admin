@@ -13,8 +13,8 @@ class AlterTableCustomersRemoveAsaasId extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            DB::statement('update customers set asaas_buyer_id = null');
+        Schema::table("customers", function (Blueprint $table) {
+            DB::statement("update customers set asaas_buyer_id = null");
         });
     }
 
@@ -25,7 +25,7 @@ class AlterTableCustomersRemoveAsaasId extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table("customers", function (Blueprint $table) {
             //
         });
     }

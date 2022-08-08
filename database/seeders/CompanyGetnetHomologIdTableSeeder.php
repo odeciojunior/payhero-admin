@@ -19,9 +19,13 @@ class CompanyGetnetHomologIdTableSeeder extends Seeder
      */
     public function run()
     {
-        if (env('APP_ENV', 'local') != 'production') {
-            GatewaysCompaniesCredential::where('gateway_id',Gateway::GETNET_PRODUCTION_ID)->update(['gateway_subseller_id'=>'700051332']);
-            GatewaysCompaniesCredential::where('gateway_id',Gateway::GETNET_SANDBOX_ID)->update(['gateway_subseller_id'=>'700051332']);            
+        if (env("APP_ENV", "local") != "production") {
+            GatewaysCompaniesCredential::where("gateway_id", Gateway::GETNET_PRODUCTION_ID)->update([
+                "gateway_subseller_id" => "700051332",
+            ]);
+            GatewaysCompaniesCredential::where("gateway_id", Gateway::GETNET_SANDBOX_ID)->update([
+                "gateway_subseller_id" => "700051332",
+            ]);
         }
     }
 }

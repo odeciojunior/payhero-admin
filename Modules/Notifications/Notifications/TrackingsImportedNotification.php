@@ -18,7 +18,7 @@ class TrackingsImportedNotification extends Notification
      */
     public function __construct(User $user)
     {
-        $this->user    = $user;
+        $this->user = $user;
     }
 
     /**
@@ -28,7 +28,7 @@ class TrackingsImportedNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ["database"];
     }
 
     /**
@@ -39,7 +39,7 @@ class TrackingsImportedNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'Importação dos códigos de rastreio concluída.',
+            "message" => "Importação dos códigos de rastreio concluída.",
         ];
     }
 }
