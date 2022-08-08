@@ -330,10 +330,6 @@ class SalesApiController extends Controller
     {
         try {
             $data = $request->all();
-            $planModel = new Plan();
-            //$userProjectModel = new UserProject();
-
-            //$projectIds = [hashids_decode($data['project_id'])];
 
             if(is_array($data['project_id'])){
                 $projectIds = [];
@@ -351,23 +347,15 @@ class SalesApiController extends Controller
             if (current($projectIds)) {
 
                 if (!empty($data['search'])) {
-                    $plans = $planModel
-                        ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
-                        ->join('companies as c', 'c.id', '=', 'cc.company_id')
-                        ->where('plans.name', 'like', '%' . $data['search'] . '%')
-                        ->where('cc.company_id', $user->company_default)
-                        ->where('c.user_id', $userId)
-                        ->whereIn('plans.project_id', $projectIds)
+                    $plans = Plan::
+                        where('name', 'like', '%' . $data['search'] . '%')
+                        ->whereIn('project_id', $projectIds)
                         ->limit(30)
                         ->get();
 
                 } else {
-                    $plans = $planModel
-                        ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
-                        ->join('companies as c', 'c.id', '=', 'cc.company_id')
-                        ->where('cc.company_id', $user->company_default)
-                        ->where('c.user_id', $userId)
-                        ->whereIn('plans.project_id', $projectIds)
+                    $plans = Plan::
+                        whereIn('project_id', $projectIds)
                         ->limit(30)
                         ->get();
 
@@ -375,31 +363,33 @@ class SalesApiController extends Controller
                 return PlansSelectResource::collection($plans);
 
             } else {
-                //$userId = auth()->user()->account_owner_id;
-                // $userProjects = $userProjectModel
-                //     ->where('user_id', $userId)
-                //     ->pluck('project_id');
+                $userId = auth()->user()->account_owner_id;
+                $userProjects = UserProject::
+                     where('user_id', $userId)
+                     ->pluck('project_id');
 
                 //$plans = null;
 
                 if (!empty($data['search'])) {
                     $plans = Plan::
-                        select('plans.*')
-                        ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
-                        ->join('companies as c', 'c.id', '=', 'cc.company_id')
-                        ->where('plans.name', 'like', '%' . $data['search'] . '%')
-                        ->where('cc.company_id', $user->company_default)
-                        ->where('c.user_id', $userId)
+                        //select('plans.*')
+                        //->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
+                        //->join('companies as c', 'c.id', '=', 'cc.company_id')
+                        where('name', 'like', '%' . $data['search'] . '%')
+                        //->where('cc.company_id', $user->company_default)
+                        //->where('c.user_id', $userId)
+                        ->whereIn("project_id", $userProjects)
                         ->limit(30)
                         ->get();
 
                 } else {
                     $plans = Plan::
-                        select('plans.*')
-                        ->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
-                        ->join('companies as c', 'c.id', '=', 'cc.company_id')
-                        ->where('cc.company_id', $user->company_default)
-                        ->where('c.user_id', $userId)
+                        //select('plans.*')
+                        //->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
+                        //->join('companies as c', 'c.id', '=', 'cc.company_id')
+                        //->where('cc.company_id', $user->company_default)
+                        //->where('c.user_id', $userId)
+                        whereIn("project_id", $userProjects)
                         ->limit(30)
                         ->get();
                 }
