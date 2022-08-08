@@ -460,7 +460,7 @@
                                     <label for="timeout-message" class="checkout-label">Mensagem ao encerrar o
                                         tempo</label>
                                     <textarea class="checkout-textarea" id="countdown_finish_message"
-                                        name="countdown_finish_message" rows="3" maxlength="117"
+                                        name="countdown_finish_message" rows="3" maxlength="55"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 
                                     <div id="countdown_finish_message_error" class="checkout-error"
