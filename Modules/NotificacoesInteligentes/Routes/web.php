@@ -13,10 +13,10 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth','permission:apps'],
-        'as' => 'notificacoesinteligentes'
+        "middleware" => ["web", "auth", "permission:apps"],
+        "as" => "notificacoesinteligentes",
     ],
-    function() {
-        Route::resource('/apps/notificacoesinteligentes', 'NotificacoesInteligentesController')->only('index');
+    function () {
+        Route::resource("/apps/notificacoesinteligentes", "NotificacoesInteligentesController")->only("index");
     }
 );

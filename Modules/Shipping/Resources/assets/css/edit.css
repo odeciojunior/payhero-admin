@@ -26,13 +26,13 @@
     margin-bottom: 22px;
 }
 
-#modal-edit-shipping .select2-selection.select2-selection--multiple{
+#modal-edit-shipping .select2-selection.select2-selection--multiple {
     padding: 3px;
     border-radius: 8px;
     border-color: #e0e7ee;
 }
-#modal-edit-shipping  .select2-container--default.select2-container--focus .select2-selection--multiple{
-    border-color: #88BFFF !important;
+#modal-edit-shipping .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #88bfff !important;
 }
 
 #modal-edit-shipping .modal-footer {

@@ -40,33 +40,29 @@ class UserProject extends Model
     public const STATUS_FLAG_INACTIVE = 0;
     public const STATUS_FLAG_ACTIVE = 1;
 
-    protected $table = 'users_projects';
+    protected $table = "users_projects";
 
     protected $presenter = UserProjectsPresenter::class;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["created_at", "updated_at", "deleted_at"];
 
     protected $fillable = [
-        'user_id',
-        'project_id',
-        'company_id',
-        'type_enum',
-        'type',
-        'remuneration_value',
-        'access_permission',
-        'edit_permission',
-        'status_flag',
-        'status',
-        'order_priority',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "user_id",
+        "project_id",
+        "company_id",
+        "type_enum",
+        "type",
+        "remuneration_value",
+        "access_permission",
+        "edit_permission",
+        "status_flag",
+        "status",
+        "order_priority",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -87,19 +83,18 @@ class UserProject extends Model
      */
     protected static $submitEmptyLogs = false;
 
-
     public function company(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 
     public function project(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo("Modules\Core\Entities\Project");
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 }

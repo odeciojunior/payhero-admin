@@ -18,7 +18,7 @@ class SmartfunnelServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class SmartfunnelServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('smartfunnel.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'smartfunnel'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("smartfunnel.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "smartfunnel");
     }
 
     /**
@@ -53,17 +54,26 @@ class SmartfunnelServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/smartfunnel');
+        $viewPath = resource_path("views/modules/smartfunnel");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/smartfunnel';
-        }, \Config::get('view.paths')), [$sourcePath]), 'smartfunnel');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/smartfunnel";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "smartfunnel"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class SmartfunnelServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/smartfunnel');
+        $langPath = resource_path("lang/modules/smartfunnel");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'smartfunnel');
+            $this->loadTranslationsFrom($langPath, "smartfunnel");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'smartfunnel');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "smartfunnel");
         }
     }
 
@@ -89,8 +99,8 @@ class SmartfunnelServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

@@ -13,8 +13,11 @@ class AddColumnTemporaryUrlProductsPlansSales extends Migration
      */
     public function up()
     {
-        Schema::table('products_plans_sales', function(Blueprint $table) {
-            $table->text('temporary_url')->nullable()->after('digital_product_url');
+        Schema::table("products_plans_sales", function (Blueprint $table) {
+            $table
+                ->text("temporary_url")
+                ->nullable()
+                ->after("digital_product_url");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnTemporaryUrlProductsPlansSales extends Migration
      */
     public function down()
     {
-        Schema::table('products_plans_sales', function (Blueprint $table) {
-            $table->dropColumn('temporary_url');
+        Schema::table("products_plans_sales", function (Blueprint $table) {
+            $table->dropColumn("temporary_url");
         });
     }
 }

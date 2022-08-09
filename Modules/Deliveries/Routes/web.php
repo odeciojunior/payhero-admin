@@ -11,6 +11,6 @@
 |
 */
 
-Route::prefix('deliveries')->group(function() {
-    Route::get('/', 'DeliveriesController@index');
+Route::prefix("deliveries")->group(function () {
+    Route::get("/", "DeliveriesController@index");
 });

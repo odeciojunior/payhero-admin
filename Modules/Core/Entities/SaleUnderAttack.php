@@ -31,17 +31,9 @@ class SaleUnderAttack extends Model
 {
     use HasFactory;
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
+    protected $dates = ["created_at", "updated_at"];
 
-    protected $fillable = [
-        'sale_id',
-        'under_attack_id',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ["sale_id", "under_attack_id", "created_at", "updated_at"];
 
     public function underAttack(): BelongsTo
     {

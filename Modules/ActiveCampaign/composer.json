@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\ActiveCampaign\\Providers\\ActiveCampaignServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

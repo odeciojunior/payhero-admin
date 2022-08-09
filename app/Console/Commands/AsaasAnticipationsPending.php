@@ -15,14 +15,14 @@ class AsaasAnticipationsPending extends Command
      *
      * @var string
      */
-    protected $signature = 'asaas:anticipations-pending';
+    protected $signature = "asaas:anticipations-pending";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     public $saveRequests = false;
 
@@ -43,45 +43,47 @@ class AsaasAnticipationsPending extends Command
      */
     public function handle()
     {
-
         try {
-
             $service = new AsaasService();
             $sales = Sale::where([
-                                     'status' => Sale::STATUS_APPROVED,
-                                     'gateway_id' => Gateway::ASAAS_PRODUCTION_ID
-                                 ])
-                ->whereIn('anticipation_status', ['SCHEDULED','PENDING', 'ANTICIPATED_ASAAS', 'ANTICIPATED'])
+                "status" => Sale::STATUS_APPROVED,
+                "gateway_id" => Gateway::ASAAS_PRODUCTION_ID,
+            ])
+                ->whereIn("anticipation_status", ["SCHEDULED", "PENDING", "ANTICIPATED_ASAAS", "ANTICIPATED"])
                 ->get();
 
             $total = count($sales);
             $bar = $this->output->createProgressBar($total);
             $bar->start();
 
-
             foreach ($sales as $sale) {
-
                 $response = $service->checkAnticipation($sale, $this->saveRequests);
 
-                if (isset($response['status'])) {
-                    $sale->update(['anticipation_status' => $response['status']]);
+                if (isset($response["status"])) {
+                    $sale->update(["anticipation_status" => $response["status"]]);
                 }
 
-                $arrayStatus = ['SCHEDULED', 'PENDING', 'CREDITED', 'CANCELLED'];
+                $arrayStatus = ["SCHEDULED", "PENDING", "CREDITED", "CANCELLED"];
 
-                if (!isset($response['status']) or !in_array($response['status'], $arrayStatus)) {
-                    report(new Exception("Erro ao consultar as antecipações, UserId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
-                                         ' -- ' . json_encode($response)));
+                if (!isset($response["status"]) or !in_array($response["status"], $arrayStatus)) {
+                    report(
+                        new Exception(
+                            "Erro ao consultar as antecipações, UserId:  " .
+                                $sale->owner_id .
+                                " SaleId:  " .
+                                $sale->id .
+                                " -- " .
+                                json_encode($response)
+                        )
+                    );
                 }
 
                 $bar->advance();
             }
 
             $bar->finish();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

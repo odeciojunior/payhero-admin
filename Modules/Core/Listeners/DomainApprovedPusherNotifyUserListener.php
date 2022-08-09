@@ -30,13 +30,13 @@ class DomainApprovedPusherNotifyUserListener implements ShouldQueue
         $pusherService = new PusherService();
 
         $project = $event->project;
-        $users   = $event->users;
+        $users = $event->users;
 
         $data = [];
         foreach ($users as $user) {
             $data = [
-                'message' => 'Domínio aprovado com sucesso para o projeto ' . $project->name . '',
-                'user'    => $user->account_owner_id,
+                "message" => "Domínio aprovado com sucesso para o projeto " . $project->name . "",
+                "user" => $user->account_owner_id,
             ];
 
             $pusherService->sendPusher($data);

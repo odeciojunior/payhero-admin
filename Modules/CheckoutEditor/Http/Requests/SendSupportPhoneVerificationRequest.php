@@ -9,8 +9,8 @@ class SendSupportPhoneVerificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|string',
-            'support_phone' => 'required|string',
+            "id" => "required|string",
+            "support_phone" => "required|string",
         ];
     }
 

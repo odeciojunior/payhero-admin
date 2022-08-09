@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
@@ -21,19 +20,18 @@ use Nwidart\Modules\Collection;
  */
 class MelhorenvioIntegration extends Model
 {
-
     use SoftDeletes;
 
     protected $fillable = [
-        'id',
-        'user_id',
-        'name',
-        'access_token',
-        'refresh_token',
-        'expiration',
-        'completed',
-        'created_at',
-        'updated_at',
+        "id",
+        "user_id",
+        "name",
+        "access_token",
+        "refresh_token",
+        "expiration",
+        "completed",
+        "created_at",
+        "updated_at",
     ];
 
     public function user()

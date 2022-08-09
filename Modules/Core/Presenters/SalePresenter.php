@@ -18,7 +18,7 @@ class SalePresenter extends Presenter
      */
     public function getTotalPaidValue()
     {
-        return number_format($this->total_paid_value, 2, ',', '.');
+        return number_format($this->total_paid_value, 2, ",", ".");
     }
 
     /**
@@ -26,12 +26,12 @@ class SalePresenter extends Presenter
      */
     public function getShipmentValue()
     {
-        return number_format($this->shipment_value, 2, ',', '.');
+        return number_format($this->shipment_value, 2, ",", ".");
     }
 
     public function getInstallmentValue()
     {
-        return number_format(intval($this->installment_tax_value) / 100, 2, ',', '.');
+        return number_format(intval($this->installment_tax_value) / 100, 2, ",", ".");
     }
 
     /**
@@ -39,7 +39,7 @@ class SalePresenter extends Presenter
      */
     public function getInstallmentsValue()
     {
-        return number_format($this->installments_value, 2, ',', '.');
+        return number_format($this->installments_value, 2, ",", ".");
     }
 
     /**
@@ -53,10 +53,9 @@ class SalePresenter extends Presenter
             $plans[] = [
                 "price" => $planSale->plan()->first()->price,
                 "quantity" => $planSale->amount,
-                "product_name" => $planSale->plan()->first()->name . ' - ' . $planSale->plan()->first()->description,
+                "product_name" => $planSale->plan()->first()->name . " - " . $planSale->plan()->first()->description,
             ];
         }
-
 
         return $plans;
     }
@@ -71,8 +70,8 @@ class SalePresenter extends Presenter
             $plans[] = [
                 "price" => $planSale->plan()->first()->price,
                 "quantity" => $planSale->amount,
-                "product_name" => $planSale->plan()->first()->name . ' - ' . $planSale->plan()->first()->description,
-                'id' => hashids_encode($planSale->plan()->first()->id)
+                "product_name" => $planSale->plan()->first()->name . " - " . $planSale->plan()->first()->description,
+                "id" => hashids_encode($planSale->plan()->first()->id),
             ];
         }
         return $plans;
@@ -83,12 +82,9 @@ class SalePresenter extends Presenter
      */
     public function getShopifyDiscount()
     {
-        return ($this->shopify_discount != '' && $this->shopify_discount != '0') ? number_format(
-            preg_replace("/[^0-9]/", "", $this->shopify_discount) / 100,
-            2,
-            ',',
-            '.'
-        ) : '0,00';
+        return $this->shopify_discount != "" && $this->shopify_discount != "0"
+            ? number_format(preg_replace("/[^0-9]/", "", $this->shopify_discount) / 100, 2, ",", ".")
+            : "0,00";
     }
 
     /**
@@ -99,9 +95,9 @@ class SalePresenter extends Presenter
         if (!is_null($this->delivery_id)) {
             $shipmentValeu = preg_replace("/[^0-9]/", "", $this->shipment_value);
 
-            return substr_replace($shipmentValeu, ',', strlen($shipmentValeu) - 2, 0);
+            return substr_replace($shipmentValeu, ",", strlen($shipmentValeu) - 2, 0);
         } else {
-            return '';
+            return "";
         }
     }
 
@@ -110,7 +106,7 @@ class SalePresenter extends Presenter
      */
     public function getBoletoDueDate()
     {
-        return date('d/m/Y', strtotime($this->boleto_due_date));
+        return date("d/m/Y", strtotime($this->boleto_due_date));
     }
 
     /**
@@ -124,70 +120,70 @@ class SalePresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'approved';
+                    return "approved";
                 case 2:
-                    return 'pending';
+                    return "pending";
                 case 3:
-                    return 'refused';
+                    return "refused";
                 case 4:
-                    return 'charge_back';
+                    return "charge_back";
                 case 5:
-                    return 'canceled';
+                    return "canceled";
                 case 6:
-                    return 'in_proccess';
+                    return "in_proccess";
                 case 7:
-                    return 'refunded';
+                    return "refunded";
                 case 8:
-                    return 'partial_refunded';
+                    return "partial_refunded";
                 case 10:
-                    return 'black_list';
+                    return "black_list";
                 case 20:
-                    return 'in_review';
+                    return "in_review";
                 case 21:
-                    return 'canceled_antifraud';
+                    return "canceled_antifraud";
                 case 22:
-                    return 'billet_refunded';
+                    return "billet_refunded";
                 case 24:
-                    return 'in_dispute';
+                    return "in_dispute";
                 case 99:
-                    return 'system_error';
+                    return "system_error";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'paid':
-                case 'approved':
+                case "paid":
+                case "approved":
                     return 1;
-                case 'pending':
+                case "pending":
                     return 2;
-                case 'refused':
+                case "refused":
                     return 3;
-                case 'charge_back':
+                case "charge_back":
                     return 4;
-                case 'canceled':
+                case "canceled":
                     return 5;
-                case 'in_proccess':
+                case "in_proccess":
                     return 6;
-                case 'refunded':
+                case "refunded":
                     return 7;
-                case 'partial_refunded':
+                case "partial_refunded":
                     return 8;
-                case 'black_list':
+                case "black_list":
                     return 10;
-                case 'in_review':
+                case "in_review":
                     return 20;
-                case 'canceled_antifraud':
+                case "canceled_antifraud":
                     return 21;
-                case 'billet_refunded':
+                case "billet_refunded":
                     return 22;
-                case 'in_dispute':
+                case "in_dispute":
                     return 24;
-                case 'system_error':
+                case "system_error":
                     return 99;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -207,11 +203,24 @@ class SalePresenter extends Presenter
         $productsSale = [];
         foreach ($this->plansSales as $planSale) {
             foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
-                $product = $productPlan->product()->first()->toArray();
-                if (is_object($productPlan->product()->first()->toArray())) {
-                    $product = clone($productPlan->product()->first()->toArray());
+                $product = $productPlan
+                    ->product()
+                    ->first()
+                    ->toArray();
+                if (
+                    is_object(
+                        $productPlan
+                            ->product()
+                            ->first()
+                            ->toArray()
+                    )
+                ) {
+                    $product = clone $productPlan
+                        ->product()
+                        ->first()
+                        ->toArray();
                 }
-                $product['amount'] = $productPlan->amount * $planSale->amount;
+                $product["amount"] = $productPlan->amount * $planSale->amount;
                 $productsSale[] = $product;
             }
         }
@@ -230,25 +239,25 @@ class SalePresenter extends Presenter
         if (is_numeric($paymentType)) {
             switch ($paymentType) {
                 case 1:
-                    return 'credit_card';
+                    return "credit_card";
                 case 2:
-                    return 'boleto';
+                    return "boleto";
                 case 3:
-                    return 'debito';
+                    return "debito";
                 case 4:
-                    return 'pix';
+                    return "pix";
             }
 
             return null;
         } else {
             switch ($paymentType) {
-                case 'credit_card':
+                case "credit_card":
                     return 1;
-                case 'boleto':
+                case "boleto":
                     return 2;
-                case 'debito':
+                case "debito":
                     return 3;
-                case 'pix':
+                case "pix":
                     return 4;
             }
 
@@ -268,11 +277,11 @@ class SalePresenter extends Presenter
             switch ($paymentType) {
                 case 1:
                 case 3:
-                    return 'Cartão';
+                    return "Cartão";
                 case 2:
-                    return 'Boleto';
+                    return "Boleto";
                 case 4:
-                    return 'Pix';
+                    return "Pix";
             }
         }
         return null;
@@ -289,13 +298,13 @@ class SalePresenter extends Presenter
         if (is_numeric($paymentType)) {
             switch ($paymentType) {
                 case 1:
-                    return 'generico';
+                    return "generico";
                 case 3:
-                    return 'debito';
+                    return "debito";
                 case 2:
-                    return 'boleto';
+                    return "boleto";
                 case 4:
-                    return 'pix';
+                    return "pix";
             }
         }
         return null;
@@ -303,7 +312,7 @@ class SalePresenter extends Presenter
 
     public function getFormattedSubTotal()
     {
-        return substr_replace($this->getSubTotal(), ',', strlen($this->getSubTotal()) - 2, 0);
+        return substr_replace($this->getSubTotal(), ",", strlen($this->getSubTotal()) - 2, 0);
     }
 
     public function getFormattedDiscount()
@@ -311,9 +320,9 @@ class SalePresenter extends Presenter
         $discount = preg_replace("/[^0-9]/", "", $this->shopify_discount);
 
         if (empty($discount)) {
-            return '';
+            return "";
         } else {
-            return substr_replace($discount, ',', strlen($discount) - 2, 0);
+            return substr_replace($discount, ",", strlen($discount) - 2, 0);
         }
     }
 
@@ -323,6 +332,6 @@ class SalePresenter extends Presenter
         if (!empty($this->shopify_discount)) {
             $val -= foxutils()->onlyNumbers($this->shopify_discount);
         }
-        return substr_replace($val, ',', strlen($val) - 2, 0);
+        return substr_replace($val, ",", strlen($val) - 2, 0);
     }
 }

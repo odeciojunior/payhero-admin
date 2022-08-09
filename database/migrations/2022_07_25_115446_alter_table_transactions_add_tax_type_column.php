@@ -13,9 +13,12 @@ class AlterTableTransactionsAddTaxTypeColumn extends Migration
      */
     public function up()
     {
-        Schema::table('transactions',function(Blueprint $table){
-            $table->integer('tax_type')->default(1)->after('percentage_rate');
-            $table->renameColumn('percentage_rate', 'tax');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->integer("tax_type")
+                ->default(1)
+                ->after("percentage_rate");
+            $table->renameColumn("percentage_rate", "tax");
         });
     }
 
@@ -26,9 +29,9 @@ class AlterTableTransactionsAddTaxTypeColumn extends Migration
      */
     public function down()
     {
-        Schema::table('transactions',function(Blueprint $table){
-            $table->dropColumn('tax_type');
-            $table->renameColumn('tax', 'percentage_rate');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("tax_type");
+            $table->renameColumn("tax", "percentage_rate");
         });
     }
 }

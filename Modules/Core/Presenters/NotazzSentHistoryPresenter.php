@@ -19,29 +19,29 @@ class NotazzSentHistoryPresenter extends Presenter
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:
-                    return 'sent';
+                    return "sent";
                 case 2:
-                    return 'update';
+                    return "update";
                 case 3:
-                    return 'consult';
+                    return "consult";
                 case 4:
-                    return 'delete';
+                    return "delete";
             }
 
-            return '';
+            return "";
         } else {
             switch ($type) {
-                case 'sent':
+                case "sent":
                     return 1;
-                case 'update':
+                case "update":
                     return 2;
-                case 'consult':
+                case "consult":
                     return 3;
-                case 'delete':
+                case "delete":
                     return 4;
             }
 
-            return '';
+            return "";
         }
     }
 }

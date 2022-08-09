@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //set timezone para este
-        date_default_timezone_set('America/Sao_Paulo');
+        date_default_timezone_set("America/Sao_Paulo");
 
         Queue::failing(function (JobFailed $event) {
             report($event->exception);
@@ -40,8 +40,8 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         //força uso do https
-        if (env("APP_ENV", "local") !== 'local') {
-            URL::forceScheme('https');
+        if (env("APP_ENV", "local") !== "local") {
+            URL::forceScheme("https");
         }
     }
 

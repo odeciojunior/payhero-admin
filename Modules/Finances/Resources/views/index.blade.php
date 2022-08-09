@@ -1,11 +1,11 @@
-@extends("layouts.master")
+@extends('layouts.master')
 
 @push('css')
-    <link rel="stylesheet" href="{{ mix('build/layouts/finances/index.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ mix('build/layouts/finances/index.min.css') }}">
 @endpush
 
 @section('content')
-
     <div class="page">
 
         <div class="page-header container">
@@ -26,9 +26,13 @@
 
             <div>
                 <div id="tabs-view">
-                    <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-content"
+                         id="nav-tabContent">
 
-                        <div class="tab-pane fade show active" id="nav-transfers" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="tab-pane fade show active"
+                             id="nav-transfers"
+                             role="tabpanel"
+                             aria-labelledby="nav-home-tab">
 
                             @include('finances::components.new-withdrawal')
 
@@ -38,7 +42,10 @@
 
                         </div>
 
-                        <div class="tab-pane fade hide" id="nav-statement" role="tabpanel"  aria-labelledby="nav-profile-tab">
+                        <div class="tab-pane fade hide"
+                             id="nav-statement"
+                             role="tabpanel"
+                             aria-labelledby="nav-profile-tab">
 
                             @include('finances::components.statement-filters')
 
@@ -61,10 +68,8 @@
 
         @include('sales::details')
 
-
         @push('scripts')
             <script src="{{ mix('build/layouts/finances/index.min.js') }}"></script>
         @endpush
     </div>
-
 @endsection

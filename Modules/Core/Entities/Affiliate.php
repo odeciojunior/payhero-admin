@@ -39,24 +39,24 @@ class Affiliate extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'project_id',
-        'company_id',
-        'percentage',
-        'status_enum',
-        'suport_phone_verified',
-        'suport_phone',
-        'suport_contact_verified',
-        'suport_contact',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'order_priority',
+        "user_id",
+        "project_id",
+        "company_id",
+        "percentage",
+        "status_enum",
+        "suport_phone_verified",
+        "suport_phone",
+        "suport_contact_verified",
+        "suport_contact",
+        "created_at",
+        "updated_at",
+        "deleted_at",
+        "order_priority",
     ];
     /**
      * @var bool
@@ -82,7 +82,7 @@ class Affiliate extends Model
      */
     public function company()
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 
     /**
@@ -90,7 +90,7 @@ class Affiliate extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo("Modules\Core\Entities\Project");
     }
 
     /**
@@ -98,7 +98,7 @@ class Affiliate extends Model
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 
     /**
@@ -106,7 +106,7 @@ class Affiliate extends Model
      */
     public function affiliateLinks()
     {
-        return $this->hasMany('Modules\Core\Entities\AffiliateLink');
+        return $this->hasMany("Modules\Core\Entities\AffiliateLink");
     }
 
     /**
@@ -114,7 +114,7 @@ class Affiliate extends Model
      */
     public function campaigns()
     {
-        return $this->hasMany('Modules\Core\Entities\Campaign');
+        return $this->hasMany("Modules\Core\Entities\Campaign");
     }
 
     /**
@@ -122,7 +122,7 @@ class Affiliate extends Model
      */
     public function clientsCookies()
     {
-        return $this->hasMany('Modules\Core\Entities\ClientsCookie');
+        return $this->hasMany("Modules\Core\Entities\ClientsCookie");
     }
 
     /**
@@ -130,6 +130,6 @@ class Affiliate extends Model
      */
     public function sales()
     {
-        return $this->hasMany('Modules\Core\Entities\Sale');
+        return $this->hasMany("Modules\Core\Entities\Sale");
     }
 }

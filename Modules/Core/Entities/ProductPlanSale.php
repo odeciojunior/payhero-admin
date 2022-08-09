@@ -47,39 +47,39 @@ class ProductPlanSale extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'products_plans_sales';
+    protected $table = "products_plans_sales";
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'product_id',
-        'plan_id',
-        'products_sales_api_id',
-        'sale_id',
-        'amount',
-        'name',
-        'description',
-        'guarantee',
-        'format',
-        'cost',
-        'photo',
-        'height',
-        'width',
-        'weight',
-        'shopify',
-        'digital_product_url',
-        'price',
-        'shopify_id',
-        'shopify_variant_id',
-        'temporary_url',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "product_id",
+        "plan_id",
+        "products_sales_api_id",
+        "sale_id",
+        "amount",
+        "name",
+        "description",
+        "guarantee",
+        "format",
+        "cost",
+        "photo",
+        "height",
+        "width",
+        "weight",
+        "shopify",
+        "digital_product_url",
+        "price",
+        "shopify_id",
+        "shopify_variant_id",
+        "temporary_url",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -105,7 +105,7 @@ class ProductPlanSale extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('Modules\Core\Entities\Plan');
+        return $this->belongsTo("Modules\Core\Entities\Plan");
     }
 
     /**
@@ -113,7 +113,7 @@ class ProductPlanSale extends Model
      */
     public function product()
     {
-        return $this->belongsTo('Modules\Core\Entities\Product');
+        return $this->belongsTo("Modules\Core\Entities\Product");
     }
 
     /**
@@ -121,7 +121,7 @@ class ProductPlanSale extends Model
      */
     public function productSaleApi()
     {
-        return $this->belongsTo(ProductSaleApi::class, 'products_sales_api_id');
+        return $this->belongsTo(ProductSaleApi::class, "products_sales_api_id");
     }
 
     /**
@@ -129,7 +129,7 @@ class ProductPlanSale extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('Modules\Core\Entities\Sale');
+        return $this->belongsTo("Modules\Core\Entities\Sale");
     }
 
     /**
@@ -137,6 +137,6 @@ class ProductPlanSale extends Model
      */
     public function tracking()
     {
-        return $this->hasOne('Modules\Core\Entities\Tracking')->latest();
+        return $this->hasOne("Modules\Core\Entities\Tracking")->latest();
     }
 }

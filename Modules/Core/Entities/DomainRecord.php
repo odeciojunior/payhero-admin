@@ -28,26 +28,26 @@ class DomainRecord extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'domains_records';
+    protected $table = "domains_records";
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'domain_id',
-        'cloudflare_record_id',
-        'type',
-        'name',
-        'content',
-        'system_flag',
-        'priority',
-        'proxy',
-        'created_at',
-        'updated_at',
+        "domain_id",
+        "cloudflare_record_id",
+        "type",
+        "name",
+        "content",
+        "system_flag",
+        "priority",
+        "proxy",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -74,12 +74,12 @@ class DomainRecord extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Entrada DNS ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Entrada DNS ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Entrada DNS ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Entrada DNS " . $this->name . " foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Entrada DNS " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Entrada DNS " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }

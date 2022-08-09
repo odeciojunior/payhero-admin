@@ -11,26 +11,26 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
-    Route::Resource('/plans', 'PlansController')->only('index');
+Route::group(["middleware" => ["web", "auth"]], function () {
+    Route::Resource("/plans", "PlansController")->only("index");
 
-    Route::get('/plans/loading/stage1', function() {
-        return view('plans::loading/create/stage1');
+    Route::get("/plans/loading/stage1", function () {
+        return view("plans::loading/create/stage1");
     });
-    Route::get('/plans/loading/stage2', function() {
-        return view('plans::loading/create/stage2');
+    Route::get("/plans/loading/stage2", function () {
+        return view("plans::loading/create/stage2");
     });
-    Route::get('/plans/loading/stage3', function() {
-        return view('plans::loading/create/stage3');
+    Route::get("/plans/loading/stage3", function () {
+        return view("plans::loading/create/stage3");
     });
 
-    Route::get('/plans/create/stage1', function() {
-        return view('plans::stage1-create');
+    Route::get("/plans/create/stage1", function () {
+        return view("plans::stage1-create");
     });
-    Route::get('/plans/create/stage2', function() {
-        return view('plans::stage2-create');
+    Route::get("/plans/create/stage2", function () {
+        return view("plans::stage2-create");
     });
-    Route::get('/plans/create/stage3', function() {
-        return view('plans::stage3-create');
+    Route::get("/plans/create/stage3", function () {
+        return view("plans::stage3-create");
     });
 });

@@ -13,8 +13,11 @@ class AlterTableDomainRecordsAddMxPriorityColumn extends Migration
      */
     public function up()
     {
-        Schema::table('domains_records', function(Blueprint $table) {
-            $table->integer('priority')->after('system_flag')->default(0);
+        Schema::table("domains_records", function (Blueprint $table) {
+            $table
+                ->integer("priority")
+                ->after("system_flag")
+                ->default(0);
         });
     }
 
@@ -25,8 +28,8 @@ class AlterTableDomainRecordsAddMxPriorityColumn extends Migration
      */
     public function down()
     {
-        Schema::table('domains_records', function(Blueprint $table) {
-            $table->dropColumn('priority');
+        Schema::table("domains_records", function (Blueprint $table) {
+            $table->dropColumn("priority");
         });
     }
 }

@@ -13,14 +13,11 @@ class AddDocumentsColumnsCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->dateTime('document_issue_date')->nullable();
-                $table->string('document_issuer')->nullable();
-                $table->string('document_issuer_state')->nullable();
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dateTime("document_issue_date")->nullable();
+            $table->string("document_issuer")->nullable();
+            $table->string("document_issuer_state")->nullable();
+        });
     }
 
     /**
@@ -30,17 +27,8 @@ class AddDocumentsColumnsCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->dropColumn(
-                    [
-                        'document_issue_date',
-                        'document_issuer',
-                        'document_issuer_state',
-                    ]
-                );
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn(["document_issue_date", "document_issuer", "document_issuer_state"]);
+        });
     }
 }

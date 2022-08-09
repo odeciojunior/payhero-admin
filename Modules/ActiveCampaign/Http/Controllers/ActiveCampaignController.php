@@ -14,7 +14,7 @@ class ActiveCampaignController extends Controller
      */
     public function index()
     {
-        return view('activecampaign::index');
+        return view("activecampaign::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class ActiveCampaignController extends Controller
      */
     public function create()
     {
-        return view('activecampaign::create');
+        return view("activecampaign::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class ActiveCampaignController extends Controller
      */
     public function show($id)
     {
-        return view('activecampaign::show');
+        return view("activecampaign::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class ActiveCampaignController extends Controller
      */
     public function edit($id)
     {
-        return view('activecampaign::edit');
+        return view("activecampaign::edit");
     }
 
     /**

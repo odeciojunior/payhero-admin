@@ -32,9 +32,11 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
     public function __construct($collection, $headings, $fontSize = null)
     {
         $this->collection = $collection; // Collection
-        $this->headings   = $headings; // Array
-        if ($fontSize !== null) // Number
+        $this->headings = $headings; // Array
+        if ($fontSize !== null) {
+            // Number
             $this->fontSize = $fontSize;
+        }
     }
 
     /**
@@ -51,33 +53,43 @@ class ReportExport implements FromCollection, WithHeadings, ShouldAutoSize, With
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:AS1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)
+            AfterSheet::class => function (AfterSheet $event) {
+                $cellRange = "A1:AS1"; // All headers
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
                     ->getFill()
-                    ->setFillType('solid')
+                    ->setFillType("solid")
                     ->getStartColor()
-                    ->setRGB('E16A0A');
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
-                    'color' => ['rgb' => 'ffffff'],
-                    'size' => 16
-                ]);
+                    ->setRGB("E16A0A");
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
+                    ->getFont()
+                    ->applyFromArray([
+                        "color" => ["rgb" => "ffffff"],
+                        "size" => 16,
+                    ]);
 
                 $lastRow = $event->sheet->getDelegate()->getHighestRow();
                 $setGray = false;
                 $lastSale = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
-                    $currentSale = $event->sheet->getDelegate()->getCellByColumnAndRow(1, $row)->getValue();
+                    $currentSale = $event->sheet
+                        ->getDelegate()
+                        ->getCellByColumnAndRow(1, $row)
+                        ->getValue();
                     if ($currentSale != $lastSale && isset($lastSale)) {
                         $setGray = !$setGray;
                     }
-                    if($setGray){
-                        $event->sheet->getDelegate()
-                            ->getStyle('A' . $row . ':AS' . $row)
+                    if ($setGray) {
+                        $event->sheet
+                            ->getDelegate()
+                            ->getStyle("A" . $row . ":AS" . $row)
                             ->getFill()
-                            ->setFillType('solid')
+                            ->setFillType("solid")
                             ->getStartColor()
-                            ->setRGB('e5e5e5');
+                            ->setRGB("e5e5e5");
                     }
                     $lastSale = $currentSale;
                 }

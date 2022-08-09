@@ -13,11 +13,11 @@ class AlterUsersTableSetPaymentTaxesVariables extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->string('boleto_tax')->default('6.5');
-            $table->string('credit_card_tax')->default('5.9');
-            $table->integer('credit_card_release_money_days')->default(30);
-            $table->integer('boleto_release_money_days')->default(2);
+        Schema::table("users", function (Blueprint $table) {
+            $table->string("boleto_tax")->default("6.5");
+            $table->string("credit_card_tax")->default("5.9");
+            $table->integer("credit_card_release_money_days")->default(30);
+            $table->integer("boleto_release_money_days")->default(2);
         });
     }
 
@@ -27,11 +27,11 @@ class AlterUsersTableSetPaymentTaxesVariables extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropColumn('boleto_tax');
-            $table->dropColumn('credit_card_tax');
-            $table->dropColumn('credit_card_release_money_days');
-            $table->dropColumn('boleto_release_money_days');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("boleto_tax");
+            $table->dropColumn("credit_card_tax");
+            $table->dropColumn("credit_card_release_money_days");
+            $table->dropColumn("boleto_release_money_days");
         });
     }
 }

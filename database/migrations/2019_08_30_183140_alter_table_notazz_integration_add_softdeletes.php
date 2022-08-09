@@ -12,7 +12,7 @@ class AlterTableNotazzIntegrationAddSoftdeletes extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
+        Schema::table("notazz_integrations", function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -23,7 +23,7 @@ class AlterTableNotazzIntegrationAddSoftdeletes extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
+        Schema::table("notazz_integrations", function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
     }

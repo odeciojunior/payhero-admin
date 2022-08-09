@@ -13,10 +13,8 @@ class RemoveUniqueEmailFromAbandonedSignups extends Migration
      */
     public function up()
     {
-        
-        Schema::table('abandoned_signups', function (Blueprint $table) {
-            $table->dropUnique(['email']); 
-            
+        Schema::table("abandoned_signups", function (Blueprint $table) {
+            $table->dropUnique(["email"]);
         });
     }
 
@@ -27,7 +25,7 @@ class RemoveUniqueEmailFromAbandonedSignups extends Migration
      */
     public function down()
     {
-        Schema::table('abandoned_signups', function (Blueprint $table) {
+        Schema::table("abandoned_signups", function (Blueprint $table) {
             //
         });
     }

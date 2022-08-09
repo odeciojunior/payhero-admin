@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\WooCommerce\\Providers\\WooCommerceServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

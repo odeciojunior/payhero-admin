@@ -13,22 +13,21 @@ class CustomerBankAccountPresenter extends Presenter
         if (is_numeric($accountType)) {
             switch ($accountType) {
                 case 1:
-                    return 'Conta corrente';
+                    return "Conta corrente";
                 case 2:
-                    return 'Conta poupança';
+                    return "Conta poupança";
                 default:
-                    return '';
+                    return "";
             }
         } else {
             switch ($accountType) {
-                case 'Conta corrente':
+                case "Conta corrente":
                     return 1;
-                case 'Conta poupança':
+                case "Conta poupança":
                     return 2;
                 default:
-                    return '';
+                    return "";
             }
         }
     }
 }
-

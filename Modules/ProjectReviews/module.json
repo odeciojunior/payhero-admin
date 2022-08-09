@@ -5,9 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\ProjectReviews\\Providers\\ProjectReviewsServiceProvider"
-    ],
+    "providers": ["Modules\\ProjectReviews\\Providers\\ProjectReviewsServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

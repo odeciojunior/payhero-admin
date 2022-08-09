@@ -13,8 +13,8 @@ class AddUpsellIdIndexToSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->index('upsell_id');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->index("upsell_id");
         });
     }
 
@@ -25,8 +25,8 @@ class AddUpsellIdIndexToSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropIndex(['upsell_id']);
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropIndex(["upsell_id"]);
         });
     }
 }

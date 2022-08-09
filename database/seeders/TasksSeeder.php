@@ -19,12 +19,12 @@ class TasksSeeder extends Seeder
         }
 
         $tasks = [
-            [Task::TASK_APPROVED_DOCS, 'Tenha seus documentos aprovados', 1, 1],
-            [Task::TASK_CREATE_FIRST_STORE, 'Cadastre sua primeira loja', 1, 2],
-            [Task::TASK_DOMAIN_APPROVED, 'Aprove seu primeiro domínio', 1, 3],
-            [Task::TASK_FIRST_SALE, 'Faça sua primeira venda', 1, 4],
+            [Task::TASK_APPROVED_DOCS, "Tenha seus documentos aprovados", 1, 1],
+            [Task::TASK_CREATE_FIRST_STORE, "Cadastre sua primeira loja", 1, 2],
+            [Task::TASK_DOMAIN_APPROVED, "Aprove seu primeiro domínio", 1, 3],
+            [Task::TASK_FIRST_SALE, "Faça sua primeira venda", 1, 4],
             [Task::TASK_FIRST_1000_REVENUE, 'Fature R$1.000,00', 1, 5],
-            [Task::TASK_FIRST_WITHDRAWAL, 'Faça seu primeiro saque', 1, 6],
+            [Task::TASK_FIRST_WITHDRAWAL, "Faça seu primeiro saque", 1, 6],
         ];
 
         foreach ($tasks as $taskData) {

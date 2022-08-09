@@ -8,15 +8,14 @@
 }*/
 
 .grad {
-    background-image: linear-gradient(
-        11deg,
-        rgba(230, 119, 76, 0.4),
-        rgba(249, 34, 120, 0.4)
-    );
+    background-image: linear-gradient(11deg, rgba(230, 119, 76, 0.4), rgba(249, 34, 120, 0.4));
 }
 .o-arrow-right-1:before {
     transform: rotate(180deg);
 }
 
 /* Page titles */
-.page-title > a, .page-title > a > span { color: #707070 }
+.page-title > a,
+.page-title > a > span {
+    color: #707070;
+}

@@ -31,26 +31,27 @@ class PostBackShopifyController extends Controller
             $requestData = $request->all();
 
             $postBackLogModel->create([
-                'origin' => 5,
-                'data' => json_encode($requestData),
-                'description' => 'shopify-tracking',
+                "origin" => 5,
+                "data" => json_encode($requestData),
+                "description" => "shopify-tracking",
             ]);
 
             $projectId = current(Hashids::decode($request->project_id));
             $project = $projectModel->find($projectId);
 
             if (!empty($project)) {
-                ProcessShopifyTrackingPostbackJob::dispatch($projectId, $requestData)
-                    ->onQueue('postback-shopify-tracking');
+                ProcessShopifyTrackingPostbackJob::dispatch($projectId, $requestData)->onQueue(
+                    "postback-shopify-tracking"
+                );
 
-                return response()->json(['message' => 'success']);
+                return response()->json(["message" => "success"]);
             } else {
-                Log::warning('Shopify atualizar código de rastreio - projeto não encontrado');
+                Log::warning("Shopify atualizar código de rastreio - projeto não encontrado");
                 //projeto nao existe
-                return response()->json(['message' => 'project not found']);
+                return response()->json(["message" => "project not found"]);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'error processing postback']);
+            return response()->json(["message" => "error processing postback"]);
         }
     }
 
@@ -67,28 +68,25 @@ class PostBackShopifyController extends Controller
             $requestData = $request->all();
 
             $postBackLogModel->create([
-                'origin' => 3,
-                'data' => json_encode($requestData),
-                'description' => 'shopify',
+                "origin" => 3,
+                "data" => json_encode($requestData),
+                "description" => "shopify",
             ]);
 
             $projectId = current(Hashids::decode($request->project_id));
             $project = $projectModel->find($projectId);
 
             if (!empty($project)) {
-                ProcessShopifyPostbackJob::dispatch($projectId, $requestData)
-                    ->onQueue('low');
+                ProcessShopifyPostbackJob::dispatch($projectId, $requestData)->onQueue("low");
 
-                return response()->json(['message' => 'success']);
+                return response()->json(["message" => "success"]);
             } else {
-                Log::warning('Shopify postback - projeto não encontrado');
+                Log::warning("Shopify postback - projeto não encontrado");
                 //projeto nao existe
-                return response()->json(['message' => 'project not found']);
+                return response()->json(["message" => "project not found"]);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'error processing postback']);
+            return response()->json(["message" => "error processing postback"]);
         }
     }
 }
-
-

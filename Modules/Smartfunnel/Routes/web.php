@@ -15,13 +15,12 @@
 //     Route::get('/', 'SmartfunnelController@index');
 // });
 
+Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
+    Route::get("apps/smartfunnel", "SmartfunnelController@index");
+    Route::get("apps/smartfunnel/{id}", "SmartfunnelController@show");
+    Route::get("apps/smartfunnel/{id}/edit", "SmartfunnelController@edit");
 
-Route::group(['middleware' => ['web', 'auth','permission:apps']], function() {
-
-    Route::get('apps/smartfunnel', 'SmartfunnelController@index');
-    Route::get('apps/smartfunnel/{id}', 'SmartfunnelController@show');
-    Route::get('apps/smartfunnel/{id}/edit', 'SmartfunnelController@edit');
-
-    Route::Resource('apps/smartfunnel', 'SmartfunnelController')
-    ->only('create', 'store', 'update', 'destroy')->middleware('permission:apps_manage');
+    Route::Resource("apps/smartfunnel", "SmartfunnelController")
+        ->only("create", "store", "update", "destroy")
+        ->middleware("permission:apps_manage");
 });

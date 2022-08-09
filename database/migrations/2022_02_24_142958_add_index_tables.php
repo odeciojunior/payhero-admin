@@ -13,14 +13,13 @@ class AddIndexTables extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function($table) {
-            $table->index('document');
+        Schema::table("customers", function ($table) {
+            $table->index("document");
         });
 
-        Schema::table('products', function($table) {
-            $table->index('shopify_variant_id');
+        Schema::table("products", function ($table) {
+            $table->index("shopify_variant_id");
         });
-
     }
 
     /**

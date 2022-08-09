@@ -14,14 +14,14 @@ class SendPendingDocumentEmail extends Command
      *
      * @var string
      */
-    protected $signature = 'email:notify-pending-document';
+    protected $signature = "email:notify-pending-document";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -40,40 +40,46 @@ class SendPendingDocumentEmail extends Command
      */
     public function handle()
     {
-        $companies = DB::table('companies as c')->select('c.id','c.user_id','us.name','us.email')
-        ->join('users as us','c.user_id','=','us.id')
-        ->leftJoin('company_documents as doc','c.id','=','doc.company_id')
-        ->whereNull('doc.id')->where('us.email_verified',true)
-        ->whereNull('c.date_last_document_notification')->get();
+        $companies = DB::table("companies as c")
+            ->select("c.id", "c.user_id", "us.name", "us.email")
+            ->join("users as us", "c.user_id", "=", "us.id")
+            ->leftJoin("company_documents as doc", "c.id", "=", "doc.company_id")
+            ->whereNull("doc.id")
+            ->where("us.email_verified", true)
+            ->whereNull("c.date_last_document_notification")
+            ->get();
 
         $userIds = [];
-        foreach($companies as $company){
+        foreach ($companies as $company) {
             $data = [
-                'domainName'=>'Cloudfox',
-                'clientEmail'=>$company->email,
-                'clientName'=>explode(' ',$company->name)['0']??' Cliente',
-                'companyId'=>$company->id
-            ];            
-            
+                "domainName" => "Cloudfox",
+                "clientEmail" => $company->email,
+                "clientName" => explode(" ", $company->name)["0"] ?? " Cliente",
+                "companyId" => $company->id,
+            ];
+
             event(new SendEmailPendingDocumentEvent($data));
 
             $userIds[] = $company->user_id;
         }
 
-        $users = DB::table('users as us')->select('us.id','us.name','us.email')        
-        ->leftJoin('user_documents as doc','us.id','=','doc.user_id')
-        ->whereNull('doc.id')->where('us.email_verified',true)
-        ->whereNotIn('us.id',$userIds)
-        ->whereNull('us.date_last_document_notification')->get();
+        $users = DB::table("users as us")
+            ->select("us.id", "us.name", "us.email")
+            ->leftJoin("user_documents as doc", "us.id", "=", "doc.user_id")
+            ->whereNull("doc.id")
+            ->where("us.email_verified", true)
+            ->whereNotIn("us.id", $userIds)
+            ->whereNull("us.date_last_document_notification")
+            ->get();
 
-        foreach($users as $user){
+        foreach ($users as $user) {
             $data = [
-                'domainName'=>'Cloudfox',
-                'clientEmail'=>$user->email,
-                'clientName'=>explode(' ',$user->name)['0']??' Cliente',
-                'userId'=>$user->id
+                "domainName" => "Cloudfox",
+                "clientEmail" => $user->email,
+                "clientName" => explode(" ", $user->name)["0"] ?? " Cliente",
+                "userId" => $user->id,
             ];
-            
+
             event(new SendEmailPendingDocumentEvent($data));
         }
     }

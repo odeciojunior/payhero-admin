@@ -15,8 +15,8 @@ class SakPixExpiredListener implements ShouldQueue
     public function handle($event)
     {
         try {
-            $whatsapp2Integration = Whatsapp2Integration::where('project_id', $event->sale->project_id)
-                ->where('pix_expired', 1)
+            $whatsapp2Integration = Whatsapp2Integration::where("project_id", $event->sale->project_id)
+                ->where("pix_expired", 1)
                 ->first();
 
             if (!empty($whatsapp2Integration)) {

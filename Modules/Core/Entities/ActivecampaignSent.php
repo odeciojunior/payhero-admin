@@ -27,25 +27,25 @@ class ActivecampaignSent extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'activecampaign_sent';
+    protected $table = "activecampaign_sent";
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'instance_id',
-        'instance',
-        'activecampaign_integration_id',
-        'data',
-        'response',
-        'sent_status',
-        'event_sale',
-        'created_at',
-        'updated_at',
+        "instance_id",
+        "instance",
+        "activecampaign_integration_id",
+        "data",
+        "response",
+        "sent_status",
+        "event_sale",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -72,12 +72,12 @@ class ActivecampaignSent extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'ActivecampaignSent foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'ActivecampaignSent foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'ActivecampaignSent foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "ActivecampaignSent foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "ActivecampaignSent foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "ActivecampaignSent foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -88,7 +88,7 @@ class ActivecampaignSent extends Model
      */
     public function activecampaignIntegration()
     {
-        return $this->belongsTo('Modules\Core\Entities\ActivecampaignIntegration');
+        return $this->belongsTo("Modules\Core\Entities\ActivecampaignIntegration");
     }
 
     /**
@@ -96,6 +96,6 @@ class ActivecampaignSent extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('Modules\Core\Entities\Sale');
+        return $this->belongsTo("Modules\Core\Entities\Sale");
     }
 }

@@ -18,7 +18,7 @@ class SalesBlackListAntifraudServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class SalesBlackListAntifraudServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('salesblacklistantifraud.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'salesblacklistantifraud'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("salesblacklistantifraud.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "salesblacklistantifraud");
     }
 
     /**
@@ -53,17 +54,26 @@ class SalesBlackListAntifraudServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/salesblacklistantifraud');
+        $viewPath = resource_path("views/modules/salesblacklistantifraud");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/salesblacklistantifraud';
-        }, \Config::get('view.paths')), [$sourcePath]), 'salesblacklistantifraud');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/salesblacklistantifraud";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "salesblacklistantifraud"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class SalesBlackListAntifraudServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/salesblacklistantifraud');
+        $langPath = resource_path("lang/modules/salesblacklistantifraud");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'salesblacklistantifraud');
+            $this->loadTranslationsFrom($langPath, "salesblacklistantifraud");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'salesblacklistantifraud');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "salesblacklistantifraud");
         }
     }
 
@@ -89,8 +99,8 @@ class SalesBlackListAntifraudServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

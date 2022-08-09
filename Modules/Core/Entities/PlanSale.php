@@ -26,24 +26,16 @@ class PlanSale extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'plans_sales';
+    protected $table = "plans_sales";
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'plan_id',
-        'sale_id',
-        'plan_value',
-        'amount',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ["plan_id", "sale_id", "plan_value", "amount", "created_at", "updated_at", "deleted_at"];
     /**
      * @var bool
      */
@@ -68,7 +60,7 @@ class PlanSale extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('Modules\Core\Entities\Plan');
+        return $this->belongsTo("Modules\Core\Entities\Plan");
     }
 
     /**
@@ -76,6 +68,6 @@ class PlanSale extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('Modules\Core\Entities\Sale');
+        return $this->belongsTo("Modules\Core\Entities\Sale");
     }
 }

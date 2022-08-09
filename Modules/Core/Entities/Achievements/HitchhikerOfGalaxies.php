@@ -17,17 +17,21 @@ class HitchhikerOfGalaxies extends Achievement implements AchievementCheck
             return false;
         }
 
-        $projectsWithSalesCount = $user->projects()->whereHas('sales', function ($query) use ($user) {
-            $query->whereIn('status', [
-                Sale::STATUS_APPROVED,
-                Sale::STATUS_CHARGEBACK,
-                Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
-            ])->where(function ($query) use ($user) {
-                $query->where('owner_id', $user->id)
-                    ->orWhere('affiliate_id', $user->id);
-            });
-        })->count();
+        $projectsWithSalesCount = $user
+            ->projects()
+            ->whereHas("sales", function ($query) use ($user) {
+                $query
+                    ->whereIn("status", [
+                        Sale::STATUS_APPROVED,
+                        Sale::STATUS_CHARGEBACK,
+                        Sale::STATUS_REFUNDED,
+                        Sale::STATUS_IN_DISPUTE,
+                    ])
+                    ->where(function ($query) use ($user) {
+                        $query->where("owner_id", $user->id)->orWhere("affiliate_id", $user->id);
+                    });
+            })
+            ->count();
 
         return $projectsWithSalesCount >= 5;
     }

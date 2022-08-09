@@ -11,12 +11,12 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth','permission:apps']], function() {
+Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
+    Route::get("apps/reportana", "ReportanaController@index");
+    Route::get("apps/reportana/{id}", "ReportanaController@show");
+    Route::get("apps/reportana/{id}/edit", "ReportanaController@edit");
 
-    Route::get('apps/reportana', 'ReportanaController@index');
-    Route::get('apps/reportana/{id}', 'ReportanaController@show');
-    Route::get('apps/reportana/{id}/edit', 'ReportanaController@edit');
-
-    Route::Resource('apps/reportana', 'ReportanaController')
-    ->only('create', 'store', 'update', 'destroy')->middleware('permission:apps_manage');
+    Route::Resource("apps/reportana", "ReportanaController")
+        ->only("create", "store", "update", "destroy")
+        ->middleware("permission:apps_manage");
 });

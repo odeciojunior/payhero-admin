@@ -22,24 +22,32 @@ class ChargebackResource extends JsonResource
      */
     public function toArray($request)
     {
-        $plansSale = $this->getRelation('sale')->getRelation('plansSales')->first();
-        $plan      = $plansSale ? $plansSale->getRelation('plan') : null;
-        $project   = $plan ? $plan->getRelation('project') : null;
+        $plansSale = $this->getRelation("sale")
+            ->getRelation("plansSales")
+            ->first();
+        $plan = $plansSale ? $plansSale->getRelation("plan") : null;
+        $project = $plan ? $plan->getRelation("project") : null;
 
         return [
-            'id'                => Hashids::encode($this->id),
-            'transaction_id'    => Hashids::connection('sale_id')->encode($this->sale_id),
-            'sale_code'         => '#' . Hashids::connection('sale_id')->encode($this->sale_id),
-            'sale_id'           => $this->sale_id,
-            'company'           => $this->company->fantasy_name,
-            'user'              => $this->user->name,
-            'project'           => $project->name ?? '',
-            'product'           => (count($this->getRelation('sale')->getRelation('plansSales')) > 1) ? 'Carrinho' : Str::limit($plan->name ?? '', 25),
-            'customer'          => $this->sale->customer->name ?? '',
-            'transaction_date'  => $this->transaction_date ? with(new Carbon($this->transaction_date))->format('d/m/Y') : '',
-            'adjustment_date'   => $this->adjustment_date ? with(new Carbon($this->adjustment_date))->format('d/m/Y') : '',
-            'amount'            => 'R$ ' . number_format(intval($this->amount) / 100, 2, ',', '.'),
-
+            "id" => Hashids::encode($this->id),
+            "transaction_id" => Hashids::connection("sale_id")->encode($this->sale_id),
+            "sale_code" => "#" . Hashids::connection("sale_id")->encode($this->sale_id),
+            "sale_id" => $this->sale_id,
+            "company" => $this->company->fantasy_name,
+            "user" => $this->user->name,
+            "project" => $project->name ?? "",
+            "product" =>
+                count($this->getRelation("sale")->getRelation("plansSales")) > 1
+                    ? "Carrinho"
+                    : Str::limit($plan->name ?? "", 25),
+            "customer" => $this->sale->customer->name ?? "",
+            "transaction_date" => $this->transaction_date
+                ? with(new Carbon($this->transaction_date))->format("d/m/Y")
+                : "",
+            "adjustment_date" => $this->adjustment_date
+                ? with(new Carbon($this->adjustment_date))->format("d/m/Y")
+                : "",
+            "amount" => 'R$ ' . number_format(intval($this->amount) / 100, 2, ",", "."),
         ];
     }
 

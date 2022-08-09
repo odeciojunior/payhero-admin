@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Log;
 
 class GetAllStatementChargebacks extends Command
 {
-    protected $signature = 'getnet:get-all-statement-chargebacks';
+    protected $signature = "getnet:get-all-statement-chargebacks";
 
-    protected $description = 'Salva todos os chargeback diarios';
+    protected $description = "Salva todos os chargeback diarios";
 
     public function __construct()
     {
@@ -26,19 +26,18 @@ class GetAllStatementChargebacks extends Command
 
     public function handle()
     {
-
         try {
             $getnetBackOfficeService = new GetnetBackOfficeService();
-            $latest_chargeback = GetnetChargeback::orderByDesc('id')->first();
+            $latest_chargeback = GetnetChargeback::orderByDesc("id")->first();
             $start_day = Carbon::parse($latest_chargeback->created_at);
 
             //filtros que retorna tudo
-            $startDateFilter = $start_day->subDays(5)->format('Y-m-d') . ' 00:00:00';
-            $endDateFilter = $start_day->addDays(20)->format('Y-m-d') . ' 23:59:59';
+            $startDateFilter = $start_day->subDays(5)->format("Y-m-d") . " 00:00:00";
+            $endDateFilter = $start_day->addDays(20)->format("Y-m-d") . " 23:59:59";
 
             $filters = [
-                'schedule_date_init' => $startDateFilter,
-                'schedule_date_end' => $endDateFilter,
+                "schedule_date_init" => $startDateFilter,
+                "schedule_date_end" => $endDateFilter,
             ];
 
             //pega todos os statements da getnet
@@ -46,9 +45,12 @@ class GetAllStatementChargebacks extends Command
 
             if (isset($statements->chargeback)) {
                 $chargebacks = $statements->chargeback;
-                $sale_gateway_order_ids_saved = GetnetChargeback::join('sales', 'sales.id',
-                    'getnet_chargebacks.sale_id')
-                    ->pluck('sales.gateway_order_id')
+                $sale_gateway_order_ids_saved = GetnetChargeback::join(
+                    "sales",
+                    "sales.id",
+                    "getnet_chargebacks.sale_id"
+                )
+                    ->pluck("sales.gateway_order_id")
                     ->toArray();
                 $sale_gateway_order_ids_news = [];
 
@@ -60,22 +62,26 @@ class GetAllStatementChargebacks extends Command
                     try {
                         //compara com vendas antigas e vendas novas
                         if (!in_array($gateway_order_id, $sale_gateway_order_ids_saved)) {
-                            $sale = Sale::where("gateway_order_id", '=', $gateway_order_id)->first();
+                            $sale = Sale::where("gateway_order_id", "=", $gateway_order_id)->first();
 
                             if (empty($sale)) {
-                                report(new Exception('Não foi possivel efetuar o chargeback para a venda com esse gateway_order_id ' . $gateway_order_id));
+                                report(
+                                    new Exception(
+                                        "Não foi possivel efetuar o chargeback para a venda com esse gateway_order_id " .
+                                            $gateway_order_id
+                                    )
+                                );
                                 continue;
                             }
 
                             if (!in_array($gateway_order_id, $sale_gateway_order_ids_news)) {
-
                                 $this->line($chargeback->adjustment_reason);
 
                                 $sale_gateway_order_ids_news[] = $gateway_order_id;
 
-                                $userProject = UserProject::with('company')
-                                    ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
-                                    ->where('project_id', $sale->project_id)
+                                $userProject = UserProject::with("company")
+                                    ->where("type_enum", UserProject::TYPE_PRODUCER_ENUM)
+                                    ->where("project_id", $sale->project_id)
                                     ->first();
 
                                 $chargeback_obj = new GetnetChargeback();
@@ -93,7 +99,7 @@ class GetAllStatementChargebacks extends Command
                                 event(new NewChargebackEvent($sale));
                             }
 
-                            $getnet_chargeback = GetnetChargeback::where('sale_id', $sale->id)->first();
+                            $getnet_chargeback = GetnetChargeback::where("sale_id", $sale->id)->first();
 
                             $getnetChargebackDetail = new GetnetChargebackDetail();
                             $getnetChargebackDetail->body = json_encode($chargeback);
@@ -109,6 +115,5 @@ class GetAllStatementChargebacks extends Command
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

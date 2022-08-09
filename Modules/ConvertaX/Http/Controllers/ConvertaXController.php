@@ -24,6 +24,6 @@ class ConvertaXController extends Controller
      */
     public function index()
     {
-        return view('convertax::index');
+        return view("convertax::index");
     }
 }

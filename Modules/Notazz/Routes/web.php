@@ -11,8 +11,14 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
-
-    Route::Resource('apps/notazz', 'NotazzController')
-         ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
+Route::group(["middleware" => ["web", "auth"]], function () {
+    Route::Resource("apps/notazz", "NotazzController")->only(
+        "index",
+        "create",
+        "store",
+        "edit",
+        "update",
+        "show",
+        "destroy"
+    );
 });

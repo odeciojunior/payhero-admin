@@ -12,8 +12,11 @@ class AddColumnDiscountProjectUpsellRulesTable extends Migration
      */
     public function up()
     {
-        Schema::table('project_upsell_rules', function(Blueprint $table) {
-            $table->integer('discount')->nullable()->after('offer_on_plans');
+        Schema::table("project_upsell_rules", function (Blueprint $table) {
+            $table
+                ->integer("discount")
+                ->nullable()
+                ->after("offer_on_plans");
         });
     }
 
@@ -23,8 +26,8 @@ class AddColumnDiscountProjectUpsellRulesTable extends Migration
      */
     public function down()
     {
-        Schema::table('project_upsell_rules', function(Blueprint $table) {
-            $table->dropColumn('discount');
+        Schema::table("project_upsell_rules", function (Blueprint $table) {
+            $table->dropColumn("discount");
         });
     }
 }

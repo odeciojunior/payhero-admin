@@ -25,9 +25,11 @@ class NotificationsController extends Controller
      */
     public function markasread(Request $request)
     {
-        auth()->user()->unreadNotifications->markAsRead();
+        auth()
+            ->user()
+            ->unreadNotifications->markAsRead();
 
-        return response()->json('sucesso');
+        return response()->json("sucesso");
     }
 
     public function getUnreadNotificationsCount()

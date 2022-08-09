@@ -34,102 +34,106 @@ class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, 
         $this->getNetStatementService = new GetNetStatementService();
         $this->user = $user;
         $this->filename = $filename;
-        $this->email = !empty($filters['email']) ? $filters['email'] : $user->email;
+        $this->email = !empty($filters["email"]) ? $filters["email"] : $user->email;
         $this->arrayTotal = [];
-
     }
 
     public function collection()
     {
-
         $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($this->filters);
-        $filters = $filtersAndStatement['filters'];
-        $result = json_decode($filtersAndStatement['statement']);
+        $filters = $filtersAndStatement["filters"];
+        $result = json_decode($filtersAndStatement["statement"]);
 
         $data = (new GetNetStatementService())->performWebStatement($result, $filters);
-        $items = collect($data['items']);
-        unset($data['items']);
+        $items = collect($data["items"]);
+        unset($data["items"]);
         $this->arrayTotal = $data;
 
-        $items->push([
-            $this->arrayTotal
-        ]);
+        $items->push([$this->arrayTotal]);
 
         return $items;
-
     }
 
     public function map($row): array
     {
-        if(!isset($row->amount)){
-            $totalInPeriod = isset($row[0]['totalInPeriod']) ? $row[0]['totalInPeriod'] : 0;
+        if (!isset($row->amount)) {
+            $totalInPeriod = isset($row[0]["totalInPeriod"]) ? $row[0]["totalInPeriod"] : 0;
 
-           return [
-               '',
-               '',
-               'Saldo no período:',
-               'R$ ' . is_string($totalInPeriod) ? $totalInPeriod : number_format($totalInPeriod, 2, ',', '.')
-           ];
+            return [
+                "",
+                "",
+                "Saldo no período:",
+                'R$ ' . is_string($totalInPeriod) ? $totalInPeriod : number_format($totalInPeriod, 2, ",", "."),
+            ];
         }
 
         $order = collect($row->order);
         $details = collect($row->details);
-        $description =  str_replace("Venda em: ", "",$details['description']) ;
+        $description = str_replace("Venda em: ", "", $details["description"]);
 
-        $data =
-            [
-                isset($order['hashId']) ? 'Transação #'.$order['hashId'] . ' (' . $details['description'] .')'  : $description,
-                ($details['status']),
-                $row->date,
-                'R$ ' . number_format($row->amount, 2, ',', '.')
-            ];
+        $data = [
+            isset($order["hashId"])
+                ? "Transação #" . $order["hashId"] . " (" . $details["description"] . ")"
+                : $description,
+            $details["status"],
+            $row->date,
+            'R$ ' . number_format($row->amount, 2, ",", "."),
+        ];
 
         return $data;
-
     }
-//
+    //
     public function headings(): array
     {
-
         return [
             //finance
-            'Razão',
-            'Status',
-            'Data prevista',
-            'Valor',
+            "Razão",
+            "Status",
+            "Data prevista",
+            "Valor",
         ];
     }
-//
+    //
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:D1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)
+            AfterSheet::class => function (AfterSheet $event) {
+                $cellRange = "A1:D1"; // All headers
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
                     ->getFill()
-                    ->setFillType('solid')
+                    ->setFillType("solid")
                     ->getStartColor()
-                    ->setRGB('E16A0A');
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
-                    'color' => ['rgb' => 'ffffff'],
-                    'size' => 16
-                ]);
+                    ->setRGB("E16A0A");
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
+                    ->getFont()
+                    ->applyFromArray([
+                        "color" => ["rgb" => "ffffff"],
+                        "size" => 16,
+                    ]);
 
                 $lastRow = $event->sheet->getDelegate()->getHighestRow();
                 $setGray = false;
                 $lastFinance = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
-                    $currentFinance = $event->sheet->getDelegate()->getCellByColumnAndRow(1, $row)->getValue();
+                    $currentFinance = $event->sheet
+                        ->getDelegate()
+                        ->getCellByColumnAndRow(1, $row)
+                        ->getValue();
                     if ($currentFinance != $lastFinance && isset($lastFinance)) {
                         $setGray = !$setGray;
                     }
-                    if($setGray){
-                        $event->sheet->getDelegate()
-                            ->getStyle('A' . $row . ':AS' . $row)
+                    if ($setGray) {
+                        $event->sheet
+                            ->getDelegate()
+                            ->getStyle("A" . $row . ":AS" . $row)
                             ->getFill()
-                            ->setFillType('solid')
+                            ->setFillType("solid")
                             ->getStartColor()
-                            ->setRGB('e5e5e5');
+                            ->setRGB("e5e5e5");
                     }
                     $lastFinance = $currentFinance;
                 }
@@ -137,5 +141,4 @@ class FinanceReportExport implements FromCollection, WithMapping, WithHeadings, 
             },
         ];
     }
-
 }

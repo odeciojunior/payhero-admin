@@ -18,7 +18,7 @@ class OrderBumpServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class OrderBumpServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('orderbump.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'orderbump'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("orderbump.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "orderbump");
     }
 
     /**
@@ -53,17 +54,26 @@ class OrderBumpServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/orderbump');
+        $viewPath = resource_path("views/modules/orderbump");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/orderbump';
-        }, \Config::get('view.paths')), [$sourcePath]), 'orderbump');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/orderbump";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "orderbump"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class OrderBumpServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/orderbump');
+        $langPath = resource_path("lang/modules/orderbump");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'orderbump');
+            $this->loadTranslationsFrom($langPath, "orderbump");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'orderbump');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "orderbump");
         }
     }
 
@@ -89,8 +99,8 @@ class OrderBumpServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

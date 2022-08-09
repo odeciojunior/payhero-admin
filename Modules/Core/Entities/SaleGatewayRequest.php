@@ -33,14 +33,7 @@ use Illuminate\Support\Carbon;
  */
 class SaleGatewayRequest extends Model
 {
-    public $fillable = [
-        'id',
-        'sale_id',
-        'gateway_id',
-        'send_data',
-        'gateway_result',
-        'gateway_exceptions',
-    ];
+    public $fillable = ["id", "sale_id", "gateway_id", "send_data", "gateway_result", "gateway_exceptions"];
 
     public function sale(): BelongsTo
     {

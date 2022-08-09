@@ -15,22 +15,20 @@ use Modules\OrderBump\Transformers\OrderBumpShowResource;
 
 class OrderBumpApiController extends Controller
 {
-
     public function index(Request $request)
     {
         try {
             $data = $request->all();
 
-            $projectId = hashids_decode($data['project_id']);
+            $projectId = hashids_decode($data["project_id"]);
 
-            $rules = OrderBumpRule::where('project_id', $projectId)
-                ->orderByDesc('id')
+            $rules = OrderBumpRule::where("project_id", $projectId)
+                ->orderByDesc("id")
                 ->paginate(5);
 
             return OrderBumpResource::collection($rules);
-
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao listar regras de order bump!'], 400);
+            return response()->json(["message" => "Erro ao listar regras de order bump!"], 400);
         }
     }
 
@@ -41,11 +39,11 @@ class OrderBumpApiController extends Controller
 
             OrderBumpRule::create($data);
 
-            CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $data['project_id']);
+            CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $data["project_id"]);
 
-            return response()->json(['message' => 'Nova regra de order bump criada com succeso!']);
+            return response()->json(["message" => "Nova regra de order bump criada com succeso!"]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao salvar nova regra de order bump!'], 400);
+            return response()->json(["message" => "Erro ao salvar nova regra de order bump!"], 400);
         }
     }
 
@@ -55,43 +53,49 @@ class OrderBumpApiController extends Controller
             $id = hashids_decode($id);
             $rule = OrderBumpRule::find($id);
 
-            $selectPlans = ['id', 'name', 'description'];
+            $selectPlans = ["id", "name", "description"];
             if ($rule->use_variants) {
-                $rawVariants = DB::raw('(select count(distinct p.shopify_variant_id) from plans p where p.shopify_id = plans.shopify_id and p.shopify_id is not null and p.deleted_at is null) as variants');
+                $rawVariants = DB::raw(
+                    "(select count(distinct p.shopify_variant_id) from plans p where p.shopify_id = plans.shopify_id and p.shopify_id is not null and p.deleted_at is null) as variants"
+                );
                 $selectPlans[] = $rawVariants;
             }
 
-            if ($rule->apply_on_shipping[0] === 'all') {
-                $rule->apply_on_shipping = collect()->push((object)[
-                    'id' => 'all',
-                    'name' => 'Qualquer frete',
-                    'information' => '',
-                ]);
+            if ($rule->apply_on_shipping[0] === "all") {
+                $rule->apply_on_shipping = collect()->push(
+                    (object) [
+                        "id" => "all",
+                        "name" => "Qualquer frete",
+                        "information" => "",
+                    ]
+                );
             } else {
-                $rule->apply_on_shipping = Shipping::select('id', 'name', 'information')
-                    ->whereIn('id', $rule->apply_on_shipping)
+                $rule->apply_on_shipping = Shipping::select("id", "name", "information")
+                    ->whereIn("id", $rule->apply_on_shipping)
                     ->get();
             }
 
-            if ($rule->apply_on_plans[0] === 'all') {
-                $rule->apply_on_plans = collect()->push((object)[
-                    'id' => 'all',
-                    'name' => 'Qualquer ' . ($rule->use_variants ? 'plano' : 'produto'),
-                    'description' => '',
-                    'variants' => 0,
-                ]);
+            if ($rule->apply_on_plans[0] === "all") {
+                $rule->apply_on_plans = collect()->push(
+                    (object) [
+                        "id" => "all",
+                        "name" => "Qualquer " . ($rule->use_variants ? "plano" : "produto"),
+                        "description" => "",
+                        "variants" => 0,
+                    ]
+                );
             } else {
                 $rule->apply_on_plans = Plan::select($selectPlans)
-                    ->whereIn('id', $rule->apply_on_plans)
+                    ->whereIn("id", $rule->apply_on_plans)
                     ->get();
             }
             $rule->offer_plans = Plan::select($selectPlans)
-                ->whereIn('id', $rule->offer_plans)
+                ->whereIn("id", $rule->offer_plans)
                 ->get();
 
             return new OrderBumpShowResource($rule);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao exibir detalhes da regra de order bump!'], 400);
+            return response()->json(["message" => "Erro ao exibir detalhes da regra de order bump!"], 400);
         }
     }
 
@@ -108,9 +112,9 @@ class OrderBumpApiController extends Controller
             CacheService::forget(CacheService::CHECKOUT_OB_RULE_PLANS, $rule->id);
             CacheService::forgetContainsUnique(CacheService::SHIPPING_OB_RULES, $rule->id);
 
-            return response()->json(['message' => 'Regra order bump atualizada com succeso!']);
+            return response()->json(["message" => "Regra order bump atualizada com succeso!"]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao atualizar regra de order bump!'], 400);
+            return response()->json(["message" => "Erro ao atualizar regra de order bump!"], 400);
         }
     }
 
@@ -127,9 +131,9 @@ class OrderBumpApiController extends Controller
             CacheService::forget(CacheService::CHECKOUT_OB_RULE_PLANS, $id);
             CacheService::forgetContainsUnique(CacheService::SHIPPING_OB_RULES, $id);
 
-            return response()->json(['message' => 'Regra order bump excluída com succeso!']);
+            return response()->json(["message" => "Regra order bump excluída com succeso!"]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao excluir regra de order bump!'], 400);
+            return response()->json(["message" => "Erro ao excluir regra de order bump!"], 400);
         }
     }
 }

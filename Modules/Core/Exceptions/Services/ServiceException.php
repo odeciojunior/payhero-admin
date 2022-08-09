@@ -17,7 +17,7 @@ class ServiceException extends Exception
      * @param string $code
      * @param Throwable|null $previous
      */
-    public function __construct($message = "", $code = '0', Throwable $previous = null)
+    public function __construct($message = "", $code = "0", Throwable $previous = null)
     {
         if (!is_numeric($code)) {
             $code = null;

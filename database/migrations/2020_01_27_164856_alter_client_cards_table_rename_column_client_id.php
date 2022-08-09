@@ -13,8 +13,8 @@ class AlterClientCardsTableRenameColumnClientId extends Migration
      */
     public function up()
     {
-        Schema::table('customer_cards', function(Blueprint $table) {
-            $table->renameColumn('client_id', 'customer_id');
+        Schema::table("customer_cards", function (Blueprint $table) {
+            $table->renameColumn("client_id", "customer_id");
         });
     }
 
@@ -25,8 +25,8 @@ class AlterClientCardsTableRenameColumnClientId extends Migration
      */
     public function down()
     {
-        Schema::table('customer_cards', function(Blueprint $table) {
-            $table->renameColumn('customer_id', 'client_id');
+        Schema::table("customer_cards", function (Blueprint $table) {
+            $table->renameColumn("customer_id", "client_id");
         });
     }
 }

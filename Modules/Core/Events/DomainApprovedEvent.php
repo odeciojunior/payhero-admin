@@ -32,9 +32,9 @@ class DomainApprovedEvent
      */
     public function __construct(Domain $domain, Project $project, Collection $users)
     {
-        $this->domain  = $domain;
+        $this->domain = $domain;
         $this->project = $project;
-        $this->users   = $users;
+        $this->users = $users;
     }
 
     /**
@@ -43,6 +43,6 @@ class DomainApprovedEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel("channel-name");
     }
 }

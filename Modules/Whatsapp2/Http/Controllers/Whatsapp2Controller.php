@@ -14,7 +14,7 @@ class Whatsapp2Controller extends Controller
      */
     public function index()
     {
-        return view('whatsapp2::index');
+        return view("whatsapp2::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class Whatsapp2Controller extends Controller
      */
     public function create()
     {
-        return view('whatsapp2::create');
+        return view("whatsapp2::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class Whatsapp2Controller extends Controller
      */
     public function show($id)
     {
-        return view('whatsapp2::show');
+        return view("whatsapp2::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class Whatsapp2Controller extends Controller
      */
     public function edit($id)
     {
-        return view('whatsapp2::edit');
+        return view("whatsapp2::edit");
     }
 
     /**

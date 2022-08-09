@@ -1,63 +1,57 @@
 $(document).ready(function () {
-    let projectId = $(window.location.pathname.split('/')).get(-1);
+    let projectId = $(window.location.pathname.split("/")).get(-1);
     let countdownInterval = null;
     let descriptionconfig;
 
-    ClassicEditor
-        .create(document.querySelector('#description_config'), {
-            language: 'pt-br',
-            uiColor: '#F1F4F5',
-            toolbar: [
-                'heading', '|',
-                'bold', 'italic', '|',
-                'link', '|',
-                'undo', 'redo'
-            ]
-        })
-        .then(newEditor => {
+    ClassicEditor.create(document.querySelector("#description_config"), {
+        language: "pt-br",
+        uiColor: "#F1F4F5",
+        toolbar: ["heading", "|", "bold", "italic", "|", "link", "|", "undo", "redo"],
+    })
+        .then((newEditor) => {
             descriptionconfig = newEditor;
         })
-        .catch(error => {
+        .catch((error) => {
             console.error(error);
         });
 
-    $('.tab_upsell').on('click', function () {
+    $(".tab_upsell").on("click", function () {
         loadUpsell();
         $(this).off();
-    })
+    });
 
     function loadUpsell() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         if (link == null) {
-            link = '/api/projectupsellrule';
+            link = "/api/projectupsellrule";
         } else {
-            link = '/api/projectupsellrule' + link;
+            link = "/api/projectupsellrule" + link;
         }
 
-        loadOnTable('#data-table-upsell', '#table-upsell');
+        loadOnTable("#data-table-upsell", "#table-upsell");
 
-        $('#tab_upsell-panel').find('.no-gutters').css('display', 'none');
-        $('#table-upsell').find('thead').css('display', 'none');
+        $("#tab_upsell-panel").find(".no-gutters").css("display", "none");
+        $("#table-upsell").find("thead").css("display", "none");
 
         $.ajax({
             method: "GET",
             url: link,
             dataType: "json",
-            data: {project_id: projectId},
+            data: { project_id: projectId },
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                let dataTable = $('#data-table-upsell');
-                dataTable.html('');
-                if (response.data == '') {
-                    $('.div-config').hide();
-                    $('#data-table-upsell').html(`
+                let dataTable = $("#data-table-upsell");
+                dataTable.html("");
+                if (response.data == "") {
+                    $(".div-config").hide();
+                    $("#data-table-upsell").html(`
                         <tr class='text-center'>
                             <td colspan='3' style='height: 70px;vertical-align: middle'>
                                 <div class='d-flex justify-content-center align-items-center'>
@@ -72,134 +66,153 @@ $(document).ready(function () {
                             </td>
                         </tr>
                     `);
-                    $('#table-upsell').addClass('table-striped');
+                    $("#table-upsell").addClass("table-striped");
                 } else {
-                    $('#tab_upsell-panel').find('.no-gutters').css('display', 'flex');
-                    $('#table-upsell').find('thead').css('display', 'contents');
+                    $("#tab_upsell-panel").find(".no-gutters").css("display", "flex");
+                    $("#table-upsell").find("thead").css("display", "contents");
 
-                    $('#table-upsell').addClass('table-striped');
-                    $('#count-upsell').html(response.meta.total);
-                    let data = '';
+                    $("#table-upsell").addClass("table-striped");
+                    $("#count-upsell").html(response.meta.total);
+                    let data = "";
                     $.each(response.data, function (index, value) {
                         data += `
                         <tr>
                             <td>${value.description}</td>
-                            <td class="text-center">${value.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                            <td class="text-center">${
+                                value.active_flag
+                                    ? `<span class="badge badge-success">Ativo</span>`
+                                    : `<span class="badge badge-danger">Desativado</span>`
+                            }</td>
                             <td style='text-align:center'>
                                 <div class='d-flex justify-content-end align-items-center'>
-                                    <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}"><span class="o-eye-1"></span></a>
-                                    <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}"><span class='o-edit-1'></span></a>
-                                    <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id}" data-toggle="modal" data-target="#modal-delete-upsell"><span class='o-bin-1'></span></a>
+                                    <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${
+                                        value.id
+                                    }"><span class="o-eye-1"></span></a>
+                                    <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${
+                                        value.id
+                                    }"><span class='o-edit-1'></span></a>
+                                    <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${
+                                        value.id
+                                    }" data-toggle="modal" data-target="#modal-delete-upsell"><span class='o-bin-1'></span></a>
                                 </div>
                             </td>
                         </tr>
                         `;
                     });
                     dataTable.append(data);
-                    $('.div-config').show();
+                    $(".div-config").show();
 
-                    pagination(response, 'upsell', loadUpsell);
+                    pagination(response, "upsell", loadUpsell);
                 }
-
-            }
+            },
         });
 
-        if(!['shopify', 'woocommerce'].includes($('#project_type').val())){
-            $('.use-variants-upsell')
-                .prop('checked', false)
-                .val(0)
-                .closest('.switch-holder')
-                .hide();
+        if (!["shopify", "woocommerce"].includes($("#project_type").val())) {
+            $(".use-variants-upsell").prop("checked", false).val(0).closest(".switch-holder").hide();
         }
     }
 
-    $(document).on('click', '.add-upsell', function () {
-        $('#modal_add_upsell .modal-title').html("Novo upsell");
+    $(document).on("click", ".add-upsell", function () {
+        $("#modal_add_upsell .modal-title").html("Novo upsell");
         $(".bt-upsell-save").show();
         $(".bt-upsell-update").hide();
-        $('#form_add_upsell').show();
-        $('#form_edit_upsell').hide();
-        $('#add_active_flag').prop('checked', true).trigger('change');
-        $('#modal_add_upsell .use-variants-upsell').prop('checked', true).trigger('change');
-        $('#add_description_upsell').val('');
-        $('#add_discount_upsell').val('');
+        $("#form_add_upsell").show();
+        $("#form_edit_upsell").hide();
+        $("#add_active_flag").prop("checked", true).trigger("change");
+        $("#modal_add_upsell .use-variants-upsell").prop("checked", true).trigger("change");
+        $("#add_description_upsell").val("");
+        $("#add_discount_upsell").val("");
     });
 
-    $(document).on('click', '.edit-upsell', function (event) {
+    $(document).on("click", ".edit-upsell", function (event) {
         event.preventDefault();
-        let upsellId = $(this).data('upsell');
-        $('#modal_add_upsell .modal-title').html("Editar upsell");
+        let upsellId = $(this).data("upsell");
+        $("#modal_add_upsell .modal-title").html("Editar upsell");
         $(".bt-upsell-save").hide();
         $(".bt-upsell-update").show();
         $("#form_add_upsell").hide();
         $("#form_edit_upsell").show();
-        $('#edit_description_upsell').val('');
-        $('#edit_discount_upsell').val('');
-        $('#form_edit_upsell .upsell-id').val(upsellId);
+        $("#edit_description_upsell").val("");
+        $("#edit_discount_upsell").val("");
+        $("#form_edit_upsell .upsell-id").val(upsellId);
 
         $.ajax({
             method: "GET",
-            url: "/api/projectupsellrule/" + upsellId + '/edit',
+            url: "/api/projectupsellrule/" + upsellId + "/edit",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            }, error: function (response) {
-
-            }, success: function (response) {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function (response) {},
+            success: function (response) {
                 let upsell = response.data;
-                $('#edit_description_upsell').val(`${upsell.description}`);
-                $('#edit_discount_upsell').val(`${upsell.discount}`);
+                $("#edit_description_upsell").val(`${upsell.description}`);
+                $("#edit_discount_upsell").val(`${upsell.discount}`);
 
-                $('#edit_active_flag').prop('checked', upsell.active_flag===1)
+                $("#edit_active_flag")
+                    .prop("checked", upsell.active_flag === 1)
                     .val(upsell.active_flag);
-                $('#form_edit_upsell .use-variants-upsell').prop('checked', upsell.use_variants===1)
+                $("#form_edit_upsell .use-variants-upsell")
+                    .prop("checked", upsell.use_variants === 1)
                     .val(upsell.use_variants)
-                    .trigger('change');
+                    .trigger("change");
 
                 // Seleciona a opção do select de acordo com o que vem do banco
-                $('#edit_apply_on_shipping, #edit_apply_on_plans, #edit_offer_on_plans').html('');
+                $("#edit_apply_on_shipping, #edit_apply_on_plans, #edit_offer_on_plans").html("");
 
                 let applyOnShipping = [];
                 for (let shipping of upsell.apply_on_shipping) {
                     applyOnShipping.push(shipping.id);
-                    $('#edit_apply_on_shipping').append(`<option value="${shipping.id}">${shipping.name + (shipping.information ? ' - ' + shipping.information : '')}</option>`);
+                    $("#edit_apply_on_shipping").append(
+                        `<option value="${shipping.id}">${
+                            shipping.name + (shipping.information ? " - " + shipping.information : "")
+                        }</option>`
+                    );
                 }
-                $('#edit_apply_on_shipping').val(applyOnShipping);
+                $("#edit_apply_on_shipping").val(applyOnShipping);
 
                 let applyOnPlans = [];
                 for (let plan of upsell.apply_on_plans) {
                     applyOnPlans.push(plan.id);
-                    $('#edit_apply_on_plans').append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                    $("#edit_apply_on_plans").append(
+                        `<option value="${plan.id}">${
+                            plan.name + (plan.description ? " - " + plan.description : "")
+                        }</option>`
+                    );
                 }
-                $('#edit_apply_on_plans').val(applyOnPlans);
+                $("#edit_apply_on_plans").val(applyOnPlans);
 
                 let offerOnPlans = [];
                 for (let plan of upsell.offer_on_plans) {
                     offerOnPlans.push(plan.id);
-                    $('#edit_offer_on_plans').append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                    $("#edit_offer_on_plans").append(
+                        `<option value="${plan.id}">${
+                            plan.name + (plan.description ? " - " + plan.description : "")
+                        }</option>`
+                    );
                 }
-                $('#edit_offer_on_plans').val(offerOnPlans);
+                $("#edit_offer_on_plans").val(offerOnPlans);
 
-                setShippingSelect2('#edit_apply_on_shipping');
-                setPlanSelect2('#edit_apply_on_plans');
-                setPlanSelect2('#edit_offer_on_plans');
+                setShippingSelect2("#edit_apply_on_shipping");
+                setPlanSelect2("#edit_apply_on_plans");
+                setPlanSelect2("#edit_offer_on_plans");
 
-                $('#modal_add_upsell').modal('show');
+                $("#modal_add_upsell").modal("show");
                 // END
-            }
+            },
         });
     });
 
-    $(document).on('click', '.bt-upsell-save', function () {
-        var form_data = new FormData(document.getElementById('form_add_upsell'));
-        form_data.append('project_id', projectId);
+    $(document).on("click", ".bt-upsell-save", function () {
+        var form_data = new FormData(document.getElementById("form_add_upsell"));
+        form_data.append("project_id", projectId);
         $.ajax({
             method: "POST",
             url: "/api/projectupsellrule",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             processData: false,
             contentType: false,
@@ -209,28 +222,28 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#modal_add_upsell').modal('hide');
+                $("#modal_add_upsell").modal("hide");
                 loadUpsell();
-                alertCustom('success', response.message);
-                $("#add_apply_on_plans, #add_offer_on_plans").val(null).trigger('change');
-            }
+                alertCustom("success", response.message);
+                $("#add_apply_on_plans, #add_offer_on_plans").val(null).trigger("change");
+            },
         });
     });
 
-    $(document).on('click', '.delete-upsell', function (event) {
+    $(document).on("click", ".delete-upsell", function (event) {
         event.preventDefault();
 
-        let upsellId = $(this).data('upsell');
+        let upsellId = $(this).data("upsell");
 
-        $('#btn-delete-upsell').unbind('click');
-        $('#btn-delete-upsell').on('click', function () {
+        $("#btn-delete-upsell").unbind("click");
+        $("#btn-delete-upsell").on("click", function () {
             $.ajax({
                 method: "DELETE",
                 url: "/api/projectupsellrule/" + upsellId,
                 dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 error: function (response) {
                     loadingOnScreenRemove();
@@ -238,23 +251,23 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     loadUpsell();
-                    alertCustom('success', response.message);
-                }
+                    alertCustom("success", response.message);
+                },
             });
         });
     });
 
-    $(document).on('click', '.bt-upsell-update', function (event) {
+    $(document).on("click", ".bt-upsell-update", function (event) {
         event.preventDefault();
 
-        var form_data = new FormData(document.getElementById('form_edit_upsell'));
-        let upsellId = $('#form_edit_upsell .upsell-id').val();
+        var form_data = new FormData(document.getElementById("form_edit_upsell"));
+        let upsellId = $("#form_edit_upsell .upsell-id").val();
         $.ajax({
             method: "POST",
             url: "/api/projectupsellrule/" + upsellId,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             processData: false,
             contentType: false,
@@ -264,74 +277,81 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#modal_add_upsell').modal('hide');
+                $("#modal_add_upsell").modal("hide");
                 loadUpsell();
-                alertCustom('success', response.message);
-            }
+                alertCustom("success", response.message);
+            },
         });
     });
-    $(document).on('click', '.details-upsell', function (event) {
+    $(document).on("click", ".details-upsell", function (event) {
         event.preventDefault();
-        let upsellId = $(this).data('upsell');
+        let upsellId = $(this).data("upsell");
         $.ajax({
             method: "GET",
             url: "/api/projectupsellrule/" + upsellId,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-            }, success: function success(response) {
+            },
+            success: function success(response) {
                 let upsell = response.data;
-                $('.upsell-description').html('');
-                $('.upsell-discount').html('');
-                $('.upsell-status').html('');
-                $('.upsell-apply-shipping').html('');
-                $('.upsell-apply-plans').html('');
-                $('.upsell-offer-plans').html('');
-                $('.upsell-description').html(`${upsell.description}`);
-                $('.upsell-discount').html(`${upsell.discount != 0 ? `${upsell.discount}%` : `Valor sem desconto`}`);
+                $(".upsell-description").html("");
+                $(".upsell-discount").html("");
+                $(".upsell-status").html("");
+                $(".upsell-apply-shipping").html("");
+                $(".upsell-apply-plans").html("");
+                $(".upsell-offer-plans").html("");
+                $(".upsell-description").html(`${upsell.description}`);
+                $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}%` : `Valor sem desconto`}`);
 
-                $('.upsell-status').html(`${upsell.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}`);
+                $(".upsell-status").html(
+                    `${
+                        upsell.active_flag
+                            ? `<span class="badge badge-success text-left">Ativo</span>`
+                            : `<span class="badge badge-danger">Desativado</span>`
+                    }`
+                );
                 for (let applyShipping of upsell.apply_on_shipping) {
-                    $('.upsell-apply-shipping').append(`<span>${applyShipping.name}</span><br>`);
+                    $(".upsell-apply-shipping").append(`<span>${applyShipping.name}</span><br>`);
                 }
                 for (let applyPlan of upsell.apply_on_plans) {
-                    $('.upsell-apply-plans').append(`<span>${applyPlan.name}</span><br>`);
+                    $(".upsell-apply-plans").append(`<span>${applyPlan.name}</span><br>`);
                 }
                 for (let offerPlan of upsell.offer_on_plans) {
-                    $('.upsell-offer-plans').append(`<span>${offerPlan.name}</span><br>`);
+                    $(".upsell-offer-plans").append(`<span>${offerPlan.name}</span><br>`);
                 }
-                $('#modal-detail-upsell').modal('show');
-            }
+                $("#modal-detail-upsell").modal("show");
+            },
         });
     });
 
     //Search shipping
     function setShippingSelect2(element) {
-        const $element = typeof element === 'string' ? $(element) : element;
+        const $element = typeof element === "string" ? $(element) : element;
 
         let configs = {
-            placeholder: 'Nome do frete',
+            placeholder: "Nome do frete",
             multiple: true,
-            dropdownParent: $('#modal_add_upsell'),
+            dropdownParent: $("#modal_add_upsell"),
             language: {
                 noResults: function () {
-                    return 'Nenhum frete encontrado';
+                    return "Nenhum frete encontrado";
                 },
                 searching: function () {
-                    return 'Procurando...';
+                    return "Procurando...";
                 },
                 loadingMore: function () {
-                    return 'Carregando mais fretes...';
+                    return "Carregando mais fretes...";
                 },
             },
             ajax: {
                 data: function (params) {
                     return {
-                        list: 'shipping',
+                        list: "shipping",
                         search: params.term,
                         project_id: projectId,
                         page: params.page || 1,
@@ -340,56 +360,57 @@ $(document).ready(function () {
                 method: "GET",
                 url: "/api/shippings/user-shippings",
                 delay: 300,
-                dataType: 'json',
+                dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 processResults: function (res) {
                     if (res.meta.current_page === 1) {
                         let allObject = {
-                            id: 'all',
+                            id: "all",
                             name: `Qualquer frete`,
-                            information: ''
+                            information: "",
                         };
                         res.data.unshift(allObject);
                     }
 
                     return {
                         results: $.map(res.data, function (obj) {
-                            return {id: obj.id, text: obj.name + (obj.information ? ' - ' + obj.information : '')};
+                            return { id: obj.id, text: obj.name + (obj.information ? " - " + obj.information : "") };
                         }),
                         pagination: {
-                            'more': res.meta.current_page !== res.meta.last_page
-                        }
+                            more: res.meta.current_page !== res.meta.last_page,
+                        },
                     };
                 },
-            }
-        }
+            },
+        };
         $element.select2(configs);
     }
 
-    setShippingSelect2('#add_apply_on_shipping');
-    setShippingSelect2('#edit_apply_on_shipping');
-    $('#add_apply_on_shipping').html(`<option value="all">Qualquer frete</option>`).val('all');
+    setShippingSelect2("#add_apply_on_shipping");
+    setShippingSelect2("#edit_apply_on_shipping");
+    $("#add_apply_on_shipping").html(`<option value="all">Qualquer frete</option>`).val("all");
 
     //Search plan
     function setPlanSelect2(element) {
-        const $element = typeof element === 'string' ? $(element) : element;
+        const $element = typeof element === "string" ? $(element) : element;
 
-        const useVariants = $element.closest('form').find('.use-variants-upsell').prop('checked') ? 1 : 0;
-        const targetName = useVariants ? 'plano' : 'produto';
+        const useVariants = $element.closest("form").find(".use-variants-upsell").prop("checked") ? 1 : 0;
+        const targetName = useVariants ? "plano" : "produto";
 
         let configs = {
             placeholder: `Nome do ${targetName}`,
             multiple: true,
-            dropdownParent: $('#modal_add_upsell'),
+            closeOnSelect: false,
+            dropdownParent: $("#modal_add_upsell"),
             language: {
                 noResults: function () {
                     return `Nenhum ${targetName} encontrado`;
                 },
                 searching: function () {
-                    return 'Procurando...';
+                    return "Procurando...";
                 },
                 loadingMore: function () {
                     return `Carregando mais ${targetName}s...`;
@@ -398,7 +419,7 @@ $(document).ready(function () {
             ajax: {
                 data: function (params) {
                     return {
-                        list: 'plan',
+                        list: "plan",
                         search: params.term,
                         project_id: projectId,
                         page: params.page || 1,
@@ -408,87 +429,92 @@ $(document).ready(function () {
                 method: "GET",
                 url: "/api/plans/user-plans",
                 delay: 300,
-                dataType: 'json',
+                dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 processResults: function (res) {
-                    let elemId = this.$element.attr('id');
-                    if (['add_apply_on_plans', 'edit_apply_on_plans'].includes(elemId) && res.meta.current_page === 1) {
+                    let elemId = this.$element.attr("id");
+                    if (["add_apply_on_plans", "edit_apply_on_plans"].includes(elemId) && res.meta.current_page === 1) {
                         let allObject = {
-                            id: 'all',
+                            id: "all",
                             name: `Qualquer ${targetName}`,
-                            description: ''
+                            description: "",
                         };
                         res.data.unshift(allObject);
                     }
                     return {
                         results: $.map(res.data, function (obj) {
-                            return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                            return { id: obj.id, text: obj.name + (obj.description ? " - " + obj.description : "") };
                         }),
                         pagination: {
-                            'more': res.meta.current_page !== res.meta.last_page
-                        }
+                            more: res.meta.current_page !== res.meta.last_page,
+                        },
                     };
                 },
-            }
-        }
+            },
+        };
 
         $element.select2(configs);
     }
 
-    setPlanSelect2('#add_apply_on_plans');
-    setPlanSelect2('#edit_apply_on_plans');
-    setPlanSelect2('#add_offer_on_plans');
-    setPlanSelect2('#edit_offer_on_plans');
+    setPlanSelect2("#add_apply_on_plans");
+    setPlanSelect2("#edit_apply_on_plans");
+    setPlanSelect2("#add_offer_on_plans");
+    setPlanSelect2("#edit_offer_on_plans");
 
-    $('.use-variants-upsell').on('change', function () {
-        const slider = $(this);
-        const form = slider.closest('form');
+    $(".use-variants-upsell")
+        .on("change", function () {
+            const slider = $(this);
+            const form = slider.closest("form");
 
-        const applyContainer = form.find('.apply-on-plan-container');
-        const offerContainer = form.find('.offer-plan-container');
+            const applyContainer = form.find(".apply-on-plan-container");
+            const offerContainer = form.find(".offer-plan-container");
 
-        const applyLabel = applyContainer.find('label');
-        const offerLabel = offerContainer.find('label');
+            const applyLabel = applyContainer.find("label");
+            const offerLabel = offerContainer.find("label");
 
-        const applySelect = applyContainer.find('select');
-        const offerSelect = offerContainer.find('select');
+            const applySelect = applyContainer.find("select");
+            const offerSelect = offerContainer.find("select");
 
-        if (slider.prop('checked')) {
-            applyLabel.text('Ao comprar os planos:');
-            offerLabel.text('Oferecer os planos:');
-            applySelect.html(`<option value="all">Qualquer plano</option>`).val('all').trigger('change');
-        } else {
-            applyLabel.text('Ao comprar os produtos:');
-            offerLabel.text('Oferecer os produtos:');
-            applySelect.html(`<option value="all">Qualquer produto</option>`).val('all').trigger('change');
-        }
+            if (slider.prop("checked")) {
+                applyLabel.text("Ao comprar os planos:");
+                offerLabel.text("Oferecer os planos:");
+                applySelect.html(`<option value="all">Qualquer plano</option>`).val("all").trigger("change");
+            } else {
+                applyLabel.text("Ao comprar os produtos:");
+                offerLabel.text("Oferecer os produtos:");
+                applySelect.html(`<option value="all">Qualquer produto</option>`).val("all").trigger("change");
+            }
 
-        offerSelect.html('').val('').trigger('change');
+            offerSelect.html("").val("").trigger("change");
 
-        setPlanSelect2(applySelect);
-        setPlanSelect2(offerSelect);
-    }).trigger('change');
+            setPlanSelect2(applySelect);
+            setPlanSelect2(offerSelect);
+        })
+        .trigger("change");
 
     const select2HasAll = [
-        '#add_apply_on_shipping',
-        '#edit_apply_on_shipping',
-        '#add_apply_on_plans',
-        '#edit_apply_on_plans',
-        '#add_offer_on_plans',
-        '#edit_offer_on_plans',
-    ].join(', ');
-    $(select2HasAll).on('select2:select', function () {
+        "#add_apply_on_shipping",
+        "#edit_apply_on_shipping",
+        "#add_apply_on_plans",
+        "#edit_apply_on_plans",
+        "#add_offer_on_plans",
+        "#edit_offer_on_plans",
+    ].join(", ");
+    $(select2HasAll).on("select2:select", function () {
         let selectPlan = $(this);
-        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() !== 'all')) {
-            selectPlan.val('all').trigger("change");
+        if (
+            (selectPlan.val().length > 1 && selectPlan.val().includes("all")) ||
+            (selectPlan.val().includes("all") && selectPlan.val() !== "all")
+        ) {
+            selectPlan.val("all").trigger("change");
         }
     });
 
     // Config
-    $(document).on('click', '#config-upsell', function (event) {
+    $(document).on("click", "#config-upsell", function (event) {
         event.preventDefault();
 
         $.ajax({
@@ -496,63 +522,63 @@ $(document).ready(function () {
             url: "/api/projectupsellconfig/" + projectId,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-
-            }, success: function success(response) {
+            },
+            success: function success(response) {
                 let upsellConfig = response.data;
-                $('#header_config').val(`${upsellConfig.header}`);
-                $('#title_config').val(`${upsellConfig.title}`);
-                descriptionconfig.setData(`${upsellConfig.description ?? ' '}`);
-                $('#countdown_time_config').val(`${upsellConfig.countdown_time}`);
+                $("#header_config").val(`${upsellConfig.header}`);
+                $("#title_config").val(`${upsellConfig.title}`);
+                descriptionconfig.setData(`${upsellConfig.description ?? " "}`);
+                $("#countdown_time_config").val(`${upsellConfig.countdown_time}`);
 
                 if (upsellConfig.countdown_flag) {
-                    $('#countdown_flag').prop('checked', true);
+                    $("#countdown_flag").prop("checked", true);
                 } else {
-                    $('#countdown_flag').prop('checked', false);
+                    $("#countdown_flag").prop("checked", false);
                 }
                 if (upsellConfig.has_upsell) {
-                    $('.btn-view-config').show();
+                    $(".btn-view-config").show();
                 }
 
-                $('#modal_config_upsell').modal('show');
-            }
+                $("#modal_config_upsell").modal("show");
+            },
         });
     });
-    $(document).on('click', '.bt-upsell-config-update', function (event) {
+    $(document).on("click", ".bt-upsell-config-update", function (event) {
         event.preventDefault();
-        if ($('#countdown_flag').is(':checked') && $('#countdown_time_config').val() == '') {
-            alertCustom('error', 'Preencha o campo Contagem');
+        if ($("#countdown_flag").is(":checked") && $("#countdown_time_config").val() == "") {
+            alertCustom("error", "Preencha o campo Contagem");
             return false;
         }
 
-        if ($('#countdown_time_config').val() < 1 || $('#countdown_time_config').val() > 60) {
-            alertCustom('error', 'Contador deve ter um valor entre 1 e 60 minutos.');
+        if ($("#countdown_time_config").val() < 1 || $("#countdown_time_config").val() > 60) {
+            alertCustom("error", "Contador deve ter um valor entre 1 e 60 minutos.");
             return false;
         }
 
-        let form_data = new FormData(document.getElementById('form_config_upsell'));
-        let header = $('#header_config').val();
-        let title = $('#title_config').val();
+        let form_data = new FormData(document.getElementById("form_config_upsell"));
+        let header = $("#header_config").val();
+        let title = $("#title_config").val();
         let description = descriptionconfig.getData();
-        let countdownTime = $('#countdown_time_config').val();
-        let countDownFlag = $('#countdown_flag').val();
+        let countdownTime = $("#countdown_time_config").val();
+        let countDownFlag = $("#countdown_flag").val();
 
-        form_data.set('header', header);
-        form_data.set('title', title);
-        form_data.set('description', description);
-        form_data.set('countdown_time', countdownTime);
-        form_data.set('countdown_flag', countDownFlag);
+        form_data.set("header", header);
+        form_data.set("title", title);
+        form_data.set("description", description);
+        form_data.set("countdown_time", countdownTime);
+        form_data.set("countdown_flag", countDownFlag);
 
         $.ajax({
             method: "POST",
             url: "/api/projectupsellconfig/" + projectId,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             processData: false,
             contentType: false,
@@ -562,19 +588,19 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                alertCustom('success', response.message);
-                $("#modal_config_upsell").modal('hide');
-            }
+                alertCustom("success", response.message);
+                $("#modal_config_upsell").modal("hide");
+            },
         });
     });
-    $(document).on('click', '.btn-return-to-config', function (event) {
+    $(document).on("click", ".btn-return-to-config", function (event) {
         event.preventDefault();
-        $('#modal-view-upsell-config').modal('hide');
-        $('#modal_config_upsell').modal('show');
+        $("#modal-view-upsell-config").modal("hide");
+        $("#modal_config_upsell").modal("show");
     });
-    $(document).on('click', '.btn-view-config', function (event) {
+    $(document).on("click", ".btn-view-config", function (event) {
         event.preventDefault();
-        $('#modal_config_upsell').modal('hide');
+        $("#modal_config_upsell").modal("hide");
 
         $.ajax({
             method: "POST",
@@ -584,34 +610,31 @@ $(document).ready(function () {
                 project_id: projectId,
             },
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
-
                 errorAjaxResponse(response);
-
-            }, success: function success(response) {
-
+            },
+            success: function success(response) {
                 let upsell = response.data;
 
-                $('#div-upsell-products').html('');
+                $("#div-upsell-products").html("");
 
-                $('#upsell-header').html(upsell.header);
-                $('#upsell-title').html(upsell.title);
-                $('#upsell-description').html(upsell.description);
+                $("#upsell-header").html(upsell.header);
+                $("#upsell-title").html(upsell.title);
+                $("#upsell-description").html(upsell.description);
 
                 if (upsell.countdown_flag) {
-                    $('#timer_upsell').show();
+                    $("#timer_upsell").show();
                     startCountdown(upsell.countdown_time);
                 } else {
-                    $('#timer_upsell').hide();
+                    $("#timer_upsell").hide();
                 }
 
                 let data = "";
 
                 for (let key in upsell.plans) {
-
                     let plan = upsell.plans[key];
                     data += `<div class="product-info">
                                 <div class="d-flex flex-column">`;
@@ -647,7 +670,7 @@ $(document).ready(function () {
                         data += `<div class="form-group">
                                     <select class="installments">`;
                         for (let installment of plan.installments) {
-                            data += `<option value="${installment['amount']}">${installment['amount']}X DE R$ ${installment['value']}</option>`;
+                            data += `<option value="${installment["amount"]}">${installment["amount"]}X DE R$ ${installment["value"]}</option>`;
                         }
                         data += `</select>
                              </div>`;
@@ -658,26 +681,24 @@ $(document).ready(function () {
                          </div>
                     </div>`;
 
-                    if (parseInt(key) !== (upsell.plans.length - 1)) {
+                    if (parseInt(key) !== upsell.plans.length - 1) {
                         data += `<hr class="plan-separator">`;
                     }
                 }
 
-                $('#div-upsell-products').append(data);
+                $("#div-upsell-products").append(data);
 
-                $('#modal-view-upsell-config').modal('show');
-            }
+                $("#modal-view-upsell-config").modal("show");
+            },
         });
-
     });
 
     function setIntervalAndExecute(fn, t) {
         fn();
-        return (setInterval(fn, t));
+        return setInterval(fn, t);
     }
 
     function startCountdown(countdownTime) {
-
         let countdown = new Date().getTime() + countdownTime * 60000;
 
         if (countdownInterval !== null) {
@@ -691,8 +712,8 @@ $(document).ready(function () {
             if (distance > 0) {
                 let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                $('#minutes').text(minutes.toString().padStart(2, '0'));
-                $('#seconds').text(seconds.toString().padStart(2, '0'));
+                $("#minutes").text(minutes.toString().padStart(2, "0"));
+                $("#seconds").text(seconds.toString().padStart(2, "0"));
             } else {
                 countdown = new Date().getTime() + countdownTime * 60000;
             }

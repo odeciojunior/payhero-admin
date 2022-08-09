@@ -13,8 +13,11 @@ class AddTypeEnumToTicketAttachments extends Migration
      */
     public function up()
     {
-        Schema::table('ticket_attachments', function (Blueprint $table) {
-            $table->integer('type_enum')->default(1)->after('file');
+        Schema::table("ticket_attachments", function (Blueprint $table) {
+            $table
+                ->integer("type_enum")
+                ->default(1)
+                ->after("file");
         });
     }
 
@@ -25,8 +28,8 @@ class AddTypeEnumToTicketAttachments extends Migration
      */
     public function down()
     {
-        Schema::table('ticket_attachments', function (Blueprint $table) {
-            $table->dropColumn('type_enum');
+        Schema::table("ticket_attachments", function (Blueprint $table) {
+            $table->dropColumn("type_enum");
         });
     }
 }

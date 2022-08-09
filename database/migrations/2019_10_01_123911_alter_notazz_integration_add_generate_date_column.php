@@ -12,8 +12,11 @@ class AlterNotazzIntegrationAddGenerateDateColumn extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->dateTime('retroactive_generated_date')->after('start_date')->nullable();
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table
+                ->dateTime("retroactive_generated_date")
+                ->after("start_date")
+                ->nullable();
         });
     }
 
@@ -23,8 +26,8 @@ class AlterNotazzIntegrationAddGenerateDateColumn extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->dropColumn('retroactive_generated_date');
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table->dropColumn("retroactive_generated_date");
         });
     }
 }

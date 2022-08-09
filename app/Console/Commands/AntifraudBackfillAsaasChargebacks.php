@@ -17,14 +17,14 @@ class AntifraudBackfillAsaasChargebacks extends Command
      *
      * @var string
      */
-    protected $signature = 'antifraud:backfill-asaas-chargebacks';
+    protected $signature = "antifraud:backfill-asaas-chargebacks";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -43,34 +43,28 @@ class AntifraudBackfillAsaasChargebacks extends Command
      */
     public function handle()
     {
-
         try {
             $salesQuery = Sale::query()
-                ->select('sales.*')
-                ->with('saleInformations')
-                ->join('sale_contestations', 'sale_id', '=', 'sales.id')
-                ->where('sale_contestations.gateway_id', Gateway::ASAAS_PRODUCTION_ID)
-                ->where('sale_contestations.status', SaleContestation::STATUS_LOST)
-                ->where('sales.status', Sale::STATUS_CHARGEBACK)
-                ->whereNotIn(
-                    'sales.id',
-                    function ($query) {
-                        $query->select('sale_id')->from('antifraud_warnings')->where(
-                            'status',
-                            AntifraudWarning::STATUS_FRAUD_CONFIRMED
-                        );
-                    }
-                );
+                ->select("sales.*")
+                ->with("saleInformations")
+                ->join("sale_contestations", "sale_id", "=", "sales.id")
+                ->where("sale_contestations.gateway_id", Gateway::ASAAS_PRODUCTION_ID)
+                ->where("sale_contestations.status", SaleContestation::STATUS_LOST)
+                ->where("sales.status", Sale::STATUS_CHARGEBACK)
+                ->whereNotIn("sales.id", function ($query) {
+                    $query
+                        ->select("sale_id")
+                        ->from("antifraud_warnings")
+                        ->where("status", AntifraudWarning::STATUS_FRAUD_CONFIRMED);
+                });
 
             $antifraudService = new CloudfoxAntifraudService();
             foreach ($salesQuery->get() as $sale) {
                 $this->line($sale->id);
                 $antifraudService->updateConfirmedFraudData($sale);
             }
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

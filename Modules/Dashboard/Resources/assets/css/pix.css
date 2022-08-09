@@ -8,7 +8,7 @@
 }
 
 .modal-pix-onboarding #header-onboarding-1 {
-    background-color: #F3F7FD;
+    background-color: #f3f7fd;
 
     border-radius: 16px 16px 50% 50%;
     margin-bottom: 2rem;
@@ -29,16 +29,16 @@
     width: 10px;
     height: 10px;
     margin: 0 5px;
-    background: #E5E5E5;
+    background: #e5e5e5;
     border-radius: 50%;
 }
 
 .modal-pix-onboarding .modal-content .pages > span.active {
-    background: #2E85EC;
+    background: #2e85ec;
 }
 
 .modal-pix-onboarding #title-onboarding-1 {
-    color: #2E85EC;
+    color: #2e85ec;
     font: normal normal bold 30px Muli;
 }
 
@@ -57,12 +57,12 @@
 }
 
 #title-onboarding-2 {
-    color: #002F67;
+    color: #002f67;
     font: normal normal 900 12px Muli;
 }
 
 #sub-title-onboarding-2 {
-    color: #002F67;
+    color: #002f67;
     font: normal normal bold 30px Muli;
 
     margin-bottom: 1rem;
@@ -78,7 +78,7 @@
 .icon-onboarding-2 {
     height: 75px;
     width: 75px;
-    background: #F3F7FD;
+    background: #f3f7fd;
 
     padding: 17px;
     border-radius: 100%;
@@ -89,12 +89,12 @@
 }
 
 .summary-title-primary {
-    color: #002F67;
+    color: #002f67;
     font: normal normal bold 30px Muli;
 }
 
 .summary-title {
-    color: #2E85EC;
+    color: #2e85ec;
     font: normal normal 900 14px Muli;
 }
 
@@ -108,15 +108,15 @@
     padding: 2px 5px;
 
     font: normal normal 900 9px Muli;
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .summary-badge.new {
-    background-color: #2E85EC;
+    background-color: #2e85ec;
 }
 
 .summary-badge.soon {
-    background-color: #DBDBDB;
+    background-color: #dbdbdb;
 }
 
 #title-news-onboarding {
@@ -136,7 +136,7 @@
 }
 
 #modal-content-onboarding .img-fluid {
-    width: 300px
+    width: 300px;
 }
 
 .slick-slide {
@@ -145,7 +145,7 @@
 
 @media (max-width: 991px) {
     #modal-content-onboarding #img-onboarding.img-fluid {
-        width: 250px
+        width: 250px;
     }
 
     #modal-content-onboarding .slick-list {
@@ -175,6 +175,6 @@
 
 @media (min-width: 1200px) {
     .modal-pix-onboarding {
-        top: 15vh
+        top: 15vh;
     }
 }

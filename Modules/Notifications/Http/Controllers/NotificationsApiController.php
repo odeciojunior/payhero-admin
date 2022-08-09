@@ -26,9 +26,11 @@ class NotificationsApiController extends Controller
     public function markasread(Request $request)
     {
         try {
-            auth()->user()->unreadNotifications->markAsRead();
+            auth()
+                ->user()
+                ->unreadNotifications->markAsRead();
 
-            return response()->json(['message' => 'sucesso'], 200);
+            return response()->json(["message" => "sucesso"], 200);
         } catch (Exception $e) {
             report($e);
         }
@@ -41,11 +43,11 @@ class NotificationsApiController extends Controller
     {
         try {
             if (empty(auth()->user())) {
-                return redirect()->route('login');
+                return redirect()->route("login");
             } else {
                 return response()->json([
-                                            'qtd_notification' => count(auth()->user()->unreadNotifications),
-                                        ]);
+                    "qtd_notification" => count(auth()->user()->unreadNotifications),
+                ]);
             }
         } catch (Exception $e) {
             report($e);
@@ -62,8 +64,12 @@ class NotificationsApiController extends Controller
             $notifications = auth()->user()->unreadNotifications;
 
             if (count($notifications) < 10) {
-                $notificationsRead = auth()->user()->readNotifications()->take(10 - count($notifications))
-                                           ->orderBy('created_at', 'desc')->get();
+                $notificationsRead = auth()
+                    ->user()
+                    ->readNotifications()
+                    ->take(10 - count($notifications))
+                    ->orderBy("created_at", "desc")
+                    ->get();
                 foreach ($notificationsRead as $notificationRead) {
                     $notifications->push($notificationRead);
                 }

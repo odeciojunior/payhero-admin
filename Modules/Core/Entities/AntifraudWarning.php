@@ -39,15 +39,9 @@ class AntifraudWarning extends Model
     public const STATUS_FRAUD_CONFIRMED = 1;
     public const STATUS_FRAUD_WARNING = 2;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $fillable = [
-        'sale_id',
-        'status',
-        'column',
-        'value',
-        'level'
-    ];
+    protected $fillable = ["sale_id", "status", "column", "value", "level"];
 
     public function sale(): BelongsTo
     {

@@ -12,19 +12,22 @@ class CreateTableNotazzSentHistories extends Migration
      */
     public function up()
     {
-        Schema::create('notazz_sent_histories', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('notazz_invoice_id')->index();
-            $table->tinyInteger('sent_type_enum');
-            $table->string('url');
-            $table->text('data_sent')->nullable();
-            $table->text('response')->nullable();
+        Schema::create("notazz_sent_histories", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedBigInteger("notazz_invoice_id")->index();
+            $table->tinyInteger("sent_type_enum");
+            $table->string("url");
+            $table->text("data_sent")->nullable();
+            $table->text("response")->nullable();
 
             $table->timestamps();
         });
 
-        Schema::table('notazz_sent_histories', function(Blueprint $table) {
-            $table->foreign('notazz_invoice_id')->references('id')->on('notazz_invoices');
+        Schema::table("notazz_sent_histories", function (Blueprint $table) {
+            $table
+                ->foreign("notazz_invoice_id")
+                ->references("id")
+                ->on("notazz_invoices");
         });
     }
 
@@ -34,6 +37,6 @@ class CreateTableNotazzSentHistories extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notazz_sent_histories');
+        Schema::dropIfExists("notazz_sent_histories");
     }
 }

@@ -23,7 +23,7 @@ class ProductsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -42,12 +42,13 @@ class ProductsServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-                             __DIR__ . '/../Config/config.php' => config_path('products.php'),
-                         ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__ . '/../Config/config.php', 'products'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("products.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "products");
     }
 
     /**
@@ -56,17 +57,26 @@ class ProductsServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/products');
+        $viewPath = resource_path("views/modules/products");
 
-        $sourcePath = __DIR__ . '/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-                             $sourcePath => $viewPath,
-                         ], 'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function($path) {
-            return $path . '/modules/products';
-        }, \Config::get('view.paths')), [$sourcePath]), 'products');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/products";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "products"
+        );
     }
 
     /**
@@ -75,12 +85,12 @@ class ProductsServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/products');
+        $langPath = resource_path("lang/modules/products");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'products');
+            $this->loadTranslationsFrom($langPath, "products");
         } else {
-            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'products');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "products");
         }
     }
 
@@ -90,8 +100,8 @@ class ProductsServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (!app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

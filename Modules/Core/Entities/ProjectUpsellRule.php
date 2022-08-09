@@ -14,22 +14,22 @@ class ProjectUpsellRule extends Model
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'description',
-        'discount',
-        'use_variants',
-        'apply_on_shipping',
-        'apply_on_plans',
-        'offer_on_plans',
-        'active_flag',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "description",
+        "discount",
+        "use_variants",
+        "apply_on_shipping",
+        "apply_on_plans",
+        "offer_on_plans",
+        "active_flag",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**
@@ -40,4 +40,3 @@ class ProjectUpsellRule extends Model
         return $this->belongsTo(Project::class);
     }
 }
-

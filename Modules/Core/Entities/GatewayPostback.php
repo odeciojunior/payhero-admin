@@ -25,28 +25,27 @@ class GatewayPostback extends Model
     public const GATEWAY_BRASPAG_ENUM = 9;
     public const GATEWAY_GERENCIANET_ENUM = 10;
 
+    protected $keyType = "integer";
 
-    protected $keyType = 'integer';
-
-    protected $dates = ['deleted_at'];
+    protected $dates = ["deleted_at"];
 
     protected $fillable = [
-        'sale_id',
-        'gateway_id',
-        'reference_id',
-        'data',
-        'gateway_enum',
-        'gateway_postback_type',
-        'gateway_status',
-        'gateway_payment_type',
-        'description',
-        'amount',
-        'processed_flag',
-        'postback_valid_flag',
-        'pay_postback_flag',
-        'machine_result',
-        'created_at',
-        'updated_at',
+        "sale_id",
+        "gateway_id",
+        "reference_id",
+        "data",
+        "gateway_enum",
+        "gateway_postback_type",
+        "gateway_status",
+        "gateway_payment_type",
+        "description",
+        "amount",
+        "processed_flag",
+        "postback_valid_flag",
+        "pay_postback_flag",
+        "machine_result",
+        "created_at",
+        "updated_at",
     ];
 
     public function sale(): BelongsTo

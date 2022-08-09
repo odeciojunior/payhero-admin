@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\Core\Services;
 
 use Illuminate\Support\Facades\Log;
@@ -12,12 +11,12 @@ class TrackingmoreService
     /**
      * @var string
      */
-    const API_URL = 'https://api.trackingmore.com';
+    const API_URL = "https://api.trackingmore.com";
 
     /**
      * @var string
      */
-    const API_VERSION = 'v2';
+    const API_VERSION = "v2";
 
     /**
      * @var string
@@ -29,7 +28,7 @@ class TrackingmoreService
      */
     public function __construct()
     {
-        $this->apiKey = getenv('TRACKINGMORE_KEY') ?? '';
+        $this->apiKey = getenv("TRACKINGMORE_KEY") ?? "";
     }
 
     /**
@@ -39,7 +38,7 @@ class TrackingmoreService
      */
     public function find($trackingNumber)
     {
-        $result = $this->doRequest('/trackings/get', ['numbers' => $trackingNumber]);
+        $result = $this->doRequest("/trackings/get", ["numbers" => $trackingNumber]);
         return current($result->data->items ?? []) ?? null;
     }
 
@@ -59,13 +58,13 @@ class TrackingmoreService
         } else {
             switch (true) {
                 case preg_match('/^\d{14}$/', $trackingNumber):
-                    $carrierCode = 'dpd-brazil'; //jadlog
+                    $carrierCode = "dpd-brazil"; //jadlog
                     break;
                 case preg_match('/^[A-Z]{2}\d{9}BR$/', $trackingNumber):
-                    $carrierCode = 'brazil-correios';
+                    $carrierCode = "brazil-correios";
                     break;
-                case preg_match('/^LP00516\d{9}/', $trackingNumber);
-                    $carrierCode = 'ltexp';
+                case preg_match("/^LP00516\d{9}/", $trackingNumber):
+                    $carrierCode = "ltexp";
                     break;
                 default:
                     $carrierCode = "cainiao";
@@ -73,15 +72,15 @@ class TrackingmoreService
             }
 
             $data = [
-                'tracking_number' => $trackingNumber,
-                'carrier_code' => $carrierCode,
+                "tracking_number" => $trackingNumber,
+                "carrier_code" => $carrierCode,
             ];
 
             if ($optionalParams) {
                 $data += $optionalParams;
             }
 
-            $result = $this->doRequest('/trackings/post', $data, 'POST');
+            $result = $this->doRequest("/trackings/post", $data, "POST");
             $metaCode = $result->meta->code ?? 0;
 
             $result = $this->find($trackingNumber);
@@ -90,7 +89,7 @@ class TrackingmoreService
                 return $result;
             } else {
                 if ($metaCode == 4032 || $metaCode == 4015) {
-                    Log::error('TrackingmoreService - Cannot detect courier - ' . $trackingNumber);
+                    Log::error("TrackingmoreService - Cannot detect courier - " . $trackingNumber);
                 }
                 return null;
             }
@@ -105,7 +104,7 @@ class TrackingmoreService
      */
     public function delete($carrierCode, $trackingNumber)
     {
-        $result = $this->doRequest("/trackings/{$carrierCode}/{$trackingNumber}", [], 'DELETE');
+        $result = $this->doRequest("/trackings/{$carrierCode}/{$trackingNumber}", [], "DELETE");
 
         return $result->meta->code == 200;
     }
@@ -117,9 +116,9 @@ class TrackingmoreService
      */
     private function detectCarrier($trackingNumber)
     {
-        $data = ['tracking_number' => $trackingNumber];
+        $data = ["tracking_number" => $trackingNumber];
 
-        $result = $this->doRequest('/carriers/detect', $data, 'POST');
+        $result = $this->doRequest("/carriers/detect", $data, "POST");
 
         return $result->data[0]->code ?? null;
     }
@@ -130,7 +129,7 @@ class TrackingmoreService
      */
     public function getAllCarriers()
     {
-        return $this->doRequest('/carriers');
+        return $this->doRequest("/carriers");
     }
 
     /**
@@ -139,16 +138,16 @@ class TrackingmoreService
      * @param string $method
      * @return object
      */
-    private function doRequest($uri = '/', $data = null, $method = 'GET')
+    private function doRequest($uri = "/", $data = null, $method = "GET")
     {
-        $url = self::API_URL . '/' . self::API_VERSION . $uri;
+        $url = self::API_URL . "/" . self::API_VERSION . $uri;
 
         $curl = curl_init();
 
         $method = strtoupper($method);
 
         switch ($method) {
-            case 'GET':
+            case "GET":
                 if ($data) {
                     $url = sprintf("%s?%s", $url, http_build_query($data));
                 }
@@ -163,8 +162,8 @@ class TrackingmoreService
 
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Trackingmore-Api-Key: ' . $this->apiKey,
-            'Content-Type: application/json',
+            "Trackingmore-Api-Key: " . $this->apiKey,
+            "Content-Type: application/json",
         ]);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
@@ -192,24 +191,24 @@ class TrackingmoreService
         $trackingModel = new Tracking();
 
         switch ($status) {
-            case 'pending':
-            case 'notfound':
+            case "pending":
+            case "notfound":
             default:
-                $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
+                $statusEnum = $trackingModel->present()->getTrackingStatusEnum("posted");
                 break;
-            case 'transit':
-                $statusEnum = $trackingModel->present()->getTrackingStatusEnum('dispatched');
+            case "transit":
+                $statusEnum = $trackingModel->present()->getTrackingStatusEnum("dispatched");
                 break;
-            case 'pickup':
-                $statusEnum = $trackingModel->present()->getTrackingStatusEnum('out_for_delivery');
+            case "pickup":
+                $statusEnum = $trackingModel->present()->getTrackingStatusEnum("out_for_delivery");
                 break;
-            case 'delivered':
-                $statusEnum = $trackingModel->present()->getTrackingStatusEnum('delivered');
+            case "delivered":
+                $statusEnum = $trackingModel->present()->getTrackingStatusEnum("delivered");
                 break;
-            case 'undelivered':
-            case 'exception':
-            case 'expired':
-                $statusEnum = $trackingModel->present()->getTrackingStatusEnum('exception');
+            case "undelivered":
+            case "exception":
+            case "expired":
+                $statusEnum = $trackingModel->present()->getTrackingStatusEnum("exception");
                 break;
         }
 

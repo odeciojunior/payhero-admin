@@ -13,10 +13,12 @@ class AddColumnContestationToSaleContestationTable extends Migration
      */
     public function up()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->boolean('is_contested')->default(false)->after('reason');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table
+                ->boolean("is_contested")
+                ->default(false)
+                ->after("reason");
         });
-
     }
 
     /**
@@ -26,8 +28,8 @@ class AddColumnContestationToSaleContestationTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->dropColumn('is_contested');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table->dropColumn("is_contested");
         });
     }
 }

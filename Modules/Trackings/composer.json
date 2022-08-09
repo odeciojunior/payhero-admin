@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Trackings\\Providers\\TrackingsServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

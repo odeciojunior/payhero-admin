@@ -11,17 +11,15 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth','permission:apps']], function() {
-    Route::Resource('apps/shopify', 'ShopifyController')
-         ->only('index');
+Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
+    Route::Resource("apps/shopify", "ShopifyController")->only("index");
 
-    Route::get('apps/shopify/login/callback/', [
-        'uses' => 'ShopifyApiController@callbackShopifyIntegration',
-        'as'   => 'shopify.login.callback',
+    Route::get("apps/shopify/login/callback/", [
+        "uses" => "ShopifyApiController@callbackShopifyIntegration",
+        "as" => "shopify.login.callback",
     ]);
-
 });
 
-Route::get('apps/shopify/app/index', function(){
-    return view('shopify.shopifyapp');
+Route::get("apps/shopify/app/index", function () {
+    return view("shopify.shopifyapp");
 });

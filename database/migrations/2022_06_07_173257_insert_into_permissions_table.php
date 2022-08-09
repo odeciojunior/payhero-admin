@@ -19,18 +19,18 @@ class InsertIntoPermissionsTable extends Migration
          * Insert the permission into the database
          */
         Permission::create([
-            'name' => 'login_sirius_by_manager',
-            'title' => 'Acessar o Sirius pelo Manager',
-            'guard' => 'web'
+            "name" => "login_sirius_by_manager",
+            "title" => "Acessar o Sirius pelo Manager",
+            "guard" => "web",
         ]);
 
         /**
          * Assign permission to all Manager users
          */
-        $managerUsers = User::where('email', 'like', '%@cloudfox.net')->get();
+        $managerUsers = User::where("email", "like", "%@cloudfox.net")->get();
 
-        foreach($managerUsers as $user) {
-            $user->givePermissionTo('login_sirius_by_manager');
+        foreach ($managerUsers as $user) {
+            $user->givePermissionTo("login_sirius_by_manager");
         }
     }
 
@@ -41,6 +41,6 @@ class InsertIntoPermissionsTable extends Migration
      */
     public function down()
     {
-        Permission::where('name', 'login_sirius_by_manager')->delete();
+        Permission::where("name", "login_sirius_by_manager")->delete();
     }
 }

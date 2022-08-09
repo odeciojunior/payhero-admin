@@ -13,9 +13,8 @@ class AddHasValidTrackingToSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->boolean('has_valid_tracking')
-                ->default(false);
+        Schema::table("sales", function (Blueprint $table) {
+            $table->boolean("has_valid_tracking")->default(false);
         });
     }
 
@@ -26,8 +25,8 @@ class AddHasValidTrackingToSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('has_valid_tracking');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("has_valid_tracking");
         });
     }
 }

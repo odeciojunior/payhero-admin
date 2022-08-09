@@ -13,8 +13,11 @@ class AddColumnProcessingCostInPlansTable extends Migration
      */
     public function up()
     {
-        Schema::table('plans', function (Blueprint $table) {
-            $table->integer('processing_cost')->after('shopify_variant_id')->default(0);
+        Schema::table("plans", function (Blueprint $table) {
+            $table
+                ->integer("processing_cost")
+                ->after("shopify_variant_id")
+                ->default(0);
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnProcessingCostInPlansTable extends Migration
      */
     public function down()
     {
-        Schema::table('plans', function (Blueprint $table) {
-            $table->dropColumn(['processing_cost']);
+        Schema::table("plans", function (Blueprint $table) {
+            $table->dropColumn(["processing_cost"]);
         });
     }
 }

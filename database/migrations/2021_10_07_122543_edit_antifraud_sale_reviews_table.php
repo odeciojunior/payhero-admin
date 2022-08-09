@@ -13,11 +13,17 @@ class EditAntifraudSaleReviewsTable extends Migration
      */
     public function up()
     {
-        Schema::table('antifraud_sale_reviews', function (Blueprint $table) {
-            $table->unsignedBigInteger('sale_id')->change();
-            $table->unsignedInteger('user_id')->change();
-            $table->foreign('sale_id')->references('id')->on('sales');
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("antifraud_sale_reviews", function (Blueprint $table) {
+            $table->unsignedBigInteger("sale_id")->change();
+            $table->unsignedInteger("user_id")->change();
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 

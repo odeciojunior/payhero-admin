@@ -13,17 +13,17 @@ class ProjectReviewsStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id'     => 'required',
-            'apply_on_plans' => 'required|array',
-            'photo'          => 'nullable',
-            'name'           => 'required',
-            'description'    => 'required',
-            'stars'          => 'required',
-            'active_flag'    => 'required|int',
-            'photo_w'        => 'nullable',
-            'photo_h'        => 'nullable',
-            'photo_x1'       => 'nullable',
-            'photo_y1'       => 'nullable',
+            "project_id" => "required",
+            "apply_on_plans" => "required|array",
+            "photo" => "nullable",
+            "name" => "required",
+            "description" => "required",
+            "stars" => "required",
+            "active_flag" => "required|int",
+            "photo_w" => "nullable",
+            "photo_h" => "nullable",
+            "photo_x1" => "nullable",
+            "photo_y1" => "nullable",
         ];
     }
 
@@ -39,8 +39,8 @@ class ProjectReviewsStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'description.required'    => 'O campo Descrição é obrigatório',
-            'apply_on_plans.required' => 'Necessário informar em quais planos o review irá ser exibido'
+            "description.required" => "O campo Descrição é obrigatório",
+            "apply_on_plans.required" => "Necessário informar em quais planos o review irá ser exibido",
         ];
     }
 }

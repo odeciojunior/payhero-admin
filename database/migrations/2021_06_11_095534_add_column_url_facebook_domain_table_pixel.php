@@ -13,14 +13,12 @@ class AddColumnUrlFacebookDomainTablePixel extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->string('url_facebook_domain')
-                    ->nullable()
-                    ->after('facebook_token');
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->string("url_facebook_domain")
+                ->nullable()
+                ->after("facebook_token");
+        });
     }
 
     /**
@@ -30,11 +28,8 @@ class AddColumnUrlFacebookDomainTablePixel extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->dropColumn(['url_facebook_domain']);
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn(["url_facebook_domain"]);
+        });
     }
 }

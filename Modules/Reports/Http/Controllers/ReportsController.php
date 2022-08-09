@@ -27,46 +27,46 @@ class ReportsController extends Controller
      */
     public function resume()
     {
-        return view('reports::resume');
+        return view("reports::resume");
     }
 
     public function sales()
     {
-        return view('reports::sales');
+        return view("reports::sales");
     }
 
     public function finances()
     {
-        return view('reports::finances');
+        return view("reports::finances");
     }
 
     public function marketing()
     {
-        return view('reports::marketing');
+        return view("reports::marketing");
     }
 
     public function checkouts()
     {
-        return view('reports::checkouts');
+        return view("reports::checkouts");
     }
 
     public function projections()
     {
-        return view('reports::projections');
+        return view("reports::projections");
     }
 
     public function coupons()
     {
-        return view('reports::coupons');
+        return view("reports::coupons");
     }
 
     public function pending()
     {
-        return view('reports::pending');
+        return view("reports::pending");
     }
 
     public function blockedbalance()
     {
-        return view('reports::blockedbalance');
+        return view("reports::blockedbalance");
     }
 }

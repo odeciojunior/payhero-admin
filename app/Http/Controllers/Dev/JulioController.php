@@ -48,7 +48,6 @@ use Modules\Core\Services\ProjectNotificationService;
 
 class JulioController extends Controller
 {
-
     public function julioFunction()
     {
         $this->checkPaidBoletos();
@@ -63,9 +62,11 @@ class JulioController extends Controller
         // $this->checkPaidBoletos();
     }
 
-    public function checkPaidBoletos(){
-
-        $sales = Sale::where('status', 20)->whereNotNull('upsell_id')->get();
+    public function checkPaidBoletos()
+    {
+        $sales = Sale::where("status", 20)
+            ->whereNotNull("upsell_id")
+            ->get();
 
         echo "<table>";
         echo "<thead>";
@@ -73,7 +74,7 @@ class JulioController extends Controller
         echo "<th>Transação original</th>";
         echo "</thead>";
         echo "<tbody>";
-        foreach($sales as $sale){
+        foreach ($sales as $sale) {
             echo "<tr>";
             echo "<td>" . Hashids::encode($sale->id) . "</td>";
             echo "<td>" . Hashids::encode($sale->upsell_id) . "</td>";
@@ -85,35 +86,40 @@ class JulioController extends Controller
         // dd($sales->with('transactions')->limit(10)->get()->toArray());
     }
 
-    public function checkTransactions(){
-
+    public function checkTransactions()
+    {
         $transactionModel = new Transaction();
-        $transferModel    = new Transfer();
+        $transferModel = new Transfer();
 
-        $transactions = $transactionModel->where([
-            ['release_date', '>=', Carbon::now()->subDays('5')->format('Y-m-d')],
-            ['status', 'transfered']
-        ])
-        ->whereHas('transfers', null, '>', 1);
+        $transactions = $transactionModel
+            ->where([
+                [
+                    "release_date",
+                    ">=",
+                    Carbon::now()
+                        ->subDays("5")
+                        ->format("Y-m-d"),
+                ],
+                ["status", "transfered"],
+            ])
+            ->whereHas("transfers", null, ">", 1);
 
         $totalValue = 0;
         $realValue = 0;
         $wrongValue = 0;
 
-        foreach($transactions->cursor() as $key => $transaction){
-
-            if($key % 300 == 0){
+        foreach ($transactions->cursor() as $key => $transaction) {
+            if ($key % 300 == 0) {
                 dump($key);
             }
 
             $value = 0;
-            foreach($transaction->transfers as $key => $transfer){
+            foreach ($transaction->transfers as $key => $transfer) {
                 $totalValue += $transfer->value;
 
-                if($key > 0){
+                if ($key > 0) {
                     $value += $transfer->value;
-                }
-                else{
+                } else {
                     $realValue += $transfer->value;
                 }
             }
@@ -134,52 +140,54 @@ class JulioController extends Controller
             //                'type'           => 'out',
             //                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
             //            ]);
-
         }
 
         dd(
-            number_format(intval($totalValue) / 100, 2, ',', '.'),
-            number_format(intval($realValue) / 100, 2, ',', '.'),
-            number_format(intval($wrongValue) / 100, 2, ',', '.')
-           );
-
+            number_format(intval($totalValue) / 100, 2, ",", "."),
+            number_format(intval($realValue) / 100, 2, ",", "."),
+            number_format(intval($wrongValue) / 100, 2, ",", ".")
+        );
     }
 
-    public function restartShopifyWebhooks(){
-
+    public function restartShopifyWebhooks()
+    {
         $webHooksUpdated = 0;
 
-        foreach(ShopifyIntegration::all() as $shopifyIntegration){
+        foreach (ShopifyIntegration::all() as $shopifyIntegration) {
+            try {
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-            try{
-                $shopifyService = new ShopifyService($shopifyIntegration->url_store,$shopifyIntegration->token);
-
-                if(count($shopifyService->getShopWebhook()) != 3){
-
+                if (count($shopifyService->getShopWebhook()) != 3) {
                     $shopifyService->deleteShopWebhook();
 
                     $this->createShopWebhook([
-                        "topic"   => "products/create",
-                        "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
-                        "format"  => "json",
+                        "topic" => "products/create",
+                        "address" =>
+                            "https://sirius.cloudfox.net/postback/shopify/" .
+                            Hashids::encode($shopifyIntegration->project_id),
+                        "format" => "json",
                     ]);
 
                     $this->createShopWebhook([
-                        "topic"   => "products/update",
-                        "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
-                        "format"  => "json",
+                        "topic" => "products/update",
+                        "address" =>
+                            "https://sirius.cloudfox.net/postback/shopify/" .
+                            Hashids::encode($shopifyIntegration->project_id),
+                        "format" => "json",
                     ]);
 
                     $this->createShopWebhook([
-                        "topic"   => "orders/updated",
-                        "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
-                        "format"  => "json",
+                        "topic" => "orders/updated",
+                        "address" =>
+                            "https://sirius.cloudfox.net/postback/shopify/" .
+                            Hashids::encode($shopifyIntegration->project_id) .
+                            "/tracking",
+                        "format" => "json",
                     ]);
 
                     $webHooksUpdated++;
                 }
-            }
-            catch(\Exception $e){
+            } catch (\Exception $e) {
                 // dump($e);
             }
 
@@ -187,26 +195,24 @@ class JulioController extends Controller
         }
     }
 
-    public function testSms($data){
-
+    public function testSms($data)
+    {
         event(new SendSmsEvent($data));
     }
 
-    public function createProjectNotifications(){
-
+    public function createProjectNotifications()
+    {
         $projectNotificationService = new ProjectNotificationService();
 
-        foreach(Project::whereDoesntHave('notifications')->get() as $project){
-
-            if(count($project->notifications) == 0){
+        foreach (Project::whereDoesntHave("notifications")->get() as $project) {
+            if (count($project->notifications) == 0) {
                 $projectNotificationService->createProjectNotificationDefault($project->id);
             }
-
         }
     }
 
-    public function editShpoifyStatusOrder(){
-
+    public function editShpoifyStatusOrder()
+    {
         // $shopifyIntegrationModel = new ShopifyIntegration();
 
         // $sales = Sale::whereHas('project.shopifyIntegrations', function ($query) {
@@ -242,37 +248,35 @@ class JulioController extends Controller
         //         $this->line("Erro ao atualizar pedido no shopify " . $sale->id . ' erro ' . $e->getMessage());
         //     }
 
-            // try{
-            //     $this->line('Gerando pedido na venda ' . $sale->id);
+        // try{
+        //     $this->line('Gerando pedido na venda ' . $sale->id);
 
-            //     $shopifyIntegration = $sale->project->shopifyIntegrations->first();
+        //     $shopifyIntegration = $sale->project->shopifyIntegrations->first();
 
-            //     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+        //     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-            //     $shopifyService->newOrder($sale);
-            // }
-            // catch(Exception $e){
-            //     $this->line('Erro ao gerar pedido na venda ' . $sale->id . ' Erro: ' . $e->getMessage());
-            // }
-
+        //     $shopifyService->newOrder($sale);
+        // }
+        // catch(Exception $e){
+        //     $this->line('Erro ao gerar pedido na venda ' . $sale->id . ' Erro: ' . $e->getMessage());
+        // }
     }
 
-    public function updateShopifyBoletos(){
-
+    public function updateShopifyBoletos()
+    {
         $shopifyIntegrationModel = new ShopifyIntegration();
 
-        $sales = Sale::whereBetween('end_date', ['2020-05-15 00:00:00', '2020-05-21 23:59:59'])
-                        ->where('project_id', 2417)
-                        ->where('status', 1)
-                        ->where('payment_method', 2)
-                        ->orderBy('id','desc')
-                        ->get();
+        $sales = Sale::whereBetween("end_date", ["2020-05-15 00:00:00", "2020-05-21 23:59:59"])
+            ->where("project_id", 2417)
+            ->where("status", 1)
+            ->where("payment_method", 2)
+            ->orderBy("id", "desc")
+            ->get();
 
         $x = 1;
 
-        foreach($sales as $sale){
-
-            $shopifyIntegration = $shopifyIntegrationModel->where('project_id', $sale->project_id)->first();
+        foreach ($sales as $sale) {
+            $shopifyIntegration = $shopifyIntegrationModel->where("project_id", $sale->project_id)->first();
 
             try {
                 $this->line($x++ . "-> Atualizando pedido no shopify " . $sale->id);
@@ -280,17 +284,17 @@ class JulioController extends Controller
                 $credential = new PublicAppCredential($shopifyIntegration->token);
 
                 $client = new Client($credential, $shopifyIntegration->url_store, [
-                    'metaCacheDir' => '/var/tmp',
+                    "metaCacheDir" => "/var/tmp",
                 ]);
 
                 $client->getTransactionManager()->create($sale->shopify_order, [
-                    "kind"    => "sale",
-                    "source"  => "external",
+                    "kind" => "sale",
+                    "source" => "external",
                     "gateway" => "cloudfox",
-                    "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                    "authorization" => Hashids::connection("sale_id")->encode($sale->id),
                 ]);
             } catch (Exception $e) {
-                $this->line("Erro ao atualizar pedido no shopify " . $sale->id . ' erro ' . $e->getMessage());
+                $this->line("Erro ao atualizar pedido no shopify " . $sale->id . " erro " . $e->getMessage());
             }
         }
     }
@@ -336,34 +340,34 @@ class JulioController extends Controller
         //             $this->line('Erro ao atualizar record!');
         //         }
 
-                // sac
-                // $domainRecord = collect($records)->first(function ($item) {
-                //     if (Str::contains($item->name, 'sac.')) {
-                //         return $item;
-                //     }
-                // });
-                // if(empty($domainRecord)){
-                //     $this->warn('Record não encontrado');
-                //     continue;
-                // }
+        // sac
+        // $domainRecord = collect($records)->first(function ($item) {
+        //     if (Str::contains($item->name, 'sac.')) {
+        //         return $item;
+        //     }
+        // });
+        // if(empty($domainRecord)){
+        //     $this->warn('Record não encontrado');
+        //     continue;
+        // }
 
-                // $data = [
-                //     'type'    => $domainRecord->type,
-                //     'name'    => 'sac3',
-                //     'content' => $domainRecord->content,
-                //     'proxied' => true,
-                // ];
+        // $data = [
+        //     'type'    => $domainRecord->type,
+        //     'name'    => 'sac3',
+        //     'content' => $domainRecord->content,
+        //     'proxied' => true,
+        // ];
 
-                // $updated = $cloudflareService->updateRecordDetails($domain->cloudflare_domain_id, $domainRecord->id, $data);
+        // $updated = $cloudflareService->updateRecordDetails($domain->cloudflare_domain_id, $domainRecord->id, $data);
 
-                // if ($updated) {
-                //     $this->line('Record checkout atualizado!');
-                //     $recordId = $cloudflareService->addRecord("CNAME", 'sac', 'CloudfoxSuit-SAC-Balance-1972915763.us-east-1.elb.amazonaws.com');
-                //     $this->line('Novo record criado: ' . $recordId);
-                // }
-                // else{
-                //     $this->line('Erro ao atualizar record!');
-                // }
+        // if ($updated) {
+        //     $this->line('Record checkout atualizado!');
+        //     $recordId = $cloudflareService->addRecord("CNAME", 'sac', 'CloudfoxSuit-SAC-Balance-1972915763.us-east-1.elb.amazonaws.com');
+        //     $this->line('Novo record criado: ' . $recordId);
+        // }
+        // else{
+        //     $this->line('Erro ao atualizar record!');
+        // }
 
         //     } catch (\Exception $e) {
         //         $this->error($e->getMessage());
@@ -372,43 +376,52 @@ class JulioController extends Controller
         // $this->info('ACABOOOOOOOOOOOOOU!');
     }
 
-    public function checkAntifraude(){
-
-        $sales = Sale::whereHas('saleLogs',function($query){
-            $query->where('status_enum',20);
-        })->whereDate('created_at', '>=',Carbon::now()->subDays(3)->toDateString())
-        ->get();
+    public function checkAntifraude()
+    {
+        $sales = Sale::whereHas("saleLogs", function ($query) {
+            $query->where("status_enum", 20);
+        })
+            ->whereDate(
+                "created_at",
+                ">=",
+                Carbon::now()
+                    ->subDays(3)
+                    ->toDateString()
+            )
+            ->get();
 
         $approved = 0;
         $reproved = 0;
         $total = 0;
-        foreach($sales as $sale){
-            if($sale->status == 1){
+        foreach ($sales as $sale) {
+            if ($sale->status == 1) {
                 $approved++;
                 $total++;
             }
-            if($sale->status == 21){
+            if ($sale->status == 21) {
                 $reproved++;
                 $total++;
             }
         }
 
-        dd('total ' . $total . ' aprovado ' . $approved . ' reprovado '. $reproved);
-
+        dd("total " . $total . " aprovado " . $approved . " reprovado " . $reproved);
     }
 
-    public function approveShopifyOrderAntifraud() {
+    public function approveShopifyOrderAntifraud()
+    {
         //command
 
         $salesModel = new Sale();
 
-        $sales = $salesModel->with(['project.shopifyIntegrations'])
-            ->where('status', $salesModel->present()->getStatus('approved'))
-            ->where('payment_method', $salesModel->present()->getPaymentType('credit_card'))
-            ->whereNotNull('shopify_order')
-            ->whereHas('saleLogs', function ($query) use ($salesModel) {
-                $query->where('status_enum', $salesModel->present()->getStatus('in_review'));
-            })->get();
+        $sales = $salesModel
+            ->with(["project.shopifyIntegrations"])
+            ->where("status", $salesModel->present()->getStatus("approved"))
+            ->where("payment_method", $salesModel->present()->getPaymentType("credit_card"))
+            ->whereNotNull("shopify_order")
+            ->whereHas("saleLogs", function ($query) use ($salesModel) {
+                $query->where("status_enum", $salesModel->present()->getStatus("in_review"));
+            })
+            ->get();
 
         $shopifyStores = [];
 
@@ -428,23 +441,29 @@ class JulioController extends Controller
                     $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
                     $shopifyStores[$project->id] = $shopifyService;
                 } else {
-                    $this->warn('Nenhuma integração encontrada para este projeto');
+                    $this->warn("Nenhuma integração encontrada para este projeto");
                     continue;
                 }
             }
 
             try {
-                $order = $shopifyService->getClient()->getOrderManager()->find($sale->shopify_order);
-                if ($order->getFinancialStatus() == 'pending') {
+                $order = $shopifyService
+                    ->getClient()
+                    ->getOrderManager()
+                    ->find($sale->shopify_order);
+                if ($order->getFinancialStatus() == "pending") {
                     $data = [
                         "kind" => "capture",
                         "gateway" => "cloudfox",
-                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                        "authorization" => Hashids::connection("sale_id")->encode($sale->id),
                     ];
-                    $shopifyService->getClient()->getTransactionManager()->create($sale->shopify_order, $data);
+                    $shopifyService
+                        ->getClient()
+                        ->getTransactionManager()
+                        ->create($sale->shopify_order, $data);
                     $ordersApproved++;
 
-                    $this->info('Order criada no shopify');
+                    $this->info("Order criada no shopify");
                 }
             } catch (Exception $e) {
                 $this->error($e->getMessage());
@@ -454,5 +473,3 @@ class JulioController extends Controller
         $this->info("{$ordersApproved} orders aprovadas no shopify de {$total} vendas verificadas");
     }
 }
-
-

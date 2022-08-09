@@ -13,14 +13,14 @@ class DeleteColumnsBankAccountFromCompanies extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('bank');
-            $table->dropColumn('agency');
-            $table->dropColumn('agency_digit');
-            $table->dropColumn('account');
-            $table->dropColumn('account_digit');
-            $table->dropColumn('has_pix_key');
-            $table->dropColumn('pix_key_situation');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("bank");
+            $table->dropColumn("agency");
+            $table->dropColumn("agency_digit");
+            $table->dropColumn("account");
+            $table->dropColumn("account_digit");
+            $table->dropColumn("has_pix_key");
+            $table->dropColumn("pix_key_situation");
         });
     }
 
@@ -31,7 +31,7 @@ class DeleteColumnsBankAccountFromCompanies extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
+        Schema::table("companies", function (Blueprint $table) {
             //
         });
     }

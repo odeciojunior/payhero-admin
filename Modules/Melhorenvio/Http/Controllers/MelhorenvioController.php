@@ -9,6 +9,6 @@ class MelhorenvioController extends Controller
 {
     public function index(Request $request)
     {
-        return view('melhorenvio::index');
+        return view("melhorenvio::index");
     }
 }

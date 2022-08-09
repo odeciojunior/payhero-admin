@@ -11,21 +11,21 @@ class AffiliatePresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'active';
+                    return "active";
                 case 2:
-                    return 'disabled';
+                    return "disabled";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'active':
+                case "active":
                     return 1;
-                case 'disabled':
+                case "disabled":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 }

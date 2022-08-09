@@ -8,50 +8,48 @@ class TransactionPresenter extends Presenter
 {
     public function getType($type)
     {
-
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:
-                    return 'cloudfox';
+                    return "cloudfox";
                 case 2:
-                    return 'producer';
+                    return "producer";
                 case 3:
-                    return 'invitation';
+                    return "invitation";
                 case 4:
-                    return 'affiliate';
+                    return "affiliate";
                 case 5:
-                    return 'partner';
+                    return "partner";
                 case 6:
-                    return 'convertaX';
+                    return "convertaX";
                 case 7:
-                    return 'refunded';
+                    return "refunded";
                 case 8:
-                    return 'cashback';
-
+                    return "cashback";
             }
 
-            return '';
+            return "";
         } else {
             switch ($type) {
-                case 'cloudfox':
+                case "cloudfox":
                     return 1;
-                case 'producer':
+                case "producer":
                     return 2;
-                case 'invitation':
+                case "invitation":
                     return 3;
-                case 'affiliate':
+                case "affiliate":
                     return 4;
-                case 'partner':
+                case "partner":
                     return 5;
-                case 'convertaX':
+                case "convertaX":
                     return 6;
-                case 'refunded':
+                case "refunded":
                     return 7;
-                 case 'cashback':
+                case "cashback":
                     return 8;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -60,62 +58,61 @@ class TransactionPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'transfered';
+                    return "transfered";
                 case 2:
-                    return 'paid';
+                    return "paid";
                 case 3:
-                    return 'pending';
+                    return "pending";
                 case 4:
-                    return 'chargedback';
+                    return "chargedback";
                 case 5:
-                    return 'canceled';
+                    return "canceled";
                 case 6:
-                    return 'refunded';
+                    return "refunded";
                 case 7:
-                    return 'refused';
+                    return "refused";
                 case 8:
-                    return 'pending_antifraud';
+                    return "pending_antifraud";
                 case 9:
-                    return 'canceled_antifraud';
+                    return "canceled_antifraud";
                 case 10:
-                    return 'waiting_withdrawal';    
+                    return "waiting_withdrawal";
                 case 12:
-                    return 'anticipated';
+                    return "anticipated";
                 case 13:
-                    return 'billet_refunded';
+                    return "billet_refunded";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'transfered':
+                case "transfered":
                     return 1;
-                case 'paid':
+                case "paid":
                     return 2;
-                case 'pending':
+                case "pending":
                     return 3;
-                case 'chargedback':
+                case "chargedback":
                     return 4;
-                case 'canceled':
+                case "canceled":
                     return 5;
-                case 'refunded':
+                case "refunded":
                     return 6;
-                case 'refused':
+                case "refused":
                     return 7;
-                case 'pending_antifraud':
+                case "pending_antifraud":
                     return 8;
-                case 'canceled_antifraud':
+                case "canceled_antifraud":
                     return 9;
-                case 'waiting_withdrawal':
+                case "waiting_withdrawal":
                     return 10;
-                case 'anticipated':
+                case "anticipated":
                     return 12;
-                case 'billet_refunded':
+                case "billet_refunded":
                     return 13;
             }
 
-            return '';
+            return "";
         }
     }
 }
-

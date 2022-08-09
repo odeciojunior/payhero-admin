@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Core\Services;
-
 
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Project;
@@ -19,23 +17,22 @@ class InstallmentsService
      */
     public static function getInstallments(Project $project, $totalValue)
     {
-        $project->loadMissing('checkoutConfig.company');
+        $project->loadMissing("checkoutConfig.company");
         $checkoutConfig = $project->checkoutConfig;
 
-        $installmentValueTax = intval($totalValue / 100 * $checkoutConfig->company->installment_tax);
+        $installmentValueTax = intval(($totalValue / 100) * $checkoutConfig->company->installment_tax);
 
         $totalValue = preg_replace("/[^0-9]/", "", $totalValue);
 
-        $installmentsData = array();
+        $installmentsData = [];
 
         for ($installmentAmount = 1; $installmentAmount <= $checkoutConfig->installments_limit; $installmentAmount++) {
-
-            $installmentData = array();
+            $installmentData = [];
 
             if ($installmentAmount == 1) {
-                $installmentData['amount'] = $installmentAmount;
-                $installmentData['value'] = number_format(intval($totalValue) / 100, 2, ',', '.');
-                $installmentData['total_value'] = number_format(intval($totalValue) / 100, 2, ',', '.');
+                $installmentData["amount"] = $installmentAmount;
+                $installmentData["value"] = number_format(intval($totalValue) / 100, 2, ",", ".");
+                $installmentData["total_value"] = number_format(intval($totalValue) / 100, 2, ",", ".");
             } else {
                 if ($checkoutConfig->interest_free_installments >= $installmentAmount) {
                     $totalValueWithTax = $totalValue;
@@ -49,9 +46,9 @@ class InstallmentsService
                     continue;
                 }
 
-                $installmentData['amount'] = $installmentAmount;
-                $installmentData['value'] = number_format($installmentValue / 100, 2, ',', '.');
-                $installmentData['total_value'] = number_format(intval($totalValueWithTax) / 100, 2, ',', '.');
+                $installmentData["amount"] = $installmentAmount;
+                $installmentData["value"] = number_format($installmentValue / 100, 2, ",", ".");
+                $installmentData["total_value"] = number_format(intval($totalValueWithTax) / 100, 2, ",", ".");
             }
 
             $installmentsData[] = $installmentData;

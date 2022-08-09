@@ -12,11 +12,17 @@ class AddColumnCustomerIdOnTransfersTable extends Migration
      */
     public function up()
     {
-        Schema::table('transfers', function(Blueprint $table) {
-            $table->unsignedBigInteger('customer_id')->nullable()->after('company_id');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("customer_id")
+                ->nullable()
+                ->after("company_id");
         });
-        Schema::table('transfers', function(Blueprint $table) {
-            $table->foreign('customer_id')->references('id')->on('customers');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table
+                ->foreign("customer_id")
+                ->references("id")
+                ->on("customers");
         });
     }
 
@@ -26,9 +32,9 @@ class AddColumnCustomerIdOnTransfersTable extends Migration
      */
     public function down()
     {
-        Schema::table('transfers', function(Blueprint $table) {
-            $table->dropForeign(['customer_id']);
-            $table->dropColumn('customer_id');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->dropForeign(["customer_id"]);
+            $table->dropColumn("customer_id");
         });
     }
 }

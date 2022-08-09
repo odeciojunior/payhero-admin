@@ -13,13 +13,11 @@ class ShopifyAddIntegrationRequest extends FormRequest
     public function rules()
     {
         return [
-
-            'token'    => 'required|string|max:255',
-
+            "token" => "required|string|max:255",
         ];
     }
 
-    /** 
+    /**
      * Determine if the user is authorized to make this request.
      * @return bool
      */

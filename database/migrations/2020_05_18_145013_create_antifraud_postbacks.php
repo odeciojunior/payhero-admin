@@ -12,14 +12,26 @@ class CreateAntifraudPostbacks extends Migration
      */
     public function up()
     {
-        Schema::create('antifraud_postbacks', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('sale_id')->index()->nullable();
-            $table->unsignedBigInteger('antifraud_id')->index()->nullable();
-            $table->json('data');
-            $table->unsignedTinyInteger('processed_flag')->index()->default(0); // 0-no , 1-yes
-            $table->unsignedTinyInteger('postback_valid_flag')->index()->default(0); // 0-no , 1-yes
-            $table->json('machine_result')->nullable();
+        Schema::create("antifraud_postbacks", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table
+                ->unsignedBigInteger("sale_id")
+                ->index()
+                ->nullable();
+            $table
+                ->unsignedBigInteger("antifraud_id")
+                ->index()
+                ->nullable();
+            $table->json("data");
+            $table
+                ->unsignedTinyInteger("processed_flag")
+                ->index()
+                ->default(0); // 0-no , 1-yes
+            $table
+                ->unsignedTinyInteger("postback_valid_flag")
+                ->index()
+                ->default(0); // 0-no , 1-yes
+            $table->json("machine_result")->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +43,6 @@ class CreateAntifraudPostbacks extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('antifraud_postbacks');
+        Schema::dropIfExists("antifraud_postbacks");
     }
 }

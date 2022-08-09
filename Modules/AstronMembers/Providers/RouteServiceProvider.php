@@ -12,7 +12,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $moduleNamespace = 'Modules\AstronMembers\Http\Controllers';
+    protected $moduleNamespace = "Modules\AstronMembers\Http\Controllers";
 
     /**
      * Called before routes are registered.
@@ -47,9 +47,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware('web')
+        Route::middleware("web")
             ->namespace($this->moduleNamespace)
-            ->group(module_path('AstronMembers', '/Routes/web.php'));
+            ->group(module_path("AstronMembers", "/Routes/web.php"));
     }
 
     /**
@@ -61,9 +61,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::prefix('api')
-            ->middleware('api')
+        Route::prefix("api")
+            ->middleware("api")
             ->namespace($this->moduleNamespace)
-            ->group(module_path('AstronMembers', '/Routes/api.php'));
+            ->group(module_path("AstronMembers", "/Routes/api.php"));
     }
 }

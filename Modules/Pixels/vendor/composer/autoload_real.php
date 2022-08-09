@@ -8,8 +8,8 @@ class ComposerAutoloaderInit2e3714cd4298f412195c9eae4e4640cf
 
     public static function loadClassLoader($class)
     {
-        if ('Composer\Autoload\ClassLoader' === $class) {
-            require __DIR__ . '/ClassLoader.php';
+        if ("Composer\Autoload\ClassLoader" === $class) {
+            require __DIR__ . "/ClassLoader.php";
         }
     }
 
@@ -19,27 +19,36 @@ class ComposerAutoloaderInit2e3714cd4298f412195c9eae4e4640cf
             return self::$loader;
         }
 
-        spl_autoload_register(array('ComposerAutoloaderInit2e3714cd4298f412195c9eae4e4640cf', 'loadClassLoader'), true, true);
+        spl_autoload_register(
+            ["ComposerAutoloaderInit2e3714cd4298f412195c9eae4e4640cf", "loadClassLoader"],
+            true,
+            true
+        );
         self::$loader = $loader = new \Composer\Autoload\ClassLoader();
-        spl_autoload_unregister(array('ComposerAutoloaderInit2e3714cd4298f412195c9eae4e4640cf', 'loadClassLoader'));
+        spl_autoload_unregister(["ComposerAutoloaderInit2e3714cd4298f412195c9eae4e4640cf", "loadClassLoader"]);
 
-        $useStaticLoader = PHP_VERSION_ID >= 50600 && !defined('HHVM_VERSION') && (!function_exists('zend_loader_file_encoded') || !zend_loader_file_encoded());
+        $useStaticLoader =
+            PHP_VERSION_ID >= 50600 &&
+            !defined("HHVM_VERSION") &&
+            (!function_exists("zend_loader_file_encoded") || !zend_loader_file_encoded());
         if ($useStaticLoader) {
-            require_once __DIR__ . '/autoload_static.php';
+            require_once __DIR__ . "/autoload_static.php";
 
-            call_user_func(\Composer\Autoload\ComposerStaticInit2e3714cd4298f412195c9eae4e4640cf::getInitializer($loader));
+            call_user_func(
+                \Composer\Autoload\ComposerStaticInit2e3714cd4298f412195c9eae4e4640cf::getInitializer($loader)
+            );
         } else {
-            $map = require __DIR__ . '/autoload_namespaces.php';
+            $map = require __DIR__ . "/autoload_namespaces.php";
             foreach ($map as $namespace => $path) {
                 $loader->set($namespace, $path);
             }
 
-            $map = require __DIR__ . '/autoload_psr4.php';
+            $map = require __DIR__ . "/autoload_psr4.php";
             foreach ($map as $namespace => $path) {
                 $loader->setPsr4($namespace, $path);
             }
 
-            $classMap = require __DIR__ . '/autoload_classmap.php';
+            $classMap = require __DIR__ . "/autoload_classmap.php";
             if ($classMap) {
                 $loader->addClassMap($classMap);
             }

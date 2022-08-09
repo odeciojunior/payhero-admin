@@ -13,7 +13,9 @@ class AlterTableAsaasTransfersAddColumnIsCloudfox extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE `asaas_transfers` ADD COLUMN `is_cloudfox` TINYINT NULL DEFAULT '0' AFTER `response`;");
+        DB::statement(
+            "ALTER TABLE `asaas_transfers` ADD COLUMN `is_cloudfox` TINYINT NULL DEFAULT '0' AFTER `response`;"
+        );
     }
 
     /**

@@ -18,7 +18,7 @@ class Moonstruck extends Achievement implements AchievementCheck
                 FROM activity_log
                 WHERE subject_type = ?
                   AND log_name = ? AND subject_id = ?;';
-        $queryReturn = DB::select($sql, [User::class, 'login', $user->id]);
+        $queryReturn = DB::select($sql, [User::class, "login", $user->id]);
 
         if (count($queryReturn)) {
             $maxSequence = 0;
@@ -34,7 +34,7 @@ class Moonstruck extends Achievement implements AchievementCheck
 
                 if ($currentDate->subDays(1)->eq($beforeDate)) {
                     $sequence++;
-                    $maxSequence = ($sequence >= $maxSequence) ? $sequence : $maxSequence;
+                    $maxSequence = $sequence >= $maxSequence ? $sequence : $maxSequence;
                 } else {
                     $sequence = 1;
                 }

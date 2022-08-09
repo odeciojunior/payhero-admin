@@ -12,8 +12,8 @@ class AlterDataTypeColumnContentTableDomainRecords extends Migration
      */
     public function up()
     {
-        Schema::table('domains_records', function(Blueprint $table) {
-            $table->text('content')->change();
+        Schema::table("domains_records", function (Blueprint $table) {
+            $table->text("content")->change();
         });
     }
 
@@ -23,8 +23,8 @@ class AlterDataTypeColumnContentTableDomainRecords extends Migration
      */
     public function down()
     {
-        Schema::table('domains_records', function(Blueprint $table) {
-            $table->string('content')->change();
+        Schema::table("domains_records", function (Blueprint $table) {
+            $table->string("content")->change();
         });
     }
 }

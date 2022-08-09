@@ -13,7 +13,7 @@ class AlterTableTransfersAddColumnDeletedAt extends Migration
      */
     public function up()
     {
-        Schema::table('transfers', function (Blueprint $table) {
+        Schema::table("transfers", function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -25,8 +25,8 @@ class AlterTableTransfersAddColumnDeletedAt extends Migration
      */
     public function down()
     {
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->dropColumn('deleted_at');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->dropColumn("deleted_at");
         });
     }
 }

@@ -20,8 +20,8 @@ class AlterTableSalesChangeBoletoDueDate extends Migration
 
         DB::statement("alter table sales modify boleto_due_date timestamp default null null");
 
-        Schema::table('sales', function(Blueprint $table) {
-            $table->index('boleto_due_date');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->index("boleto_due_date");
         });
     }
 
@@ -32,8 +32,8 @@ class AlterTableSalesChangeBoletoDueDate extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dropIndex(['boleto_due_date']);
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropIndex(["boleto_due_date"]);
         });
     }
 }

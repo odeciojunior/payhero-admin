@@ -4,9 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
-    "providers": [
-        "Modules\\NotificacoesInteligentes\\Providers\\NotificacoesInteligentesServiceProvider"
-    ],
+    "providers": ["Modules\\NotificacoesInteligentes\\Providers\\NotificacoesInteligentesServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

@@ -5,10 +5,13 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return array(
-    'Modules\\Relatorios\\DataTables\\VendasDataTable' => $baseDir . '/DataTables/VendasDataTable.php',
-    'Modules\\Relatorios\\Database\\Seeders\\RelatoriosDatabaseSeeder' => $baseDir . '/Database/Seeders/RelatoriosDatabaseSeeder.php',
-    'Modules\\Relatorios\\Http\\Controllers\\RelatoriosController' => $baseDir . '/Http/Controllers/RelatoriosController.php',
-    'Modules\\Relatorios\\Providers\\RelatoriosServiceProvider' => $baseDir . '/Providers/RelatoriosServiceProvider.php',
-    'Modules\\Relatorios\\Transformers\\VendasResource' => $baseDir . '/Transformers/VendasResource.php',
-);
+return [
+    "Modules\\Relatorios\\DataTables\\VendasDataTable" => $baseDir . "/DataTables/VendasDataTable.php",
+    "Modules\\Relatorios\\Database\\Seeders\\RelatoriosDatabaseSeeder" =>
+        $baseDir . "/Database/Seeders/RelatoriosDatabaseSeeder.php",
+    "Modules\\Relatorios\\Http\\Controllers\\RelatoriosController" =>
+        $baseDir . "/Http/Controllers/RelatoriosController.php",
+    "Modules\\Relatorios\\Providers\\RelatoriosServiceProvider" =>
+        $baseDir . "/Providers/RelatoriosServiceProvider.php",
+    "Modules\\Relatorios\\Transformers\\VendasResource" => $baseDir . "/Transformers/VendasResource.php",
+];

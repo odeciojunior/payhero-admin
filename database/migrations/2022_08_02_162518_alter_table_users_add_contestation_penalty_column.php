@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEventColumnToActivityLogTable extends Migration
+class AlterTableUsersAddContestationPenaltyColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddEventColumnToActivityLogTable extends Migration
      */
     public function up()
     {
-        // Schema::table('activity_log', function (Blueprint $table) {
-        //     $table->string('event')->nullable()->after('subject_type');
-        // });
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('contestation_penalty')->after('security_reserve_rule')->default(true);
+        });
     }
 
     /**
@@ -25,8 +25,8 @@ class AddEventColumnToActivityLogTable extends Migration
      */
     public function down()
     {
-        Schema::table('activity_log', function (Blueprint $table) {
-            $table->dropColumn('event');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['contestation_penalty']);
         });
     }
 }

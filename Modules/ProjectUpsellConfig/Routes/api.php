@@ -14,19 +14,20 @@ use Illuminate\Http\Request;
 */
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        "middleware" => ["auth:api", "scopes:admin"],
     ],
-    function() {
-        Route::get('/projectupsellconfig', 'ProjectUpsellConfigApiController@index');
-        Route::get('/projectupsellconfig/{id}', 'ProjectUpsellConfigApiController@show');
-        Route::get('/projectupsellconfig/{id}/edit', 'ProjectUpsellConfigApiController@edit');
-        
-        Route::apiResource('/projectupsellconfig', 'ProjectUpsellConfigApiController')
-             ->only('store', 'destroy', 'update')
-             ->middleware('permission:projects_manage');
+    function () {
+        Route::get("/projectupsellconfig", "ProjectUpsellConfigApiController@index");
+        Route::get("/projectupsellconfig/{id}", "ProjectUpsellConfigApiController@show");
+        Route::get("/projectupsellconfig/{id}/edit", "ProjectUpsellConfigApiController@edit");
 
-        Route::post('/projectupsellconfig/previewupsell', 'ProjectUpsellConfigApiController@previewUpsell')
-             ->middleware('permission:projects');
+        Route::apiResource("/projectupsellconfig", "ProjectUpsellConfigApiController")
+            ->only("store", "destroy", "update")
+            ->middleware("permission:projects_manage");
+
+        Route::post("/projectupsellconfig/previewupsell", "ProjectUpsellConfigApiController@previewUpsell")->middleware(
+            "permission:projects"
+        );
     }
 );
 //Route::middleware('auth:api')->get('/projectupsellconfig', function (Request $request) {

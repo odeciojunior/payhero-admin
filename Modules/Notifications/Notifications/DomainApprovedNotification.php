@@ -44,7 +44,7 @@ class DomainApprovedNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ["database"];
     }
 
     /**
@@ -54,8 +54,8 @@ class DomainApprovedNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->message,
-            'project' => Hashids::encode($this->project),
+            "message" => $this->message,
+            "project" => Hashids::encode($this->project),
         ];
     }
 }

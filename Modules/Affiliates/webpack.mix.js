@@ -1,10 +1,12 @@
-const mix = require('laravel-mix');
-require('laravel-mix-merge-manifest');
+const mix = require("laravel-mix");
+require("laravel-mix-merge-manifest");
 
-mix.setPublicPath('../../public').mergeManifest();
+mix.setPublicPath("../../public").mergeManifest();
 
-mix.js(__dirname + '/Resources/assets/js/app.js', 'js/affiliates.js')
-    .sass( __dirname + '/Resources/assets/sass/app.scss', 'css/affiliates.css');
+mix.js(__dirname + "/Resources/assets/js/app.js", "js/affiliates.js").sass(
+    __dirname + "/Resources/assets/sass/app.scss",
+    "css/affiliates.css"
+);
 
 if (mix.inProduction()) {
     mix.version();

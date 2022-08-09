@@ -13,8 +13,8 @@ class AddColumnFileUserCompletedToSaleContestationTable extends Migration
      */
     public function up()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->boolean('file_user_completed')->default(false);
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table->boolean("file_user_completed")->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnFileUserCompletedToSaleContestationTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->dropColumn('file_user_completed');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table->dropColumn("file_user_completed");
         });
     }
 }

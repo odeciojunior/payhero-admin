@@ -16,41 +16,38 @@ class ProcessPostbacks implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public  $url;
-    public  $method;
-    public  $data;
+    public $url;
+    public $method;
+    public $data;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($url, $method = 'GET', $data = null)
+    public function __construct($url, $method = "GET", $data = null)
     {
         $this->url = $url;
         $this->method = $method;
         $this->data = $data;
-
     }
 
     public function tags()
     {
-        return ['process-postbacks'];
+        return ["process-postbacks"];
     }
 
     public function handle()
     {
         try {
-
             $this->runCurl($this->url, $this->method, $this->data);
-
         } catch (Exception $e) {
             report($e);
             return false;
         }
     }
 
-    public function runCurl($url, $method = 'GET', $data = null): void
+    public function runCurl($url, $method = "GET", $data = null): void
     {
         try {
             $ch = curl_init($url);

@@ -12,8 +12,8 @@ class ChangeForeingKeysTableGift extends Migration
      */
     public function up()
     {
-        Schema::table('gifts', function(Blueprint $table) {
-            $table->renameColumn('project', 'project_id');
+        Schema::table("gifts", function (Blueprint $table) {
+            $table->renameColumn("project", "project_id");
         });
     }
 
@@ -23,8 +23,8 @@ class ChangeForeingKeysTableGift extends Migration
      */
     public function down()
     {
-        Schema::table('gifts', function(Blueprint $table) {
-            $table->renameColumn('project_id', 'project');
+        Schema::table("gifts", function (Blueprint $table) {
+            $table->renameColumn("project_id", "project");
         });
     }
 }

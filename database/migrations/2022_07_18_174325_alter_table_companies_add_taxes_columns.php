@@ -13,14 +13,35 @@ class AlterTableCompaniesAddTaxesColumns extends Migration
      */
     public function up()
     {
-        Schema::table('companies',function(Blueprint $table){
-            $table->string('boleto_rule')->default('percent')->after('gateway_tax');
-            $table->string('boleto_tax')->default('6.9')->after('gateway_tax');
-            $table->string('pix_rule')->default('percent')->after('gateway_tax');
-            $table->string('pix_tax')->default('6.9')->after('gateway_tax');
-            $table->string('credit_card_rule')->default('percent')->after('gateway_tax');
-            $table->string('credit_card_tax')->default('6.9')->after('gateway_tax');
-            $table->boolean('tax_default')->default(true)->after('gateway_tax');
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->string("boleto_rule")
+                ->default("percent")
+                ->after("gateway_tax");
+            $table
+                ->string("boleto_tax")
+                ->default("6.9")
+                ->after("gateway_tax");
+            $table
+                ->string("pix_rule")
+                ->default("percent")
+                ->after("gateway_tax");
+            $table
+                ->string("pix_tax")
+                ->default("6.9")
+                ->after("gateway_tax");
+            $table
+                ->string("credit_card_rule")
+                ->default("percent")
+                ->after("gateway_tax");
+            $table
+                ->string("credit_card_tax")
+                ->default("6.9")
+                ->after("gateway_tax");
+            $table
+                ->boolean("tax_default")
+                ->default(true)
+                ->after("gateway_tax");
         });
     }
 
@@ -31,14 +52,14 @@ class AlterTableCompaniesAddTaxesColumns extends Migration
      */
     public function down()
     {
-        Schema::table('companies',function(Blueprint $table){
-            $table->dropColumn(['boleto_rule']);
-            $table->dropColumn(['boleto_tax']);
-            $table->dropColumn(['pix_rule']);
-            $table->dropColumn(['pix_tax']);
-            $table->dropColumn(['credit_card_rule']);
-            $table->dropColumn(['credit_card_tax']);
-            $table->dropColumn(['tax_default']);
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn(["boleto_rule"]);
+            $table->dropColumn(["boleto_tax"]);
+            $table->dropColumn(["pix_rule"]);
+            $table->dropColumn(["pix_tax"]);
+            $table->dropColumn(["credit_card_rule"]);
+            $table->dropColumn(["credit_card_tax"]);
+            $table->dropColumn(["tax_default"]);
         });
     }
 }

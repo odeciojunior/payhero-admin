@@ -26,25 +26,25 @@ class Whatsapp2Sent extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'whatsapp2_sent';
+    protected $table = "whatsapp2_sent";
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'whatsapp2_integration_id',
-        'data',
-        'response',
-        'sent_status',
-        'event_sale',
-        'instance_id',
-        'instance',
-        'created_at',
-        'updated_at',
+        "whatsapp2_integration_id",
+        "data",
+        "response",
+        "sent_status",
+        "event_sale",
+        "instance_id",
+        "instance",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -70,6 +70,6 @@ class Whatsapp2Sent extends Model
      */
     public function whatsapp2Integration()
     {
-        return $this->belongsTo('Modules\Core\Entities\Whatsapp2Integration');
+        return $this->belongsTo("Modules\Core\Entities\Whatsapp2Integration");
     }
 }

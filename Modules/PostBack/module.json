@@ -5,12 +5,8 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\PostBack\\Providers\\PostBackServiceProvider"
-    ],
+    "providers": ["Modules\\PostBack\\Providers\\PostBackServiceProvider"],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": ["start.php"],
     "requires": []
 }

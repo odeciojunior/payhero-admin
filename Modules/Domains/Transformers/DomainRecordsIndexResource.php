@@ -16,15 +16,14 @@ class DomainRecordsIndexResource extends JsonResource
     public function toArray($request)
     {
         $cloudFlareService = new CloudFlareService();
-        $haveEnterA        = false;
-        $registers         = [];
+        $haveEnterA = false;
+        $registers = [];
 
-        foreach ($this->resource['domainRecords'] as $record) {
-
-            if ($record->type == 'A' && $record->name == $this->resource['domain']->name) {
+        foreach ($this->resource["domainRecords"] as $record) {
+            if ($record->type == "A" && $record->name == $this->resource["domain"]->name) {
                 $haveEnterA = true;
             }
-            $subdomain = explode('.', $record->name);
+            $subdomain = explode(".", $record->name);
 
             switch ($record->content) {
                 case $cloudFlareService::shopifyIp:
@@ -43,23 +42,22 @@ class DomainRecordsIndexResource extends JsonResource
             }
 
             $newRegister = [
-                'id'                   => Hashids::encode($record->id),
-                'type'                 => $record->type,
-                'proxy'                => $record->proxy,
-                'domain_name'          => $this->resource['domain']->name,
+                "id" => Hashids::encode($record->id),
+                "type" => $record->type,
+                "proxy" => $record->proxy,
+                "domain_name" => $this->resource["domain"]->name,
                 //'name'                 => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
-                'name'                 => $record->name,
-                'content'              => substr($content, 0, 20),
-                'content_complete'     => $content,
-                'system_flag'          => $record->system_flag,
-
+                "name" => $record->name,
+                "content" => substr($content, 0, 20),
+                "content_complete" => $content,
+                "system_flag" => $record->system_flag,
             ];
 
             $registers[] = $newRegister;
         }
 
         return [
-            'domainRecords' => $registers,
+            "domainRecords" => $registers,
         ];
     }
 }

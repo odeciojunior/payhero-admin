@@ -32,19 +32,19 @@ class UpdateCompanyGetnetSendEmailListener implements ShouldQueue
             $emailService = new SendgridService();
 
             $company = $event->company;
-            $user    = $event->company->user;
+            $user = $event->company->user;
             $data = [
-                'first_name'      => explode(' ', $user->name)[0],
-                'company_name'    => $company->fantasy_name,
-                'companies_url'   => 'https://sirius.cloudfox.net/companies',
+                "first_name" => explode(" ", $user->name)[0],
+                "company_name" => $company->fantasy_name,
+                "companies_url" => "https://sirius.cloudfox.net/companies",
             ];
 
             $emailService->sendEmail(
-                'help@cloudfox.net',
-                'cloudfox',
+                "help@cloudfox.net",
+                "cloudfox",
                 $user->email,
                 $user->name,
-                'd-525d3fca7c4a4132a0892900411a06a6',
+                "d-525d3fca7c4a4132a0892900411a06a6",
                 $data
             );
         } catch (Exception $e) {
