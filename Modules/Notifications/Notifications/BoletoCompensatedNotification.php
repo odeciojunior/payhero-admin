@@ -45,7 +45,7 @@ class BoletoCompensatedNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ["database"];
     }
 
     /**
@@ -56,7 +56,7 @@ class BoletoCompensatedNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'qtd' => $this->boletoCount,
+            "qtd" => $this->boletoCount,
         ];
     }
 }

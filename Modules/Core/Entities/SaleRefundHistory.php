@@ -48,21 +48,21 @@ class SaleRefundHistory extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'refunded_amount',
-        'date_refunded',
-        'gateway_response',
-        'refund_value',
-        'user_id',
-        'refund_observation',
-        'created_at',
-        'deleted_at',
-        'updated_at',
+        "sale_id",
+        "refunded_amount",
+        "date_refunded",
+        "gateway_response",
+        "refund_value",
+        "user_id",
+        "refund_observation",
+        "created_at",
+        "deleted_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -83,9 +83,8 @@ class SaleRefundHistory extends Model
      */
     protected static $submitEmptyLogs = false;
 
-
     public function sale(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Sale');
+        return $this->belongsTo("Modules\Core\Entities\Sale");
     }
 }

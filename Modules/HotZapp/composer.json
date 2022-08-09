@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\HotZapp\\Providers\\HotZappServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

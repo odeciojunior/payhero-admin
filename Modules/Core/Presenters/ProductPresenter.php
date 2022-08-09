@@ -19,21 +19,21 @@ class ProductPresenter extends Presenter
         if (is_numeric($currency)) {
             switch ($currency) {
                 case 1:
-                    return 'BRL';
+                    return "BRL";
                 case 2:
-                    return 'USD';
+                    return "USD";
             }
 
-            return '';
+            return "";
         } else {
             switch ($currency) {
-                case 'BRL':
+                case "BRL":
                     return 1;
-                case 'USD':
+                case "USD":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -46,21 +46,21 @@ class ProductPresenter extends Presenter
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:
-                    return 'physical';
+                    return "physical";
                 case 2:
-                    return 'digital';
+                    return "digital";
             }
 
-            return '';
+            return "";
         } else {
             switch ($type) {
-                case 'physical':
+                case "physical":
                     return 1;
-                case 'digital':
+                case "digital":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -73,25 +73,25 @@ class ProductPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'analyzing';
+                    return "analyzing";
                 case 2:
-                    return 'approved';
+                    return "approved";
                 case 3:
-                    return 'refused';
+                    return "refused";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'analyzing':
+                case "analyzing":
                     return 1;
-                case 'approved':
+                case "approved":
                     return 2;
-                case 'refused':
+                case "refused":
                     return 3;
             }
 
-            return '';
+            return "";
         }
     }
 }

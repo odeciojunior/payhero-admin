@@ -18,7 +18,7 @@ class ProjectUpsellConfigServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class ProjectUpsellConfigServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('projectupsellconfig.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'projectupsellconfig'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("projectupsellconfig.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "projectupsellconfig");
     }
 
     /**
@@ -53,17 +54,26 @@ class ProjectUpsellConfigServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/projectupsellconfig');
+        $viewPath = resource_path("views/modules/projectupsellconfig");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/projectupsellconfig';
-        }, \Config::get('view.paths')), [$sourcePath]), 'projectupsellconfig');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/projectupsellconfig";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "projectupsellconfig"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class ProjectUpsellConfigServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/projectupsellconfig');
+        $langPath = resource_path("lang/modules/projectupsellconfig");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'projectupsellconfig');
+            $this->loadTranslationsFrom($langPath, "projectupsellconfig");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'projectupsellconfig');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "projectupsellconfig");
         }
     }
 
@@ -89,8 +99,8 @@ class ProjectUpsellConfigServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

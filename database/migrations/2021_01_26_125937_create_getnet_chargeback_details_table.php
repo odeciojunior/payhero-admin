@@ -13,14 +13,13 @@ class CreateGetnetChargebackDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('getnet_chargeback_details', function (Blueprint $table) {
+        Schema::create("getnet_chargeback_details", function (Blueprint $table) {
             $table->id();
-            $table->string('filters')->nullable();
-            $table->json('body')->nullable();
+            $table->string("filters")->nullable();
+            $table->json("body")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
-
     }
 
     /**
@@ -30,6 +29,6 @@ class CreateGetnetChargebackDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('getnet_chargeback_details');
+        Schema::dropIfExists("getnet_chargeback_details");
     }
 }

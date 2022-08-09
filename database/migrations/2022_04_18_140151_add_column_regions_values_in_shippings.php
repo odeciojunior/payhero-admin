@@ -13,10 +13,12 @@ class AddColumnRegionsValuesInShippings extends Migration
      */
     public function up()
     {
-        Schema::table('shippings', function (Blueprint $table) {
+        Schema::table("shippings", function (Blueprint $table) {
             //
-            $table->json('regions_values')->after('value')->nullable();
-
+            $table
+                ->json("regions_values")
+                ->after("value")
+                ->nullable();
         });
     }
 
@@ -27,10 +29,9 @@ class AddColumnRegionsValuesInShippings extends Migration
      */
     public function down()
     {
-        Schema::table('shippings', function (Blueprint $table) {
+        Schema::table("shippings", function (Blueprint $table) {
             //
-            $table->dropColumn('regions_values');
-
+            $table->dropColumn("regions_values");
         });
     }
 }

@@ -13,8 +13,11 @@ class AlterGetnetChargebacksTable extends Migration
      */
     public function up()
     {
-        Schema::table('getnet_chargebacks', function (Blueprint $table) {
-            $table->integer('tax')->after('is_debited')->default(0);
+        Schema::table("getnet_chargebacks", function (Blueprint $table) {
+            $table
+                ->integer("tax")
+                ->after("is_debited")
+                ->default(0);
         });
     }
 
@@ -25,8 +28,8 @@ class AlterGetnetChargebacksTable extends Migration
      */
     public function down()
     {
-        Schema::table('getnet_chargebacks', function (Blueprint $table) {
-            $table->dropColumn('tax');
+        Schema::table("getnet_chargebacks", function (Blueprint $table) {
+            $table->dropColumn("tax");
         });
     }
 }

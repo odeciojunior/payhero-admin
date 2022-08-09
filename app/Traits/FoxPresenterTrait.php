@@ -25,7 +25,7 @@ trait FoxPresenterTrait
      */
     public function getEnumValueByKey($enum, $key)
     {
-        return $this->enum[$enum][$key] ?? '';
+        return $this->enum[$enum][$key] ?? "";
     }
 
     /**
@@ -48,10 +48,10 @@ trait FoxPresenterTrait
      */
     public function getEnumArray($enum = null)
     {
-        $presenterEnum = ($this->enum ?? []);
-        if (empty($enum) || $enum == ['*']) {
+        $presenterEnum = $this->enum ?? [];
+        if (empty($enum) || $enum == ["*"]) {
             $enumArray = $presenterEnum;
-        } else if (is_array($enum)) {
+        } elseif (is_array($enum)) {
             $enumArray = array_intersect_key($presenterEnum, array_flip($enum));
         } else {
             $enumArray = $presenterEnum[$enum] ?? null;

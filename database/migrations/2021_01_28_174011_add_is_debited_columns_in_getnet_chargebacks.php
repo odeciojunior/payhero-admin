@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class AddIsDebitedColumnsInGetnetChargebacks extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,9 +13,15 @@ class AddIsDebitedColumnsInGetnetChargebacks extends Migration
      */
     public function up()
     {
-        Schema::table('getnet_chargebacks', function (Blueprint $table) {
-            $table->boolean('is_debited')->default(false)->after('chargeback_amount');
-            $table->date('debited_at')->nullable()->after('is_debited');
+        Schema::table("getnet_chargebacks", function (Blueprint $table) {
+            $table
+                ->boolean("is_debited")
+                ->default(false)
+                ->after("chargeback_amount");
+            $table
+                ->date("debited_at")
+                ->nullable()
+                ->after("is_debited");
         });
     }
 
@@ -27,9 +32,8 @@ class AddIsDebitedColumnsInGetnetChargebacks extends Migration
      */
     public function down()
     {
-        Schema::table('getnet_chargebacks', function (Blueprint $table) {
-            $table->dropColumn(['is_debited', 'debited_at']);
+        Schema::table("getnet_chargebacks", function (Blueprint $table) {
+            $table->dropColumn(["is_debited", "debited_at"]);
         });
     }
-
 }

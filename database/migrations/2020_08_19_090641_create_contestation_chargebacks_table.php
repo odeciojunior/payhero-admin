@@ -13,18 +13,21 @@ class CreateContestationChargebacksTable extends Migration
      */
     public function up()
     {
-        Schema::create('contestation_chargebacks', function (Blueprint $table) {
+        Schema::create("contestation_chargebacks", function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('sale_id')->unsigned();
-            $table->string('case_number',100);
-            $table->tinyInteger('status_enum');
-            $table->mediumText('data');
-            $table->text('result');
+            $table->bigInteger("sale_id")->unsigned();
+            $table->string("case_number", 100);
+            $table->tinyInteger("status_enum");
+            $table->mediumText("data");
+            $table->text("result");
             $table->timestamps();
         });
 
-        Schema::table('contestation_chargebacks', function(Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
+        Schema::table("contestation_chargebacks", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 
@@ -35,6 +38,6 @@ class CreateContestationChargebacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contestation_chargebacks');
+        Schema::dropIfExists("contestation_chargebacks");
     }
 }

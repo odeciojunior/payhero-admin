@@ -12,8 +12,11 @@ class AlterAddGatewayBilletIdentificatorSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->bigInteger("gateway_billet_identificator")->after("gateway_transaction_id")->nullable();
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->bigInteger("gateway_billet_identificator")
+                ->after("gateway_transaction_id")
+                ->nullable();
         });
     }
 
@@ -23,8 +26,8 @@ class AlterAddGatewayBilletIdentificatorSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dropColumn('gateway_billet_identificator');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("gateway_billet_identificator");
         });
     }
 }

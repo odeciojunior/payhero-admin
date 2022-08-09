@@ -12,12 +12,12 @@ class ChangeLinkHotzappSize extends Migration
      */
     public function up()
     {
-        Schema::table('hotzapp_integrations', function(Blueprint $table) {
-            $table->text('link')->change();
+        Schema::table("hotzapp_integrations", function (Blueprint $table) {
+            $table->text("link")->change();
         });
 
-        Schema::table('convertax_integrations', function(Blueprint $table) {
-            $table->text('link')->change();
+        Schema::table("convertax_integrations", function (Blueprint $table) {
+            $table->text("link")->change();
         });
     }
 
@@ -27,11 +27,11 @@ class ChangeLinkHotzappSize extends Migration
      */
     public function down()
     {
-        Schema::table('hotzapp_integrations', function(Blueprint $table) {
-            $table->string('link', 255)->change();
+        Schema::table("hotzapp_integrations", function (Blueprint $table) {
+            $table->string("link", 255)->change();
         });
-        Schema::table('convertax_integrations', function(Blueprint $table) {
-            $table->string('link', 255)->change();
+        Schema::table("convertax_integrations", function (Blueprint $table) {
+            $table->string("link", 255)->change();
         });
     }
 }

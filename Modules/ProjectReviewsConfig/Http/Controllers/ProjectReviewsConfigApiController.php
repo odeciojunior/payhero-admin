@@ -27,18 +27,24 @@ class ProjectReviewsConfigApiController extends Controller
             $projectId = current(Hashids::decode($projectId));
             if ($projectId) {
                 $projectModel = new Project();
-                $config = $projectModel->where('id', $projectId)->first();
+                $config = $projectModel->where("id", $projectId)->first();
 
                 return new ProjectReviewsConfigResource($config);
             } else {
-                return response()->json([
-                    'message' => 'Configuração da Review do Projeto não encontrado',
-                ], 404);
+                return response()->json(
+                    [
+                        "message" => "Configuração da Review do Projeto não encontrado",
+                    ],
+                    404
+                );
             }
         } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao buscar a Configuração da Review do Projeto',
-            ], 500);
+            return response()->json(
+                [
+                    "message" => "Erro ao buscar a Configuração da Review do Projeto",
+                ],
+                500
+            );
         }
     }
 
@@ -53,27 +59,36 @@ class ProjectReviewsConfigApiController extends Controller
             $projectId = current(Hashids::decode($projectId));
             $data = $request->validated();
             if (empty($projectId)) {
-                return response()->json([
-                    'message' => 'Erro ao atualizar configurações das reviews',
-                ], 404);
+                return response()->json(
+                    [
+                        "message" => "Erro ao atualizar configurações das reviews",
+                    ],
+                    404
+                );
             }
 
-            $project = Project::where('id', $projectId)->first();
+            $project = Project::where("id", $projectId)->first();
             $projectReviewsConfigUpdated = $project->update($data);
 
             if ($projectReviewsConfigUpdated) {
-                return response()->json(['message' => 'Configuração das reviews atualizado com sucesso!']);
+                return response()->json(["message" => "Configuração das reviews atualizado com sucesso!"]);
             } else {
-                return response()->json([
-                    'message' => 'Erro ao atualizar configurações das reviews',
-                ], 400);
+                return response()->json(
+                    [
+                        "message" => "Erro ao atualizar configurações das reviews",
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                'message' => 'Erro ao atualizar configurações das reviews',
-            ], 500);
+            return response()->json(
+                [
+                    "message" => "Erro ao atualizar configurações das reviews",
+                ],
+                500
+            );
         }
     }
 }

@@ -1,29 +1,28 @@
 :root {
-    --color-red: #FF3006;
+    --color-red: #ff3006;
     --color-ripple-red-0: rgba(255, 48, 6, 0);
     --color-ripple-red-3: rgba(255, 48, 6, 0.3);
-    --color-orange: #FFAF00;
+    --color-orange: #ffaf00;
     --color-ripple-orange-0: rgba(255, 175, 0, 0);
     --color-ripple-orange-3: rgba(255, 175, 0, 0.3);
-    --color-yellow: #F2CC11;
+    --color-yellow: #f2cc11;
     --color-ripple-yellow-0: rgba(242, 204, 17, 0);
     --color-ripple-yellow-3: rgba(242, 204, 17, 0.3);
-    --color-green: #1BCE68;
+    --color-green: #1bce68;
     --color-ripple-green-0: rgba(27, 206, 104, 0);
     --color-ripple-green-3: rgba(27, 206, 104, 0.3);
-    --color-dark-green: #04A74A;
+    --color-dark-green: #04a74a;
     --color-ripple-dark-green-0: rgba(4, 167, 74, 0);
     --color-ripple-dark-green-3: rgba(4, 167, 74, 0.3);
-    --color-blue: #108DEC;
+    --color-blue: #108dec;
     --color-ripple-blue-0: rgba(16, 141, 236, 0);
     --color-ripple-blue-3: rgba(16, 141, 236, 0.3);
-    --color-gray: #B8B8B8;
+    --color-gray: #b8b8b8;
     --color-ripple-gray-0: rgba(184, 184, 184, 0);
     --color-ripple-gray-3: rgba(184, 184, 184, 0.3);
 }
 
 .page.dashboard .sirius-account {
-
 }
 
 .page.dashboard .sirius-account-health {
@@ -31,15 +30,14 @@
     height: 370px;
 }
 
-
 .text-color-red {
     color: var(--color-red);
 }
 
 .bg-color-red {
     background: var(--color-red);
-    -webkit-animation: ripple-red .7s linear infinite;
-    animation: ripple-red .7s linear infinite;
+    -webkit-animation: ripple-red 0.7s linear infinite;
+    animation: ripple-red 0.7s linear infinite;
     -webkit-animation-delay: 3s;
     animation-delay: 3s;
 }
@@ -66,11 +64,10 @@
     color: var(--color-orange) !important;
 }
 
-
 .bg-color-orange {
     background: var(--color-orange);
-    -webkit-animation: ripple-orange .7s linear infinite;
-    animation: ripple-orange .7s linear infinite;
+    -webkit-animation: ripple-orange 0.7s linear infinite;
+    animation: ripple-orange 0.7s linear infinite;
     -webkit-animation-delay: 3s;
     animation-delay: 3s;
 }
@@ -99,8 +96,8 @@
 
 .bg-color-yellow {
     background: var(--color-yellow);
-    -webkit-animation: ripple-yellow .7s linear infinite;
-    animation: ripple-yellow .7s linear infinite;
+    -webkit-animation: ripple-yellow 0.7s linear infinite;
+    animation: ripple-yellow 0.7s linear infinite;
     -webkit-animation-delay: 3s;
     animation-delay: 3s;
 }
@@ -129,8 +126,8 @@
 
 .bg-color-green {
     background: var(--color-green);
-    -webkit-animation: ripple-green .7s linear infinite;
-    animation: ripple-green .7s linear infinite;
+    -webkit-animation: ripple-green 0.7s linear infinite;
+    animation: ripple-green 0.7s linear infinite;
     -webkit-animation-delay: 3s;
     animation-delay: 3s;
 }
@@ -159,8 +156,8 @@
 
 .bg-color-dark-green {
     background: var(--color-dark-green);
-    -webkit-animation: ripple-dark-green .7s linear infinite;
-    animation: ripple-dark-green .7s linear infinite;
+    -webkit-animation: ripple-dark-green 0.7s linear infinite;
+    animation: ripple-dark-green 0.7s linear infinite;
     -webkit-animation-delay: 3s;
     animation-delay: 3s;
 }
@@ -189,8 +186,8 @@
 
 .bg-color-blue {
     background: var(--color-blue);
-    -webkit-animation: ripple-blue .7s linear infinite;
-    animation: ripple-blue .7s linear infinite;
+    -webkit-animation: ripple-blue 0.7s linear infinite;
+    animation: ripple-blue 0.7s linear infinite;
     /*-webkit-animation-delay: 3s;
     animation-delay: 3s;*/
 }
@@ -219,8 +216,8 @@
 
 .bg-color-gray {
     background: var(--color-gray);
-    -webkit-animation: ripple-gray .7s linear infinite;
-    animation: ripple-gray .7s linear infinite;
+    -webkit-animation: ripple-gray 0.7s linear infinite;
+    animation: ripple-gray 0.7s linear infinite;
     -webkit-animation-delay: 3s;
     animation-delay: 3s;
 }
@@ -254,7 +251,7 @@
     font-size: 14.5px;
     text-align: left;
     letter-spacing: 0.18px;
-    color: #BFBFBF;
+    color: #bfbfbf;
 }
 
 #account-health-note > span {
@@ -268,7 +265,7 @@
     font-size: 12px;
     text-align: left;
     letter-spacing: 0px;
-    color: #A5A5A5;
+    color: #a5a5a5;
 }
 
 #card-notes {
@@ -293,7 +290,7 @@
 
 .account-health-note-description {
     font-size: 13px;
-    color: #A5A5A5;
+    color: #a5a5a5;
     text-align: left;
     letter-spacing: 0px;
     opacity: 1;
@@ -302,7 +299,7 @@
 
 .account-health-note-description-tracking {
     font-size: 11px;
-    color: #A5A5A5;
+    color: #a5a5a5;
     text-align: left;
     letter-spacing: 0px;
     opacity: 1;
@@ -318,7 +315,8 @@
     opacity: 1;
 }
 
-.tips-chargeback, .tips-chargeback > i {
+.tips-chargeback,
+.tips-chargeback > i {
     font-size: 13px;
     font-weight: bold;
     line-height: 14px;
@@ -334,15 +332,15 @@
     -webkit-text-stroke: 1.5px var(--color-blue);
 }
 
-.tips-chargeback:hover, .tips-chargeback > i:hover {
+.tips-chargeback:hover,
+.tips-chargeback > i:hover {
     color: var(--color-blue);
 }
 
-
-.empty-score > div:first-child  {
+.empty-score > div:first-child {
     height: 100%;
     width: 100%;
-    background: #EBEBEB;
+    background: #ebebeb;
     border-radius: 8px;
 }
 
@@ -361,7 +359,7 @@
     font-size: 18px;
     font-weight: 800;
     letter-spacing: 0px;
-    color: #9C9C9C;
+    color: #9c9c9c;
     line-height: 0px;
 }
 
@@ -370,7 +368,7 @@
     text-align: center;
     font-size: 12px;
     letter-spacing: 0px;
-    color: #9C9C9C;
+    color: #9c9c9c;
     line-height: 12px;
 }
 
@@ -379,13 +377,13 @@
     margin-top: 20px;
 }
 
-.empty-score > div:nth-of-type(2) > div  {
+.empty-score > div:nth-of-type(2) > div {
     height: 45px;
 }
 
-.empty-score > div:nth-of-type(2) > div > span  {
+.empty-score > div:nth-of-type(2) > div > span {
     font-size: 13px;
-    color: #A5A5A5;
+    color: #a5a5a5;
     text-align: left;
     letter-spacing: 0px;
     opacity: 1;
@@ -394,7 +392,7 @@
     white-space: nowrap;
 }
 
-.empty-score > div:nth-of-type(2) > div > div > span:first-child  {
+.empty-score > div:nth-of-type(2) > div > div > span:first-child {
     margin-right: 10px;
     width: 12px;
     height: 12px;
@@ -402,11 +400,11 @@
     content: "";
 }
 
-.empty-score > div:nth-of-type(2) > div > div > span:last-child  {
+.empty-score > div:nth-of-type(2) > div > div > span:last-child {
     /*margin-right: 15px;*/
     width: 40px;
     height: 12px;
-    background: #D8D8D8;
+    background: #d8d8d8;
     border-radius: 8px;
 }
 
@@ -421,7 +419,7 @@
 }
 
 @media (max-width: 480px) {
-    .empty-score > div:nth-of-type(2) > div > span  {
+    .empty-score > div:nth-of-type(2) > div > span {
         font-size: 12px;
     }
 
@@ -442,7 +440,7 @@
 }
 
 @media (max-width: 300px) {
-    .empty-score > div:nth-of-type(2) > div > span  {
+    .empty-score > div:nth-of-type(2) > div > span {
         font-size: 11px;
     }
 
@@ -461,7 +459,8 @@
         font-size: 11px;
     }
 
-    .tips-chargeback, .tips-chargeback > i {
+    .tips-chargeback,
+    .tips-chargeback > i {
         font-size: 12px;
     }
 
@@ -469,4 +468,3 @@
         font-size: 12px;
     }
 }
-

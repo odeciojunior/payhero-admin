@@ -13,19 +13,20 @@ class CreatePromotionalTaxesTable extends Migration
      */
     public function up()
     {
-
-        Schema::create('promotional_taxes', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->date('expiration');
-            $table->string('tax');
-            $table->string('old_tax')->nullable();
-            $table->boolean('active')->default(true);
+        Schema::create("promotional_taxes", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("user_id");
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
+            $table->date("expiration");
+            $table->string("tax");
+            $table->string("old_tax")->nullable();
+            $table->boolean("active")->default(true);
             $table->timestamps();
             $table->softDeletes();
         });
-
     }
 
     /**
@@ -35,6 +36,6 @@ class CreatePromotionalTaxesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promotional_taxes');
+        Schema::dropIfExists("promotional_taxes");
     }
 }

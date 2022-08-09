@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\DiscountCoupons\\Providers\\DiscountCouponsServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

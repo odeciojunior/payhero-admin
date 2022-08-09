@@ -14,13 +14,16 @@ class UpdateStatusUserDocumentsTable extends Migration
     public function up()
     {
         $userDocumentModel = new UserDocument();
-        $userModel         = new User();
-        $documents         = $userDocumentModel->with('user')->where('status', '=', null)->get();
+        $userModel = new User();
+        $documents = $userDocumentModel
+            ->with("user")
+            ->where("status", "=", null)
+            ->get();
         foreach ($documents as $document) {
-            if ($document->document_type_enum == $userModel->present()->getDocumentType('personal_document')) {
-                $document->update(['status' => $document->user->personal_document_status]);
+            if ($document->document_type_enum == $userModel->present()->getDocumentType("personal_document")) {
+                $document->update(["status" => $document->user->personal_document_status]);
             } else {
-                $document->update(['status' => $document->user->address_document_status]);
+                $document->update(["status" => $document->user->address_document_status]);
             }
         }
     }

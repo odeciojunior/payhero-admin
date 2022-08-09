@@ -5,9 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\Affiliates\\Providers\\AffiliatesServiceProvider"
-    ],
+    "providers": ["Modules\\Affiliates\\Providers\\AffiliatesServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Core\Events;
-
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -20,6 +18,6 @@ class UserRegisteredEvent
      */
     public function __construct($request)
     {
-            $this->request = $request;
+        $this->request = $request;
     }
 }

@@ -12,8 +12,11 @@ class AlterAnticipationsTableAddColumnPercentageAnticipable extends Migration
      */
     public function up()
     {
-        Schema::table('anticipations', function(Blueprint $table) {
-            $table->string('percentage_anticipable')->after('percentage_tax')->nullable();
+        Schema::table("anticipations", function (Blueprint $table) {
+            $table
+                ->string("percentage_anticipable")
+                ->after("percentage_tax")
+                ->nullable();
         });
     }
 
@@ -23,9 +26,8 @@ class AlterAnticipationsTableAddColumnPercentageAnticipable extends Migration
      */
     public function down()
     {
-        Schema::table('anticipations', function(Blueprint $table) {
-            $table->dropColumn('percentage_anticipable');
+        Schema::table("anticipations", function (Blueprint $table) {
+            $table->dropColumn("percentage_anticipable");
         });
     }
-
 }

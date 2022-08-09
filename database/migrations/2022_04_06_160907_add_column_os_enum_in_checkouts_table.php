@@ -13,8 +13,11 @@ class AddColumnOsEnumInCheckoutsTable extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function (Blueprint $table) {
-            $table->integer('os_enum')->after('operational_system')->default(0);
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table
+                ->integer("os_enum")
+                ->after("operational_system")
+                ->default(0);
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnOsEnumInCheckoutsTable extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function (Blueprint $table) {
-            $table->dropColumn('os_enum');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("os_enum");
         });
     }
 }

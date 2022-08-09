@@ -13,9 +13,15 @@ class AlterTableCompaniesSetAsaasColumnsNullable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('asaas_id')->nullable()->change();
-            $table->string('asaas_homolog_id')->nullable()->change();
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->string("asaas_id")
+                ->nullable()
+                ->change();
+            $table
+                ->string("asaas_homolog_id")
+                ->nullable()
+                ->change();
         });
     }
 

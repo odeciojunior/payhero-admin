@@ -13,8 +13,8 @@ class IncreaseLimitLabelTableSaleAdditionalCustomerInformations extends Migratio
      */
     public function up()
     {
-        Schema::table('sale_additional_customer_informations', function (Blueprint $table) {
-            $table->string('label', 500)->change();
+        Schema::table("sale_additional_customer_informations", function (Blueprint $table) {
+            $table->string("label", 500)->change();
         });
     }
 

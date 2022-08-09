@@ -21,7 +21,7 @@ class NotazzController extends Controller
      */
     public function index()
     {
-        return view('notazz::index');
+        return view("notazz::index");
     }
 
     /**
@@ -30,7 +30,7 @@ class NotazzController extends Controller
      */
     public function create()
     {
-        return view('notazz::create');
+        return view("notazz::create");
     }
 
     /**
@@ -40,7 +40,7 @@ class NotazzController extends Controller
      */
     public function show($id)
     {
-        return view('notazz::show');
+        return view("notazz::show");
     }
 
     /**
@@ -50,6 +50,6 @@ class NotazzController extends Controller
      */
     public function edit($id)
     {
-        return view('notazz::edit');
+        return view("notazz::edit");
     }
 }

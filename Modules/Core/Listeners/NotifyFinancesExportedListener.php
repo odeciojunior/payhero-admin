@@ -21,29 +21,35 @@ class NotifyFinancesExportedListener
     public function handle(FinancesExportedEvent $event)
     {
         try {
-            $user      = $event->user ?? null;
-            $filename  = $event->filename;
+            $user = $event->user ?? null;
+            $filename = $event->filename;
             $userEmail = !empty($event->email) ? $event->email : $user->email;
 
-            if (!str_contains($userEmail, '@cloudfox.net') ) {
+            if (!str_contains($userEmail, "@cloudfox.net")) {
                 Notification::send($user, new FinancesExportedNotification($user, $filename));
             }
 
             //Envio de e-mail
             $sendGridService = new SendgridService();
             $userName = $user->name;
-            $downloadLink = getenv('APP_URL') . "/finances/download/" . $filename;
+            $downloadLink = getenv("APP_URL") . "/finances/download/" . $filename;
 
             $data = [
-                'name' => $userName,
-                'report_name' => 'Relatório de Finanças',
-                'download_link' => $downloadLink,
+                "name" => $userName,
+                "report_name" => "Relatório de Finanças",
+                "download_link" => $downloadLink,
             ];
 
-            $sendGridService->sendEmail('help@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
-
+            $sendGridService->sendEmail(
+                "help@cloudfox.net",
+                "CloudFox",
+                $userEmail,
+                $userName,
+                "d-2279bf09c11a4bf59b951e063d274450",
+                $data
+            );
         } catch (Exception $e) {
-            Log::warning('Erro listener NotifySalesExportedListener');
+            Log::warning("Erro listener NotifySalesExportedListener");
             report($e);
         }
     }

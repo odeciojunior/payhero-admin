@@ -15,7 +15,7 @@ class CustomerPresenter extends Presenter
      */
     public function getFirstName()
     {
-        return explode(' ', $this->name)[0];
+        return explode(" ", $this->name)[0];
     }
 
     /**
@@ -23,7 +23,7 @@ class CustomerPresenter extends Presenter
      */
     public function getLastName()
     {
-        return explode(' ', $this->name)[count(explode(' ', $this->name)) - 1];
+        return explode(" ", $this->name)[count(explode(" ", $this->name)) - 1];
     }
 
     /**
@@ -33,13 +33,18 @@ class CustomerPresenter extends Presenter
     public function getTelephoneShopify()
     {
         $telephone = preg_replace("/[^0-9]/", "", $this->telephone);
-        $length    = strlen($telephone);
+        $length = strlen($telephone);
         if ($length == 11) {
-            return '+55' . $telephone;
-        } else if ($length == 12) {
-            return '+' . substr($telephone, 0, $length - 10) . substr($telephone, $length - 10, 2) . "9" . substr($telephone, $length - 8, 4) . substr($telephone, -4);
+            return "+55" . $telephone;
+        } elseif ($length == 12) {
+            return "+" .
+                substr($telephone, 0, $length - 10) .
+                substr($telephone, $length - 10, 2) .
+                "9" .
+                substr($telephone, $length - 8, 4) .
+                substr($telephone, -4);
         } else {
-            return '+' . $telephone;
+            return "+" . $telephone;
         }
     }
 
@@ -48,27 +53,55 @@ class CustomerPresenter extends Presenter
      */
     public function getFormatTelephone($ddd = false, $number = false)
     {
-        $this->telephone = preg_replace("/\D/", '', $this->telephone);
+        $this->telephone = preg_replace("/\D/", "", $this->telephone);
 
         if (!$ddd && !$number) {
-
             $length = strlen(preg_replace("/[^0-9]/", "", $this->telephone));
-            if ($length == 13) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS e 9 dígitos
-                return "+" . substr($this->telephone, 0, $length - 11) . "(" . substr($this->telephone, $length - 11, 2) . ")" . substr($this->telephone, $length - 9, 5) . "-" . substr($this->telephone, -4);
+            if ($length == 13) {
+                // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS e 9 dígitos
+                return "+" .
+                    substr($this->telephone, 0, $length - 11) .
+                    "(" .
+                    substr($this->telephone, $length - 11, 2) .
+                    ")" .
+                    substr($this->telephone, $length - 9, 5) .
+                    "-" .
+                    substr($this->telephone, -4);
             }
-            if ($length == 12) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS
-                return "+" . substr($this->telephone, 0, $length - 10) . "(" . substr($this->telephone, $length - 10, 2) . ")" . substr($this->telephone, $length - 8, 4) . "-" . substr($this->telephone, -4);
+            if ($length == 12) {
+                // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS
+                return "+" .
+                    substr($this->telephone, 0, $length - 10) .
+                    "(" .
+                    substr($this->telephone, $length - 10, 2) .
+                    ")" .
+                    substr($this->telephone, $length - 8, 4) .
+                    "-" .
+                    substr($this->telephone, -4);
             }
-            if ($length == 11) { // COM CÓDIGO DE ÁREA NACIONAL e 9 dígitos
-                return "(" . substr($this->telephone, 0, 2) . ")" . substr($this->telephone, 2, 5) . "-" . substr($this->telephone, 7, 11);
+            if ($length == 11) {
+                // COM CÓDIGO DE ÁREA NACIONAL e 9 dígitos
+                return "(" .
+                    substr($this->telephone, 0, 2) .
+                    ")" .
+                    substr($this->telephone, 2, 5) .
+                    "-" .
+                    substr($this->telephone, 7, 11);
             }
-            if ($length == 10) { // COM CÓDIGO DE ÁREA NACIONAL
-                return "(" . substr($this->telephone, 0, 2) . ")" . substr($this->telephone, 2, 4) . "-" . substr($this->telephone, 6, 10);
+            if ($length == 10) {
+                // COM CÓDIGO DE ÁREA NACIONAL
+                return "(" .
+                    substr($this->telephone, 0, 2) .
+                    ")" .
+                    substr($this->telephone, 2, 4) .
+                    "-" .
+                    substr($this->telephone, 6, 10);
             }
-            if ($length <= 9) { // SEM CÓDIGO DE ÁREA
+            if ($length <= 9) {
+                // SEM CÓDIGO DE ÁREA
                 return substr($this->telephone, 0, $length - 4) . "-" . substr($this->telephone, -4);
             }
-        } else if ($ddd) {
+        } elseif ($ddd) {
             return substr($this->telephone, 0, 2);
         } else {
             $length = strlen(preg_replace("/[^0-9]/", "", $this->telephone));
@@ -80,7 +113,7 @@ class CustomerPresenter extends Presenter
                 return substr($this->telephone, 2, 4) . "-" . substr($this->telephone, 6, 10);
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -89,7 +122,7 @@ class CustomerPresenter extends Presenter
      */
     public function getDocument()
     {
-        $this->document = preg_replace("/\D/", '', $this->document);
+        $this->document = preg_replace("/\D/", "", $this->document);
 
         if (strlen($this->document) === 11) {
             return preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", $this->document);
@@ -103,7 +136,10 @@ class CustomerPresenter extends Presenter
      */
     public function getWhatsappLink()
     {
-        return "https://api.whatsapp.com/send?phone=" . preg_replace('/[^0-9]/', '', $this->telephone) . '&text=Olá ' . $this->getFirstName();
+        return "https://api.whatsapp.com/send?phone=" .
+            preg_replace("/[^0-9]/", "", $this->telephone) .
+            "&text=Olá " .
+            $this->getFirstName();
     }
 
     /**
@@ -111,11 +147,10 @@ class CustomerPresenter extends Presenter
      */
     public function getEmail()
     {
-        if (strpos($this->email, 'invalido') !== false) {
-            $this->email = 'Email não informado';
+        if (strpos($this->email, "invalido") !== false) {
+            $this->email = "Email não informado";
         }
 
         return $this->email;
     }
 }
-

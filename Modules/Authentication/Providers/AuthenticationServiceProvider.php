@@ -25,7 +25,7 @@ class AuthenticationServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -45,12 +45,13 @@ class AuthenticationServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('authentication.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'authentication'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("authentication.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "authentication");
     }
 
     /**
@@ -60,17 +61,26 @@ class AuthenticationServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/authentication');
+        $viewPath = resource_path("views/modules/authentication");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/authentication';
-        }, \Config::get('view.paths')), [$sourcePath]), 'authentication');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/authentication";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "authentication"
+        );
     }
 
     /**
@@ -80,12 +90,12 @@ class AuthenticationServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/authentication');
+        $langPath = resource_path("lang/modules/authentication");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'authentication');
+            $this->loadTranslationsFrom($langPath, "authentication");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'authentication');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "authentication");
         }
     }
 
@@ -95,8 +105,8 @@ class AuthenticationServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

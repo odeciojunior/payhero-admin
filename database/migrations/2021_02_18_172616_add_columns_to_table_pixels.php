@@ -13,14 +13,12 @@ class AddColumnsToTablePixels extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->string('purchase_event_name')
-                    ->nullable()
-                    ->after('code_meta_tag_facebook');
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->string("purchase_event_name")
+                ->nullable()
+                ->after("code_meta_tag_facebook");
+        });
     }
 
     /**
@@ -30,11 +28,8 @@ class AddColumnsToTablePixels extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->dropColumn(['purchase_event_name']);
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn(["purchase_event_name"]);
+        });
     }
 }

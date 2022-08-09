@@ -13,8 +13,11 @@ class AddLastMessageTypeEnumToTickets extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->integer('last_message_type_enum')->default(1)->after('ticket_status_enum');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table
+                ->integer("last_message_type_enum")
+                ->default(1)
+                ->after("ticket_status_enum");
         });
     }
 
@@ -25,8 +28,8 @@ class AddLastMessageTypeEnumToTickets extends Migration
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('last_message_type_enum');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table->dropColumn("last_message_type_enum");
         });
     }
 }

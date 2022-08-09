@@ -13,7 +13,7 @@ class AddColumnDeletedAtWithdrawalsTable extends Migration
      */
     public function up()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
+        Schema::table("withdrawals", function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -25,7 +25,7 @@ class AddColumnDeletedAtWithdrawalsTable extends Migration
      */
     public function down()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
+        Schema::table("withdrawals", function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
     }

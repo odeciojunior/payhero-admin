@@ -13,9 +13,12 @@ class ChangeGatewayBilletIdentificatorOnSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->string('gateway_billet_identificator')->nullable()->change();
-            $table->index('gateway_billet_identificator');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->string("gateway_billet_identificator")
+                ->nullable()
+                ->change();
+            $table->index("gateway_billet_identificator");
         });
     }
 
@@ -26,9 +29,12 @@ class ChangeGatewayBilletIdentificatorOnSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->bigInteger('gateway_billet_identificator')->nullable()->change();
-            $table->dropIndex(['created_at']);
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->bigInteger("gateway_billet_identificator")
+                ->nullable()
+                ->change();
+            $table->dropIndex(["created_at"]);
         });
     }
 }

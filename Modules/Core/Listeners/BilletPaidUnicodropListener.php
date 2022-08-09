@@ -31,9 +31,9 @@ class BilletPaidUnicodropListener
     public function handle($event)
     {
         try {
-            $unicodropIntegration = UnicodropIntegration::where('project_id', $event->sale->project_id)
-                                                        ->where('billet_paid', 1)
-                                                        ->first();
+            $unicodropIntegration = UnicodropIntegration::where("project_id", $event->sale->project_id)
+                ->where("billet_paid", 1)
+                ->first();
 
             if (!empty($unicodropIntegration)) {
                 $unicodropService = new UnicodropService($unicodropIntegration);

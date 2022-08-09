@@ -13,10 +13,10 @@ class AddIndexesToTransfers extends Migration
      */
     public function up()
     {
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->index('value');
-            $table->index('is_refund_tax');
-            $table->index('created_at');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->index("value");
+            $table->index("is_refund_tax");
+            $table->index("created_at");
         });
     }
 
@@ -27,10 +27,10 @@ class AddIndexesToTransfers extends Migration
      */
     public function down()
     {
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->dropIndex(['value']);
-            $table->dropIndex(['created_at']);
-            $table->dropIndex(['is_refund_tax']);
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->dropIndex(["value"]);
+            $table->dropIndex(["created_at"]);
+            $table->dropIndex(["is_refund_tax"]);
         });
     }
 }

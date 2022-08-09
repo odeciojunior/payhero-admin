@@ -13,8 +13,11 @@ class AddColumnUrlExpirationTimeProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->integer('url_expiration_time')->nullable()->after('digital_product_url');
+        Schema::table("products", function (Blueprint $table) {
+            $table
+                ->integer("url_expiration_time")
+                ->nullable()
+                ->after("digital_product_url");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnUrlExpirationTimeProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('url_expiration_time');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropColumn("url_expiration_time");
         });
     }
 }

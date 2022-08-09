@@ -13,19 +13,22 @@ class CreateOrderBumpRulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_bump_rules', function (Blueprint $table) {
+        Schema::create("order_bump_rules", function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('project_id');
-            $table->text('description')->nullable();
-            $table->integer('discount');
-            $table->json('apply_on_plans')->nullable();
-            $table->json('offer_plans');
-            $table->boolean('active_flag')->default(0);
+            $table->unsignedInteger("project_id");
+            $table->text("description")->nullable();
+            $table->integer("discount");
+            $table->json("apply_on_plans")->nullable();
+            $table->json("offer_plans");
+            $table->boolean("active_flag")->default(0);
             $table->timestamps();
         });
 
-        Schema::table('order_bump_rules', function(Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
+        Schema::table("order_bump_rules", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
     }
 
@@ -36,6 +39,6 @@ class CreateOrderBumpRulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_bump_rules');
+        Schema::dropIfExists("order_bump_rules");
     }
 }

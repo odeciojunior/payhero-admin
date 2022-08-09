@@ -17,32 +17,35 @@ use Modules\Core\Entities\UserDocument;
  */
 class AccountApprovedService
 {
-
     /**
      * @param $user
      * @throws Exception
      */
     public function checkAccountIsApproved(User $user)
     {
+        if ($user->account_is_approved) {
+            return;
+        }
 
-        if ($user->account_is_approved) return;
-
-        if ($user->address_document_status == UserDocument::STATUS_APPROVED &&
-            $user->personal_document_status == UserDocument::STATUS_APPROVED) {
-            $hasCompanyPfApproved = Company::where('user_id', $user->id)
-                ->where('company_type', Company::PHYSICAL_PERSON)
+        if (
+            $user->address_document_status == UserDocument::STATUS_APPROVED &&
+            $user->personal_document_status == UserDocument::STATUS_APPROVED
+        ) {
+            $hasCompanyPfApproved = Company::where("user_id", $user->id)
+                ->where("company_type", Company::PHYSICAL_PERSON)
                 ->exists();
 
-            $hasCompanyPjApproved = Company::where('user_id', $user->id)
-                ->where('company_type', Company::JURIDICAL_PERSON)
-                ->where('address_document_status', CompanyDocument::STATUS_APPROVED)
-                ->where('contract_document_status', CompanyDocument::STATUS_APPROVED)
+            $hasCompanyPjApproved = Company::where("user_id", $user->id)
+                ->where("company_type", Company::JURIDICAL_PERSON)
+                ->where("address_document_status", CompanyDocument::STATUS_APPROVED)
+                ->where("contract_document_status", CompanyDocument::STATUS_APPROVED)
                 ->exists();
 
             if ($hasCompanyPjApproved || $hasCompanyPfApproved) {
-                DB::table('users')->where('id', $user->id)->update(['account_is_approved' => true]);
+                DB::table("users")
+                    ->where("id", $user->id)
+                    ->update(["account_is_approved" => true]);
             }
         }
-
     }
 }

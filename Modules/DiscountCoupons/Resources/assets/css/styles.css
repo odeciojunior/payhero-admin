@@ -98,7 +98,7 @@
     margin-left: 2px;
     outline: none;
 }
-.discount_radio:hover{
+.discount_radio:hover {
     outline: none !important;
 }
 
@@ -111,7 +111,7 @@ input[type="text"] {
     width: 128px !important;
 }
 
-#coupon-modals .sirius-select-text{
+#coupon-modals .sirius-select-text {
     height: 49px !important;
 }
 
@@ -193,7 +193,7 @@ input::placeholder {
     margin-right: 8px;
     width: 293px;
     height: 84px;
-    border: 1px solid #C0C1C1;
+    border: 1px solid #c0c1c1;
     box-sizing: border-box;
     border-radius: 8px;
     cursor: pointer;
@@ -242,7 +242,7 @@ input::placeholder {
     font-weight: 700;
     line-height: 18px;
     padding: 14px 32px;
-    border: 1px solid #EDEDED;
+    border: 1px solid #ededed;
 }
 
 .not-found {
@@ -300,7 +300,8 @@ input::placeholder {
     font-size: 16px;
     font-weight: 700;
 }
-.cancel-btn, .back-btn{
+.cancel-btn,
+.back-btn {
     color: #636363;
 }
 
@@ -345,8 +346,6 @@ input::placeholder {
     top: 14px;
     left: 14px;
 }
-
-
 
 .item_placeholder {
     position: relative;
@@ -567,19 +566,18 @@ input::placeholder {
 }
 
 .modal-disc .btn-edit {
-    background-color: #F4F4F4;
-    border:1px solid #f4f4f4;
+    background-color: #f4f4f4;
+    border: 1px solid #f4f4f4;
 }
 .modal-disc .btn-edit svg path {
-    fill:#2E85EC;
+    fill: #2e85ec;
 }
 
 .modal-disc .btn-edit {
-    
     width: 36px;
     height: 36px;
     background: #fff;
-    border: 1px solid #2E85EC;
+    border: 1px solid #2e85ec;
     box-sizing: border-box;
     border-radius: 8px;
     float: right;
@@ -590,10 +588,10 @@ input::placeholder {
 }
 
 .modal-disc .btn-edit:hover {
-    background: #2E85EC;
+    background: #2e85ec;
 }
-.modal-disc .btn-edit:not(:disabled):hover svg path{
-    fill:#ffffff;
+.modal-disc .btn-edit:not(:disabled):hover svg path {
+    fill: #ffffff;
 }
 
 #c-edit_step0 .mCSB_inside > .mCSB_container,
@@ -601,6 +599,7 @@ input::placeholder {
     margin-right: 0 !important;
 }
 
-#rules .mCSB_container, #rules-edit .mCSB_container {
+#rules .mCSB_container,
+#rules-edit .mCSB_container {
     padding-bottom: 108px;
 }

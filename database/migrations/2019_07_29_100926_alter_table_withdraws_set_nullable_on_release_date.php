@@ -13,8 +13,11 @@ class AlterTableWithdrawsSetNullableOnReleaseDate extends Migration
      */
     public function up()
     {
-        Schema::table('withdrawals', function(Blueprint $table) {
-            $table->string('release_date')->nullable()->change();
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table
+                ->string("release_date")
+                ->nullable()
+                ->change();
         });
     }
 
@@ -24,8 +27,8 @@ class AlterTableWithdrawsSetNullableOnReleaseDate extends Migration
      */
     public function down()
     {
-        Schema::table('withdrawals', function(Blueprint $table) {
-            $table->string('release_date');
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->string("release_date");
         });
     }
 }

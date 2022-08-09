@@ -19,21 +19,21 @@ class CurrencyQuotationPresenter extends Presenter
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:
-                    return 'BRL';
+                    return "BRL";
                 case 2:
-                    return 'USD';
+                    return "USD";
             }
 
-            return '';
+            return "";
         } else {
             switch ($type) {
-                case 'BRL':
+                case "BRL":
                     return 1;
-                case 'USD':
+                case "USD":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 }

@@ -22,13 +22,13 @@ class GatewaysCompaniesCredentialObserver
      */
     public function updated(GatewaysCompaniesCredential $gatewayCredential)
     {
-        if(!isset($gatewayCredential->company))
+        if (!isset($gatewayCredential->company)) {
             return null;
+        }
 
         $user = $gatewayCredential->company->user;
 
         $accountApprovedService = new AccountApprovedService();
         $accountApprovedService->checkAccountIsApproved($user);
-
     }
 }

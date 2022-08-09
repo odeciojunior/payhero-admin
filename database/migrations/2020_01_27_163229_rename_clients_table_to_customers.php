@@ -13,7 +13,7 @@ class RenameClientsTableToCustomers extends Migration
      */
     public function up()
     {
-        Schema::rename('clients', 'customers');
+        Schema::rename("clients", "customers");
     }
 
     /**
@@ -23,6 +23,6 @@ class RenameClientsTableToCustomers extends Migration
      */
     public function down()
     {
-        Schema::rename('customers', 'clients');
+        Schema::rename("customers", "clients");
     }
 }

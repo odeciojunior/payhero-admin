@@ -13,14 +13,11 @@ class CreateGetnetPostbacksTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'getnet_postbacks',
-            function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->json('data');
-                $table->timestamps();
-            }
-        );
+        Schema::create("getnet_postbacks", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->json("data");
+            $table->timestamps();
+        });
     }
 
     /**
@@ -30,6 +27,6 @@ class CreateGetnetPostbacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('getnet_postbacks');
+        Schema::dropIfExists("getnet_postbacks");
     }
 }

@@ -45,22 +45,19 @@ class UnderAttack extends Model
 
     const MAX_ATTEMPT = 20;
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
+    protected $dates = ["created_at", "updated_at"];
 
     protected $fillable = [
-        'domain_id',
-        'user_id',
-        'type',
-        'percentage_card_refused',
-        'start_date_card_refused',
-        'end_date_card_refused',
-        'total_refused',
-        'removed_at',
-        'created_at',
-        'updated_at',
+        "domain_id",
+        "user_id",
+        "type",
+        "percentage_card_refused",
+        "start_date_card_refused",
+        "end_date_card_refused",
+        "total_refused",
+        "removed_at",
+        "created_at",
+        "updated_at",
     ];
 
     public function domain(): BelongsTo
@@ -70,6 +67,6 @@ class UnderAttack extends Model
 
     public function domainWithTrashed()
     {
-        return $this->belongsTo(Domain::class, 'domain_id', 'id')->withTrashed();
+        return $this->belongsTo(Domain::class, "domain_id", "id")->withTrashed();
     }
 }

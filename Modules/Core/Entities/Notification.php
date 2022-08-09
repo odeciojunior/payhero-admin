@@ -23,7 +23,7 @@ class Notification extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'string';
+    protected $keyType = "string";
     /**
      * Indicates if the IDs are auto-incrementing.
      * @var bool
@@ -32,15 +32,7 @@ class Notification extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'type',
-        'notifiable_type',
-        'notifiable_id',
-        'data',
-        'read_at',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ["type", "notifiable_type", "notifiable_id", "data", "read_at", "created_at", "updated_at"];
     /**
      * @var bool
      */
@@ -66,12 +58,12 @@ class Notification extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Notificação foi deleteda.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Notificação foi atualizada.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Notificação foi criada.';
+        if ($eventName == "deleted") {
+            $activity->description = "Notificação foi deleteda.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Notificação foi atualizada.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Notificação foi criada.";
         } else {
             $activity->description = $eventName;
         }

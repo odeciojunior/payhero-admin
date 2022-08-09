@@ -13,8 +13,8 @@ class UpdateAccountOnCompanyBankAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::table('company_bank_accounts', function (Blueprint $table) {
-            $table->string('account', 15)->change();
+        Schema::table("company_bank_accounts", function (Blueprint $table) {
+            $table->string("account", 15)->change();
         });
     }
 
@@ -25,8 +25,8 @@ class UpdateAccountOnCompanyBankAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::table('company_bank_accounts', function (Blueprint $table) {
-            $table->string('account', 10)->change();
+        Schema::table("company_bank_accounts", function (Blueprint $table) {
+            $table->string("account", 10)->change();
         });
     }
 }

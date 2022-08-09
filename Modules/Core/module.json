@@ -5,12 +5,8 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\Core\\Providers\\CoreServiceProvider"
-    ],
+    "providers": ["Modules\\Core\\Providers\\CoreServiceProvider"],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": ["start.php"],
     "requires": []
 }

@@ -17,7 +17,7 @@ class SalesRecoveryServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -35,12 +35,13 @@ class SalesRecoveryServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-                             __DIR__ . '/../Config/config.php' => config_path('salesrecovery.php'),
-                         ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__ . '/../Config/config.php', 'salesrecovery'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("salesrecovery.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "salesrecovery");
     }
 
     /**
@@ -49,17 +50,26 @@ class SalesRecoveryServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/salesrecovery');
+        $viewPath = resource_path("views/modules/salesrecovery");
 
-        $sourcePath = __DIR__ . '/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-                             $sourcePath => $viewPath,
-                         ], 'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function($path) {
-            return $path . '/modules/salesrecovery';
-        }, \Config::get('view.paths')), [$sourcePath]), 'salesrecovery');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/salesrecovery";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "salesrecovery"
+        );
     }
 
     /**
@@ -68,12 +78,12 @@ class SalesRecoveryServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/salesrecovery');
+        $langPath = resource_path("lang/modules/salesrecovery");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'salesrecovery');
+            $this->loadTranslationsFrom($langPath, "salesrecovery");
         } else {
-            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'salesrecovery');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "salesrecovery");
         }
     }
 
@@ -83,8 +93,8 @@ class SalesRecoveryServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (!app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

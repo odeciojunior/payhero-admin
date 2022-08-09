@@ -12,12 +12,12 @@ class AddColumnIdwallDateUpdateToCompany extends Migration
      * @return void
      */
     public function up()
-    {        
-
-        Schema::table('companies', function (Blueprint $table) {
-            $table->date('id_wall_date_update')
+    {
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->date("id_wall_date_update")
                 ->nullable()
-                ->after('id_wall_result');
+                ->after("id_wall_result");
         });
     }
 
@@ -28,8 +28,8 @@ class AddColumnIdwallDateUpdateToCompany extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('id_wall_date_update');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("id_wall_date_update");
         });
     }
 }

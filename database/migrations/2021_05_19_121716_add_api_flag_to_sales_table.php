@@ -13,9 +13,10 @@ class AddApiFlagToSalesTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->boolean('api_flag')
-                ->after('gateway_id')
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->boolean("api_flag")
+                ->after("gateway_id")
                 ->default(false);
         });
     }
@@ -27,8 +28,8 @@ class AddApiFlagToSalesTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('api_flag');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("api_flag");
         });
     }
 }

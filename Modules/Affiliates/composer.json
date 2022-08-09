@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Affiliates\\Providers\\AffiliatesServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

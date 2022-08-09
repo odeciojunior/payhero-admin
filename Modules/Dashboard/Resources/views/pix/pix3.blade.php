@@ -1,19 +1,23 @@
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
-        <img src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
+        <img src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}"
+             width="40"
              alt="Image"> <span>Novidades</span>
     </div>
     <div class="pages">
         <span id="page-gamification"></span>
         <span id="page-account-health"></span>
-        <span id="page-news-summary" class="active"></span>
+        <span id="page-news-summary"
+              class="active"></span>
     </div>
 </div>
 <div class="modal-body">
     <div class="row">
         <div class="col-12 col-lg-7 order-lg-1 h-p100">
-            <div id="title-onboarding-2" class="text-lg-left text-center text-primary">O QUE VOCÊ PRECISA FAZER?</div>
-            <div id="sub-title-onboarding-2" class="text-center text-lg-left">
+            <div id="title-onboarding-2"
+                 class="text-lg-left text-center text-primary">O QUE VOCÊ PRECISA FAZER?</div>
+            <div id="sub-title-onboarding-2"
+                 class="text-center text-lg-left">
                 Para começar a vender com PIX, ative sua chave
             </div>
 
@@ -28,7 +32,8 @@
                     </p>
                 </div>
 
-                <div id="title-onboarding-2" class="col-12 text-lg-left text-center text-primary py-20">
+                <div id="title-onboarding-2"
+                     class="col-12 text-lg-left text-center text-primary py-20">
                     POR QUÊ PRECISO CADASTRAR MINHA CHAVE?
                 </div>
 
@@ -47,7 +52,10 @@
         </div>
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center mt-lg-5 mt-0">
-            <img class="img-fluid" alt="Image" id="img-onboarding" width="100"
+            <img class="img-fluid"
+                 alt="Image"
+                 id="img-onboarding"
+                 width="100"
                  src="{{ mix('build/global/img/pix/pix-register-key.svg') }}">
         </div>
     </div>

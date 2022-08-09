@@ -18,7 +18,7 @@ class TicketsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class TicketsServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('tickets.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'tickets'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("tickets.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "tickets");
     }
 
     /**
@@ -53,17 +54,26 @@ class TicketsServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/tickets');
+        $viewPath = resource_path("views/modules/tickets");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/tickets';
-        }, \Config::get('view.paths')), [$sourcePath]), 'tickets');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/tickets";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "tickets"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class TicketsServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/tickets');
+        $langPath = resource_path("lang/modules/tickets");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'tickets');
+            $this->loadTranslationsFrom($langPath, "tickets");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'tickets');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "tickets");
         }
     }
 
@@ -89,8 +99,8 @@ class TicketsServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

@@ -13,14 +13,20 @@ class AddFksToCheckoutConfigs extends Migration
      */
     public function up()
     {
-        Schema::table('checkout_configs', function (Blueprint $table) {
-            $table->unsignedInteger('project_id')->change();
-            $table->unsignedInteger('company_id')->change();
+        Schema::table("checkout_configs", function (Blueprint $table) {
+            $table->unsignedInteger("project_id")->change();
+            $table->unsignedInteger("company_id")->change();
         });
 
-        Schema::table('checkout_configs', function (Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
-            $table->foreign('company_id')->references('id')->on('companies');
+        Schema::table("checkout_configs", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
     }
 
@@ -31,13 +37,13 @@ class AddFksToCheckoutConfigs extends Migration
      */
     public function down()
     {
-        Schema::table('checkout_configs', function (Blueprint $table) {
-            $table->unsignedBigInteger('project_id')->change();
-            $table->unsignedBigInteger('company_id')->change();
+        Schema::table("checkout_configs", function (Blueprint $table) {
+            $table->unsignedBigInteger("project_id")->change();
+            $table->unsignedBigInteger("company_id")->change();
         });
 
-        Schema::table('checkout_configs', function (Blueprint $table) {
-            $table->dropForeign(['project_id', 'company_id']);
+        Schema::table("checkout_configs", function (Blueprint $table) {
+            $table->dropForeign(["project_id", "company_id"]);
         });
     }
 }

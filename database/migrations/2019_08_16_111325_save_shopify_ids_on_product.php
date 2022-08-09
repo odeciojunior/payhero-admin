@@ -13,9 +13,9 @@ class SaveShopifyIdsOnProduct extends Migration
      */
     public function up()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->string('shopify_id')->nullable();
-            $table->string('shopify_variant_id')->nullable();
+        Schema::table("products", function (Blueprint $table) {
+            $table->string("shopify_id")->nullable();
+            $table->string("shopify_variant_id")->nullable();
         });
     }
 
@@ -25,9 +25,9 @@ class SaveShopifyIdsOnProduct extends Migration
      */
     public function down()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->dropColumn('shopify_id');
-            $table->dropColumn('shopify_variant_id');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropColumn("shopify_id");
+            $table->dropColumn("shopify_variant_id");
         });
     }
 }

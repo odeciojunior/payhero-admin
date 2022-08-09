@@ -32,62 +32,70 @@ class SalesBlackListAntifraudApiController extends Controller
     public function index(Request $request)
     {
         try {
-            activity()->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela BlackList e AntiFraud');
+            activity()
+                ->tap(function (Activity $activity) {
+                    $activity->log_name = "visualization";
+                })
+                ->log("Visualizou tela BlackList e AntiFraud");
 
             $filters = $request->all();
 
             $companyModel = new Company();
-            $saleModel    = new Sale();
+            $saleModel = new Sale();
 
             $userId = auth()->user()->account_owner_id;
 
-            $userCompanies = $companyModel->where('user_id', $userId)
-                                          ->pluck('id')
-                                          ->toArray();
-            $sales         = $saleModel
+            $userCompanies = $companyModel
+                ->where("user_id", $userId)
+                ->pluck("id")
+                ->toArray();
+            $sales = $saleModel
                 ->with([
-                           'customer', 'plansSales', 'plansSales.plan', 'plansSales.plan.products',
-                           'plansSales.plan.project',
-                           'project',
-                           'saleWhiteBlackListResult',
-                           'transactions' => function($query) use ($userCompanies) {
-                               $query->whereIn('company_id', $userCompanies);
-                           },
-                       ])->whereIn('status', [10, 21]);
+                    "customer",
+                    "plansSales",
+                    "plansSales.plan",
+                    "plansSales.plan.products",
+                    "plansSales.plan.project",
+                    "project",
+                    "saleWhiteBlackListResult",
+                    "transactions" => function ($query) use ($userCompanies) {
+                        $query->whereIn("company_id", $userCompanies);
+                    },
+                ])
+                ->whereIn("status", [10, 21]);
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            if ($dateRange[0] < '2020-04-10') {
-                $dateRange[0] = '2020-04-10';
+            if ($dateRange[0] < "2020-04-10") {
+                $dateRange[0] = "2020-04-10";
             }
-            $sales->whereBetween('start_date', [$dateRange[0], $dateRange[1] . ' 23:59:59']);
+            $sales->whereBetween("start_date", [$dateRange[0], $dateRange[1] . " 23:59:59"]);
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
-                $sales->where('project_id', $projectId);
+                $sales->where("project_id", $projectId);
             } else {
-                $userProjects = UserProject::where('user_id', $userId)->pluck('project_id');
-                $sales->whereIn('project_id', $userProjects);
+                $userProjects = UserProject::where("user_id", $userId)->pluck("project_id");
+                $sales->whereIn("project_id", $userProjects);
             }
 
             if (!empty($filters["transaction"])) {
-                $saleId = current(Hashids::connection('sale_id')
-                                         ->decode(str_replace('#', '', $filters["transaction"])));
-                $sales->where('id', $saleId);
+                $saleId = current(
+                    Hashids::connection("sale_id")->decode(str_replace("#", "", $filters["transaction"]))
+                );
+                $sales->where("id", $saleId);
             }
             if (!empty($filters["customer"])) {
                 $customerName = $filters["customer"];
-                $sales->whereHas('customer', function($query) use ($customerName) {
-                    $query->where('name', 'LIKE', '%' . $customerName . '%');
+                $sales->whereHas("customer", function ($query) use ($customerName) {
+                    $query->where("name", "LIKE", "%" . $customerName . "%");
                 });
             }
 
-            return SalesBlackListAntiFraudResource::collection($sales->orderBy('start_date', 'DESC')->paginate(10));
+            return SalesBlackListAntiFraudResource::collection($sales->orderBy("start_date", "DESC")->paginate(10));
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao carregar',], 400);
+            return response()->json(["message" => "Erro ao carregar"], 400);
         }
     }
 
@@ -101,20 +109,26 @@ class SalesBlackListAntifraudApiController extends Controller
         try {
             $saleModel = new Sale();
             if (!empty($id)) {
-                $sale = $saleModel->find(current(Hashids::connection('sale_id')->decode($id)));
+                $sale = $saleModel->find(current(Hashids::connection("sale_id")->decode($id)));
 
                 return new SalesBlackListAntiFraudDetaislResource($sale);
             } else {
-                return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente!',
-                                        ], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro, tente novamente!",
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente!',
-                                    ], 400);
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro, tente novamente!",
+                ],
+                400
+            );
         }
     }
 }

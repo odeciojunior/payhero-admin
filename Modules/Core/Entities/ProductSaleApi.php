@@ -26,33 +26,26 @@ class ProductSaleApi extends Model
      *
      * @var string
      */
-    protected $table = 'products_sales_api';
+    protected $table = "products_sales_api";
 
     /**
      * The "type" of the auto-incrementing ID.
      *
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
 
-    protected $fillable = [
-        'sale_id',
-        'item_id',
-        'name',
-        'price',
-        'quantity',
-        'product_type'
-    ];
+    protected $fillable = ["sale_id", "item_id", "name", "price", "quantity", "product_type"];
 
     /**
-      * @return BelongsTo
-      */
+     * @return BelongsTo
+     */
     public function sale()
     {
         return $this->belongsTo(Sale::class);
-    }  
+    }
 }

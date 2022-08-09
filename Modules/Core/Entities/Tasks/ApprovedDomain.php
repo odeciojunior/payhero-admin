@@ -11,9 +11,13 @@ class ApprovedDomain extends Task implements TaskCheck
 {
     public function userCompletedTask(User $user): bool
     {
-        $approvedDomain = $user->projects()->whereHas('domains', function ($query) {
-            $query->where('domains.status', (new Domain())->present()->getStatus('approved'));
-        })->limit(1)->get();
+        $approvedDomain = $user
+            ->projects()
+            ->whereHas("domains", function ($query) {
+                $query->where("domains.status", (new Domain())->present()->getStatus("approved"));
+            })
+            ->limit(1)
+            ->get();
 
         return $approvedDomain->count() > 0;
     }

@@ -12,17 +12,17 @@ class AntifraudPostback extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ["deleted_at"];
 
     protected $fillable = [
-        'sale_id',
-        'antifraud_id',
-        'data',
-        'processed_flag',
-        'postback_valid_flag',
-        'machine_result',
+        "sale_id",
+        "antifraud_id",
+        "data",
+        "processed_flag",
+        "postback_valid_flag",
+        "machine_result",
     ];
 
     public function sale(): BelongsTo

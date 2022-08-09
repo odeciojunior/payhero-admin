@@ -13,8 +13,8 @@ class AddIndexCheckoutsIdLogSession extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function (Blueprint $table) {
-            $table->index('id_log_session');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->index("id_log_session");
         });
     }
 
@@ -25,8 +25,8 @@ class AddIndexCheckoutsIdLogSession extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function (Blueprint $table) {
-            $table->dropIndex('id_log_session');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropIndex("id_log_session");
         });
     }
 }

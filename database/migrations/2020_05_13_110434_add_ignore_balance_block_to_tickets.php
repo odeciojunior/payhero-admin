@@ -13,10 +13,11 @@ class AddIgnoreBalanceBlockToTickets extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->boolean('ignore_balance_block')
+        Schema::table("tickets", function (Blueprint $table) {
+            $table
+                ->boolean("ignore_balance_block")
                 ->default(0)
-                ->after('mediation_notified');
+                ->after("mediation_notified");
         });
     }
 
@@ -27,8 +28,8 @@ class AddIgnoreBalanceBlockToTickets extends Migration
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('ignore_balance_block');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table->dropColumn("ignore_balance_block");
         });
     }
 }

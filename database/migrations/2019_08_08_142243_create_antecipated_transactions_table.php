@@ -12,17 +12,23 @@ class CreateAntecipatedTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('antecipated_transactions', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('tax');
-            $table->string('tax_value');
-            $table->string('days_to_release');
-            $table->bigInteger('anticipation_id')->unsigned();
-            $table->bigInteger('transaction_id')->unsigned();
+        Schema::create("antecipated_transactions", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("tax");
+            $table->string("tax_value");
+            $table->string("days_to_release");
+            $table->bigInteger("anticipation_id")->unsigned();
+            $table->bigInteger("transaction_id")->unsigned();
             $table->timestamps();
 
-            $table->foreign('transaction_id')->references('id')->on('transactions');
-            $table->foreign('anticipation_id')->references('id')->on('anticipations');
+            $table
+                ->foreign("transaction_id")
+                ->references("id")
+                ->on("transactions");
+            $table
+                ->foreign("anticipation_id")
+                ->references("id")
+                ->on("anticipations");
         });
     }
 
@@ -32,11 +38,11 @@ class CreateAntecipatedTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('antecipated_transactions', function(Blueprint $table) {
-            $table->dropForeign(['transaction_id']);
-            $table->dropForeign(['anticipation_id']);
+        Schema::table("antecipated_transactions", function (Blueprint $table) {
+            $table->dropForeign(["transaction_id"]);
+            $table->dropForeign(["anticipation_id"]);
         });
 
-        Schema::dropIfExists('antecipated_transactions');
+        Schema::dropIfExists("antecipated_transactions");
     }
 }

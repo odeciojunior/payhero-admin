@@ -13,14 +13,23 @@ class CreatePushNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('push_notifications', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('sale_id')->index()->nullable();
-            $table->json('postback_data');
-            $table->text('onesignal_response')->nullable();
-            $table->unsignedTinyInteger('processed_flag')->index()->default(0); // 0-no , 1-yes
-            $table->unsignedTinyInteger('postback_valid_flag')->index()->default(0); // 0-no , 1-yes
-            $table->json('machine_result')->nullable();
+        Schema::create("push_notifications", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table
+                ->unsignedBigInteger("sale_id")
+                ->index()
+                ->nullable();
+            $table->json("postback_data");
+            $table->text("onesignal_response")->nullable();
+            $table
+                ->unsignedTinyInteger("processed_flag")
+                ->index()
+                ->default(0); // 0-no , 1-yes
+            $table
+                ->unsignedTinyInteger("postback_valid_flag")
+                ->index()
+                ->default(0); // 0-no , 1-yes
+            $table->json("machine_result")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +42,6 @@ class CreatePushNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('push_notifications');
+        Schema::dropIfExists("push_notifications");
     }
 }

@@ -13,16 +13,19 @@ class CreateSaleContestationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_contestations', function (Blueprint $table) {
+        Schema::create("sale_contestations", function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("sale_id")->nullable();
-            $table->json('data')->nullable();
+            $table->json("data")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('sale_contestations', function(Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 
@@ -33,11 +36,10 @@ class CreateSaleContestationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_contestations', function(Blueprint $table) {
+        Schema::table("sale_contestations", function (Blueprint $table) {
             $table->dropForeign(["sale_id"]);
         });
 
-        Schema::dropIfExists('sale_contestations');
-
+        Schema::dropIfExists("sale_contestations");
     }
 }

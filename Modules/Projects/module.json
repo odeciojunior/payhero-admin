@@ -5,9 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\Projects\\Providers\\ProjectsServiceProvider"
-    ],
+    "providers": ["Modules\\Projects\\Providers\\ProjectsServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

@@ -14,22 +14,20 @@ class AddColumnShowOldFinancesTableUsers extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'users',
-            function (Blueprint $table) {
-                $table->boolean('show_old_finances')->default(false)->after('total_commission_value');
-            }
-        );
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("show_old_finances")
+                ->default(false)
+                ->after("total_commission_value");
+        });
 
         $users = User::get();
 
         foreach ($users as $user) {
             if ($user->has_sale_before_getnet) {
-                $user->update(
-                    [
-                        'show_old_finances' => true
-                    ]
-                );
+                $user->update([
+                    "show_old_finances" => true,
+                ]);
             }
         }
     }
@@ -41,11 +39,8 @@ class AddColumnShowOldFinancesTableUsers extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'users',
-            function (Blueprint $table) {
-                $table->dropColumn('show_old_finances');
-            }
-        );
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("show_old_finances");
+        });
     }
 }

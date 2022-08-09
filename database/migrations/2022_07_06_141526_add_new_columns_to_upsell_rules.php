@@ -13,9 +13,15 @@ class AddNewColumnsToUpsellRules extends Migration
      */
     public function up()
     {
-        Schema::table('project_upsell_rules', function (Blueprint $table) {
-            $table->json('apply_on_shipping')->nullable()->after('discount');
-            $table->boolean('use_variants')->default(true)->after('apply_on_shipping');
+        Schema::table("project_upsell_rules", function (Blueprint $table) {
+            $table
+                ->json("apply_on_shipping")
+                ->nullable()
+                ->after("discount");
+            $table
+                ->boolean("use_variants")
+                ->default(true)
+                ->after("apply_on_shipping");
         });
     }
 
@@ -26,8 +32,8 @@ class AddNewColumnsToUpsellRules extends Migration
      */
     public function down()
     {
-        Schema::table('project_upsell_rules', function (Blueprint $table) {
-            $table->dropColumn(['apply_on_shipping', 'use_variants']);
+        Schema::table("project_upsell_rules", function (Blueprint $table) {
+            $table->dropColumn(["apply_on_shipping", "use_variants"]);
         });
     }
 }

@@ -13,8 +13,12 @@ class AlterSalesAddAutomaticDiscount extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->integer('automatic_discount')->unsigned()->default(0)->after('gateway_tax_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->integer("automatic_discount")
+                ->unsigned()
+                ->default(0)
+                ->after("gateway_tax_value");
         });
     }
 
@@ -25,8 +29,8 @@ class AlterSalesAddAutomaticDiscount extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('automatic_discount');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("automatic_discount");
         });
     }
 }

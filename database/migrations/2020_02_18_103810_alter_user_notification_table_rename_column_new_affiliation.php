@@ -12,10 +12,10 @@ class AlterUserNotificationTableRenameColumnNewAffiliation extends Migration
      */
     public function up()
     {
-        Schema::table('user_notifications', function(Blueprint $table) {
-            $table->renameColumn('new_affiliation', 'affiliation');
-            $table->dropColumn('new_affiliation_request');
-            $table->dropColumn('approved_affiliation');
+        Schema::table("user_notifications", function (Blueprint $table) {
+            $table->renameColumn("new_affiliation", "affiliation");
+            $table->dropColumn("new_affiliation_request");
+            $table->dropColumn("approved_affiliation");
         });
     }
 
@@ -25,10 +25,10 @@ class AlterUserNotificationTableRenameColumnNewAffiliation extends Migration
      */
     public function down()
     {
-        Schema::table('user_notifications', function(Blueprint $table) {
-            $table->renameColumn('affiliation', 'new_affiliation');
-            $table->boolean('new_affiliation_request')->default(true);
-            $table->boolean('approved_affiliation')->default(true);
+        Schema::table("user_notifications", function (Blueprint $table) {
+            $table->renameColumn("affiliation", "new_affiliation");
+            $table->boolean("new_affiliation_request")->default(true);
+            $table->boolean("approved_affiliation")->default(true);
         });
     }
 }

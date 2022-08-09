@@ -12,8 +12,8 @@ class AlterTableCompaniesChangeUserColumn extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function(Blueprint $table) {
-            $table->renameColumn('user', 'user_id');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->renameColumn("user", "user_id");
         });
     }
 
@@ -23,8 +23,8 @@ class AlterTableCompaniesChangeUserColumn extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function(Blueprint $table) {
-            $table->renameColumn('user_id', 'user');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->renameColumn("user_id", "user");
         });
     }
 }

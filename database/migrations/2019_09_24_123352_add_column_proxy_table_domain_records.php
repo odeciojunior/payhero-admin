@@ -12,8 +12,8 @@ class AddColumnProxyTableDomainRecords extends Migration
      */
     public function up()
     {
-        Schema::table('domains_records', function($table) {
-            $table->integer('proxy')->default(1);
+        Schema::table("domains_records", function ($table) {
+            $table->integer("proxy")->default(1);
         });
     }
 
@@ -23,8 +23,8 @@ class AddColumnProxyTableDomainRecords extends Migration
      */
     public function down()
     {
-        Schema::table('domains_records', function($table) {
-            $table->dropForeign(['proxy']);
+        Schema::table("domains_records", function ($table) {
+            $table->dropForeign(["proxy"]);
         });
     }
 }

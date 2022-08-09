@@ -13,16 +13,18 @@ class AddColumnTelephoneTableCheckout extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->string('client_telephone')->nullable()->after('is_mobile');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table
+                ->string("client_telephone")
+                ->nullable()
+                ->after("is_mobile");
         });
     }
 
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->dropColumn('client_telephone');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("client_telephone");
         });
     }
-
 }

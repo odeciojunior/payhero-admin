@@ -35,25 +35,32 @@ class AffiliateRequestSendEmailListener implements ShouldQueue
     {
         try {
             $sendGridService = new SendgridService();
-            $affiliateRequest = $event->affiliateRequest->load('user', 'project', 'project.users');
-            $producer         = $affiliateRequest->project->users[0];
-            $affiliate        = $affiliateRequest->user;
-            $project          = $affiliateRequest->project;
-            $idEncoded        = Hashids::encode($project->id);
-            $data             = [
-                'producer_name'  => $producer->name,
-                'affiliate_name' => $affiliate->name,
-                'project_name'   => $project->name,
-                'date'           => $affiliateRequest->created_at->format('d/m/Y h:i:s'),
-                'link'           => env('APP_URL') . '/projects/' . $idEncoded,
+            $affiliateRequest = $event->affiliateRequest->load("user", "project", "project.users");
+            $producer = $affiliateRequest->project->users[0];
+            $affiliate = $affiliateRequest->user;
+            $project = $affiliateRequest->project;
+            $idEncoded = Hashids::encode($project->id);
+            $data = [
+                "producer_name" => $producer->name,
+                "affiliate_name" => $affiliate->name,
+                "project_name" => $project->name,
+                "date" => $affiliateRequest->created_at->format("d/m/Y h:i:s"),
+                "link" => env("APP_URL") . "/projects/" . $idEncoded,
             ];
-            $producer->load('userNotification');
+            $producer->load("userNotification");
 
             if ($producer->userNotification->affiliation) {
-                $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $producer->email, $producer->name, 'd-0386c841a52c466e96840eb5a663b400', $data);
+                $sendGridService->sendEmail(
+                    "help@cloudfox.net",
+                    "cloudfox",
+                    $producer->email,
+                    $producer->name,
+                    "d-0386c841a52c466e96840eb5a663b400",
+                    $data
+                );
             }
         } catch (Exception $e) {
-            Log::warning('erro ao enviar email de solicitação de afiliação para o projeto ' . $project->id);
+            Log::warning("erro ao enviar email de solicitação de afiliação para o projeto " . $project->id);
             report($e);
         }
     }

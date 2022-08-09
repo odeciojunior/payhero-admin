@@ -13,8 +13,11 @@ class AddColumnActiveCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function(Blueprint $table) {
-            $table->boolean('active_flag')->after('account_type')->default(true);
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->boolean("active_flag")
+                ->after("account_type")
+                ->default(true);
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnActiveCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('active_flag');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("active_flag");
         });
     }
 }

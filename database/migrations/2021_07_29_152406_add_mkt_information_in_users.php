@@ -13,8 +13,11 @@ class AddMktInformationInUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->json('mkt_information')->nullable()->after('show_old_finances');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->json("mkt_information")
+                ->nullable()
+                ->after("show_old_finances");
         });
     }
 
@@ -25,8 +28,8 @@ class AddMktInformationInUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropIfExists('mkt_information');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropIfExists("mkt_information");
         });
     }
 }

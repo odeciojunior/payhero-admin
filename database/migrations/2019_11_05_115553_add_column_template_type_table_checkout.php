@@ -12,8 +12,8 @@ class AddColumnTemplateTypeTableCheckout extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->unsignedInteger('template_type')->default(1);
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->unsignedInteger("template_type")->default(1);
         });
     }
 
@@ -23,8 +23,8 @@ class AddColumnTemplateTypeTableCheckout extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->dropColumn('template_type');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("template_type");
         });
     }
 }

@@ -15,14 +15,14 @@ class PopulateIpLocalizationInCheckout extends Command
      *
      * @var string
      */
-    protected $signature = 'checkout:populate-iplocalization';
+    protected $signature = "checkout:populate-iplocalization";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -48,21 +48,21 @@ class PopulateIpLocalizationInCheckout extends Command
             $progress = new ProgressBar($output, count($checkouts));
             $progress->start();
 
-            foreach($checkouts as $checkout) {
+            foreach ($checkouts as $checkout) {
                 $progress->advance();
 
                 $localization = getRegionByIp($checkout->ip);
 
                 $checkout->update([
-                    'ip_localization' => json_encode($localization),
-                    'ip_state' => $localization['region']
+                    "ip_localization" => json_encode($localization),
+                    "ip_state" => $localization["region"],
                 ]);
             }
 
             $this->line($progress);
 
             $progress->finish();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
         }
     }

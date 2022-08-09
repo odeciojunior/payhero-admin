@@ -13,8 +13,8 @@ class AlterSalesTableAddAttemptsColumn extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->integer('attempts')->default(1);
+        Schema::table("sales", function (Blueprint $table) {
+            $table->integer("attempts")->default(1);
         });
     }
 
@@ -24,8 +24,8 @@ class AlterSalesTableAddAttemptsColumn extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dropColumn('attempts');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("attempts");
         });
     }
 }

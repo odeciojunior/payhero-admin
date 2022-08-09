@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Sales\Http\Requests;
-
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,21 +22,21 @@ class SaleIndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'project'        => 'nullable|string',
-            'transaction'    => 'nullable',
-            'payment_method' => 'nullable|string',
-            'status'         => 'nullable',
-            'client'         => 'nullable|string',
-            'date_type'      => 'required',
-            'date_range'     => 'required',
+            "project" => "nullable|string",
+            "transaction" => "nullable",
+            "payment_method" => "nullable|string",
+            "status" => "nullable",
+            "client" => "nullable|string",
+            "date_type" => "required",
+            "date_range" => "required",
         ];
     }
 
     public function messages()
     {
         return [
-            'date_type.required' => 'O campo data e obrigatório',
-            'date_range.required' => 'É preciso selecionar um período',
+            "date_type.required" => "O campo data e obrigatório",
+            "date_range.required" => "É preciso selecionar um período",
         ];
     }
 }

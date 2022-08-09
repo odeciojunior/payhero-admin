@@ -12,7 +12,7 @@ class AlterTableWithdrawalsChangeReleaseDateColumn extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('hotzapp_integration');
+        Schema::dropIfExists("hotzapp_integration");
     }
 
     /**

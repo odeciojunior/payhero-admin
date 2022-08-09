@@ -25,16 +25,16 @@ class ProjectReviewsResource extends JsonResource
 
         if (!empty($this->apply_on_plans)) {
             $applyPlanDecoded = json_decode($this->apply_on_plans);
-            if (in_array('all', $applyPlanDecoded)) {
-                $applyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano', 'description' => ''];
+            if (in_array("all", $applyPlanDecoded)) {
+                $applyPlanArray[] = ["id" => "all", "name" => "Qualquer plano", "description" => ""];
             } else {
                 foreach ($applyPlanDecoded as $key => $value) {
                     $plan = $planModel->find($value);
                     if (!empty($plan)) {
                         $applyPlanArray[] = [
-                            'id'          => Hashids::encode($plan->id),
-                            'name'        => $plan->name,
-                            'description' => $plan->description,
+                            "id" => Hashids::encode($plan->id),
+                            "name" => $plan->name,
+                            "description" => $plan->description,
                         ];
                     }
                 }
@@ -42,13 +42,13 @@ class ProjectReviewsResource extends JsonResource
         }
 
         return [
-            'id'             => Hashids::encode($this->id),
-            'name'           => $this->name,
-            'description'    => $this->description,
-            'photo'          => $this->photo,
-            'stars'          => $this->stars,
-            'active_flag'    => $this->active_flag,
-            'apply_on_plans' => $applyPlanArray,
+            "id" => Hashids::encode($this->id),
+            "name" => $this->name,
+            "description" => $this->description,
+            "photo" => $this->photo,
+            "stars" => $this->stars,
+            "active_flag" => $this->active_flag,
+            "apply_on_plans" => $applyPlanArray,
         ];
     }
 }

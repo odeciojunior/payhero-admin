@@ -44,9 +44,9 @@ class SaleApprovedEvent
      */
     public function __construct(Plan $plan, Sale $sale, Project $project, Delivery $delivery, Customer $customer)
     {
-        $this->plan     = $plan;
-        $this->sale     = $sale;
-        $this->project  = $project;
+        $this->plan = $plan;
+        $this->sale = $sale;
+        $this->project = $project;
         $this->delivery = $delivery;
         $this->customer = $customer;
     }
@@ -57,6 +57,6 @@ class SaleApprovedEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel("channel-name");
     }
 }

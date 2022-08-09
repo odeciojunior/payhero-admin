@@ -3,13 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
     <title>Ops! Acesso não permitido! | CloudFox App </title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap"
+          rel="stylesheet">
 
 </head>
 
@@ -18,12 +21,16 @@
     <div class="page-holder">
 
         <div class="content-error d-flex text-center">
-            <img class="svgorange" src="{!! mix('build/global/img/svg/dog_off.svg') !!}">
+            <img class="svgorange"
+                 src="{!! mix('build/global/img/svg/dog_off.svg') !!}">
             <h1 class="big"> Conteúdo indisponível</h1>
-            <p>Você não tem permissão de acesso aqui! Solicite permissão ao<br/>
-titular para visualizar e gerenciar esse conteúdo. </p>
-            <a href="javascript:history.back()" class="btn btn-info btn-lg">
-                <img class="svgorange" src="{!! mix('build/global/img/svg/arrow_left.svg') !!}">&nbsp;&nbsp;Retornar para a página anterior
+            <p>Você não tem permissão de acesso aqui! Solicite permissão ao<br />
+                titular para visualizar e gerenciar esse conteúdo. </p>
+            <a href="javascript:history.back()"
+               class="btn btn-info btn-lg">
+                <img class="svgorange"
+                     src="{!! mix('build/global/img/svg/arrow_left.svg') !!}">&nbsp;&nbsp;Retornar para a
+                página anterior
             </a>
         </div>
 
@@ -46,10 +53,8 @@ titular para visualizar e gerenciar esse conteúdo. </p>
     }
 
     .logo {
-
         margin-bottom: 20px;
         width: 60px;
-
     }
 
     .content-error {
@@ -60,10 +65,11 @@ titular para visualizar e gerenciar esse conteúdo. </p>
         justify-content: center;
         flex-direction: column;
         text-align: center;
-        {{--  padding: 20px;  --}}
+        {{-- padding: 20px; --}}
     }
-    .content-error p{
-        font-size:16px;
+
+    .content-error p {
+        font-size: 16px;
         color: #A2A3B4;
     }
 
@@ -73,11 +79,10 @@ titular para visualizar e gerenciar esse conteúdo. </p>
         font-weight: 700;
     }
 
-    .btn-info, .btn-info:hover{
+    .btn-info,
+    .btn-info:hover {
         background: #2E85EC;
     }
-
 </style>
 
 </html>
-

@@ -13,8 +13,8 @@ class ChangeDomainTableRemoveDomainIpColumn extends Migration
      */
     public function up()
     {
-        Schema::table('domains', function(Blueprint $table) {
-            $table->dropColumn('domain_ip');
+        Schema::table("domains", function (Blueprint $table) {
+            $table->dropColumn("domain_ip");
         });
     }
 
@@ -24,8 +24,8 @@ class ChangeDomainTableRemoveDomainIpColumn extends Migration
      */
     public function down()
     {
-        Schema::table('domains', function(Blueprint $table) {
-            $table->string('domain_ip')->nullable();
+        Schema::table("domains", function (Blueprint $table) {
+            $table->string("domain_ip")->nullable();
         });
     }
 }

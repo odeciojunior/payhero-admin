@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\WooCommerceService;
 use Modules\Core\Entities\WooCommerceIntegration;
 
-
-
 class ImportWooCommerceOrders implements ShouldQueue
 {
     use Dispatchable;
@@ -36,44 +34,37 @@ class ImportWooCommerceOrders implements ShouldQueue
     public function handle()
     {
         try {
-                        
-            $integration = WooCommerceIntegration::where('project_id', $this->projectId)->first();
+            $integration = WooCommerceIntegration::where("project_id", $this->projectId)->first();
 
-            if(!empty($integration)){
+            if (!empty($integration)) {
+                $service = new WooCommerceService(
+                    $integration->url_store,
+                    $integration->token_user,
+                    $integration->token_pass
+                );
 
-                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-                
-                $orders = $service->woocommerce->get('orders', 
-                    [
-                        'status'=>'completed', 
-                        'page'=> $this->page, 
-                        'per_page'=>5
-                    ]);
-                
-                if(empty($orders)){
-                   
+                $orders = $service->woocommerce->get("orders", [
+                    "status" => "completed",
+                    "page" => $this->page,
+                    "per_page" => 5,
+                ]);
+
+                if (empty($orders)) {
                     return false;
-
-                }else{
-                    
+                } else {
                     $service->importTrackingCodes($this->projectId, $orders);
-                    
+
                     $page = $this->page;
 
                     $page++;
-                    
+
                     $this->dispatch($this->projectId, $this->userId, $page);
                 }
-                
+
                 return true;
-                
             }
-            
-
-        } catch (Exception $e) {    
-
+        } catch (Exception $e) {
             //report($e);
-            
         }
     }
 }

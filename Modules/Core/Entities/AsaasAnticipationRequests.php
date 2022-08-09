@@ -19,22 +19,22 @@ class AsaasAnticipationRequests extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
-    protected $fillable = ['company_id', 'sale_id', 'sent_data', 'response', 'created_at', 'updated_at'];
+    protected $fillable = ["company_id", "sale_id", "sent_data", "response", "created_at", "updated_at"];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function company()
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 
     /**
@@ -42,6 +42,6 @@ class AsaasAnticipationRequests extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('Modules\Core\Entities\Sale');
+        return $this->belongsTo("Modules\Core\Entities\Sale");
     }
 }

@@ -13,13 +13,13 @@ class AlterTableApiTokenIncreasePostbackColumnSize extends Migration
      */
     public function up()
     {
-        Schema::table('api_tokens',function(Blueprint $table){
-            $table->string('postback',1000)->change();
+        Schema::table("api_tokens", function (Blueprint $table) {
+            $table->string("postback", 1000)->change();
         });
 
-        Schema::table('checkout_configs',function(Blueprint $table){
-            $table->index('project_id');
-            $table->index('company_id');
+        Schema::table("checkout_configs", function (Blueprint $table) {
+            $table->index("project_id");
+            $table->index("company_id");
         });
     }
 

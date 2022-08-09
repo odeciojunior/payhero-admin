@@ -46,23 +46,23 @@ class Invitation extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'invite',
-        'user_invited',
-        'company_id',
-        'invitation_id',
-        'email_invited',
-        'status',
-        'register_date',
-        'expiration_date',
-        'parameter',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "invite",
+        "user_invited",
+        "company_id",
+        "invitation_id",
+        "email_invited",
+        "status",
+        "register_date",
+        "expiration_date",
+        "parameter",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -90,14 +90,14 @@ class Invitation extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
-                $activity->description = 'Convite deletedo.';
+            case "deleted":
+                $activity->description = "Convite deletedo.";
                 break;
-            case 'updated':
-                $activity->description = 'Convite foi atualizado.';
+            case "updated":
+                $activity->description = "Convite foi atualizado.";
                 break;
-            case 'created':
-                $activity->description = 'Convite foi criado.';
+            case "created":
+                $activity->description = "Convite foi criado.";
                 break;
             default:
                 $activity->description = $eventName;
@@ -106,17 +106,17 @@ class Invitation extends Model
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class, 'company_id');
+        return $this->belongsTo(Company::class, "company_id");
     }
 
     public function userInvited(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_invited');
+        return $this->belongsTo(User::class, "user_invited");
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id', 'invite');
+        return $this->belongsTo(User::class, "id", "invite");
     }
 
     public function invitation(): BelongsTo

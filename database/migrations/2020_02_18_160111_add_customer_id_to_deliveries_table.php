@@ -13,11 +13,15 @@ class AddCustomerIdToDeliveriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('deliveries', function (Blueprint $table) {
-            $table->unsignedBigInteger('customer_id')
+        Schema::table("deliveries", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("customer_id")
                 ->nullable()
-                ->after('id');
-            $table->foreign('customer_id')->references('id')->on('customers');
+                ->after("id");
+            $table
+                ->foreign("customer_id")
+                ->references("id")
+                ->on("customers");
         });
     }
 
@@ -28,9 +32,9 @@ class AddCustomerIdToDeliveriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('deliveries', function (Blueprint $table) {
-            $table->dropForeign(['customer_id']);
-            $table->dropColumn('customer_id');
+        Schema::table("deliveries", function (Blueprint $table) {
+            $table->dropForeign(["customer_id"]);
+            $table->dropColumn("customer_id");
         });
     }
 }

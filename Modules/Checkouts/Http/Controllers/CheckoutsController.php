@@ -14,7 +14,7 @@ class CheckoutsController extends Controller
      */
     public function index()
     {
-        return view('checkouts::index');
+        return view("checkouts::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class CheckoutsController extends Controller
      */
     public function create()
     {
-        return view('checkouts::create');
+        return view("checkouts::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class CheckoutsController extends Controller
      */
     public function show($id)
     {
-        return view('checkouts::show');
+        return view("checkouts::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class CheckoutsController extends Controller
      */
     public function edit($id)
     {
-        return view('checkouts::edit');
+        return view("checkouts::edit");
     }
 
     /**

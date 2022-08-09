@@ -8,56 +8,53 @@ class ShippingPresenter extends Presenter
 {
     public function getStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'active';
+                    return "active";
                 case 0:
-                    return 'disabled';
+                    return "disabled";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'active':
+                case "active":
                     return 1;
-                case 'disabled':
+                case "disabled":
                     return 0;
             }
 
-            return '';
+            return "";
         }
     }
 
     public function getPreSelectedStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'yes';
+                    return "yes";
                 case 0:
-                    return 'no';
+                    return "no";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'yes':
+                case "yes":
                     return 1;
-                case 'no':
+                case "no":
                     return 0;
             }
 
-            return '';
+            return "";
         }
     }
 
     public function getTypeEnum($type)
     {
         if (is_numeric($type)) {
-
             switch ($type) {
                 case 1:
                     return "static";
@@ -81,6 +78,6 @@ class ShippingPresenter extends Presenter
             }
         }
 
-        return '';
+        return "";
     }
 }

@@ -13,20 +13,29 @@ class CreateWithdrawalSettings extends Migration
      */
     public function up()
     {
-        Schema::create('withdrawal_settings', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('company_id')->index();
-            $table->string('rule')->nullable();
-            $table->string('frequency')->nullable();
-            $table->unsignedTinyInteger('weekday')->nullable()->default(0);
-            $table->unsignedTinyInteger('day')->nullable()->default(1);
-            $table->integer('amount')->nullable();
+        Schema::create("withdrawal_settings", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("company_id")->index();
+            $table->string("rule")->nullable();
+            $table->string("frequency")->nullable();
+            $table
+                ->unsignedTinyInteger("weekday")
+                ->nullable()
+                ->default(0);
+            $table
+                ->unsignedTinyInteger("day")
+                ->nullable()
+                ->default(1);
+            $table->integer("amount")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('withdrawal_settings', function (Blueprint $table) {
-            $table->foreign('company_id')->references('id')->on('companies');
+        Schema::table("withdrawal_settings", function (Blueprint $table) {
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
     }
 
@@ -37,6 +46,6 @@ class CreateWithdrawalSettings extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('withdrawal_settings');
+        Schema::dropIfExists("withdrawal_settings");
     }
 }

@@ -2,48 +2,49 @@ $(document).ready(function () {
     let statusObject = {
         1: "Em andamento",
         2: "Perdido",
-        3: "Ganho",        
+        3: "Ganho",
         null: "Em Processo",
     };
 
     let badgeObject = {
         1: "badge-pendente",
         2: "badge-danger",
-        3: "badge-success",        
+        3: "badge-success",
         null: "badge-primary",
     };
 
-    $('#date_range').val(moment().format('DD/MM/YYYY') + ' - ' + moment().add(30, 'days').format('DD/MM/YYYY')).
-    dateRangePicker({
-        format: 'DD/MM/YYYY',
-        endDate: moment().add(30, 'days'),
-        customShortcuts: [
-            {
-                name: 'Hoje',
-                dates: () => [moment().startOf('day').toDate(), new Date()]
-            },
-            {
-                name: '7 dias',
-                dates: () => [moment().subtract(6, 'days').toDate(), new Date()]
-            },
-            {
-                name: '15 dias',
-                dates: () => [moment().subtract(14, 'days').toDate(), new Date()]
-            },
-            {
-                name: 'Último mês',
-                dates: () => [moment().subtract(30, 'days').toDate(), new Date()]
-            },
-            {
-                name: 'Próximo 30 dias',
-                dates: () => [moment().add(30, 'days').toDate(), new Date()]
-            },
-            {
-                name: 'Desde o início',
-                dates: () => [moment('2018-01-01').toDate(), new Date()]
-            }
-        ]
-    });
+    $("#date_range")
+        .val(moment().format("DD/MM/YYYY") + " - " + moment().add(30, "days").format("DD/MM/YYYY"))
+        .dateRangePicker({
+            format: "DD/MM/YYYY",
+            endDate: moment().add(30, "days"),
+            customShortcuts: [
+                {
+                    name: "Hoje",
+                    dates: () => [moment().startOf("day").toDate(), new Date()],
+                },
+                {
+                    name: "7 dias",
+                    dates: () => [moment().subtract(6, "days").toDate(), new Date()],
+                },
+                {
+                    name: "15 dias",
+                    dates: () => [moment().subtract(14, "days").toDate(), new Date()],
+                },
+                {
+                    name: "Último mês",
+                    dates: () => [moment().subtract(30, "days").toDate(), new Date()],
+                },
+                {
+                    name: "Próximo 30 dias",
+                    dates: () => [moment().add(30, "days").toDate(), new Date()],
+                },
+                {
+                    name: "Desde o início",
+                    dates: () => [moment("2018-01-01").toDate(), new Date()],
+                },
+            ],
+        });
 
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
@@ -54,7 +55,7 @@ $(document).ready(function () {
             project: $("#project").val() ?? "",
             customer: $("#customer").val() ?? "",
             customer_document: $("#customer_document").val() ?? "",
-            date_range: $('#date_range').val().replace(" à ", " - ") ?? "",
+            date_range: $("#date_range").val().replace(" à ", " - ") ?? "",
             date_type: $("#date_type").val() ?? "",
             order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
             contestation_situation: $("#contestation_situation").val() ?? "",
@@ -74,7 +75,7 @@ $(document).ready(function () {
         return data;
     }
 
-    const addZeroLeft = (value) => value > 0 && value < 10 ? String(value).padStart(2, '0') : value
+    const addZeroLeft = (value) => (value > 0 && value < 10 ? String(value).padStart(2, "0") : value);
 
     function pagination(response) {
         $("#pagination").html("");
@@ -83,8 +84,7 @@ $(document).ready(function () {
             return;
         }
 
-        var primeira_pagina =
-            "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         $("#pagination").append(primeira_pagina);
 
@@ -111,22 +111,14 @@ $(document).ready(function () {
                     "</button>"
             );
 
-            $("#pagina_" + (response.meta.current_page - x)).on(
-                "click",
-                function () {
-                    atualizar("?page=" + $(this).html());
-                }
-            );
+            $("#pagina_" + (response.meta.current_page - x)).on("click", function () {
+                atualizar("?page=" + $(this).html());
+            });
         }
 
-        if (
-            response.meta.current_page != 1 &&
-            response.meta.current_page != response.meta.last_page
-        ) {
+        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
             var pagina_atual =
-                "<button id='pagina_atual' class='btn nav-btn active'>" +
-                response.meta.current_page +
-                "</button>";
+                "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
             $("#pagination").append(pagina_atual);
 
@@ -147,19 +139,14 @@ $(document).ready(function () {
                     "</button>"
             );
 
-            $("#pagina_" + (response.meta.current_page + x)).on(
-                "click",
-                function () {
-                    atualizar("?page=" + $(this).html());
-                }
-            );
+            $("#pagina_" + (response.meta.current_page + x)).on("click", function () {
+                atualizar("?page=" + $(this).html());
+            });
         }
 
         if (response.meta.last_page != "1") {
             var ultima_pagina =
-                "<button id='ultima_pagina' class='btn nav-btn'>" +
-                response.meta.last_page +
-                "</button>";
+                "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
 
             $("#pagination").append(ultima_pagina);
 
@@ -187,9 +174,7 @@ $(document).ready(function () {
                 method: "GET",
                 url: "api/contestations/" + ckargeback,
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
+                    Authorization: $('meta[name="access-token"]').attr("content"),
                     Accept: "application/json",
                 },
                 error: function (response) {
@@ -204,7 +189,7 @@ $(document).ready(function () {
             });
         });
     }
-    
+
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
 
@@ -232,9 +217,7 @@ $(document).ready(function () {
                     let valuesObject = ``;
 
                     objectArray.forEach(([key, value]) => {
-                        valuesObject += `${Object.keys(
-                            value
-                        )} - ${Object.values(value)}`;
+                        valuesObject += `${Object.keys(value)} - ${Object.values(value)}`;
                     });
 
                     dados = "";
@@ -259,38 +242,48 @@ $(document).ready(function () {
                                     Pagamento em ${value.adjustment_date}
                                 </small>
                             </td>`;
-                            
-                            /*
+
+                    /*
                             ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
                                 ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
                                 : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
                             */
-                            if (value.status in statusObject) {
-                                dados +=`
+                    if (value.status in statusObject) {
+                        dados += `
                                     <td class='copy_link'>
                                         <div class="d-flex justify-content-center align-items-center text-center" >
-                                            <span class='badge ${badgeObject[value.status]} ${value.sale_status === 10 ? "pointer" : "cursor-default"} font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${statusObject[value.status]}">
+                                            <span class='badge ${badgeObject[value.status]} ${
+                            value.sale_status === 10 ? "pointer" : "cursor-default"
+                        } font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${
+                            statusObject[value.status]
+                        }">
                                                 ${statusObject[value.status]}
                                             </span>
-                                            ${value.sale_is_chargeback_recovered ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">' : ""}
+                                            ${
+                                                value.sale_is_chargeback_recovered
+                                                    ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">'
+                                                    : ""
+                                            }
                                         </div>
-                                    </td>`
-                                ;
-                            } else {
-                                dados +=`
+                                    </td>`;
+                    } else {
+                        dados += `
                                     <td>
                                         <span class='badge badge-danger'>
                                             Vazio
                                         </span>
-                                    </td>`
-                                ;
-                            }
+                                    </td>`;
+                    }
 
-                            dados+=`
-                                    <td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
+                    dados += `
+                                    <td class="bold">${value.expiration_user} ${
+                        value.expiration_user.includes("dia")
+                            ? '<br><span class="font-size-12 text-muted"> para expirar</span>'
+                            : ""
+                    }</td>
                                 `;
-                                
-                            dados +=`
+
+                    dados += `
                                 <td class="font-size-12 bold line-overflow" style="white-space: normal;">
                                     ${value.reason}
                                 </td>
@@ -299,9 +292,7 @@ $(document).ready(function () {
                                         ${
                                             value.is_file_user_completed
                                                 ? '<a  role="button" class="contetation_file pointer  ' +
-                                                  (value.has_expired
-                                                      ? "disabled"
-                                                      : "") +
+                                                  (value.has_expired ? "disabled" : "") +
                                                   '" title="' +
                                                   (value.has_expired
                                                       ? "Prazo para recurso encerrado"
@@ -323,17 +314,13 @@ $(document).ready(function () {
                                                   value.id +
                                                   '">' +
                                                   '<span class="o-upload-to-cloud-1  ' +
-                                                  (value.has_files
-                                                      ? "text-success"
-                                                      : "") +
+                                                  (value.has_files ? "text-success" : "") +
                                                   '" id="upload-file_' +
                                                   value.id +
                                                   ' " ></span>' +
                                                   "</a>"
                                         }
-                                        <a role='button' class='detalhes_venda pointer' venda='${
-                                            value.sale_id
-                                        }'>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.sale_id}'>
                                             <span class="o-eye-1"></span>
                                         </a>
                                   </td>
@@ -360,10 +347,7 @@ $(document).ready(function () {
                     $("#pdf-modal").modal("show");
                     $("#update-contestation-pdf").on("click", function () {
                         let files = new FormData();
-                        files.append(
-                            "file_contestation",
-                            $("#file_contestation")[0].files[0]
-                        );
+                        files.append("file_contestation", $("#file_contestation")[0].files[0]);
 
                         loadOnAny("#pdf-modal .modal-user-pdf-body");
 
@@ -374,9 +358,7 @@ $(document).ready(function () {
                             contentType: false,
                             data: files,
                             headers: {
-                                Authorization: $(
-                                    'meta[name="access-token"]'
-                                ).attr("content"),
+                                Authorization: $('meta[name="access-token"]').attr("content"),
                                 Accept: "application/json",
                             },
                             error: function (response) {
@@ -387,16 +369,11 @@ $(document).ready(function () {
                                 alertCustom("success", response.message);
                             },
                             complete: function (data) {
-                                loadOnAny(
-                                    "#pdf-modal .modal-user-pdf-body",
-                                    true
-                                );
+                                loadOnAny("#pdf-modal .modal-user-pdf-body", true);
                             },
                         });
 
-                        $(
-                            ".icon-observation-value_" + response.data.id
-                        ).addClass("green");
+                        $(".icon-observation-value_" + response.data.id).addClass("green");
                     });
                 });
             },
@@ -433,13 +410,14 @@ $(document).ready(function () {
             success: function (response) {
                 loadOnAny(".total-number", true);
 
-                $("#total-contestation").html(addZeroLeft(response.total_contestation));                
-                
+                $("#total-contestation").html(addZeroLeft(response.total_contestation));
+
                 $("#total-chargeback-tax-val").html(addZeroLeft(response.total_chargeback));
-                
-                if($("#date_type").val() == 'transaction_date')
-                {
-                    $("#total-contestation-tax").html(" (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")");                
+
+                if ($("#date_type").val() == "transaction_date") {
+                    $("#total-contestation-tax").html(
+                        " (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")"
+                    );
                     $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
                 }
 
@@ -495,17 +473,17 @@ $(document).ready(function () {
         atualizar();
         getTotalValues();
     });
-    
-    $('#transaction').on('change paste keyup select', function () {
+
+    $("#transaction").on("change paste keyup select", function () {
         let val = $(this).val();
 
-        if (val === '') {
-            $('#date_type').attr('disabled', false).removeClass('disableFields');
-            $('#date_range').attr('disabled', false).removeClass('disableFields');
+        if (val === "") {
+            $("#date_type").attr("disabled", false).removeClass("disableFields");
+            $("#date_range").attr("disabled", false).removeClass("disableFields");
         } else {
-            $('#date_range').val(moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY"));
-            $('#date_type').attr('disabled', true).addClass('disableFields');
-            $('#date_range').attr('disabled', true).addClass('disableFields');
+            $("#date_range").val(moment("2018-01-01").format("DD/MM/YYYY") + " - " + moment().format("DD/MM/YYYY"));
+            $("#date_type").attr("disabled", true).addClass("disableFields");
+            $("#date_range").attr("disabled", true).addClass("disableFields");
         }
     });
 
@@ -551,10 +529,7 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (
-            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
-            collapse.css("transform") == "none"
-        ) {
+        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {

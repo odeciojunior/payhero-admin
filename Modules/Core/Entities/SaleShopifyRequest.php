@@ -24,18 +24,11 @@ class SaleShopifyRequest extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        "project",
-        "method",
-        "sale_id",
-        "send_data",
-        "received_data",
-        "exceptions",
-    ];
+    protected $fillable = ["project", "method", "sale_id", "send_data", "received_data", "exceptions"];
     /**
      * @var bool
      */

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Transfers\Getnet;
-
 
 use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;
@@ -21,9 +19,9 @@ class Order implements JsonSerializable, Arrayable
     public function toArray()
     {
         return [
-            'saleId' => $this->saleId ? $this->getSaleId() : null,
-            'hashId' => $this->hashId ? $this->getHashId() : null,
-            'orderId' => $this->orderId ? $this->getOrderId() : null
+            "saleId" => $this->saleId ? $this->getSaleId() : null,
+            "hashId" => $this->hashId ? $this->getHashId() : null,
+            "orderId" => $this->orderId ? $this->getOrderId() : null,
         ];
     }
 

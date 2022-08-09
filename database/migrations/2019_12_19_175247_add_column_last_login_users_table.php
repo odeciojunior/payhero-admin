@@ -12,8 +12,11 @@ class AddColumnLastLoginUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->timestamp('last_login')->nullable()->after('deleted_at');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->timestamp("last_login")
+                ->nullable()
+                ->after("deleted_at");
         });
     }
 
@@ -23,8 +26,8 @@ class AddColumnLastLoginUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropColumn('last_login');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("last_login");
         });
     }
 }

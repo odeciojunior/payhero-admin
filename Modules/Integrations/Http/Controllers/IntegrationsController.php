@@ -18,7 +18,7 @@ class IntegrationsController extends Controller
      */
     public function index()
     {
-        return view('integrations::index');
+        return view("integrations::index");
     }
 
     /**

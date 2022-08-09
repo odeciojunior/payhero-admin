@@ -38,12 +38,10 @@ class PushNotificationJob implements ShouldQueue
     public function handle()
     {
         try {
-
             $notificationMachine = new NotificationMachine();
             $notificationMachine->init($this->pushNotification);
-
         } catch (Exception $e) {
-            Log::warning('PushNotification - Erro no job ');
+            Log::warning("PushNotification - Erro no job ");
             report($e);
         }
     }

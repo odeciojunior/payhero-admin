@@ -21,16 +21,16 @@ class ProjectUpsellConfigResource extends JsonResource
     public function toArray($request)
     {
         $projectUpsellModel = new ProjectUpsellRule();
-        $projectUpsell      = $projectUpsellModel->where('project_id', $this->project_id)->first();
+        $projectUpsell = $projectUpsellModel->where("project_id", $this->project_id)->first();
 
         return [
-            'id'             => Hashids::encode($this->id),
-            'header'         => $this->header,
-            'title'          => $this->title,
-            'description'    => $this->description,
-            'countdown_time' => $this->countdown_time ?? '',
-            'countdown_flag' => $this->countdown_flag,
-            'has_upsell'      => $projectUpsell ? true : false,
+            "id" => Hashids::encode($this->id),
+            "header" => $this->header,
+            "title" => $this->title,
+            "description" => $this->description,
+            "countdown_time" => $this->countdown_time ?? "",
+            "countdown_flag" => $this->countdown_flag,
+            "has_upsell" => $projectUpsell ? true : false,
         ];
     }
 }

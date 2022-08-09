@@ -13,8 +13,8 @@ class AddBlockCheckoutColumnsCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->boolean('block_checkout')->default(false);
+        Schema::table("companies", function (Blueprint $table) {
+            $table->boolean("block_checkout")->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ class AddBlockCheckoutColumnsCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('block_checkout');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("block_checkout");
         });
     }
 }

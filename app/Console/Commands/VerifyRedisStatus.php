@@ -15,14 +15,14 @@ class VerifyRedisStatus extends Command
      *
      * @var string
      */
-    protected $signature = 'verify:redis';
+    protected $signature = "verify:redis";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -41,58 +41,45 @@ class VerifyRedisStatus extends Command
      */
     public function handle()
     {
-
-        try{
+        try {
             $redisClient = new Client();
 
-            $redisClient->get('test-connection');
-        }
-        catch(Exception $e){
+            $redisClient->get("test-connection");
+        } catch (Exception $e) {
             // redis OFF
 
             // email addresses for notify
-            $emails = [
-                'julioleichtweis@gmail.com',
-            ];
+            $emails = ["julioleichtweis@gmail.com"];
 
             // phone numbers for notify
-            $phoneNumbers = [
-                '5555996931098',
-            ];
+            $phoneNumbers = ["5555996931098"];
 
-            $sendgrid =  new SendGrid(getenv('SENDGRID_API_KEY'));
+            $sendgrid = new SendGrid(getenv("SENDGRID_API_KEY"));
             $smsService = new SmsService();
 
-            foreach($emails as $email){
-
-                try{
+            foreach ($emails as $email) {
+                try {
                     $sendgridMail = new \SendGrid\Mail\Mail();
-                    $sendgridMail->setFrom('help@cloudfox.net', 'cloudfox');
-                    $sendgridMail->addTo($email, 'cloudfox');
+                    $sendgridMail->setFrom("help@cloudfox.net", "cloudfox");
+                    $sendgridMail->addTo($email, "cloudfox");
                     $sendgridMail->addDynamicTemplateDatas([
-                        'server' => 'ADMIN'
+                        "server" => "ADMIN",
                     ]);
-                    $sendgridMail->setTemplateId('d-413a13e7bfbe412a9531037402872cff');
+                    $sendgridMail->setTemplateId("d-413a13e7bfbe412a9531037402872cff");
 
-                    $response   = $sendgrid->send($sendgridMail);
-                }
-                catch(Exception $e){
-                    //
-                }
-
-            }
-
-            foreach($phoneNumbers as $phoneNumber){
-
-                try{
-                    $smsService->sendSms($phoneNumber, 'Admin - redis caiu');
-                }
-                catch(Exception $e){
+                    $response = $sendgrid->send($sendgridMail);
+                } catch (Exception $e) {
                     //
                 }
             }
 
+            foreach ($phoneNumbers as $phoneNumber) {
+                try {
+                    $smsService->sendSms($phoneNumber, "Admin - redis caiu");
+                } catch (Exception $e) {
+                    //
+                }
+            }
         }
-
     }
 }

@@ -25,6 +25,8 @@ class AlterTableProductsPlansAddColumnCustomConfig extends Migration
     public function down()
     {
         DB::statement("ALTER TABLE `products_plans` DROP COLUMN `custom_config`;");
-        DB::statement("ALTER TABLE `plans` ADD COLUMN `config_personalization_product` JSON NULL DEFAULT NULL AFTER `shopify_variant_id`;");
+        DB::statement(
+            "ALTER TABLE `plans` ADD COLUMN `config_personalization_product` JSON NULL DEFAULT NULL AFTER `shopify_variant_id`;"
+        );
     }
 }

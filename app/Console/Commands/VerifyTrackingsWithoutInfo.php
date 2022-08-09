@@ -13,14 +13,14 @@ class VerifyTrackingsWithoutInfo extends Command
      *
      * @var string
      */
-    protected $signature = 'verify:trackingWithoutInfo';
+    protected $signature = "verify:trackingWithoutInfo";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -34,14 +34,14 @@ class VerifyTrackingsWithoutInfo extends Command
 
     public function handle()
     {
-
         $trackingService = new TrackingService();
 
-        $query = Tracking::select('product_plan_sale_id', 'tracking_code')
-            ->whereIn('system_status_enum', [
+        $query = Tracking::select("product_plan_sale_id", "tracking_code")
+            ->whereIn("system_status_enum", [
                 Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
                 Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
-            ])->whereDate('created_at', '>=', now()->subMonths(4));
+            ])
+            ->whereDate("created_at", ">=", now()->subMonths(4));
 
         $bar = $this->getOutput()->createProgressBar($query->count());
         $bar->start();
@@ -60,6 +60,5 @@ class VerifyTrackingsWithoutInfo extends Command
         });
 
         $bar->finish();
-
     }
 }

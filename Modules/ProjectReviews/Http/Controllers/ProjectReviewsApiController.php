@@ -30,23 +30,29 @@ class ProjectReviewsApiController extends Controller
         try {
             $data = $request->all();
             $projectReviewsModel = new ProjectReviews();
-            $projectId = current(Hashids::decode($data['project_id']));
+            $projectId = current(Hashids::decode($data["project_id"]));
             if ($projectId) {
-                $projectUpsell = $projectReviewsModel->where('project_id', $projectId);
+                $projectUpsell = $projectReviewsModel->where("project_id", $projectId);
 
                 return ProjectReviewsResource::collection($projectUpsell->paginate(5));
             } else {
-                return response()->json([
-                    'message' => 'Erro ao listar dados de reviews',
-                ], 400);
+                return response()->json(
+                    [
+                        "message" => "Erro ao listar dados de reviews",
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar buscar reviews (ProjectReviewsApiController - index)');
+            Log::warning("Erro ao tentar buscar reviews (ProjectReviewsApiController - index)");
             report($e);
 
-            return response()->json([
-                'message' => 'Erro ao listar dados de reviews',
-            ], 400);
+            return response()->json(
+                [
+                    "message" => "Erro ao listar dados de reviews",
+                ],
+                400
+            );
         }
     }
 
@@ -64,9 +70,12 @@ class ProjectReviewsApiController extends Controller
 
             return new ProjectReviewsResource($review);
         } else {
-            return response()->json([
-                'message' => 'Erro ao carregar dados da review',
-            ], 400);
+            return response()->json(
+                [
+                    "message" => "Erro ao carregar dados da review",
+                ],
+                400
+            );
         }
     }
 
@@ -83,9 +92,12 @@ class ProjectReviewsApiController extends Controller
 
             return new ProjectReviewsResource($review);
         } else {
-            return response()->json([
-                'message' => 'Erro ao carregar dados da review',
-            ], 400);
+            return response()->json(
+                [
+                    "message" => "Erro ao carregar dados da review",
+                ],
+                400
+            );
         }
     }
 
@@ -97,16 +109,16 @@ class ProjectReviewsApiController extends Controller
     {
         $projectReviewModel = new ProjectReviews();
         $data = $request->validated();
-        $projectId = current(Hashids::decode($data['project_id']));
+        $projectId = current(Hashids::decode($data["project_id"]));
         $project = Project::find($projectId);
         $amazonFileService = app(AmazonFileService::class);
 
         if (!empty($project)) {
             $applyPlanArray = [];
-            if (in_array('all', $data['apply_on_plans'])) {
-                $applyPlanArray[] = 'all';
+            if (in_array("all", $data["apply_on_plans"])) {
+                $applyPlanArray[] = "all";
             } else {
-                foreach ($data['apply_on_plans'] as $key => $value) {
+                foreach ($data["apply_on_plans"] as $key => $value) {
                     $applyPlanArray[] = current(Hashids::decode($value));
                 }
             }
@@ -114,39 +126,34 @@ class ProjectReviewsApiController extends Controller
             $applyPlanEncoded = json_encode($applyPlanArray);
 
             $review = $projectReviewModel->create([
-                'project_id'     => $projectId,
-                'name'           => $data['name'],
-                'description'    => $data['description'],
+                "project_id" => $projectId,
+                "name" => $data["name"],
+                "description" => $data["description"],
                 //'photo'          => $data['photo'] ,
-                'stars'          => $data['stars'] ?? 0,
-                'active_flag'    => $data['active_flag'] ?? 0,
-                'apply_on_plans' => $applyPlanEncoded,
+                "stars" => $data["stars"] ?? 0,
+                "active_flag" => $data["active_flag"] ?? 0,
+                "apply_on_plans" => $applyPlanEncoded,
             ]);
 
-            $photo = $request->file('photo');
+            $photo = $request->file("photo");
             if ($photo != null) {
                 try {
-                    if (!$data['photo_w'] || !$data['photo_h']) {
-                        $data['photo_h'] = $data['photo_w'] = 200;
+                    if (!$data["photo_w"] || !$data["photo_h"]) {
+                        $data["photo_h"] = $data["photo_w"] = 200;
                     }
 
                     $img = Image::make($photo->getPathname());
-                    $img->crop(
-                        $data['photo_w'],
-                        $data['photo_h'],
-                        $data['photo_x1'],
-                        $data['photo_y1']
-                    );
+                    $img->crop($data["photo_w"], $data["photo_h"], $data["photo_x1"], $data["photo_y1"]);
                     $img->resize(200, 200);
                     $img->save($photo->getPathname());
 
-                    $amazonFileService->setDisk('s3_plans_reviews');
+                    $amazonFileService->setDisk("s3_plans_reviews");
                     $amazonPath = $amazonFileService->uploadFile(
-                        'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/plans-reviews/public/',
+                        "uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . "/plans-reviews/public/",
                         $photo,
                         $photo->getFilename(),
-                        Hashids::encode($review->id) . '.' . $photo->extension(),
-                        'public'
+                        Hashids::encode($review->id) . "." . $photo->extension(),
+                        "public"
                     );
 
                     $review->photo = $amazonPath;
@@ -156,11 +163,14 @@ class ProjectReviewsApiController extends Controller
                 }
             }
 
-            return response()->json(['message' => 'Review criado com sucesso!'], 200);
+            return response()->json(["message" => "Review criado com sucesso!"], 200);
         } else {
-            return response()->json([
-                'message' => 'Erro ao criar review',
-            ], 400);
+            return response()->json(
+                [
+                    "message" => "Erro ao criar review",
+                ],
+                400
+            );
         }
     }
 
@@ -179,49 +189,43 @@ class ProjectReviewsApiController extends Controller
 
         if ($reviewId && !empty($review)) {
             $applyPlanArray = [];
-            if (in_array('all', $data['apply_on_plans'])) {
-                $applyPlanArray[] = 'all';
+            if (in_array("all", $data["apply_on_plans"])) {
+                $applyPlanArray[] = "all";
             } else {
-                foreach ($data['apply_on_plans'] as $key => $value) {
+                foreach ($data["apply_on_plans"] as $key => $value) {
                     $applyPlanArray[] = current(Hashids::decode($value));
                 }
             }
             $applyPlanEncoded = json_encode($applyPlanArray);
 
             $reviewUpdated = $review->update([
-                'name'           => $data['name'],
-                'description'    => $data['description'],
-                'stars'          => $data['stars'] ?? 0,
-                'active_flag'    => $data['active_flag'] ?? 0,
-                'apply_on_plans' => $applyPlanEncoded,
+                "name" => $data["name"],
+                "description" => $data["description"],
+                "stars" => $data["stars"] ?? 0,
+                "active_flag" => $data["active_flag"] ?? 0,
+                "apply_on_plans" => $applyPlanEncoded,
             ]);
 
             $amazonPath = null;
-            $photo = $request->file('photo');
+            $photo = $request->file("photo");
             if ($photo != null) {
                 try {
-
-                    if (!$data['photo_w'] || !$data['photo_h']) {
-                        $data['photo_h'] = $data['photo_w'] = 200;
+                    if (!$data["photo_w"] || !$data["photo_h"]) {
+                        $data["photo_h"] = $data["photo_w"] = 200;
                     }
 
                     $img = Image::make($photo->getPathname());
-                    $img->crop(
-                        $data['photo_w'],
-                        $data['photo_h'],
-                        $data['photo_x1'],
-                        $data['photo_y1']
-                    );
+                    $img->crop($data["photo_w"], $data["photo_h"], $data["photo_x1"], $data["photo_y1"]);
                     $img->resize(200, 200);
                     $img->save($photo->getPathname());
 
-                    $amazonFileService->setDisk('s3_plans_reviews');
+                    $amazonFileService->setDisk("s3_plans_reviews");
                     $amazonPath = $amazonFileService->uploadFile(
-                        'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/plans-reviews/public/',
+                        "uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . "/plans-reviews/public/",
                         $photo,
                         $photo->getFilename(),
-                        Hashids::encode($review->id) . '.' . $photo->extension(),
-                        'public'
+                        Hashids::encode($review->id) . "." . $photo->extension(),
+                        "public"
                     );
 
                     $review->photo = $amazonPath;
@@ -232,16 +236,22 @@ class ProjectReviewsApiController extends Controller
             }
 
             if ($reviewUpdated) {
-                return response()->json(['message' => 'Review atualizado com sucesso!'], 200);
+                return response()->json(["message" => "Review atualizado com sucesso!"], 200);
             } else {
-                return response()->json([
-                    'message' => 'Erro ao atualizar review',
-                ], 400);
+                return response()->json(
+                    [
+                        "message" => "Erro ao atualizar review",
+                    ],
+                    400
+                );
             }
         } else {
-            return response()->json([
-                'message' => 'Review não encontrado',
-            ], 404);
+            return response()->json(
+                [
+                    "message" => "Review não encontrado",
+                ],
+                404
+            );
         }
     }
 
@@ -254,9 +264,12 @@ class ProjectReviewsApiController extends Controller
     {
         try {
             if (empty($id)) {
-                return response()->json([
-                    'message' => 'Erro ao deletar review',
-                ], 404);
+                return response()->json(
+                    [
+                        "message" => "Erro ao deletar review",
+                    ],
+                    404
+                );
             }
 
             $projectReviewModel = new ProjectReviews();
@@ -265,19 +278,25 @@ class ProjectReviewsApiController extends Controller
             if (!empty($review)) {
                 $reviewDeleted = $review->delete();
                 if ($reviewDeleted) {
-                    return response()->json(['message' => 'Review deletada com sucesso!']);
+                    return response()->json(["message" => "Review deletada com sucesso!"]);
                 }
             }
 
-            return response()->json([
-                'message' => 'Erro ao deletar review',
-            ], 400);
+            return response()->json(
+                [
+                    "message" => "Erro ao deletar review",
+                ],
+                400
+            );
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                'message' => 'Erro ao deletar review',
-            ], 400);
+            return response()->json(
+                [
+                    "message" => "Erro ao deletar review",
+                ],
+                400
+            );
         }
     }
 }

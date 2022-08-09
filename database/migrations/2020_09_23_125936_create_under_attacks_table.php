@@ -13,15 +13,18 @@ class CreateUnderAttacksTable extends Migration
      */
     public function up()
     {
-        Schema::create('under_attacks', function (Blueprint $table) {
+        Schema::create("under_attacks", function (Blueprint $table) {
             $table->id();
-            $table->integer('domain_id')->unsigned();
-            $table->timestamp('removed_at')->nullable();
+            $table->integer("domain_id")->unsigned();
+            $table->timestamp("removed_at")->nullable();
             $table->timestamps();
         });
 
-        Schema::table('under_attacks', function(Blueprint $table) {
-            $table->foreign('domain_id')->references('id')->on('domains');
+        Schema::table("under_attacks", function (Blueprint $table) {
+            $table
+                ->foreign("domain_id")
+                ->references("id")
+                ->on("domains");
         });
     }
 
@@ -32,6 +35,6 @@ class CreateUnderAttacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('under_attacks');
+        Schema::dropIfExists("under_attacks");
     }
 }

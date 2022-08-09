@@ -13,9 +13,15 @@ class AlterColumnTypeToTypeEnumTableUserProjects extends Migration
      */
     public function up()
     {
-        Schema::table('users_projects', function (Blueprint $table) {
-            $table->integer('type_enum')->default(0)->after('company_id');
-            $table->integer('status_flag')->default(0)->after('edit_permission');
+        Schema::table("users_projects", function (Blueprint $table) {
+            $table
+                ->integer("type_enum")
+                ->default(0)
+                ->after("company_id");
+            $table
+                ->integer("status_flag")
+                ->default(0)
+                ->after("edit_permission");
         });
     }
 
@@ -26,9 +32,9 @@ class AlterColumnTypeToTypeEnumTableUserProjects extends Migration
      */
     public function down()
     {
-        Schema::table('users_projects', function (Blueprint $table) {
-            $table->dropColumn('type_enum');
-            $table->dropColumn('status_flag');
+        Schema::table("users_projects", function (Blueprint $table) {
+            $table->dropColumn("type_enum");
+            $table->dropColumn("status_flag");
         });
     }
 }

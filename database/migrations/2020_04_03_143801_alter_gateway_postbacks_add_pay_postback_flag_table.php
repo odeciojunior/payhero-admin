@@ -12,8 +12,11 @@ class AlterGatewayPostbacksAddPayPostbackFlagTable extends Migration
      */
     public function up()
     {
-        Schema::table('gateway_postbacks', function(Blueprint $table) {
-            $table->boolean('pay_postback_flag')->default(false)->after('postback_valid_flag');
+        Schema::table("gateway_postbacks", function (Blueprint $table) {
+            $table
+                ->boolean("pay_postback_flag")
+                ->default(false)
+                ->after("postback_valid_flag");
         });
     }
 
@@ -23,8 +26,8 @@ class AlterGatewayPostbacksAddPayPostbackFlagTable extends Migration
      */
     public function down()
     {
-        Schema::table('gateway_postbacks', function(Blueprint $table) {
-            $table->dropColumn('pay_postback_flag');
+        Schema::table("gateway_postbacks", function (Blueprint $table) {
+            $table->dropColumn("pay_postback_flag");
         });
     }
 }

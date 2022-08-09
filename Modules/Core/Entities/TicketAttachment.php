@@ -26,17 +26,9 @@ class TicketAttachment extends Model
     const TYPE_FROM_ADMIN = 2;
     const TYPE_FROM_SYSTEM = 3;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $fillable = [
-        'ticket_id',
-        'file',
-        'filename',
-        'type_enum',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ["ticket_id", "file", "filename", "type_enum", "created_at", "updated_at", "deleted_at"];
 
     protected static $logFillable = true;
 
@@ -52,12 +44,12 @@ class TicketAttachment extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'O anexo do chamado foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'O anexo do chamado foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Anexo do chamado criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "O anexo do chamado foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "O anexo do chamado foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Anexo do chamado criado.";
         } else {
             $activity->description = $eventName;
         }

@@ -19,21 +19,21 @@ class ProductPlanPresenter extends Presenter
         if (is_numeric($currency)) {
             switch ($currency) {
                 case 1:
-                    return 'BRL';
+                    return "BRL";
                 case 2:
-                    return 'USD';
+                    return "USD";
             }
 
-            return '';
+            return "";
         } else {
             switch ($currency) {
-                case 'BRL':
+                case "BRL":
                     return 1;
-                case 'USD':
+                case "USD":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 }

@@ -13,25 +13,31 @@ class CreateRegeneratedBilletsTable extends Migration
      */
     public function up()
     {
-        Schema::create('regenerated_billets', function (Blueprint $table) {
+        Schema::create("regenerated_billets", function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('sale_id')->unsigned();
-            $table->string('billet_link');
-            $table->string('billet_digitable_line');
-            $table->string('billet_due_date');
-            $table->string('gateway_transaction_id');
-            $table->bigInteger('gateway_billet_identificator')->nullable();
-            $table->bigInteger('gateway_id')->unsigned();
-            $table->bigInteger('owner_id');
+            $table->bigInteger("sale_id")->unsigned();
+            $table->string("billet_link");
+            $table->string("billet_digitable_line");
+            $table->string("billet_due_date");
+            $table->string("gateway_transaction_id");
+            $table->bigInteger("gateway_billet_identificator")->nullable();
+            $table->bigInteger("gateway_id")->unsigned();
+            $table->bigInteger("owner_id");
             $table->timestamps();
         });
 
-        Schema::table('regenerated_billets', function(Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
+        Schema::table("regenerated_billets", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
 
-        Schema::table('regenerated_billets', function(Blueprint $table) {
-            $table->foreign('gateway_id')->references('id')->on('gateways');
+        Schema::table("regenerated_billets", function (Blueprint $table) {
+            $table
+                ->foreign("gateway_id")
+                ->references("id")
+                ->on("gateways");
         });
     }
 
@@ -42,6 +48,6 @@ class CreateRegeneratedBilletsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('regenerated_billets');
+        Schema::dropIfExists("regenerated_billets");
     }
 }

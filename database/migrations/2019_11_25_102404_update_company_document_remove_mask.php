@@ -18,10 +18,9 @@ class UpdateCompanyDocumentRemoveMask extends Migration
 
         $companies = $companyModel->all();
 
-        foreach($companies as $company) {
-
+        foreach ($companies as $company) {
             $company->update([
-                'company_document' => preg_replace("/[^0-9]/", "", $company->company_document),
+                "company_document" => preg_replace("/[^0-9]/", "", $company->company_document),
             ]);
         }
     }

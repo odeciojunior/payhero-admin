@@ -5,10 +5,7 @@ $(() => {
         // 1 - Verifica se o input não é vazio ou inválido via regex
         if (
             $("#support_phone").val() &&
-            testinput(
-                /^\([1-9]{2}\)\s(?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,
-                $("#support_phone").val()
-            )
+            testinput(/^\([1-9]{2}\)\s(?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/, $("#support_phone").val())
         ) {
             $("#support_phone").removeClass("warning-input");
 
@@ -21,22 +18,21 @@ $(() => {
     });
 
     $("#remove_phone").on("click", () => {
-        $('#support_phone').val("");
-        $('#remove_phone').hide('slow');
-        $('#verified_phone_open').hide('slow');
-        $('#verify_phone_open').show('slow');
-        $('#checkout_editor').submit();
+        $("#support_phone").val("");
+        $("#remove_phone").hide("slow");
+        $("#verified_phone_open").hide("slow");
+        $("#verify_phone_open").show("slow");
+        $("#checkout_editor").submit();
     });
-    
 
     $("#modal_verify_phone").on("hidden.bs.modal", function () {
-        $('.code-input').val("");
-        $('#modal_verify_content').hide();
-        $('#modal_verified_content').hide();
+        $(".code-input").val("");
+        $("#modal_verify_content").hide();
+        $("#modal_verified_content").hide();
     });
 
     $("#modal_verify_phone").on("shown.bs.modal", function () {
-        $('#modal_verify_content').show('slow');
+        $("#modal_verify_content").show("slow");
 
         $("#phone_modal").empty();
         $("#phone_modal").append($("#support_phone").val());
@@ -60,7 +56,6 @@ $(() => {
     });
 
     function verifyPhone() {
-
         loadOnAny("#modal_verify_content", false, {
             styles: {
                 container: {
@@ -86,13 +81,12 @@ $(() => {
             },
             success: function (response) {
                 alertCustom("success", response.message);
-                
-                $('#verify_phone_open').hide();
-                $('#verified_phone_open').show();
-                $('#remove_phone').show();
-                $('#modal_verify_content').hide();                
+
+                $("#verify_phone_open").hide();
+                $("#verified_phone_open").show();
+                $("#remove_phone").show();
+                $("#modal_verify_content").hide();
                 loadOnAny("#modal_verified_content", true);
-                
             },
             error: function (response) {
                 startTimer();
@@ -100,7 +94,6 @@ $(() => {
                 $(".verify-error").show("fast", "linear");
                 // errorAjaxResponse(response);
                 loadOnAny("#modal_verify_content", true);
-                
             },
         });
     }

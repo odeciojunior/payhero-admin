@@ -20,14 +20,14 @@ class AsaasTransfersSurplusBalance extends Command
      *
      * @var string
      */
-    protected $signature = 'asaas:transfers-surplus-balance';
+    protected $signature = "asaas:transfers-surplus-balance";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     protected $gatewayId = 0;
 
@@ -49,14 +49,11 @@ class AsaasTransfersSurplusBalance extends Command
      */
     public function handle()
     {
-
         try {
-
-            $companies = Company::whereHas('transactions', function($q) {
-                $q->where('gateway_id' ,Gateway::ASAAS_PRODUCTION_ID)
-                    ->where('created_at', '>' , '2021-09');
+            $companies = Company::whereHas("transactions", function ($q) {
+                $q->where("gateway_id", Gateway::ASAAS_PRODUCTION_ID)->where("created_at", ">", "2021-09");
             })
-                ->with('user')
+                ->with("user")
                 ->get();
 
             $checkoutGateway = new CheckoutGateway($this->gatewayId);
@@ -65,7 +62,7 @@ class AsaasTransfersSurplusBalance extends Command
             $asaasBalance = 0;
             $companyBalance = 0;
             $amountTransfer = 0;
-            $status = '';
+            $status = "";
 
             // Log::info(
             //     str_pad("Company",15,' ',STR_PAD_RIGHT).
@@ -75,48 +72,45 @@ class AsaasTransfersSurplusBalance extends Command
             //     str_pad('Status',15,' ',STR_PAD_RIGHT).
             //     "Usuário"
             // );
-            $this->comment('processando...');
+            $this->comment("processando...");
             $output = new ConsoleOutput();
             $progress = new ProgressBar($output, count($companies));
             $progress->start();
 
-            foreach($companies as $company)
-            {
+            foreach ($companies as $company) {
                 $progress->advance();
                 $asaasBalance = 0;
                 $companyBalance = 0;
                 $amountTransfer = 0;
-                $status = 'Nothing';
+                $status = "Nothing";
 
                 $response = $checkoutGateway->getCurrentBalance($company->id);
-                if(!empty($response->status) && $response->status == 'success'){
-                    $asaasBalance = $response->total_balance*100;
+                if (!empty($response->status) && $response->status == "success") {
+                    $asaasBalance = $response->total_balance * 100;
                 }
 
-                $pendingChargebacks = Transfer::whereDoesntHave('asaasTransfer',function($qr){
-                    $qr->where('status','DONE');
+                $pendingChargebacks = Transfer::whereDoesntHave("asaasTransfer", function ($qr) {
+                    $qr->where("status", "DONE");
                 })
-                    ->where('reason','chargedback')
-                    ->where('gateway_id',$this->gatewayId)
-                    ->where('company_id', $company->id)
-                    ->sum('value');
+                    ->where("reason", "chargedback")
+                    ->where("gateway_id", $this->gatewayId)
+                    ->where("company_id", $company->id)
+                    ->sum("value");
 
                 $asaasBalance -= $pendingChargebacks;
 
                 $asaasService->setCompany($company);
                 $companyBalance = $asaasService->getAvailableBalance() + $asaasService->getPendingBalance();
 
-                $pendingWtihdrawals = Withdrawal::where('company_id',$company->id)
-                    ->whereIn('status',[Withdrawal::STATUS_PENDING,Withdrawal::STATUS_IN_REVIEW])->sum('value');
-                $companyBalance+= $pendingWtihdrawals;
+                $pendingWtihdrawals = Withdrawal::where("company_id", $company->id)
+                    ->whereIn("status", [Withdrawal::STATUS_PENDING, Withdrawal::STATUS_IN_REVIEW])
+                    ->sum("value");
+                $companyBalance += $pendingWtihdrawals;
 
-                if($asaasBalance > 0 && $asaasBalance > $companyBalance)
-                {
+                if ($asaasBalance > 0 && $asaasBalance > $companyBalance) {
                     $amountTransfer = intval($companyBalance > 0 ? $asaasBalance - $companyBalance : $asaasBalance);
 
-                    $response = $checkoutGateway->transferSubSellerToSeller(
-                        $company->id, $amountTransfer
-                    );
+                    $response = $checkoutGateway->transferSubSellerToSeller($company->id, $amountTransfer);
 
                     //$status = 'Done';
                     //if(empty($response) || empty($response->status) || $response->status=='error'){
@@ -135,10 +129,8 @@ class AsaasTransfersSurplusBalance extends Command
             }
 
             $progress->finish();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

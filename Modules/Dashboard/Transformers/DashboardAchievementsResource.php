@@ -14,8 +14,8 @@ use Modules\Core\Services\Performance\UserLevel;
  */
 class DashboardAchievementsResource extends JsonResource
 {
-    CONST ACHIEVEMENT_TYPE_0 = 0; // ACHIEVEMENT
-    CONST ACHIEVEMENT_TYPE_1 = 1; // LEVEL
+    const ACHIEVEMENT_TYPE_0 = 0; // ACHIEVEMENT
+    const ACHIEVEMENT_TYPE_1 = 1; // LEVEL
 
     /**
      * Transform the resource into an array.
@@ -28,22 +28,22 @@ class DashboardAchievementsResource extends JsonResource
         if ($this->subject_type == UpdateUserLevel::class) {
             $user = auth()->user();
             $data = (new UserLevel())->getLevelData($this->subject_id);
-            $benefits = $user->benefits->where('enabled', true)->toArray();
-            $data['benefits'] = null;
+            $benefits = $user->benefits->where("enabled", true)->toArray();
+            $data["benefits"] = null;
 
             if (!empty($benefits)) {
-                $benefitsDescription = array_column($benefits, 'description');
-                $data['benefits'] = $this->arrayToString($benefitsDescription);
+                $benefitsDescription = array_column($benefits, "description");
+                $data["benefits"] = $this->arrayToString($benefitsDescription);
             }
 
             return [
-                "name" => $data['name'],
-                "description" => $data['description'],
-                "storytelling" => $data['storytelling'],
-                "icon" => $data['icon'],
-                'achievement' => \hashids()->encode($this->id),
-                'type' => self::ACHIEVEMENT_TYPE_1,
-                'benefits' => $data['benefits']
+                "name" => $data["name"],
+                "description" => $data["description"],
+                "storytelling" => $data["storytelling"],
+                "icon" => $data["icon"],
+                "achievement" => \hashids()->encode($this->id),
+                "type" => self::ACHIEVEMENT_TYPE_1,
+                "benefits" => $data["benefits"],
             ];
         }
 
@@ -51,13 +51,13 @@ class DashboardAchievementsResource extends JsonResource
             $data = Achievement::find($this->subject_id)->toArray();
 
             return [
-                "name" => $data['name'],
-                "description" => $data['description'],
-                "storytelling" => $data['storytelling'],
-                "icon" => $data['icon'],
-                'achievement' => \hashids()->encode($this->id),
-                'type' => self::ACHIEVEMENT_TYPE_0,
-                'benefits' => null
+                "name" => $data["name"],
+                "description" => $data["description"],
+                "storytelling" => $data["storytelling"],
+                "icon" => $data["icon"],
+                "achievement" => \hashids()->encode($this->id),
+                "type" => self::ACHIEVEMENT_TYPE_0,
+                "benefits" => null,
             ];
         }
 
@@ -68,8 +68,8 @@ class DashboardAchievementsResource extends JsonResource
     {
         if (count($array) > 1) {
             $lastItem = array_pop($array);
-            $text = implode(', ', $array);
-            $text .= ' e '.$lastItem;
+            $text = implode(", ", $array);
+            $text .= " e " . $lastItem;
 
             return $text;
         }

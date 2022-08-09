@@ -15,10 +15,10 @@ class InsertIntoGerencianetInGatewayConfigs extends Migration
     public function up()
     {
         GatewayConfig::create([
-            'name'=>'gerencianet',
-            'gateway_id'=>19,
-            'type'=>'pix',
-            'type_enum'=>4
+            "name" => "gerencianet",
+            "gateway_id" => 19,
+            "type" => "pix",
+            "type_enum" => 4,
         ]);
     }
 
@@ -29,7 +29,7 @@ class InsertIntoGerencianetInGatewayConfigs extends Migration
      */
     public function down()
     {
-        Schema::table('gateway_configs', function (Blueprint $table) {
+        Schema::table("gateway_configs", function (Blueprint $table) {
             //
         });
     }

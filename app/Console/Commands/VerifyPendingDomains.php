@@ -12,12 +12,12 @@ class VerifyPendingDomains extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'verify:pendingdomains';
+    protected $signature = "verify:pendingdomains";
     /**
      * The console command description.
      * @var string
      */
-    protected $description = 'Verifica se os domínios pendentes ficaram ativos';
+    protected $description = "Verifica se os domínios pendentes ficaram ativos";
     /**
      * @var DomainService
      */
@@ -46,12 +46,10 @@ class VerifyPendingDomains extends Command
 
     public function handle()
     {
-
         try {
             $this->getDomainService()->verifyPendingDomains();
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

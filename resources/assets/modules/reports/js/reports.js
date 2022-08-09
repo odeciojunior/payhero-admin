@@ -38,16 +38,10 @@ $(function () {
             },
             ranges: {
                 Hoje: [moment(), moment()],
-                Ontem: [
-                    moment().subtract(1, "days"),
-                    moment().subtract(1, "days"),
-                ],
+                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
                 "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
                 "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [
-                    moment().startOf("month"),
-                    moment().endOf("month"),
-                ],
+                "Este mês": [moment().startOf("month"), moment().endOf("month")],
                 "Mês passado": [
                     moment().subtract(1, "month").startOf("month"),
                     moment().subtract(1, "month").endOf("month"),
@@ -81,12 +75,7 @@ $(function () {
             "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-reembolso, #qtd-pending, #qtd-canceled" +
                 "#percent-credit-card, #percent-values-boleto, #credit-card-value, #boleto-value, #percent-boleto-convert" +
                 "#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio, #qtd-canceled"
-        ).html(
-            "<span class='loading'>" +
-                "<span class='loaderSpan' >" +
-                "</span>" +
-                "</span>"
-        );
+        ).html("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable("#origins-table-itens", ".table-vendas-itens");
 
         $.ajax({
@@ -105,49 +94,31 @@ $(function () {
             },
             success: function (response) {
                 current_currency = response.currency;
-                $("#revenue-generated").html(
-                    response.currency + " " + response.totalPaidValueAproved
-                );
+                $("#revenue-generated").html(response.currency + " " + response.totalPaidValueAproved);
                 $("#qtd-aproved").html(response.contAproved);
                 $("#qtd-boletos").html(response.contBoleto);
                 $("#qtd-recusadas").html(response.contRecused);
                 $("#qtd-reembolso").html(response.contChargeBack);
                 $("#qtd-pending").html(response.contPending);
                 $("#qtd-canceled").html(response.contCanceled);
-                $("#percent-credit-card").html(
-                    response.totalPercentCartao + "%"
-                );
-                $("#percent-values-boleto").html(
-                    response.totalPercentPaidBoleto + "%"
-                );
-                $("#credit-card-value").html(
-                    response.currency + " " + response.totalValueCreditCard
-                );
-                $("#boleto-value").html(
-                    response.currency + " " + response.totalValueBoleto
-                );
-                $("#percent-boleto-convert").html(
-                    response.convercaoBoleto + "%"
-                );
-                $("#percent-credit-card-convert").html(
-                    response.convercaoCreditCard + "%"
-                );
+                $("#percent-credit-card").html(response.totalPercentCartao + "%");
+                $("#percent-values-boleto").html(response.totalPercentPaidBoleto + "%");
+                $("#credit-card-value").html(response.currency + " " + response.totalValueCreditCard);
+                $("#boleto-value").html(response.currency + " " + response.totalValueBoleto);
+                $("#percent-boleto-convert").html(response.convercaoBoleto + "%");
+                $("#percent-credit-card-convert").html(response.convercaoCreditCard + "%");
                 $("#percent-desktop").html(response.conversaoDesktop + "%");
                 $("#percent-mobile").html(response.conversaoMobile + "%");
                 $("#qtd-cartao-convert").html(response.cartaoConvert);
                 $("#qtd-boleto-convert").html(response.boletoConvert);
-                $("#ticket-medio").html(
-                    response.currency + " " + response.ticketMedio
-                );
+                $("#ticket-medio").html(response.currency + " " + response.ticketMedio);
 
                 var table_data_itens = "";
                 $.each(response.plans, function (index, data) {
                     console.log(data);
                     table_data_itens += "<tr>";
                     table_data_itens +=
-                        "<td><img src=" +
-                        data.photo +
-                        ' width="50px;" style="border-radius:6px;"></td>';
+                        "<td><img src=" + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
                     table_data_itens += "<td>" + data.name + "</td>";
                     table_data_itens += "<td>" + data.quantidade + "</td>";
                     table_data_itens += "</tr>";
@@ -201,9 +172,7 @@ $(function () {
             },
             success: function (response) {
                 if (response.data == "") {
-                    $("#origins-table").html(
-                        "<td colspan='3' class='text-center'> Nenhuma venda encontrada</div>"
-                    );
+                    $("#origins-table").html("<td colspan='3' class='text-center'> Nenhuma venda encontrada</div>");
                     $("#pagination").html("");
                 } else {
                     var table_data = "";
@@ -212,12 +181,7 @@ $(function () {
                         table_data += "<tr>";
                         table_data += "<td>" + data.origin + "</td>";
                         table_data += "<td>" + data.sales_amount + "</td>";
-                        table_data +=
-                            "<td>" +
-                            current_currency +
-                            " " +
-                            data.balance +
-                            "</td>";
+                        table_data += "<td>" + current_currency + " " + data.balance + "</td>";
                         table_data += "</tr>";
                     });
 
@@ -279,9 +243,7 @@ $(function () {
                 );
                 scoreChart
                     .on("created", function (data) {
-                        var defs =
-                                data.svg.querySelector("defs") ||
-                                data.svg.elem("defs"),
+                        var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
                             filter =
                                 (data.svg.width(),
                                 data.svg.height(),
@@ -318,9 +280,7 @@ $(function () {
                                   filter: "url(#shadow" + id + ")",
                               })
                             : "point" === data.type &&
-                              new Chartist.Svg(
-                                  data.element._node.parentNode
-                              ).elem("line", {
+                              new Chartist.Svg(data.element._node.parentNode).elem("line", {
                                   x1: data.x,
                                   y1: data.y,
                                   x2: data.x + 0.01,
@@ -335,14 +295,10 @@ $(function () {
                                         from: data.path
                                             .clone()
                                             .scale(1, 0)
-                                            .translate(
-                                                0,
-                                                data.chartRect.height()
-                                            )
+                                            .translate(0, data.chartRect.height())
                                             .stringify(),
                                         to: data.path.clone().stringify(),
-                                        easing:
-                                            Chartist.Svg.Easing.easeOutQuint,
+                                        easing: Chartist.Svg.Easing.easeOutQuint,
                                     },
                                 });
                     });
@@ -357,12 +313,7 @@ $(function () {
                 data: chartData.credit_card_data,
             };
         (createChart = function (button) {
-            scoreChart(
-                "scoreLineToDay",
-                labelList,
-                creditCardSalesData,
-                boletoSalesData
-            );
+            scoreChart("scoreLineToDay", labelList, creditCardSalesData, boletoSalesData);
         }),
             createChart(),
             $(".chart-action li a").on("click", function () {
@@ -377,8 +328,7 @@ $(function () {
             return true;
         }
 
-        var primeira_pagina =
-            "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         $("#pagination").append(primeira_pagina);
 
@@ -405,22 +355,14 @@ $(function () {
                     "</button>"
             );
 
-            $("#pagina_" + (response.meta.current_page - x)).on(
-                "click",
-                function () {
-                    updateSalesByOrigin("?page=" + $(this).html());
-                }
-            );
+            $("#pagina_" + (response.meta.current_page - x)).on("click", function () {
+                updateSalesByOrigin("?page=" + $(this).html());
+            });
         }
 
-        if (
-            response.meta.current_page != 1 &&
-            response.meta.current_page != response.meta.last_page
-        ) {
+        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
             var pagina_atual =
-                "<button id='pagina_atual' class='btn nav-btn active'>" +
-                response.meta.current_page +
-                "</button>";
+                "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
             $("#pagination").append(pagina_atual);
         }
@@ -438,19 +380,14 @@ $(function () {
                     "</button>"
             );
 
-            $("#pagina_" + (response.meta.current_page + x)).on(
-                "click",
-                function () {
-                    updateSalesByOrigin("?page=" + $(this).html());
-                }
-            );
+            $("#pagina_" + (response.meta.current_page + x)).on("click", function () {
+                updateSalesByOrigin("?page=" + $(this).html());
+            });
         }
 
         if (response.meta.last_page != "1") {
             var ultima_pagina =
-                "<button id='ultima_pagina' class='btn nav-btn'>" +
-                response.meta.last_page +
-                "</button>";
+                "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
 
             $("#pagination").append(ultima_pagina);
 

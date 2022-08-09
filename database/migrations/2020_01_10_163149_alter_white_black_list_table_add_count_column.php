@@ -12,8 +12,11 @@ class AlterWhiteBlackListTableAddCountColumn extends Migration
      */
     public function up()
     {
-        Schema::table('white_black_list', function(Blueprint $table) {
-            $table->unsignedInteger("count")->after("description")->default(0);
+        Schema::table("white_black_list", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("count")
+                ->after("description")
+                ->default(0);
         });
     }
 
@@ -23,7 +26,7 @@ class AlterWhiteBlackListTableAddCountColumn extends Migration
      */
     public function down()
     {
-        Schema::table('white_black_list', function(Blueprint $table) {
+        Schema::table("white_black_list", function (Blueprint $table) {
             $table->dropColumn(["count"]);
         });
     }

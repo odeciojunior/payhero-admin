@@ -20,7 +20,7 @@ class CurrencyQuotationService
      */
     private function getUsdQuotation()
     {
-        $date = Carbon::yesterday()->format('m-d-Y');
+        $date = Carbon::yesterday()->format("m-d-Y");
         //open connection
         $ch = curl_init();
 
@@ -41,11 +41,11 @@ class CurrencyQuotationService
             //sem cotacao
             $quotation = 0;
         } else {
-            $quotation = number_format(current($quotationResponse->value)->cotacaoCompra, 2, '', '');
+            $quotation = number_format(current($quotationResponse->value)->cotacaoCompra, 2, "", "");
         }
 
-        $result['http_response'] = $response;
-        $result['quotation']     = $quotation;
+        $result["http_response"] = $response;
+        $result["quotation"] = $quotation;
 
         return $result;
     }
@@ -59,14 +59,13 @@ class CurrencyQuotationService
 
         $usdQuotation = $this->getUsdQuotation();
 
-        if (!empty($usdQuotation['quotation']) && $usdQuotation['quotation'] > 0) {
+        if (!empty($usdQuotation["quotation"]) && $usdQuotation["quotation"] > 0) {
             $usdCurrencyQuotation = $currencyQuotationModel->create([
-                                                                        'currency_type' => $currencyQuotationModel->present()
-                                                                                                                  ->getCurrencyType('USD'),
-                                                                        'currency'      => 'USD',
-                                                                        'http_response' => $usdQuotation['http_response'],
-                                                                        'value'         => $usdQuotation['quotation'],
-                                                                    ]);
+                "currency_type" => $currencyQuotationModel->present()->getCurrencyType("USD"),
+                "currency" => "USD",
+                "http_response" => $usdQuotation["http_response"],
+                "value" => $usdQuotation["quotation"],
+            ]);
         }
     }
 
@@ -77,11 +76,11 @@ class CurrencyQuotationService
     public function getLastUsdQuotation()
     {
         $currencyQuotationModel = new CurrencyQuotation();
-        $currencyQuotationUsd   = $currencyQuotationModel->where('currency_type', $currencyQuotationModel->present()
-                                                                                                         ->getCurrencyType('USD'))
-                                                         ->where('value','>','0')
-                                                         ->latest('id')
-                                                         ->first();
+        $currencyQuotationUsd = $currencyQuotationModel
+            ->where("currency_type", $currencyQuotationModel->present()->getCurrencyType("USD"))
+            ->where("value", ">", "0")
+            ->latest("id")
+            ->first();
 
         return $currencyQuotationUsd;
     }

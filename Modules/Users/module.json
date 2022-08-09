@@ -4,9 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
-    "providers": [
-        "Modules\\Users\\Providers\\UsersServiceProvider"
-    ],
+    "providers": ["Modules\\Users\\Providers\\UsersServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

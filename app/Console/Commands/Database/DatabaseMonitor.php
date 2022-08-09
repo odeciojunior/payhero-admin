@@ -8,15 +8,15 @@ use Symfony\Component\Console\Cursor;
 
 class DatabaseMonitor extends Command
 {
-    protected $signature = 'database:monitor';
+    protected $signature = "database:monitor";
 
     public function handle()
     {
         $cursor = new Cursor($this->output);
         while (true) {
-            $results = DB::select('show processlist');
+            $results = DB::select("show processlist");
 
-            $headers = ['User', 'Host', 'Time', 'Info'];
+            $headers = ["User", "Host", "Time", "Info"];
             $data = [];
             foreach ($results as $result) {
                 if (!is_null($result->Info)) {

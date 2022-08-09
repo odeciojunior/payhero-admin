@@ -12,20 +12,23 @@ class CreateTableUpsellConfigs extends Migration
      */
     public function up()
     {
-        Schema::create('project_upsell_configs', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('project_id')->index();
-            $table->string('header');
-            $table->string('title');
-            $table->text('description');
-            $table->integer('countdown_time')->nullable();
-            $table->boolean('countdown_flag')->default(0);
+        Schema::create("project_upsell_configs", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("project_id")->index();
+            $table->string("header");
+            $table->string("title");
+            $table->text("description");
+            $table->integer("countdown_time")->nullable();
+            $table->boolean("countdown_flag")->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('project_upsell_configs', function(Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
+        Schema::table("project_upsell_configs", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
     }
 
@@ -35,6 +38,6 @@ class CreateTableUpsellConfigs extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('upsell_configs');
+        Schema::dropIfExists("upsell_configs");
     }
 }
