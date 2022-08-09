@@ -411,7 +411,8 @@ function loading(elementId, loaderClass) {
 
 function loadingOnScreen() {
     loadOnAnyPage('.page');
-    $('body').css('overflow-y', 'hidden')
+    $('body').css('overflow-y', 'hidden');
+    $('.new-register-page-open-modal-container').hide();
 }
 
 function loadingOnChart(target) {

@@ -98,7 +98,7 @@ $(window).on("load", function(){
         $("#available-in-period").html('');
         updateCompanyDefault().done( function(data1){
             getCompaniesAndProjects().done(function(data2){
-                if(!isEmpty(data2.company_default_projects)){
+                if(!isEmpty(data2.company_default)){
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     window.gatewayCode = window.location.href.split('/')[4];
@@ -111,6 +111,7 @@ $(window).on("load", function(){
                 else{
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
+                    loadingOnScreenRemove();
                 }
             });
         });
