@@ -23,7 +23,7 @@ $(document).ready(function(){
 
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-
+        $("#project-empty-title").hide();
         $("#project-empty").hide();
         $("#project-not-empty").show();
         if($('#container-config').is(':visible')){
