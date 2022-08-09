@@ -291,9 +291,9 @@ $(document).ready(function () {
 
         for (var installments = 1; installments < installmentsLimit + 1; installments++) {
             $("#interest_free_installments").append(
-                `<option 
+                `<option
                     value="${installments}" ${installments == interestFreeInstallments ? "selected" : ""}>
-                    ${installments}x 
+                    ${installments}x
                 </option>`
             );
         }
@@ -304,9 +304,9 @@ $(document).ready(function () {
 
         for (var installments = 1; installments < installmentsLimit + 1; installments++) {
             $("#preselected_installment").append(
-                `<option 
+                `<option
                     value="${installments}" ${installments == preselectedInstallment ? "selected" : ""}>
-                    ${installments}x 
+                    ${installments}x
                 </option>`
             );
         }

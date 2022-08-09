@@ -190,6 +190,10 @@
     align-items: center;
 }
 
+.preview-logo {
+    padding: 4px;
+}
+
 .preview-logo.desktop {
     border-radius: 4px;
     max-height: 41px;

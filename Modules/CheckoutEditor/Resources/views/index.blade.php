@@ -94,7 +94,7 @@
 
                                 <div id='upload_logo'>
                                     <input type="file" id="checkout_logo" name="checkout_logo"
-                                        data-max-file-size="10M" data-min-height="64" data-min-width="64" data-allowed-file-extensions="jpg jpeg png">
+                                        data-max-file-size="10M" data-min-height="63" data-min-width="63" data-allowed-file-extensions="jpg jpeg png">
                                     <input type="hidden" id="has_checkout_logo" value="false">
                                 </div>
 
