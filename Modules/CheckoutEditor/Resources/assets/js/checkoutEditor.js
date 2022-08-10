@@ -77,12 +77,12 @@ $(document).ready(function () {
         var bannerType = $(this).val();
 
         if (bannerType === "0") {
-            $(".preview-banner").removeClass("wide-banner");
             $(".preview-banner").addClass("retangle-banner");
+            $(".preview-banner").removeClass("wide-banner");
             $(".logo-div").addClass("has-retangle-banner");
         } else {
-            $(".preview-banner").removeClass("retangle-banner");
             $(".logo-div").removeClass("has-retangle-banner");
+            $(".preview-banner").removeClass("retangle-banner");
             $(".preview-banner").addClass("wide-banner");
         }
     });
