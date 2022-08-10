@@ -19,8 +19,8 @@ class SetTransactionRateCompaniesTable extends Migration
         foreach ($companies as $company) {
             if (!empty($company->user->transaction_rate)) {
                 $company->update([
-                                     'transaction_rate' => $company->user->transaction_rate,
-                                 ]);
+                    "transaction_rate" => $company->user->transaction_rate,
+                ]);
             }
         }
     }

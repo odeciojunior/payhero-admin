@@ -14,9 +14,9 @@ class AffiliateStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required',
-            'company_id' => 'required',
-            'type'       => 'required|string|in:"affiliate","affiliate_request"',
+            "project_id" => "required",
+            "company_id" => "required",
+            "type" => 'required|string|in:"affiliate","affiliate_request"',
         ];
     }
 
@@ -32,7 +32,7 @@ class AffiliateStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'company_id.required' => 'O campo Empresa é obrigatório',
+            "company_id.required" => "O campo Empresa é obrigatório",
         ];
     }
 }

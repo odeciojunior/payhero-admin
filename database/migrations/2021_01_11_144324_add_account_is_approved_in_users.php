@@ -13,8 +13,11 @@ class AddAccountIsApprovedInUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('account_is_approved')->default(0)->after('observation');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("account_is_approved")
+                ->default(0)
+                ->after("observation");
         });
     }
 
@@ -25,8 +28,8 @@ class AddAccountIsApprovedInUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('account_is_approved');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("account_is_approved");
         });
     }
 }

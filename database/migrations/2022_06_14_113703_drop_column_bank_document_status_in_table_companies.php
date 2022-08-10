@@ -13,8 +13,8 @@ class DropColumnBankDocumentStatusInTableCompanies extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('bank_document_status');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("bank_document_status");
         });
     }
 
@@ -25,7 +25,7 @@ class DropColumnBankDocumentStatusInTableCompanies extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
+        Schema::table("companies", function (Blueprint $table) {
             //
         });
     }

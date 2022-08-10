@@ -13,8 +13,11 @@ class AddColumnExpirationToSaleContestationTable extends Migration
      */
     public function up()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->date('expiration_date')->nullable()->after('request_date');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table
+                ->date("expiration_date")
+                ->nullable()
+                ->after("request_date");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnExpirationToSaleContestationTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->dropColumn('expiration_date');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table->dropColumn("expiration_date");
         });
     }
 }

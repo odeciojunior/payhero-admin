@@ -13,12 +13,27 @@ class AddColumnNsuToSaleContestationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('sale_contestations', function (Blueprint $table){
-            $table->string('nsu')->nullable()->after('sale_id');
-            $table->date('file_date')->nullable()->after('nsu');
-            $table->date('transaction_date')->nullable()->after('file_date');
-            $table->date('request_date')->nullable()->after('transaction_date');
-            $table->string('reason')->nullable()->after('request_date');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table
+                ->string("nsu")
+                ->nullable()
+                ->after("sale_id");
+            $table
+                ->date("file_date")
+                ->nullable()
+                ->after("nsu");
+            $table
+                ->date("transaction_date")
+                ->nullable()
+                ->after("file_date");
+            $table
+                ->date("request_date")
+                ->nullable()
+                ->after("transaction_date");
+            $table
+                ->string("reason")
+                ->nullable()
+                ->after("request_date");
         });
     }
 
@@ -29,8 +44,8 @@ class AddColumnNsuToSaleContestationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->dropColumn(['nsu', 'file_date', 'transaction_date', 'request_date', 'reason']);
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table->dropColumn(["nsu", "file_date", "transaction_date", "request_date", "reason"]);
         });
     }
 }

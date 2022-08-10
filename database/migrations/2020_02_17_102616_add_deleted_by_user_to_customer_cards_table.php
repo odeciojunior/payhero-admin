@@ -13,8 +13,8 @@ class AddDeletedByUserToCustomerCardsTable extends Migration
      */
     public function up()
     {
-        Schema::table('customer_cards', function (Blueprint $table) {
-            $table->boolean('deleted_by_user')->default(false);
+        Schema::table("customer_cards", function (Blueprint $table) {
+            $table->boolean("deleted_by_user")->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ class AddDeletedByUserToCustomerCardsTable extends Migration
      */
     public function down()
     {
-        Schema::table('customer_cards', function (Blueprint $table) {
-            $table->dropColumn('deleted_by_user');
+        Schema::table("customer_cards", function (Blueprint $table) {
+            $table->dropColumn("deleted_by_user");
         });
     }
 }

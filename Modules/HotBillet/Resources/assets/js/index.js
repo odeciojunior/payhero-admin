@@ -165,52 +165,26 @@ $(document).ready(function () {
                 $("#link_edit").val(response.data.link);
 
                 $("#boleto_generated_edit").val(response.data.boleto_generated);
-                $("#boleto_generated_edit").prop(
-                    "checked",
-                    $("#boleto_generated_edit").val() == "1"
-                );
+                $("#boleto_generated_edit").prop("checked", $("#boleto_generated_edit").val() == "1");
 
                 $("#boleto_paid_edit").val(response.data.boleto_paid);
-                $("#boleto_paid_edit").prop(
-                    "checked",
-                    $("#boleto_paid_edit").val() == "1"
-                );
+                $("#boleto_paid_edit").prop("checked", $("#boleto_paid_edit").val() == "1");
 
-                $("#credit_card_refused_edit").val(
-                    response.data.credit_card_refused
-                );
-                $("#credit_card_refused_edit").prop(
-                    "checked",
-                    $("#credit_card_refused_edit").val() == "1"
-                );
+                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
+                $("#credit_card_refused_edit").prop("checked", $("#credit_card_refused_edit").val() == "1");
 
                 $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                $("#credit_card_paid_edit").prop(
-                    "checked",
-                    $("#credit_card_paid_edit").val() == "1"
-                );
+                $("#credit_card_paid_edit").prop("checked", $("#credit_card_paid_edit").val() == "1");
 
                 $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                $("#abandoned_cart_edit").prop(
-                    "checked",
-                    $("#abandoned_cart_edit").val() == "1"
-                );
+                $("#abandoned_cart_edit").prop("checked", $("#abandoned_cart_edit").val() == "1");
 
                 $("#pix_generated_edit").val(response.data.pix_generated);
-                $("#pix_generated_edit").prop(
-                    "checked",
-                    $("#pix_generated_edit").val() == "1"
-                );
+                $("#pix_generated_edit").prop("checked", $("#pix_generated_edit").val() == "1");
                 $("#pix_paid_edit").val(response.data.pix_paid);
-                $("#pix_paid_edit").prop(
-                    "checked",
-                    $("#pix_paid_edit").val() == "1"
-                );
+                $("#pix_paid_edit").prop("checked", $("#pix_paid_edit").val() == "1");
                 $("#pix_expired_edit").val(response.data.pix_expired);
-                $("#pix_expired_edit").prop(
-                    "checked",
-                    $("#pix_expired_edit").val() == "1"
-                );
+                $("#pix_expired_edit").prop("checked", $("#pix_expired_edit").val() == "1");
             },
         });
     });
@@ -221,9 +195,7 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var form_data = new FormData(
-            document.getElementById("form_add_integration")
-        );
+        var form_data = new FormData(document.getElementById("form_add_integration"));
 
         $.ajax({
             method: "POST",
@@ -254,9 +226,7 @@ $(document).ready(function () {
             return false;
         }
         var integrationId = $("#integration_id").val();
-        var form_data = new FormData(
-            document.getElementById("form_update_integration")
-        );
+        var form_data = new FormData(document.getElementById("form_update_integration"));
 
         $.ajax({
             method: "POST",
@@ -287,30 +257,24 @@ $(document).ready(function () {
         $("#modal-delete-integration").modal("show");
     });
     //destroy
-    $(document).on(
-        "click",
-        "#modal-delete-integration .btn-delete",
-        function (e) {
-            e.stopPropagation();
-            var project = $(this).attr("project");
-            $.ajax({
-                method: "DELETE",
-                url: "/api/apps/hotbillet/" + project,
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                error: (response) => {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    index();
-                    alertCustom("success", response.message);
-                },
-            });
-        }
-    );
+    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
+        e.stopPropagation();
+        var project = $(this).attr("project");
+        $.ajax({
+            method: "DELETE",
+            url: "/api/apps/hotbillet/" + project,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                index();
+                alertCustom("success", response.message);
+            },
+        });
+    });
 });

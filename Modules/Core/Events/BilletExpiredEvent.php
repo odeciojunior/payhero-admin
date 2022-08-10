@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Core\Events;
-
 
 use Illuminate\Broadcasting\Channel;
 use Modules\Core\Entities\Sale;
@@ -20,7 +18,7 @@ class BilletExpiredEvent
      */
     public function __construct(Sale $sale)
     {
-        $this->sale   = $sale;
+        $this->sale = $sale;
     }
 
     /**

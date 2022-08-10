@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,18 +14,17 @@ class AddObservationInUsersAndDropUsersNeverLogged extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->text('observation')->after('onboarding');
+        Schema::table("users", function (Blueprint $table) {
+            $table->text("observation")->after("onboarding");
         });
 
-
-
-        $users = User::whereNull('last_login')->where('created_at', '<=', '2020-10-31')
-            ->whereRaw('id = account_owner_id')
+        $users = User::whereNull("last_login")
+            ->where("created_at", "<=", "2020-10-31")
+            ->whereRaw("id = account_owner_id")
             ->get();
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $user->update([
-                'email' => uniqid().$user->email
+                "email" => uniqid() . $user->email,
             ]);
 
             $user->delete();
@@ -40,8 +38,8 @@ class AddObservationInUsersAndDropUsersNeverLogged extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('observation');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("observation");
         });
     }
 }

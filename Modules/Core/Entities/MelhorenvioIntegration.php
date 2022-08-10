@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,15 +25,15 @@ class MelhorenvioIntegration extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'id',
-        'user_id',
-        'name',
-        'access_token',
-        'refresh_token',
-        'expiration',
-        'completed',
-        'created_at',
-        'updated_at',
+        "id",
+        "user_id",
+        "name",
+        "access_token",
+        "refresh_token",
+        "expiration",
+        "completed",
+        "created_at",
+        "updated_at",
     ];
 
     public function user()

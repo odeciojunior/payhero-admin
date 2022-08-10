@@ -16,12 +16,9 @@ class AlterCodeToPixelsTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->string('code', 100)->change();
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->string("code", 100)->change();
+        });
     }
 
     /**
@@ -31,11 +28,8 @@ class AlterCodeToPixelsTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->string('code', 30)->change();
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->string("code", 30)->change();
+        });
     }
 }

@@ -27,20 +27,20 @@ class CustomerCard extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'browser_fingerprint',
-        'customer_id',
-        'first_four_digits',
-        'last_four_digits',
-        'card_token',
-        'association_code',
-        'deleted_by_user',
-        'created_at',
-        'updated_at',
+        "browser_fingerprint",
+        "customer_id",
+        "first_four_digits",
+        "last_four_digits",
+        "card_token",
+        "association_code",
+        "deleted_by_user",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -66,6 +66,6 @@ class CustomerCard extends Model
      */
     public function customer()
     {
-        return $this->belongsTo('Modules\Core\Entities\Customer');
+        return $this->belongsTo("Modules\Core\Entities\Customer");
     }
 }

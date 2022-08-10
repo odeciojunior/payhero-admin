@@ -13,8 +13,11 @@ class AddColumnPixPaidTableWhatsapp2Integrations extends Migration
      */
     public function up()
     {
-        Schema::table('whatsapp2_integrations', function (Blueprint $table) {
-            $table->integer('pix_paid')->after('pix_expired')->default(1);
+        Schema::table("whatsapp2_integrations", function (Blueprint $table) {
+            $table
+                ->integer("pix_paid")
+                ->after("pix_expired")
+                ->default(1);
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnPixPaidTableWhatsapp2Integrations extends Migration
      */
     public function down()
     {
-        Schema::table('whatsapp2_integrations', function (Blueprint $table) {
-            $table->dropColumn(['pix_paid']);
+        Schema::table("whatsapp2_integrations", function (Blueprint $table) {
+            $table->dropColumn(["pix_paid"]);
         });
     }
 }

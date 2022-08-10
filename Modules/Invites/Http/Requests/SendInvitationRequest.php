@@ -14,8 +14,8 @@ class SendInvitationRequest extends FormRequest
     public function rules()
     {
         return [
-            'email_invited' => 'required|email',
-            'company'       => 'required'
+            "email_invited" => "required|email",
+            "company" => "required",
         ];
     }
 

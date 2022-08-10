@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Checkouts\\Providers\\CheckoutsServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

@@ -12,8 +12,11 @@ class AlterSaleInformationsTableAddBrowserTokenPostColumn extends Migration
      */
     public function up()
     {
-        Schema::table('sale_informations', function(Blueprint $table) {
-            $table->string("browser_token_post")->after("browser_token")->nullable();
+        Schema::table("sale_informations", function (Blueprint $table) {
+            $table
+                ->string("browser_token_post")
+                ->after("browser_token")
+                ->nullable();
         });
     }
 
@@ -23,8 +26,8 @@ class AlterSaleInformationsTableAddBrowserTokenPostColumn extends Migration
      */
     public function down()
     {
-        Schema::table('sale_informations', function(Blueprint $table) {
-            $table->dropColumn('browser_token_post');
+        Schema::table("sale_informations", function (Blueprint $table) {
+            $table->dropColumn("browser_token_post");
         });
     }
 }

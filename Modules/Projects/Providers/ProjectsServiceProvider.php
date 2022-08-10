@@ -25,7 +25,7 @@ class ProjectsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -46,12 +46,13 @@ class ProjectsServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('projects.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'projects'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("projects.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "projects");
     }
 
     /**
@@ -61,17 +62,26 @@ class ProjectsServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/projects');
+        $viewPath = resource_path("views/modules/projects");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/projects';
-        }, \Config::get('view.paths')), [$sourcePath]), 'projects');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/projects";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "projects"
+        );
     }
 
     /**
@@ -81,12 +91,12 @@ class ProjectsServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/projects');
+        $langPath = resource_path("lang/modules/projects");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'projects');
+            $this->loadTranslationsFrom($langPath, "projects");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'projects');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "projects");
         }
     }
 
@@ -96,8 +106,8 @@ class ProjectsServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

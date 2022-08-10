@@ -13,8 +13,11 @@ class AlterWithdrawalsAddFile extends Migration
      */
     public function up()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->string('file')->nullable()->after('observation');
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table
+                ->string("file")
+                ->nullable()
+                ->after("observation");
         });
     }
 
@@ -25,8 +28,8 @@ class AlterWithdrawalsAddFile extends Migration
      */
     public function down()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->dropColumn('file');
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->dropColumn("file");
         });
     }
 }

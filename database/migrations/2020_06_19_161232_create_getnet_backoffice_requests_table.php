@@ -13,10 +13,10 @@ class CreateGetnetBackofficeRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('getnet_backoffice_requests', function (Blueprint $table) {
+        Schema::create("getnet_backoffice_requests", function (Blueprint $table) {
             $table->id();
-            $table->json('sent_data')->nullable();
-            $table->json('response')->nullable();
+            $table->json("sent_data")->nullable();
+            $table->json("response")->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateGetnetBackofficeRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('getnet_backoffice_requests');
+        Schema::dropIfExists("getnet_backoffice_requests");
     }
 }

@@ -1,13 +1,12 @@
-window.defaultWithdrawal = function(gatewayId) {
-
-    let availableBalanceText = onlyNumbers($('#available-balance-' + gatewayId).html());
-    let toTransferText = onlyNumbers($('#withdrawal-value-' + gatewayId).val());
+window.defaultWithdrawal = function (gatewayId) {
+    let availableBalanceText = onlyNumbers($("#available-balance-" + gatewayId).html());
+    let toTransferText = onlyNumbers($("#withdrawal-value-" + gatewayId).val());
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
-    console.log($('#available-balance-' + gatewayId).html())
-    if ($('#modal-withdrawal').css('display') === 'none') {
-        $('#modal-withdrawal').removeAttr("style")
+    console.log($("#available-balance-" + gatewayId).html());
+    if ($("#modal-withdrawal").css("display") === "none") {
+        $("#modal-withdrawal").removeAttr("style");
     }
 
     if (!verifyWithdrawalIsValid(toTransfer, availableBalance, gatewayId)) {
@@ -46,10 +45,9 @@ window.defaultWithdrawal = function(gatewayId) {
         });
 }
 
-window.customWithdrawal = function(gatewayId) {
-
-    let availableBalanceText = onlyNumbers($('#available-balance-' + gatewayId).html());
-    let toTransferText = onlyNumbers($('#withdrawal-value-' + gatewayId).val());
+window.customWithdrawal = function (gatewayId) {
+    let availableBalanceText = onlyNumbers($("#available-balance-" + gatewayId).html());
+    let toTransferText = onlyNumbers($("#withdrawal-value-" + gatewayId).val());
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
@@ -59,8 +57,7 @@ window.customWithdrawal = function(gatewayId) {
 
     $("#request-withdrawal-" + gatewayId).attr("disabled", "disabled");
 
-
-    let value = $("#withdrawal-value-" + gatewayId).val()
+    let value = $("#withdrawal-value-" + gatewayId).val();
     $.ajax({
         url: "/api/withdrawals/getWithdrawalValues",
         type: "POST",
@@ -83,7 +80,7 @@ window.customWithdrawal = function(gatewayId) {
         complete: (response) => {
             $("#request-withdrawal-" + gatewayId).removeAttr("disabled");
             loadingOnScreenRemove();
-        }
+        },
     });
 
     function manipulateModalWithdrawal(dataWithdrawal) {
@@ -92,8 +89,14 @@ window.customWithdrawal = function(gatewayId) {
             bigger_value: dataWithdrawal.bigger_value,
         };
 
-        const currentBalance = $("#available-balance-" + gatewayId).text().replace(/,/g, "").replace(/\./g, "");
-        const withdrawal = $("#withdrawal-value-" + gatewayId).val().replace(/,/g, "").replace(/\./g, "");
+        const currentBalance = $("#available-balance-" + gatewayId)
+            .text()
+            .replace(/,/g, "")
+            .replace(/\./g, "");
+        const withdrawal = $("#withdrawal-value-" + gatewayId)
+            .val()
+            .replace(/,/g, "")
+            .replace(/\./g, "");
         const debitValue = onlyNumbers($("#pending-debt-" + gatewayId).val());
 
         const singleValue = modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue);
@@ -112,20 +115,19 @@ window.customWithdrawal = function(gatewayId) {
             } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1 && debitValue > 1) {
                 withdrawRequestValid = true;
                 modalDebitWithdrawal(dataWithdrawal.bigger_value, debitValue, withdrawal);
-            } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1 ) {
+            } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) {
                 withdrawRequestValid = true;
                 modalEmptyWithdrawal(withdrawal);
             }
         }
 
         if (withdrawRequestValid === false && totalBalanceNegative === false) {
-            modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValue)
+            modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValue);
         }
 
         $("#modal-withdrawal-custom").modal("show");
     }
     function modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue) {
-
         let valueLowerIsNegative = 2;
 
         if (debitValue != undefined) {
@@ -140,28 +142,23 @@ window.customWithdrawal = function(gatewayId) {
             currentBalance == dataWithdrawal.bigger_value
         );
     }
-}
+};
 
-function modalDebitPending (currentBalance, debitValue) {
+function modalDebitPending(currentBalance, debitValue) {
+    const $modal = $("#debit-pending-informations");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modal = $("#debit-pending-informations")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modalCustomBody = $("#modal-body-withdrawal-custom");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    const $modalCustomBody = $("#modal-body-withdrawal-custom")
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
-
-    $modalCustomBody
-        .html('')
-        .addClass('d-none')
-    $modalCustomTitle
-        .text("Não é possivel realizar este saque")
-        .parent()
-        .addClass('debit-pending');
+    $modalCustomBody.html("").addClass("d-none");
+    $modalCustomTitle.text("Não é possivel realizar este saque").parent().addClass("debit-pending");
 
     let result = currentBalance - removeFormatNumbers(debitValue);
     $modal
-        .removeClass('d-none')
-        .html(`
+        .removeClass("d-none")
+        .html(
+            `
                 <h3 class="text-center mt-10" id="text-title-debit-pending">
                     Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.
                 </h3>
@@ -202,11 +199,11 @@ function modalDebitPending (currentBalance, debitValue) {
                         </div>
                     </div>
                 </div>
-            `)
+            `
+        )
         .show();
 
-    $footer
-        .html(`
+    $footer.html(`
             <hr>
             <div class="row justify-content-center w-p100">
                 <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
@@ -217,27 +214,23 @@ function modalDebitPending (currentBalance, debitValue) {
         `);
 }
 function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
-    const $modal = $("#debit-pending-informations")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modal = $("#debit-pending-informations");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modalCustomBody = $("#modal-body-withdrawal-custom")
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+    const $modalCustomBody = $("#modal-body-withdrawal-custom");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    $modalCustomBody
-        .html('')
-        .addClass('d-none')
-    $modalCustomTitle
-        .text("Não é possivel realizar este saque")
-        .parent()
-        .addClass('debit-pending');
+    $modalCustomBody.html("").addClass("d-none");
+    $modalCustomTitle.text("Não é possivel realizar este saque").parent().addClass("debit-pending");
 
-    const $amountWithdrawal = $("#requested-amount-withdrawal")
+    const $amountWithdrawal = $("#requested-amount-withdrawal");
     $amountWithdrawal.text(formatMoney(withdrawal));
 
     let result = removeFormatNumbers(withdrawal) - removeFormatNumbers(debitValue);
     $modal
-        .removeClass('d-none')
-        .html(`
+        .removeClass("d-none")
+        .html(
+            `
                 <h3 class="text-center mt-10" id="text-title-debit-pending">
                     Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.
                 </h3>
@@ -278,11 +271,11 @@ function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
                         </div>
                     </div>
                 </div>
-            `)
+            `
+        )
         .show();
 
-    $footer
-        .html(`
+    $footer.html(`
             <hr>
             <div class="row justify-content-center w-p100">
                 <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
@@ -293,34 +286,30 @@ function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
         `);
 }
 function modalEmptyWithdrawal(withdrawal) {
-    const $modal = $("#debit-pending-informations")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modal = $("#debit-pending-informations");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modalCustomBody = $("#modal-body-withdrawal-custom")
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+    const $modalCustomBody = $("#modal-body-withdrawal-custom");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    $modalCustomBody
-        .html('')
-        .addClass('d-none')
-    $modalCustomTitle
-        .text("Não é possivel realizar este saque")
-        .parent()
-        .addClass('debit-pending');
+    $modalCustomBody.html("").addClass("d-none");
+    $modalCustomTitle.text("Não é possivel realizar este saque").parent().addClass("debit-pending");
 
-    const $amountWithdrawal = $("#requested-amount-withdrawal")
+    const $amountWithdrawal = $("#requested-amount-withdrawal");
     $amountWithdrawal.text(formatMoney(withdrawal));
 
     $modal
-        .removeClass('d-none')
-        .html(`
+        .removeClass("d-none")
+        .html(
+            `
                 <h3 class="text-center mt-10" id="text-title-debit-pending">
                     Você não possui nenhuma venda com o valor inferior ao saldo disponível para efetuar o saque.
                 </h3>
-            `)
+            `
+        )
         .show();
 
-    $footer
-        .html(`
+    $footer.html(`
             <hr>
             <div class="row justify-content-center w-p100">
                 <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
@@ -333,24 +322,17 @@ function modalEmptyWithdrawal(withdrawal) {
 function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValue = 0) {
     const $options = optionsValuesWithdrawal(singleValue, dataWithdrawal);
 
-    const $modal = $("#modal-body-withdrawal-custom")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modal = $("#modal-body-withdrawal-custom");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modalDebitPending = $('#debit-pending-informations')
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+    const $modalDebitPending = $("#debit-pending-informations");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    $modalDebitPending
-        .html('')
-        .addClass('d-none')
+    $modalDebitPending.html("").addClass("d-none");
 
-    $modalCustomTitle
-        .text("Confirmar saque")
-        .parent()
-        .removeClass('debit-pending')
+    $modalCustomTitle.text("Confirmar saque").parent().removeClass("debit-pending");
 
-    $modal
-        .removeClass('d-none')
-        .html(`
+    $modal.removeClass("d-none").html(`
                 <h3 id="text-title-withdrawal-custom" class="text-center mb-1">
                     ${singleValue ? "Valor a ser sacado" : "Valores disponíveis:"}
                 </h3>
@@ -365,13 +347,14 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             `);
 
     if (!isEmptyValue(debitValue)) {
-        const $newValueSelected = $modal.find(".value-select")
+        const $newValueSelected = $modal.find(".value-select");
         const $value = $newValueSelected.text().trim();
 
-        let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue)
+        let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue);
         $modalDebitPending
-            .removeClass('d-none')
-            .html(`
+            .removeClass("d-none")
+            .html(
+                `
                     <h3 class="text-center mt-10 mb-0" id="text-title-debit-pending"> Débitos pendentes </h3>
                     <p class="mt-5" id="text-description-debit-pending">
                         Você tem alguns valores em aberto
@@ -409,12 +392,12 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
                             </div>
                         </div>
                     </div>
-                `)
+                `
+            )
             .show();
     }
 
-    $footer
-        .html(`
+    $footer.html(`
                 <div class="row justify-content-center w-p100">
                     <button id="bt-cancel-withdrawal" data-dismiss="modal" aria-label="Close"
                     class="btn col-auto s-btn-border mr-10"
@@ -430,7 +413,7 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
                 </div>
             `);
 
-    const $event = $("#bigger-value, #lower-value, #single-value")
+    const $event = $("#bigger-value, #lower-value, #single-value");
     $event.off("click");
     $event.on("click", function () {
         const $value = $(this);
@@ -441,26 +424,25 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
         $amountWithdrawal.text($value.text().trim());
 
         if (debitValue != undefined) {
-            const $valueWithdrawal = $("#value-withdrawal-received")
+            const $valueWithdrawal = $("#value-withdrawal-received");
 
             let result = $value.data("value") - removeFormatNumbers(debitValue);
             $valueWithdrawal.text(formatMoney(result));
         }
     });
 
-    $(document).off('click', '#bt-confirm-withdrawal-modal-custom');
-    $(document).on('click', '#bt-confirm-withdrawal-modal-custom', function (e) {
-
+    $(document).off("click", "#bt-confirm-withdrawal-modal-custom");
+    $(document).on("click", "#bt-confirm-withdrawal-modal-custom", function (e) {
         var click = $(this);
-        if (click.data('clicked')) {
+        if (click.data("clicked")) {
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
-        click.data('clicked', true);
+        click.data("clicked", true);
 
-        window.setTimeout(function(){
-            click.removeData('clicked');
+        window.setTimeout(function () {
+            click.removeData("clicked");
         }, 2000);
 
         loadOnModal("#modal-body-withdrawal-custom");
@@ -495,14 +477,14 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
                     $("#withdrawal-value-" + gatewayId).val("");
                     $(".modal-body, #modal-body-withdrawal-custom").modal("hide");
                 });
-                $('#gateway-skeleton').show();
-                $('#container-all-gateways').html('');
-                $('#val-skeleton').show();
-                $('#container_val').css('display','none');
-                $('#skeleton-withdrawal').show();
-                $('#container-withdraw').html(' ');
-                $('#empty-history').hide();
-                $('.asScrollable').hide();
+                $("#gateway-skeleton").show();
+                $("#container-all-gateways").html("");
+                $("#val-skeleton").show();
+                $("#container_val").css("display", "none");
+                $("#skeleton-withdrawal").show();
+                $("#container-withdraw").html(" ");
+                $("#empty-history").hide();
+                $(".asScrollable").hide();
                 updateStatements();
                 updateWithdrawals();
             },
@@ -513,33 +495,27 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
     });
 }
 function modalDocsPending(data) {
-    const $modal = $("#debit-pending-informations")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modal = $("#debit-pending-informations");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modalCustomBody = $("#modal-body-withdrawal-custom")
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+    const $modalCustomBody = $("#modal-body-withdrawal-custom");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    let description =
-        `Parece que ainda existe pendencias com seus documentos <br>
-         Seria bom conferir se todos os documentos já foram cadastrados`
+    let description = `Parece que ainda existe pendencias com seus documentos <br>
+         Seria bom conferir se todos os documentos já foram cadastrados`;
 
     if (data.company_pending) {
-        description =
-            `Parece que ainda existe pendencias com os documentos de sua empresa <br>
-             Seria bom conferir se todos os documentos já foram cadastrados.`
+        description = `Parece que ainda existe pendencias com os documentos de sua empresa <br>
+             Seria bom conferir se todos os documentos já foram cadastrados.`;
     }
 
-    $modalCustomBody
-        .html('')
-        .addClass('d-none')
-    $modalCustomTitle
-        .text("Você tem documentos pendentes")
-        .parent()
-        .removeClass('debit-pending');
+    $modalCustomBody.html("").addClass("d-none");
+    $modalCustomTitle.text("Você tem documentos pendentes").parent().removeClass("debit-pending");
 
     $modal
-        .removeClass('d-none')
-        .html(`
+        .removeClass("d-none")
+        .html(
+            `
                 <div class="text-center my-10">
                     <svg width="151" height="150" viewBox="0 0 151 150" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M75.5 150C116.921 150 150.5 116.421 150.5 75C150.5 33.5786 116.921 0 75.5 0C34.0786 0 0.5 33.5786 0.5 75C0.5 116.421 34.0786 150 75.5 150Z" fill="url(#paint0_linear_729_70)"/>
@@ -562,11 +538,11 @@ function modalDocsPending(data) {
                 <p id="text-description-withdrawal-custom">
                     ${description}
                 </p>
-            `)
+            `
+        )
         .show();
 
-    $footer
-        .html(`
+    $footer.html(`
             <div class="row justify-content-center w-p100">
                 <a class="pointer" href="${data.route}">
                     <button class="btn col-auto s-btn-border mr-10" style="background-color: #2E85EC; color: #FFF">
@@ -630,8 +606,8 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance, gatewayId) {
         return false;
     }
 
-    if(toTransfer < 5000){
-        alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
+    if (toTransfer < 5000) {
+        alertCustom("error", "Valor mínimo de saque  R$ 50,00");
         return;
     }
     return true;
@@ -665,28 +641,28 @@ function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
         `;
 }
 function removeFormatNumbers(number) {
-    number += '';
+    number += "";
     return number.replace(/,/g, "").replace(/\./g, "");
 }
 function formatMoney(value) {
-    return (value / 100).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    })
-        .replace(/\s+/g, '')
-        .replace('-', '- ');
+    return (value / 100)
+        .toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        })
+        .replace(/\s+/g, "")
+        .replace("-", "- ");
 }
 
 function notHaveTwoRequisition(click, e) {
-    if (click.data('clicked')) {
+    if (click.data("clicked")) {
         e.preventDefault();
         e.stopPropagation();
         return false;
     }
-    click.data('clicked', true);
+    click.data("clicked", true);
 
-    window.setTimeout(function(){
-        click.removeData('clicked');
+    window.setTimeout(function () {
+        click.removeData("clicked");
     }, 2000);
 }
-

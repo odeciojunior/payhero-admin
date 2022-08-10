@@ -13,17 +13,23 @@ class CreateCheckoutApiPostbacksTable extends Migration
      */
     public function up()
     {
-        Schema::create('checkout_api_postbacks', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('company_id');
-            $table->unsignedInteger('user_id');
-            $table->json('sent_data')->nullable();
-            $table->json('response')->nullable();
+        Schema::create("checkout_api_postbacks", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("company_id");
+            $table->unsignedInteger("user_id");
+            $table->json("sent_data")->nullable();
+            $table->json("response")->nullable();
 
             $table->timestamps();
 
-            $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -34,6 +40,6 @@ class CreateCheckoutApiPostbacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('checkout_api_postbacks');
+        Schema::dropIfExists("checkout_api_postbacks");
     }
 }

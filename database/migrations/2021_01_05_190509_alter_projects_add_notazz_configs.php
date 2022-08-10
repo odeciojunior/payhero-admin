@@ -13,8 +13,11 @@ class AlterProjectsAddNotazzConfigs extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->json('notazz_configs')->nullable()->after('reviews_config_icon_color');
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->json("notazz_configs")
+                ->nullable()
+                ->after("reviews_config_icon_color");
         });
     }
 
@@ -25,8 +28,8 @@ class AlterProjectsAddNotazzConfigs extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->dropColumn('notazz_configs');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("notazz_configs");
         });
     }
 }

@@ -28,17 +28,15 @@ class CheckoutApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $request->validate(
-                [
-                    'project' => 'nullable|string',
-                    'recovery_type' => 'required',
-                    'date_range' => 'required',
-                    'client' => 'nullable|string',
-                    'client_document' => 'nullable|string',
-                    'plan' => 'nullable|string',
-                    'company'=>'nullable|string'
-                ]
-            );
+            $request->validate([
+                "project" => "nullable|string",
+                "recovery_type" => "required",
+                "date_range" => "required",
+                "client" => "nullable|string",
+                "client_document" => "nullable|string",
+                "plan" => "nullable|string",
+                "company"=>"nullable|string"
+            ]);
 
             $checkouts = (new CheckoutService())->getAbandonedCart();
             return CheckoutIndexResource::collection($checkouts);
@@ -48,7 +46,7 @@ class CheckoutApiController extends Controller
 
             return response()->json(
                 [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    "message" => "Ocorreu um erro, tente novamente mais tarde",
                 ],
                 400
             );
@@ -67,13 +65,13 @@ class CheckoutApiController extends Controller
 
                 return new CheckoutResource($checkout);
             } else {
-                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+                return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados recuperação de vendas (CheckoutApiController - index)');
+            Log::warning("Erro ao buscar dados recuperação de vendas (CheckoutApiController - index)");
             report($e);
 
-            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
         }
     }
 }

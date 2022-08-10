@@ -17,29 +17,29 @@ class CompanyPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'analyzing';
+                    return "analyzing";
                 case 3:
-                    return 'approved';
+                    return "approved";
                 case 4:
-                    return 'refused';
+                    return "refused";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'pending':
+                case "pending":
                     return 1;
-                case 'analyzing':
+                case "analyzing":
                     return 2;
-                case 'approved':
+                case "approved":
                     return 3;
-                case 'refused':
+                case "refused":
                     return 4;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -48,31 +48,30 @@ class CompanyPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'analyzing';
+                    return "analyzing";
                 case 3:
-                    return 'approved';
+                    return "approved";
                 case 4:
-                    return 'refused';
+                    return "refused";
             }
 
-            return '';
+            return "";
         }
 
         switch ($status) {
-            case 'pending':
+            case "pending":
                 return 1;
-            case 'analyzing':
+            case "analyzing":
                 return 2;
-            case 'approved':
+            case "approved":
                 return 3;
-            case 'refused':
+            case "refused":
                 return 4;
         }
 
-        return '';
-
+        return "";
     }
 
     public function getContractDocumentStatus($contractDocumentStatus = null)
@@ -81,30 +80,30 @@ class CompanyPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'analyzing';
+                    return "analyzing";
                 case 3:
-                    return 'approved';
+                    return "approved";
                 case 4:
-                    return 'refused';
+                    return "refused";
             }
 
-            return '';
+            return "";
         }
 
         switch ($status) {
-            case 'pending':
+            case "pending":
                 return 1;
-            case 'analyzing':
+            case "analyzing":
                 return 2;
-            case 'approved':
+            case "approved":
                 return 3;
-            case 'refused':
+            case "refused":
                 return 4;
         }
 
-        return '';
+        return "";
     }
 
     public function getDocumentType($type)
@@ -112,23 +111,22 @@ class CompanyPresenter extends Presenter
         if (is_numeric($type)) {
             switch ($type) {
                 case 2:
-                    return 'address_document_status';
+                    return "address_document_status";
                 case 3:
-                    return 'contract_document_status';
+                    return "contract_document_status";
             }
 
-            return '';
+            return "";
         }
 
         switch ($type) {
-            case 'address_document_status':
+            case "address_document_status":
                 return 2;
-            case 'contract_document_status':
+            case "contract_document_status":
                 return 3;
         }
 
-        return '';
-
+        return "";
     }
 
     public function getStatus($status)
@@ -136,30 +134,30 @@ class CompanyPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'analyzing';
+                    return "analyzing";
                 case 3:
-                    return 'approved';
+                    return "approved";
                 case 4:
-                    return 'refused';
+                    return "refused";
             }
 
-            return '';
+            return "";
         }
 
         switch ($status) {
-            case 'pending':
+            case "pending":
                 return 1;
-            case 'analyzing':
+            case "analyzing":
                 return 2;
-            case 'approved':
+            case "approved":
                 return 3;
-            case 'refused':
+            case "refused":
                 return 4;
         }
 
-        return '';
+        return "";
     }
 
     public function getCompanyType($status)
@@ -167,23 +165,22 @@ class CompanyPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'physical person';
+                    return "physical person";
                 case 2:
-                    return 'juridical person';
+                    return "juridical person";
             }
 
-            return '';
+            return "";
         }
 
         switch ($status) {
-            case 'physical person':
+            case "physical person":
                 return 1;
-            case 'juridical person':
+            case "juridical person":
                 return 2;
         }
 
-        return '';
-
+        return "";
     }
 
     public function allStatusPending()
@@ -198,39 +195,37 @@ class CompanyPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'approved';
+                    return "approved";
                 case 2:
-                    return 'review';
+                    return "review";
                 case 3:
-                    return 'reproved';
+                    return "reproved";
                 case 4:
-                    return 'approved_getnet';
+                    return "approved_getnet";
                 case 5:
-                    return 'error';
+                    return "error";
                 case 6:
-                    return 'pending';
+                    return "pending";
             }
 
-            return '';
+            return "";
         }
 
         switch ($status) {
-            case 'approved':
+            case "approved":
                 return 1;
-            case 'review':
+            case "review":
                 return 2;
-            case 'reproved':
+            case "reproved":
                 return 3;
-            case 'approved_getnet' :
+            case "approved_getnet":
                 return 4;
-            case 'error' :
+            case "error":
                 return 5;
-            case 'pending' :
+            case "pending":
                 return 6;
         }
 
-        return '';
-
+        return "";
     }
-
 }

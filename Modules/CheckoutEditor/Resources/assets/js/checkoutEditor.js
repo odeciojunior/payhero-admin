@@ -9,7 +9,7 @@ $(document).ready( function () {
             $("#color_buy_button").prop("disabled", true);
             $("#color_buy_button").css("opacity", "0.3");
         } else {
-            $(":root").css("--finish-button-color",$("#color_buy_button").val());
+            $(":root").css("--finish-button-color", $("#color_buy_button").val());
             $("#color_buy_button").prop("disabled", false);
             $("#color_buy_button").css("opacity", "1");
         }
@@ -22,7 +22,7 @@ $(document).ready( function () {
     $("#color_primary").on("input", function () {
         $(":root").css("--primary-color", $(this).val());
 
-        $('.accepted-payment-card-creditcard svg path').fill = $(this).val();
+        $(".accepted-payment-card-creditcard svg path").fill = $(this).val();
     });
 
     $("#color_secondary").on("input", function () {
@@ -35,7 +35,7 @@ $(document).ready( function () {
 
     $("#download_template_banner").on("click", function (e) {
         e.preventDefault();
-        window.location.href = $(this).attr('data-href');
+        window.location.href = $(this).attr("data-href");
     });
 
     $(".accept-payment-type").on("change", function () {
@@ -54,7 +54,6 @@ $(document).ready( function () {
     });
 
     $(".accept-payment-method").on("change", function () {
-
         const form = document.querySelector("#checkout_editor");
         const checkboxes = form.querySelectorAll(".accept-payment-method");
         const checkboxLength = checkboxes.length;
@@ -100,14 +99,8 @@ $(document).ready( function () {
             $(".visual-content-mobile").addClass("three-steps");
             $(".visual-content-mobile").removeClass("unique");
             $(".steps-lines").slideDown("slow", "swing");
-            $("#finish_button_preview_desktop_visual").slideDown(
-                "slow",
-                "swing"
-            );
-            $("#finish_button_preview_mobile_visual").slideDown(
-                "slow",
-                "swing"
-            );
+            $("#finish_button_preview_desktop_visual").slideDown("slow", "swing");
+            $("#finish_button_preview_mobile_visual").slideDown("slow", "swing");
         } else {
             $(".visual-content-left").removeClass("three-steps");
             $(".visual-content-left").addClass("unique");
@@ -134,11 +127,11 @@ $(document).ready( function () {
             if (checked) {
                 $("." + $(this).attr("data-target")).slideDown("slow", "swing");
                 $($(this).attr("data-preview")).slideDown("slow", "swing");
-                $($(this).attr("data-enable")).removeClass('low-opacity')
+                $($(this).attr("data-enable")).removeClass("low-opacity");
             } else {
                 $("." + $(this).attr("data-target")).slideUp("slow", "swing");
                 $($(this).attr("data-preview")).slideUp("slow", "swing");
-                $($(this).attr("data-enable")).addClass('low-opacity')
+                $($(this).attr("data-enable")).addClass("low-opacity");
             }
         });
 
@@ -163,23 +156,15 @@ $(document).ready( function () {
 
                 $(":root").css("--finish-button-color", finishButtonColor);
 
-                $('.theme-ready-first-line').addClass('low-opacity');
+                $(".theme-ready-first-line").addClass("low-opacity");
             } else {
                 $("." + $(this).attr("data-target")).slideUp("slow", "swing");
                 $("." + $(this).attr("data-toggle")).slideDown("slow", "swing");
 
-                var primaryColor = $(
-                    'label[for="' +
-                        $("input[name=theme_enum]:checked").attr("id") +
-                        '"]'
-                )
+                var primaryColor = $('label[for="' + $("input[name=theme_enum]:checked").attr("id") + '"]')
                     .children(".theme-primary-color")
                     .css("background-color");
-                var secondaryColor = $(
-                    'label[for="' +
-                        $("input[name=theme_enum]:checked").attr("id") +
-                        '"]'
-                )
+                var secondaryColor = $('label[for="' + $("input[name=theme_enum]:checked").attr("id") + '"]')
                     .children(".theme-secondary-color")
                     .css("background-color");
 
@@ -187,7 +172,7 @@ $(document).ready( function () {
                 $(":root").css("--secondary-color", secondaryColor);
                 $(":root").css("--finish-button-color", primaryColor);
 
-                $('.theme-ready-first-line').removeClass('low-opacity');
+                $(".theme-ready-first-line").removeClass("low-opacity");
             }
         });
 
@@ -207,13 +192,9 @@ $(document).ready( function () {
 
     (function hideToogleAccordions() {
         if ($(".switch-checkout-accordion").is("checked")) {
-            $(
-                "." + $(".switch-checkout-accordion").attr("data-toggle")
-            ).slideUp("slow", "swing");
+            $("." + $(".switch-checkout-accordion").attr("data-toggle")).slideUp("slow", "swing");
         } else {
-            $(
-                "." + $(".switch-checkout-accordion").attr("data-target")
-            ).slideUp("slow", "swing");
+            $("." + $(".switch-checkout-accordion").attr("data-target")).slideUp("slow", "swing");
         }
     })();
 
@@ -267,7 +248,6 @@ $(document).ready( function () {
         }
     });
 
-
     $("#checkout_editor input[type=checkbox]").on("change", function () {
         if ($(this).is(":checked")) {
             $(this).val(1);
@@ -276,27 +256,27 @@ $(document).ready( function () {
         }
     });
 
-    $("input[name='checkout_favicon_type'").on("change", function(){
-        if($(this).val()=='1'){
-            $("#upload_favicon").addClass('low-opacity');
-        }else{
-            $("#upload_favicon").removeClass('low-opacity');
+    $("input[name='checkout_favicon_type'").on("change", function () {
+        if ($(this).val() == "1") {
+            $("#upload_favicon").addClass("low-opacity");
+        } else {
+            $("#upload_favicon").removeClass("low-opacity");
         }
-    })
+    });
 
-    $('#checkout_banner_enabled').on('change', function(){
-        if($(this).is(':checked')){
+    $("#checkout_banner_enabled").on("change", function () {
+        if ($(this).is(":checked")) {
             $("#banner_type").fadeIn("slow", "swing");
-            $('.logo-div').addClass('has-banner');
-            $('.logo-preview-container').addClass('has-banner');
-            $('.menu-bar-mobile').hide('slow');
-            $('.purchase-menu-mobile').fadeIn('slow');
-        }else{
+            $(".logo-div").addClass("has-banner");
+            $(".logo-preview-container").addClass("has-banner");
+            $(".menu-bar-mobile").hide("slow");
+            $(".purchase-menu-mobile").fadeIn("slow");
+        } else {
             $("#banner_type").fadeOut("slow", "swing");
-            $('.logo-div').removeClass('has-banner');
-            $('.logo-preview-container').removeClass('has-banner');
-            $('.menu-bar-mobile').show('slow');
-            $('.purchase-menu-mobile').fadeOut('slow');
+            $(".logo-div").removeClass("has-banner");
+            $(".logo-preview-container").removeClass("has-banner");
+            $(".menu-bar-mobile").show("slow");
+            $(".purchase-menu-mobile").fadeOut("slow");
         }
     });
 
@@ -308,11 +288,11 @@ $(document).ready( function () {
         $("#interest_free_installments option").remove();
         $("#preselected_installment option").remove();
 
-        if(installmentsLimit < interestFreeInstallments ) {
-            interestFreeInstallments =  installmentsLimit;
+        if (installmentsLimit < interestFreeInstallments) {
+            interestFreeInstallments = installmentsLimit;
         }
 
-        for(var installments = 1; installments < installmentsLimit+1; installments++) {
+        for (var installments = 1; installments < installmentsLimit + 1; installments++) {
             $("#interest_free_installments").append(
                 `<option
                     value="${installments}" ${installments == interestFreeInstallments ? 'selected' : ''}>
@@ -320,11 +300,11 @@ $(document).ready( function () {
                 </option>`);
         }
 
-        if(installmentsLimit < preselectedInstallment ) {
-            preselectedInstallment =  installmentsLimit;
+        if (installmentsLimit < preselectedInstallment) {
+            preselectedInstallment = installmentsLimit;
         }
 
-        for(var installments = 1; installments < installmentsLimit+1; installments++) {
+        for (var installments = 1; installments < installmentsLimit + 1; installments++) {
             $("#preselected_installment").append(
                 `<option
                     value="${installments}" ${installments == preselectedInstallment ? 'selected' : ''}>
@@ -333,37 +313,37 @@ $(document).ready( function () {
         }
     });
 
-    $('#selector-tooltip').on({
+    $("#selector-tooltip").on({
         mouseenter: function () {
-            $('#selector-tooltip-container').fadeIn();
+            $("#selector-tooltip-container").fadeIn();
         },
         mouseleave: function () {
-            $('#selector-tooltip-container').fadeOut();
-        }
+            $("#selector-tooltip-container").fadeOut();
+        },
     });
 
-    $('#favicon-tooltip').on({
+    $("#favicon-tooltip").on({
         mouseenter: function () {
-            $('#favicon-tooltip-container').fadeIn();
+            $("#favicon-tooltip-container").fadeIn();
         },
         mouseleave: function () {
-            $('#favicon-tooltip-container').fadeOut();
-        }
+            $("#favicon-tooltip-container").fadeOut();
+        },
     });
 
     // ---------------- Functions Table - START ---------------------
-    $('.selectable-notification').on('change', function(){
+    $(".selectable-notification").on("change", function () {
         const form = document.querySelector("#checkout_editor");
         const selectableCheckboxes = form.querySelectorAll(".selectable-notification:checked");
 
-        if(selectableCheckboxes.length > 0 && selectableCheckboxes.length < 4) {
-            $('#selectable-all-notification').addClass('dash-check');
-            $('#selectable-all-notification').prop('checked', true);
+        if (selectableCheckboxes.length > 0 && selectableCheckboxes.length < 4) {
+            $("#selectable-all-notification").addClass("dash-check");
+            $("#selectable-all-notification").prop("checked", true);
         }
 
-        if(selectableCheckboxes.length == 0) {
-            $('#selectable-all-notification').prop('checked', false);
-            $('#selectable-all-notification').removeClass('dash-check');
+        if (selectableCheckboxes.length == 0) {
+            $("#selectable-all-notification").prop("checked", false);
+            $("#selectable-all-notification").removeClass("dash-check");
         }
 
         if (selectableCheckboxes.length == 4){
@@ -406,8 +386,7 @@ const inputElements = [...document.querySelectorAll("input.code-input")];
 
 inputElements.forEach((ele, index) => {
     ele.addEventListener("keydown", (e) => {
-        if (e.keyCode === 8 && e.target.value === "")
-            inputElements[Math.max(0, index - 1)].focus();
+        if (e.keyCode === 8 && e.target.value === "") inputElements[Math.max(0, index - 1)].focus();
     });
     ele.addEventListener("input", (e) => {
         const [first, ...rest] = e.target.value;

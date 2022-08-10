@@ -13,12 +13,12 @@ class AddColumnFinalizingPurchaseConfigsToProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'projects',
-            function (Blueprint $table) {
-                $table->json('finalizing_purchase_configs')->nullable()->after('reviews_config_icon_type');
-            }
-        );
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->json("finalizing_purchase_configs")
+                ->nullable()
+                ->after("reviews_config_icon_type");
+        });
     }
 
     /**
@@ -28,11 +28,8 @@ class AddColumnFinalizingPurchaseConfigsToProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'projects',
-            function (Blueprint $table) {
-                $table->dropColumn(['finalizing_purchase_configs']);
-            }
-        );
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn(["finalizing_purchase_configs"]);
+        });
     }
 }

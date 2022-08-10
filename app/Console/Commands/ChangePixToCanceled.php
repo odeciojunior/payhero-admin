@@ -13,14 +13,14 @@ class ChangePixToCanceled extends Command
      *
      * @var string
      */
-    protected $signature = 'change:pix-to-canceled';
+    protected $signature = "change:pix-to-canceled";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command set pix expired';
+    protected $description = "Command set pix expired";
 
     /**
      * Create a new command instance.
@@ -34,16 +34,11 @@ class ChangePixToCanceled extends Command
 
     public function handle()
     {
-
         try {
-
             $pixService = new PixService();
             $pixService->changePixToCanceled();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
-
 }

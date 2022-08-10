@@ -13,8 +13,11 @@ class AddColumnCompanyTypeTableCompanies extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function(Blueprint $table) {
-            $table->unsignedInteger('company_type')->nullable()->after('contract_document_status'); //1- physical person, 2- juridical person
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("company_type")
+                ->nullable()
+                ->after("contract_document_status"); //1- physical person, 2- juridical person
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnCompanyTypeTableCompanies extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function(Blueprint $table) {
-            $table->dropColumn('company_type');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("company_type");
         });
     }
 }

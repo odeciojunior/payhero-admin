@@ -14,7 +14,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return view('users::index');
+        return view("users::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('users::create');
+        return view("users::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        return view('users::show');
+        return view("users::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        return view('users::edit');
+        return view("users::edit");
     }
 
     /**

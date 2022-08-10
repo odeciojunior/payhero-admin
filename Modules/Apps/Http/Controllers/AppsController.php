@@ -15,6 +15,6 @@ class AppsController extends Controller
      */
     public function index()
     {
-        return view('apps::index');
+        return view("apps::index");
     }
 }

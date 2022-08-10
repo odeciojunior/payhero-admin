@@ -13,8 +13,11 @@ class AddCaptureTransactionEnabledColumnCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->boolean('capture_transaction_enabled')->default(false)->after('get_net_status');
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->boolean("capture_transaction_enabled")
+                ->default(false)
+                ->after("get_net_status");
         });
     }
 
@@ -25,8 +28,8 @@ class AddCaptureTransactionEnabledColumnCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn(['capture_transaction_enabled']);
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn(["capture_transaction_enabled"]);
         });
     }
 }

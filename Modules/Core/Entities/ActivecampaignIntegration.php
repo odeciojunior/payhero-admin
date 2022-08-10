@@ -29,19 +29,11 @@ class ActivecampaignIntegration extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'user_id',
-        'project_id',
-        'api_url',
-        'api_key',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ["user_id", "project_id", "api_url", "api_key", "created_at", "updated_at", "deleted_at"];
     /**
      * @var bool
      */
@@ -67,12 +59,12 @@ class ActivecampaignIntegration extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Integração com ActiveCampaignIntegration foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Integração com ActiveCampaignIntegration foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Integração com ActiveCampaignIntegration foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Integração com ActiveCampaignIntegration foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Integração com ActiveCampaignIntegration foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Integração com ActiveCampaignIntegration foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -83,7 +75,7 @@ class ActivecampaignIntegration extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo("Modules\Core\Entities\Project");
     }
 
     /**
@@ -91,7 +83,7 @@ class ActivecampaignIntegration extends Model
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 
     /**
@@ -99,7 +91,7 @@ class ActivecampaignIntegration extends Model
      */
     public function events()
     {
-        return $this->hasMany('Modules\Core\Entities\ActivecampaignEvent');
+        return $this->hasMany("Modules\Core\Entities\ActivecampaignEvent");
     }
 
     /**
@@ -107,6 +99,6 @@ class ActivecampaignIntegration extends Model
      */
     public function customFields()
     {
-        return $this->hasMany('Modules\Core\Entities\ActivecampaignCustom');
+        return $this->hasMany("Modules\Core\Entities\ActivecampaignCustom");
     }
 }

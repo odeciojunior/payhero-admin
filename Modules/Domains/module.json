@@ -1,14 +1,12 @@
 {
-    "name"       : "Domains",
-    "alias"      : "domains",
+    "name": "Domains",
+    "alias": "domains",
     "description": "",
-    "keywords"   : [],
-    "active"     : 1,
-    "order"      : 0,
-    "providers"  : [
-        "Modules\\Domains\\Providers\\DomainsServiceProvider"
-    ],
-    "aliases"    : {},
-    "files"      : [],
-    "requires"   : []
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": ["Modules\\Domains\\Providers\\DomainsServiceProvider"],
+    "aliases": {},
+    "files": [],
+    "requires": []
 }

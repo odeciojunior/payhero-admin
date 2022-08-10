@@ -32,9 +32,11 @@ class InvoiceReportExport implements FromCollection, WithHeadings, ShouldAutoSiz
     public function __construct($collection, $headings, $fontSize = null)
     {
         $this->collection = $collection; // Collection
-        $this->headings   = $headings; // Array
-        if ($fontSize !== null) // Number
+        $this->headings = $headings; // Array
+        if ($fontSize !== null) {
+            // Number
             $this->fontSize = $fontSize;
+        }
     }
 
     /**
@@ -51,9 +53,13 @@ class InvoiceReportExport implements FromCollection, WithHeadings, ShouldAutoSiz
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:W1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize($this->fontSize);
+            AfterSheet::class => function (AfterSheet $event) {
+                $cellRange = "A1:W1"; // All headers
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
+                    ->getFont()
+                    ->setSize($this->fontSize);
             },
         ];
     }

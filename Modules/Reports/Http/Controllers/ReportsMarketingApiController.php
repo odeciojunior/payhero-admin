@@ -14,8 +14,8 @@ class ReportsMarketingApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required',
-                'project_id' => 'required'
+                "date_range" => "required",
+                "project_id" => "required",
             ]);
 
             $data = $request->all();
@@ -24,12 +24,11 @@ class ReportsMarketingApiController extends Controller
             $resume = $reportService->getResumeMarketing($data);
 
             return response()->json([
-                'data' => $resume
+                "data" => $resume,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de comissões'], 400);
+            return response()->json(["message" => "Erro ao obter dados de comissões"], 400);
         }
     }
 
@@ -37,8 +36,8 @@ class ReportsMarketingApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required',
-                'project_id' => 'required'
+                "date_range" => "required",
+                "project_id" => "required",
             ]);
 
             $data = $request->all();
@@ -47,12 +46,11 @@ class ReportsMarketingApiController extends Controller
             $resume = $reportService->getSalesByState($data);
 
             return response()->json([
-                'data' => $resume
+                "data" => $resume,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados para o mapa'], 400);
+            return response()->json(["message" => "Erro ao obter dados para o mapa"], 400);
         }
     }
 
@@ -60,8 +58,8 @@ class ReportsMarketingApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required',
-                'project_id' => 'required'
+                "date_range" => "required",
+                "project_id" => "required",
             ]);
 
             $data = $request->all();
@@ -70,12 +68,11 @@ class ReportsMarketingApiController extends Controller
             $mostFrequentSales = $reportService->getMostFrequentSales($data);
 
             return response()->json([
-                'data' => $mostFrequentSales
+                "data" => $mostFrequentSales,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter vendas mais frequentes'], 400);
+            return response()->json(["message" => "Erro ao obter vendas mais frequentes"], 400);
         }
     }
 
@@ -83,8 +80,8 @@ class ReportsMarketingApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required',
-                'project_id' => 'required'
+                "date_range" => "required",
+                "project_id" => "required",
             ]);
 
             $data = $request->all();
@@ -93,12 +90,11 @@ class ReportsMarketingApiController extends Controller
             $devices = $reportService->getDevices($data);
 
             return response()->json([
-                'data' => $devices
+                "data" => $devices,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de dispositivos'], 400);
+            return response()->json(["message" => "Erro ao obter dados de dispositivos"], 400);
         }
     }
 
@@ -106,8 +102,8 @@ class ReportsMarketingApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required',
-                'project_id' => 'required'
+                "date_range" => "required",
+                "project_id" => "required",
             ]);
 
             $data = $request->all();
@@ -116,12 +112,11 @@ class ReportsMarketingApiController extends Controller
             $devices = $reportService->getOperationalSystems($data);
 
             return response()->json([
-                'data' => $devices
+                "data" => $devices,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de sistemas operacionais'], 400);
+            return response()->json(["message" => "Erro ao obter dados de sistemas operacionais"], 400);
         }
     }
 
@@ -129,8 +124,8 @@ class ReportsMarketingApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required',
-                'state' => 'required'
+                "date_range" => "required",
+                "state" => "required",
             ]);
 
             $data = $request->all();
@@ -139,38 +134,15 @@ class ReportsMarketingApiController extends Controller
             $stateDetail = $reportService->getStateDetail($data);
 
             return response()->json([
-                'data' => $stateDetail
+                "data" => $stateDetail,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter detalhes do estado'], 400);
+            return response()->json(["message" => "Erro ao obter detalhes do estado"], 400);
         }
     }
 
     public function getResumeCoupons(Request $request)
-    {
-        try{
-            $request->validate([
-                'date_range' => 'required',
-                'project_id' => 'required'                
-            ]);
-
-            $data = $request->all();
-            $reportService = new ReportMarketingService();
-            $coupons = $reportService->getResumeCoupons($data);
-
-            return response()->json([
-                'data' => $coupons
-            ]);
-        }
-        catch(Exception $e) {
-            report($e);
-            return response()->json(['message' => 'Erro ao obter dados de cupons de desconto'], 400);
-        }
-    }
-
-    public function getResumeRegions(Request $request)
     {
         try {
             $request->validate([
@@ -179,17 +151,37 @@ class ReportsMarketingApiController extends Controller
             ]);
 
             $data = $request->all();
+            $reportService = new ReportMarketingService();
+            $coupons = $reportService->getResumeCoupons($data);
+
+            return response()->json([
+                "data" => $coupons,
+            ]);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(["message" => "Erro ao obter dados de cupons de desconto"], 400);
+        }
+    }
+
+    public function getResumeRegions(Request $request)
+    {
+        try {
+            $request->validate([
+                "date_range" => "required",
+                "project_id" => "required",
+            ]);
+
+            $data = $request->all();
 
             $reportService = new ReportMarketingService();
             $regions = $reportService->getResumeRegions($data);
 
             return response()->json([
-                'data' => $regions
+                "data" => $regions,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de regiões'], 400);
+            return response()->json(["message" => "Erro ao obter dados de regiões"], 400);
         }
     }
 
@@ -208,22 +200,21 @@ class ReportsMarketingApiController extends Controller
             $reportService = new ReportMarketingService();
             $orders = $reportService->getResumeOrigins($data);
 
-            $cacheName = 'origins-resume-'.json_encode($data);
-            return cache()->remember($cacheName, 120, function() use ($orders, $data) {
-                if ($data['paginate'] === 'false') {
-                    if ($data['limit'] == 'all') {
+            $cacheName = "origins-resume-" . json_encode($data);
+            return cache()->remember($cacheName, 120, function () use ($orders, $data) {
+                if ($data["paginate"] === "false") {
+                    if ($data["limit"] == "all") {
                         return SalesByOriginResource::collection($orders->get());
                     }
 
-                    return SalesByOriginResource::collection($orders->limit($data['limit'])->get());
+                    return SalesByOriginResource::collection($orders->limit($data["limit"])->get());
                 }
 
                 return SalesByOriginResource::collection($orders->paginate(10));
             });
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de UTMs'], 400);
+            return response()->json(["message" => "Erro ao obter dados de UTMs"], 400);
         }
     }
 }

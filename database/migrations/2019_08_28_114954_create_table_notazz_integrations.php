@@ -12,23 +12,29 @@ class CreateTableNotazzIntegrations extends Migration
      */
     public function up()
     {
-        Schema::create('notazz_integrations', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('project_id')->index();
-            $table->unsignedInteger('user_id')->index();
-            $table->text('token_webhook');
-            $table->text('token_api');
-            $table->text('token_logistics');
+        Schema::create("notazz_integrations", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("project_id")->index();
+            $table->unsignedInteger("user_id")->index();
+            $table->text("token_webhook");
+            $table->text("token_api");
+            $table->text("token_logistics");
 
             $table->timestamps();
         });
 
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
 
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -38,6 +44,6 @@ class CreateTableNotazzIntegrations extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notazz_integrations');
+        Schema::dropIfExists("notazz_integrations");
     }
 }

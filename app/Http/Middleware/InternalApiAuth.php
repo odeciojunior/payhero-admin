@@ -15,14 +15,14 @@ class InternalApiAuth
      */
     public function handle($request, Closure $next)
     {
-        $apiName  = $request->header('Api-name') ?? null;
-        $apiToken = $request->header('Api-token') ?? null;
+        $apiName = $request->header("Api-name") ?? null;
+        $apiToken = $request->header("Api-token") ?? null;
         if ($apiName && $apiToken) {
             if ($apiToken != $this->getTokenApi($apiName)) {
-                return response()->json('Token de acesso inválido!', 401);
+                return response()->json("Token de acesso inválido!", 401);
             }
         } else {
-            return response()->json('Token de acesso requerido!', 401);
+            return response()->json("Token de acesso requerido!", 401);
         }
 
         return $next($request);
@@ -30,7 +30,7 @@ class InternalApiAuth
 
     public function getTokenApi(string $apiName)
     {
-        $tokenName = strtoupper($apiName) . '_TOKEN';
+        $tokenName = strtoupper($apiName) . "_TOKEN";
 
         return env($tokenName);
     }

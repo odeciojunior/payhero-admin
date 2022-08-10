@@ -34,14 +34,14 @@ class SendSmsListener implements ShouldQueue
     {
         $data = $event->request;
 
-        $sendSms = $this->smsService->sendSms($data['telephone'], $data['message']);
+        $sendSms = $this->smsService->sendSms($data["telephone"], $data["message"]);
         if ($sendSms) {
-            Checkout::where('id', $data['checkout_id'])->increment('sms_sent_amount');
+            Checkout::where("id", $data["checkout_id"])->increment("sms_sent_amount");
         }
     }
 
     public function tags()
     {
-        return ['listener:' . static::class, 'sendEmailListener'];
+        return ["listener:" . static::class, "sendEmailListener"];
     }
 }

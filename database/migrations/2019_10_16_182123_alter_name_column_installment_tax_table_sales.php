@@ -12,8 +12,8 @@ class AlterNameColumnInstallmentTaxTableSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->renameColumn('installment_tax', 'installment_tax_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->renameColumn("installment_tax", "installment_tax_value");
         });
     }
 
@@ -23,8 +23,8 @@ class AlterNameColumnInstallmentTaxTableSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->renameColumn('installment_tax_value', 'installment_tax');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->renameColumn("installment_tax_value", "installment_tax");
         });
     }
 }

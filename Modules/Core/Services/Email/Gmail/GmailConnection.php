@@ -34,40 +34,40 @@ class GmailConnection
     public function create_client()
     {
         $client = new \Google_Client();
-        $client->setApplicationName('Gmail API PHP Quickstart');
+        $client->setApplicationName("Gmail API PHP Quickstart");
         $client->setScopes(\Google_Service_Gmail::GMAIL_READONLY);
-        $client->setAuthConfig('credentials.json');
-        $client->setAccessType('offline');
-        $client->setPrompt('select_account consent');
+        $client->setAuthConfig("credentials.json");
+        $client->setAccessType("offline");
+        $client->setPrompt("select_account consent");
 
         // Load previously authorized token from a file, if it exists.
         // The file token.json stores the user's access and refresh tokens, and is
         // created automatically when the authorization flow completes for the first
         // time.
 
-//        $accessToken = config('token_gmail');
-//        $tokenPath = storage_path('app/token_gmail.json');
-//        if (!empty($accessToken)) {
-//            $client->setAccessToken($accessToken);
-//        }else{
-//            $accessToken = json_decode(file_get_contents($tokenPath), true);
-//            $client->setAccessToken($accessToken);
-//        }
+        //        $accessToken = config('token_gmail');
+        //        $tokenPath = storage_path('app/token_gmail.json');
+        //        if (!empty($accessToken)) {
+        //            $client->setAccessToken($accessToken);
+        //        }else{
+        //            $accessToken = json_decode(file_get_contents($tokenPath), true);
+        //            $client->setAccessToken($accessToken);
+        //        }
 
-        $tokenPath = storage_path('app/token_gmail.json');
+        $tokenPath = storage_path("app/token_gmail.json");
 
         if (file_exists($tokenPath)) {
             $accessToken = json_decode(file_get_contents($tokenPath), true);
             $client->setAccessToken($accessToken);
         }
 
-//        $accessToken = config('token_gmail');
-//        if ($accessToken) {
-//            $client->setAccessToken($accessToken);
-//        } else if (file_exists($tokenPath)) {
-//            $accessToken = json_decode(file_get_contents($tokenPath), true);
-//            $client->setAccessToken($accessToken);
-//        }
+        //        $accessToken = config('token_gmail');
+        //        if ($accessToken) {
+        //            $client->setAccessToken($accessToken);
+        //        } else if (file_exists($tokenPath)) {
+        //            $accessToken = json_decode(file_get_contents($tokenPath), true);
+        //            $client->setAccessToken($accessToken);
+        //        }
 
         // If there is no previous token or it's expired.
         if ($client->isAccessTokenExpired()) {
@@ -78,16 +78,16 @@ class GmailConnection
                 /// Request authorization from the user.
                 $authUrl = $client->createAuthUrl();
                 printf("Open the following link in your browser:\n%s\n", $authUrl);
-                print 'Enter verification code: ';
+                print "Enter verification code: ";
                 $authCode = trim(fgets(STDIN));
 
                 // Exchange authorization code for an access token.
                 $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
                 $client->setAccessToken($accessToken);
                 // Check to see if there was an error.
-                if (array_key_exists('error', $accessToken)) {
+                if (array_key_exists("error", $accessToken)) {
                     $this->is_connected = false;
-                    throw new Exception(join(', ', $accessToken));
+                    throw new Exception(join(", ", $accessToken));
                 }
             }
             // Save the token to a file.
@@ -100,5 +100,4 @@ class GmailConnection
         $this->is_connected = true;
         return $client;
     }
-
 }

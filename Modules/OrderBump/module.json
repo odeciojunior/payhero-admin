@@ -5,9 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\OrderBump\\Providers\\OrderBumpServiceProvider"
-    ],
+    "providers": ["Modules\\OrderBump\\Providers\\OrderBumpServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

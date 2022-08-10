@@ -12,16 +12,19 @@ class CreateTableTrackingHistory extends Migration
      */
     public function up()
     {
-        Schema::create('tracking_histories', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('delivery_id')->index();
-            $table->string('tracking_code');
+        Schema::create("tracking_histories", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedBigInteger("delivery_id")->index();
+            $table->string("tracking_code");
 
             $table->timestamps();
         });
 
-        Schema::table('tracking_histories', function(Blueprint $table) {
-            $table->foreign('delivery_id')->references('id')->on('deliveries');
+        Schema::table("tracking_histories", function (Blueprint $table) {
+            $table
+                ->foreign("delivery_id")
+                ->references("id")
+                ->on("deliveries");
         });
     }
 
@@ -31,10 +34,10 @@ class CreateTableTrackingHistory extends Migration
      */
     public function down()
     {
-        Schema::table('tracking_histories', function(Blueprint $table) {
-            $table->dropForeign(['delivery_id']);
+        Schema::table("tracking_histories", function (Blueprint $table) {
+            $table->dropForeign(["delivery_id"]);
         });
 
-        Schema::dropIfExists('tracking_histories');
+        Schema::dropIfExists("tracking_histories");
     }
 }

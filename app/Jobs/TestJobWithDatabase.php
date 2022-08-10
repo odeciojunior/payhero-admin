@@ -22,7 +22,6 @@ class TestJobWithDatabase implements ShouldQueue
      */
     public function __construct($user)
     {
-
         $this->user = $user;
     }
 

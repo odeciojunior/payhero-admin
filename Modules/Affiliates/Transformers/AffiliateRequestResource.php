@@ -22,13 +22,15 @@ class AffiliateRequestResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'                => Hashids::encode($this->id),
-            'name'              => $this->user->name ?? '',
-            'email'             => $this->user->email ?? '',
-            'status'            => $this->status,
-            'date'              => (!is_null($this->created_at)) ? Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i:s') : '',
-            'status_translated' => Lang::get('definitions.enum.status.' . $this->present()->getStatus($this->status)),
-            'project_name'      => $this->project->name,
+            "id" => Hashids::encode($this->id),
+            "name" => $this->user->name ?? "",
+            "email" => $this->user->email ?? "",
+            "status" => $this->status,
+            "date" => !is_null($this->created_at)
+                ? Carbon::createFromFormat("Y-m-d H:i:s", $this->created_at)->format("d/m/Y H:i:s")
+                : "",
+            "status_translated" => Lang::get("definitions.enum.status." . $this->present()->getStatus($this->status)),
+            "project_name" => $this->project->name,
         ];
     }
 }

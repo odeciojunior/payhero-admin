@@ -14,7 +14,7 @@ class ProjectUpsellRuleController extends Controller
      */
     public function index()
     {
-        return view('projectupsellrule::index');
+        return view("projectupsellrule::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class ProjectUpsellRuleController extends Controller
      */
     public function create()
     {
-        return view('projectupsellrule::create');
+        return view("projectupsellrule::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class ProjectUpsellRuleController extends Controller
      */
     public function show($id)
     {
-        return view('projectupsellrule::show');
+        return view("projectupsellrule::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class ProjectUpsellRuleController extends Controller
      */
     public function edit($id)
     {
-        return view('projectupsellrule::edit');
+        return view("projectupsellrule::edit");
     }
 
     /**

@@ -14,7 +14,7 @@ class NotificacoesInteligentesController extends Controller
      */
     public function index()
     {
-        return view('notificacoesinteligentes::index');
+        return view("notificacoesinteligentes::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class NotificacoesInteligentesController extends Controller
      */
     public function create()
     {
-        return view('notificacoesinteligentes::create');
+        return view("notificacoesinteligentes::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class NotificacoesInteligentesController extends Controller
      */
     public function show($id)
     {
-        return view('notificacoesinteligentes::show');
+        return view("notificacoesinteligentes::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class NotificacoesInteligentesController extends Controller
      */
     public function edit($id)
     {
-        return view('notificacoesinteligentes::edit');
+        return view("notificacoesinteligentes::edit");
     }
 
     /**

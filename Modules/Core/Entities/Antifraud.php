@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -38,17 +37,16 @@ use Illuminate\Support\Carbon;
  */
 class Antifraud extends Model
 {
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     protected $fillable = [
-        'name',
-        'api',
-        'antifraud_api_enum',
-        'environment',
-        'client_id',
-        'client_secret',
-        'merchant_id',
-        'available_flag',
+        "name",
+        "api",
+        "antifraud_api_enum",
+        "environment",
+        "client_id",
+        "client_secret",
+        "merchant_id",
+        "available_flag",
     ];
-
 }

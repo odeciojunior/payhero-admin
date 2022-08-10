@@ -14,8 +14,8 @@ class SalesRecoveryIndexResourceTransformer extends JsonResource
     {
         if (!empty($this->id_code)) {
             return [
-                'id'   => $this->id_code,
-                'name' => $this->name,
+                "id" => $this->id_code,
+                "name" => $this->name,
             ];
         }
     }

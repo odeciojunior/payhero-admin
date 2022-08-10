@@ -36,18 +36,18 @@ class UserDocument extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'document_url',
-        'document_type_enum',
-        'status',
-        'refused_reason',
-        'created_at',
-        'updated_at',
+        "user_id",
+        "document_url",
+        "document_type_enum",
+        "status",
+        "refused_reason",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -74,12 +74,12 @@ class UserDocument extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Documento do usuario foi deletado.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Documento do usuario foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Documento do usuario foi criado';
+        if ($eventName == "deleted") {
+            $activity->description = "Documento do usuario foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Documento do usuario foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Documento do usuario foi criado";
         } else {
             $activity->description = $eventName;
         }
@@ -90,6 +90,6 @@ class UserDocument extends Model
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 }

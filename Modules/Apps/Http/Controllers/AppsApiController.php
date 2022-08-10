@@ -20,8 +20,6 @@ use Modules\Core\Entities\HotbilletIntegration;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Entities\MelhorenvioIntegration;
 use Modules\Core\Entities\NotificacoesInteligentesIntegration;
-use Vinkla\Hashids\Facades\Hashids;
-
 
 class AppsApiController extends Controller
 {
@@ -90,5 +88,4 @@ class AppsApiController extends Controller
             'melhorenvioIntegrations' => MelhorenvioIntegration::where('user_id', $accountOwnerId)->count(),
         ]);
     }
-
 }

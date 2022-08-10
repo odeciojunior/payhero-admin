@@ -20,23 +20,22 @@ class ProcessWithdrawal implements ShouldQueue
     use SerializesModels;
 
     public Withdrawal $withdrawal;
-    public  $isFirstUserWithdrawal;
+    public $isFirstUserWithdrawal;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct( Withdrawal $withdrawal, $isFirstUserWithdrawal)
+    public function __construct(Withdrawal $withdrawal, $isFirstUserWithdrawal)
     {
         $this->withdrawal = $withdrawal;
         $this->isFirstUserWithdrawal = $isFirstUserWithdrawal;
-
     }
 
     public function tags()
     {
-        return ['process-withdrawal-store'];
+        return ["process-withdrawal-store"];
     }
 
     public function handle()
@@ -46,7 +45,6 @@ class ProcessWithdrawal implements ShouldQueue
             $getnetService->setCompany($this->withdrawal->company);
 
             $getnetService->processWithdrawal($this->withdrawal, $this->isFirstUserWithdrawal);
-
         } catch (Exception $e) {
             report($e);
             return false;

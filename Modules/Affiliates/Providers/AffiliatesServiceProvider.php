@@ -18,7 +18,7 @@ class AffiliatesServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class AffiliatesServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('affiliates.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'affiliates'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("affiliates.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "affiliates");
     }
 
     /**
@@ -53,17 +54,26 @@ class AffiliatesServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/affiliates');
+        $viewPath = resource_path("views/modules/affiliates");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/affiliates';
-        }, \Config::get('view.paths')), [$sourcePath]), 'affiliates');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/affiliates";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "affiliates"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class AffiliatesServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/affiliates');
+        $langPath = resource_path("lang/modules/affiliates");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'affiliates');
+            $this->loadTranslationsFrom($langPath, "affiliates");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'affiliates');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "affiliates");
         }
     }
 
@@ -89,8 +99,8 @@ class AffiliatesServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

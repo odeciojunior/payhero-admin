@@ -13,9 +13,15 @@ class AlterTableTransfersAddReasonColumn extends Migration
      */
     public function up()
     {
-        Schema::table('transfers', function(Blueprint $table) {
-            $table->integer('type_enum')->nullable()->after('type');
-            $table->string('reason')->nullable()->after('type_enum');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table
+                ->integer("type_enum")
+                ->nullable()
+                ->after("type");
+            $table
+                ->string("reason")
+                ->nullable()
+                ->after("type_enum");
         });
 
         $sql = 'update transfers set type_enum = CASE WHEN type = "in" THEN 1  ELSE 2 END';
@@ -28,9 +34,9 @@ class AlterTableTransfersAddReasonColumn extends Migration
      */
     public function down()
     {
-        Schema::table('transfers', function(Blueprint $table) {
-            $table->dropColumn('type_enum');
-            $table->dropColumn('reason');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->dropColumn("type_enum");
+            $table->dropColumn("reason");
         });
     }
 }

@@ -13,13 +13,13 @@ class DropTransactionRateColumnUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('transaction_rate');
-            $table->dropColumn('boleto_tax');
-            $table->dropColumn('credit_card_tax');
-            $table->dropColumn('installment_tax');
-            $table->dropColumn('boleto_release_money_days');
-            $table->dropColumn('credit_card_release_money_days');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("transaction_rate");
+            $table->dropColumn("boleto_tax");
+            $table->dropColumn("credit_card_tax");
+            $table->dropColumn("installment_tax");
+            $table->dropColumn("boleto_release_money_days");
+            $table->dropColumn("credit_card_release_money_days");
         });
     }
 
@@ -30,13 +30,19 @@ class DropTransactionRateColumnUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('transaction_rate')->nullable()->default('1.00');
-            $table->string('boleto_tax')->nullable();
-            $table->string('credit_card_tax')->nullable();
-            $table->string('installment_tax')->nullable()->default('2.99');
-            $table->integer('credit_card_release_money_days')->nullable();
-            $table->integer('boleto_release_money_days')->nullable();
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->string("transaction_rate")
+                ->nullable()
+                ->default("1.00");
+            $table->string("boleto_tax")->nullable();
+            $table->string("credit_card_tax")->nullable();
+            $table
+                ->string("installment_tax")
+                ->nullable()
+                ->default("2.99");
+            $table->integer("credit_card_release_money_days")->nullable();
+            $table->integer("boleto_release_money_days")->nullable();
         });
     }
 }

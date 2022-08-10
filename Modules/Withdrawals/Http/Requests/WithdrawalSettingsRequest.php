@@ -23,12 +23,12 @@ class WithdrawalSettingsRequest extends FormRequest
     public function rules()
     {
         return [
-            'company_id' => 'required|string',
-            'rule'       => 'required|string',
-            'frequency'  => 'required_if:rule,==,"' . WithdrawalSettings::RULE_PERIOD . '"|nullable',
-            'weekday'    => 'required_if:frequency,==,"' . WithdrawalSettings::FREQUENCY_WEEKLY . '"|nullable',
-            'day'        => 'required_if:frequency,==,"' . WithdrawalSettings::FREQUENCY_MONTHLY . '"|nullable',
-            'amount'     => 'required_if:rule,==,"' . WithdrawalSettings::RULE_AMOUNT . '"|nullable',
+            "company_id" => "required|string",
+            "rule" => "required|string",
+            "frequency" => 'required_if:rule,==,"' . WithdrawalSettings::RULE_PERIOD . '"|nullable',
+            "weekday" => 'required_if:frequency,==,"' . WithdrawalSettings::FREQUENCY_WEEKLY . '"|nullable',
+            "day" => 'required_if:frequency,==,"' . WithdrawalSettings::FREQUENCY_MONTHLY . '"|nullable',
+            "amount" => 'required_if:rule,==,"' . WithdrawalSettings::RULE_AMOUNT . '"|nullable',
         ];
     }
 
@@ -38,7 +38,7 @@ class WithdrawalSettingsRequest extends FormRequest
     public function messages()
     {
         return [
-            'company_id.required' => 'É obrigatório selecionar uma empresa'
+            "company_id.required" => "É obrigatório selecionar uma empresa",
         ];
     }
 }

@@ -34,40 +34,42 @@ class ProjectAffiliateResource extends JsonResource
         }
 
         //verifica se é o projeto tem afiliação automatica
-        $affiliateModel     = new Affiliate();
+        $affiliateModel = new Affiliate();
         $affiliatePresenter = $affiliateModel->present();
-        $affiliate          = $affiliateModel->where('user_id', $userId)
-                                             ->where('project_id', $this->id)
-                                             ->first();
-        if(!empty($affiliate->id)) {
-            $affiliatedMessage  = !empty($affiliate) ? 'Você ja está afiliado a esse projeto.' : '';
+        $affiliate = $affiliateModel
+            ->where("user_id", $userId)
+            ->where("project_id", $this->id)
+            ->first();
+        if (!empty($affiliate->id)) {
+            $affiliatedMessage = !empty($affiliate) ? "Você ja está afiliado a esse projeto." : "";
         } else {
             $affiliateRequestModel = new AffiliateRequest();
-            $affiliateRequest      = $affiliateRequestModel->where('user_id', $userId)
-                                                           ->where('project_id', $this->id)
-                                                           ->first();
-            $affiliatedMessage     = !empty($affiliateRequest) ? 'Você já solicitou afiliação a esse projeto.' : '';
+            $affiliateRequest = $affiliateRequestModel
+                ->where("user_id", $userId)
+                ->where("project_id", $this->id)
+                ->first();
+            $affiliatedMessage = !empty($affiliateRequest) ? "Você já solicitou afiliação a esse projeto." : "";
         }
 
         return [
-            'id'                     => Hashids::encode($this->id),
-            'photo'                  => $this->photo,
-            'name'                   => $this->name,
-            'description'            => $this->description,
-            'created_at'             => (new Carbon($this->created_at))->format('d/m/Y'),
-            'shopify_id'             => $this->shopify_id,
-            'url_page'               => $this->url_page,
-            'status'                 => isset($this->domains[0]->name) ? 1 : 0,
-            "automatic_affiliation"  => $this->automatic_affiliation,
-            "url_affiliates"         => route('affiliates.index', Hashids::encode($this->id)),
-            'user_name'              => $this->users[0]->name,
-            'terms_affiliates'       => $this->terms_affiliates ?? '',
-            'percentage_affiliates'  => $this->percentage_affiliates ?? '',
-            'affiliatedMessage'      => $affiliatedMessage,
-            'producer'               => $producer,
-            'status_url_affiliates'  => $this->status_url_affiliates,
-            'cookie_duration'        => $this->cookie_duration ?? '',
-            'billet_release_days'    => $userProject->company->gateway_release_money_days ?? '',
+            "id" => Hashids::encode($this->id),
+            "photo" => $this->photo,
+            "name" => $this->name,
+            "description" => $this->description,
+            "created_at" => (new Carbon($this->created_at))->format("d/m/Y"),
+            "shopify_id" => $this->shopify_id,
+            "url_page" => $this->url_page,
+            "status" => isset($this->domains[0]->name) ? 1 : 0,
+            "automatic_affiliation" => $this->automatic_affiliation,
+            "url_affiliates" => route("affiliates.index", Hashids::encode($this->id)),
+            "user_name" => $this->users[0]->name,
+            "terms_affiliates" => $this->terms_affiliates ?? "",
+            "percentage_affiliates" => $this->percentage_affiliates ?? "",
+            "affiliatedMessage" => $affiliatedMessage,
+            "producer" => $producer,
+            "status_url_affiliates" => $this->status_url_affiliates,
+            "cookie_duration" => $this->cookie_duration ?? "",
+            "billet_release_days" => $userProject->company->gateway_release_money_days ?? "",
         ];
     }
 }

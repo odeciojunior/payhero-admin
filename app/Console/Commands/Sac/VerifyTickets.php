@@ -14,7 +14,7 @@ class VerifyTickets extends Command
      *
      * @var string
      */
-    protected $signature = 'verify:tickets';
+    protected $signature = "verify:tickets";
 
     /**
      * The console command description.
@@ -43,26 +43,28 @@ class VerifyTickets extends Command
         $daysWithoutUserResponse = 3;
         $systemMessage = "Não houve interação sua nos últimos {$daysWithoutUserResponse} dias, por isso, entendemos que o problema já foi resolvido e encerramos o chamado automaticamente. Você pode reabri-lo sempre que preciso.";
 
-        $query = Ticket::where('ticket_status_enum', Ticket::STATUS_OPEN)
-            ->where('last_message_date', '<', now()->subDays($daysWithoutUserResponse))
-            ->whereIn('last_message_type_enum', [TicketMessage::TYPE_FROM_ADMIN, TicketMessage::TYPE_FROM_SYSTEM]);
+        $query = Ticket::where("ticket_status_enum", Ticket::STATUS_OPEN)
+            ->where("last_message_date", "<", now()->subDays($daysWithoutUserResponse))
+            ->whereIn("last_message_type_enum", [TicketMessage::TYPE_FROM_ADMIN, TicketMessage::TYPE_FROM_SYSTEM]);
 
         $bar = $this->getOutput()->createProgressBar($query->count());
         $bar->start();
 
         $query->chunk(500, function ($tickets) use ($bar, $systemMessage) {
-
             foreach ($tickets as $ticket) {
                 try {
                     $now = now()->toDateTimeString();
 
-                    TicketMessage::updateOrCreate([
-                        'ticket_id' => $ticket->id,
-                        'type_enum' => TicketMessage::TYPE_FROM_SYSTEM,
-                    ], [
-                        'message' => $systemMessage,
-                        'created_at' => $now
-                    ]);
+                    TicketMessage::updateOrCreate(
+                        [
+                            "ticket_id" => $ticket->id,
+                            "type_enum" => TicketMessage::TYPE_FROM_SYSTEM,
+                        ],
+                        [
+                            "message" => $systemMessage,
+                            "created_at" => $now,
+                        ]
+                    );
 
                     $ticket->last_message_type_enum = TicketMessage::TYPE_FROM_SYSTEM;
                     $ticket->last_message_date = $now;
@@ -70,11 +72,11 @@ class VerifyTickets extends Command
                     $tickets->mediation_notified = 0;
                     $ticket->save();
 
-                    BlockReasonSale::where('sale_id', $ticket->sale_id)
-                        ->where('status', BlockReasonSale::STATUS_BLOCKED)
-                        ->where('blocked_reason_id', 8)
+                    BlockReasonSale::where("sale_id", $ticket->sale_id)
+                        ->where("status", BlockReasonSale::STATUS_BLOCKED)
+                        ->where("blocked_reason_id", 8)
                         ->update([
-                            'status' => BlockReasonSale::STATUS_UNLOCKED
+                            "status" => BlockReasonSale::STATUS_UNLOCKED,
                         ]);
                 } catch (\Exception $e) {
                     report($e);

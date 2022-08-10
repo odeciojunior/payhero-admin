@@ -11,9 +11,5 @@ class VerifyCsrfToken extends Middleware
      *
      * @var array
      */
-    protected $except = [
-        '/postback/*',
-        '/api/register',
-        '/api/register/*'
-    ];
+    protected $except = ["/postback/*", "/api/register", "/api/register/*"];
 }

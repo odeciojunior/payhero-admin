@@ -15,10 +15,10 @@ class ReportMarketingService
 {
     public function getColors($index = null, $hex = false)
     {
-        $colors = [ 'blue', 'purple', 'pink', 'orange', 'yellow', 'light-blue', 'light-green', 'grey' ];
+        $colors = ["blue", "purple", "pink", "orange", "yellow", "light-blue", "light-green", "grey"];
 
         if ($hex == true) {
-            $colors = [ '#2E85EC', '#FF7900', '#665FE8', '#F43F5E' ];
+            $colors = ["#2E85EC", "#FF7900", "#665FE8", "#F43F5E"];
         }
 
         if (!empty($index) || $index >= 0) {
@@ -30,7 +30,7 @@ class ReportMarketingService
 
     public function getResumeMarketing($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
@@ -38,7 +38,7 @@ class ReportMarketingService
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId)
         {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $projectId = hashids_decode($filters["project_id"]);
 
             $checkoutsCount =   Checkout::where('project_id', $projectId)
                                 ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
@@ -76,7 +76,7 @@ class ReportMarketingService
 
     public function getSalesByState($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
@@ -105,32 +105,32 @@ class ReportMarketingService
 
             $totalValue = 0;
             $totalSales = 0;
-            foreach($data as $state) {
-                $totalValue += $state['value'];
-                $totalSales += $state['sales_amount'];
+            foreach ($data as $state) {
+                $totalValue += $state["value"];
+                $totalSales += $state["sales_amount"];
             }
 
-            foreach($data as $key => &$state) {
-                if(empty(BrazilStatesService::getStatePopulation($state['state']))){
+            foreach ($data as $key => &$state) {
+                if (empty(BrazilStatesService::getStatePopulation($state["state"]))) {
                     unset($data[$key]);
                     continue;
-                };
+                }
 
-                if($filters['map_filter'] == 'density'){
-                    $salesPercentage = ($state['sales_amount'] / BrazilStatesService::getStatePopulation($state['state'])) * 100000;
-                    $state['percentage'] = number_format($salesPercentage, 2, '.', '.');
+                if ($filters["map_filter"] == "density") {
+                    $salesPercentage =
+                        ($state["sales_amount"] / BrazilStatesService::getStatePopulation($state["state"])) * 100000;
+                    $state["percentage"] = number_format($salesPercentage, 2, ".", ".");
+                } else {
+                    $state["percentage"] = number_format(($state["value"] * 100) / $totalValue, 2, ".", ",") . "%";
                 }
-                else {
-                    $state['percentage'] = number_format(($state['value'] * 100) / $totalValue, 2, '.', ',') . '%';
-                }
-                $state['value'] = foxutils()->formatMoney($state['value'] / 100);
+                $state["value"] = foxutils()->formatMoney($state["value"] / 100);
             }
 
-            if($filters['map_filter'] == 'density'){
-                $percentage = array_column($data, 'percentage');
+            if ($filters["map_filter"] == "density") {
+                $percentage = array_column($data, "percentage");
                 array_multisort($percentage, SORT_DESC, $data);
             }
-            $projectId = hashids_decode($filters['project_id']);
+            $projectId = hashids_decode($filters["project_id"]);
 
             return $data;
         });
@@ -138,7 +138,7 @@ class ReportMarketingService
 
     public function getMostFrequentSales($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
 
         $cacheName = 'frequent-sales-'.json_encode($filters);
@@ -173,9 +173,9 @@ class ReportMarketingService
                 return null;
             }
 
-            foreach($data as &$plan) {
+            foreach ($data as &$plan) {
                 $plan->photo = $plan->products()->first()->photo;
-                $plan->sales_amount = number_format($plan->sales_amount, 0, '.', '.');
+                $plan->sales_amount = number_format($plan->sales_amount, 0, ".", ".");
                 $plan->value = foxutils()->formatMoney($plan->value);
             }
 
@@ -185,14 +185,14 @@ class ReportMarketingService
 
     public function getDevices($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
         $cacheName = 'devices-'. json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $projectId = hashids_decode($filters["project_id"]);
 
             $data = Sale::selectRaw("COUNT(*) AS total,
                         SUM(CASE WHEN checkout.is_mobile = 1 THEN 1 ELSE 0 END) AS count_mobile,
@@ -220,56 +220,87 @@ class ReportMarketingService
                 return null;
             }
 
-            if(empty($data['count_mobile'])) {
-                $data['count_mobile'] = 0;
-                $data['count_mobile_approved'] = 0;
-                $data['percentage_mobile'] = '0%';
-                $data['percentage_mobile_total'] = '0%';
+            if (empty($data["count_mobile"])) {
+                $data["count_mobile"] = 0;
+                $data["count_mobile_approved"] = 0;
+                $data["percentage_mobile"] = "0%";
+                $data["percentage_mobile_total"] = "0%";
             } else {
-                $data['percentage_mobile'] = round(number_format(($data['count_mobile_approved'] * 100) / $data['count_mobile'], 2, '.', ',')) . '%';
-                $data['percentage_mobile_total'] = round(number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',')) . '%';
+                $data["percentage_mobile"] =
+                    round(number_format(($data["count_mobile_approved"] * 100) / $data["count_mobile"], 2, ".", ",")) .
+                    "%";
+                $data["percentage_mobile_total"] =
+                    round(number_format(($data["count_mobile"] * 100) / $data["total"], 2, ".", ",")) . "%";
             }
 
-            if(empty($data['count_desktop'])) {
-                $data['count_desktop'] = 0;
-                $data['count_desktop_approved'] = 0;
-                $data['percentage_desktop'] = '0%';
-                $data['percentage_desktop_total'] = '0%';
+            if (empty($data["count_desktop"])) {
+                $data["count_desktop"] = 0;
+                $data["count_desktop_approved"] = 0;
+                $data["percentage_desktop"] = "0%";
+                $data["percentage_desktop_total"] = "0%";
             } else {
-                $data['percentage_desktop'] = round(number_format(($data['count_desktop_approved'] * 100) / $data['count_desktop'], 2, '.', ',')) . '%';
-                $data['percentage_desktop_total'] = round(number_format(($data['count_desktop'] * 100) / $data['total'], 2, '.', ',')) . '%';
+                $data["percentage_desktop"] =
+                    round(
+                        number_format(($data["count_desktop_approved"] * 100) / $data["count_desktop"], 2, ".", ",")
+                    ) . "%";
+                $data["percentage_desktop_total"] =
+                    round(number_format(($data["count_desktop"] * 100) / $data["total"], 2, ".", ",")) . "%";
             }
 
-            $data['conversion_mobile'] = $data['count_mobile_approved'] > 0 || $data['count_desktop_approved'] > 0 ? round(number_format(($data['count_mobile_approved'] * 100) / ($data['count_mobile_approved'] + $data['count_desktop_approved']), 2, '.', ',')) . '%' : '0%';
-            $data['conversion_desktop'] = $data['count_mobile_approved'] > 0 || $data['count_desktop_approved'] > 0 ? round(number_format(($data['count_desktop_approved'] * 100) / ($data['count_mobile_approved'] + $data['count_desktop_approved']), 2, '.', ',')) . '%' : '0%';
+            $data["conversion_mobile"] =
+                $data["count_mobile_approved"] > 0 || $data["count_desktop_approved"] > 0
+                    ? round(
+                            number_format(
+                                ($data["count_mobile_approved"] * 100) /
+                                    ($data["count_mobile_approved"] + $data["count_desktop_approved"]),
+                                2,
+                                ".",
+                                ","
+                            )
+                        ) . "%"
+                    : "0%";
+            $data["conversion_desktop"] =
+                $data["count_mobile_approved"] > 0 || $data["count_desktop_approved"] > 0
+                    ? round(
+                            number_format(
+                                ($data["count_desktop_approved"] * 100) /
+                                    ($data["count_mobile_approved"] + $data["count_desktop_approved"]),
+                                2,
+                                ".",
+                                ","
+                            )
+                        ) . "%"
+                    : "0%";
 
-            $data['value_mobile'] = $data['value_mobile'] > 0 ? foxutils()->formatMoney($data['value_mobile'] / 100) : 'R$ 0,00';
-            $data['value_desktop'] = $data['value_desktop'] > 0 ? foxutils()->formatMoney($data['value_desktop'] / 100) : 'R$ 0,00';
+            $data["value_mobile"] =
+                $data["value_mobile"] > 0 ? foxutils()->formatMoney($data["value_mobile"] / 100) : 'R$ 0,00';
+            $data["value_desktop"] =
+                $data["value_desktop"] > 0 ? foxutils()->formatMoney($data["value_desktop"] / 100) : 'R$ 0,00';
 
             return [
-                'mobile' => [
-                    'total' => $data['count_mobile'],
-                    'approved' => $data['count_mobile_approved'],
-                    'value' => $data['value_mobile'],
-                    'percentage_approved' => $data['percentage_mobile'],
-                    'percentage_conversion' => $data['conversion_mobile'],
-                    'percentage_total' => $data['percentage_mobile_total']
+                "mobile" => [
+                    "total" => $data["count_mobile"],
+                    "approved" => $data["count_mobile_approved"],
+                    "value" => $data["value_mobile"],
+                    "percentage_approved" => $data["percentage_mobile"],
+                    "percentage_conversion" => $data["conversion_mobile"],
+                    "percentage_total" => $data["percentage_mobile_total"],
                 ],
-                'desktop' => [
-                    'total' => $data['count_desktop'],
-                    'approved' => $data['count_desktop_approved'],
-                    'value' => $data['value_desktop'],
-                    'percentage_approved' => $data['percentage_desktop'],
-                    'percentage_conversion' => $data['conversion_desktop'],
-                    'percentage_total' => $data['percentage_desktop_total']
-                ]
+                "desktop" => [
+                    "total" => $data["count_desktop"],
+                    "approved" => $data["count_desktop_approved"],
+                    "value" => $data["value_desktop"],
+                    "percentage_approved" => $data["percentage_desktop"],
+                    "percentage_conversion" => $data["conversion_desktop"],
+                    "percentage_total" => $data["percentage_desktop_total"],
+                ],
             ];
         });
     }
 
     public function getOperationalSystems($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
 
         $cacheName = 'operational-systems-'.json_encode($filters);
@@ -294,25 +325,30 @@ class ReportMarketingService
 
             $salesAmount = 0;
 
-            foreach($data as $key => &$operationalSystem) {
-                if(!in_array($operationalSystem['os_enum'], [
-                                Checkout::OPERATIONAL_SYSTEM_ANDROID,
-                                Checkout::OPERATIONAL_SYSTEM_IOS,
-                                Checkout::OPERATIONAL_SYSTEM_WINDOWS,
-                                Checkout::OPERATIONAL_SYSTEM_LINUX
-                ])){
+            foreach ($data as $key => &$operationalSystem) {
+                if (
+                    !in_array($operationalSystem["os_enum"], [
+                        Checkout::OPERATIONAL_SYSTEM_ANDROID,
+                        Checkout::OPERATIONAL_SYSTEM_IOS,
+                        Checkout::OPERATIONAL_SYSTEM_WINDOWS,
+                        Checkout::OPERATIONAL_SYSTEM_LINUX,
+                    ])
+                ) {
                     unset($data[$key]);
                     continue;
                 }
-                $salesAmount += $operationalSystem['sales_amount'];
+                $salesAmount += $operationalSystem["sales_amount"];
             }
 
-            foreach($data as &$operationalSystem) {
-                $operationalSystem['description'] = (new Checkout)->present()->getOperationalSystemName($operationalSystem['os_enum']);
-                $operationalSystem['percentage'] = number_format(($operationalSystem['sales_amount'] * 100) / $salesAmount, 1, '.', ',') . '%';
-                unset($operationalSystem['id_code']);
-                unset($operationalSystem['os_enum']);
-                unset($operationalSystem['sales_amount']);
+            foreach ($data as &$operationalSystem) {
+                $operationalSystem["description"] = (new Checkout())
+                    ->present()
+                    ->getOperationalSystemName($operationalSystem["os_enum"]);
+                $operationalSystem["percentage"] =
+                    number_format(($operationalSystem["sales_amount"] * 100) / $salesAmount, 1, ".", ",") . "%";
+                unset($operationalSystem["id_code"]);
+                unset($operationalSystem["os_enum"]);
+                unset($operationalSystem["sales_amount"]);
             }
 
             return $data;
@@ -321,7 +357,7 @@ class ReportMarketingService
 
     public function getStateDetail($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
@@ -362,18 +398,19 @@ class ReportMarketingService
                                 ->count();
 
             return [
-                'total_value' => foxutils()->formatMoney($totalValue / 100),
-                'total_sales' => number_format($totalSales, 0, '.', '.'),
-                'accesses' => number_format($accesses, 0, '.', '.'),
-                'conversion' => $accesses > 0 ? number_format(($totalSales * 100) / $accesses, 1, '.', ',') . '%' : '0%'
+                "total_value" => foxutils()->formatMoney($totalValue / 100),
+                "total_sales" => number_format($totalSales, 0, ".", "."),
+                "accesses" => number_format($accesses, 0, ".", "."),
+                "conversion" =>
+                    $accesses > 0 ? number_format(($totalSales * 100) / $accesses, 1, ".", ",") . "%" : "0%",
             ];
         });
     }
 
     public function getResumeCoupons($filters)
     {
-        $user = Auth::user();        
-        $filters['company_id'] = $user->company_default;        
+        $user = Auth::user();
+        $filters['company_id'] = $user->company_default;
 
         $cacheName = 'coupons-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 180, function() use($filters){
@@ -393,15 +430,14 @@ class ReportMarketingService
                             ->get();
 
             $total = 0;
-            foreach($coupons as $coupon)
-            {
+            foreach ($coupons as $coupon) {
                 $total += $coupon->amount;
             }
 
             $index = 0;
-            foreach($coupons as $coupon)
-            {
-                $coupon->percentage = round(number_format(($coupon->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
+            foreach ($coupons as $coupon) {
+                $coupon->percentage =
+                    round(number_format(($coupon->amount * 100) / $total, 2, ".", ","), 1, PHP_ROUND_HALF_UP) . "%";
                 $coupon->color = $this->getColors($index);
                 $coupon->hexadecimal = $this->getColors($index, true);
                 $index++;
@@ -410,21 +446,20 @@ class ReportMarketingService
             $couponsArray = $coupons->toArray();
 
             return [
-                'coupons' => $couponsArray,
-                'total' => $total
+                "coupons" => $couponsArray,
+                "total" => $total,
             ];
         });
-
     }
 
     public function getResumeRegions($filters)
-    {   
+    {
         $filters['company_id'] = Auth::user()->company_default;
 
         $cacheName = 'regions-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = current(Hashids::decode($filters['project_id']));            
+            $projectId = current(Hashids::decode($filters['project_id']));
 
             $regions = Checkout::select(
                 DB::raw('
@@ -451,10 +486,14 @@ class ReportMarketingService
                     unset($regions[$key]);
                     continue;
                 }
-                $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $region['access'], 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+                $region["percentage_conversion"] = round(
+                    number_format(($region["conversion"] * 100) / $region["access"], 2, ".", ","),
+                    1,
+                    PHP_ROUND_HALF_UP
+                );
             }
 
-            $percentageConversion = array_column($regions, 'percentage_conversion');
+            $percentageConversion = array_column($regions, "percentage_conversion");
             array_multisort($percentageConversion, SORT_DESC, $regions);
 
             return $regions;

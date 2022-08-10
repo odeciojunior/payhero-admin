@@ -6,32 +6,28 @@ use Laracasts\Presenter\Presenter;
 
 class ActiveCampaignSentPresenter extends Presenter
 {
-
-    public function getSentStatus($status) {
-
-        if(is_numeric($status)){
+    public function getSentStatus($status)
+    {
+        if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'error';
+                    return "error";
                 case 2:
-                    return 'success';
-                case 3: 
-                    return 'canceled';
+                    return "success";
+                case 3:
+                    return "canceled";
             }
-            return '';
-        }
-        else{
+            return "";
+        } else {
             switch ($status) {
-                case 'error':
+                case "error":
                     return 1;
-                case 'success':
+                case "success":
                     return 2;
-                case 'canceled':
+                case "canceled":
                     return 3;
             }
-            return '';
+            return "";
         }
-
     }
-
 }

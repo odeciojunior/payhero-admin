@@ -37,8 +37,10 @@ class WithdrawalsReportExport implements FromCollection, WithMapping, WithHeadin
 
     public function __construct($withdrawalId, $user, $email, $filename)
     {
-        $transactions = Transaction::with('sale')->with('company')->where('withdrawal_id', $withdrawalId );
-        $items = WithdrawalTransactionsResource::collection($transactions->orderBy('id', 'ASC')->get());
+        $transactions = Transaction::with("sale")
+            ->with("company")
+            ->where("withdrawal_id", $withdrawalId);
+        $items = WithdrawalTransactionsResource::collection($transactions->orderBy("id", "ASC")->get());
         $this->items = collect($items);
         $this->user = $user;
         $this->filename = $filename;
@@ -52,60 +54,61 @@ class WithdrawalsReportExport implements FromCollection, WithMapping, WithHeadin
 
     public function map($row): array
     {
-
         return [
-            $row['transaction_code'],
-            $row['brand'],
-            $row['liquidated'] ? "Sim" : "Não",
-            $row['date'],
-            $row['value'],
+            $row["transaction_code"],
+            $row["brand"],
+            $row["liquidated"] ? "Sim" : "Não",
+            $row["date"],
+            $row["value"],
         ];
-
     }
-////
+    ////
     public function headings(): array
     {
-
-        return [
-            'Código Transação',
-            'Forma',
-            'Transferido',
-            'Data de transferência',
-            'Valor',
-        ];
+        return ["Código Transação", "Forma", "Transferido", "Data de transferência", "Valor"];
     }
 
-//
+    //
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:E1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)
+            AfterSheet::class => function (AfterSheet $event) {
+                $cellRange = "A1:E1"; // All headers
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
                     ->getFill()
-                    ->setFillType('solid')
+                    ->setFillType("solid")
                     ->getStartColor()
-                    ->setRGB('E16A0A');
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
-                    'color' => ['rgb' => 'ffffff'],
-                    'size' => 16
-                ]);
+                    ->setRGB("E16A0A");
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
+                    ->getFont()
+                    ->applyFromArray([
+                        "color" => ["rgb" => "ffffff"],
+                        "size" => 16,
+                    ]);
 
                 $lastRow = $event->sheet->getDelegate()->getHighestRow();
                 $setGray = false;
                 $lastFinance = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
-                    $currentFinance = $event->sheet->getDelegate()->getCellByColumnAndRow(1, $row)->getValue();
+                    $currentFinance = $event->sheet
+                        ->getDelegate()
+                        ->getCellByColumnAndRow(1, $row)
+                        ->getValue();
                     if ($currentFinance != $lastFinance && isset($lastFinance)) {
                         $setGray = !$setGray;
                     }
-                    if($setGray){
-                        $event->sheet->getDelegate()
-                            ->getStyle('A' . $row . ':AS' . $row)
+                    if ($setGray) {
+                        $event->sheet
+                            ->getDelegate()
+                            ->getStyle("A" . $row . ":AS" . $row)
                             ->getFill()
-                            ->setFillType('solid')
+                            ->setFillType("solid")
                             ->getStartColor()
-                            ->setRGB('e5e5e5');
+                            ->setRGB("e5e5e5");
                     }
                     $lastFinance = $currentFinance;
                 }
@@ -114,5 +117,4 @@ class WithdrawalsReportExport implements FromCollection, WithMapping, WithHeadin
             },
         ];
     }
-
 }

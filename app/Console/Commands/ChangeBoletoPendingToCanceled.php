@@ -13,14 +13,14 @@ class ChangeBoletoPendingToCanceled extends Command
      *
      * @var string
      */
-    protected $signature = 'change:boletopendingtocanceled';
+    protected $signature = "change:boletopendingtocanceled";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -35,13 +35,10 @@ class ChangeBoletoPendingToCanceled extends Command
     public function handle()
     {
         try {
-
             $boletoService = new BoletoService();
             $boletoService->changeBoletoPendingToCanceled();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

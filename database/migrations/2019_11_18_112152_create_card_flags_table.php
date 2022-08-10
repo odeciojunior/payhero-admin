@@ -13,17 +13,20 @@ class CreateCardFlagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('card_flags', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('gateway_id')->nullable();
-            $table->string('name');
-            $table->string('slug');
-            $table->tinyInteger('card_flag_enum');
-            $table->boolean('active_flag')->default(1);
+        Schema::create("card_flags", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedBigInteger("gateway_id")->nullable();
+            $table->string("name");
+            $table->string("slug");
+            $table->tinyInteger("card_flag_enum");
+            $table->boolean("active_flag")->default(1);
             $table->timestamps();
         });
-        Schema::table('card_flags', function(Blueprint $table) {
-            $table->foreign('gateway_id')->references('id')->on('gateways');
+        Schema::table("card_flags", function (Blueprint $table) {
+            $table
+                ->foreign("gateway_id")
+                ->references("id")
+                ->on("gateways");
         });
         $sql = "INSERT INTO card_flags (name, slug,card_flag_enum, created_at, updated_at) ";
         $sql .= "VALUES('Card','card',1,CURRENT_DATE, CURRENT_DATE)";
@@ -48,6 +51,6 @@ class CreateCardFlagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('card_flags');
+        Schema::dropIfExists("card_flags");
     }
 }

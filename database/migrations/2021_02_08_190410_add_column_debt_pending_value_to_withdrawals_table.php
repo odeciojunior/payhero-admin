@@ -13,12 +13,12 @@ class AddColumnDebtPendingValueToWithdrawalsTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'withdrawals',
-            function (Blueprint $table) {
-                $table->integer('debt_pending_value')->nullable()->after('is_released');
-            }
-        );
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table
+                ->integer("debt_pending_value")
+                ->nullable()
+                ->after("is_released");
+        });
     }
 
     /**
@@ -28,11 +28,8 @@ class AddColumnDebtPendingValueToWithdrawalsTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'withdrawals',
-            function (Blueprint $table) {
-                $table->dropColumn(['debt_pending_value']);
-            }
-        );
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->dropColumn(["debt_pending_value"]);
+        });
     }
 }

@@ -126,7 +126,7 @@ class User extends Authenticable
     /**
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = ["id_code"];
     /**
      * @var array
      */
@@ -191,7 +191,7 @@ class User extends Authenticable
     /**
      * @var array
      */
-    protected static $logAttributes = ['*'];
+    protected static $logAttributes = ["*"];
     /**
      * @var bool
      */
@@ -210,7 +210,7 @@ class User extends Authenticable
      * Ignora atributos
      * @var array
      */
-    protected static $logAttributesToIgnore = ['last_login', 'updated_at'];
+    protected static $logAttributesToIgnore = ["last_login", "updated_at"];
 
     /**
      * @param Activity $activity
@@ -218,12 +218,12 @@ class User extends Authenticable
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Usuário ' . $this->name . ' foi deletado.';
-        } elseif ($eventName == 'updated') {
-            $activity->description = 'Usuário ' . $this->name . ' foi atualizado.';
-        } elseif ($eventName == 'created') {
-            $activity->description = 'Usuário ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Usuário " . $this->name . " foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Usuário " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Usuário " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -274,7 +274,7 @@ class User extends Authenticable
      */
     public function invitations()
     {
-        return $this->hasMany(Invitation::class, 'user_invited');
+        return $this->hasMany(Invitation::class, "user_invited");
     }
 
     /**
@@ -282,7 +282,7 @@ class User extends Authenticable
      */
     public function invites()
     {
-        return $this->hasMany(Invitation::class, 'invite');
+        return $this->hasMany(Invitation::class, "invite");
     }
 
     /**
@@ -306,7 +306,7 @@ class User extends Authenticable
      */
     public function sales()
     {
-        return $this->hasMany(Sale::class, 'owner_id');
+        return $this->hasMany(Sale::class, "owner_id");
     }
 
     /**
@@ -346,7 +346,7 @@ class User extends Authenticable
      */
     public function userShoppings()
     {
-        return $this->hasMany(UserShopping::class, 'client');
+        return $this->hasMany(UserShopping::class, "client");
     }
 
     /**
@@ -362,7 +362,7 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'users_projects', 'user_id', 'project_id');
+        return $this->belongsToMany(Project::class, "users_projects", "user_id", "project_id");
     }
 
     /**
@@ -386,7 +386,7 @@ class User extends Authenticable
      */
     public function userInformations()
     {
-        return $this->belongsTo(UserInformation::class, 'document', 'document');
+        return $this->belongsTo(UserInformation::class, "document", "document");
     }
 
     /**
@@ -418,12 +418,7 @@ class User extends Authenticable
      */
     public function tasks()
     {
-        return $this->belongsToMany(
-            Task::class,
-            'tasks_users',
-            'user_id',
-            'task_id'
-        );
+        return $this->belongsToMany(Task::class, "tasks_users", "user_id", "task_id");
     }
 
     /**
@@ -438,11 +433,11 @@ class User extends Authenticable
 
     public function getAccountOwnerId()
     {
-        return $this->company_default == Company::DEMO_ID ? self::DEMO_ID : $this->account_owner_id;        
-    }    
-       
+        return $this->company_default == Company::DEMO_ID ? self::DEMO_ID : $this->account_owner_id;
+    }
+
     public function getAccountIsApproved()
-    {        
-        return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;        
+    {
+        return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;
     }
 }

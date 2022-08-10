@@ -12,9 +12,9 @@ class DropColumnAcceptedAtAndRenameColumnAcceptedAtTermsTableUserTerms extends M
      */
     public function up()
     {
-        Schema::table('user_terms', function(Blueprint $table) {
-            $table->dropColumn('accepted_at');
-            $table->renameColumn('accepted_at_terms', 'accepted_at');
+        Schema::table("user_terms", function (Blueprint $table) {
+            $table->dropColumn("accepted_at");
+            $table->renameColumn("accepted_at_terms", "accepted_at");
         });
     }
 
@@ -24,10 +24,12 @@ class DropColumnAcceptedAtAndRenameColumnAcceptedAtTermsTableUserTerms extends M
      */
     public function down()
     {
-        Schema::table('user_terms', function(Blueprint $table) {
-            $table->boolean('accepted_at')->nullable()
-                  ->after('device_data');
-            $table->renameColumn('accepted_at', 'accepted_at_terms');
+        Schema::table("user_terms", function (Blueprint $table) {
+            $table
+                ->boolean("accepted_at")
+                ->nullable()
+                ->after("device_data");
+            $table->renameColumn("accepted_at", "accepted_at_terms");
         });
     }
 }

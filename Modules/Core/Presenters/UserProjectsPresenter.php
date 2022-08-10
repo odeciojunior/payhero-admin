@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\Core\Presenters;
 
 /**
@@ -18,22 +17,21 @@ class UserProjectsPresenter
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:
-                    return 'producer';
+                    return "producer";
                 case 2:
-                    return 'partner';
-
+                    return "partner";
             }
 
-            return '';
+            return "";
         } else {
             switch ($type) {
-                case 'producer':
+                case "producer":
                     return 1;
-                case 'partner':
+                case "partner":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -44,7 +42,6 @@ class UserProjectsPresenter
     public function getStatusFlag($status)
     {
         if (is_numeric($status)) {
-
             switch ($status) {
                 case 1:
                     return "active";
@@ -61,7 +58,6 @@ class UserProjectsPresenter
             }
         }
 
-        return '';
-
+        return "";
     }
 }

@@ -18,10 +18,14 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            if (auth()->user()->can('dashboard')) {
-                return redirect('/dashboard');
+            if (
+                auth()
+                    ->user()
+                    ->can("dashboard")
+            ) {
+                return redirect("/dashboard");
             } else {
-                return redirect('/sales');
+                return redirect("/sales");
             }
         }
 

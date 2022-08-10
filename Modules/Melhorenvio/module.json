@@ -4,9 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
-    "providers": [
-        "Modules\\Melhorenvio\\Providers\\MelhorenvioServiceProvider"
-    ],
+    "providers": ["Modules\\Melhorenvio\\Providers\\MelhorenvioServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

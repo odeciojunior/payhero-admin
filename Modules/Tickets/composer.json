@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Tickets\\Providers\\TicketsServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

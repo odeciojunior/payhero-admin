@@ -13,9 +13,8 @@ class CreateIndexShopifyVariantIdPlansTable extends Migration
      */
     public function up()
     {
-
-        Schema::table('plans', function($table) {
-            $table->index('shopify_variant_id');
+        Schema::table("plans", function ($table) {
+            $table->index("shopify_variant_id");
         });
     }
 
@@ -26,6 +25,5 @@ class CreateIndexShopifyVariantIdPlansTable extends Migration
      */
     public function down()
     {
-
     }
 }

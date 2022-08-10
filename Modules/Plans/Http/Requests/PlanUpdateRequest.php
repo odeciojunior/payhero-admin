@@ -13,26 +13,26 @@ class PlanUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id'      => 'nullable',
-            'name'            => 'required|max:200',
-            'price'           => 'required',
-            'description'     => 'nullable|max:200',
-            'products'        => 'required|array',
-            'product_amounts' => 'required|array',
-            'product_cost'    => 'required|array',
-            'product_total'   => 'required|array',
-            'currency'        => 'required|array',
+            "project_id" => "nullable",
+            "name" => "required|max:200",
+            "price" => "required",
+            "description" => "nullable|max:200",
+            "products" => "required|array",
+            "product_amounts" => "required|array",
+            "product_cost" => "required|array",
+            "product_total" => "required|array",
+            "currency" => "required|array",
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required'            => 'O campo Nome é obrigatório',
-            'price.required'           => 'O campo Preço é obrigatório',
-            'description.required'     => 'O campo Descrição é obrigatório',
-            'products.required'        => 'O campo Produtos de origem é obrigatório',
-            'product_amounts.required' => 'O campo Quantidade é obrigatório',
+            "name.required" => "O campo Nome é obrigatório",
+            "price.required" => "O campo Preço é obrigatório",
+            "description.required" => "O campo Descrição é obrigatório",
+            "products.required" => "O campo Produtos de origem é obrigatório",
+            "product_amounts.required" => "O campo Quantidade é obrigatório",
         ];
     }
 

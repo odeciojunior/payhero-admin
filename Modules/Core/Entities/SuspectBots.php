@@ -18,28 +18,21 @@ class SuspectBots extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
+    protected $dates = ["created_at", "updated_at"];
     /**
      * @var array
      */
-    protected $fillable = [
-        'checkout_id',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ["checkout_id", "created_at", "updated_at"];
 
     /**
      * @return BelongsTo
      */
     public function checkout()
     {
-        return $this->belongsTo('Modules\Core\Entities\Checkout');
+        return $this->belongsTo("Modules\Core\Entities\Checkout");
     }
 }

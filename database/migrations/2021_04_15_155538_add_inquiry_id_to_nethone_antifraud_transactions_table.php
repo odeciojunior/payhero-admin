@@ -13,8 +13,12 @@ class AddInquiryIdToNethoneAntifraudTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('nethone_antifraud_transaction', function (Blueprint $table) {
-            $table->string('inquiry_id')->after('sale_id')->nullable()->index();
+        Schema::table("nethone_antifraud_transaction", function (Blueprint $table) {
+            $table
+                ->string("inquiry_id")
+                ->after("sale_id")
+                ->nullable()
+                ->index();
         });
     }
 
@@ -25,8 +29,8 @@ class AddInquiryIdToNethoneAntifraudTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('nethone_antifraud_transaction', function (Blueprint $table) {
-            $table->dropColumn('inquiry_id');
+        Schema::table("nethone_antifraud_transaction", function (Blueprint $table) {
+            $table->dropColumn("inquiry_id");
         });
     }
 }

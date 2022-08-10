@@ -13,17 +13,16 @@ class CreateSaleWoocommerceRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_woocommerce_requests', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('sale_id')->nullable();
-            $table->bigInteger('project_id')->nullable();
-            $table->bigInteger('order')->nullable();
-            $table->string('method')->nullable();
-            $table->tinyInteger('status')->default(0);
-            
-            $table->json('send_data')->nullable();
-            $table->text('received_data')->nullable();
+        Schema::create("sale_woocommerce_requests", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->bigInteger("sale_id")->nullable();
+            $table->bigInteger("project_id")->nullable();
+            $table->bigInteger("order")->nullable();
+            $table->string("method")->nullable();
+            $table->tinyInteger("status")->default(0);
 
+            $table->json("send_data")->nullable();
+            $table->text("received_data")->nullable();
 
             $table->timestamps();
         });
@@ -36,6 +35,6 @@ class CreateSaleWoocommerceRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_woocommerce_requests');
+        Schema::dropIfExists("sale_woocommerce_requests");
     }
 }

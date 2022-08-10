@@ -18,7 +18,7 @@ class ProjectNotificationServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class ProjectNotificationServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('projectnotification.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'projectnotification'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("projectnotification.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "projectnotification");
     }
 
     /**
@@ -53,17 +54,26 @@ class ProjectNotificationServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/projectnotification');
+        $viewPath = resource_path("views/modules/projectnotification");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/projectnotification';
-        }, \Config::get('view.paths')), [$sourcePath]), 'projectnotification');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/projectnotification";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "projectnotification"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class ProjectNotificationServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/projectnotification');
+        $langPath = resource_path("lang/modules/projectnotification");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'projectnotification');
+            $this->loadTranslationsFrom($langPath, "projectnotification");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'projectnotification');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "projectnotification");
         }
     }
 
@@ -89,8 +99,8 @@ class ProjectNotificationServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

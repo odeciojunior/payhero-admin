@@ -5,9 +5,12 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return array(
-    'Modules\\Notificacoes\\Database\\Seeders\\NotificacoesDatabaseSeeder' => $baseDir . '/Database/Seeders/NotificacoesDatabaseSeeder.php',
-    'Modules\\Notificacoes\\Http\\Controllers\\NotificacoesController' => $baseDir . '/Http/Controllers/NotificacoesController.php',
-    'Modules\\Notificacoes\\Notifications\\Teste' => $baseDir . '/Notifications/Teste.php',
-    'Modules\\Notificacoes\\Providers\\NotificacoesServiceProvider' => $baseDir . '/Providers/NotificacoesServiceProvider.php',
-);
+return [
+    "Modules\\Notificacoes\\Database\\Seeders\\NotificacoesDatabaseSeeder" =>
+        $baseDir . "/Database/Seeders/NotificacoesDatabaseSeeder.php",
+    "Modules\\Notificacoes\\Http\\Controllers\\NotificacoesController" =>
+        $baseDir . "/Http/Controllers/NotificacoesController.php",
+    "Modules\\Notificacoes\\Notifications\\Teste" => $baseDir . "/Notifications/Teste.php",
+    "Modules\\Notificacoes\\Providers\\NotificacoesServiceProvider" =>
+        $baseDir . "/Providers/NotificacoesServiceProvider.php",
+];

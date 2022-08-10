@@ -13,7 +13,7 @@ class DropBraspagPostbacksTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('braspag_postbacks');
+        Schema::dropIfExists("braspag_postbacks");
     }
 
     /**

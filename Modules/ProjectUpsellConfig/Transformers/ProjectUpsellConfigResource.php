@@ -23,13 +23,13 @@ class ProjectUpsellConfigResource extends JsonResource
         $projectUpsell      = ProjectUpsellRule::where('project_id', $this->project_id)->exists();
 
         return [
-            'id'             => Hashids::encode($this->id),
-            'header'         => $this->header,
-            'title'          => $this->title,
-            'description'    => $this->description,
-            'countdown_time' => $this->countdown_time ?? '',
-            'countdown_flag' => $this->countdown_flag,
-            'has_upsell'      => $projectUpsell ? true : false,
+            "id" => Hashids::encode($this->id),
+            "header" => $this->header,
+            "title" => $this->title,
+            "description" => $this->description,
+            "countdown_time" => $this->countdown_time ?? "",
+            "countdown_flag" => $this->countdown_flag,
+            "has_upsell" => $projectUpsell ? true : false,
         ];
     }
 }

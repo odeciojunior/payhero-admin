@@ -38,21 +38,20 @@ class AffiliateLinksApiController extends Controller
                     ->orWhere('description', 'like', '%' . $request->input('plan') . '%');
                 });
 
-                $union = AffiliateLink::whereHas('affiliate', function($q) use ($userId, $projectId) {
-                    $q->where('user_id', $userId)->where('project_id', $projectId);
-                })->with('affiliate.project.domains', 'plan');
-                $union->where('affiliate_links.name', 'like', '%' . $request->input('plan') . '%');
+                $union = AffiliateLink::whereHas("affiliate", function ($q) use ($userId, $projectId) {
+                    $q->where("user_id", $userId)->where("project_id", $projectId);
+                })->with("affiliate.project.domains", "plan");
+                $union->where("affiliate_links.name", "like", "%" . $request->input("plan") . "%");
                 $links->union($union);
             }
 
-            $links = $links->whereHas('affiliate.project.domains', function($query) {
-                $query->where('status', 3);
+            $links = $links->whereHas("affiliate.project.domains", function ($query) {
+                $query->where("status", 3);
             });
 
             return new AffiliateLinkCollection($links->paginate(5));
-
         } catch (Exception $e) {
-            return response()->json(['message' => 'Ocorreu um erro'], 400);
+            return response()->json(["message" => "Ocorreu um erro"], 400);
         }
     }
 
@@ -63,11 +62,11 @@ class AffiliateLinksApiController extends Controller
     public function store(Request $request)
     {
         try {
-            $affiliateId = current(Hashids::decode($request->input('affiliate')));
-            $link = $request->input('link-affiliate');
-            $name = $request->input('link-affiliate-name');
+            $affiliateId = current(Hashids::decode($request->input("affiliate")));
+            $link = $request->input("link-affiliate");
+            $name = $request->input("link-affiliate-name");
 
-            $request->validate(['link-affiliate' => 'required|max:254']);
+            $request->validate(["link-affiliate" => "required|max:254"]);
             if (!empty($affiliateId) && !empty($link) && !empty($name)) {
 
                 $affiliate = Affiliate::with(['project.domains' => function($query) {
@@ -78,28 +77,33 @@ class AffiliateLinksApiController extends Controller
                                       ->first();
 
                 $domain = $affiliate->project->domains->first()->name;
-                if(strpos($link, $domain) === false) {
-                    return response()->json(['message' => 'O link deve estar dentro do domínio cadastrado na loja'], 400);
+                if (strpos($link, $domain) === false) {
+                    return response()->json(
+                        ["message" => "O link deve estar dentro do domínio cadastrado na loja"],
+                        400
+                    );
                 }
 
                 if (!empty($affiliate->id)) {
                     $affiliateLink = AffiliateLink::create([
-                                                                'link'         => $link,
-                                                                'name'         => $name,
-                                                                'affiliate_id' => $affiliateId,
-                                                        ]);
-                    if($affiliateLink) {
-                        $affiliateLink->update(['parameter' => Hashids::connection('affiliate')->encode($affiliateLink->id)]);
-                        return response()->json(['message' => 'Link criado com sucesso'], 200);
+                        "link" => $link,
+                        "name" => $name,
+                        "affiliate_id" => $affiliateId,
+                    ]);
+                    if ($affiliateLink) {
+                        $affiliateLink->update([
+                            "parameter" => Hashids::connection("affiliate")->encode($affiliateLink->id),
+                        ]);
+                        return response()->json(["message" => "Link criado com sucesso"], 200);
                     }
                 }
             }
 
-            return response()->json(['message' => 'Ocorreu um erro ao criar o Link'], 400);
+            return response()->json(["message" => "Ocorreu um erro ao criar o Link"], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao criar o link afiliado (AffiliateLinksApiController - store)');
+            Log::warning("Erro ao criar o link afiliado (AffiliateLinksApiController - store)");
             report($e);
-            return response()->json(['message' => 'Ocorreu um erro ao criar o link'], 400);
+            return response()->json(["message" => "Ocorreu um erro ao criar o link"], 400);
         }
     }
     /**
@@ -118,11 +122,11 @@ class AffiliateLinksApiController extends Controller
                 }
             }
 
-            return response()->json(['message' => 'Link não encontrado'], 400);
+            return response()->json(["message" => "Link não encontrado"], 400);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Ocorreu um erro'], 400);
+            return response()->json(["message" => "Ocorreu um erro"], 400);
         }
     }
     /**
@@ -134,10 +138,10 @@ class AffiliateLinksApiController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $request->validate(['link' => 'required|max:254']);
+            $request->validate(["link" => "required|max:254"]);
             $linkId = current(Hashids::decode($id));
-            $link = $request->input('link');
-            $name = $request->input('name');
+            $link = $request->input("link");
+            $name = $request->input("name");
 
             if (!empty($linkId) && !empty($link) && !empty($name)) {
 
@@ -149,22 +153,22 @@ class AffiliateLinksApiController extends Controller
                                     ->find($linkAffiliate->affiliate->project_id);
 
                     $domain = $project->domains->first()->name;
-                    if(strpos($link, $domain) === false) {
-                        return response()->json(['message' => 'Link inválido'], 400);
+                    if (strpos($link, $domain) === false) {
+                        return response()->json(["message" => "Link inválido"], 400);
                     }
 
-                    $update = $linkAffiliate->update(['link' => $link, 'name' => $name]);
+                    $update = $linkAffiliate->update(["link" => $link, "name" => $name]);
                     if ($update) {
-                        return response()->json(['message' => 'Link atualizado com sucesso!'], 200);
+                        return response()->json(["message" => "Link atualizado com sucesso!"], 200);
                     }
                 }
             }
 
-            return response()->json(['message' => 'Erro ao atualizar link!'], 400);
+            return response()->json(["message" => "Erro ao atualizar link!"], 400);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao atualizar link!'], 400);
+            return response()->json(["message" => "Erro ao atualizar link!"], 400);
         }
     }
 
@@ -176,22 +180,22 @@ class AffiliateLinksApiController extends Controller
     public function destroy($id)
     {
         try {
-            $linkId        = current(Hashids::decode($id));
-            $linkAffiliate = AffiliateLink::with('affiliate')->find($linkId);
+            $linkId = current(Hashids::decode($id));
+            $linkAffiliate = AffiliateLink::with("affiliate")->find($linkId);
 
             if($linkAffiliate->affiliate->user_id == auth()->user()->getAccountOwnerId()) {
                 $deleted = $linkAffiliate->delete();
                 if ($deleted) {
-                    return response()->json(['message' => 'Link removido com sucesso!'], 200);
+                    return response()->json(["message" => "Link removido com sucesso!"], 200);
                 }
             }
 
-            return response()->json(['message' => 'Erro ao remover link'], 400);
+            return response()->json(["message" => "Erro ao remover link"], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao remover Link (AffiliateLinksApiController - destroy)');
+            Log::warning("Erro ao remover Link (AffiliateLinksApiController - destroy)");
             report($e);
 
-            return response()->json(['message' => 'Erro ao remover link!'], 400);
+            return response()->json(["message" => "Erro ao remover link!"], 400);
         }
     }
 
@@ -211,11 +215,11 @@ class AffiliateLinksApiController extends Controller
                 }
             }
 
-            return response()->json(['message' => 'Link não encontrado'], 400);
+            return response()->json(["message" => "Link não encontrado"], 400);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Ocorreu um erro'], 400);
+            return response()->json(["message" => "Ocorreu um erro"], 400);
         }
     }
 }

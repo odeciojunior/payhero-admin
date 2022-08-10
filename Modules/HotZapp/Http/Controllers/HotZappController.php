@@ -13,6 +13,6 @@ class HotZappController extends Controller
      */
     public function index()
     {
-        return view('hotzapp::index');
+        return view("hotzapp::index");
     }
 }

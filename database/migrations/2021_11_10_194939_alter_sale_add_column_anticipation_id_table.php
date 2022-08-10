@@ -13,8 +13,11 @@ class AlterSaleAddColumnAnticipationIdTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->string('anticipation_id')->nullable()->after('anticipation_status');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->string("anticipation_id")
+                ->nullable()
+                ->after("anticipation_status");
         });
     }
 
@@ -25,8 +28,8 @@ class AlterSaleAddColumnAnticipationIdTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('anticipation_id');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("anticipation_id");
         });
     }
 }

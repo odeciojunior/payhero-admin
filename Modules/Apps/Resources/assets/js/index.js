@@ -26,19 +26,19 @@ $(document).ready(function () {
             url: '/api/projects?select=true&status=active&company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnScreenRemove()
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
                 if (verifyAccountFrozen()) {
-                    $('.add-btn').removeAttr('href');
+                    $(".add-btn").removeAttr("href");
                 }
             },
             success: function success(response) {
                 if (verifyAccountFrozen()) {
-                    $('.add-btn').removeAttr('href');
+                    $(".add-btn").removeAttr("href");
                 }
                 $("#project-not-empty").show();
 
@@ -48,18 +48,18 @@ $(document).ready(function () {
                 } else {
                     loadingOnScreenRemove();
                 }
-            }
+            },
         });
     }
 
     function updateUsedApps() {
         $.ajax({
-            method: 'GET',
-            url: '/api/apps',
+            method: "GET",
+            url: "/api/apps",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 loadOnAny('.page-content',true);
@@ -68,8 +68,8 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.hotzappIntegrations > 0) {
-                    $('#hotzapp-bt').addClass('added');
-                    $('#hotzapp-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#hotzapp-bt").addClass("added");
+                    $("#hotzapp-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#hotzapp-bt').removeClass('added');
@@ -77,8 +77,8 @@ $(document).ready(function () {
                 }
 
                 if (response.shopifyIntegrations > 0) {
-                    $('#shopify-bt').addClass('added');
-                    $('#shopify-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#shopify-bt").addClass("added");
+                    $("#shopify-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#shopify-bt').removeClass('added');
@@ -86,8 +86,8 @@ $(document).ready(function () {
                 }
 
                 if (response.notazzIntegrations > 0) {
-                    $('#notazz-bt').addClass('added');
-                    $('#notazz-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#notazz-bt").addClass("added");
+                    $("#notazz-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#notazz-bt').removeClass('added');
@@ -95,8 +95,8 @@ $(document).ready(function () {
                 }
 
                 if (response.convertaxIntegrations > 0) {
-                    $('#convertax-bt').addClass('added');
-                    $('#convertax-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#convertax-bt").addClass("added");
+                    $("#convertax-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#convertax-bt').removeClass('added');
@@ -104,8 +104,8 @@ $(document).ready(function () {
                 }
 
                 if (response.activecampaignIntegrations > 0) {
-                    $('#activecampaign-bt').addClass('added');
-                    $('#activecampaign-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#activecampaign-bt").addClass("added");
+                    $("#activecampaign-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#activecampaign-bt').removeClass('added');
@@ -113,8 +113,8 @@ $(document).ready(function () {
                 }
 
                 if (response.digitalmanagerIntegrations > 0) {
-                    $('#digitalmanager-bt').addClass('added');
-                    $('#digitalmanager-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#digitalmanager-bt").addClass("added");
+                    $("#digitalmanager-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#digitalmanager-bt').removeClass('added');
@@ -122,8 +122,8 @@ $(document).ready(function () {
                 }
 
                 if (response.whatsapp2Integrations > 0) {
-                    $('#whatsapp2-bt').addClass('added');
-                    $('#whatsapp2-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#whatsapp2-bt").addClass("added");
+                    $("#whatsapp2-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#whatsapp2-bt').removeClass('added');
@@ -131,8 +131,8 @@ $(document).ready(function () {
                 }
 
                 if (response.reportanaIntegrations > 0) {
-                    $('#reportana-bt').addClass('added');
-                    $('#reportana-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#reportana-bt").addClass("added");
+                    $("#reportana-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#reportana-bt').removeClass('added');
@@ -140,8 +140,8 @@ $(document).ready(function () {
                 }
 
                 if (response.unicodropIntegrations > 0) {
-                    $('#unicodrop-bt').addClass('added');
-                    $('#unicodrop-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#unicodrop-bt").addClass("added");
+                    $("#unicodrop-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#unicodrop-bt').removeClass('added');
@@ -149,8 +149,8 @@ $(document).ready(function () {
                 }
 
                 if (response.smartfunnelIntegrations > 0) {
-                    $('#smartfunnel-bt').addClass('added');
-                    $('#smartfunnel-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#smartfunnel-bt").addClass("added");
+                    $("#smartfunnel-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#smartfunnel-bt').removeClass('added');
@@ -158,8 +158,8 @@ $(document).ready(function () {
                 }
 
                 if (response.woocommerceIntegrations > 0) {
-                    $('#woocom-bt').addClass('added');
-                    $('#woocom-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#woocom-bt").addClass("added");
+                    $("#woocom-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#woocom-bt').removeClass('added');
@@ -167,8 +167,8 @@ $(document).ready(function () {
                 }
 
                 if (response.astronmembersIntegrations > 0) {
-                    $('#astronmembers-bt').addClass('added');
-                    $('#astronmembers-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#astronmembers-bt").addClass("added");
+                    $("#astronmembers-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#astronmembers-bt').removeClass('added');
@@ -176,8 +176,8 @@ $(document).ready(function () {
                 }
 
                 if (response.notificacoesinteligentesIntegrations > 0) {
-                    $('#notificacoesinteligentes-bt').addClass('added');
-                    $('#notificacoesinteligentes-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#notificacoesinteligentes-bt").addClass("added");
+                    $("#notificacoesinteligentes-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#notificacoesinteligentes-bt').removeClass('added');
@@ -185,8 +185,8 @@ $(document).ready(function () {
                 }
 
                 if (response.hotbilletIntegrations > 0) {
-                    $('#hotbillet-bt').addClass('added');
-                    $('#hotbillet-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#hotbillet-bt").addClass("added");
+                    $("#hotbillet-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#hotbillet-bt').removeClass('added');
@@ -194,8 +194,8 @@ $(document).ready(function () {
                 }
 
                 if (response.melhorenvioIntegrations > 0) {
-                    $('#menv-bt').addClass('added');
-                    $('#menv-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                    $("#menv-bt").addClass("added");
+                    $("#menv-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 }
                 else{
                     $('#menv-bt').removeClass('added');
@@ -203,13 +203,13 @@ $(document).ready(function () {
                 }
                 loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
-            }
+            },
         });
     }
 
-    $('.app-integration').on('click', function () {
+    $(".app-integration").on("click", function () {
         if (verifyAccountFrozen() == false) {
-            window.location.href = $(this).data('url');
+            window.location.href = $(this).data("url");
         }
     });
 });

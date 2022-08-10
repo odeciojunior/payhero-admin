@@ -15,32 +15,32 @@ class ReportSaleService
 {
     public function getResumeSales($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
         $cacheName = 'sales-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';            
+            $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
 
             $sales = Sale::select('sales.*')
                         ->join('transactions', 'transactions.sale_id', 'sales.id')
                         ->where('project_id', current(Hashids::decode($filters['project_id'])))
-                        ->where('transactions.company_id', $filters['company_id'])            
+                        ->where('transactions.company_id', $filters['company_id'])
                         ->where('owner_id', $ownerId)
                         ->whereBetween($dateFilter, [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
-            if (!empty($filters['status'])) {
+            if (!empty($filters["status"])) {
                 $salesModel = new Sale();
-                if ($filters['status'] === 'others') {
+                if ($filters["status"] === "others") {
                     $statusNotIn = [
                         Sale::STATUS_APPROVED,
                         Sale::STATUS_PENDING,
                         Sale::STATUS_CANCELED,
                         Sale::STATUS_REFUSED,
                         Sale::STATUS_REFUNDED,
-                        Sale::STATUS_CHARGEBACK
+                        Sale::STATUS_CHARGEBACK,
                     ];
                     $sales->whereNotIn('sales.status', $statusNotIn);
                 } else {
@@ -48,11 +48,11 @@ class ReportSaleService
                 }
             }
 
-            if ($dateRange['0'] == $dateRange['1']) {
+            if ($dateRange["0"] == $dateRange["1"]) {
                 return $this->getResumeSalesByHours($sales, $filters);
-            } elseif ($dateRange['0'] != $dateRange['1']) {
-                $startDate  = Carbon::createFromFormat('Y-m-d', $dateRange['0'], 'America/Sao_Paulo');
-                $endDate    = Carbon::createFromFormat('Y-m-d', $dateRange['1'], 'America/Sao_Paulo');
+            } elseif ($dateRange["0"] != $dateRange["1"]) {
+                $startDate = Carbon::createFromFormat("Y-m-d", $dateRange["0"], "America/Sao_Paulo");
+                $endDate = Carbon::createFromFormat("Y-m-d", $dateRange["1"], "America/Sao_Paulo");
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
@@ -72,22 +72,44 @@ class ReportSaleService
 
     public function getResumeSalesByHours($sales, $filters)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        date_default_timezone_set("America/Sao_Paulo");
 
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-        if (Carbon::parse($dateRange[0])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
-            $labelList   = [];
-            $currentHour = date('H');
-            $startHour   = 0;
+        if (Carbon::parse($dateRange[0])->format("m/d/y") == Carbon::now()->format("m/d/y")) {
+            $labelList = [];
+            $currentHour = date("H");
+            $startHour = 0;
 
             while ($startHour <= $currentHour) {
-                array_push($labelList, $startHour . 'h');
+                array_push($labelList, $startHour . "h");
                 $startHour++;
             }
         } else {
             $labelList = [
-                '0h', '1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h',
-                '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
+                "0h",
+                "1h",
+                "2h",
+                "3h",
+                "4h",
+                "5h",
+                "6h",
+                "7h",
+                "8h",
+                "9h",
+                "10h",
+                "11h",
+                "12h",
+                "13h",
+                "14h",
+                "15h",
+                "16h",
+                "17h",
+                "18h",
+                "19h",
+                "20h",
+                "21h",
+                "22h",
+                "23h",
             ];
         }
 
@@ -107,22 +129,22 @@ class ReportSaleService
 
         $variation = 0;
         if ($saleData[0] > 0) {
-            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+            $variation = round(($saleData[count($saleData) - 1] / $saleData[0] - 1) * 100, 0, PHP_ROUND_HALF_UP);
         }
 
-        $color = 'grey';
+        $color = "grey";
         if ($variation > 0) {
-            $color = 'green';
-        } else if ($variation < 0) {
-            $color = 'pink';
+            $color = "green";
+        } elseif ($variation < 0) {
+            $color = "pink";
         }
 
         return [
-            'chart' => [
-                'labels' => $labelList,
-                'values' => $saleData
+            "chart" => [
+                "labels" => $labelList,
+                "values" => $saleData,
             ],
-            'total' => number_format($resume->count(), 0, '.', '.'),
+            "total" => number_format($resume->count(), 0, ".", "."),
             // 'variation' => [
             //     'value' => $variation.'%',
             //     'color' => $color
@@ -132,27 +154,27 @@ class ReportSaleService
 
     public function getResumeSalesByDays($sales, $filters)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        date_default_timezone_set("America/Sao_Paulo");
 
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-        $labelList    = [];
+        $labelList = [];
         $dataFormated = Carbon::parse($dateRange[0]);
-        $endDate      = Carbon::parse($dateRange[1]);
+        $endDate = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
-            array_push($labelList, $dataFormated->format('d-m'));
+            array_push($labelList, $dataFormated->format("d-m"));
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
+        $dateFilter = !empty($filters["status"]) && $filters["status"] == "approved" ? "end_date" : "start_date";
         $resume = $sales->select(DB::raw("sales.id as sale, DATE(sales.{$dateFilter}) as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
             $saleDataValue = 0;
             foreach ($resume as $r) {
-                if (Carbon::parse($r->date)->format('d-m') == $label) {
+                if (Carbon::parse($r->date)->format("d-m") == $label) {
                     $saleDataValue += 1;
                 }
             }
@@ -162,22 +184,22 @@ class ReportSaleService
 
         $variation = 0;
         if ($saleData[0] > 0) {
-            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+            $variation = round(($saleData[count($saleData) - 1] / $saleData[0] - 1) * 100, 0, PHP_ROUND_HALF_UP);
         }
 
-        $color = 'grey';
+        $color = "grey";
         if ($variation > 0) {
-            $color = 'green';
-        } else if ($variation < 0) {
-            $color = 'pink';
+            $color = "green";
+        } elseif ($variation < 0) {
+            $color = "pink";
         }
 
         return [
-            'chart' => [
-                'labels' => $labelList,
-                'values' => $saleData
+            "chart" => [
+                "labels" => $labelList,
+                "values" => $saleData,
             ],
-            'total' => number_format($sales->count(), 0, '.', '.'),
+            "total" => number_format($sales->count(), 0, ".", "."),
             // 'variation' => [
             //     'value' => $variation.'%',
             //     'color' => $color
@@ -187,7 +209,7 @@ class ReportSaleService
 
     public function getResumeSalesByTwentyDays($sales, $filters)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        date_default_timezone_set("America/Sao_Paulo");
 
         $labelList = [];
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
@@ -196,12 +218,12 @@ class ReportSaleService
         $endDate = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
-            array_push($labelList, $dataFormated->format('d/m'));
+            array_push($labelList, $dataFormated->format("d/m"));
             $dataFormated = $dataFormated->addDays(2);
             if ($dataFormated->diffInDays($endDate) < 2 && $dataFormated->diffInDays($endDate) > 0) {
-                array_push($labelList, $dataFormated->format('d/m'));
+                array_push($labelList, $dataFormated->format("d/m"));
                 $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
-                array_push($labelList, $dataFormated->format('d/m'));
+                array_push($labelList, $dataFormated->format("d/m"));
                 break;
             }
         }
@@ -213,7 +235,12 @@ class ReportSaleService
         foreach ($labelList as $label) {
             $saleDataValue = 0;
             foreach ($resume as $r) {
-                if ((Carbon::parse($r->date)->format('d/m') == $label) || (Carbon::parse($r->date)->subdays(1)->format('d/m') == $label)) {
+                if (
+                    Carbon::parse($r->date)->format("d/m") == $label ||
+                    Carbon::parse($r->date)
+                        ->subdays(1)
+                        ->format("d/m") == $label
+                ) {
                     $saleDataValue += 1;
                 }
             }
@@ -223,22 +250,22 @@ class ReportSaleService
 
         $variation = 0;
         if ($saleData[0] > 0) {
-            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+            $variation = round(($saleData[count($saleData) - 1] / $saleData[0] - 1) * 100, 0, PHP_ROUND_HALF_UP);
         }
 
-        $color = 'grey';
+        $color = "grey";
         if ($variation > 0) {
-            $color = 'green';
-        } else if ($variation < 0) {
-            $color = 'pink';
+            $color = "green";
+        } elseif ($variation < 0) {
+            $color = "pink";
         }
 
         return [
-            'chart' => [
-                'labels' => $labelList,
-                'values' => $saleData
+            "chart" => [
+                "labels" => $labelList,
+                "values" => $saleData,
             ],
-            'total' => number_format($resume->count(), 0, '.', '.'),
+            "total" => number_format($resume->count(), 0, ".", "."),
             // 'variation' => [
             //     'value' => $variation.'%',
             //     'color' => $color
@@ -248,7 +275,7 @@ class ReportSaleService
 
     public function getResumeSalesByFortyDays($sales, $filters)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        date_default_timezone_set("America/Sao_Paulo");
 
         $labelList = [];
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
@@ -256,12 +283,12 @@ class ReportSaleService
         $endDate = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
-            array_push($labelList, $dataFormated->format('d/m'));
+            array_push($labelList, $dataFormated->format("d/m"));
             $dataFormated = $dataFormated->addDays(3);
             if ($dataFormated->diffInDays($endDate) < 3) {
-                array_push($labelList, $dataFormated->format('d/m'));
+                array_push($labelList, $dataFormated->format("d/m"));
                 $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
-                array_push($labelList, $dataFormated->format('d/m'));
+                array_push($labelList, $dataFormated->format("d/m"));
                 break;
             }
         }
@@ -274,7 +301,11 @@ class ReportSaleService
             $saleDataValue = 0;
             foreach ($resume as $r) {
                 for ($x = 1; $x <= 3; $x++) {
-                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                    if (
+                        Carbon::parse($r->date)
+                            ->addDays($x)
+                            ->format("d/m") == $label
+                    ) {
                         $saleDataValue += 1;
                     }
                 }
@@ -285,22 +316,22 @@ class ReportSaleService
 
         $variation = 0;
         if ($saleData[0] > 0) {
-            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+            $variation = round(($saleData[count($saleData) - 1] / $saleData[0] - 1) * 100, 0, PHP_ROUND_HALF_UP);
         }
 
-        $color = 'grey';
+        $color = "grey";
         if ($variation > 0) {
-            $color = 'green';
-        } else if ($variation < 0) {
-            $color = 'pink';
+            $color = "green";
+        } elseif ($variation < 0) {
+            $color = "pink";
         }
 
         return [
-            'chart' => [
-                'labels' => $labelList,
-                'values' => $saleData
+            "chart" => [
+                "labels" => $labelList,
+                "values" => $saleData,
             ],
-            'total' => number_format($sales->count(), 0, '.', '.'),
+            "total" => number_format($sales->count(), 0, ".", "."),
             // 'variation' => [
             //     'value' => $variation.'%',
             //     'color' => $color
@@ -310,7 +341,7 @@ class ReportSaleService
 
     public function getResumeSalesByWeeks($sales, $filters)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        date_default_timezone_set("America/Sao_Paulo");
 
         $labelList = [];
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
@@ -318,12 +349,12 @@ class ReportSaleService
         $endDate = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
-            array_push($labelList, $dataFormated->format('d/m'));
+            array_push($labelList, $dataFormated->format("d/m"));
             $dataFormated = $dataFormated->addDays(7);
             if ($dataFormated->diffInDays($endDate) < 7) {
-                array_push($labelList, $dataFormated->format('d/m'));
+                array_push($labelList, $dataFormated->format("d/m"));
                 $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
-                array_push($labelList, $dataFormated->format('d/m'));
+                array_push($labelList, $dataFormated->format("d/m"));
                 break;
             }
         }
@@ -336,7 +367,11 @@ class ReportSaleService
             $saleDataValue = 0;
             foreach ($resume as $r) {
                 for ($x = 1; $x <= 6; $x++) {
-                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                    if (
+                        Carbon::parse($r->date)
+                            ->addDays($x)
+                            ->format("d/m") == $label
+                    ) {
                         $saleDataValue += 1;
                     }
                 }
@@ -347,22 +382,22 @@ class ReportSaleService
 
         $variation = 0;
         if ($saleData[0] > 0) {
-            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+            $variation = round(($saleData[count($saleData) - 1] / $saleData[0] - 1) * 100, 0, PHP_ROUND_HALF_UP);
         }
 
-        $color = 'grey';
+        $color = "grey";
         if ($variation > 0) {
-            $color = 'green';
-        } else if ($variation < 0) {
-            $color = 'pink';
+            $color = "green";
+        } elseif ($variation < 0) {
+            $color = "pink";
         }
 
         return [
-            'chart' => [
-                'labels' => $labelList,
-                'values' => $saleData
+            "chart" => [
+                "labels" => $labelList,
+                "values" => $saleData,
             ],
-            'total' => number_format($resume->count(), 0, '.', '.'),
+            "total" => number_format($resume->count(), 0, ".", "."),
             // 'variation' => [
             //     'value' => $variation.'%',
             //     'color' => $color
@@ -372,7 +407,7 @@ class ReportSaleService
 
     public function getResumeSalesByMonths($sales, $filters)
     {
-        date_default_timezone_set('America/Sao_Paulo');
+        date_default_timezone_set("America/Sao_Paulo");
 
         $labelList = [];
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
@@ -380,18 +415,18 @@ class ReportSaleService
         $endDate = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
-            array_push($labelList, $dataFormated->format('m/y'));
+            array_push($labelList, $dataFormated->format("m/y"));
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
+        $dateFilter = !empty($filters["status"]) && $filters["status"] == "approved" ? "end_date" : "start_date";
         $resume = $sales->select(DB::raw("sales.id as sale, DATE({$dateFilter}) as date"))->get();
 
         $saleData = [];
         foreach ($labelList as $label) {
             $saleDataValue = 0;
             foreach ($resume as $r) {
-                if (Carbon::parse($r->date)->format('m/y') == $label) {
+                if (Carbon::parse($r->date)->format("m/y") == $label) {
                     $saleDataValue += 1;
                 }
             }
@@ -401,22 +436,22 @@ class ReportSaleService
 
         $variation = 0;
         if ($saleData[0] > 0) {
-            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+            $variation = round(($saleData[count($saleData) - 1] / $saleData[0] - 1) * 100, 0, PHP_ROUND_HALF_UP);
         }
 
-        $color = 'grey';
+        $color = "grey";
         if ($variation > 0) {
-            $color = 'green';
-        } else if ($variation < 0) {
-            $color = 'pink';
+            $color = "green";
+        } elseif ($variation < 0) {
+            $color = "pink";
         }
 
         return [
-            'chart' => [
-                'labels' => $labelList,
-                'values' => $saleData
+            "chart" => [
+                "labels" => $labelList,
+                "values" => $saleData,
             ],
-            'total' => number_format($resume->count(), 0, '.', '.'),
+            "total" => number_format($resume->count(), 0, ".", "."),
             // 'variation' => [
             //     'value' => $variation.'%',
             //     'color' => $color
@@ -426,13 +461,13 @@ class ReportSaleService
 
     public function getResumeTypePayments($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
         $cacheName = 'payment-type-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
-            $projectId = hashids_decode($filters['project_id']);            
+            $projectId = hashids_decode($filters['project_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $query = Sale::join('transactions', 'transactions.sale_id', 'sales.id')
@@ -454,32 +489,33 @@ class ReportSaleService
             }
 
             $totalCreditCard = $query->total_credit_card;
-            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
+            $percentageCreditCard =
+                $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, ".", ",") : 0;
 
             $totalBoleto = $query->total_boleto;
-            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
+            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, ".", ",") : 0;
 
             $totalPix = $query->total_pix;
-            $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
+            $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, ".", ",") : 0;
 
             $data = [
-                'boleto' => [
-                    'value' => number_format($totalBoleto, 2, ',', '.'),
-                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
+                "boleto" => [
+                    "value" => number_format($totalBoleto, 2, ",", "."),
+                    "percentage" => round($percentageBoleto, 1, PHP_ROUND_HALF_UP) . "%",
                 ],
-                'pix' => [
-                    'value' => number_format($totalPix, 2, ',', '.'),
-                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
+                "pix" => [
+                    "value" => number_format($totalPix, 2, ",", "."),
+                    "percentage" => round($percentagePix, 1, PHP_ROUND_HALF_UP) . "%",
                 ],
-                'credit_card' => [
-                    'value' => number_format($totalCreditCard, 2, ',', '.'),
-                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                "credit_card" => [
+                    "value" => number_format($totalCreditCard, 2, ",", "."),
+                    "percentage" => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP) . "%",
                 ],
             ];
 
-            $value = array();
-            foreach($data as $val) {
-                array_push($value, foxutils()->onlyNumbers($val['value']));
+            $value = [];
+            foreach ($data as $val) {
+                array_push($value, foxutils()->onlyNumbers($val["value"]));
             }
             array_multisort($value, SORT_DESC, $data);
 
@@ -488,12 +524,12 @@ class ReportSaleService
     }
 
     public function getResumeProducts($filters)
-    {        
+    {
         $filters['company_id'] = Auth::user()->company_default;
 
         $cacheName = 'products-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
-            $projectId = hashids_decode($filters['project_id']);            
+            $projectId = hashids_decode($filters['project_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $products = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
@@ -511,26 +547,30 @@ class ReportSaleService
 
             if (count($products) == 0) {
                 return [
-                    'products' => null,
-                    'total' => 0
+                    "products" => null,
+                    "total" => 0,
                 ];
             }
 
             $total = 0;
-            foreach($products as $r)
-            {
+            foreach ($products as $r) {
                 $total += $r->amount;
             }
 
-            $firstValue = $products[0]['amount'];
+            $firstValue = $products[0]["amount"];
 
             $index = 0;
-            foreach($products as $result)
-            {
-                $percentage = round(number_format(($result->amount * 100) / $firstValue, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+            foreach ($products as $result) {
+                $percentage = round(
+                    number_format(($result->amount * 100) / $firstValue, 2, ".", ","),
+                    1,
+                    PHP_ROUND_HALF_UP
+                );
 
-                $result->image = empty($result->image) ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $result->image;
-                $result->percentage = $index == 0 ? '100%' : $percentage.'%';
+                $result->image = empty($result->image)
+                    ? "https://cloudfox-files.s3.amazonaws.com/produto.svg"
+                    : $result->image;
+                $result->percentage = $index == 0 ? "100%" : $percentage . "%";
                 $result->color = $this->getColors($index);
 
                 $index++;
@@ -539,15 +579,15 @@ class ReportSaleService
             $productsArray = $products->toArray();
 
             return [
-                'products' => $productsArray,
-                'total' => $total
+                "products" => $productsArray,
+                "total" => $total,
             ];
         });
     }
 
     public function getSalesResume($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
@@ -559,7 +599,7 @@ class ReportSaleService
             $salesApproved = Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                             ->where('t.company_id',$filters['company_id'])
                             ->whereBetween('sales.end_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                            ->where('sales.owner_id', $ownerId)                            
+                            ->where('sales.owner_id', $ownerId)
                             ->where('sales.project_id', $projectId)
                             ->where('sales.status', Sale::STATUS_APPROVED)
                             ->count();
@@ -589,17 +629,17 @@ class ReportSaleService
                                 ->sum('sales.original_total_paid_value');
 
             return [
-                'transactions' => number_format($salesApproved, 0, '.', '.'),
-                'average_ticket' => foxutils()->formatMoney($salesAverageTicket / 100),
-                'comission' => foxutils()->formatMoney($salesComission / 100),
-                'chargeback' => foxutils()->formatMoney($salesChargeback /100)
+                "transactions" => number_format($salesApproved, 0, ".", "."),
+                "average_ticket" => foxutils()->formatMoney($salesAverageTicket / 100),
+                "comission" => foxutils()->formatMoney($salesComission / 100),
+                "chargeback" => foxutils()->formatMoney($salesChargeback / 100),
             ];
         });
     }
 
     public function getSalesDistribuitions($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
@@ -668,51 +708,53 @@ class ReportSaleService
             $total = ($salesApprovedSum + $salesPendingSum + $salesCanceledSum + $salesRefusedSum + $salesRefundedSum + $salesChargebackSum + $salesOtherSum);
 
             return [
-                'total' => number_format($total, 0, '.', '.'),
-                'approved' => [
-                    'amount' => number_format($salesApprovedSum, 0, '.', '.'),
-                    'percentage' => empty($total) ? 0 : number_format(($salesApprovedSum * 100) / $total, 2, '.', ',')
+                "total" => number_format($total, 0, ".", "."),
+                "approved" => [
+                    "amount" => number_format($salesApprovedSum, 0, ".", "."),
+                    "percentage" => empty($total) ? 0 : number_format(($salesApprovedSum * 100) / $total, 2, ".", ","),
                 ],
-                'pending' => [
-                    'amount' => number_format($salesPendingSum, 0, '.', '.'),
-                    'percentage' => empty($total) ? 0 : number_format(($salesPendingSum * 100) / $total, 2, '.', ',')
+                "pending" => [
+                    "amount" => number_format($salesPendingSum, 0, ".", "."),
+                    "percentage" => empty($total) ? 0 : number_format(($salesPendingSum * 100) / $total, 2, ".", ","),
                 ],
-                'canceled' => [
-                    'amount' => number_format($salesCanceledSum, 0, '.', '.'),
-                    'percentage' => empty($total) ? 0 : number_format(($salesCanceledSum * 100) / $total, 2, '.', ',')
+                "canceled" => [
+                    "amount" => number_format($salesCanceledSum, 0, ".", "."),
+                    "percentage" => empty($total) ? 0 : number_format(($salesCanceledSum * 100) / $total, 2, ".", ","),
                 ],
-                'refused' => [
-                    'amount' => number_format($salesRefusedSum, 0, '.', '.'),
-                    'percentage' => empty($total) ? 0 : number_format(($salesRefusedSum * 100) / $total, 2, '.', ',')
+                "refused" => [
+                    "amount" => number_format($salesRefusedSum, 0, ".", "."),
+                    "percentage" => empty($total) ? 0 : number_format(($salesRefusedSum * 100) / $total, 2, ".", ","),
                 ],
-                'refunded' => [
-                    'amount' => number_format($salesRefundedSum, 0, '.', '.'),
-                    'percentage' => empty($total) ? 0 : number_format(($salesRefundedSum * 100) / $total, 2, '.', ',')
+                "refunded" => [
+                    "amount" => number_format($salesRefundedSum, 0, ".", "."),
+                    "percentage" => empty($total) ? 0 : number_format(($salesRefundedSum * 100) / $total, 2, ".", ","),
                 ],
-                'chargeback' => [
-                    'amount' => number_format($salesChargebackSum, 0, '.', '.'),
-                    'percentage' => empty($total) ? 0 : number_format(($salesChargebackSum * 100) / $total, 2, '.', ',')
+                "chargeback" => [
+                    "amount" => number_format($salesChargebackSum, 0, ".", "."),
+                    "percentage" => empty($total)
+                        ? 0
+                        : number_format(($salesChargebackSum * 100) / $total, 2, ".", ","),
                 ],
-                'other' => [
-                    'amount' => number_format($salesOtherSum, 0, '.', '.'),
-                    'percentage' => empty($total) ? 0 : number_format(($salesOtherSum * 100) / $total, 2, '.', ',')
-                ]
+                "other" => [
+                    "amount" => number_format($salesOtherSum, 0, ".", "."),
+                    "percentage" => empty($total) ? 0 : number_format(($salesOtherSum * 100) / $total, 2, ".", ","),
+                ],
             ];
         });
     }
 
     public function getAbandonedCarts($filters)
-    {        
-        $filters['company_id'] = Auth::user()->company_default;    
+    {
+        $filters['company_id'] = Auth::user()->company_default;
 
         $cacheName = 'abandoned-carts-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $projectId = hashids_decode($filters["project_id"]);
 
             $checkoutsData = Checkout::select([
-                DB::raw('SUM(CASE WHEN checkouts.status_enum = 2 THEN 1 ELSE 0 END) AS abandoned'),
-                DB::raw('SUM(CASE WHEN checkouts.status_enum = 3 THEN 1 ELSE 0 END) AS recovered'),
+                DB::raw("SUM(CASE WHEN checkouts.status_enum = 2 THEN 1 ELSE 0 END) AS abandoned"),
+                DB::raw("SUM(CASE WHEN checkouts.status_enum = 3 THEN 1 ELSE 0 END) AS recovered"),
             ])
             ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
             ->where('project_id', $projectId)
@@ -735,15 +777,19 @@ class ReportSaleService
                                     ->sum('transaction.value');
 
             return [
-                'percentage' => $checkoutsData->abandoned > 0 ? number_format(($checkoutsData->recovered * 100) / $checkoutsData->abandoned, 1, '.', ',') . '%' : '0%',
-                'value' => foxutils()->formatMoney($recoveredValue / 100)
+                "percentage" =>
+                    $checkoutsData->abandoned > 0
+                        ? number_format(($checkoutsData->recovered * 100) / $checkoutsData->abandoned, 1, ".", ",") .
+                            "%"
+                        : "0%",
+                "value" => foxutils()->formatMoney($recoveredValue / 100),
             ];
         });
     }
 
     public function getOrderBump($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
@@ -769,15 +815,15 @@ class ReportSaleService
             }
 
             return [
-                'value' => foxutils()->formatMoney($data->value / 100),
-                'amount' => $data->amount
+                "value" => foxutils()->formatMoney($data->value / 100),
+                "amount" => $data->amount,
             ];
         });
     }
 
     public function getUpsell($filters)
     {
-        $user = Auth::user();        
+        $user = Auth::user();
         $filters['company_id'] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
@@ -803,14 +849,14 @@ class ReportSaleService
             }
 
             return [
-                'value' => foxutils()->formatMoney($data->value / 100),
-                'amount' => $data->amount
+                "value" => foxutils()->formatMoney($data->value / 100),
+                "amount" => $data->amount,
             ];
         });
     }
 
     public function getConversion($filters)
-    {        
+    {
         $filters['company_id'] = Auth::user()->company_default;
 
         $cacheName = 'conversion-'. json_encode($filters);
@@ -836,32 +882,36 @@ class ReportSaleService
 
             $totalCreditCard = $query->total_credit_card;
             $totalCreditCardApproved = $query->total_credit_card_approved;
-            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCardApproved * 100) / $totalCreditCard, 2, '.', ',') : 0;
+            $percentageCreditCard =
+                $totalCreditCard > 0
+                    ? number_format(($totalCreditCardApproved * 100) / $totalCreditCard, 2, ".", ",")
+                    : 0;
 
             $totalBoleto = $query->total_boleto;
             $totalBoletoApproved = $query->total_boleto_approved;
-            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoletoApproved * 100) / $totalBoleto, 2, '.', ',') : 0;
+            $percentageBoleto =
+                $totalBoleto > 0 ? number_format(($totalBoletoApproved * 100) / $totalBoleto, 2, ".", ",") : 0;
 
             $totalPix = $query->total_pix;
             $totalPixApproved = $query->total_pix_approved;
-            $percentagePix = $totalPix > 0 ? number_format(($totalPixApproved * 100) / $totalPix, 2, '.', ',') : 0;
+            $percentagePix = $totalPix > 0 ? number_format(($totalPixApproved * 100) / $totalPix, 2, ".", ",") : 0;
 
             return [
-                'credit_card' => [
-                    'total' => number_format($totalCreditCard, 0, '.', '.'),
-                    'approved' => number_format($totalCreditCardApproved, 0, '.', '.'),
-                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                "credit_card" => [
+                    "total" => number_format($totalCreditCard, 0, ".", "."),
+                    "approved" => number_format($totalCreditCardApproved, 0, ".", "."),
+                    "percentage" => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP) . "%",
                 ],
-                'boleto' => [
-                    'total' => number_format($totalBoleto, 0, '.', '.'),
-                    'approved' => number_format($totalBoletoApproved, 0, '.', '.'),
-                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
+                "boleto" => [
+                    "total" => number_format($totalBoleto, 0, ".", "."),
+                    "approved" => number_format($totalBoletoApproved, 0, ".", "."),
+                    "percentage" => round($percentageBoleto, 1, PHP_ROUND_HALF_UP) . "%",
                 ],
-                'pix' => [
-                    'total' => number_format($totalPix, 0, '.', '.'),
-                    'approved' => number_format($totalPixApproved, 0, '.', '.'),
-                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
-                ]
+                "pix" => [
+                    "total" => number_format($totalPix, 0, ".", "."),
+                    "approved" => number_format($totalPixApproved, 0, ".", "."),
+                    "percentage" => round($percentagePix, 1, PHP_ROUND_HALF_UP) . "%",
+                ],
             ];
         });
     }
@@ -874,8 +924,8 @@ class ReportSaleService
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $projectId = hashids_decode($filters['project_id']);
 
-            date_default_timezone_set('America/Sao_Paulo');
-            config()->set('database.connections.mysql.strict', false);
+            date_default_timezone_set("America/Sao_Paulo");
+            config()->set("database.connections.mysql.strict", false);
             DB::reconnect();
 
             $sales = Sale::select([
@@ -891,35 +941,35 @@ class ReportSaleService
                     ->groupBy('year', 'month')
                     ->get();
 
-            config()->set('database.connections.mysql.strict', true);
+            config()->set("database.connections.mysql.strict", true);
             DB::reconnect();
 
             $labels = [];
             $values = [];
 
-            foreach($sales as $sale) {
-                array_push($labels, date('M', mktime(0, 0, 0, $sale->month, 0, 0)));
+            foreach ($sales as $sale) {
+                array_push($labels, date("M", mktime(0, 0, 0, $sale->month, 0, 0)));
                 array_push($values, $sale->sales_count);
             }
 
             $total = array_sum($values);
 
             return [
-                'chart' => [
-                    'labels' => $labels,
-                    'values' => $values
+                "chart" => [
+                    "labels" => $labels,
+                    "values" => $values,
                 ],
-                'total' => $total
+                "total" => $total,
             ];
         });
     }
 
     public function getColors($index = null, $hex = false)
     {
-        $colors = [ 'blue', 'purple', 'pink', 'orange', 'yellow', 'light-blue', 'light-green', 'grey' ];
+        $colors = ["blue", "purple", "pink", "orange", "yellow", "light-blue", "light-green", "grey"];
 
         if ($hex == true) {
-            $colors = [ '#2E85EC', '#FF7900', '#665FE8', '#F43F5E' ];
+            $colors = ["#2E85EC", "#FF7900", "#665FE8", "#F43F5E"];
         }
 
         if (!empty($index) || $index >= 0) {

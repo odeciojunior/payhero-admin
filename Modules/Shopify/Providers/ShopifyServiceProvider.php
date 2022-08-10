@@ -23,7 +23,7 @@ class ShopifyServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -41,12 +41,13 @@ class ShopifyServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-                             __DIR__ . '/../Config/config.php' => config_path('shopify.php'),
-                         ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__ . '/../Config/config.php', 'shopify'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("shopify.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "shopify");
     }
 
     /**
@@ -55,17 +56,26 @@ class ShopifyServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/shopify');
+        $viewPath = resource_path("views/modules/shopify");
 
-        $sourcePath = __DIR__ . '/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-                             $sourcePath => $viewPath,
-                         ], 'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function($path) {
-            return $path . '/modules/shopify';
-        }, \Config::get('view.paths')), [$sourcePath]), 'shopify');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/shopify";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "shopify"
+        );
     }
 
     /**
@@ -74,12 +84,12 @@ class ShopifyServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/shopify');
+        $langPath = resource_path("lang/modules/shopify");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'shopify');
+            $this->loadTranslationsFrom($langPath, "shopify");
         } else {
-            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'shopify');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "shopify");
         }
     }
 
@@ -89,8 +99,8 @@ class ShopifyServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (!app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

@@ -12,8 +12,11 @@ class AlterAddDateRefundSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dateTime('date_refunded')->nullable()->after('start_date');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->dateTime("date_refunded")
+                ->nullable()
+                ->after("start_date");
         });
     }
 
@@ -23,8 +26,8 @@ class AlterAddDateRefundSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dropColumn('date_refunded');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("date_refunded");
         });
     }
 }

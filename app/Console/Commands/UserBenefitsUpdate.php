@@ -14,14 +14,14 @@ class UserBenefitsUpdate extends Command
      *
      * @var string
      */
-    protected $signature = 'user:benefits:update';
+    protected $signature = "user:benefits:update";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command to monitorize user benefits conditioned by account health score';
+    protected $description = "Command to monitorize user benefits conditioned by account health score";
 
     /**
      * Create a new command instance.
@@ -40,23 +40,20 @@ class UserBenefitsUpdate extends Command
      */
     public function handle()
     {
-
         try {
-
             $benefitsService = new BenefitsService();
             $now = now();
-            $users = User::with('benefits')
-                ->whereRaw('id = account_owner_id')
+            $users = User::with("benefits")
+                ->whereRaw("id = account_owner_id")
                 ->get();
 
             foreach ($users as $user) {
-                $this->line($user->id . ' - ' . $user->name);
+                $this->line($user->id . " - " . $user->name);
                 $benefitsService->updateUserBenefits($user);
             }
 
             $this->line($now);
             $this->line(now());
-
         } catch (Exception $e) {
             report($e);
         }

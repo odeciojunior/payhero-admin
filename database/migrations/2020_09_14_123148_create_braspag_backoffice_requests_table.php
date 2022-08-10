@@ -13,10 +13,10 @@ class CreateBraspagBackofficeRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('braspag_backoffice_requests', function (Blueprint $table) {
+        Schema::create("braspag_backoffice_requests", function (Blueprint $table) {
             $table->id();
-            $table->json('sent_data')->nullable();
-            $table->json('response')->nullable();
+            $table->json("sent_data")->nullable();
+            $table->json("response")->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateBraspagBackofficeRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('braspag_backoffice_requests');
+        Schema::dropIfExists("braspag_backoffice_requests");
     }
 }

@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Shipping\\Providers\\ShippingServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

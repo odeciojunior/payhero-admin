@@ -14,10 +14,9 @@ class UpdateTaxColumnOnWithdrawalsTable extends Migration
      */
     public function up()
     {
-
-        foreach(Withdrawal::where('value', '<', 50000)->get() as $withdrawal){
+        foreach (Withdrawal::where("value", "<", 50000)->get() as $withdrawal) {
             $withdrawal->update([
-                'tax' => 1000
+                "tax" => 1000,
             ]);
         }
     }
@@ -29,9 +28,9 @@ class UpdateTaxColumnOnWithdrawalsTable extends Migration
      */
     public function down()
     {
-        foreach(Withdrawal::where('value', '<', 50000)->get() as $withdrawal){
+        foreach (Withdrawal::where("value", "<", 50000)->get() as $withdrawal) {
             $withdrawal->update([
-                'tax' => 0
+                "tax" => 0,
             ]);
         }
     }

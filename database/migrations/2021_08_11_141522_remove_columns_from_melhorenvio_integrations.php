@@ -13,8 +13,8 @@ class RemoveColumnsFromMelhorenvioIntegrations extends Migration
      */
     public function up()
     {
-        Schema::table('melhorenvio_integrations', function (Blueprint $table) {
-            $table->dropColumn(['client_id', 'client_secret']);
+        Schema::table("melhorenvio_integrations", function (Blueprint $table) {
+            $table->dropColumn(["client_id", "client_secret"]);
         });
     }
 
@@ -25,9 +25,9 @@ class RemoveColumnsFromMelhorenvioIntegrations extends Migration
      */
     public function down()
     {
-        Schema::table('melhorenvio_integrations', function (Blueprint $table) {
-            $table->string('client_id')->after('name');
-            $table->string('client_secret')->after('client_id');
+        Schema::table("melhorenvio_integrations", function (Blueprint $table) {
+            $table->string("client_id")->after("name");
+            $table->string("client_secret")->after("client_id");
         });
     }
 }

@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Relatorios\\Providers\\RelatoriosServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

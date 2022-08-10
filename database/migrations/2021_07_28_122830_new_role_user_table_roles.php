@@ -15,18 +15,16 @@ class NewRoleUserTableRoles extends Migration
      */
     public function up()
     {
-        Role::create(['name' => 'finantial']);        
+        Role::create(["name" => "finantial"]);
 
-        $userAdmin = User::create(
-            [
-                'name'           => "Manager finantial",
-                'email'          => "finantial@cloudfox.net",
-                'email_verified' => "1",
-                'password'       => bcrypt('P0Rj7mvUaR@&F^mPLX#T'),
-            ]
-        );
-        
-        $userAdmin->assignRole('finantial');
+        $userAdmin = User::create([
+            "name" => "Manager finantial",
+            "email" => "finantial@cloudfox.net",
+            "email_verified" => "1",
+            "password" => bcrypt("P0Rj7mvUaR@&F^mPLX#T"),
+        ]);
+
+        $userAdmin->assignRole("finantial");
     }
 
     /**

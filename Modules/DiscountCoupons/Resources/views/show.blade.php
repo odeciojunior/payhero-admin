@@ -1,4 +1,5 @@
-<table class='table-hover' style='width: 100%'>
+<table class='table-hover'
+       style='width: 100%'>
     <tbody>
         <tr>
             <td class="table-title">Descrição</td>

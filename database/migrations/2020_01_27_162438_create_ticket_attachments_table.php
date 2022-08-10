@@ -13,11 +13,14 @@ class CreateTicketAttachmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ticket_attachments', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('ticket_id');
-            $table->foreign('ticket_id')->references('id')->on('tickets');
-            $table->string('file');
+        Schema::create("ticket_attachments", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedBigInteger("ticket_id");
+            $table
+                ->foreign("ticket_id")
+                ->references("id")
+                ->on("tickets");
+            $table->string("file");
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +33,6 @@ class CreateTicketAttachmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ticket_attachments');
+        Schema::dropIfExists("ticket_attachments");
     }
 }

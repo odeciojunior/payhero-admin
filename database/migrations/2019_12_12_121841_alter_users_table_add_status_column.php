@@ -13,8 +13,11 @@ class AlterUsersTableAddStatusColumn extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->integer('status')->after('email_verified')->default(1);
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->integer("status")
+                ->after("email_verified")
+                ->default(1);
         });
     }
 
@@ -25,8 +28,8 @@ class AlterUsersTableAddStatusColumn extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropColumn('status');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("status");
         });
     }
 }

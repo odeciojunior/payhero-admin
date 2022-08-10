@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Attendance\\Providers\\AttendanceServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

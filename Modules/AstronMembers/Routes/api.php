@@ -17,12 +17,13 @@ Route::group(
     [
         'middleware' => ['auth:api','demo_account', 'scopes:admin','permission:apps'],
     ],
-    function() {
-        Route::get('/apps/astronmembers', 'AstronMembersApiController@index');
-        Route::get('/apps/astronmembers/{id}', 'AstronMembersApiController@show');
-        Route::get('/apps/astronmembers/{id}/edit', 'AstronMembersApiController@edit');
+    function () {
+        Route::get("/apps/astronmembers", "AstronMembersApiController@index");
+        Route::get("/apps/astronmembers/{id}", "AstronMembersApiController@show");
+        Route::get("/apps/astronmembers/{id}/edit", "AstronMembersApiController@edit");
 
-        Route::apiResource('/apps/astronmembers', 'AstronMembersApiController')
-            ->only('store', 'update', 'destroy')->middleware('permission:apps_manage');
+        Route::apiResource("/apps/astronmembers", "AstronMembersApiController")
+            ->only("store", "update", "destroy")
+            ->middleware("permission:apps_manage");
     }
 );

@@ -13,14 +13,17 @@ class CreateTransfeeraPostbacks extends Migration
      */
     public function up()
     {
-        Schema::create('transfeera_postbacks', function (Blueprint $table) {
+        Schema::create("transfeera_postbacks", function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('withdrawal_id')->nullable();
-            $table->foreign('withdrawal_id')->references('id')->on('withdrawals');
-            $table->enum('source',['payment','contacerta'])->default('payment');
-            $table->json('data');
-            $table->tinyinteger('processed_flag')->default(0);
-            $table->json('machine_result')->nullable();
+            $table->unsignedBigInteger("withdrawal_id")->nullable();
+            $table
+                ->foreign("withdrawal_id")
+                ->references("id")
+                ->on("withdrawals");
+            $table->enum("source", ["payment", "contacerta"])->default("payment");
+            $table->json("data");
+            $table->tinyinteger("processed_flag")->default(0);
+            $table->json("machine_result")->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +35,6 @@ class CreateTransfeeraPostbacks extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transfeera_postbacks');
+        Schema::dropIfExists("transfeera_postbacks");
     }
 }

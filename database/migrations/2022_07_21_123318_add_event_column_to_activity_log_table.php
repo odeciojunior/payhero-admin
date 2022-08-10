@@ -13,8 +13,11 @@ class AddEventColumnToActivityLogTable extends Migration
      */
     public function up()
     {
-        Schema::table('activity_log', function (Blueprint $table) {
-            $table->string('event')->nullable()->after('subject_type');
+        Schema::table("activity_log", function (Blueprint $table) {
+            $table
+                ->string("event")
+                ->nullable()
+                ->after("subject_type");
         });
     }
 
@@ -25,8 +28,8 @@ class AddEventColumnToActivityLogTable extends Migration
      */
     public function down()
     {
-        Schema::table('activity_log', function (Blueprint $table) {
-            $table->dropColumn('event');
+        Schema::table("activity_log", function (Blueprint $table) {
+            $table->dropColumn("event");
         });
     }
 }

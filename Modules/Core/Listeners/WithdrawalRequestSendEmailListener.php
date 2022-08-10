@@ -30,11 +30,18 @@ class WithdrawalRequestSendEmailListener implements ShouldQueue
     public function handle(WithdrawalRequestEvent $event)
     {
         $sendGridService = new SendgridService();
-        $userName        = $event->withdrawal->company->user->name;
+        $userName = $event->withdrawal->company->user->name;
         $data = [
-            'name'  => $userName,
-            'value' => number_format(intval($event->withdrawal->value) / 100, 2, ',', '.'),
+            "name" => $userName,
+            "value" => number_format(intval($event->withdrawal->value) / 100, 2, ",", "."),
         ];
-        $sendGridService->sendEmail('help@cloudfox.net', 'cloudfox', $event->withdrawal->company->user->email, $userName, 'd-3c2e86c9fefb412fad28ffcdf2d87768', $data);
+        $sendGridService->sendEmail(
+            "help@cloudfox.net",
+            "cloudfox",
+            $event->withdrawal->company->user->email,
+            $userName,
+            "d-3c2e86c9fefb412fad28ffcdf2d87768",
+            $data
+        );
     }
 }

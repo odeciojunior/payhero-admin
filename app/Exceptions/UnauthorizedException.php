@@ -13,11 +13,11 @@ class UnauthorizedException extends HttpException
 
     public static function forRoles(array $roles): self
     {
-        $message = 'A função do Usuário não tem permissão para realizar esta ação.';
+        $message = "A função do Usuário não tem permissão para realizar esta ação.";
 
-        if (config('permission.display_permission_in_exception')) {
-            $permStr = implode(', ', $roles);
-            $message = 'User does not have the right roles. Necessary roles are '.$permStr;
+        if (config("permission.display_permission_in_exception")) {
+            $permStr = implode(", ", $roles);
+            $message = "User does not have the right roles. Necessary roles are " . $permStr;
         }
 
         $exception = new static(403, $message, null, []);
@@ -31,9 +31,9 @@ class UnauthorizedException extends HttpException
         $labels = self::getLabelPermission($permissions);
         $message = "Para realizar esta ação você precisa permissão: {$labels}";
 
-        if (config('permission.display_permission_in_exception')) {
-            $permStr = implode(', ', $permissions);
-            $message = 'User does not have the right permissions. Necessary permissions are '.$permStr;
+        if (config("permission.display_permission_in_exception")) {
+            $permStr = implode(", ", $permissions);
+            $message = "User does not have the right permissions. Necessary permissions are " . $permStr;
         }
 
         $exception = new static(403, $message, null, []);
@@ -44,11 +44,11 @@ class UnauthorizedException extends HttpException
 
     public static function forRolesOrPermissions(array $rolesOrPermissions): self
     {
-        $message = 'O Usuário não tem permissão necessária para realizar esta ação.';
+        $message = "O Usuário não tem permissão necessária para realizar esta ação.";
 
-        if (config('permission.display_permission_in_exception') && config('permission.display_role_in_exception')) {
-            $permStr = implode(', ', $rolesOrPermissions);
-            $message = 'User does not have the right permissions. Necessary permissions are '.$permStr;
+        if (config("permission.display_permission_in_exception") && config("permission.display_role_in_exception")) {
+            $permStr = implode(", ", $rolesOrPermissions);
+            $message = "User does not have the right permissions. Necessary permissions are " . $permStr;
         }
 
         $exception = new static(403, $message, null, []);
@@ -59,7 +59,7 @@ class UnauthorizedException extends HttpException
 
     public static function notLoggedIn(): self
     {
-        return new static(403, 'User is not logged in.', null, []);
+        return new static(403, "User is not logged in.", null, []);
     }
 
     public function getRequiredRoles(): array
@@ -72,14 +72,16 @@ class UnauthorizedException extends HttpException
         return $this->requiredPermissions;
     }
 
-    public static function getLabelPermission(Array $permissions)
+    public static function getLabelPermission(array $permissions)
     {
         $labels = [];
-        foreach($permissions as $permission){
-            $modelPermission = Permission::select('title')->where('name',$permission)->first();
-            $labels[] = $modelPermission->title??'';
+        foreach ($permissions as $permission) {
+            $modelPermission = Permission::select("title")
+                ->where("name", $permission)
+                ->first();
+            $labels[] = $modelPermission->title ?? "";
         }
-        
-        return implode(' ou ', $labels);
+
+        return implode(" ou ", $labels);
     }
 }

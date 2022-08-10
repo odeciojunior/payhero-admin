@@ -13,20 +13,23 @@ class CreateActivecampaignEvents extends Migration
      */
     public function up()
     {
-        Schema::create('activecampaign_events', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('activecampaign_integration_id')->unsigned();
-            $table->integer('event_sale');
-            $table->string('add_tags')->nullable();
-            $table->string('remove_tags')->nullable();
-            $table->string('remove_list')->nullable();
-            $table->string('add_list')->nullable();
+        Schema::create("activecampaign_events", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->bigInteger("activecampaign_integration_id")->unsigned();
+            $table->integer("event_sale");
+            $table->string("add_tags")->nullable();
+            $table->string("remove_tags")->nullable();
+            $table->string("remove_list")->nullable();
+            $table->string("add_list")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('activecampaign_events', function(Blueprint $table) {
-            $table->foreign('activecampaign_integration_id')->references('id')->on('activecampaign_integrations');
+        Schema::table("activecampaign_events", function (Blueprint $table) {
+            $table
+                ->foreign("activecampaign_integration_id")
+                ->references("id")
+                ->on("activecampaign_integrations");
         });
     }
 
@@ -37,6 +40,6 @@ class CreateActivecampaignEvents extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('activecampaign_events');
+        Schema::dropIfExists("activecampaign_events");
     }
 }

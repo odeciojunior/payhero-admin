@@ -20,13 +20,10 @@ use Modules\Core\Services\ContestationService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-
 class ContestationsController extends Controller
 {
-
     public function index()
     {
-        return view('chargebacks::contestations-index');
+        return view("chargebacks::contestations-index");
     }
-
 }

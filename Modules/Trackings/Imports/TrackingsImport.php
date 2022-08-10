@@ -45,18 +45,17 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
             $row = $value->toArray();
 
             if (!empty($row[1]) && strlen($row[1]) <= 18 && strlen($row[1]) >= 9) {
-                $saleId = str_replace('#', '', $row[0]);
+                $saleId = str_replace("#", "", $row[0]);
                 $trackingCode = $row[1];
-                $productId = str_replace('#', '', $row[2]);
+                $productId = str_replace("#", "", $row[2]);
 
-                $saleId = current(Hashids::connection('sale_id')->decode($saleId));
+                $saleId = current(Hashids::connection("sale_id")->decode($saleId));
                 $productId = current(Hashids::decode($productId));
 
-                $pps = ProductPlanSale::select('id')
-                    ->where('sale_id', $saleId)
+                $pps = ProductPlanSale::select("id")
+                    ->where("sale_id", $saleId)
                     ->where(function ($query) use ($productId) {
-                        $query->where('product_id', $productId)
-                            ->orWhere('products_sales_api_id', $productId);
+                        $query->where("product_id", $productId)->orWhere("products_sales_api_id", $productId);
                     })
                     ->first();
 

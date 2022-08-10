@@ -14,7 +14,7 @@ class WooCommerceController extends Controller
      */
     public function index()
     {
-        return view('woocommerce::index');
+        return view("woocommerce::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class WooCommerceController extends Controller
      */
     public function create()
     {
-        return view('woocommerce::create');
+        return view("woocommerce::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class WooCommerceController extends Controller
      */
     public function show($id)
     {
-        return view('woocommerce::show');
+        return view("woocommerce::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class WooCommerceController extends Controller
      */
     public function edit($id)
     {
-        return view('woocommerce::edit');
+        return view("woocommerce::edit");
     }
 
     /**

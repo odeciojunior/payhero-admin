@@ -13,14 +13,14 @@ class VerifyBoleto2 extends Command
      *
      * @var string
      */
-    protected $signature = 'verify:boleto2';
+    protected $signature = "verify:boleto2";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -34,15 +34,11 @@ class VerifyBoleto2 extends Command
 
     public function handle()
     {
-
         try {
-
             $boletoService = new BoletoService();
             $boletoService->verifyBoleto2();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

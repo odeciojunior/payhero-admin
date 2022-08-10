@@ -13,15 +13,18 @@ class CreateWithdrawalTable extends Migration
      */
     public function up()
     {
-        Schema::create('withdrawals', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('value');
-            $table->date('release_date');
-            $table->string('account_information');
-            $table->integer('status');
+        Schema::create("withdrawals", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("value");
+            $table->date("release_date");
+            $table->string("account_information");
+            $table->integer("status");
 
-            $table->integer('company_id')->unsigned();
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table->integer("company_id")->unsigned();
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
 
             $table->timestamps();
         });
@@ -34,7 +37,6 @@ class CreateWithdrawalTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('withdrawals');
+        Schema::dropIfExists("withdrawals");
     }
 }
-

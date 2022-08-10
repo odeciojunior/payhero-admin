@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Pixels\\Providers\\PixelsServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

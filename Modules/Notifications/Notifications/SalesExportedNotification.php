@@ -34,7 +34,7 @@ class SalesExportedNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ["database"];
     }
 
     /**
@@ -45,7 +45,7 @@ class SalesExportedNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->filename,
+            "message" => $this->filename,
         ];
     }
 }

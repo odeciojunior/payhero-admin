@@ -15,14 +15,14 @@ class CheckBlockReasonSalesPending extends Command
      *
      * @var string
      */
-    protected $signature = 'check:block-sales';
+    protected $signature = "check:block-sales";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Verifica vendas pendentes de bloqueio';
+    protected $description = "Verifica vendas pendentes de bloqueio";
 
     /**
      * Create a new command instance.
@@ -41,13 +41,12 @@ class CheckBlockReasonSalesPending extends Command
      */
     public function handle()
     {
-        $pendingBlockSales = BlockReasonSale::with('sale')
-                                            ->where('status', BlockReasonSale::STATUS_PENDING_BLOCK);
+        $pendingBlockSales = BlockReasonSale::with("sale")->where("status", BlockReasonSale::STATUS_PENDING_BLOCK);
 
         foreach ($pendingBlockSales->cursor() as $pendingBlockSale) {
-            $transaction = Transaction::where('sale_id', $pendingBlockSale->sale_id)
-                                        ->where('type', Transaction::TYPE_PRODUCER)
-                                        ->first();
+            $transaction = Transaction::where("sale_id", $pendingBlockSale->sale_id)
+                ->where("type", Transaction::TYPE_PRODUCER)
+                ->first();
 
             $safe2payService = new Safe2PayService();
             $safe2payService->setCompany($transaction->company);
@@ -55,12 +54,11 @@ class CheckBlockReasonSalesPending extends Command
             $availableBalance = $safe2payService->getAvailableBalance();
             $pendingBalance = $safe2payService->getPendingBalance();
 
-            (new CompanyService)->applyBlockedBalance($safe2payService, $availableBalance, $pendingBalance);
+            (new CompanyService())->applyBlockedBalance($safe2payService, $availableBalance, $pendingBalance);
 
-            if(($availableBalance + $pendingBalance) >= $transaction->value) {
-                $pendingBlockSale->update(['status' => BlockReasonSale::STATUS_BLOCKED]);
+            if ($availableBalance + $pendingBalance >= $transaction->value) {
+                $pendingBlockSale->update(["status" => BlockReasonSale::STATUS_BLOCKED]);
             }
         }
     }
-
 }

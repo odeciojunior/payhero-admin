@@ -13,19 +13,17 @@ class CreateRegistrationTokenTable extends Migration
      */
     public function up()
     {
-        Schema::create('registration_token', function (Blueprint $table) {
+        Schema::create("registration_token", function (Blueprint $table) {
             $table->id();
-            $table->enum('type', array('sms','email'))->default('email');
-            $table->string('type_data');
-            $table->string('token');
-            $table->timestamp('expiration');
-            $table->boolean('validated')->default(false);
-            $table->unsignedInteger('number_wrong_attempts')->default(0);
-            $table->ipAddress('ip');
+            $table->enum("type", ["sms", "email"])->default("email");
+            $table->string("type_data");
+            $table->string("token");
+            $table->timestamp("expiration");
+            $table->boolean("validated")->default(false);
+            $table->unsignedInteger("number_wrong_attempts")->default(0);
+            $table->ipAddress("ip");
             $table->timestamps();
         });
-
-
     }
 
     /**
@@ -35,6 +33,6 @@ class CreateRegistrationTokenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('registration_token');
+        Schema::dropIfExists("registration_token");
     }
 }

@@ -2,6 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('antifraud', 'SalesBlackListAntifraudApiController')
-     ->only('index', 'show')
-     ->middleware(['auth:api', 'scopes:admin']);
+Route::apiResource("antifraud", "SalesBlackListAntifraudApiController")
+    ->only("index", "show")
+    ->middleware(["auth:api", "scopes:admin"]);

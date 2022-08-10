@@ -26,15 +26,15 @@ class DeliveryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'code'         => $this->id_code,
-            'zip_code'     => foxutils()->getCep($this->zip_code),
-            'country'      => $this->country,
-            'state'        => $this->state,
-            'city'         => $this->city,
-            'neighborhood' => $this->neighborhood,
-            'street'       => $this->street,
-            'number'       => $this->number,
-            'complement'   => $this->complement,
+            "code" => $this->id_code,
+            "zip_code" => foxutils()->getCep($this->zip_code),
+            "country" => $this->country,
+            "state" => $this->state,
+            "city" => $this->city,
+            "neighborhood" => $this->neighborhood,
+            "street" => $this->street,
+            "number" => $this->number,
+            "complement" => $this->complement,
         ];
     }
 }

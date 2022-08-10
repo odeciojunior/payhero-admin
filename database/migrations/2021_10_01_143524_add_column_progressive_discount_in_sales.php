@@ -13,10 +13,12 @@ class AddColumnProgressiveDiscountInSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
+        Schema::table("sales", function (Blueprint $table) {
             //
-            $table->integer('progressive_discount')->after('automatic_discount')->nullable();
-
+            $table
+                ->integer("progressive_discount")
+                ->after("automatic_discount")
+                ->nullable();
         });
     }
 
@@ -27,10 +29,9 @@ class AddColumnProgressiveDiscountInSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
+        Schema::table("sales", function (Blueprint $table) {
             //
-            $table->dropColumn(['progressive_discount']);
-
+            $table->dropColumn(["progressive_discount"]);
         });
     }
 }

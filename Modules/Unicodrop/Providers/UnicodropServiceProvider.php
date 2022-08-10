@@ -18,7 +18,7 @@ class UnicodropServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class UnicodropServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('unicodrop.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'unicodrop'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("unicodrop.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "unicodrop");
     }
 
     /**
@@ -53,17 +54,26 @@ class UnicodropServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/unicodrop');
+        $viewPath = resource_path("views/modules/unicodrop");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/unicodrop';
-        }, \Config::get('view.paths')), [$sourcePath]), 'unicodrop');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/unicodrop";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "unicodrop"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class UnicodropServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/unicodrop');
+        $langPath = resource_path("lang/modules/unicodrop");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'unicodrop');
+            $this->loadTranslationsFrom($langPath, "unicodrop");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'unicodrop');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "unicodrop");
         }
     }
 
@@ -89,8 +99,8 @@ class UnicodropServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

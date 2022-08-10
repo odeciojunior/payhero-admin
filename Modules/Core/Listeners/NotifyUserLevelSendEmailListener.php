@@ -32,44 +32,42 @@ class NotifyUserLevelSendEmailListener
      */
     public function handle(NotifyUserLevelEvent $event)
     {
-        DashboardNotification::firstOrCreate(
-            [
-                'user_id' => $event->user->id,
-                'subject_id' => $event->level,
-                'subject_type' => UpdateUserLevel::class,
-            ]
-        );
+        DashboardNotification::firstOrCreate([
+            "user_id" => $event->user->id,
+            "subject_id" => $event->level,
+            "subject_type" => UpdateUserLevel::class,
+        ]);
 
         $sendgrindService = new SendgridService();
 
         $data = (new UserLevel())->getLevelData($event->user->level);
-        $benefits = $event->user->benefits->where('enabled', true)->toArray();
+        $benefits = $event->user->benefits->where("enabled", true)->toArray();
 
-        $data['benefits'] = null;
+        $data["benefits"] = null;
         if (!empty($benefits)) {
-            $benefitsDescription = array_column($benefits, 'description');
-            $data['benefits'] = $this->arrayToString($benefitsDescription);
+            $benefitsDescription = array_column($benefits, "description");
+            $data["benefits"] = $this->arrayToString($benefitsDescription);
         }
 
         $sendgrindService->sendEmail(
-            'help@cloudfox.net',
-            'cloudfox',
+            "help@cloudfox.net",
+            "cloudfox",
             $event->user->email,
             $event->user->name,
-            'd-ee2628cce4c64ef5bbcafe3594fee27b',
+            "d-ee2628cce4c64ef5bbcafe3594fee27b",
             $data
         );
 
         if ($event->level == 3) {
             $userName = [
-                "nome" => ucfirst(strtolower(current(explode(' ', $event->user->name))))
+                "nome" => ucfirst(strtolower(current(explode(" ", $event->user->name)))),
             ];
             $sendgrindService->sendEmail(
-                'help@cloudfox.net',
-                'cloudfox',
+                "help@cloudfox.net",
+                "cloudfox",
                 $event->user->email,
                 $event->user->name,
-                'd-a24d8da16e114bf295fc6bd40fdff9a7',
+                "d-a24d8da16e114bf295fc6bd40fdff9a7",
                 $userName
             );
         }
@@ -79,8 +77,8 @@ class NotifyUserLevelSendEmailListener
     {
         if (count($array) > 1) {
             $lastItem = array_pop($array);
-            $text = implode(', ', $array);
-            $text .= ' e '.$lastItem;
+            $text = implode(", ", $array);
+            $text .= " e " . $lastItem;
 
             return $text;
         }

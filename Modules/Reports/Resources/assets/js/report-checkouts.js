@@ -119,18 +119,18 @@ $(function () {
         //         loadingOnScreenRemove();
         //     }
         // });
-    }
+    },
 
     $("#select_projects").on('change', function () {
         window.updateReports();
     });
 
-    $("#origin").on('change', function () {
-        $('#origin').val($(this).val());
+    $("#origin").on("change", function () {
+        $("#origin").val($(this).val());
         updateCheckoutsByOrigin();
     });
 
-    var current_currency = '';
+    var current_currency = "";
 
     window.updateReports = function() {
         var date_range = $('#date_range_requests').val();
@@ -152,8 +152,8 @@ $(function () {
             },
         });
         $.ajax({
-            url: '/api/reports/checkouts',
-            type: 'GET',
+            url: "/api/reports/checkouts",
+            type: "GET",
             data: {
                 project: $("#select_projects").val(),
                 endDate: endDate,
@@ -162,8 +162,8 @@ $(function () {
             },
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
@@ -174,168 +174,234 @@ $(function () {
                 $("#qtd-recovered").html('<span class="font-size-30 bold">'+response.contRecovered + '</span> <span style="color:#959595">(' + response.percentRecovered +')</span>');
                 $("#qtd-finalized").html('<span class="font-size-30 bold">'+response.contFinalized + '</span> <span style="color:#959595">(' + response.percentFinalized +')</span>');
                 $("#qtd-total-checkouts").html(response.contCheckouts);
-                $("#percent-desktop").html(response.conversaoDesktop + '%');
-                $("#percent-mobile").html(response.conversaoMobile + '%');
+                $("#percent-desktop").html(response.conversaoDesktop + "%");
+                $("#percent-mobile").html(response.conversaoMobile + "%");
 
-                var table_data_itens = '';
-                if (!isEmpty(response.plans)){
+                var table_data_itens = "";
+                if (!isEmpty(response.plans)) {
                     $.each(response.plans, function (index, data) {
-                        table_data_itens += '<tr>';
-                        table_data_itens += '<td><img src=' + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
-                        table_data_itens += '<td>' + data.name + "</td>";
-                        table_data_itens += '<td> x ' + data.quantidade + "</td>";
-                        table_data_itens += '</tr>';
+                        table_data_itens += "<tr>";
+                        table_data_itens +=
+                            "<td><img src=" + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
+                        table_data_itens += "<td>" + data.name + "</td>";
+                        table_data_itens += "<td> x " + data.quantidade + "</td>";
+                        table_data_itens += "</tr>";
                     });
                 } else {
-                    table_data_itens += "<tr> <td colspan='3' class='text-center' style='vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
+                    table_data_itens +=
+                        "<tr> <td colspan='3' class='text-center' style='vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
                         $("#origins-table-itens").attr("img-empty") +
                         "'>Nenhuma venda encontrada</td> </tr>";
                 }
-                $('#origins-table-itens').html("");
+                $("#origins-table-itens").html("");
                 $("#origins-table-itens").append(table_data_itens);
                 var flag = false;
-                $.each(response.chartData.checkout_data,function(index,value){
-                    if (value>0) {
-                        flag=true;
+                $.each(response.chartData.checkout_data, function (index, value) {
+                    if (value > 0) {
+                        flag = true;
                     }
                 });
-                if (flag==true) {
-                    $('#empty-graph>').hide();
-                    $('#scoreLineToDay').show();
-                    $('#scoreLineToWeek').show();
-                    $('#scoreLineToMonth').show();
+                if (flag == true) {
+                    $("#empty-graph>").hide();
+                    $("#scoreLineToDay").show();
+                    $("#scoreLineToWeek").show();
+                    $("#scoreLineToMonth").show();
                     updateGraph(response.chartData);
-                }else{
-                    $('#empty-graph>').show();
-                    $('#scoreLineToDay').hide();
-                    $('#scoreLineToWeek').hide();
-                    $('#scoreLineToMonth').hide();
+                } else {
+                    $("#empty-graph>").show();
+                    $("#scoreLineToDay").hide();
+                    $("#scoreLineToWeek").hide();
+                    $("#scoreLineToMonth").hide();
                 }
                 updateCheckoutsByOrigin();
-            }
+            },
         });
     }
 
     function updateCheckoutsByOrigin() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-        loadOnTable('#origins-table', '.table-vendas');
+        loadOnTable("#origins-table", ".table-vendas");
 
         if (link == null) {
-            link = '/api/reports/getcheckoutsbyorigin?' + 'project_id=' + $("#select_projects").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
+            link =
+                "/api/reports/getcheckoutsbyorigin?" +
+                "project_id=" +
+                $("#select_projects").val() +
+                "&start_date=" +
+                startDate +
+                "&end_date=" +
+                endDate +
+                "&origin=" +
+                $("#origin").val();
         } else {
-            link = '/api/reports/getcheckoutsbyorigin' + link + '&project_id=' + $("#select_projects").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
+            link =
+                "/api/reports/getcheckoutsbyorigin" +
+                link +
+                "&project_id=" +
+                $("#select_projects").val() +
+                "&start_date=" +
+                startDate +
+                "&end_date=" +
+                endDate +
+                "&origin=" +
+                $("#origin").val();
         }
 
         $.ajax({
             url: link,
-            type: 'GET',
+            type: "GET",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-
-                if (response.data == '') {
-                    $('#origins-table').html("<td colspan='3' class='text-center' style='vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#origins-table-itens").attr("img-empty") +
-                        "'>Nenhuma venda encontrada</div>");
+                if (response.data == "") {
+                    $("#origins-table").html(
+                        "<td colspan='3' class='text-center' style='vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
+                            $("#origins-table-itens").attr("img-empty") +
+                            "'>Nenhuma venda encontrada</div>"
+                    );
                     $("#pagination").html("");
                 } else {
-                    var table_data = '';
+                    var table_data = "";
 
                     $.each(response.data, function (index, data) {
-                        table_data += '<tr>';
-                        table_data += '<td>' + data.origin + "</td>";
-                        table_data += '<td>' + data.qtd_checkout + "</td>";
-                        table_data += '</tr>';
+                        table_data += "<tr>";
+                        table_data += "<td>" + data.origin + "</td>";
+                        table_data += "<td>" + data.qtd_checkout + "</td>";
+                        table_data += "</tr>";
                     });
 
-                    $('#origins-table').html("");
+                    $("#origins-table").html("");
                     $("#origins-table").append(table_data);
-                    $('.table-vendas').addClass('table-striped');
+                    $(".table-vendas").addClass("table-striped");
 
                     pagination(response, "origins", updateCheckoutsByOrigin);
                 }
-            }
+            },
         });
     }
 
     function updateGraph(chartData) {
-
         var scoreChart = function scoreChart(id, labelList, series1List) {
-                var scoreChart = new Chartist.Line("#" + id, {
-                    labels: labelList, series: [series1List]
-                }, {
-                    lineSmooth: Chartist.Interpolation.simple({
-                        divisor: 2
-                    }),
-                    fullWidth: !0,
-                    chartPadding: {
-                        right: 30
+                var scoreChart = new Chartist.Line(
+                    "#" + id,
+                    {
+                        labels: labelList,
+                        series: [series1List],
                     },
-                    series: {
-                        "credit-card-data": {
-                            showArea: !0
-                        }
-                    },
-                    axisX: {
-                        showGrid: !1
-                    },
-                    axisY: {
-                        labelInterpolationFnc: function labelInterpolationFnc(value) {
-                            return value;
-                            return value / 1e3 + "K";
+                    {
+                        lineSmooth: Chartist.Interpolation.simple({
+                            divisor: 2,
+                        }),
+                        fullWidth: !0,
+                        chartPadding: {
+                            right: 30,
                         },
-                        scaleMinSpace: 40
-                    },
-                    plugins: [Chartist.plugins.tooltip({
-                        position: 'bottom'
-                    }), Chartist.plugins.legend()],
-                    low: 0,
-                    height: 300
-                });
-                scoreChart.on("created", function (data) {
-                    var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
-                        filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
-                            x: 0, y: "-10%", id: "shadow" + id
-                        }, "", !0));
-                    return filter.elem("feGaussianBlur", {
-                        in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
-                    }), filter.elem("feOffset", {
-                        dx: "0", dy: "800"
-                    }), filter.elem("feBlend", {
-                        in: "SourceGraphic", mode: "multiply"
-                    }), defs;
-                }).on("draw", function (data) {
-                    "line" === data.type ? data.element.attr({
-                        filter: "url(#shadow" + id + ")"
-                    }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
-                        x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
-                    }), "line" !== data.type && "area" != data.type || data.element.animate({
-                        d: {
-                            begin: 1e3 * data.index,
-                            dur: 1e3,
-                            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-                            to: data.path.clone().stringify(),
-                            easing: Chartist.Svg.Easing.easeOutQuint
-                        }
+                        series: {
+                            "credit-card-data": {
+                                showArea: !0,
+                            },
+                        },
+                        axisX: {
+                            showGrid: !1,
+                        },
+                        axisY: {
+                            labelInterpolationFnc: function labelInterpolationFnc(value) {
+                                return value;
+                                return value / 1e3 + "K";
+                            },
+                            scaleMinSpace: 40,
+                        },
+                        plugins: [
+                            Chartist.plugins.tooltip({
+                                position: "bottom",
+                            }),
+                            Chartist.plugins.legend(),
+                        ],
+                        low: 0,
+                        height: 300,
+                    }
+                );
+                scoreChart
+                    .on("created", function (data) {
+                        var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
+                            filter =
+                                (data.svg.width(),
+                                data.svg.height(),
+                                defs.elem(
+                                    "filter",
+                                    {
+                                        x: 0,
+                                        y: "-10%",
+                                        id: "shadow" + id,
+                                    },
+                                    "",
+                                    !0
+                                ));
+                        return (
+                            filter.elem("feGaussianBlur", {
+                                in: "SourceAlpha",
+                                stdDeviation: "800",
+                                result: "offsetBlur",
+                            }),
+                            filter.elem("feOffset", {
+                                dx: "0",
+                                dy: "800",
+                            }),
+                            filter.elem("feBlend", {
+                                in: "SourceGraphic",
+                                mode: "multiply",
+                            }),
+                            defs
+                        );
+                    })
+                    .on("draw", function (data) {
+                        "line" === data.type
+                            ? data.element.attr({
+                                  filter: "url(#shadow" + id + ")",
+                              })
+                            : "point" === data.type &&
+                              new Chartist.Svg(data.element._node.parentNode).elem("line", {
+                                  x1: data.x,
+                                  y1: data.y,
+                                  x2: data.x + 0.01,
+                                  y2: data.y,
+                                  class: "ct-point-content",
+                              }),
+                            ("line" !== data.type && "area" != data.type) ||
+                                data.element.animate({
+                                    d: {
+                                        begin: 1e3 * data.index,
+                                        dur: 1e3,
+                                        from: data.path
+                                            .clone()
+                                            .scale(1, 0)
+                                            .translate(0, data.chartRect.height())
+                                            .stringify(),
+                                        to: data.path.clone().stringify(),
+                                        easing: Chartist.Svg.Easing.easeOutQuint,
+                                    },
+                                });
                     });
-                });
             },
             labelList = chartData.label_list,
             creditCardSalesData = {
-                name: "Acessos", data: chartData.checkout_data
+                name: "Acessos",
+                data: chartData.checkout_data,
             };
-        createChart = function createChart(button) {
+        (createChart = function createChart(button) {
             scoreChart("scoreLineToDay", labelList, creditCardSalesData);
-        }, createChart(), $(".chart-action li a").on("click", function () {
-            createChart($(this));
-        });
+        }),
+            createChart(),
+            $(".chart-action li a").on("click", function () {
+                createChart($(this));
+            });
     }
 
     var startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');

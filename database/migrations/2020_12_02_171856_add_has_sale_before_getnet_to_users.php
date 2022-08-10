@@ -15,21 +15,23 @@ class AddHasSaleBeforeGetnetToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('has_sale_before_getnet')->default(0)->after('mother_name');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("has_sale_before_getnet")
+                ->default(0)
+                ->after("mother_name");
         });
 
-        foreach(User::all() as $user) {
-            $hasSaleBeforeGetnet = Sale::where(
-                function ($q) use($user){
-                    $q->where('owner_id', $user->account_owner_id)
-                        ->orWhere('affiliate_id', $user->account_owner_id);
-                }
-            )->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])->exists();
+        foreach (User::all() as $user) {
+            $hasSaleBeforeGetnet = Sale::where(function ($q) use ($user) {
+                $q->where("owner_id", $user->account_owner_id)->orWhere("affiliate_id", $user->account_owner_id);
+            })
+                ->whereNotIn("gateway_id", [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
+                ->exists();
 
-            if($hasSaleBeforeGetnet) {
+            if ($hasSaleBeforeGetnet) {
                 $user->update([
-                    'has_sale_before_getnet' => true
+                    "has_sale_before_getnet" => true,
                 ]);
             }
         }
@@ -42,8 +44,8 @@ class AddHasSaleBeforeGetnetToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('has_sale_before_getnet');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("has_sale_before_getnet");
         });
     }
 }

@@ -13,9 +13,9 @@ class ShippingUpdateConfigResource extends FormRequest
     public function rules()
     {
         return [
-            'shipment'             => 'nullable',
-            'shipment_responsible' => 'nullable',
-            'carrier'              => 'nullable',
+            "shipment" => "nullable",
+            "shipment_responsible" => "nullable",
+            "carrier" => "nullable",
         ];
     }
 

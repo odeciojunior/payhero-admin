@@ -30,12 +30,12 @@ class ImportShopifyProductsStore implements ShouldQueue
         $this->shopifyIntegrantion = $shopifyIntegration;
         $this->userId = $userId;
 
-        $this->allOnQueue('long');
+        $this->allOnQueue("long");
     }
 
     public function tags()
     {
-        return ['import-shopify-products-store'];
+        return ["import-shopify-products-store"];
     }
 
     public function handle()

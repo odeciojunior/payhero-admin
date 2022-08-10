@@ -39,32 +39,34 @@ class CompanyResource extends JsonResource
         $companyService = new CompanyService();
         $refusedDocuments = $companyService->getRefusedDocuments($this->resource->id);
         $user = $this->resource->user;
-        $project = UserProject::whereHas('project', function ($query) {
-            $query->where('status', 1);
+        $project = UserProject::whereHas("project", function ($query) {
+            $query->where("status", 1);
         })
-        ->where('company_id', $this->resource->id)
-        ->first();
+            ->where("company_id", $this->resource->id)
+            ->first();
 
         $currencyQuotationService = new CurrencyQuotationService();
         $lastUsdQuotation = $currencyQuotationService->getLastUsdQuotation();
 
         $companyDocumentValidated = $companyService->isDocumentValidated($this->resource->id);
 
-        $companyDocumentStatus = ($companyDocumentValidated) ? 'approved' : 'pending';
+        $companyDocumentStatus = $companyDocumentValidated ? "approved" : "pending";
 
         $userAddressDocumentStatus = $presenter->getAddressDocumentStatus($user->address_document_status);
         $userPersonalDocumentStatus = $presenter->getAddressDocumentStatus($user->personal_document_status);
 
         $companyIsApproved = false;
-        if($companyDocumentStatus == "approved" && $userAddressDocumentStatus == "approved" && $userPersonalDocumentStatus == "approved" ) {
+        if (
+            $companyDocumentStatus == "approved" &&
+            $userAddressDocumentStatus == "approved" &&
+            $userPersonalDocumentStatus == "approved"
+        ) {
             $companyIsApproved = true;
         }
 
-
-
         $data = [
-            'id_code' => Hashids::encode($this->resource->id),
-            'user_code' => Hashids::encode($this->resource->user_id),
+            "id_code" => Hashids::encode($this->resource->id),
+            "user_code" => Hashids::encode($this->resource->user_id),
             // 'support_email' => $this->resource->support_email ?? '',
             // 'support_telephone' => $this->resource->support_telephone ?? '',
             'fantasy_name' => $this->resource->company_type == 1 ? 'Pessoa Física' : $this->resource->fantasy_name ?? '',
@@ -115,12 +117,12 @@ class CompanyResource extends JsonResource
         ];
 
         $bankAccount = $this->resource->getBankAccountTED();
-        if(!empty($bankAccount)){
-            $data['bank'] = $bankAccount->bank ?? '';
-            $data['agency'] = $bankAccount->agency ?? '';
-            $data['agency_digit'] = $bankAccount->agency_digit ?? '';
-            $data['account'] = $bankAccount->account ?? '';
-            $data['account_digit'] = $bankAccount->account_digit ?? '';
+        if (!empty($bankAccount)) {
+            $data["bank"] = $bankAccount->bank ?? "";
+            $data["agency"] = $bankAccount->agency ?? "";
+            $data["agency_digit"] = $bankAccount->agency_digit ?? "";
+            $data["account"] = $bankAccount->account ?? "";
+            $data["account_digit"] = $bankAccount->account_digit ?? "";
         }
 
         return $data;

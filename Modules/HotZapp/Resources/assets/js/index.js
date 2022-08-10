@@ -182,36 +182,19 @@ $(document).ready(function () {
                 $("#link_edit").val(response.data.link);
 
                 $("#boleto_generated_edit").val(response.data.boleto_generated);
-                $("#boleto_generated_edit").prop(
-                    "checked",
-                    $("#boleto_generated_edit").val() == "1"
-                );
+                $("#boleto_generated_edit").prop("checked", $("#boleto_generated_edit").val() == "1");
 
                 $("#boleto_paid_edit").val(response.data.boleto_paid);
-                $("#boleto_paid_edit").prop(
-                    "checked",
-                    $("#boleto_paid_edit").val() == "1"
-                );
+                $("#boleto_paid_edit").prop("checked", $("#boleto_paid_edit").val() == "1");
 
-                $("#credit_card_refused_edit").val(
-                    response.data.credit_card_refused
-                );
-                $("#credit_card_refused_edit").prop(
-                    "checked",
-                    $("#credit_card_refused_edit").val() == "1"
-                );
+                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
+                $("#credit_card_refused_edit").prop("checked", $("#credit_card_refused_edit").val() == "1");
 
                 $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                $("#credit_card_paid_edit").prop(
-                    "checked",
-                    $("#credit_card_paid_edit").val() == "1"
-                );
+                $("#credit_card_paid_edit").prop("checked", $("#credit_card_paid_edit").val() == "1");
 
                 $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                $("#abandoned_cart_edit").prop(
-                    "checked",
-                    $("#abandoned_cart_edit").val() == "1"
-                );
+                $("#abandoned_cart_edit").prop("checked", $("#abandoned_cart_edit").val() == "1");
             },
         });
     });
@@ -222,9 +205,7 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var form_data = new FormData(
-            document.getElementById("form_add_integration")
-        );
+        var form_data = new FormData(document.getElementById("form_add_integration"));
 
         $.ajax({
             method: "POST",
@@ -255,9 +236,7 @@ $(document).ready(function () {
             return false;
         }
         var integrationId = $("#integration_id").val();
-        var form_data = new FormData(
-            document.getElementById("form_update_integration")
-        );
+        var form_data = new FormData(document.getElementById("form_update_integration"));
 
         $.ajax({
             method: "POST",

@@ -13,9 +13,15 @@ class AlterUsersAddLevel extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('total_commission_value')->after('installment_cashback')->default(0);
-            $table->integer('level')->after('installment_cashback')->default(1);
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->bigInteger("total_commission_value")
+                ->after("installment_cashback")
+                ->default(0);
+            $table
+                ->integer("level")
+                ->after("installment_cashback")
+                ->default(1);
         });
     }
 
@@ -26,9 +32,9 @@ class AlterUsersAddLevel extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('total_commission_value');
-            $table->dropColumn('level');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("total_commission_value");
+            $table->dropColumn("level");
         });
     }
 }

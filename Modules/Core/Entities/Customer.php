@@ -40,22 +40,22 @@ class Customer extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'name',
-        'document',
-        'email',
-        'telephone',
-        'balance',
-        'blocked_withdrawal',
-        'birthday',
-        'id_kapsula_client',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "name",
+        "document",
+        "email",
+        "telephone",
+        "balance",
+        "blocked_withdrawal",
+        "birthday",
+        "id_kapsula_client",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -82,12 +82,12 @@ class Customer extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Cliente ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Cliente ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Cliente ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Cliente " . $this->name . " foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Cliente " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Cliente " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -98,7 +98,7 @@ class Customer extends Model
      */
     public function sales()
     {
-        return $this->hasMany('Modules\Core\Entities\Sale');
+        return $this->hasMany("Modules\Core\Entities\Sale");
     }
 
     /**
@@ -106,7 +106,7 @@ class Customer extends Model
      */
     public function clientCards()
     {
-        return $this->hasMany('App\Entities\ClientCard');
+        return $this->hasMany("App\Entities\ClientCard");
     }
 
     /**
@@ -114,7 +114,7 @@ class Customer extends Model
      */
     public function bankAccounts()
     {
-        return $this->hasMany(CustomerBankAccount::class, 'customer_id');
+        return $this->hasMany(CustomerBankAccount::class, "customer_id");
     }
 
     /**
@@ -130,6 +130,6 @@ class Customer extends Model
      */
     public function customerWithdrawals()
     {
-        return $this->hasMany('Modules\Core\Entities\CustomerWithdrawal');
+        return $this->hasMany("Modules\Core\Entities\CustomerWithdrawal");
     }
 }

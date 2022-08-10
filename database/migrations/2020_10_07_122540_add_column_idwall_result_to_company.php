@@ -13,8 +13,8 @@ class AddColumnIdwallResultToCompany extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->json('id_wall_result')->nullable();
+        Schema::table("companies", function (Blueprint $table) {
+            $table->json("id_wall_result")->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnIdwallResultToCompany extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('id_wall_result');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("id_wall_result");
         });
     }
 }

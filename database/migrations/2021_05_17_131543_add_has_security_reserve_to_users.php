@@ -13,8 +13,11 @@ class AddHasSecurityReserveToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('has_security_reserve')->default(true)->after('release_count');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("has_security_reserve")
+                ->default(true)
+                ->after("release_count");
         });
     }
 
@@ -25,8 +28,8 @@ class AddHasSecurityReserveToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('has_security_reserve');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("has_security_reserve");
         });
     }
 }

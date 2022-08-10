@@ -12,28 +12,25 @@ class UpdateCompanyType extends Migration
      *
      * @return void
      */
-    public function up() {
-
+    public function up()
+    {
         $companyModel = new Company();
 
         $companies = $companyModel->all();
-        
-        foreach($companies as $company) {
 
+        foreach ($companies as $company) {
             $document = preg_replace("/[^0-9]/", "", $company->company_document);
 
-            if(strlen($document) == 11){
+            if (strlen($document) == 11) {
                 $company->update([
-                    'company_type' => $companyModel->present()->getCompanyType('physical person')
+                    "company_type" => $companyModel->present()->getCompanyType("physical person"),
                 ]);
-            }
-            else {
+            } else {
                 $company->update([
-                    'company_type' => $companyModel->present()->getCompanyType('juridical person')
+                    "company_type" => $companyModel->present()->getCompanyType("juridical person"),
                 ]);
             }
         }
-        
     }
 
     /**
@@ -41,19 +38,16 @@ class UpdateCompanyType extends Migration
      *
      * @return void
      */
-    public function down() {
-
+    public function down()
+    {
         $companyModel = new Company();
 
         $companies = $companyModel->all();
-        
-        foreach($companies as $company) {
 
+        foreach ($companies as $company) {
             $company->update([
-                'company_type' => null
+                "company_type" => null,
             ]);
         }
-
     }
 }
-

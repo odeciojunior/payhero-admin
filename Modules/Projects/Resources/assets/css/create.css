@@ -1,5 +1,9 @@
-
-label, h1, h4, a, a:hover, .btn-cancelar {
+label,
+h1,
+h4,
+a,
+a:hover,
+.btn-cancelar {
     color: #707070;
 }
 
@@ -9,7 +13,7 @@ label {
     text-align: center;
 }
 
-label #company{
+label #company {
     height: 80px;
 }
 
@@ -30,18 +34,18 @@ a:hover {
     background: transparent;
     border: none;
     box-shadow: none;
-    padding: 0.900rem 1.286rem;
+    padding: 0.9rem 1.286rem;
     font-size: 18px;
     line-height: 1.333333333;
     font-weight: bold;
 }
 
 .btn-cancelar:hover {
-    background-color: #FFF;
+    background-color: #fff;
 }
 
 .o-bin-1::before {
-	-webkit-text-stroke: 1px;
+    -webkit-text-stroke: 1px;
 }
 
 .form-group input,
@@ -52,12 +56,12 @@ a:hover {
     font-size: 16px;
     padding: 16px 14px 16px 16px !important;
     border-radius: 8px;
-    border-color: #7070704D;
+    border-color: #7070704d;
     height: auto;
 }
 
 .input-group-text {
-    background-color: #F3F3F3;
+    background-color: #f3f3f3;
     border-left: 0px;
 }
 
@@ -69,11 +73,11 @@ a:hover {
     justify-content: center;
     height: 250px !important;
     width: 250px !important;
-    border: 2px dashed #2E85EC;
+    border: 2px dashed #2e85ec;
     border-radius: 8px;
     margin: auto;
     font-weight: bold;
-    background-color: #F8FDFF;
+    background-color: #f8fdff;
 }
 
 .dropify-wrapper .dropify-message {
@@ -97,8 +101,9 @@ a:hover {
     display: none;
 }
 
-.dropify-wrapper .dropify-message span.file-icon, p {
-    color: #0D2C54;
+.dropify-wrapper .dropify-message span.file-icon,
+p {
+    color: #0d2c54;
 }
 
 .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
@@ -106,7 +111,7 @@ a:hover {
 }
 
 .dropify-filename span.file-icon::before {
-    content: '\e800';
+    content: "\e800";
 }
 
 .dropify-filename span.file-icon {
@@ -116,38 +121,37 @@ a:hover {
 }
 
 .dropify-wrapper .dropify-clear {
-	color: #0D2C54;
-	border: 2px solid #0D2C54;
+    color: #0d2c54;
+    border: 2px solid #0d2c54;
 }
 
 .dropify-wrapper .dropify-preview .dropify-infos {
-    background: #F8FDFFE6;
+    background: #f8fdffe6;
 }
 
 .dropify-wrapper:hover .dropify-preview .dropify-infos {
-	opacity: .9;
+    opacity: 0.9;
 }
 
 .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
-	line-height: 14px;
-	color: #0D2C54;
-	text-align: center;
+    line-height: 14px;
+    color: #0d2c54;
+    text-align: center;
 }
 
 .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
     margin-top: 0;
     padding-top: 8px;
-
 }
 
 .dropify-wrapper .dropify-clear {
-    content: '';
-	color: #0D2C54;
-	border: 2px solid #0D2C54;
-	border-radius: 8px;
-	width: 40px;
-	height: 40px;
-	font-size: 20px;
+    content: "";
+    color: #0d2c54;
+    border: 2px solid #0d2c54;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
 }
 
 /* Upload Digital Product Input */
@@ -166,9 +170,9 @@ a:hover {
 }
 
 .input-file-trigger {
-    color: #3B8CED;
+    color: #3b8ced;
     cursor: pointer;
-    background-color: #F8FDFF;
+    background-color: #f8fdff;
     border-radius: 16px;
     display: inline-flex;
     align-items: center;

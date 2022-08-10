@@ -13,8 +13,11 @@ class AddColumnFileTableCustomerWithdrawals extends Migration
      */
     public function up()
     {
-        Schema::table('customer_withdrawals', function (Blueprint $table) {
-            $table->string('file')->nullable()->after('observation');
+        Schema::table("customer_withdrawals", function (Blueprint $table) {
+            $table
+                ->string("file")
+                ->nullable()
+                ->after("observation");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnFileTableCustomerWithdrawals extends Migration
      */
     public function down()
     {
-        Schema::table('customer_withdrawals', function (Blueprint $table) {
-            $table->dropColumn('file');
+        Schema::table("customer_withdrawals", function (Blueprint $table) {
+            $table->dropColumn("file");
         });
     }
 }

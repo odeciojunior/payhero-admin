@@ -14,7 +14,7 @@ class UpdateUserCompletedTasks extends Command
      *
      * @var string
      */
-    protected $signature = 'tasks:update-completed-tasks';
+    protected $signature = "tasks:update-completed-tasks";
 
     /**
      * The console command description.
@@ -40,23 +40,20 @@ class UpdateUserCompletedTasks extends Command
      */
     public function handle()
     {
-
         try {
-
             $taskService = new TaskService();
             $now = now();
-            $users = User::with('tasks')
-                ->whereRaw('id = account_owner_id')
+            $users = User::with("tasks")
+                ->whereRaw("id = account_owner_id")
                 ->get();
 
             foreach ($users as $user) {
-                $this->line($user->id . ' - ' . $user->name);
+                $this->line($user->id . " - " . $user->name);
                 $taskService->checkUserCompletedTasks($user);
             }
 
             $this->line($now);
             $this->line(now());
-
         } catch (Exception $e) {
             report($e);
         }

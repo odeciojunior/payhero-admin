@@ -12,7 +12,7 @@ class RenameTableAntecipatedTransactionsToAnticipatedTransactions extends Migrat
      */
     public function up()
     {
-        Schema::rename('antecipated_transactions', 'anticipated_transactions');
+        Schema::rename("antecipated_transactions", "anticipated_transactions");
     }
 
     /**
@@ -21,6 +21,6 @@ class RenameTableAntecipatedTransactionsToAnticipatedTransactions extends Migrat
      */
     public function down()
     {
-        Schema::rename('anticipated_transactions', 'antecipated_transactions');
+        Schema::rename("anticipated_transactions", "antecipated_transactions");
     }
 }

@@ -12,8 +12,11 @@ class AddBlockedBalanceToUserNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('user_notifications', function(Blueprint $table) {
-            $table->boolean('blocked_balance')->default(true)->after('shopify');
+        Schema::table("user_notifications", function (Blueprint $table) {
+            $table
+                ->boolean("blocked_balance")
+                ->default(true)
+                ->after("shopify");
         });
     }
 
@@ -23,8 +26,8 @@ class AddBlockedBalanceToUserNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('user_notifications', function(Blueprint $table) {
-            $table->dropColumn('blocked_balance');
+        Schema::table("user_notifications", function (Blueprint $table) {
+            $table->dropColumn("blocked_balance");
         });
     }
 }

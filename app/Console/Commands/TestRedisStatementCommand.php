@@ -14,14 +14,14 @@ class TestRedisStatementCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'TestRedisStatement';
+    protected $signature = "TestRedisStatement";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Testa se o redis do REDIS_STATEMENT_HOST está ok';
+    protected $description = "Testa se o redis do REDIS_STATEMENT_HOST está ok";
 
     /**
      * Create a new command instance.
@@ -40,34 +40,28 @@ class TestRedisStatementCommand extends Command
      */
     public function handle()
     {
-
         try {
-
-            $this->info('Redis: ' . env('REDIS_STATEMENT_HOST'));
-            $sale_id = $this->ask('Qual o sale_id?');
+            $this->info("Redis: " . env("REDIS_STATEMENT_HOST"));
+            $sale_id = $this->ask("Qual o sale_id?");
             $sale = Sale::find($sale_id);
 
             if ($sale) {
-
                 $this->info('Verificando o $sale_id = ' . $sale_id);
-                $this->info('  has_valid_tracking => ' . $sale->has_valid_tracking);
+                $this->info("  has_valid_tracking => " . $sale->has_valid_tracking);
 
-                $hasValidTracking = Redis::connection('redis-statement')->get("sale:has:tracking:{$sale->id}");
-                $this->info('  No Redis está => ' . $hasValidTracking);
+                $hasValidTracking = Redis::connection("redis-statement")->get("sale:has:tracking:{$sale->id}");
+                $this->info("  No Redis está => " . $hasValidTracking);
 
-                $this->info('  Tentando setar para o mesmo valor = ' . $sale->has_valid_tracking);
-                Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
+                $this->info("  Tentando setar para o mesmo valor = " . $sale->has_valid_tracking);
+                Redis::connection("redis-statement")->set("sale:has:tracking:{$sale->id}", $sale->has_valid_tracking);
 
-                $hasValidTracking = Redis::connection('redis-statement')->get("sale:has:tracking:{$sale->id}");
-                $this->info('  Lendo novamente do Redis => ' . $hasValidTracking);
+                $hasValidTracking = Redis::connection("redis-statement")->get("sale:has:tracking:{$sale->id}");
+                $this->info("  Lendo novamente do Redis => " . $hasValidTracking);
             } else {
-
-                $this->error('Venda não encontrada');
+                $this->error("Venda não encontrada");
             }
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

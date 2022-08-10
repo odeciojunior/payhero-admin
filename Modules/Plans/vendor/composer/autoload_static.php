@@ -6,33 +6,37 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit9c813412e3483590376fe4a1a6febab5
 {
-    public static $prefixLengthsPsr4 = array (
-        'M' => 
-        array (
-            'Modules\\Planos\\' => 15,
-        ),
-    );
+    public static $prefixLengthsPsr4 = [
+        "M" => [
+            "Modules\\Planos\\" => 15,
+        ],
+    ];
 
-    public static $prefixDirsPsr4 = array (
-        'Modules\\Planos\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/',
-        ),
-    );
+    public static $prefixDirsPsr4 = [
+        "Modules\\Planos\\" => [
+            0 => __DIR__ . "/../.." . "/",
+        ],
+    ];
 
-    public static $classMap = array (
-        'Modules\\Planos\\Database\\Seeders\\PlanosDatabaseSeeder' => __DIR__ . '/../..' . '/Database/Seeders/PlanosDatabaseSeeder.php',
-        'Modules\\Planos\\Http\\Controllers\\PlanosController' => __DIR__ . '/../..' . '/Http/Controllers/PlanosController.php',
-        'Modules\\Planos\\Providers\\PlanosServiceProvider' => __DIR__ . '/../..' . '/Providers/PlanosServiceProvider.php',
-    );
+    public static $classMap = [
+        "Modules\\Planos\\Database\\Seeders\\PlanosDatabaseSeeder" =>
+            __DIR__ . "/../.." . "/Database/Seeders/PlanosDatabaseSeeder.php",
+        "Modules\\Planos\\Http\\Controllers\\PlanosController" =>
+            __DIR__ . "/../.." . "/Http/Controllers/PlanosController.php",
+        "Modules\\Planos\\Providers\\PlanosServiceProvider" =>
+            __DIR__ . "/../.." . "/Providers/PlanosServiceProvider.php",
+    ];
 
     public static function getInitializer(ClassLoader $loader)
     {
-        return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9c813412e3483590376fe4a1a6febab5::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9c813412e3483590376fe4a1a6febab5::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit9c813412e3483590376fe4a1a6febab5::$classMap;
-
-        }, null, ClassLoader::class);
+        return \Closure::bind(
+            function () use ($loader) {
+                $loader->prefixLengthsPsr4 = ComposerStaticInit9c813412e3483590376fe4a1a6febab5::$prefixLengthsPsr4;
+                $loader->prefixDirsPsr4 = ComposerStaticInit9c813412e3483590376fe4a1a6febab5::$prefixDirsPsr4;
+                $loader->classMap = ComposerStaticInit9c813412e3483590376fe4a1a6febab5::$classMap;
+            },
+            null,
+            ClassLoader::class
+        );
     }
 }

@@ -15,18 +15,18 @@ class StarDust extends Achievement implements AchievementCheck
     public function userAchieved(User $user): bool
     {
         $totalApprovedDigitalSales = Sale::where(function ($query) use ($user) {
-            $query->where('owner_id', $user->id)
-                ->orWhere('affiliate_id', $user->id);
+            $query->where("owner_id", $user->id)->orWhere("affiliate_id", $user->id);
         })
-            ->join('products_plans_sales', 'sales.id', '=', 'products_plans_sales.sale_id')
-            ->join('products', 'products.id', '=', 'products_plans_sales.product_id')
-            ->where('products.type_enum', Product::TYPE_DIGITAL)
-            ->whereIn('sales.status', [
+            ->join("products_plans_sales", "sales.id", "=", "products_plans_sales.sale_id")
+            ->join("products", "products.id", "=", "products_plans_sales.product_id")
+            ->where("products.type_enum", Product::TYPE_DIGITAL)
+            ->whereIn("sales.status", [
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
                 Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
-            ])->count();
+                Sale::STATUS_IN_DISPUTE,
+            ])
+            ->count();
 
         return $totalApprovedDigitalSales >= 100;
     }

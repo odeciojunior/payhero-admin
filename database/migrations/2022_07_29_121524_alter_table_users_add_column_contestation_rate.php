@@ -13,8 +13,11 @@ class AlterTableUsersAddColumnContestationRate extends Migration
      */
     public function up()
     {
-        Schema::table('users',function(Blueprint $table){
-            $table->float('contestation_rate')->nullable()->after('chargeback_rate');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->float("contestation_rate")
+                ->nullable()
+                ->after("chargeback_rate");
         });
     }
 
@@ -25,8 +28,8 @@ class AlterTableUsersAddColumnContestationRate extends Migration
      */
     public function down()
     {
-        Schema::table('users',function(Blueprint $table){
-            $table->dropColumn(['contestation_rate']);
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn(["contestation_rate"]);
         });
     }
 }

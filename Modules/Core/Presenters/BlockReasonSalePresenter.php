@@ -11,21 +11,21 @@ class BlockReasonSalePresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'blocked';
+                    return "blocked";
                 case 2:
-                    return 'unlocked';
+                    return "unlocked";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'blocked':
+                case "blocked":
                     return 1;
-                case 'unlocked':
+                case "unlocked":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 }

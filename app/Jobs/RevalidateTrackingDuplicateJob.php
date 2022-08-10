@@ -25,23 +25,26 @@ class RevalidateTrackingDuplicateJob implements ShouldQueue
         $this->productPlanSales = $productPlanSales;
         $this->trackingService = new TrackingService();
 
-        $this->allOnQueue('low');
+        $this->allOnQueue("low");
     }
 
     public function tags()
     {
-        return ['revalidate-tracking-duplicate'];
+        return ["revalidate-tracking-duplicate"];
     }
 
     public function handle()
     {
-        $knownInvalidCodes = [
-            'CLOUDFOX000XX',
-            'ALIEXPRESS',
-        ];
+        $knownInvalidCodes = ["CLOUDFOX000XX", "ALIEXPRESS"];
         if (!in_array($this->trackingCode, $knownInvalidCodes)) {
             foreach ($this->productPlanSales as $productPlanSale) {
-                $this->trackingService->createOrUpdateTracking($this->trackingCode, $productPlanSale['id'], false, false, false);
+                $this->trackingService->createOrUpdateTracking(
+                    $this->trackingCode,
+                    $productPlanSale["id"],
+                    false,
+                    false,
+                    false
+                );
             }
         }
     }

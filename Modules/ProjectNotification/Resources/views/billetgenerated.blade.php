@@ -1,39 +1,53 @@
-<div class="col-12 templates-email template-billet-generated" style="background: #F7F7F7; padding: 40px;">
+<div class="col-12 templates-email template-billet-generated"
+     style="background: #F7F7F7; padding: 40px;">
     <div class="col-12 pt-25 bg-white">
-        <div align="center" class="mr-2 px-15" >
+        <div align="center"
+             class="mr-2 px-15">
             <div style="font-size:1px;line-height:15px"></div>
-            <img align="center" alt="Image" border="0" class="" src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/success-boleto.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: 70px; width: 100%; width: 80px; display: block;" title="Image" width="125"/>
+            <img align="center"
+                 alt="Image"
+                 border="0"
+                 class=""
+                 src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/success-boleto.png"
+                 style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: 70px; width: 100%; width: 80px; display: block;"
+                 title="Image"
+                 width="125" />
             <div style="font-size:1px;line-height:15px"></div>
         </div>
-        <div class="font-padrao m-0 text-center px-10 pb-5 pt-15 color-333" style="font-size: 28px;">
+        <div class="font-padrao m-0 text-center px-10 pb-5 pt-15 color-333"
+             style="font-size: 28px;">
             <strong class="p_text_notification">Olá first_name, aqui está seu boleto</strong>
         </div>
         <div class="px-20 font-padrao m-0 pt-10 pb-20 color-555 p_text_message font-12">
-            Como você optou por Boleto Bancário, estamos enviando por aqui para você não se esquecer. O boleto deve ser pago até a data de vencimento para enviarmos seu(s) pedido(s).
+            Como você optou por Boleto Bancário, estamos enviando por aqui para você não se esquecer. O boleto deve ser
+            pago até a data de vencimento para enviarmos seu(s) pedido(s).
         </div>
         <div class="text-center">
-            <button class="btn btn-primary" style="background: #3A99E0"><strong>Imprimir Boleto</strong></button><br>
+            <button class="btn btn-primary"
+                    style="background: #3A99E0"><strong>Imprimir Boleto</strong></button><br>
             <div class="pt-5 font-14 color-333">
-            	Linha digitável:<br>
+                Linha digitável:<br>
                 <b>237933802960494465309160 <br>
-                06333302680070000019700 </b><br>
+                    06333302680070000019700 </b><br>
             </div>
         </div>
         <div class="row py-5">
-	        <div class="col-6 font-12 color-333">
-	        	Vencimento: <strong>20/01/2020</strong>
-	        </div>
-	        <div class="col-6 font-12 color-333 text-right">
-	        	Valor: <strong>R$ 115,00</strong>
-	        </div>
+            <div class="col-6 font-12 color-333">
+                Vencimento: <strong>20/01/2020</strong>
+            </div>
+            <div class="col-6 font-12 color-333 text-right">
+                Valor: <strong>R$ 115,00</strong>
+            </div>
         </div>
         <div class="row">
-            <div class="col-12" style="padding: 5px 120px;">
+            <div class="col-12"
+                 style="padding: 5px 120px;">
                 <hr>
             </div>
         </div>
         <div class="color-555 font-11 pb-20 text-center">
-        	O boleto pode levar até 2 dias úteis para ser processado após o pagamento. Por isso, fique atento às atualizações do seu pedido pelo e-mail.
+            O boleto pode levar até 2 dias úteis para ser processado após o pagamento. Por isso, fique atento às
+            atualizações do seu pedido pelo e-mail.
         </div>
     </div>
     <div style="height: 40px; width: 100%;"></div>
@@ -47,19 +61,28 @@
         </div>
         <div class="row">
             <div class="col-3">
-                <div align="center" class="px-0" style="">
-                    <img align="center" alt="Image" border="0" class="p_image_project" src="/build/global/img/projeto.svg" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: auto; width: 100%; max-width: 68px; display: block;" title="Image" width="68"/>
+                <div align="center"
+                     class="px-0"
+                     style="">
+                    <img align="center"
+                         alt="Image"
+                         border="0"
+                         class="p_image_project"
+                         src="/build/global/img/projeto.svg"
+                         style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: auto; width: 100%; max-width: 68px; display: block;"
+                         title="Image"
+                         width="68" />
                 </div>
             </div>
             <div class="col-6">
                 <div class="font-padrao m-0 px-10 pr-10 pb-0 lineh-18 font-15 color-333">
-                    <strong class="p_project_name">  Nome Produto </strong>
+                    <strong class="p_project_name"> Nome Produto </strong>
                 </div>
             </div>
             <div class="col-3">
                 <div class="font-padrao text-right m-0 py-10 pl-10 lineh-18 font-15 color-999"> x 3 </div>
             </div>
-{{--             <div class="col-3">
+            {{-- <div class="col-3">
                 <div class="font-padrao text-right m-0 py-10 pl-10 lineh-18 font-15 color-999"> R$ 30,00 </div>
             </div> --}}
         </div>
@@ -81,7 +104,7 @@
             <div class="col-9 font-padrao item-text-padrao">Outros (taxas, IOF)</div>
             <div class="col-3 font-padrao item-text-padrao text-right">R$ 0,00</div>
         </div>
-{{--         <div class="row">
+        {{-- <div class="row">
             <div class="col-9 font-padrao item-text-padrao">Desconto</div>
             <div class="col-3 font-padrao item-text-padrao text-right">R$ 0,00</div>
         </div> --}}
@@ -99,17 +122,26 @@
             </div>
         </div>
         <div style="border-collapse:collapse;display:table;width:100%;background-color:#ffffff">
-            <div align="center" style="padding:10px">
-                <p dir="ltr" style="line-height:22px;font-size:10px">
-                    <span style="font-size:13px">Qualquer dúvida, reclamação ou sugestão entre em contato com o suporte clicando no link abaixo:</span>
+            <div align="center"
+                 style="padding:10px">
+                <p dir="ltr"
+                   style="line-height:22px;font-size:10px">
+                    <span style="font-size:13px">Qualquer dúvida, reclamação ou sugestão entre em contato com o suporte
+                        clicando no link abaixo:</span>
                 </p>
-                <a href="" onclick="event.preventDefault();" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#3a99e0;border-radius:4px;width:auto;width:auto;border-top:1px solid #3a99e0;border-right:1px solid #3a99e0;border-bottom:1px solid #3a99e0;border-left:1px solid #3a99e0;padding-top:5px;padding-bottom:5px;text-align:center;word-break:keep-all"><span style="padding-left:20px;padding-right:20px;font-size:14px;display:inline-block">
-                    <span style="font-size:14px;line-height:25px"><strong>Ir para o atendimento</strong></span></span>
+                <a href=""
+                   onclick="event.preventDefault();"
+                   style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#3a99e0;border-radius:4px;width:auto;width:auto;border-top:1px solid #3a99e0;border-right:1px solid #3a99e0;border-bottom:1px solid #3a99e0;border-left:1px solid #3a99e0;padding-top:5px;padding-bottom:5px;text-align:center;word-break:keep-all"><span
+                          style="padding-left:20px;padding-right:20px;font-size:14px;display:inline-block">
+                        <span style="font-size:14px;line-height:25px"><strong>Ir para o
+                                atendimento</strong></span></span>
                 </a>
             </div>
         </div>
     </div>
-    <div class="mt-2 text-center" style="color: #757575; font-size: 10px;">
-        Esse é um e-mail automático, por favor não responda. Para entrar em contato com o suporte <a href="">clique aqui</a>
+    <div class="mt-2 text-center"
+         style="color: #757575; font-size: 10px;">
+        Esse é um e-mail automático, por favor não responda. Para entrar em contato com o suporte <a
+           href="">clique aqui</a>
     </div>
 </div>

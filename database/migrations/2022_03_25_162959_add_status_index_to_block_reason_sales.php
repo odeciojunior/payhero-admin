@@ -13,8 +13,8 @@ class AddStatusIndexToBlockReasonSales extends Migration
      */
     public function up()
     {
-        Schema::table('block_reason_sales', function (Blueprint $table) {
-            $table->index('status');
+        Schema::table("block_reason_sales", function (Blueprint $table) {
+            $table->index("status");
         });
     }
 
@@ -25,8 +25,8 @@ class AddStatusIndexToBlockReasonSales extends Migration
      */
     public function down()
     {
-        Schema::table('block_reason_sales', function (Blueprint $table) {
-            $table->dropIndex(['status']);
+        Schema::table("block_reason_sales", function (Blueprint $table) {
+            $table->dropIndex(["status"]);
         });
     }
 }

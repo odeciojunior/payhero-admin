@@ -24,7 +24,7 @@ class SalesController extends Controller
      */
     public function index()
     {
-        return view('sales::index');
+        return view("sales::index");
     }
 
     /**
@@ -33,11 +33,9 @@ class SalesController extends Controller
      */
     public function download($filename)
     {
-        $file_path = storage_path('app/' . $filename);
+        $file_path = storage_path("app/" . $filename);
         if (file_exists($file_path)) {
-            return response()->download($file_path, $filename, [
-                'Content-Length: ' . filesize($file_path)
-            ]);
+            return response()->download($file_path, $filename, ["Content-Length: " . filesize($file_path)]);
             //->deleteFileAfterSend(true);
         } else {
             abort(404);
@@ -47,39 +45,47 @@ class SalesController extends Controller
     public function refundReceipt($hashid)
     {
         try {
+            $id = current(Hashids::connection("sale_id")->decode($hashid));
 
-            $id = current(Hashids::connection('sale_id')->decode($hashid));
+            $arrDatewaysIds = foxutils()->isProduction()
+                ? [
+                    Gateway::ASAAS_PRODUCTION_ID,
+                    Gateway::GETNET_PRODUCTION_ID,
+                    Gateway::GERENCIANET_PRODUCTION_ID,
+                    Gateway::SAFE2PAY_PRODUCTION_ID,
+                ]
+                : [
+                    Gateway::ASAAS_PRODUCTION_ID,
+                    Gateway::GETNET_PRODUCTION_ID,
+                    Gateway::GERENCIANET_PRODUCTION_ID,
+                    Gateway::SAFE2PAY_PRODUCTION_ID,
+                    Gateway::ASAAS_SANDBOX_ID,
+                    Gateway::GETNET_SANDBOX_ID,
+                    Gateway::GERENCIANET_SANDBOX_ID,
+                    Gateway::SAFE2PAY_SANDBOX_ID,
+                ];
 
-            $arrDatewaysIds = foxutils()->isProduction() ?
-            [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID, Gateway::SAFE2PAY_PRODUCTION_ID] :
-            [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID, Gateway::SAFE2PAY_PRODUCTION_ID,
-            Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID, Gateway::GERENCIANET_SANDBOX_ID, Gateway::SAFE2PAY_SANDBOX_ID];
-
-            $transaction = Transaction::with([
-                'sale',
-                'company'
-            ])->where('sale_id', $id)
-                ->whereIn('gateway_id', $arrDatewaysIds)
-                ->where('type', Transaction::TYPE_PRODUCER)
-                ->whereHas('sale', function ($query) {
+            $transaction = Transaction::with(["sale", "company"])
+                ->where("sale_id", $id)
+                ->whereIn("gateway_id", $arrDatewaysIds)
+                ->where("type", Transaction::TYPE_PRODUCER)
+                ->whereHas("sale", function ($query) {
                     $query
-                    ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
-                    ->orWhere('payment_method',  Sale::BILLET_PAYMENT)
-                    ->orWhere('payment_method',  Sale::PIX_PAYMENT);
-                })->first();
+                        ->where("payment_method", Sale::CREDIT_CARD_PAYMENT)
+                        ->orWhere("payment_method", Sale::BILLET_PAYMENT)
+                        ->orWhere("payment_method", Sale::PIX_PAYMENT);
+                })
+                ->first();
 
-            if(empty($transaction) || empty($transaction->company)){
-                throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
+            if (empty($transaction) || empty($transaction->company)) {
+                throw new Exception("Não foi possivel continuar, entre em contato com o suporte!");
             }
 
-            $pdf = SaleService::refundReceipt($hashid,$transaction);
-            return $pdf->stream('comprovante.pdf');
-
+            $pdf = SaleService::refundReceipt($hashid, $transaction);
+            return $pdf->stream("comprovante.pdf");
         } catch (\Exception $e) {
             report($e);
             abort(404);
         }
     }
 }
-
-

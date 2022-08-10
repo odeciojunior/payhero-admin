@@ -18,7 +18,7 @@ class ProjectReviewsConfigServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class ProjectReviewsConfigServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('projectreviewsconfig.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'projectreviewsconfig'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("projectreviewsconfig.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "projectreviewsconfig");
     }
 
     /**
@@ -53,17 +54,26 @@ class ProjectReviewsConfigServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/projectreviewsconfig');
+        $viewPath = resource_path("views/modules/projectreviewsconfig");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/projectreviewsconfig';
-        }, \Config::get('view.paths')), [$sourcePath]), 'projectreviewsconfig');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/projectreviewsconfig";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "projectreviewsconfig"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class ProjectReviewsConfigServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/projectreviewsconfig');
+        $langPath = resource_path("lang/modules/projectreviewsconfig");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'projectreviewsconfig');
+            $this->loadTranslationsFrom($langPath, "projectreviewsconfig");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'projectreviewsconfig');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "projectreviewsconfig");
         }
     }
 
@@ -89,8 +99,8 @@ class ProjectReviewsConfigServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

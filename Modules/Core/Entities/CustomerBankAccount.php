@@ -33,16 +33,16 @@ class CustomerBankAccount extends Model
      * @var array
      */
     protected $fillable = [
-        'customer_id',
-        'holder_name',
-        'holder_document',
-        'account_type',
-        'bank',
-        'agency',
-        'account',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "customer_id",
+        "holder_name",
+        "holder_document",
+        "account_type",
+        "bank",
+        "agency",
+        "account",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**

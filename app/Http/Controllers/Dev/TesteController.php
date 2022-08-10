@@ -34,7 +34,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class TesteController extends Controller
 {
-
     private $mp;
 
     public function __construct()
@@ -45,24 +44,27 @@ class TesteController extends Controller
     public function code($code)
     {
         $id = current(Hashids::decode($code));
-        $idSale = current(Hashids::connection('sale_id')->decode($code));
-        $idPusher = current(Hashids::connection('pusher_connection')->decode($code));
-        dd('connection("main") = ' . $id, 'connection("sale_id") = ' . $idSale, 'connection("pusher_connection") = ' . $idPusher);
+        $idSale = current(Hashids::connection("sale_id")->decode($code));
+        $idPusher = current(Hashids::connection("pusher_connection")->decode($code));
+        dd(
+            'connection("main") = ' . $id,
+            'connection("sale_id") = ' . $idSale,
+            'connection("pusher_connection") = ' . $idPusher
+        );
     }
 
     public function index(Request $request)
     {
-
         $this->tgFunction($request);
-        dd('tg');
+        dd("tg");
 
-        $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
+        $this->mp = new MP(getenv("MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION"));
 
         //        $requestData = $request->all();
         $requestData = [
-            'type' => 'payment',
-            'data' => [
-                'id' => '5096826632',
+            "type" => "payment",
+            "data" => [
+                "id" => "5096826632",
             ],
         ];
         /* $postBackLogModel = new PostbackLog();
@@ -73,8 +75,7 @@ class TesteController extends Controller
                                        'description' => 'mercado-pago',
                                    ]);*/
 
-        if (isset($requestData['type']) && $requestData['type'] == 'payment') {
-
+        if (isset($requestData["type"]) && $requestData["type"] == "payment") {
             $saleModel = new Sale();
             $transactionModel = new Transaction();
             $companyModel = new Company();
@@ -82,7 +83,7 @@ class TesteController extends Controller
             $planModel = new Plan();
             $planSaleModel = new PlanSale();
 
-            $sale = $saleModel->where('gateway_id', $requestData['data']['id'])->first();
+            $sale = $saleModel->where("gateway_id", $requestData["data"]["id"])->first();
 
             /*if (empty($sale)) {
                 Log::warning('VENDA NÃO ENCONTRADA!!!' . @$requestData['data']['id']);
@@ -96,71 +97,67 @@ class TesteController extends Controller
                 return response()->json(['message' => 'sale not found'], 200);
             }*/
 
-            $paymentInfo = $this->mp->get('/v1/payments/' . $requestData['data']['id']);
+            $paymentInfo = $this->mp->get("/v1/payments/" . $requestData["data"]["id"]);
 
-            Log::warning('venda atualizada no mercado pago:  ' . print_r($paymentInfo, true));
+            Log::warning("venda atualizada no mercado pago:  " . print_r($paymentInfo, true));
 
-            if ($requestData['transaction']['status'] == $sale->gateway_status) {
-                return response()->json(['message' => 'success'], 200);
+            if ($requestData["transaction"]["status"] == $sale->gateway_status) {
+                return response()->json(["message" => "success"], 200);
             }
 
-            $transactions = $transactionModel->where('sale', $sale->id)->get();
+            $transactions = $transactionModel->where("sale", $sale->id)->get();
 
-            if ($requestData['transaction']['status'] == 'paid') {
-
-                date_default_timezone_set('America/Sao_Paulo');
+            if ($requestData["transaction"]["status"] == "paid") {
+                date_default_timezone_set("America/Sao_Paulo");
 
                 $sale->update([
-                    'end_date' => Carbon::now(),
-                    'gateway_status' => 'paid',
-                    'status' => '1',
+                    "end_date" => Carbon::now(),
+                    "gateway_status" => "paid",
+                    "status" => "1",
                 ]);
 
                 foreach ($transactions as $transaction) {
-
                     if ($transaction->company != null) {
-
                         $company = $companyModel->find($transaction->company);
 
-                        $user = $userModel->find($company['user_id']);
+                        $user = $userModel->find($company["user_id"]);
 
                         $transaction->update([
-                            'status' => 'paid',
-                            'release_date' => Carbon::now()
-                                ->addDays($user['release_money_days'])
-                                ->format('Y-m-d'),
+                            "status" => "paid",
+                            "release_date" => Carbon::now()
+                                ->addDays($user["release_money_days"])
+                                ->format("Y-m-d"),
                         ]);
                     } else {
                         $transaction->update([
-                            'status' => 'paid',
+                            "status" => "paid",
                         ]);
                     }
                 }
 
-                $plansSale = $planSaleModel->where('sale', $sale->id)->first();
+                $plansSale = $planSaleModel->where("sale", $sale->id)->first();
 
                 $plan = $planModel->find($plansSale->plan);
 
-                if ($sale->shopify_order != '') {
-
+                if ($sale->shopify_order != "") {
                     $shopifyIntegrationModel = new ShopifyIntegration();
 
-                    $shopifyIntegration = $shopifyIntegrationModel->where('project', $plan->project)->first();
+                    $shopifyIntegration = $shopifyIntegrationModel->where("project", $plan->project)->first();
 
                     try {
-                        $credential = new PublicAppCredential($shopifyIntegration['token']);
+                        $credential = new PublicAppCredential($shopifyIntegration["token"]);
 
-                        $client = new Client($credential, $shopifyIntegration['url_store'], [
-                            'metaCacheDir' => './tmp',
+                        $client = new Client($credential, $shopifyIntegration["url_store"], [
+                            "metaCacheDir" => "./tmp",
                         ]);
 
                         $client->getTransactionManager()->create($sale->shopify_order, [
                             "kind" => "capture",
                             "gateway" => "cloudfox",
-                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                            "authorization" => Hashids::connection("sale_id")->encode($sale->id),
                         ]);
                     } catch (Exception $e) {
-                        Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $sale->id);
+                        Log::warning("erro ao alterar estado do pedido no shopify com a venda " . $sale->id);
                         report($e);
                     }
                 }
@@ -168,17 +165,15 @@ class TesteController extends Controller
                 try {
                     $hotZappIntegrationModel = new HotZappIntegration();
 
-                    $hotzappIntegration = $hotZappIntegrationModel->where('project_id', $plan->project)->first();
+                    $hotzappIntegration = $hotZappIntegrationModel->where("project_id", $plan->project)->first();
 
                     if (!empty($hotzappIntegration)) {
-
                         $hotZappService = new HotZappService($hotzappIntegration->link);
 
-                        $plansSale = $planSaleModel->where('sale', $sale->id)->get();
+                        $plansSale = $planSaleModel->where("sale", $sale->id)->get();
 
                         $plans = [];
                         foreach ($plansSale as $planSale) {
-
                             $plan = $planModel->find($planSale->plan);
 
                             $plans[] = [
@@ -191,53 +186,51 @@ class TesteController extends Controller
                         $hotZappService->newBoleto($sale, $plans);
                     }
                 } catch (Exception $e) {
-                    Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
+                    Log::warning("erro ao enviar notificação pro HotZapp na venda " . $sale->id);
                     report($e);
                 }
             } else {
-
-                if ($requestData['transaction']['status'] == 'chargedback') {
+                if ($requestData["transaction"]["status"] == "chargedback") {
                     $sale->update([
-                        'gateway_status' => 'chargedback',
-                        'status' => '4',
+                        "gateway_status" => "chargedback",
+                        "status" => "4",
                     ]);
 
                     $transferModel = new Transfer();
 
                     foreach ($transactions as $transaction) {
-
-                        if ($transaction->status == 'transfered') {
+                        if ($transaction->status == "transfered") {
                             $company = $companyModel->find($transaction->company);
 
                             $transferModel->create([
-                                'transaction' => $transaction->id,
-                                'user' => $company->user_id,
-                                'value' => $transaction->value,
-                                'type' => 'out',
+                                "transaction" => $transaction->id,
+                                "user" => $company->user_id,
+                                "value" => $transaction->value,
+                                "type" => "out",
                             ]);
 
                             $company->update([
-                                'balance' => $company->balance -= $transaction->value,
+                                "balance" => ($company->balance -= $transaction->value),
                             ]);
                         }
 
                         $transaction->update([
-                            'status' => 'chargedback',
+                            "status" => "chargedback",
                         ]);
                     }
                 } else {
                     $sale->update([
-                        'gateway_status' => $requestData['transaction']['status'],
+                        "gateway_status" => $requestData["transaction"]["status"],
                     ]);
 
                     foreach ($transactions as $transaction) {
-                        $transaction->update(['status' => $requestData['transaction']['status']]);
+                        $transaction->update(["status" => $requestData["transaction"]["status"]]);
                     }
                 }
             }
         }
 
-        return response()->json(['message' => 'success'], 200);
+        return response()->json(["message" => "success"], 200);
     }
 
     public function indexx()
@@ -257,24 +250,20 @@ class TesteController extends Controller
     public function jeanFunction(Request $request)
     {
         //regerar order shopify considerando descontos e upsell
-        $userId = $this->argument('user');
+        $userId = $this->argument("user");
 
         //upsell
         if (!empty($userId)) {
-
-            $sales = Sale::with([
-                'upsells',
-                'project.shopifyIntegrations'
-            ])->join('sales as s2', 'sales.id', '=', 's2.upsell_id')
-                ->where('sales.shopify_order', '!=', DB::raw('s2.shopify_order'))
-                ->where('sales.owner_id', $userId)
-                ->selectRaw('sales.*')
+            $sales = Sale::with(["upsells", "project.shopifyIntegrations"])
+                ->join("sales as s2", "sales.id", "=", "s2.upsell_id")
+                ->where("sales.shopify_order", "!=", DB::raw("s2.shopify_order"))
+                ->where("sales.owner_id", $userId)
+                ->selectRaw("sales.*")
                 ->get();
 
             $integrations = [];
 
             foreach ($sales as $sale) {
-
                 $shopifyService = $integrations[$sale->project_id] ?? null;
                 if (empty($shopifyService)) {
                     $integration = $sale->project->shopifyIntegrations->first();
@@ -288,11 +277,8 @@ class TesteController extends Controller
 
         //descontos
         if (!empty($userId)) {
-            $sales = Sale::with(
-                [
-                    'project.shopifyIntegrations'
-                ]
-            )->whereIn('id', [668020])
+            $sales = Sale::with(["project.shopifyIntegrations"])
+                ->whereIn("id", [668020])
                 ->get();
 
             $integrations = [];
@@ -306,13 +292,25 @@ class TesteController extends Controller
                 }
 
                 $oldOrderId = $sale->shopify_order;
-                $fulfillments = $shopifyService->getClient()->getFulfillmentManager()->findAll($oldOrderId);
+                $fulfillments = $shopifyService
+                    ->getClient()
+                    ->getFulfillmentManager()
+                    ->findAll($oldOrderId);
                 try {
                     foreach ($fulfillments as $fulfillment) {
-                        $shopifyService->getClient()->getFulfillmentManager()->cancel($oldOrderId, $fulfillment->getId());
+                        $shopifyService
+                            ->getClient()
+                            ->getFulfillmentManager()
+                            ->cancel($oldOrderId, $fulfillment->getId());
                     }
-                    $shopifyService->getClient()->getOrderManager()->cancel($oldOrderId);
-                    $shopifyService->getClient()->getOrderManager()->remove($oldOrderId);
+                    $shopifyService
+                        ->getClient()
+                        ->getOrderManager()
+                        ->cancel($oldOrderId);
+                    $shopifyService
+                        ->getClient()
+                        ->getOrderManager()
+                        ->remove($oldOrderId);
                 } catch (Exception $e) {
                 }
 
@@ -328,19 +326,19 @@ class TesteController extends Controller
     {
         $checkoutModel = new Checkout();
 
-        $checkouts = $checkoutModel->where('email_sent_amount', '>', 10)->get();
+        $checkouts = $checkoutModel->where("email_sent_amount", ">", 10)->get();
 
         foreach ($checkouts as $checkout) {
             $checkout->update([
-                'email_sent_amount' => '4',
+                "email_sent_amount" => "4",
             ]);
         }
 
-        $checkouts = $checkoutModel->where('sms_sent_amount', '>', 10)->get();
+        $checkouts = $checkoutModel->where("sms_sent_amount", ">", 10)->get();
 
         foreach ($checkouts as $checkout) {
             $checkout->update([
-                'sms_sent_amount' => '2',
+                "sms_sent_amount" => "2",
             ]);
         }
     }
@@ -369,7 +367,6 @@ class TesteController extends Controller
      */
     public function tgFunction($request)
     {
-
         //        $checkser = new CheckoutService();
         //
         //
@@ -387,7 +384,7 @@ class TesteController extends Controller
         //        ]);
         //        $order  = $client->getOrderManager()->find(1946397605933);
 
-        dd('xXx');
+        dd("xXx");
 
         //        $saleModel     = new Sale();
         //        $planSaleModel = new PlanSale();
@@ -599,7 +596,7 @@ class TesteController extends Controller
         //
         //                dd($invoices);
 
-        dd('aa');
+        dd("aa");
     }
 
     /**
@@ -620,24 +617,21 @@ class TesteController extends Controller
 
     public function joaoLucasFunction()
     {
-        $sales = Sale::whereDate('created_at', '>=', '2020-01-20 15:00:00.0')->whereNotNull('shopify_order')
-            ->whereDate('created_at', '<=', '2020-01-21 13:00:00.0')->get();
+        $sales = Sale::whereDate("created_at", ">=", "2020-01-20 15:00:00.0")
+            ->whereNotNull("shopify_order")
+            ->whereDate("created_at", "<=", "2020-01-21 13:00:00.0")
+            ->get();
 
         foreach ($sales as $sale) {
-            $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+            $shopifyIntegration = ShopifyIntegration::where("project_id", $sale->project_id)->first();
 
             if (!empty($shopifyIntegration)) {
-
                 $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
                 $sh = $shopifyService->updateOrder($sale);
-
             }
-
         }
 
-        dd('Terminou!');
-
-
+        dd("Terminou!");
     }
 
     /**
@@ -670,45 +664,43 @@ class TesteController extends Controller
      */
     public function faustoFunction(Request $request)
     {
-        User::create(
-            [
-                'name' => "Fausto Marins",
-                'email' => "faustogmjr@gmail.com",
-                'email_verified' => "1",
-                'password' => bcrypt("vpc10"),
-                'remember_token' => "",
-                'cellphone' => "24999309321",
-                'cellphone_verified' => "1",
-                'document' => "",
-                'zip_code' => "27521130",
-                'country' => "BR",
-                'state' => "Rio de Janeiro",
-                'city' => "Resende",
-                'neighborhood' => "",
-                'street' => "",
-                'number' => "",
-                'complement' => "",
-                'photo' => "",
-                'date_birth' => "1997-08-14",
-                'address_document_status' => "3",
-                'personal_document_status' => "3",
-                'score' => "",
-                'sms_zenvia_amount' => "1",
-                'percentage_rate' => "",
-                'transaction_rate' => "",
-                'foxcoin' => "",
-                'email_amount' => "",
-                'call_amount' => "",
-                'release_money_days' => "1",
-                'antecipation_tax' => "1",
-                'invites_amount' => "1",
-                'installment_tax' => "1",
-                'credit_card_release_money_days' => "1",
-                'boleto_release_money_days' => "1",
-                'boleto_tax' => "1",
-                'credit_card_tax' => "1",
-            ]
-        );
+        User::create([
+            "name" => "Fausto Marins",
+            "email" => "faustogmjr@gmail.com",
+            "email_verified" => "1",
+            "password" => bcrypt("vpc10"),
+            "remember_token" => "",
+            "cellphone" => "24999309321",
+            "cellphone_verified" => "1",
+            "document" => "",
+            "zip_code" => "27521130",
+            "country" => "BR",
+            "state" => "Rio de Janeiro",
+            "city" => "Resende",
+            "neighborhood" => "",
+            "street" => "",
+            "number" => "",
+            "complement" => "",
+            "photo" => "",
+            "date_birth" => "1997-08-14",
+            "address_document_status" => "3",
+            "personal_document_status" => "3",
+            "score" => "",
+            "sms_zenvia_amount" => "1",
+            "percentage_rate" => "",
+            "transaction_rate" => "",
+            "foxcoin" => "",
+            "email_amount" => "",
+            "call_amount" => "",
+            "release_money_days" => "1",
+            "antecipation_tax" => "1",
+            "invites_amount" => "1",
+            "installment_tax" => "1",
+            "credit_card_release_money_days" => "1",
+            "boleto_release_money_days" => "1",
+            "boleto_tax" => "1",
+            "credit_card_tax" => "1",
+        ]);
         if (isset($request->email)) {
             dump(__METHOD__, "Email");
             $email = $request->email ?? null;
@@ -716,7 +708,9 @@ class TesteController extends Controller
                 dd("Email vazio.");
             }
 
-            $sentEmails = SentEmail::where("to_email", 'LIKE', '%' . $email . '%')->get()->toArray();
+            $sentEmails = SentEmail::where("to_email", "LIKE", "%" . $email . "%")
+                ->get()
+                ->toArray();
             dump($sentEmails);
 
             dd("Fim");
@@ -729,23 +723,23 @@ class TesteController extends Controller
         dd(__FUNCTION__, __METHOD__, __CLASS__);
         dump(__METHOD__);
         try {
-            $cardBrand = '';
+            $cardBrand = "";
 
-            $cardNumber = preg_replace('/\D/', '', $request->cardNumber);
+            $cardNumber = preg_replace("/\D/", "", $request->cardNumber);
 
             $brands = [
-                'visa' => '/^4\d{12}(\d{3})?$/',
-                'master' => '/^(5[1-5]\d{4}|677189)\d{10}$/',
-                'diners' => '/^3(0[0-5]|[68]\d)\d{11}$/',
-                'discover' => '/^6(?:011|5[0-9]{2})[0-9]{12}$/',
-                'elo' => '/^(?:401178|636368|438935|504175|451416|636297|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|
+                "visa" => '/^4\d{12}(\d{3})?$/',
+                "master" => '/^(5[1-5]\d{4}|677189)\d{10}$/',
+                "diners" => '/^3(0[0-5]|[68]\d)\d{11}$/',
+                "discover" => '/^6(?:011|5[0-9]{2})[0-9]{12}$/',
+                "elo" => '/^(?:401178|636368|438935|504175|451416|636297|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|
                             655000|655001|651652|651653|651654|650485|650486|650487|650488|506699|5067[0-6][0-9]|
                             50677[0-8]|509\d{3})\d{10}\d{0,10}|(((5067)|(4576)|(4011))\d{0,12})$/',
-                'amex' => '/^3[47]\d{13}$/',
-                'jcb' => '/^(?:2131|1800|35\d{3})\d{11}$/',
-                'aura' => '/^(5078\d{2})(\d{2})(\d{11})$/',
-                'hipercard' => '/^(606282\d{10}(\d{3})?)|(3841\d{15})$/',
-                'maestro' => '/^(?:5[0678]\d\d|6304|6390|67\d\d)\d{8,15}$/',
+                "amex" => '/^3[47]\d{13}$/',
+                "jcb" => '/^(?:2131|1800|35\d{3})\d{11}$/',
+                "aura" => '/^(5078\d{2})(\d{2})(\d{11})$/',
+                "hipercard" => '/^(606282\d{10}(\d{3})?)|(3841\d{15})$/',
+                "maestro" => '/^(?:5[0678]\d\d|6304|6390|67\d\d)\d{8,15}$/',
             ];
 
             foreach ($brands as $brand => $regex) {
@@ -759,12 +753,10 @@ class TesteController extends Controller
 
             return $cardBrand;
             $notazzIntegration = new NotazzIntegration();
-            $integrations = $notazzIntegration->with([
-                'project',
-                'user',
-            ])
-                ->whereNotNull('start_date')
-                ->whereNull('retroactive_generated_date')
+            $integrations = $notazzIntegration
+                ->with(["project", "user"])
+                ->whereNotNull("start_date")
+                ->whereNull("retroactive_generated_date")
                 ->get();
             dd($integrations);
             $user = User::find(45);
@@ -773,49 +765,47 @@ class TesteController extends Controller
             $userNotification = $user->userNotification ?? null;
             dd($userNotification->released_balance ?? true);
             if ($userNotification->released_balance ?? true) {
-                dd('opa');
+                dd("opa");
             }
-            dd('saiu');
+            dd("saiu");
 
-            User::create(
-                [
-                    'name' => "Teste Maciel",
-                    'email' => "testemaciel" . random_int(10, 999999999) . "@gmail.com",
-                    'email_verified' => "1",
-                    'password' => bcrypt(123456789),
-                    'remember_token' => "",
-                    'cellphone' => "24999309321",
-                    'cellphone_verified' => "1",
-                    'document' => "",
-                    'zip_code' => "27521130",
-                    'country' => "BR",
-                    'state' => "Rio de Janeiro",
-                    'city' => "Resende",
-                    'neighborhood' => "",
-                    'street' => "",
-                    'number' => "",
-                    'complement' => "",
-                    'photo' => "",
-                    'date_birth' => "1997-08-14",
-                    'address_document_status' => "3",
-                    'personal_document_status' => "3",
-                    'score' => "",
-                    'sms_zenvia_amount' => "1",
-                    'percentage_rate' => "",
-                    'transaction_rate' => "",
-                    'foxcoin' => "",
-                    'email_amount' => "",
-                    'call_amount' => "",
-                    'release_money_days' => "1",
-                    'antecipation_tax' => "1",
-                    'invites_amount' => "1",
-                    'installment_tax' => "1",
-                    'credit_card_release_money_days' => "1",
-                    'boleto_release_money_days' => "1",
-                    'boleto_tax' => "1",
-                    'credit_card_tax' => "1",
-                ]
-            );
+            User::create([
+                "name" => "Teste Maciel",
+                "email" => "testemaciel" . random_int(10, 999999999) . "@gmail.com",
+                "email_verified" => "1",
+                "password" => bcrypt(123456789),
+                "remember_token" => "",
+                "cellphone" => "24999309321",
+                "cellphone_verified" => "1",
+                "document" => "",
+                "zip_code" => "27521130",
+                "country" => "BR",
+                "state" => "Rio de Janeiro",
+                "city" => "Resende",
+                "neighborhood" => "",
+                "street" => "",
+                "number" => "",
+                "complement" => "",
+                "photo" => "",
+                "date_birth" => "1997-08-14",
+                "address_document_status" => "3",
+                "personal_document_status" => "3",
+                "score" => "",
+                "sms_zenvia_amount" => "1",
+                "percentage_rate" => "",
+                "transaction_rate" => "",
+                "foxcoin" => "",
+                "email_amount" => "",
+                "call_amount" => "",
+                "release_money_days" => "1",
+                "antecipation_tax" => "1",
+                "invites_amount" => "1",
+                "installment_tax" => "1",
+                "credit_card_release_money_days" => "1",
+                "boleto_release_money_days" => "1",
+                "boleto_tax" => "1",
+                "credit_card_tax" => "1",
+            ]);
             $user = auth()->user();
             $user->load(["userNotification"]);
 
@@ -832,12 +822,19 @@ class TesteController extends Controller
     {
         $tes = 0;
         $data = [
-            'name' => 'Hero Produtor',
-            'transaction' => 'nao tem', // code da venda
-            'date' => Carbon::now()->format('d/m/Y H:i:s'), //data da aprovacao
+            "name" => "Hero Produtor",
+            "transaction" => "nao tem", // code da venda
+            "date" => Carbon::now()->format("d/m/Y H:i:s"), //data da aprovacao
         ];
         $sendGridService = new SendgridService();
-        $sendGridService->sendEmail('noreply', 'Cloudfox', 'emailteste@gmail.com', 'Hero Produtor', 'd-d65e83a8aa7e44c19b13d8b1cce0176c', $data);
+        $sendGridService->sendEmail(
+            "noreply",
+            "Cloudfox",
+            "emailteste@gmail.com",
+            "Hero Produtor",
+            "d-d65e83a8aa7e44c19b13d8b1cce0176c",
+            $data
+        );
     }
 
     /**
@@ -851,15 +848,15 @@ class TesteController extends Controller
         $companyModel = new Company();
 
         //Verifica os documentos aprovados do usuario
-        $userAddressDocuments = $userDocumentModel->where('status', 3)
-            ->where('document_type_enum', 2)
-            ->with('user')
+        $userAddressDocuments = $userDocumentModel
+            ->where("status", 3)
+            ->where("document_type_enum", 2)
+            ->with("user")
             ->get();
 
         $count = 0;
 
         foreach ($userAddressDocuments as $userAddressDocument) {
-
             if ($userAddressDocument->user->address_document_status != 3) {
                 $count++;
             }
@@ -870,64 +867,68 @@ class TesteController extends Controller
 
     public function testJobWithDatabase()
     {
-        $count = request('count') ?? 20;
+        $count = request("count") ?? 20;
 
-        $users = User::take($count)->inRandomOrder()->get();
+        $users = User::take($count)
+            ->inRandomOrder()
+            ->get();
 
         foreach ($users as $x => $user) {
-
             $time = $x * 10;
 
             TestJobWithDatabase::dispatch($user)
-                ->allOnConnection('redis')
-                ->allOnQueue('high')
+                ->allOnConnection("redis")
+                ->allOnQueue("high")
                 ->delay(now()->addSeconds($time));
         }
 
-        return response()->json($users->pluck('name', 'id')->toArray());
+        return response()->json($users->pluck("name", "id")->toArray());
     }
 
-    public function fixShopifyDebutTheme() {
-//        $integrations = ShopifyIntegration::with('project')
-//            ->where('theme_name', 'Debut')
-//            ->orderByDesc('id')
-//            ->get();
-//
-//        $count = 1;
-//        $total = $integrations->count();
-//        foreach ($integrations as $integration) {
-//            $this->line("Loja {$count} de {$total}: $integration->url_store");
-//            try {
-//                $value = "{% comment %}\n  The contents of the cart.liquid template can be found in /sections/cart-template.liquid\n{% endcomment %}\n{% section 'cart-template' %}\n";
-//                $shopify = new ShopifyService($integration->url_store, $integration->token);
-//                $shopify->setThemeByRole('main');
-//                $htmlCart = $shopify->getTemplateHtml($shopify::templateKeyNames[1]);
-//                if (empty($htmlCart)) {
-//                    $shopify->setTemplateHtml($shopify::templateKeyNames[1], $value);
-//                }
-//                if($integration->skip_to_cart) {
-//                    $this->setSkipToCart($shopify, $integration,false);
-//                    $this->setSkipToCart($shopify, $integration, true);
-//                }
-//                $this->line("foi!");
-//            } catch (Exception $e) {
-//                $this->error($e->getMessage());
-//            }
-//            $count++;
-//        }
+    public function fixShopifyDebutTheme()
+    {
+        //        $integrations = ShopifyIntegration::with('project')
+        //            ->where('theme_name', 'Debut')
+        //            ->orderByDesc('id')
+        //            ->get();
+        //
+        //        $count = 1;
+        //        $total = $integrations->count();
+        //        foreach ($integrations as $integration) {
+        //            $this->line("Loja {$count} de {$total}: $integration->url_store");
+        //            try {
+        //                $value = "{% comment %}\n  The contents of the cart.liquid template can be found in /sections/cart-template.liquid\n{% endcomment %}\n{% section 'cart-template' %}\n";
+        //                $shopify = new ShopifyService($integration->url_store, $integration->token);
+        //                $shopify->setThemeByRole('main');
+        //                $htmlCart = $shopify->getTemplateHtml($shopify::templateKeyNames[1]);
+        //                if (empty($htmlCart)) {
+        //                    $shopify->setTemplateHtml($shopify::templateKeyNames[1], $value);
+        //                }
+        //                if($integration->skip_to_cart) {
+        //                    $this->setSkipToCart($shopify, $integration,false);
+        //                    $this->setSkipToCart($shopify, $integration, true);
+        //                }
+        //                $this->line("foi!");
+        //            } catch (Exception $e) {
+        //                $this->error($e->getMessage());
+        //            }
+        //            $count++;
+        //        }
     }
     private function setSkipToCart($shopify, $integration, $isSet = false)
     {
         $shopify->setSkipToCart($isSet);
 
-        $shopify->setThemeByRole('main');
+        $shopify->setThemeByRole("main");
 
         $htmlCart = null;
         $templateKeyName = null;
         foreach ($shopify::templateKeyNames as $template) {
             $templateKeyName = $template;
             $htmlCart = $shopify->getTemplateHtml($template);
-            if ($htmlCart) break;
+            if ($htmlCart) {
+                break;
+            }
         }
 
         $domain = $integration->project->domains->first();
@@ -936,5 +937,3 @@ class TesteController extends Controller
         $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domainName);
     }
 }
-
-

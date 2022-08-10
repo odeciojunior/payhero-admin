@@ -58,7 +58,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
-        'web' => [
+        "web" => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartSession::class,
@@ -70,20 +70,9 @@ class Kernel extends HttpKernel
             VerifyFrozenAccountWeb::class,
         ],
 
-        'api' => [
-            'throttle:500,1',
-            'bindings',
-            CheckAccountStatusApi::class,
-            VerifyFrozenAccountApi::class,
-        ],
+        "api" => ["throttle:500,1", "bindings", CheckAccountStatusApi::class, VerifyFrozenAccountApi::class],
 
-        'api-socialite' => [
-            EncryptCookies::class,
-            StartSession::class,
-            'throttle:60,1',
-            'bindings',
-        ],
-
+        "api-socialite" => [EncryptCookies::class, StartSession::class, "throttle:60,1", "bindings"],
     ];
     /**
      * The application's route middleware.
@@ -91,23 +80,23 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => Authenticate::class,
-        'auth.basic' => AuthenticateWithBasicAuth::class,
-        'bindings' => SubstituteBindings::class,
-        'cache.headers' => SetCacheHeaders::class,
-        'can' => Authorize::class,
-        'guest' => RedirectIfAuthenticated::class,
-        'signed' => ValidateSignature::class,
-        'throttle' => ThrottleRequests::class,
-        'VerifyShopifyPostback' => VerifyShopifyPostback::class,
-        'broadcast' => Broadcast::class,
-        'role' => RoleMiddleware::class,
-        'permission'=>PermissionMiddleware::class,
-        'role_or_permission' => RoleOrPermissionMiddleware::class,
-        'scopes' => CheckScopes::class,
-        'scope' => CheckForAnyScope::class,
-        'InternalApiAuth' => InternalApiAuth::class,
-        'IsCloudFoxAccount' => IsCloudFoxAccount::class,
-        'demo_account'=>DemoAccount::class
+        "auth" => Authenticate::class,
+        "auth.basic" => AuthenticateWithBasicAuth::class,
+        "bindings" => SubstituteBindings::class,
+        "cache.headers" => SetCacheHeaders::class,
+        "can" => Authorize::class,
+        "guest" => RedirectIfAuthenticated::class,
+        "signed" => ValidateSignature::class,
+        "throttle" => ThrottleRequests::class,
+        "VerifyShopifyPostback" => VerifyShopifyPostback::class,
+        "broadcast" => Broadcast::class,
+        "role" => RoleMiddleware::class,
+        "permission" => PermissionMiddleware::class,
+        "role_or_permission" => RoleOrPermissionMiddleware::class,
+        "scopes" => CheckScopes::class,
+        "scope" => CheckForAnyScope::class,
+        "InternalApiAuth" => InternalApiAuth::class,
+        "IsCloudFoxAccount" => IsCloudFoxAccount::class,
+        "demo_account"=>DemoAccount::class
     ];
 }

@@ -13,14 +13,12 @@ class AddAntifraudObservationColumn extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'sales',
-            function (Blueprint $table) {
-                $table->text('antifraud_observation')
-                    ->nullable()
-                    ->after('antifraud_warning_level');
-            }
-        );
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->text("antifraud_observation")
+                ->nullable()
+                ->after("antifraud_warning_level");
+        });
     }
 
     /**
@@ -30,11 +28,8 @@ class AddAntifraudObservationColumn extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'sales',
-            function (Blueprint $table) {
-                $table->dropColumn('antifraud_observation');
-            }
-        );
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("antifraud_observation");
+        });
     }
 }

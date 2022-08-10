@@ -18,7 +18,7 @@ class ResetPasswordEvent
      */
     public function __construct($token, User $user)
     {
-        $this->user  = $user;
+        $this->user = $user;
         $this->token = $token;
     }
 

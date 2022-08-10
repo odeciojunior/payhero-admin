@@ -11,10 +11,17 @@ class AddColumnProjectTableProduct extends Migration
      */
     public function up()
     {
-        Schema::table('products', function($table) {
-            $table->integer('project_id')->unsigned()->index()->nullable();
+        Schema::table("products", function ($table) {
+            $table
+                ->integer("project_id")
+                ->unsigned()
+                ->index()
+                ->nullable();
 
-            $table->foreign('project_id')->references('id')->on('projects');
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
     }
 
@@ -24,11 +31,10 @@ class AddColumnProjectTableProduct extends Migration
      */
     public function down()
     {
+        Schema::table("products", function ($table) {
+            $table->dropForeign(["project_id"]);
 
-        Schema::table('products', function($table) {
-            $table->dropForeign(['project_id']);
-
-            $table->dropColumn('project_id');
+            $table->dropColumn("project_id");
         });
     }
 }

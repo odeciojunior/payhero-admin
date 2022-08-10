@@ -9,10 +9,9 @@ use Modules\Core\Services\SendgridService;
 
 class ClearSendgridDomains extends Command
 {
+    protected $signature = "clear-sendgrid-domains";
 
-    protected $signature = 'clear-sendgrid-domains';
-
-    protected $description = 'Clear old sendgrid domains';
+    protected $description = "Clear old sendgrid domains";
 
     public function __construct()
     {
@@ -21,15 +20,13 @@ class ClearSendgridDomains extends Command
 
     public function handle()
     {
-
         try {
-
             $lastMonths = 3;
 
-            $domainsWithSales = Domain::select('name')
-                ->whereHas('project', function ($query) use ($lastMonths) {
-                    $query->whereHas('sales', function ($query) use ($lastMonths) {
-                        $query->whereDate('start_date', '>=', now()->subMonths($lastMonths));
+            $domainsWithSales = Domain::select("name")
+                ->whereHas("project", function ($query) use ($lastMonths) {
+                    $query->whereHas("sales", function ($query) use ($lastMonths) {
+                        $query->whereDate("start_date", ">=", now()->subMonths($lastMonths));
                     });
                 })
                 ->get();
@@ -50,9 +47,9 @@ class ClearSendgridDomains extends Command
                 foreach ($zones as $key => $zone) {
                     try {
                         $count = $offset + ($key + 1);
-                        $total = $offset . '-' . ($offset + $totalZones) . ($totalZones === $limit ? '+' : '');
+                        $total = $offset . "-" . ($offset + $totalZones) . ($totalZones === $limit ? "+" : "");
                         $this->line("Verificando domínio {$count} de {$total}: {$zone->domain}");
-                        $domain = $domainsWithSales->where('name', $zone->domain)->first();
+                        $domain = $domainsWithSales->where("name", $zone->domain)->first();
                         if ($domain) {
                             $this->info("Tem vendas nos últimos {$lastMonths} meses. Ignorando...");
                         } else {
@@ -61,17 +58,14 @@ class ClearSendgridDomains extends Command
                             $sendgrid->deleteLinkBrand($zone->domain);
                         }
                     } catch (\Exception $e) {
-                        $this->error('ERROR: ' . $e->getMessage());
+                        $this->error("ERROR: " . $e->getMessage());
                     }
                 }
 
                 $page++;
-
             } while ($totalZones === $limit);
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

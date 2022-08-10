@@ -13,9 +13,12 @@ class AddAsaasBuyerIdOnCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->string('asaas_buyer_id')->nullable()->after('id_zoop_buyer');
-        });    
+        Schema::table("customers", function (Blueprint $table) {
+            $table
+                ->string("asaas_buyer_id")
+                ->nullable()
+                ->after("id_zoop_buyer");
+        });
     }
 
     /**
@@ -25,8 +28,8 @@ class AddAsaasBuyerIdOnCustomersTable extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn('asaas_buyer_id');
+        Schema::table("customers", function (Blueprint $table) {
+            $table->dropColumn("asaas_buyer_id");
         });
     }
 }

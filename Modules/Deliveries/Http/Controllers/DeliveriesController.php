@@ -14,7 +14,7 @@ class DeliveriesController extends Controller
      */
     public function index()
     {
-        return view('deliveries::index');
+        return view("deliveries::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class DeliveriesController extends Controller
      */
     public function create()
     {
-        return view('deliveries::create');
+        return view("deliveries::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class DeliveriesController extends Controller
      */
     public function show($id)
     {
-        return view('deliveries::show');
+        return view("deliveries::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class DeliveriesController extends Controller
      */
     public function edit($id)
     {
-        return view('deliveries::edit');
+        return view("deliveries::edit");
     }
 
     /**

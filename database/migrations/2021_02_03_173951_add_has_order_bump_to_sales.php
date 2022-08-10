@@ -13,8 +13,11 @@ class AddHasOrderBumpToSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->boolean('has_order_bump')->default(false)->after('has_valid_tracking');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->boolean("has_order_bump")
+                ->default(false)
+                ->after("has_valid_tracking");
         });
     }
 
@@ -25,8 +28,8 @@ class AddHasOrderBumpToSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('has_order_bump');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("has_order_bump");
         });
     }
 }

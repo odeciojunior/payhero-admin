@@ -212,9 +212,7 @@ $(document).ready(function () {
                                     method: "GET",
                                     url: "/api/apps/notazz/" + integration_id,
                                     headers: {
-                                        Authorization: $(
-                                            'meta[name="access-token"]'
-                                        ).attr("content"),
+                                        Authorization: $('meta[name="access-token"]').attr("content"),
                                         Accept: "application/json",
                                     },
                                     dataType: "json",
@@ -248,85 +246,50 @@ $(document).ready(function () {
                                             response.data.pending_days
                                         );
 
-                                        $("#emit_zero_edit").val(
-                                            response.data.emit_zero
-                                        );
-                                        $("#emit_zero_edit").prop(
-                                            "checked",
-                                            $("#emit_zero_edit").val() == "1"
-                                        );
+                                        $("#emit_zero_edit").val(response.data.emit_zero);
+                                        $("#emit_zero_edit").prop("checked", $("#emit_zero_edit").val() == "1");
 
-                                        $("#remove_tax_edit").val(
-                                            response.data.remove_tax
-                                        );
-                                        $("#remove_tax_edit").prop(
-                                            "checked",
-                                            $("#remove_tax_edit").val() == "1"
-                                        );
+                                        $("#remove_tax_edit").val(response.data.remove_tax);
+                                        $("#remove_tax_edit").prop("checked", $("#remove_tax_edit").val() == "1");
 
-                                        $("#active_flag").val(
-                                            response.data.active_flag
-                                        );
-                                        $("#active_flag").prop(
-                                            "checked",
-                                            $("#active_flag").val() == "1"
-                                        );
+                                        $("#active_flag").val(response.data.active_flag);
+                                        $("#active_flag").prop("checked", $("#active_flag").val() == "1");
 
-                                        $("#modal_add_integracao").modal(
-                                            "show"
-                                        );
+                                        $("#modal_add_integracao").modal("show");
                                         $("#form_add_integration").hide();
                                         $("#form_update_integration").show();
-                                        $("#bt_integration").addClass(
-                                            "btn-update"
-                                        );
-                                        $("#bt_integration").removeClass(
-                                            "btn-save"
-                                        );
+                                        $("#bt_integration").addClass("btn-update");
+                                        $("#bt_integration").removeClass("btn-save");
                                         $("#bt_integration").text("Atualizar");
                                         $("#btn-modal").show();
 
                                         $(".btn-update").unbind("click");
-                                        $(".btn-update").on(
-                                            "click",
-                                            function () {
-                                                var integrationId = $(
-                                                    "#integration_id"
-                                                ).val();
-                                                var form_data = new FormData(
-                                                    document.getElementById(
-                                                        "form_update_integration"
-                                                    )
-                                                );
+                                        $(".btn-update").on("click", function () {
+                                            var integrationId = $("#integration_id").val();
+                                            var form_data = new FormData(
+                                                document.getElementById("form_update_integration")
+                                            );
 
-                                                $.ajax({
-                                                    method: "POST",
-                                                    url:
-                                                        "/api/apps/notazz/" +
-                                                        integrationId,
-                                                    headers: {
-                                                        Authorization: $(
-                                                            'meta[name="access-token"]'
-                                                        ).attr("content"),
-                                                        Accept:
-                                                            "application/json",
-                                                    },
-                                                    dataType: "json",
-                                                    processData: false,
-                                                    contentType: false,
-                                                    cache: false,
-                                                    data: form_data,
-                                                    error: (function (_error) {
-                                                        function error(_x) {
-                                                            return _error.apply(
-                                                                this,
-                                                                arguments
-                                                            );
-                                                        }
+                                            $.ajax({
+                                                method: "POST",
+                                                url: "/api/apps/notazz/" + integrationId,
+                                                headers: {
+                                                    Authorization: $('meta[name="access-token"]').attr("content"),
+                                                    Accept: "application/json",
+                                                },
+                                                dataType: "json",
+                                                processData: false,
+                                                contentType: false,
+                                                cache: false,
+                                                data: form_data,
+                                                error: (function (_error) {
+                                                    function error(_x) {
+                                                        return _error.apply(this, arguments);
+                                                    }
 
-                                                        error.toString = function () {
-                                                            return _error.toString();
-                                                        };
+                                                    error.toString = function () {
+                                                        return _error.toString();
+                                                    };
 
                                                         return error;
                                                     })(function (response) {console.log(response);

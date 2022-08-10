@@ -13,10 +13,10 @@ class CreateBlockReasonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('block_reasons', function (Blueprint $table) {
+        Schema::create("block_reasons", function (Blueprint $table) {
             $table->id();
-            $table->string('reason');
-            $table->tinyInteger('reason_enum')->nullable();
+            $table->string("reason");
+            $table->tinyInteger("reason_enum")->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateBlockReasonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('block_reasons');
+        Schema::dropIfExists("block_reasons");
     }
 }

@@ -13,11 +13,12 @@ class NonTrackableOrder implements TicketScore
     {
         $ticketDate = Carbon::make($ticket->created_at)->startOfDay();
 
-        if (!Tracking::where('sale_id', $ticket->sale->id)->count()) {
-            return (new TrackingCodeNotInformed)->calculateScore($ticket);
+        if (!Tracking::where("sale_id", $ticket->sale->id)->count()) {
+            return (new TrackingCodeNotInformed())->calculateScore($ticket);
         } else {
-            $trackings = Tracking::where('sale_id', $ticket->sale->id)
-                ->orderBy('trackings.created_at', 'DESC')->get();
+            $trackings = Tracking::where("sale_id", $ticket->sale->id)
+                ->orderBy("trackings.created_at", "DESC")
+                ->get();
 
             $score = 0;
             foreach ($trackings as $tracking) {
@@ -33,7 +34,7 @@ class NonTrackableOrder implements TicketScore
     {
         if ($ellapsedTime <= 5) {
             return 10;
-        } else if ($ellapsedTime <= 10) {
+        } elseif ($ellapsedTime <= 10) {
             return 5;
         }
         return 0;

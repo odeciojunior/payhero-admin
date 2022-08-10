@@ -18,7 +18,7 @@ class TrackingsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class TrackingsServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('trackings.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'trackings'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("trackings.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "trackings");
     }
 
     /**
@@ -53,17 +54,26 @@ class TrackingsServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/trackings');
+        $viewPath = resource_path("views/modules/trackings");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/trackings';
-        }, \Config::get('view.paths')), [$sourcePath]), 'trackings');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/trackings";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "trackings"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class TrackingsServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/trackings');
+        $langPath = resource_path("lang/modules/trackings");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'tracking');
+            $this->loadTranslationsFrom($langPath, "tracking");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'trackings');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "trackings");
         }
     }
 
@@ -89,8 +99,8 @@ class TrackingsServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

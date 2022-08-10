@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\SalesBlackListAntifraud\\Providers\\SalesBlackListAntifraudServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

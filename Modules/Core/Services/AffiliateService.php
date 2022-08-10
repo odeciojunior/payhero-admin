@@ -27,36 +27,36 @@ class AffiliateService
     {
         try {
             $affiliateLinkModel = new AffiliateLink();
-            $planModel          = new Plan();
-            $planService        = new PlanService();
-            $plans              = $planModel->where('project_id', $projectId)->get();
-            $projectModel       = new Project();
-            $project            = $projectModel->find($projectId);
-            $projectHash        = Hashids::connection('affiliate')->encode($projectId);
-            $affiliateHash      = Hashids::connection('affiliate')->encode($affiliateId);
+            $planModel = new Plan();
+            $planService = new PlanService();
+            $plans = $planModel->where("project_id", $projectId)->get();
+            $projectModel = new Project();
+            $project = $projectModel->find($projectId);
+            $projectHash = Hashids::connection("affiliate")->encode($projectId);
+            $affiliateHash = Hashids::connection("affiliate")->encode($affiliateId);
 
             foreach ($plans as $plan) {
                 $affiliateLinkModel->create([
-                    'affiliate_id'  => $affiliateId,
-                    'plan_id'       => $plan->id,
-                    'parameter'     => $affiliateHash . Hashids::connection('affiliate')->encode($plan->id),
-                    'clicks_amount' => 0,
-                    'link'          => $planService->getCheckoutLink($plan),
+                    "affiliate_id" => $affiliateId,
+                    "plan_id" => $plan->id,
+                    "parameter" => $affiliateHash . Hashids::connection("affiliate")->encode($plan->id),
+                    "clicks_amount" => 0,
+                    "link" => $planService->getCheckoutLink($plan),
                 ]);
             }
 
             //criar affiliate link sem plano
             $affiliateLinkModel->create([
-                'affiliate_id'  => $affiliateId,
-                'plan_id'       => null,
-                'parameter'     => $affiliateHash . $projectHash,
-                'clicks_amount' => 0,
-                'link'          =>  count($project->domains) > 0 ? 'https://' . $project->domains->first()->name . '/' : '',
+                "affiliate_id" => $affiliateId,
+                "plan_id" => null,
+                "parameter" => $affiliateHash . $projectHash,
+                "clicks_amount" => 0,
+                "link" => count($project->domains) > 0 ? "https://" . $project->domains->first()->name . "/" : "",
             ]);
 
             return true;
         } catch (Exception $e) {
-            Log::warning('Erro ao criar link de afiliado (AffiliateService - createAffiliateLinks)');
+            Log::warning("Erro ao criar link de afiliado (AffiliateService - createAffiliateLinks)");
             report($e);
 
             return false;

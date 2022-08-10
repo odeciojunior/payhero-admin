@@ -14,8 +14,8 @@ class AddTicketBlockReason extends Migration
     public function up()
     {
         \Modules\Core\Entities\BlockReason::firstOrCreate([
-            'reason' => 'Chamado aberto',
-            'reason_enum' => 8
+            "reason" => "Chamado aberto",
+            "reason_enum" => 8,
         ]);
     }
 

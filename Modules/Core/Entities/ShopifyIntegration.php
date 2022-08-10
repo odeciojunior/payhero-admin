@@ -55,21 +55,21 @@ class ShopifyIntegration extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'project_id',
-        'token',
-        'shared_secret',
-        'url_store',
-        'theme_type',
-        'theme_name',
-        'theme_file',
-        'theme_html',
-        'layout_theme_html',
-        'status',
-        'skip_to_cart',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "user_id",
+        "project_id",
+        "token",
+        "shared_secret",
+        "url_store",
+        "theme_type",
+        "theme_name",
+        "theme_file",
+        "theme_html",
+        "layout_theme_html",
+        "status",
+        "skip_to_cart",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -97,14 +97,14 @@ class ShopifyIntegration extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
-                $activity->description = 'Integração com shopify foi deleteda.';
+            case "deleted":
+                $activity->description = "Integração com shopify foi deleteda.";
                 break;
-            case 'updated':
-                $activity->description = 'Integração com shopify foi atualizado.';
+            case "updated":
+                $activity->description = "Integração com shopify foi atualizado.";
                 break;
-            case 'created':
-                $activity->description = 'Integração com shopify foi criado.';
+            case "created":
+                $activity->description = "Integração com shopify foi criado.";
                 break;
             default:
                 $activity->description = $eventName;

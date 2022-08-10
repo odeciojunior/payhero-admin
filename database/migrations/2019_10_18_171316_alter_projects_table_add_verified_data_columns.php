@@ -12,9 +12,15 @@ class AlterProjectsTableAddVerifiedDataColumns extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->boolean("support_phone_verified")->after("support_phone")->default(false);
-            $table->boolean("contact_verified")->after("contact")->default(false);
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->boolean("support_phone_verified")
+                ->after("support_phone")
+                ->default(false);
+            $table
+                ->boolean("contact_verified")
+                ->after("contact")
+                ->default(false);
         });
     }
 
@@ -24,7 +30,7 @@ class AlterProjectsTableAddVerifiedDataColumns extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
+        Schema::table("projects", function (Blueprint $table) {
             $table->dropColumn(["support_phone_verified", "contact_verified"]);
         });
     }

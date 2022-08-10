@@ -35,15 +35,22 @@ class SendEmailListener implements ShouldQueue
      */
     public function handle(SendEmailEvent $event)
     {
-        $data      = $event->request;
-        $emailReturn = $this->emailService->sendEmail('help@' . $data['domainName'], $data['projectName'], $data['clientEmail'], $data['clientName'], $data['templateId'], $data['bodyEmail']);
+        $data = $event->request;
+        $emailReturn = $this->emailService->sendEmail(
+            "help@" . $data["domainName"],
+            $data["projectName"],
+            $data["clientEmail"],
+            $data["clientName"],
+            $data["templateId"],
+            $data["bodyEmail"]
+        );
         if ($emailReturn) {
-            Checkout::where('id', $data['checkout_id'])->increment('email_sent_amount');
+            Checkout::where("id", $data["checkout_id"])->increment("email_sent_amount");
         }
     }
 
     public function tags()
     {
-        return ['listener:' . static::class, 'SendEmailListener'];
+        return ["listener:" . static::class, "SendEmailListener"];
     }
 }

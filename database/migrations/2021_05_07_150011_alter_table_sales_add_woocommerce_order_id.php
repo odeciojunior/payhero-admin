@@ -14,8 +14,11 @@ class AlterTableSalesAddWoocommerceOrderId extends Migration
     public function up()
     {
         //
-        Schema::table('sales', function (Blueprint $table) {
-            $table->string('woocommerce_order')->nullable()->after('shopify_order');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->string("woocommerce_order")
+                ->nullable()
+                ->after("shopify_order");
         });
     }
 

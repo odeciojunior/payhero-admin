@@ -12,20 +12,29 @@ class CreateApiTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_tokens', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('user_id')->unsigned()->index();
-            $table->string('token_id', 100)->nullable()->index();
-            $table->text('access_token')->nullable();
-            $table->text('scopes')->nullable();
-            $table->tinyInteger('integration_type_enum')->nullable();
-            $table->string('description')->nullable();
+        Schema::create("api_tokens", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table
+                ->integer("user_id")
+                ->unsigned()
+                ->index();
+            $table
+                ->string("token_id", 100)
+                ->nullable()
+                ->index();
+            $table->text("access_token")->nullable();
+            $table->text("scopes")->nullable();
+            $table->tinyInteger("integration_type_enum")->nullable();
+            $table->string("description")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('api_tokens', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("api_tokens", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -35,6 +44,6 @@ class CreateApiTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('api_tokens');
+        Schema::dropIfExists("api_tokens");
     }
 }

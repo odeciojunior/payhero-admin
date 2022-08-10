@@ -22,32 +22,36 @@ class ApiTokenPresenter extends Presenter
      */
     public $enum = [
         "integration_type_enum" => [
-            1 => 'admin',        //'Admin',
-            2 => 'personal',     //'Acesso Pessoal',
-            3 => 'external',     //'Integração Externa (Profitfy)',
-            4 => 'checkout_api', //'Checkout API',
+            1 => "admin", //'Admin',
+            2 => "personal", //'Acesso Pessoal',
+            3 => "external", //'Integração Externa (Profitfy)',
+            4 => "checkout_api", //'Checkout API',
         ],
     ];
     /**
      * @var array
      */
     private $integrationTypeEnumScope = [
-        1 => [    //'admin',
-                  ApiToken::TOKEN_SCOPE_ADMIN,
+        1 => [
+            //'admin',
+            ApiToken::TOKEN_SCOPE_ADMIN,
         ],
-        2 => [    //'personal',
-                  ApiToken::TOKEN_SCOPE_USER,
-                  ApiToken::TOKEN_SCOPE_SALE,
-                  ApiToken::TOKEN_SCOPE_PRODUCT,
-                  ApiToken::TOKEN_SCOPE_CLIENT,
+        2 => [
+            //'personal',
+            ApiToken::TOKEN_SCOPE_USER,
+            ApiToken::TOKEN_SCOPE_SALE,
+            ApiToken::TOKEN_SCOPE_PRODUCT,
+            ApiToken::TOKEN_SCOPE_CLIENT,
         ],
-        3 => [  //'Integração Externa (Profitfy)',
-                ApiToken::TOKEN_SCOPE_SALE,
-                ApiToken::TOKEN_SCOPE_PRODUCT,
+        3 => [
+            //'Integração Externa (Profitfy)',
+            ApiToken::TOKEN_SCOPE_SALE,
+            ApiToken::TOKEN_SCOPE_PRODUCT,
         ],
-        4 => [  //Checkout API
-                ApiToken::TOKEN_SCOPE_SALE
-        ]
+        4 => [
+            //Checkout API
+            ApiToken::TOKEN_SCOPE_SALE,
+        ],
     ];
 
     /**
@@ -56,12 +60,12 @@ class ApiTokenPresenter extends Presenter
      */
     public function getIntegrationType($scope = null)
     {
-        $enum = $scope ?? $this->entity->integration_type_enum ?? null;
+        $enum = $scope ?? ($this->entity->integration_type_enum ?? null);
         if (empty($enum)) {
-            return '';
+            return "";
         }
 
-        return $this->getEnumGeneric('integration_type_enum', $enum);
+        return $this->getEnumGeneric("integration_type_enum", $enum);
     }
 
     /**
@@ -87,21 +91,21 @@ class ApiTokenPresenter extends Presenter
     {
         $token = $this->entity->getValidToken();
         if (empty($token)) {
-            return 'inactive';
+            return "inactive";
         }
         /** @var bool $revoked */
         $revoked = $token->revoked ?? false;
         if ($revoked) {
-            return 'inactive';
+            return "inactive";
         }
         /** @var Carbon $now */
         $now = now();
         /** @var Carbon $expiresAt */
         $expiresAt = $token->expires_at ?? $now;
         if ($now->isAfter($expiresAt)) {
-            return 'inactive';
+            return "inactive";
         }
 
-        return 'active';
+        return "active";
     }
 }

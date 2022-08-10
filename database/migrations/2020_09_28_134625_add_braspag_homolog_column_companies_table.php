@@ -13,12 +13,9 @@ class AddBraspagHomologColumnCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->string('braspag_merchant_homolog_id')->nullable();
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table->string("braspag_merchant_homolog_id")->nullable();
+        });
     }
 
     /**
@@ -28,15 +25,8 @@ class AddBraspagHomologColumnCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->dropColumn(
-                    [
-                        'braspag_merchant_homolog_id',
-                    ]
-                );
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn(["braspag_merchant_homolog_id"]);
+        });
     }
 }
