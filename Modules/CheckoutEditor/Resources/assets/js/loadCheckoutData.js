@@ -250,6 +250,8 @@ $(() => {
                     error: {
                         fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
                         fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                        minWidth: "Largura mínima: 64px.",
+                        minHeight: "Altura mínima: 64px.",
                     },
                     tpl: {
                         message:
@@ -356,6 +358,8 @@ $(() => {
                 error: {
                     fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
                     fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                    minWidth: "Largura mínima: 64px.",
+                    minHeight: "Altura mínima: 64px.",
                 },
                 tpl: {
                     message:
