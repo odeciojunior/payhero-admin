@@ -37,7 +37,7 @@ class UserDocumentBureauValidationListener implements ShouldQueue
             $user->bureau_result = json_encode($bureauUserData->getRawData());
             $user->name = $bureauUserData->getName() ?: $user->name;
             if (!$bureauUserData->isAbleToCreateAccount()) {
-                $user->status = User::STATUS_ACCOUNT_BLOCKED;
+//                $user->status = User::STATUS_ACCOUNT_BLOCKED;
                 $user->observation = $bureauUserData->getIssues();
             }
             $user->save();

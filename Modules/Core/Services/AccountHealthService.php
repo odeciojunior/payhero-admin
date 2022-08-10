@@ -29,7 +29,7 @@ class AccountHealthService
 
     public function userHasMinimumSalesAmount(User $user): bool
     {
-        $approvedSales = Sale::whereIn("status", [
+        $approvedSalesAmount = Sale::whereIn("status", [
             Sale::STATUS_APPROVED,
             Sale::STATUS_CHARGEBACK,
             Sale::STATUS_REFUNDED,
@@ -38,11 +38,9 @@ class AccountHealthService
             Sale::STATUS_IN_REVIEW,
         ])->where(function ($query) use ($user) {
             $query->where("owner_id", $user->id)->orWhere("affiliate_id", $user->id);
-        });
+        })->count();
 
-        $approvedSalesAmount = $approvedSales->count();
-        $minimumSalesToEvaluate = 100;
-        return $approvedSalesAmount >= $minimumSalesToEvaluate;
+        return $approvedSalesAmount >= 100;
     }
 
     public function getAttendanceScore(User $user): float
@@ -128,15 +126,8 @@ class AccountHealthService
         return isset($scores[$ticket->subject_enum]) ? $scores[$ticket->subject_enum] : 0;
     }
 
-    public function getChargebackScore(User $user): float
+    public function getChargebackScore($chargebackRate, $contestationRate): float
     {
-        $startDate = now()
-            ->startOfDay()
-            ->subDays(150);
-        $endDate = now()
-            ->endOfDay()
-            ->subDays(20);
-        $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
         $maxChargebackScore = 10;
         //each 0.3% of chargebacks rate means -1 point of score
         $chargebackScoreReference = 0.3;
@@ -146,7 +137,6 @@ class AccountHealthService
             $chargebackScore = round($maxChargebackScore - $chargebackRate / $chargebackScoreReference, 2);
         }
 
-        $contestationRate = $this->chargebackService->getContestationRateInPeriod($user, $startDate, now()->endOfDay());
         $maxContestationScore = 10;
         //each 0.5% of contestation rate means -1 point of score
         $contestationScoreReference = 0.5;
@@ -242,9 +232,9 @@ class AccountHealthService
                 ->subDays(20);
 
             $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
-            $contastationRate = $this->chargebackService->getContestationRateInPeriod($user, $startDate, $endDate);
+            $contestationRate = $this->chargebackService->getContestationRateInPeriod($user, $startDate, now());
             $attendanceScore = $this->getAttendanceScore($user);
-            $chargebackScore = $this->getChargebackScore($user);
+            $chargebackScore = $this->getChargebackScore($chargebackRate, $contestationRate);
             $trackingScore = $this->getTrackingScore($user);
             $accountScore = round(($chargebackScore + $attendanceScore + $trackingScore) / 3, 2);
 
@@ -253,7 +243,7 @@ class AccountHealthService
                 "attendance_score" => $attendanceScore,
                 "chargeback_score" => $chargebackScore,
                 "chargeback_rate" => $chargebackRate,
-                "contestation_rate" => $contastationRate,
+                "contestation_rate" => $contestationRate,
                 "tracking_score" => $trackingScore,
             ]);
         } catch (\Exception $e) {

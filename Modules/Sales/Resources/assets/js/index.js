@@ -2,6 +2,29 @@ var currentPage = null;
 //var atualizar = null;
 var exportFormat = null;
 
+function searchIsLocked(elementButton) {
+    return elementButton.attr('block_search');
+}
+
+function lockSearch(elementButton) {
+    elementButton.attr('block_search', 'true');
+    //set layout do button block
+}
+
+function unlockSearch(elementButton) {
+    elementButton.attr('block_search', 'false');
+    //layout do button block
+}
+
+function loadData() {
+    elementButton = $('#bt_filtro');
+    if (searchIsLocked(elementButton) != 'true') {
+        lockSearch(elementButton);
+        console.log(elementButton.attr('block_search'));
+        atualizar();
+    }
+}
+
 // Obtem lista de vendas
 //atualizar = function (link = null) {
 function atualizar(link = null) {
@@ -215,6 +238,9 @@ function atualizar(link = null) {
             }
             pagination(response, "sales", atualizar);
         },
+        complete: response => {
+            unlockSearch($('#bt_filtro'));
+        }
     });
 
     if (updateResume) {
@@ -440,7 +466,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
+        loadData();
     });
 
     let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
