@@ -25,7 +25,7 @@ class PixelsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -46,12 +46,13 @@ class PixelsServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('pixels.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'pixels'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("pixels.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "pixels");
     }
 
     /**
@@ -61,17 +62,26 @@ class PixelsServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/pixels');
+        $viewPath = resource_path("views/modules/pixels");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/pixels';
-        }, \Config::get('view.paths')), [$sourcePath]), 'pixels');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/pixels";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "pixels"
+        );
     }
 
     /**
@@ -81,12 +91,12 @@ class PixelsServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/pixels');
+        $langPath = resource_path("lang/modules/pixels");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'pixels');
+            $this->loadTranslationsFrom($langPath, "pixels");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'pixels');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "pixels");
         }
     }
 
@@ -96,8 +106,8 @@ class PixelsServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

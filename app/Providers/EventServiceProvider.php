@@ -111,10 +111,7 @@ class EventServiceProvider extends ServiceProvider
             SaleRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
         ],
-        ManualRefundEvent::class => [
-            ManualRefundedSendEmailListener::class,
-            IntegrationOrderCancelListener::class,
-        ],
+        ManualRefundEvent::class => [ManualRefundedSendEmailListener::class, IntegrationOrderCancelListener::class],
 
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
@@ -125,91 +122,42 @@ class EventServiceProvider extends ServiceProvider
             DomainApprovedNotifyUserListener::class,
             DomainApprovedEmailNotifyUserListener::class,
         ],
-        TrackingsImportedEvent::class => [
-            NotifyTrackingsImportedListener::class,
+        BoletoPaidEvent::class => [
+            BoletoPaidPusherNotifyUser::class,
+            BoletoPaidNotifyUser::class,
+            BoletoPaidEmailNotifyUser::class,
         ],
-        SalesExportedEvent::class => [
-            NotifySalesExportedListener::class,
-        ],
-        ExtractExportedEvent::class => [
-            NotifyExtractExportedListener::class,
-        ],
-        TrackingsExportedEvent::class => [
-            NotifyTrackingsExportedListener::class,
-        ],
+        TrackingsImportedEvent::class => [NotifyTrackingsImportedListener::class],
+        SalesExportedEvent::class => [NotifySalesExportedListener::class],
+        ExtractExportedEvent::class => [NotifyExtractExportedListener::class],
+        TrackingsExportedEvent::class => [NotifyTrackingsExportedListener::class],
         TrackingCodeUpdatedEvent::class => [
             TrackingCodeUpdatedSendEmailClientListener::class,
             TrackingCodeUpdatedActiveCampaignListener::class,
         ],
-        CheckSaleHasValidTrackingEvent::class => [
-            CheckSaleHasValidTrackingListener::class
-        ],
-        ResetPasswordEvent::class => [
-            ResetPasswordSendEmailListener::class,
-        ],
-        ReleasedBalanceEvent::class => [
-            ReleasedBalanceNotifyUserListener::class,
-        ],
-        SaleApprovedEvent::class => [
-            SetApprovedShopifyOrderListener::class,
-        ],
-        SocialiteWasCalled::class => [
-            'SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle',
-        ],
-        WithdrawalRequestEvent::class => [
-            WithdrawalRequestSendEmailListener::class,
-        ],
-        SendEmailEvent::class => [
-            SendEmailListener::class,
-        ],
-        SendEmailPendingDocumentEvent::class => [
-            SendEmailPedingDocumentoListener::class
-        ],
-        SendSmsEvent::class => [
-            SendSmsListener::class,
-        ],
-        TicketMessageEvent::class => [
-            TicketMessageSendEmailListener::class,
-        ],
-        NotifyTicketMediationEvent::class => [
-            NotifyTicketMediationListener::class,
-        ],
-        NotifyTicketOpenEvent::class => [
-            NotifyTicketOpenListener::class,
-        ],
-        NotifyTicketClosedEvent::class => [
-            NotifyTicketClosedListener::class,
-        ],
-        AffiliateRequestEvent::class => [
-            AffiliateRequestSendEmailListener::class,
-        ],
-        AffiliateEvent::class => [
-            AffiliateSendEmailListener::class,
-        ],
-        EvaluateAffiliateRequestEvent::class => [
-            EvaluateAffiliateRequestSendEmailListener::class,
-        ],
-        UserRegisteredEvent::class => [
-            SendEmailRegisteredListener::class,
-        ],
-        UserRegistrationFinishedEvent::class => [
-            UserDocumentBureauValidationListener::class,
-        ],
-        UpdateCompanyGetnetEvent::class => [
-            UpdateCompanyGetnetSendEmailListener::class,
-        ],
-        FinancesExportedEvent::class => [
-            NotifyFinancesExportedListener::class,
-        ],
-        WithdrawalsExportedEvent::class => [
-            NotifyWithdrawalsExportedListener::class,
-        ],
-        NotifyUserLevelEvent::class => [
-            NotifyUserLevelSendEmailListener::class
-        ],
-        NotifyUserAchievementEvent::class => [
-            NotifyUserAchievementSendEmailListener::class
-        ],
+        CheckSaleHasValidTrackingEvent::class => [CheckSaleHasValidTrackingListener::class],
+        ResetPasswordEvent::class => [ResetPasswordSendEmailListener::class],
+        ReleasedBalanceEvent::class => [ReleasedBalanceNotifyUserListener::class],
+        SaleApprovedEvent::class => [SetApprovedShopifyOrderListener::class],
+        SocialiteWasCalled::class => ["SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle"],
+        WithdrawalRequestEvent::class => [WithdrawalRequestSendEmailListener::class],
+        SendEmailEvent::class => [SendEmailListener::class],
+        SendEmailPendingDocumentEvent::class => [SendEmailPedingDocumentoListener::class],
+        SendSmsEvent::class => [SendSmsListener::class],
+        TicketMessageEvent::class => [TicketMessageSendEmailListener::class],
+        NotifyTicketMediationEvent::class => [NotifyTicketMediationListener::class],
+        NotifyTicketOpenEvent::class => [NotifyTicketOpenListener::class],
+        NotifyTicketClosedEvent::class => [NotifyTicketClosedListener::class],
+        AffiliateRequestEvent::class => [AffiliateRequestSendEmailListener::class],
+        AffiliateEvent::class => [AffiliateSendEmailListener::class],
+        EvaluateAffiliateRequestEvent::class => [EvaluateAffiliateRequestSendEmailListener::class],
+        UserRegisteredEvent::class => [SendEmailRegisteredListener::class],
+        UserRegistrationFinishedEvent::class => [UserDocumentBureauValidationListener::class],
+        UpdateCompanyGetnetEvent::class => [UpdateCompanyGetnetSendEmailListener::class],
+        FinancesExportedEvent::class => [NotifyFinancesExportedListener::class],
+        WithdrawalsExportedEvent::class => [NotifyWithdrawalsExportedListener::class],
+        NotifyUserLevelEvent::class => [NotifyUserLevelSendEmailListener::class],
+        NotifyUserAchievementEvent::class => [NotifyUserAchievementSendEmailListener::class],
         PixExpiredEvent::class => [
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
@@ -219,18 +167,14 @@ class EventServiceProvider extends ServiceProvider
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
         ],
-        CheckTransactionReleasedEvent::class => [
-            CheckTransactionReleasedListener::class,
-        ],
+        CheckTransactionReleasedEvent::class => [CheckTransactionReleasedListener::class],
         NewChargebackEvent::class => [
             UpdateSaleChargebackListener::class,
             CreateChargebackDebitListener::class,
             SendChargebackNotificationsListener::class,
             NotifyAntifraudChargebackListener::class,
         ],
-        ReportanaTrackingEvent::class => [
-            ReportanaSaleListener::class,
-        ]
+        ReportanaTrackingEvent::class => [ReportanaSaleListener::class],
     ];
 
     /**

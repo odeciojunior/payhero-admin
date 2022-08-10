@@ -13,10 +13,11 @@ class AddMediationNotifiedToTickets extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->boolean('mediation_notified')
+        Schema::table("tickets", function (Blueprint $table) {
+            $table
+                ->boolean("mediation_notified")
                 ->default(0)
-                ->after('ticket_status_enum');
+                ->after("ticket_status_enum");
         });
     }
 
@@ -27,8 +28,8 @@ class AddMediationNotifiedToTickets extends Migration
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('mediation_notified');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table->dropColumn("mediation_notified");
         });
     }
 }

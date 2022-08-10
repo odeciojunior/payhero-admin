@@ -13,10 +13,11 @@ class AddRequestToSaleInformations extends Migration
      */
     public function up()
     {
-        Schema::table('sale_informations', function (Blueprint $table) {
-            $table->json('request')
+        Schema::table("sale_informations", function (Blueprint $table) {
+            $table
+                ->json("request")
                 ->nullable()
-                ->after('sale_id');
+                ->after("sale_id");
         });
     }
 
@@ -27,8 +28,8 @@ class AddRequestToSaleInformations extends Migration
      */
     public function down()
     {
-        Schema::table('sale_informations', function (Blueprint $table) {
-            $table->dropColumn('request');
+        Schema::table("sale_informations", function (Blueprint $table) {
+            $table->dropColumn("request");
         });
     }
 }

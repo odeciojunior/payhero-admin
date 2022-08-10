@@ -31,23 +31,21 @@ class NotifyUserAchievementSendEmailListener
      */
     public function handle(NotifyUserAchievementEvent $event)
     {
-        DashboardNotification::firstOrCreate(
-            [
-                'user_id' => $event->user->id,
-                'subject_id' => $event->achievement->id,
-                'subject_type' => UpdateUserAchievements::class,
-            ]
-        );
+        DashboardNotification::firstOrCreate([
+            "user_id" => $event->user->id,
+            "subject_id" => $event->achievement->id,
+            "subject_type" => UpdateUserAchievements::class,
+        ]);
 
         $sendgrindService = new SendgridService();
         $data = $event->achievement->toArray();
 
         $sendgrindService->sendEmail(
-            'help@cloudfox.net',
-            'cloudfox',
+            "help@cloudfox.net",
+            "cloudfox",
             $event->user->email,
             $event->user->name,
-            'd-31354085bb7e441597f76fdb6e94d182',
+            "d-31354085bb7e441597f76fdb6e94d182",
             $data
         );
     }

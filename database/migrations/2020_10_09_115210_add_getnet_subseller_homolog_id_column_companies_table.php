@@ -13,8 +13,8 @@ class AddGetnetSubsellerHomologIdColumnCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('subseller_getnet_homolog_id')->nullable();
+        Schema::table("companies", function (Blueprint $table) {
+            $table->string("subseller_getnet_homolog_id")->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddGetnetSubsellerHomologIdColumnCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn(['braspag_merchant_homolog_id']);
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn(["braspag_merchant_homolog_id"]);
         });
     }
 }

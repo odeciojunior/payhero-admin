@@ -36,10 +36,7 @@ class AsaasService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [
-            Gateway::ASAAS_PRODUCTION_ID,
-            Gateway::ASAAS_SANDBOX_ID
-        ];
+        $this->gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID];
     }
 
     public function setCompany(Company $company)
@@ -60,60 +57,60 @@ class AsaasService implements Statement
 
     public function getPendingBalance(): int
     {
-        return Transaction::where('transactions.company_id', $this->company->id)
-            ->where('transactions.status_enum', Transaction::STATUS_PAID)
-            ->whereIn('transactions.gateway_id', $this->gatewayIds)
-            ->where('transactions.created_at', '>', '2021-09-20')
-            ->sum('transactions.value');
+        return Transaction::where("transactions.company_id", $this->company->id)
+            ->where("transactions.status_enum", Transaction::STATUS_PAID)
+            ->whereIn("transactions.gateway_id", $this->gatewayIds)
+            ->where("transactions.created_at", ">", "2021-09-20")
+            ->sum("transactions.value");
     }
 
     public function getPendingBalanceCount(): int
     {
-        return Transaction::where('transactions.company_id', $this->company->id)
-            ->where('transactions.status_enum', Transaction::STATUS_PAID)
-            ->whereIn('transactions.gateway_id', $this->gatewayIds)
-            ->where('transactions.created_at', '>', '2021-09-20')
+        return Transaction::where("transactions.company_id", $this->company->id)
+            ->where("transactions.status_enum", Transaction::STATUS_PAID)
+            ->whereIn("transactions.gateway_id", $this->gatewayIds)
+            ->where("transactions.created_at", ">", "2021-09-20")
             ->count();
     }
 
     public function getBlockedBalance(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
-            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-            ->sum('value');
+        return Transaction::where("company_id", $this->company->id)
+            ->whereIn("gateway_id", $this->gatewayIds)
+            ->whereIn("status_enum", [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
+            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+            ->sum("value");
     }
 
     public function getBlockedBalanceCount(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-        ->whereIn('gateway_id', $this->gatewayIds)
-        ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-        ->count();
+        return Transaction::where("company_id", $this->company->id)
+            ->whereIn("gateway_id", $this->gatewayIds)
+            ->where("status_enum", Transaction::STATUS_TRANSFERRED)
+            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+            ->count();
     }
 
     public function getBlockedBalancePending(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-        ->whereIn('gateway_id', $this->gatewayIds)
-        ->where('status_enum', Transaction::STATUS_PAID)
-        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-        ->sum('value');
+        return Transaction::where("company_id", $this->company->id)
+            ->whereIn("gateway_id", $this->gatewayIds)
+            ->where("status_enum", Transaction::STATUS_PAID)
+            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+            ->sum("value");
     }
 
     public function getBlockedBalancePendingCount(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-        ->whereIn('gateway_id', $this->gatewayIds)
-        ->where('status_enum', Transaction::STATUS_PAID)
-        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-        ->count();
+        return Transaction::where("company_id", $this->company->id)
+            ->whereIn("gateway_id", $this->gatewayIds)
+            ->where("status_enum", Transaction::STATUS_PAID)
+            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+            ->count();
     }
 
     public function getPendingDebtBalance(): int
@@ -127,17 +124,19 @@ class AsaasService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        $accountOwnerId = auth()->user()->account_owner_id??$sale->owner_id;
-        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', $accountOwnerId)->first();
+        $accountOwnerId = auth()->user()->account_owner_id ?? $sale->owner_id;
+        $transaction = Transaction::where("sale_id", $sale->id)
+            ->where("user_id", $accountOwnerId)
+            ->first();
 
         return $availableBalance >= $transaction->value;
     }
 
     public function getWithdrawals(): JsonResource
     {
-        $withdrawals = Withdrawal::where('company_id', $this->company->id)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->orderBy('id', 'DESC');
+        $withdrawals = Withdrawal::where("company_id", $this->company->id)
+            ->whereIn("gateway_id", $this->gatewayIds)
+            ->orderBy("id", "DESC");
 
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
@@ -150,7 +149,7 @@ class AsaasService implements Statement
 
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
-        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance);
+        (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
 
         if ($value > $availableBalance) {
             return false;
@@ -162,7 +161,7 @@ class AsaasService implements Statement
     public function existsBankAccountApproved()
     {
         //verifica se existe uma chave pix aprovada
-        $this->companyBankAccount =  $this->company->getBankAccountTED();
+        $this->companyBankAccount = $this->company->getBankAccountTED();
         return !empty($this->companyBankAccount);
     }
 
@@ -172,48 +171,44 @@ class AsaasService implements Statement
             DB::beginTransaction();
 
             $this->company->update([
-                'asaas_balance' => $this->company->asaas_balance -= $value
+                "asaas_balance" => ($this->company->asaas_balance -= $value),
             ]);
 
             $withdrawal = Withdrawal::where([
-                ['company_id', $this->company->id],
-                ['status', Withdrawal::STATUS_PENDING],
+                ["company_id", $this->company->id],
+                ["status", Withdrawal::STATUS_PENDING],
             ])
-                ->whereIn('gateway_id', $this->gatewayIds)
+                ->whereIn("gateway_id", $this->gatewayIds)
                 ->first();
 
             if (empty($withdrawal)) {
-
-                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
+                $isFirstUserWithdrawal = (new WithdrawalService())->isFirstUserWithdrawal($this->company->user_id);
 
                 if ($isFirstUserWithdrawal) {
-                    TaskService::setCompletedTask(
-                        $this->company->user,
-                        Task::find(Task::TASK_FIRST_WITHDRAWAL)
-                    );
+                    TaskService::setCompletedTask($this->company->user, Task::find(Task::TASK_FIRST_WITHDRAWAL));
                 }
 
-                $withdrawal = Withdrawal::create(
-                    [
-                        'value' => $value,
-                        'company_id' => $this->company->id,
-                        'transfer_type'=>'TED',
-                        'bank' => $this->companyBankAccount->bank,
-                        'agency' => $this->companyBankAccount->agency,
-                        'agency_digit' => $this->companyBankAccount->agency_digit,
-                        'account' => $this->companyBankAccount->account,
-                        'account_digit' => $this->companyBankAccount->account_digit,
-                        'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
-                        'tax' => 0,
-                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                        'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
-                    ]
-                );
+                $withdrawal = Withdrawal::create([
+                    "value" => $value,
+                    "company_id" => $this->company->id,
+                    "transfer_type" => "TED",
+                    "bank" => $this->companyBankAccount->bank,
+                    "agency" => $this->companyBankAccount->agency,
+                    "agency_digit" => $this->companyBankAccount->agency_digit,
+                    "account" => $this->companyBankAccount->account,
+                    "account_digit" => $this->companyBankAccount->account_digit,
+                    "status" => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
+                    "tax" => 0,
+                    "observation" => $isFirstUserWithdrawal ? "Primeiro saque" : null,
+                    "gateway_id" => foxutils()->isProduction()
+                        ? Gateway::ASAAS_PRODUCTION_ID
+                        : Gateway::ASAAS_SANDBOX_ID,
+                ]);
             } else {
                 $withdrawalValueSum = $withdrawal->value + $value;
 
                 $withdrawal->update([
-                    'value' => $withdrawalValueSum
+                    "value" => $withdrawalValueSum,
                 ]);
             }
             DB::commit();
@@ -231,48 +226,46 @@ class AsaasService implements Statement
         try {
             DB::beginTransaction();
 
-            $transactions = Transaction::with('company')
-                ->where('created_at', '>', '2021-09-15')
-                ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-                ->where('status_enum', Transaction::STATUS_PAID)
-                ->whereIn('gateway_id', $this->gatewayIds)
-                ->whereNotNull('company_id')
+            $transactions = Transaction::with("company")
+                ->where("created_at", ">", "2021-09-15")
+                ->where("release_date", "<=", Carbon::now()->format("Y-m-d"))
+                ->where("status_enum", Transaction::STATUS_PAID)
+                ->whereIn("gateway_id", $this->gatewayIds)
+                ->whereNotNull("company_id")
                 ->where(function ($where) {
-                    $where->where('tracking_required', false)
-                        ->orWhereHas('sale', function ($query) {
-                            $query->where(function ($q) {
-                                $q->where('has_valid_tracking', true)
-                                    ->orWhereNull('delivery_id');
-                            });
+                    $where->where("tracking_required", false)->orWhereHas("sale", function ($query) {
+                        $query->where(function ($q) {
+                            $q->where("has_valid_tracking", true)->orWhereNull("delivery_id");
                         });
+                    });
                 });
 
             if (!empty($saleId)) {
-                $transactions->where('sale_id', $saleId);
+                $transactions->where("sale_id", $saleId);
             }
 
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
 
-                Transfer::create(
-                    [
-                        'transaction_id' => $transaction->id,
-                        'user_id' => $company->user_id,
-                        'company_id' => $company->id,
-                        'type_enum' => Transfer::TYPE_IN,
-                        'value' => $transaction->value,
-                        'type' => 'in',
-                        'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
-                    ]
-                );
+                Transfer::create([
+                    "transaction_id" => $transaction->id,
+                    "user_id" => $company->user_id,
+                    "company_id" => $company->id,
+                    "type_enum" => Transfer::TYPE_IN,
+                    "value" => $transaction->value,
+                    "type" => "in",
+                    "gateway_id" => foxutils()->isProduction()
+                        ? Gateway::ASAAS_PRODUCTION_ID
+                        : Gateway::ASAAS_SANDBOX_ID,
+                ]);
 
                 $company->update([
-                    'asaas_balance' => $company->asaas_balance += $transaction->value
+                    "asaas_balance" => ($company->asaas_balance += $transaction->value),
                 ]);
 
                 $transaction->update([
-                    'status' => 'transfered',
-                    'status_enum' => Transaction::STATUS_TRANSFERRED,
+                    "status" => "transfered",
+                    "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
             }
             DB::commit();
@@ -284,52 +277,55 @@ class AsaasService implements Statement
 
     public function getStatement($filters)
     {
-        return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
+        return (new StatementService())->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
     }
 
     public function getPeriodBalance($filters)
     {
-        return (new StatementService)->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
+        return (new StatementService())->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
     }
 
     public function getResume()
     {
-        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
-            ->where('company_id', $this->company->id)
-            ->orderBy('id', 'desc')->first();
+        $lastTransaction = Transaction::whereIn("gateway_id", $this->gatewayIds)
+            ->where("company_id", $this->company->id)
+            ->orderBy("id", "desc")
+            ->first();
 
         if (empty($lastTransaction) && $this->company->asaas_balance == 0) {
             return [];
         }
-        $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
+        $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format("d/m/Y") : "";
 
         $blockedBalance = null;
         $pendingBalance = $this->getPendingBalance();
         $availableBalance = $this->getAvailableBalance();
         $totalBalance = $availableBalance + $pendingBalance;
 
-        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
+        (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
         return [
-            'name' => 'Asaas',
-            'available_balance' => $availableBalance,
-            'pending_balance' => $pendingBalance,
-            'blocked_balance' => $blockedBalance,
-            'total_balance' => $totalBalance,
-            'total_available' => $availableBalance,
-            'pending_debt_balance' => 0,
-            'last_transaction' => $lastTransactionDate,
-            'id' => 'NzJqoR32egVj5D6'
+            "name" => "Asaas",
+            "available_balance" => $availableBalance,
+            "pending_balance" => $pendingBalance,
+            "blocked_balance" => $blockedBalance,
+            "total_balance" => $totalBalance,
+            "total_available" => $availableBalance,
+            "pending_debt_balance" => 0,
+            "last_transaction" => $lastTransactionDate,
+            "id" => "NzJqoR32egVj5D6",
         ];
     }
 
     public function getGatewayAvailable()
     {
-        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
-            ->where('company_id', $this->company->id)
-            ->orderBy('id', 'desc')->first();
+        $lastTransaction = DB::table("transactions")
+            ->whereIn("gateway_id", $this->gatewayIds)
+            ->where("company_id", $this->company->id)
+            ->orderBy("id", "desc")
+            ->first();
 
-        return !empty($lastTransaction) ? ['Asaas'] : [];
+        return !empty($lastTransaction) ? ["Asaas"] : [];
     }
 
     public function makeAnticipation(Sale $sale, $saveRequests = true, $simulate = false)
@@ -347,19 +343,18 @@ class AsaasService implements Statement
             $data["installment"] = $saleInstallmentId;
         }
 
-        $url = 'https://www.asaas.com/api/v3/anticipations';
-        if ($simulate) $url = 'https://www.asaas.com/api/v3/anticipations/simulate';
+        $url = "https://www.asaas.com/api/v3/anticipations";
+        if ($simulate) {
+            $url = "https://www.asaas.com/api/v3/anticipations/simulate";
+        }
 
         $curl = curl_init($url);
 
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_ENCODING, "");
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Content-Type: multipart/form-data',
-            'access_token: ' . $this->apiKey,
-        ]);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: multipart/form-data", "access_token: " . $this->apiKey]);
 
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
 
@@ -368,14 +363,13 @@ class AsaasService implements Statement
         curl_close($curl);
         $response = json_decode($result, true);
 
-        if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response['errors']))) {
+        if (($httpStatus < 200 || $httpStatus > 299) && !isset($response["errors"])) {
             //report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
         }
 
         if ($saveRequests) {
             $this->saveRequests($url, $response, $httpStatus, $data, $sale->id);
         }
-
 
         return $response;
     }
@@ -384,18 +378,15 @@ class AsaasService implements Statement
     {
         $this->getCompanyApiKey($sale);
 
-        $url = 'https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id;
+        $url = "https://www.asaas.com/api/v3/anticipations/" . $sale->anticipation_id;
         $curl = curl_init($url);
 
-        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_ENCODING, "");
         //curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_HEADER, FALSE);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            "Content-Type: application/json",
-            'access_token: ' . $this->apiKey,
-        ]);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: application/json", "access_token: " . $this->apiKey]);
 
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -412,24 +403,33 @@ class AsaasService implements Statement
 
     public function getCompanyApiKey(Sale $sale)
     {
-        $company = $sale->transactions()->where('type', Transaction::TYPE_PRODUCER)->first()->company;
+        $company = $sale
+            ->transactions()
+            ->where("type", Transaction::TYPE_PRODUCER)
+            ->first()->company;
 
         $this->companyId = $company->id;
-        $this->apiKey = $company->getGatewayApiKey(foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID);
-
+        $this->apiKey = $company->getGatewayApiKey(
+            foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
+        );
     }
 
     private function saleInstallmentId(Sale $sale): ?string
     {
-        $gatewayRequest = $sale->saleGatewayRequests()
-            ->where('gateway_result->status', Gateway::PAYMENT_STATUS_CONFIRMED)
+        $gatewayRequest = $sale
+            ->saleGatewayRequests()
+            ->where("gateway_result->status", Gateway::PAYMENT_STATUS_CONFIRMED)
             ->latest()
             ->first();
 
         $result = json_decode($gatewayRequest->gateway_result, true);
 
-        if (isset($result['id']) and $sale->gateway_transaction_id == $result['id'] and !empty($result['installment'])) {
-            return $result['installment'];
+        if (
+            isset($result["id"]) and
+            $sale->gateway_transaction_id == $result["id"] and
+            !empty($result["installment"])
+        ) {
+            return $result["installment"];
         }
 
         if (empty($gatewayRequest)) {
@@ -440,25 +440,18 @@ class AsaasService implements Statement
 
     private function saveRequests($url, $result, $httpStatus, $data, $saleId)
     {
-        AsaasAnticipationRequests::create(
-            [
-                'company_id' => $this->companyId,
-                'sale_id' => $saleId,
-                'sent_data' => json_encode(
-                    [
-                        'url' => $url,
-                        'data' => $data
-                    ]
-                ),
-                'response' => json_encode(
-                    [
-                        'result' => $result,
-                        'status' => $httpStatus
-                    ]
-                )
-            ]
-
-        );
+        AsaasAnticipationRequests::create([
+            "company_id" => $this->companyId,
+            "sale_id" => $saleId,
+            "sent_data" => json_encode([
+                "url" => $url,
+                "data" => $data,
+            ]),
+            "response" => json_encode([
+                "result" => $result,
+                "status" => $httpStatus,
+            ]),
+        ]);
     }
 
     public function getGatewayId(): int
@@ -471,19 +464,17 @@ class AsaasService implements Statement
         try {
             DB::beginTransaction();
             $responseGateway = $response->response ?? [];
-            $statusGateway = $response->status_gateway ?? '';
+            $statusGateway = $response->status_gateway ?? "";
 
-            SaleRefundHistory::create(
-                [
-                    'sale_id' => $sale->id,
-                    'refunded_amount' => foxutils()->onlyNumbers($sale->total_paid_value),
-                    'date_refunded' => Carbon::now(),
-                    'gateway_response' => json_encode($responseGateway),
-                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
-                    'refund_observation' => $refundObservation,
-                    'user_id' => auth()->user()->account_owner_id,
-                ]
-            );
+            SaleRefundHistory::create([
+                "sale_id" => $sale->id,
+                "refunded_amount" => foxutils()->onlyNumbers($sale->total_paid_value),
+                "date_refunded" => Carbon::now(),
+                "gateway_response" => json_encode($responseGateway),
+                "refund_value" => foxutils()->onlyNumbers($sale->total_paid_value),
+                "refund_observation" => $refundObservation,
+                "user_id" => auth()->user()->account_owner_id,
+            ]);
 
             $refundTransactions = $sale->transactions;
 
@@ -496,12 +487,9 @@ class AsaasService implements Statement
             $totalSale = $saleService->getSaleTotalValue($sale);
 
             foreach ($refundTransactions as $refundTransaction) {
-
                 $company = $refundTransaction->company;
                 if (!empty($company)) {
-
                     if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
-
                         $refundValue = $refundTransaction->value;
                         if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
                             $refundValue += $saleTax;
@@ -512,38 +500,39 @@ class AsaasService implements Statement
                         }
 
                         Transfer::create([
-                            'transaction_id' => $refundTransaction->id,
-                            'user_id' => $refundTransaction->user_id,
-                            'company_id' => $refundTransaction->company_id,
-                            'gateway_id' => $sale->gateway_id,
-                            'value' => $refundValue,
-                            'type' => 'out',
-                            'type_enum' => Transfer::TYPE_OUT,
-                            'reason' => 'refunded',
-                            'is_refunded_tax' => 0
+                            "transaction_id" => $refundTransaction->id,
+                            "user_id" => $refundTransaction->user_id,
+                            "company_id" => $refundTransaction->company_id,
+                            "gateway_id" => $sale->gateway_id,
+                            "value" => $refundValue,
+                            "type" => "out",
+                            "type_enum" => Transfer::TYPE_OUT,
+                            "reason" => "refunded",
+                            "is_refunded_tax" => 0,
                         ]);
 
                         $company->update([
-                            'asaas_balance' => $company->asaas_balance -= $refundValue
+                            "asaas_balance" => ($company->asaas_balance -= $refundValue),
                         ]);
-
                     } elseif ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-                        if ($refundTransaction->type <> Transaction::TYPE_PRODUCER) continue;
+                        if ($refundTransaction->type != Transaction::TYPE_PRODUCER) {
+                            continue;
+                        }
 
-                        Transfer::create(
-                            [
-                                'transaction_id' => $refundTransaction->id,
-                                'user_id' => $company->user_id,
-                                'company_id' => $company->id,
-                                'type_enum' => Transfer::TYPE_IN,
-                                'value' => $refundTransaction->value,
-                                'type' => 'in',
-                                'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
-                            ]
-                        );
+                        Transfer::create([
+                            "transaction_id" => $refundTransaction->id,
+                            "user_id" => $company->user_id,
+                            "company_id" => $company->id,
+                            "type_enum" => Transfer::TYPE_IN,
+                            "value" => $refundTransaction->value,
+                            "type" => "in",
+                            "gateway_id" => foxutils()->isProduction()
+                                ? Gateway::ASAAS_PRODUCTION_ID
+                                : Gateway::ASAAS_SANDBOX_ID,
+                        ]);
 
                         $company->update([
-                            'asaas_balance' => $company->asaas_balance += $refundTransaction->value
+                            "asaas_balance" => ($company->asaas_balance += $refundTransaction->value),
                         ]);
 
                         $refundValue = $refundTransaction->value + $saleTax;
@@ -553,46 +542,41 @@ class AsaasService implements Statement
                         }
 
                         Transfer::create([
-                            'transaction_id' => $refundTransaction->id,
-                            'user_id' => $refundTransaction->user_id,
-                            'company_id' => $refundTransaction->company_id,
-                            'gateway_id' => $sale->gateway_id,
-                            'value' => $refundValue,
-                            'type' => 'out',
-                            'type_enum' => Transfer::TYPE_OUT,
-                            'reason' => 'refunded',
-                            'is_refunded_tax' => 0
+                            "transaction_id" => $refundTransaction->id,
+                            "user_id" => $refundTransaction->user_id,
+                            "company_id" => $refundTransaction->company_id,
+                            "gateway_id" => $sale->gateway_id,
+                            "value" => $refundValue,
+                            "type" => "out",
+                            "type_enum" => Transfer::TYPE_OUT,
+                            "reason" => "refunded",
+                            "is_refunded_tax" => 0,
                         ]);
 
                         $company->update([
-                            'asaas_balance' => $company->asaas_balance -= $refundValue
+                            "asaas_balance" => ($company->asaas_balance -= $refundValue),
                         ]);
                     }
-
                 }
 
-                $refundTransaction->status = 'refunded';
+                $refundTransaction->status = "refunded";
                 $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
                 $refundTransaction->is_waiting_withdrawal = 0;
                 $refundTransaction->save();
             }
 
-            $sale->update(
-                [
-                    'status' => Sale::STATUS_REFUNDED,
-                    'gateway_status' => $statusGateway,
-                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
-                    'date_refunded' => Carbon::now(),
-                ]
-            );
+            $sale->update([
+                "status" => Sale::STATUS_REFUNDED,
+                "gateway_status" => $statusGateway,
+                "refund_value" => foxutils()->onlyNumbers($sale->total_paid_value),
+                "date_refunded" => Carbon::now(),
+            ]);
 
-            SaleLog::create(
-                [
-                    'sale_id' => $sale->id,
-                    'status' => 'refunded',
-                    'status_enum' => Sale::STATUS_REFUNDED,
-                ]
-            );
+            SaleLog::create([
+                "sale_id" => $sale->id,
+                "status" => "refunded",
+                "status_enum" => Sale::STATUS_REFUNDED,
+            ]);
 
             DB::commit();
 
@@ -613,5 +597,4 @@ class AsaasService implements Statement
     {
         return false;
     }
-
 }

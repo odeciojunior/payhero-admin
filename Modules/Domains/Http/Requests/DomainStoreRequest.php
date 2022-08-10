@@ -13,8 +13,8 @@ class DomainStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required|string|max:255',
-            'name'       => 'required|string|max:100',
+            "project_id" => "required|string|max:255",
+            "name" => "required|string|max:100",
         ];
     }
 
@@ -33,8 +33,8 @@ class DomainStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'O campo Domínio deve ser preenchido corretamente',
-            'name.max'      => 'O campo Domínio permite apenas 100 caracteres',
+            "name.required" => "O campo Domínio deve ser preenchido corretamente",
+            "name.max" => "O campo Domínio permite apenas 100 caracteres",
         ];
     }
 }

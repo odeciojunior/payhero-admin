@@ -14,7 +14,9 @@ class UpdateUserIdOnTransactionsTable extends Migration
      */
     public function up()
     {
-        DB::update("UPDATE transactions t set user_id = ( select user_id from companies where id = t.company_id) where company_id is not null and user_id is null");    
+        DB::update(
+            "UPDATE transactions t set user_id = ( select user_id from companies where id = t.company_id) where company_id is not null and user_id is null"
+        );
     }
 
     /**

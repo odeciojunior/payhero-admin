@@ -9,9 +9,9 @@ use Modules\Core\Entities\WhiteBlackList;
 
 class VerifyExpiresWhiteBlackList extends Command
 {
-    protected $signature = 'whiteblacklist:verifyexpires';
+    protected $signature = "whiteblacklist:verifyexpires";
 
-    protected $description = 'Remove regras do white/black list que expiraram';
+    protected $description = "Remove regras do white/black list que expiraram";
 
     public function __construct()
     {
@@ -20,14 +20,10 @@ class VerifyExpiresWhiteBlackList extends Command
 
     public function handle()
     {
-
         try {
-
-            WhiteBlackList::where('expires_at', '<', Carbon::now()->toDateString())->delete();
-
+            WhiteBlackList::where("expires_at", "<", Carbon::now()->toDateString())->delete();
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

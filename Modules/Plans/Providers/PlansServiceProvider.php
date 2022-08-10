@@ -25,7 +25,7 @@ class PlansServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -37,7 +37,6 @@ class PlansServiceProvider extends ServiceProvider
     {
         $this->app->register(AuthServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
-
     }
 
     /**
@@ -47,12 +46,13 @@ class PlansServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('plans.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'plans'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("plans.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "plans");
     }
 
     /**
@@ -62,17 +62,26 @@ class PlansServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/plans');
+        $viewPath = resource_path("views/modules/plans");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/plans';
-        }, \Config::get('view.paths')), [$sourcePath]), 'plans');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/plans";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "plans"
+        );
     }
 
     /**
@@ -82,12 +91,12 @@ class PlansServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/plans');
+        $langPath = resource_path("lang/modules/plans");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'plans');
+            $this->loadTranslationsFrom($langPath, "plans");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'plans');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "plans");
         }
     }
 
@@ -97,8 +106,8 @@ class PlansServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

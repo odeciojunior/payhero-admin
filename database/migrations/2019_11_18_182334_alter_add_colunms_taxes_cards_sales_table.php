@@ -12,10 +12,10 @@ class AlterAddColunmsTaxesCardsSalesTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->string('gateway_card_flag')->nullable();
-            $table->decimal('gateway_tax_percent', 8, 2)->nullable();
-            $table->integer('gateway_tax_value')->nullable();
+        Schema::table("sales", function (Blueprint $table) {
+            $table->string("gateway_card_flag")->nullable();
+            $table->decimal("gateway_tax_percent", 8, 2)->nullable();
+            $table->integer("gateway_tax_value")->nullable();
         });
     }
 
@@ -25,10 +25,10 @@ class AlterAddColunmsTaxesCardsSalesTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dropColumn('gateway_card_flag');
-            $table->dropColumn('gateway_tax_percent');
-            $table->dropColumn('gateway_tax_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("gateway_card_flag");
+            $table->dropColumn("gateway_tax_percent");
+            $table->dropColumn("gateway_tax_value");
         });
     }
 }

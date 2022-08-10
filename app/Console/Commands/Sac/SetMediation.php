@@ -14,14 +14,14 @@ class SetMediation extends Command
      *
      * @var string
      */
-    protected $signature = 'set:mediation';
+    protected $signature = "set:mediation";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Coloca os chamados em mediação automáticamente após';
+    protected $description = "Coloca os chamados em mediação automáticamente após";
 
     /**
      * Create a new command instance.
@@ -42,10 +42,10 @@ class SetMediation extends Command
     {
         $daysWithoutUserResponse = 5;
 
-        $query = Ticket::where('ticket_status_enum', Ticket::STATUS_OPEN)
-            ->where('ticket_category_enum', Ticket::CATEGORY_COMPLAINT)
-            ->where('last_message_date', '<', now()->subDays($daysWithoutUserResponse))
-            ->where('last_message_type_enum', TicketMessage::TYPE_FROM_CUSTOMER);
+        $query = Ticket::where("ticket_status_enum", Ticket::STATUS_OPEN)
+            ->where("ticket_category_enum", Ticket::CATEGORY_COMPLAINT)
+            ->where("last_message_date", "<", now()->subDays($daysWithoutUserResponse))
+            ->where("last_message_type_enum", TicketMessage::TYPE_FROM_CUSTOMER);
 
         $bar = $this->getOutput()->createProgressBar($query->count());
         $bar->start();
@@ -53,12 +53,10 @@ class SetMediation extends Command
         $query->chunk(500, function ($tickets) use ($bar) {
             foreach ($tickets as $ticket) {
                 try {
-
                     $ticket->ticket_status_enum = Ticket::STATUS_MEDIATION;
                     $ticket->save();
 
                     event(new NotifyTicketMediationEvent($ticket->id));
-
                 } catch (\Exception $e) {
                     report($e);
                 }

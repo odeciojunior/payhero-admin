@@ -15,11 +15,11 @@ class WithdrawalResource extends JsonResource
         $bankName = Str::title((new BankService())->getBankName($this->bank));
         $accountInformation = $this->accountInformation();
 
-        $realeaseDate = '';
-        $realeaseTime = '';
+        $realeaseDate = "";
+        $realeaseTime = "";
         if (!empty($this->release_date)) {
-            $realeaseDate = $this->release_date->format('d/m/Y');
-            $realeaseTime = $this->release_date->format('H:i');
+            $realeaseDate = $this->release_date->format("d/m/Y");
+            $realeaseTime = $this->release_date->format("H:i");
         }
 
         $data = [
@@ -36,8 +36,8 @@ class WithdrawalResource extends JsonResource
                 'definitions.enum.withdrawals.status.' . $this->present()
                     ->getStatus($this->status)
             ),
-            'tax_value' => $this->tax,
-            'debt_pending_value' => 'R$' . number_format(intval($this->debt_pending_value) / 100, 2, ',', '.')
+            "tax_value" => $this->tax,
+            "debt_pending_value" => 'R$' . number_format(intval($this->debt_pending_value) / 100, 2, ",", "."),
         ];
 
         if (request('is_mobile')) {
@@ -50,6 +50,7 @@ class WithdrawalResource extends JsonResource
 
     private function accountInformation(): string
     {
+
         $bankAccount =  $this->company->getDefaultBankAccount();
         if (!empty($bankAccount)) {
             switch ($bankAccount->transfer_type) {
@@ -69,6 +70,6 @@ class WithdrawalResource extends JsonResource
                     return "$agency - $account";
             }
         }
-        return '';
+        return "";
     }
 }

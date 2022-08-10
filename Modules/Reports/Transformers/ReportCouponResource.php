@@ -14,9 +14,9 @@ class ReportCouponResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'project'    => $this->project_name ?? '',
-            'amount'     => $this->amount ?? 0,
-            'cupom_code' => $this->cupom_code ?? ''
+            "project" => $this->project_name ?? "",
+            "amount" => $this->amount ?? 0,
+            "cupom_code" => $this->cupom_code ?? "",
         ];
     }
 }

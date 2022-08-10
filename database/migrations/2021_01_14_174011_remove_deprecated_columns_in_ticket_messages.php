@@ -13,8 +13,8 @@ class RemoveDeprecatedColumnsInTicketMessages extends Migration
      */
     public function up()
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->dropColumn(['from_admin', 'from_system']);
+        Schema::table("ticket_messages", function (Blueprint $table) {
+            $table->dropColumn(["from_admin", "from_system"]);
         });
     }
 
@@ -25,9 +25,9 @@ class RemoveDeprecatedColumnsInTicketMessages extends Migration
      */
     public function down()
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->boolean('from_admin');
-            $table->boolean('from_system');
+        Schema::table("ticket_messages", function (Blueprint $table) {
+            $table->boolean("from_admin");
+            $table->boolean("from_system");
         });
     }
 }

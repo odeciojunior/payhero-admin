@@ -13,24 +13,28 @@ class CreatePixTransfersTable extends Migration
      */
     public function up()
     {
-
-        Schema::create('pix_transfers', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create("pix_transfers", function (Blueprint $table) {
+            $table->bigIncrements("id");
             $table->unsignedBigInteger("sale_id")->nullable();
-            $table->foreign('sale_id')->references('id')->on('sales');
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
             $table->unsignedBigInteger("withdrawal_id")->nullable();
-            $table->foreign('withdrawal_id')->references('id')->on('withdrawals');
-            $table->string('pix_transaction_id');
-            $table->integer('value');
-            $table->dateTime('requested_in');
-            $table->dateTime('latest_status_updated');
-            $table->string('transaction_ids')->nullable();
-            $table->enum('status', ['PROCESSING', 'REALIZED', 'UNREALIZED']);
-            $table->json('postback')->nullable();
+            $table
+                ->foreign("withdrawal_id")
+                ->references("id")
+                ->on("withdrawals");
+            $table->string("pix_transaction_id");
+            $table->integer("value");
+            $table->dateTime("requested_in");
+            $table->dateTime("latest_status_updated");
+            $table->string("transaction_ids")->nullable();
+            $table->enum("status", ["PROCESSING", "REALIZED", "UNREALIZED"]);
+            $table->json("postback")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
-
     }
 
     /**
@@ -40,6 +44,6 @@ class CreatePixTransfersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pix_transfers');
+        Schema::dropIfExists("pix_transfers");
     }
 }

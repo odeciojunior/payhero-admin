@@ -18,19 +18,13 @@ class Benefit extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'level',
-        'description',
-        'created_at',
-        'updated_at'
-    ];
+    protected $fillable = ["name", "level", "description", "created_at", "updated_at"];
 
     /**
      * @return HasManyThrough
      */
     public function users()
     {
-        return $this->hasManyThrough(User::class, UserBenefit::class, 'benefit_id', 'id', 'id', 'user_id');
+        return $this->hasManyThrough(User::class, UserBenefit::class, "benefit_id", "id", "id", "user_id");
     }
 }

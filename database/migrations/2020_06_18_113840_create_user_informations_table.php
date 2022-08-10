@@ -16,43 +16,39 @@ class CreateUserInformationsTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'user_informations',
-            function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->unsignedInteger('user_id')->index();
-                $table->string('sex', 50)->nullable();
-                $table->unsignedInteger('marital_status')->nullable();
-                $table->string('nationality', 2)->nullable();
-                $table->string('mother_name', 255)->nullable();
-                $table->string('father_name', 255)->nullable();
-                $table->string('spouse_name', 255)->nullable();
-                $table->string('birth_place', 255)->nullable();
-                $table->string('birth_city', 255)->nullable();
-                $table->string('birth_state', 255)->nullable();
-                $table->string('birth_country', 255)->nullable();
-                $table->unsignedInteger('monthly_income')->nullable();
+        Schema::create("user_informations", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("user_id")->index();
+            $table->string("sex", 50)->nullable();
+            $table->unsignedInteger("marital_status")->nullable();
+            $table->string("nationality", 2)->nullable();
+            $table->string("mother_name", 255)->nullable();
+            $table->string("father_name", 255)->nullable();
+            $table->string("spouse_name", 255)->nullable();
+            $table->string("birth_place", 255)->nullable();
+            $table->string("birth_city", 255)->nullable();
+            $table->string("birth_state", 255)->nullable();
+            $table->string("birth_country", 255)->nullable();
+            $table->unsignedInteger("monthly_income")->nullable();
 
+            $table->unsignedInteger("document_type")->nullable();
+            $table->string("document_number", 255)->nullable();
+            $table->dateTime("document_issue_date")->nullable();
+            $table->dateTime("document_expiration_date")->nullable();
+            $table->string("document_issuer")->nullable();
+            $table->string("document_issuer_state")->nullable();
+            $table->string("document_serial_number")->nullable();
 
-                $table->unsignedInteger('document_type')->nullable();
-                $table->string('document_number', 255)->nullable();
-                $table->dateTime('document_issue_date')->nullable();
-                $table->dateTime('document_expiration_date')->nullable();
-                $table->string('document_issuer')->nullable();
-                $table->string('document_issuer_state')->nullable();
-                $table->string('document_serial_number')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
 
-                $table->timestamps();
-                $table->softDeletes();
-            }
-        );
-
-        Schema::table(
-            'user_informations',
-            function (Blueprint $table) {
-                $table->foreign('user_id')->references('id')->on('users');
-            }
-        );
+        Schema::table("user_informations", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
+        });
     }
 
     /**
@@ -62,6 +58,6 @@ class CreateUserInformationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_informations');
+        Schema::dropIfExists("user_informations");
     }
 }

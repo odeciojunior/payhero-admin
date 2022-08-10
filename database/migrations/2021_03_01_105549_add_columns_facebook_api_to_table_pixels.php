@@ -13,14 +13,20 @@ class AddColumnsFacebookApiToTablePixels extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->boolean('is_api')->default(false)->after('purchase_event_name');
-                $table->text('facebook_token')->nullable()->after('is_api');
-                $table->integer('value_percentage_purchase_boleto')->default(100)->after('facebook_token');
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->boolean("is_api")
+                ->default(false)
+                ->after("purchase_event_name");
+            $table
+                ->text("facebook_token")
+                ->nullable()
+                ->after("is_api");
+            $table
+                ->integer("value_percentage_purchase_boleto")
+                ->default(100)
+                ->after("facebook_token");
+        });
     }
 
     /**
@@ -30,11 +36,8 @@ class AddColumnsFacebookApiToTablePixels extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->dropColumn(['is_api', 'facebook_token', 'value_percentage_purchase_boleto']);
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn(["is_api", "facebook_token", "value_percentage_purchase_boleto"]);
+        });
     }
 }

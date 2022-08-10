@@ -1,54 +1,62 @@
 $(() => {
-
-    let projectId = $(window.location.pathname.split('/')).get(-1);
+    let projectId = $(window.location.pathname.split("/")).get(-1);
 
     function index() {
-
-        loadOnTable('#table-order-bump tbody', '#table-order-bump');
+        loadOnTable("#table-order-bump tbody", "#table-order-bump");
 
         let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-        link = '/api/orderbump' + (link || '');
+        link = "/api/orderbump" + (link || "");
 
-        $('#tab-order-bump-panel').find('.no-gutters').css('display', 'none');
-        $('#table-order-bump').find('thead').css('display', 'none');
+        $("#tab-order-bump-panel").find(".no-gutters").css("display", "none");
+        $("#table-order-bump").find("thead").css("display", "none");
 
         $.ajax({
-            method: 'GET',
+            method: "GET",
             url: link,
             data: {
-                project_id: projectId
+                project_id: projectId,
             },
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: resp => {
+            error: (resp) => {
                 errorAjaxResponse(resp);
             },
-            success: resp => {
+            success: (resp) => {
                 let rules = resp.data;
-                let table = $('#table-order-bump tbody');
+                let table = $("#table-order-bump tbody");
                 if (rules.length) {
-                    table.html('');
-                    $('#tab-order-bump-panel').find('.no-gutters').css('display', 'flex');
-                    $('#table-order-bump').find('thead').css('display', 'contents');
+                    table.html("");
+                    $("#tab-order-bump-panel").find(".no-gutters").css("display", "flex");
+                    $("#table-order-bump").find("thead").css("display", "contents");
 
                     for (let rule of rules) {
                         let row = `<tr>
                                        <td>${rule.description}</td>
-                                       <td class="text-center">${rule.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                                       <td class="text-center">${
+                                           rule.active_flag
+                                               ? `<span class="badge badge-success">Ativo</span>`
+                                               : `<span class="badge badge-danger">Desativado</span>`
+                                       }</td>
                                        <td>
                                             <div class='d-flex justify-content-end align-items-center'>
-                                                <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><span class="o-eye-1"></span></a>
-                                                <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><span class="o-edit-1"></span></a>
-                                                <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class="o-bin-1"></span></a>
+                                                <a class="pointer mg-responsive show-order-bump" data-id="${
+                                                    rule.id
+                                                }" title="Visualizar"><span class="o-eye-1"></span></a>
+                                                <a class="pointer mg-responsive edit-order-bump" data-id="${
+                                                    rule.id
+                                                }" title="Editar" ><span class="o-edit-1"></span></a>
+                                                <a class="pointer mg-responsive destroy-order-bump" data-id="${
+                                                    rule.id
+                                                }" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class="o-bin-1"></span></a>
                                             </div>
                                        </td>
                                    </tr>`;
                         table.append(row);
                     }
 
-                    pagination(resp, 'order-bump', index);
+                    pagination(resp, "order-bump", index);
                 } else {
                     table.html(`
                         <tr class="text-center">
@@ -65,120 +73,134 @@ $(() => {
                             </td>
                         </tr>
                     `);
-                    table.parent().addClass('table-striped');
+                    table.parent().addClass("table-striped");
                 }
-            }
+            },
         });
 
-        if (!['shopify', 'woocommerce'].includes($('#project_type').val())) {
-            $('.use-variants-order-bump')
-                .prop('checked', false)
-                .val(0)
-                .closest('.switch-holder')
-                .hide();
+        if (!["shopify", "woocommerce"].includes($("#project_type").val())) {
+            $(".use-variants-order-bump").prop("checked", false).val(0).closest(".switch-holder").hide();
         }
     }
 
-    $('#tab_order_bump').on('click', function () {
+    $("#tab_order_bump").on("click", function () {
         index();
     });
 
-    $(document).on('click', '.show-order-bump', function () {
-        let id = $(this).data('id');
+    $(document).on("click", ".show-order-bump", function () {
+        let id = $(this).data("id");
         $.ajax({
-            url: '/api/orderbump/' + id,
+            url: "/api/orderbump/" + id,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: resp => {
+            error: (resp) => {
                 errorAjaxResponse(resp);
             },
-            success: resp => {
+            success: (resp) => {
                 let rule = resp.data;
                 let applyOnShipping = rule.apply_on_shipping
-                    .map(shipping => shipping.name + (shipping.information ? ` - ${shipping.information}` : ''))
-                    .join(' / ');
+                    .map((shipping) => shipping.name + (shipping.information ? ` - ${shipping.information}` : ""))
+                    .join(" / ");
                 let applyOnPlans = rule.apply_on_plans
-                    .map(plan => plan.name + (plan.description ? ` - ${plan.description}` : ''))
-                    .join(' / ');
+                    .map((plan) => plan.name + (plan.description ? ` - ${plan.description}` : ""))
+                    .join(" / ");
                 let offerPlans = rule.offer_plans
-                    .map(plan => plan.name + (plan.description ? ` - ${plan.description}` : ''))
-                    .join(' / ');
-                $('#order-bump-show-table .order-bump-description').html(rule.description);
-                $('#order-bump-show-table .order-bump-discount').html(rule.discount + '%');
-                $('#order-bump-show-table .order-bump-apply-shipping').html(applyOnShipping);
-                $('#order-bump-show-table .order-bump-apply-plans').html(applyOnPlans);
-                $('#order-bump-show-table .order-bump-offer-plans').html(offerPlans);
-                $('#order-bump-show-table .order-bump-status').html(rule.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`);
-                $('#modal-show-order-bump').modal('show');
-            }
-        })
+                    .map((plan) => plan.name + (plan.description ? ` - ${plan.description}` : ""))
+                    .join(" / ");
+                $("#order-bump-show-table .order-bump-description").html(rule.description);
+                $("#order-bump-show-table .order-bump-discount").html(rule.discount + "%");
+                $("#order-bump-show-table .order-bump-apply-shipping").html(applyOnShipping);
+                $("#order-bump-show-table .order-bump-apply-plans").html(applyOnPlans);
+                $("#order-bump-show-table .order-bump-offer-plans").html(offerPlans);
+                $("#order-bump-show-table .order-bump-status").html(
+                    rule.active_flag
+                        ? `<span class="badge badge-success">Ativo</span>`
+                        : `<span class="badge badge-danger">Desativado</span>`
+                );
+                $("#modal-show-order-bump").modal("show");
+            },
+        });
     });
 
-    $(document).on('click', '.edit-order-bump', function () {
-        let id = $(this).data('id');
+    $(document).on("click", ".edit-order-bump", function () {
+        let id = $(this).data("id");
         $.ajax({
-            url: '/api/orderbump/' + id,
+            url: "/api/orderbump/" + id,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: resp => {
+            error: (resp) => {
                 errorAjaxResponse(resp);
             },
-            success: resp => {
+            success: (resp) => {
                 let rule = resp.data;
-                let applyOnShippingInput = $('#update-apply-on-shipping-order-bump');
-                let applyOnPlansInput = $('#update-apply-on-plans-order-bump');
-                let offerPlansInput = $('#update-offer-plans-order-bump');
+                let applyOnShippingInput = $("#update-apply-on-shipping-order-bump");
+                let applyOnPlansInput = $("#update-apply-on-plans-order-bump");
+                let offerPlansInput = $("#update-offer-plans-order-bump");
 
-                $('#update-description-order-bump').val(rule.description);
-                $('#update-discount-order-bump').val(rule.discount);
+                $("#update-description-order-bump").val(rule.description);
+                $("#update-discount-order-bump").val(rule.discount);
 
-                $('#update-active-flag-order-bump').val(rule.active_flag)
-                    .prop('checked', rule.active_flag === 1);
-                $('#modal-update-order-bump .use-variants-order-bump').val(rule.use_variants)
-                    .prop('checked', rule.use_variants === 1)
-                    .trigger('change');
+                $("#update-active-flag-order-bump")
+                    .val(rule.active_flag)
+                    .prop("checked", rule.active_flag === 1);
+                $("#modal-update-order-bump .use-variants-order-bump")
+                    .val(rule.use_variants)
+                    .prop("checked", rule.use_variants === 1)
+                    .trigger("change");
 
                 let applyOnShipping = [];
-                applyOnShippingInput.html('');
+                applyOnShippingInput.html("");
                 for (let shipping of rule.apply_on_shipping) {
                     applyOnShipping.push(shipping.id);
-                    applyOnShippingInput.append(`<option value="${shipping.id}">${shipping.name + (shipping.information ? ` - ${shipping.information}` : '')}</option>`);
+                    applyOnShippingInput.append(
+                        `<option value="${shipping.id}">${
+                            shipping.name + (shipping.information ? ` - ${shipping.information}` : "")
+                        }</option>`
+                    );
                 }
                 applyOnShippingInput.val(applyOnShipping);
 
                 let applyOnPlans = [];
-                applyOnPlansInput.html('');
+                applyOnPlansInput.html("");
                 for (let plan of rule.apply_on_plans) {
                     applyOnPlans.push(plan.id);
-                    applyOnPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.description ? ` - ${plan.description}` : '')}</option>`);
+                    applyOnPlansInput.append(
+                        `<option value="${plan.id}">${
+                            plan.name + (plan.description ? ` - ${plan.description}` : "")
+                        }</option>`
+                    );
                 }
                 applyOnPlansInput.val(applyOnPlans);
 
-                offerPlansInput.html('');
+                offerPlansInput.html("");
                 let offerPlans = [];
                 for (let plan of rule.offer_plans) {
                     offerPlans.push(plan.id);
-                    offerPlansInput.append(`<option value="${plan.id}">${plan.name + (plan.description ? ` - ${plan.description}` : '')}</option>`);
+                    offerPlansInput.append(
+                        `<option value="${plan.id}">${
+                            plan.name + (plan.description ? ` - ${plan.description}` : "")
+                        }</option>`
+                    );
                 }
                 offerPlansInput.val(offerPlans);
 
-                setShippingSelect2('#update-apply-on-shipping-order-bump', '#modal-update-order-bump');
-                setPlanSelect2('#update-apply-on-plans-order-bump', '#modal-update-order-bump');
-                setPlanSelect2('#update-offer-plans-order-bump', '#modal-update-order-bump');
+                setShippingSelect2("#update-apply-on-shipping-order-bump", "#modal-update-order-bump");
+                setPlanSelect2("#update-apply-on-plans-order-bump", "#modal-update-order-bump");
+                setPlanSelect2("#update-offer-plans-order-bump", "#modal-update-order-bump");
 
-                $('#btn-update-order-bump').data('id', id);
-                $('#modal-update-order-bump').modal('show');
-            }
-        })
+                $("#btn-update-order-bump").data("id", id);
+                $("#modal-update-order-bump").modal("show");
+            },
+        });
     });
 
-    $('#btn-store-order-bump').on('click', function () {
-        let formData = new FormData(document.querySelector('#form-store-order-bump'));
-        formData.append('project_id', projectId);
+    $("#btn-store-order-bump").on("click", function () {
+        let formData = new FormData(document.querySelector("#form-store-order-bump"));
+        formData.append("project_id", projectId);
 
         let data = {};
         for (let pair of formData.entries()) {
@@ -186,72 +208,74 @@ $(() => {
         }
 
         $.ajax({
-            method: 'POST',
-            url: '/api/orderbump',
+            method: "POST",
+            url: "/api/orderbump",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             processData: false,
             contentType: false,
             cache: false,
             data: formData,
-            error: resp => {
+            error: (resp) => {
                 errorAjaxResponse(resp);
             },
-            success: resp => {
-                alertCustom('success', resp.message);
-                $('#modal-store-order-bump').modal('hide');
-                $('#store-description-order-bump, #store-discount-order-bump').val('');
-                $("#store-apply-on-shipping-order-bump, #store-apply-on-plans-order-bump, #store-offer-plans-order-bump")
+            success: (resp) => {
+                alertCustom("success", resp.message);
+                $("#modal-store-order-bump").modal("hide");
+                $("#store-description-order-bump, #store-discount-order-bump").val("");
+                $(
+                    "#store-apply-on-shipping-order-bump, #store-apply-on-plans-order-bump, #store-offer-plans-order-bump"
+                )
                     .val(null)
-                    .trigger('change');
+                    .trigger("change");
                 index();
-            }
-        })
+            },
+        });
     });
 
-    $('#btn-update-order-bump').on('click', function () {
-        let id = $(this).data('id');
-        let formData = new FormData(document.querySelector('#form-update-order-bump'));
-        formData.append('project_id', projectId);
+    $("#btn-update-order-bump").on("click", function () {
+        let id = $(this).data("id");
+        let formData = new FormData(document.querySelector("#form-update-order-bump"));
+        formData.append("project_id", projectId);
         $.ajax({
-            method: 'POST',
-            url: '/api/orderbump/' + id,
+            method: "POST",
+            url: "/api/orderbump/" + id,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             processData: false,
             contentType: false,
             cache: false,
             data: formData,
-            error: resp => {
+            error: (resp) => {
                 errorAjaxResponse(resp);
             },
-            success: resp => {
-                alertCustom('success', resp.message);
-                $('#modal-update-order-bump').modal('hide');
+            success: (resp) => {
+                alertCustom("success", resp.message);
+                $("#modal-update-order-bump").modal("hide");
                 index();
-            }
-        })
+            },
+        });
     });
 
     // load delete modal
-    $(document).on('click', '.destroy-order-bump', function (event) {
+    $(document).on("click", ".destroy-order-bump", function (event) {
         event.preventDefault();
 
-        let id = $(this).data('id');
+        let id = $(this).data("id");
 
-        $('#btn-delete-orderbump').unbind('click');
-        $('#btn-delete-orderbump').on('click', function () {
+        $("#btn-delete-orderbump").unbind("click");
+        $("#btn-delete-orderbump").on("click", function () {
             $.ajax({
-                method: 'DELETE',
-                url: '/api/orderbump/' + id,
+                method: "DELETE",
+                url: "/api/orderbump/" + id,
                 dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 error: function (response) {
                     errorAjaxResponse(response);
@@ -259,36 +283,36 @@ $(() => {
                 success: function (response) {
                     index();
 
-                    alertCustom('success', response.message);
-                }
-            })
+                    alertCustom("success", response.message);
+                },
+            });
         });
     });
 
     //Search Shipping
     function setShippingSelect2(element, dropdownParent) {
-        const $element = typeof element === 'string' ? $(element) : element;
-        const $dropdownParent = typeof element === 'string' ? $(dropdownParent) : dropdownParent;
+        const $element = typeof element === "string" ? $(element) : element;
+        const $dropdownParent = typeof element === "string" ? $(dropdownParent) : dropdownParent;
 
         let configs = {
-            placeholder: 'Nome do frete',
+            placeholder: "Nome do frete",
             multiple: true,
             dropdownParent: $dropdownParent,
             language: {
                 noResults: function () {
-                    return 'Nenhum frete encontrado';
+                    return "Nenhum frete encontrado";
                 },
                 searching: function () {
-                    return 'Procurando...';
+                    return "Procurando...";
                 },
                 loadingMore: function () {
-                    return 'Carregando mais fretes...';
+                    return "Carregando mais fretes...";
                 },
             },
             ajax: {
                 data: function (params) {
                     return {
-                        list: 'shipping',
+                        list: "shipping",
                         search: params.term,
                         project_id: projectId,
                         page: params.page || 1,
@@ -297,46 +321,46 @@ $(() => {
                 method: "GET",
                 url: "/api/shippings/user-shippings",
                 delay: 300,
-                dataType: 'json',
+                dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 processResults: function (res) {
                     if (res.meta.current_page === 1) {
                         let allObject = {
-                            id: 'all',
+                            id: "all",
                             name: `Qualquer frete`,
-                            information: ''
+                            information: "",
                         };
                         res.data.unshift(allObject);
                     }
 
                     return {
                         results: $.map(res.data, function (obj) {
-                            return {id: obj.id, text: obj.name + (obj.information ? ' - ' + obj.information : '')};
+                            return { id: obj.id, text: obj.name + (obj.information ? " - " + obj.information : "") };
                         }),
                         pagination: {
-                            'more': res.meta.current_page !== res.meta.last_page
-                        }
+                            more: res.meta.current_page !== res.meta.last_page,
+                        },
                     };
                 },
-            }
-        }
+            },
+        };
         $element.select2(configs);
     }
 
-    setShippingSelect2('#store-apply-on-shipping-order-bump', '#modal-store-order-bump');
-    setShippingSelect2('#update-apply-on-shipping-order-bump', '#modal-update-order-bump');
-    $('#store-apply-on-shipping-order-bump').html(`<option value="all">Qualquer frete</option>`).val('all');
+    setShippingSelect2("#store-apply-on-shipping-order-bump", "#modal-store-order-bump");
+    setShippingSelect2("#update-apply-on-shipping-order-bump", "#modal-update-order-bump");
+    $("#store-apply-on-shipping-order-bump").html(`<option value="all">Qualquer frete</option>`).val("all");
 
     //Search plan
     function setPlanSelect2(element, dropdownParent) {
-        const $element = typeof element === 'string' ? $(element) : element;
-        const $dropdownParent = typeof element === 'string' ? $(dropdownParent) : dropdownParent;
+        const $element = typeof element === "string" ? $(element) : element;
+        const $dropdownParent = typeof element === "string" ? $(dropdownParent) : dropdownParent;
 
-        const useVariants = $dropdownParent.find('.use-variants-order-bump').prop('checked') ? 1 : 0;
-        const targetName = useVariants ? 'plano' : 'produto';
+        const useVariants = $dropdownParent.find(".use-variants-order-bump").prop("checked") ? 1 : 0;
+        const targetName = useVariants ? "plano" : "produto";
 
         let configs = {
             placeholder: `Nome do ${targetName}`,
@@ -348,7 +372,7 @@ $(() => {
                     return `Nenhum ${targetName} encontrado`;
                 },
                 searching: function () {
-                    return 'Procurando...';
+                    return "Procurando...";
                 },
                 loadingMore: function () {
                     return `Carregando mais ${targetName}s...`;
@@ -357,7 +381,7 @@ $(() => {
             ajax: {
                 data: function (params) {
                     return {
-                        list: 'plan',
+                        list: "plan",
                         search: params.term,
                         project_id: projectId,
                         page: params.page || 1,
@@ -367,80 +391,85 @@ $(() => {
                 method: "GET",
                 url: "/api/plans/user-plans",
                 delay: 300,
-                dataType: 'json',
+                dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 processResults: function (res) {
-                    let elemId = this.$element.attr('id');
-                    if (['store-apply-on-plans-order-bump', 'update-apply-on-plans-order-bump'].includes(elemId) && res.meta.current_page === 1) {
+                    let elemId = this.$element.attr("id");
+                    if (
+                        ["store-apply-on-plans-order-bump", "update-apply-on-plans-order-bump"].includes(elemId) &&
+                        res.meta.current_page === 1
+                    ) {
                         let allObject = {
-                            id: 'all',
+                            id: "all",
                             name: `Qualquer ${targetName}`,
-                            description: ''
+                            description: "",
                         };
                         res.data.unshift(allObject);
                     }
                     return {
                         results: $.map(res.data, function (obj) {
-                            return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                            return { id: obj.id, text: obj.name + (obj.description ? " - " + obj.description : "") };
                         }),
                         pagination: {
-                            'more': res.meta.current_page !== res.meta.last_page
-                        }
+                            more: res.meta.current_page !== res.meta.last_page,
+                        },
                     };
                 },
-            }
-        }
+            },
+        };
 
         $element.select2(configs);
     }
 
     const select2HasAll = [
-        '#store-apply-on-plans-order-bump',
-        '#update-apply-on-plans-order-bump',
-        '#store-apply-on-shipping-order-bump',
-        '#update-apply-on-shipping-order-bump'
-    ].join(', ')
-    $(select2HasAll).on('select2:select', function () {
+        "#store-apply-on-plans-order-bump",
+        "#update-apply-on-plans-order-bump",
+        "#store-apply-on-shipping-order-bump",
+        "#update-apply-on-shipping-order-bump",
+    ].join(", ");
+    $(select2HasAll).on("select2:select", function () {
         let selectPlan = $(this);
-        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all'))) {
-            selectPlan.val('all').trigger("change");
+        if (selectPlan.val().length > 1 && selectPlan.val().includes("all")) {
+            selectPlan.val("all").trigger("change");
         }
     });
 
-    $('.use-variants-order-bump').on('change', function () {
-        const slider = $(this);
-        const modal = slider.closest('.modal');
+    $(".use-variants-order-bump")
+        .on("change", function () {
+            const slider = $(this);
+            const modal = slider.closest(".modal");
 
-        const applyContainer = modal.find('.apply-on-plan-container');
-        const offerContainer = modal.find('.offer-plan-container');
+            const applyContainer = modal.find(".apply-on-plan-container");
+            const offerContainer = modal.find(".offer-plan-container");
 
-        const applyLabel = applyContainer.find('label');
-        const offerLabel = offerContainer.find('label');
+            const applyLabel = applyContainer.find("label");
+            const offerLabel = offerContainer.find("label");
 
-        const applySelect = applyContainer.find('select');
-        const offerSelect = offerContainer.find('select');
+            const applySelect = applyContainer.find("select");
+            const offerSelect = offerContainer.find("select");
 
-        if (slider.prop('checked')) {
-            applyLabel.text('Ao comprar os plano:');
-            offerLabel.text('Oferecer os planos:');
-            applySelect.html(`<option value="all">Qualquer plano</option>`).val('all').trigger('change');
-        } else {
-            applyLabel.text('Ao comprar os produtos:');
-            offerLabel.text('Oferecer os produtos:');
-            applySelect.html(`<option value="all">Qualquer produto</option>`).val('all').trigger('change');
-        }
+            if (slider.prop("checked")) {
+                applyLabel.text("Ao comprar os plano:");
+                offerLabel.text("Oferecer os planos:");
+                applySelect.html(`<option value="all">Qualquer plano</option>`).val("all").trigger("change");
+            } else {
+                applyLabel.text("Ao comprar os produtos:");
+                offerLabel.text("Oferecer os produtos:");
+                applySelect.html(`<option value="all">Qualquer produto</option>`).val("all").trigger("change");
+            }
 
-        offerSelect.html('').val('').trigger('change');
+            offerSelect.html("").val("").trigger("change");
 
-        setPlanSelect2(applySelect, modal)
-        setPlanSelect2(offerSelect, modal)
-    }).trigger('change');
+            setPlanSelect2(applySelect, modal);
+            setPlanSelect2(offerSelect, modal);
+        })
+        .trigger("change");
 
-    setPlanSelect2('#store-apply-on-plans-order-bump', '#modal-store-order-bump');
-    setPlanSelect2('#store-offer-plans-order-bump', '#modal-store-order-bump');
-    setPlanSelect2('#update-apply-on-plans-order-bump', '#modal-update-order-bump');
-    setPlanSelect2('#update-offer-plans-order-bump', '#modal-update-order-bump');
+    setPlanSelect2("#store-apply-on-plans-order-bump", "#modal-store-order-bump");
+    setPlanSelect2("#store-offer-plans-order-bump", "#modal-store-order-bump");
+    setPlanSelect2("#update-apply-on-plans-order-bump", "#modal-update-order-bump");
+    setPlanSelect2("#update-offer-plans-order-bump", "#modal-update-order-bump");
 });

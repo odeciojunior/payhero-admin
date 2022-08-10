@@ -12,8 +12,8 @@ class AddSupportPhoneColumnProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->string('support_phone')->nullable();
+        Schema::table("projects", function (Blueprint $table) {
+            $table->string("support_phone")->nullable();
         });
     }
 
@@ -23,8 +23,8 @@ class AddSupportPhoneColumnProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('support_phone');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("support_phone");
         });
     }
 }

@@ -37,24 +37,45 @@ class Kernel extends ConsoleKernel
             ->storeOutputInDb();
         */
 
-        setlocale(LC_ALL, 'pt_BR');
+        setlocale(LC_ALL, "pt_BR");
 
-        $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
+        $schedule
+            ->command("change:pix-to-canceled")
+            ->everyMinute()
+            ->withoutOverlapping();
 
-        $schedule->command('horizon:snapshot')->everyFiveMinutes();
-        $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
+        $schedule->command("horizon:snapshot")->everyFiveMinutes();
+        $schedule
+            ->command("gatewaypostbacks:process")
+            ->withoutOverlapping()
+            ->everyFiveMinutes();
 
-        $schedule->command('check:systems')->everyTenMinutes();
+        $schedule->command("check:systems")->everyTenMinutes();
 
-        $schedule->command('check:underattack')->everyThirtyMinutes();
-        $schedule->command('withdrawals:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
-        $schedule->command('generate:notazzinvoicessalesapproved')->everyThirtyMinutes();
-        $schedule->command('verify:pendingnotazzinvoices')->everyThirtyMinutes()->withoutOverlapping();
-        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes()->withoutOverlapping();
+        $schedule->command("check:underattack")->everyThirtyMinutes();
+        $schedule
+            ->command("withdrawals:release-get-faster")
+            ->withoutOverlapping()
+            ->everyThirtyMinutes();
+        $schedule->command("generate:notazzinvoicessalesapproved")->everyThirtyMinutes();
+        $schedule
+            ->command("verify:pendingnotazzinvoices")
+            ->everyThirtyMinutes()
+            ->withoutOverlapping();
+        $schedule
+            ->command("verify:abandonedcarts")
+            ->everyFifteenMinutes()
+            ->withoutOverlapping();
 
-        $schedule->command('verify:pendingdomains')->hourly();
-        $schedule->command('verify:tickets')->withoutOverlapping()->hourly();
-        $schedule->command('verify:tickets-refunded')->withoutOverlapping()->hourly();
+        $schedule->command("verify:pendingdomains")->hourly();
+        $schedule
+            ->command("verify:tickets")
+            ->withoutOverlapping()
+            ->hourly();
+        $schedule
+            ->command("verify:tickets-refunded")
+            ->withoutOverlapping()
+            ->hourly();
 
         $schedule->command('command:checkUpdateCompanyGetnet')->sundays()->at('05:00');
         $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('06:30');
@@ -100,9 +121,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:boleto2')->dailyAt('11:15');
         $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
-        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');
+        $schedule->command("verify:trackingWithoutInfo")->dailyAt("18:00");
 
-        $schedule->command('safe2pay:update-reason-sale-contestations')->dailyAt('19:30');
+        $schedule->command("safe2pay:update-reason-sale-contestations")->dailyAt("19:30");
 
         $schedule->command('antifraud:backfill-asaas-chargebacks')->dailyAt('20:00');
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('20:30');
@@ -112,13 +133,14 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
         $schedule->command('verify:promotional-tax')->dailyAt('23:45');
-    }
 
+        // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
+    }
 
     protected function commands()
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__ . "/Commands");
 
-        require base_path('routes/console.php');
+        require base_path("routes/console.php");
     }
 }

@@ -13,8 +13,11 @@ class AddNewColumnNameAffiliateLinks extends Migration
      */
     public function up()
     {
-        Schema::table('affiliate_links', function (Blueprint $table) {
-            $table->string('name', '255')->nullable()->after('parameter');
+        Schema::table("affiliate_links", function (Blueprint $table) {
+            $table
+                ->string("name", "255")
+                ->nullable()
+                ->after("parameter");
         });
     }
 
@@ -25,8 +28,8 @@ class AddNewColumnNameAffiliateLinks extends Migration
      */
     public function down()
     {
-        Schema::table('affiliate_links', function (Blueprint $table) {
-            $table->dropColumn(['name']);
+        Schema::table("affiliate_links", function (Blueprint $table) {
+            $table->dropColumn(["name"]);
         });
     }
 }

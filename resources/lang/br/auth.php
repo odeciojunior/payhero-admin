@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Language Lines
@@ -13,7 +12,6 @@ return [
     |
     */
 
-    'failed' => 'Credenciais não encontradas.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-
+    "failed" => "Credenciais não encontradas.",
+    "throttle" => "Too many login attempts. Please try again in :seconds seconds.",
 ];

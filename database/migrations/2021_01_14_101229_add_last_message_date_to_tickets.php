@@ -13,8 +13,11 @@ class AddLastMessageDateToTickets extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->timestamp('last_message_date')->useCurrent()->after('last_message_type_enum');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table
+                ->timestamp("last_message_date")
+                ->useCurrent()
+                ->after("last_message_type_enum");
         });
     }
 
@@ -25,8 +28,8 @@ class AddLastMessageDateToTickets extends Migration
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('last_message_date');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table->dropColumn("last_message_date");
         });
     }
 }

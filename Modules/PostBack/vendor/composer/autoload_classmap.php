@@ -5,7 +5,7 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return array(
-    'Modules\\PostBack\\Http\\Controllers\\PostBackController' => $baseDir . '/Http/Controllers/PostBackController.php',
-    'Modules\\PostBack\\Providers\\PostBackServiceProvider' => $baseDir . '/Providers/PostBackServiceProvider.php',
-);
+return [
+    "Modules\\PostBack\\Http\\Controllers\\PostBackController" => $baseDir . "/Http/Controllers/PostBackController.php",
+    "Modules\\PostBack\\Providers\\PostBackServiceProvider" => $baseDir . "/Providers/PostBackServiceProvider.php",
+];

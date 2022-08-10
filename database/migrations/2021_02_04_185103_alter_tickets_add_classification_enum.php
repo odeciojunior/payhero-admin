@@ -13,9 +13,15 @@ class AlterTicketsAddClassificationEnum extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->tinyInteger('classification_enum')->after('ignore_balance_block')->nullable();
-            $table->integer('average_response_time')->after('ignore_balance_block')->nullable();
+        Schema::table("tickets", function (Blueprint $table) {
+            $table
+                ->tinyInteger("classification_enum")
+                ->after("ignore_balance_block")
+                ->nullable();
+            $table
+                ->integer("average_response_time")
+                ->after("ignore_balance_block")
+                ->nullable();
         });
     }
 
@@ -26,9 +32,9 @@ class AlterTicketsAddClassificationEnum extends Migration
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('classification_enum');
-            $table->dropColumn('average_response_time');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table->dropColumn("classification_enum");
+            $table->dropColumn("average_response_time");
         });
     }
 }

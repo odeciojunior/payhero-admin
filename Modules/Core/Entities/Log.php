@@ -32,29 +32,29 @@ class Log extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'checkout_id',
-        'id_log_session',
-        'plan',
-        'event',
-        'name',
-        'email',
-        'document',
-        'telephone',
-        'zip_code',
-        'street',
-        'number',
-        'neighborhood',
-        'city',
-        'state',
-        'total_value',
-        'error',
-        'created_at',
-        'updated_at',
+        "checkout_id",
+        "id_log_session",
+        "plan",
+        "event",
+        "name",
+        "email",
+        "document",
+        "telephone",
+        "zip_code",
+        "street",
+        "number",
+        "neighborhood",
+        "city",
+        "state",
+        "total_value",
+        "error",
+        "created_at",
+        "updated_at",
     ];
 
     /**
@@ -62,6 +62,6 @@ class Log extends Model
      */
     public function checkout()
     {
-        return $this->belongsTo('Modules\Core\Entities\Checkout');
+        return $this->belongsTo("Modules\Core\Entities\Checkout");
     }
 }

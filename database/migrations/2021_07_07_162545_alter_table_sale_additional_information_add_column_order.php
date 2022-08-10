@@ -13,12 +13,14 @@ class AlterTableSaleAdditionalInformationAddColumnOrder extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE sale_additional_customer_informations ADD COLUMN `order` tinyint default 0 after label;");
+        DB::statement(
+            "ALTER TABLE sale_additional_customer_informations ADD COLUMN `order` tinyint default 0 after label;"
+        );
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * Reverse the migrations.
      *
      * @return void

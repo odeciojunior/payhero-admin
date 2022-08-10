@@ -19,7 +19,7 @@ class UpdatedEmailWithDeletedAt extends Migration
 
         foreach ($deletedUsers as $deletedUser) {
             if ($deletedUser->deleted_at !== null) {
-                $deletedUser->update(['email' => uniqid(). $deletedUser->email]);
+                $deletedUser->update(["email" => uniqid() . $deletedUser->email]);
             }
         }
     }

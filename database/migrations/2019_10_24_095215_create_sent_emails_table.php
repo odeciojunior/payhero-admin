@@ -12,17 +12,17 @@ class CreateSentEmailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sent_emails', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('from_email', 320);
-            $table->string('from_name', 255);
-            $table->string('to_email', 320);
-            $table->string('to_name', 255);
-            $table->string('template_id', 255)->nullable();
-            $table->json('template_data')->nullable();
-            $table->integer('status_code')->unsigned();
-            $table->string('status', 255);
-            $table->text('log_error')->nullable();
+        Schema::create("sent_emails", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("from_email", 320);
+            $table->string("from_name", 255);
+            $table->string("to_email", 320);
+            $table->string("to_name", 255);
+            $table->string("template_id", 255)->nullable();
+            $table->json("template_data")->nullable();
+            $table->integer("status_code")->unsigned();
+            $table->string("status", 255);
+            $table->text("log_error")->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ class CreateSentEmailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sent_emails');
+        Schema::dropIfExists("sent_emails");
     }
 }

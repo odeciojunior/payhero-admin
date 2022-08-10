@@ -18,41 +18,31 @@ class CreateGerencianetTransfers extends Migration
      */
     public function up()
     {
-        $allTransactions = Transaction::with('company')
-                                        ->whereIn('gateway_id',[
-                                            Gateway::GERENCIANET_PRODUCTION_ID, 
-                                            Gateway::GERENCIANET_SANDBOX_ID
-                                        ])
-                                        ->where('is_waiting_withdrawal', 1)
-                                        ->whereNull('withdrawal_id')
-                                        ->whereNotNull('company_id');
+        $allTransactions = Transaction::with("company")
+            ->whereIn("gateway_id", [Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])
+            ->where("is_waiting_withdrawal", 1)
+            ->whereNull("withdrawal_id")
+            ->whereNotNull("company_id");
 
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, $allTransactions->count());
         $progress->start();
 
-        $allTransactions->chunkById(
-            1000,
-            function ($transactions) use ($progress) {
-                foreach($transactions as $transaction) {
+        $allTransactions->chunkById(1000, function ($transactions) use ($progress) {
+            foreach ($transactions as $transaction) {
+                Transfer::create([
+                    "transaction_id" => $transaction->id,
+                    "user_id" => $transaction->company->user_id,
+                    "company_id" => $transaction->company->id,
+                    "type_enum" => Transfer::TYPE_IN,
+                    "value" => $transaction->value,
+                    "type" => "in",
+                    "gateway_id" => Gateway::GERENCIANET_PRODUCTION_ID,
+                ]);
 
-                    Transfer::create(
-                        [
-                            'transaction_id' => $transaction->id,
-                            'user_id' => $transaction->company->user_id,
-                            'company_id' => $transaction->company->id,
-                            'type_enum' => Transfer::TYPE_IN,
-                            'value' => $transaction->value,
-                            'type' => 'in',
-                            'gateway_id' => Gateway::GERENCIANET_PRODUCTION_ID
-                        ]
-                    );
-
-                    $progress->advance();
-                }
-
+                $progress->advance();
             }
-        );
+        });
 
         $progress->finish();
     }
@@ -64,6 +54,6 @@ class CreateGerencianetTransfers extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gerencianet_transfers');
+        Schema::dropIfExists("gerencianet_transfers");
     }
 }

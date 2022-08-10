@@ -73,74 +73,88 @@ class SalesRecoveryService
         $customerModel = new Customer();
 
         $salesExpired = $salesModel
-            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
-                'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
-            ->leftJoin('plans_sales as plan_sale', function ($join) {
-                $join->on('plan_sale.sale_id', '=', 'sales.id');
-            })->leftJoin('checkouts as checkout', function ($join) {
-                $join->on('sales.checkout_id', '=', 'checkout.id');
-            })->leftJoin('customers as customer', function ($join) {
-                $join->on('sales.customer_id', '=', 'customer.id');
+            ->select(
+                "sales.*",
+                "checkout.email_sent_amount",
+                "checkout.sms_sent_amount",
+                "checkout.id as checkout_id",
+                "checkout.id_log_session",
+                DB::raw("(plan_sale.amount * plan_sale.plan_value ) AS value")
+            )
+            ->leftJoin("plans_sales as plan_sale", function ($join) {
+                $join->on("plan_sale.sale_id", "=", "sales.id");
             })
-            ->whereIn('sales.status', $status)
-            ->where('sales.payment_method', $paymentMethod)
+            ->leftJoin("checkouts as checkout", function ($join) {
+                $join->on("sales.checkout_id", "=", "checkout.id");
+            })
+            ->leftJoin("customers as customer", function ($join) {
+                $join->on("sales.customer_id", "=", "customer.id");
+            })
+            ->whereIn("sales.status", $status)
+            ->where("sales.payment_method", $paymentMethod)
             ->with([
-                'project',
-                'customer',
-                'project.domains' => function ($query) {
-                    $query->where('status', 3) //dominio aprovado
-                    ->first();
+                "project",
+                "customer",
+                "project.domains" => function ($query) {
+                    $query
+                        ->where("status", 3) //dominio aprovado
+                        ->first();
                 },
             ]);
 
         if (!empty($customer)) {
-            $customerSearch = $customerModel->where('name', 'like', '%' . $customer . '%')->pluck('id')->toArray();
-            $salesExpired->whereIn('sales.customer_id', $customerSearch);
+            $customerSearch = $customerModel
+                ->where("name", "like", "%" . $customer . "%")
+                ->pluck("id")
+                ->toArray();
+            $salesExpired->whereIn("sales.customer_id", $customerSearch);
         }
 
         if (!empty($customerDocument)) {
-            $customerSearch = $customerModel->where('document', foxutils()->onlyNumbers($customerDocument))->pluck('id');
-            $salesExpired->whereIn('sales.customer_id', $customerSearch);
+            $customerSearch = $customerModel
+                ->where("document", foxutils()->onlyNumbers($customerDocument))
+                ->pluck("id");
+            $salesExpired->whereIn("sales.customer_id", $customerSearch);
         }
 
         if (!empty($plans)) {
-            $plansIds = collect($plans)->map(function ($plan) {
-                return hashids_decode($plan);
-            })->toArray();
+            $plansIds = collect($plans)
+                ->map(function ($plan) {
+                    return hashids_decode($plan);
+                })
+                ->toArray();
 
-            $salesExpired->whereHas('plansSales', function ($query) use ($plansIds) {
-                $query->whereIn('plan_id', $plansIds);
+            $salesExpired->whereHas("plansSales", function ($query) use ($plansIds) {
+                $query->whereIn("plan_id", $plansIds);
             });
         }
 
-        if (!empty($projectIds) && !in_array('all', $projectIds)) {
-            $salesExpired->whereIn('sales.project_id', $projectIds);
-
+        if (!empty($projectIds) && !in_array("all", $projectIds)) {
+            $salesExpired->whereIn("sales.project_id", $projectIds);
         } else {
-            $userProjects = $userProjectsModel->where([
-                ['user_id', auth()->user()->account_owner_id],
-                [
-                    'type_enum',
-                    $userProjectsModel->present()
-                    ->getTypeEnum('producer'),
-                ],
-            ])->pluck('project_id')->toArray();
+            $userProjects = $userProjectsModel
+                ->where([
+                    ["user_id", auth()->user()->account_owner_id],
+                    ["type_enum", $userProjectsModel->present()->getTypeEnum("producer")],
+                ])
+                ->pluck("project_id")
+                ->toArray();
 
-            $salesExpired->whereIn('sales.project_id', $userProjects);
+            $salesExpired->whereIn("sales.project_id", $userProjects);
         }
 
         if (!empty($dateStart) && !empty($dateEnd)) {
-            $salesExpired->whereBetween('sales.created_at', [$dateStart, $dateEnd]);
+            $salesExpired->whereBetween("sales.created_at", [$dateStart, $dateEnd]);
         } else {
             if (!empty($dateStart)) {
-                $salesExpired->whereDate('sales.created_at', '>=', $dateStart);
+                $salesExpired->whereDate("sales.created_at", ">=", $dateStart);
             }
             if (!empty($dateEnd)) {
-                $salesExpired->whereDate('sales.created_at', '<', $dateEnd);
+                $salesExpired->whereDate("sales.created_at", "<", $dateEnd);
             }
         }
 
-        return $salesExpired->orderBy('sales.id', 'desc')->paginate(10);
+        return $salesExpired->orderBy("sales.id", "desc")->paginate(10);
     }
 
     /**
@@ -153,66 +167,77 @@ class SalesRecoveryService
     {
         $logModel = new CheckoutLog();
         $domainModel = new Domain();
-        $log = $logModel->where('checkout_id', $checkout->id)
-            ->orderBy('id', 'DESC')->first();
-        $whatsAppMsg = 'Olá ' . explode(' ', $log->name)[0];
+        $log = $logModel
+            ->where("checkout_id", $checkout->id)
+            ->orderBy("id", "DESC")
+            ->first();
+        $whatsAppMsg = "Olá " . explode(" ", $log->name)[0];
 
         if (!empty($log->telephone)) {
-            $log['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '',
-                    $log->telephone) . '&text=' . $whatsAppMsg;
+            $log["whatsapp_link"] =
+                "https://api.whatsapp.com/send?phone=55" .
+                preg_replace("/[^0-9]/", "", $log->telephone) .
+                "&text=" .
+                $whatsAppMsg;
             $log->telephone = foxutils()->getTelephone($log->telephone);
         } else {
-            $log->telephone = 'Numero inválido';
+            $log->telephone = "Numero inválido";
         }
 
-        $checkout['hours'] = with(new Carbon($checkout->created_at))->format('H:i:s');
-        $checkout['date'] = with(new Carbon($checkout->created_at))->format('d/m/Y');
-        $checkout['total'] = number_format($checkout->present()->getSubTotal() / 100, 2, ',', '.');
-        $checkout->src = ($checkout->src == 'null' || $checkout->src == null) ? '' : $checkout->src;
-        $checkout->utm_source = ($checkout->utm_source == 'null' || $checkout->utm_source == null) ? '' : $checkout->utm_source;
-        $checkout->utm_medium = ($checkout->utm_medium == 'null' || $checkout->utm_medium == null) ? '' : $checkout->utm_medium;
-        $checkout->utm_campaign = ($checkout->utm_campaign == 'null' || $checkout->utm_campaign == null) ? '' : $checkout->utm_campaign;
-        $checkout->utm_term = ($checkout->utm_term == 'null' || $checkout->utm_term == null) ? '' : $checkout->utm_term;
-        $checkout->utm_content = ($checkout->utm_content == 'null' || $checkout->utm_content == null) ? '' : $checkout->utm_content;
+        $checkout["hours"] = with(new Carbon($checkout->created_at))->format("H:i:s");
+        $checkout["date"] = with(new Carbon($checkout->created_at))->format("d/m/Y");
+        $checkout["total"] = number_format($checkout->present()->getSubTotal() / 100, 2, ",", ".");
+        $checkout->src = $checkout->src == "null" || $checkout->src == null ? "" : $checkout->src;
+        $checkout->utm_source =
+            $checkout->utm_source == "null" || $checkout->utm_source == null ? "" : $checkout->utm_source;
+        $checkout->utm_medium =
+            $checkout->utm_medium == "null" || $checkout->utm_medium == null ? "" : $checkout->utm_medium;
+        $checkout->utm_campaign =
+            $checkout->utm_campaign == "null" || $checkout->utm_campaign == null ? "" : $checkout->utm_campaign;
+        $checkout->utm_term = $checkout->utm_term == "null" || $checkout->utm_term == null ? "" : $checkout->utm_term;
+        $checkout->utm_content =
+            $checkout->utm_content == "null" || $checkout->utm_content == null ? "" : $checkout->utm_content;
 
-        $delivery['city'] = $log->city;
-        $delivery['street'] = $log->street;
-        $delivery['zip_code'] = $log->zip_code;
-        $delivery['state'] = $log->state;
+        $delivery["city"] = $log->city;
+        $delivery["street"] = $log->street;
+        $delivery["zip_code"] = $log->zip_code;
+        $delivery["state"] = $log->state;
 
-        if ($checkout->status == 'abandoned cart') {
-            $status = 'Não recuperado';
+        if ($checkout->status == "abandoned cart") {
+            $status = "Não recuperado";
         } else {
-            $status = 'Recuperado';
+            $status = "Recuperado";
         }
 
-        $checkout->browser = ($checkout->browser == 'null' || $checkout->browser == null) ? '' : $checkout->browser;
-        $checkout->operational_system = ($checkout->operational_system == 'null' || $checkout->operational_system == null) ? '' : $checkout->operational_system;
-        $checkout->is_mobile = $checkout->is_mobile == 1 ? 'Dispositivo: Celular' : 'Dispositivo: Computador';
+        $checkout->browser = $checkout->browser == "null" || $checkout->browser == null ? "" : $checkout->browser;
+        $checkout->operational_system =
+            $checkout->operational_system == "null" || $checkout->operational_system == null
+                ? ""
+                : $checkout->operational_system;
+        $checkout->is_mobile = $checkout->is_mobile == 1 ? "Dispositivo: Celular" : "Dispositivo: Computador";
 
         $products = $checkout->present()->getProducts();
 
-        $domain = $domainModel->where([
-            ['status', 3],
-            ['project_id', $checkout->project_id],
-        ])->first();
+        $domain = $domainModel->where([["status", 3], ["project_id", $checkout->project_id]])->first();
 
-        if(foxutils()->isProduction()) {
-            $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . hashids_encode($checkout->id) : 'Domínio removido';
+        if (foxutils()->isProduction()) {
+            $link = isset($domain)
+                ? "https://checkout." . $domain->name . "/recovery/" . hashids_encode($checkout->id)
+                : "Domínio removido";
         } else {
-            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . hashids_encode($checkout->id);
+            $link = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/recovery/" . hashids_encode($checkout->id);
         }
 
-        $checkout->id = '';
-        $log->id = '';
+        $checkout->id = "";
+        $log->id = "";
 
         return [
-            'checkout' => $checkout,
-            'client' => $log,
-            'products' => $products,
-            'delivery' => $delivery,
-            'status' => $status,
-            'link' => $link,
+            "checkout" => $checkout,
+            "client" => $log,
+            "products" => $products,
+            "delivery" => $delivery,
+            "status" => $status,
+            "link" => $link,
         ];
     }
 
@@ -232,60 +257,71 @@ class SalesRecoveryService
         $checkout = $sale->checkout;
 
         if (!empty($customer->telephone)) {
-            $customer->telephone = preg_replace('/[^0-9]/', '', $customer->telephone);
-            $whatsAppMsg = 'Olá ' . $customer->present()->getFirstName();
-            $customer->whatsapp_link = "https://api.whatsapp.com/send?phone=" . $customer->telephone . '&text=' . $whatsAppMsg;
+            $customer->telephone = preg_replace("/[^0-9]/", "", $customer->telephone);
+            $whatsAppMsg = "Olá " . $customer->present()->getFirstName();
+            $customer->whatsapp_link =
+                "https://api.whatsapp.com/send?phone=" . $customer->telephone . "&text=" . $whatsAppMsg;
         } else {
-            $customer->whatsapp_link = '';
-            $customer->telephone = 'Numero Inválido';
+            $customer->whatsapp_link = "";
+            $customer->telephone = "Numero Inválido";
         }
 
-        $checkout->sale_id = hashids_encode($sale->id, 'sale_id');
+        $checkout->sale_id = hashids_encode($sale->id, "sale_id");
 
-        $checkout->hours = with(new Carbon($sale->created_at))->format('H:i:s');
-        $checkout->date = with(new Carbon($sale->created_at))->format('d/m/Y');
-        $checkout->total = number_format($checkout->present()->getSubTotal() / 100, 2, ',', '.');
-        $checkout->src = ($checkout->src == 'null' || $checkout->src == null) ? '' : $checkout->src;
-        $checkout->utm_source = ($checkout->utm_source == 'null' || $checkout->utm_source == null) ? '' : $checkout->utm_source;
-        $checkout->utm_medium = ($checkout->utm_medium == 'null' || $checkout->utm_medium == null) ? '' : $checkout->utm_medium;
-        $checkout->utm_campaign = ($checkout->utm_campaign == 'null' || $checkout->utm_campaign == null) ? '' : $checkout->utm_campaign;
-        $checkout->utm_term = ($checkout->utm_term == 'null' || $checkout->utm_term == null) ? '' : $checkout->utm_term;
-        $checkout->utm_content = ($checkout->utm_content == 'null' || $checkout->utm_content == null) ? '' : $checkout->utm_content;
+        $checkout->hours = with(new Carbon($sale->created_at))->format("H:i:s");
+        $checkout->date = with(new Carbon($sale->created_at))->format("d/m/Y");
+        $checkout->total = number_format($checkout->present()->getSubTotal() / 100, 2, ",", ".");
+        $checkout->src = $checkout->src == "null" || $checkout->src == null ? "" : $checkout->src;
+        $checkout->utm_source =
+            $checkout->utm_source == "null" || $checkout->utm_source == null ? "" : $checkout->utm_source;
+        $checkout->utm_medium =
+            $checkout->utm_medium == "null" || $checkout->utm_medium == null ? "" : $checkout->utm_medium;
+        $checkout->utm_campaign =
+            $checkout->utm_campaign == "null" || $checkout->utm_campaign == null ? "" : $checkout->utm_campaign;
+        $checkout->utm_term = $checkout->utm_term == "null" || $checkout->utm_term == null ? "" : $checkout->utm_term;
+        $checkout->utm_content =
+            $checkout->utm_content == "null" || $checkout->utm_content == null ? "" : $checkout->utm_content;
 
-        $checkout->browser = ($checkout->browser == 'null' || $checkout->browser == null) ? '' : $checkout->browser;
-        $checkout->operational_system = ($checkout->operational_system == 'null' || $checkout->operational_system == null) ? '' : $checkout->operational_system;
+        $checkout->browser = $checkout->browser == "null" || $checkout->browser == null ? "" : $checkout->browser;
+        $checkout->operational_system =
+            $checkout->operational_system == "null" || $checkout->operational_system == null
+                ? ""
+                : $checkout->operational_system;
 
-        $checkout->is_mobile = $checkout->is_mobile == 1 ? 'Dispositivo: Celular' : 'Dispositivo: Computador';
+        $checkout->is_mobile = $checkout->is_mobile == 1 ? "Dispositivo: Celular" : "Dispositivo: Computador";
 
         if ($sale->payment_method == 2) {
-            $customer->error = 'Não pago até a data do vencimento';
+            $customer->error = "Não pago até a data do vencimento";
         } else {
-            $log = $logModel->where('checkout_id', $checkout->id)
-                ->where('event', '=', 'payment error')
-                ->orderBy('id', 'DESC')
+            $log = $logModel
+                ->where("checkout_id", $checkout->id)
+                ->where("event", "=", "payment error")
+                ->orderBy("id", "DESC")
                 ->first();
 
             if (empty($log->error)) {
-                $customer->error = 'Saldo insuficiente!';
-            } elseif ($log->error == 'CARTÃO RECUSADO !') {
-                $customer->error = $log->error . ' (saldo insuficiente)';
+                $customer->error = "Saldo insuficiente!";
+            } elseif ($log->error == "CARTÃO RECUSADO !") {
+                $customer->error = $log->error . " (saldo insuficiente)";
             } else {
                 $customer->error = $log->error;
             }
         }
 
-        if ($checkout->status != 'recovered') {
+        if ($checkout->status != "recovered") {
             if ($sale->payment_method == 1 || $sale->payment_method == 3) {
-                $status = 'Recusado';
+                $status = "Recusado";
             } else {
-                $status = 'Expirado';
+                $status = "Expirado";
             }
         } else {
-            $status = 'Recuperado';
+            $status = "Recuperado";
         }
 
-        $domain = $domainModel->where('project_id', $sale->project_id)
-        ->where('status', $domainModel->present()->getStatus('approved'))->first();
+        $domain = $domainModel
+            ->where("project_id", $sale->project_id)
+            ->where("status", $domainModel->present()->getStatus("approved"))
+            ->first();
 
         // if (!empty($domain)) {
         //    $link = "https://checkout." . $domain->name . "/recovery/" . hashids_encode($checkout->id);
@@ -293,40 +329,42 @@ class SalesRecoveryService
         //    $link = 'Domínio removido';
         // }
 
-        $link = '';
-        if($sale->payment_method === Sale::PIX_PAYMENT) {
-            if(foxutils()->isProduction()) {
-                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . hashids_encode($sale->id, 'sale_id') : 'Domínio removido';
+        $link = "";
+        if ($sale->payment_method === Sale::PIX_PAYMENT) {
+            if (foxutils()->isProduction()) {
+                $link = isset($domain)
+                    ? "https://checkout." . $domain->name . "/pix/" . hashids_encode($sale->id, "sale_id")
+                    : "Domínio removido";
             } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . hashids_encode($sale->id, 'sale_id');
+                $link =
+                    env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/pix/" . hashids_encode($sale->id, "sale_id");
             }
-
-        }else {
-            if(foxutils()->isProduction()) {
-                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . hashids_encode($checkout->id) : 'Domínio removido';
+        } else {
+            if (foxutils()->isProduction()) {
+                $link = isset($domain)
+                    ? "https://checkout." . $domain->name . "/recovery/" . hashids_encode($checkout->id)
+                    : "Domínio removido";
             } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . hashids_encode($checkout->id);
+                $link =
+                    env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/recovery/" . hashids_encode($checkout->id);
             }
         }
-
 
         $products = $saleService->getProducts($checkout->sale_id);
 
         $customer->document = foxutils()->getDocument($customer->document);
 
-        if(!empty($delivery)){
+        if (!empty($delivery)) {
             $delivery->zip_code = foxutils()->getCep($delivery->zip_code);
         }
 
         return [
-            'checkout' => $checkout,
-            'client' => $customer,
-            'products' => $products,
-            'delivery' => $delivery,
-            'status' => $status,
-            'link' => $link,
+            "checkout" => $checkout,
+            "client" => $customer,
+            "products" => $products,
+            "delivery" => $delivery,
+            "status" => $status,
+            "link" => $link,
         ];
     }
 }
-
-

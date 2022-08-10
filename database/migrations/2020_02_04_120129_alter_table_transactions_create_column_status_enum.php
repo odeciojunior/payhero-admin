@@ -14,10 +14,12 @@ class AlterTableTransactionsCreateColumnStatusEnum extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->integer('status_enum')->default(0)->after('status');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->integer("status_enum")
+                ->default(0)
+                ->after("status");
         });
-
     }
 
     /**
@@ -27,8 +29,8 @@ class AlterTableTransactionsCreateColumnStatusEnum extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('status_enum');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("status_enum");
         });
     }
 }

@@ -14,12 +14,18 @@ class AlterTableTransfersAddColumnGatewayId extends Migration
      */
     public function up()
     {
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->unsignedBigInteger('gateway_id')->nullable()->after('company_id');
-            $table->foreign('gateway_id')->references('id')->on('gateways');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("gateway_id")
+                ->nullable()
+                ->after("company_id");
+            $table
+                ->foreign("gateway_id")
+                ->references("id")
+                ->on("gateways");
         });
 
-        DB::statement('update transfers set gateway_id = 5 where customer_id is null');
+        DB::statement("update transfers set gateway_id = 5 where customer_id is null");
     }
 
     /**
@@ -29,9 +35,9 @@ class AlterTableTransfersAddColumnGatewayId extends Migration
      */
     public function down()
     {
-        Schema::table('transfers', function(Blueprint $table) {
-            $table->dropForeign(['gateway_id']);
-            $table->dropColumn('gateway_id');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->dropForeign(["gateway_id"]);
+            $table->dropColumn("gateway_id");
         });
     }
 }

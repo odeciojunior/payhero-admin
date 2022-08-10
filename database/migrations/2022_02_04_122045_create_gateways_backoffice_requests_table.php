@@ -13,14 +13,20 @@ class CreateGatewaysBackofficeRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('gateways_backoffice_requests', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('company_id');
-            $table->foreign('company_id')->references('id')->on('companies');
-            $table->unsignedBigInteger('gateway_id');
-            $table->foreign('gateway_id')->references('id')->on('gateways');
-            $table->json('sent_data')->nullable();
-            $table->json('response')->nullable();
+        Schema::create("gateways_backoffice_requests", function (Blueprint $table) {
+            $table->increments("id");
+            $table->unsignedInteger("company_id");
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
+            $table->unsignedBigInteger("gateway_id");
+            $table
+                ->foreign("gateway_id")
+                ->references("id")
+                ->on("gateways");
+            $table->json("sent_data")->nullable();
+            $table->json("response")->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +38,6 @@ class CreateGatewaysBackofficeRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gateways_backoffice_requests');
+        Schema::dropIfExists("gateways_backoffice_requests");
     }
 }

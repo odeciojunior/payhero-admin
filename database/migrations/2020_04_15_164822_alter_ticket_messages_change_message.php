@@ -13,8 +13,8 @@ class AlterTicketMessagesChangeMessage extends Migration
      */
     public function up()
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->text('message')->change();
+        Schema::table("ticket_messages", function (Blueprint $table) {
+            $table->text("message")->change();
         });
     }
 
@@ -25,8 +25,8 @@ class AlterTicketMessagesChangeMessage extends Migration
      */
     public function down()
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->string('message')->change();
+        Schema::table("ticket_messages", function (Blueprint $table) {
+            $table->string("message")->change();
         });
     }
 }

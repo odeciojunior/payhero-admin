@@ -13,14 +13,18 @@ class AlterTableProductPlanSale extends Migration
      */
     public function up()
     {
-        Schema::table('products_plans_sales', function (Blueprint $table) 
-        {
-            $table->unsignedBigInteger('plan_id')->nullable()->change();
-            $table->unsignedBigInteger('product_id')->nullable()->change();
-            $table->dropColumn('tracking_code');
-            $table->dropColumn('tracking_type_enum');
-            $table->dropColumn('tracking_status_enum');
-
+        Schema::table("products_plans_sales", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("plan_id")
+                ->nullable()
+                ->change();
+            $table
+                ->unsignedBigInteger("product_id")
+                ->nullable()
+                ->change();
+            $table->dropColumn("tracking_code");
+            $table->dropColumn("tracking_type_enum");
+            $table->dropColumn("tracking_status_enum");
         });
     }
 

@@ -18,7 +18,7 @@ class CustomersServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class CustomersServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('customers.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'customers'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("customers.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "customers");
     }
 
     /**
@@ -53,17 +54,26 @@ class CustomersServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/customers');
+        $viewPath = resource_path("views/modules/customers");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/customers';
-        }, \Config::get('view.paths')), [$sourcePath]), 'customers');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/customers";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "customers"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class CustomersServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/customers');
+        $langPath = resource_path("lang/modules/customers");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'customers');
+            $this->loadTranslationsFrom($langPath, "customers");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'customers');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "customers");
         }
     }
 
@@ -89,8 +99,8 @@ class CustomersServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

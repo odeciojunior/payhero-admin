@@ -1,6 +1,6 @@
 $(document).ready(function () {
     //alert('Aqui');
-    let projectId = $(window.location.pathname.split('/')).get(-1);
+    let projectId = $(window.location.pathname.split("/")).get(-1);
     let btnAddDomain = $(".add-domain");
     let btnDeleteDomain = $("#btn-delete-domain");
     let btnAddDomainModal = $("#btn-modal-add-domain");
@@ -15,29 +15,30 @@ $(document).ready(function () {
      * @param link
      */
     function updateDomains(link = null) {
-        loadOnTable('#domain-table-body', '#tabela-dominios');
+        loadOnTable("#domain-table-body", "#tabela-dominios");
 
         if (link == null) {
-            link = '/api/project/' + projectId + '/domains';
+            link = "/api/project/" + projectId + "/domains";
         } else {
-            link = '/api/project/' + projectId + '/domains' + link;
+            link = "/api/project/" + projectId + "/domains" + link;
         }
 
-        $('#tab_domains').find('.no-gutters').css('display', 'none');
-        $('#tabela-dominios').find('thead').css('display', 'none');
+        $("#tab_domains").find(".no-gutters").css("display", "none");
+        $("#tabela-dominios").find("thead").css("display", "none");
 
         $.ajax({
-            method: 'GET',
+            method: "GET",
             url: link,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function (response) {
                 errorAjaxResponse(response);
-            }, success: function (response) {
-                $("#domain-table-body").html('');
-                if (isEmpty(response.data) || response.data == '') {
+            },
+            success: function (response) {
+                $("#domain-table-body").html("");
+                if (isEmpty(response.data) || response.data == "") {
                     $("#domain-table-body").html(`
                         <tr class='text-center'>
                             <td colspan='4' style='height: 70px; vertical-align: middle;'>
@@ -54,51 +55,49 @@ $(document).ready(function () {
                         </tr>
                     `);
 
-                    $('#tabela-dominios').addClass('table-striped');
+                    $("#tabela-dominios").addClass("table-striped");
                 } else {
-                    $('#tab_domains').find('.no-gutters').css('display', 'flex');
-                    $('#tabela-dominios').find('thead').css('display', 'contents');
+                    $("#tab_domains").find(".no-gutters").css("display", "flex");
+                    $("#tabela-dominios").find("thead").css("display", "contents");
 
-                    $('#count-cupons').html(response.meta.total)
+                    $("#count-cupons").html(response.meta.total);
                     $.each(response.data, function (index, value) {
                         tableDomains(value);
                     });
-                    $('#tabela-dominios').addClass('table-striped');
+                    $("#tabela-dominios").addClass("table-striped");
 
-                    pagination(response, 'domain', updateDomains);
+                    pagination(response, "domain", updateDomains);
                     verifyCompanyDocuments(response);
                     /**
                      * Delete Domain
                      */
-                    $(".delete-domain").on('click', function () {
-                        let domain = $(this).attr('domain');
+                    $(".delete-domain").on("click", function () {
+                        let domain = $(this).attr("domain");
                         deleteDomain(domain);
                     });
 
                     /**
                      * Update Domain
                      */
-                    $(".edit-domain").on('click', function () {
+                    $(".edit-domain").on("click", function () {
                         $("#btn-modal-add-input").show();
-                        let domain = $(this).attr('domain');
-                        $("#modal-content-domain").css('overflow-y', 'auto').modal('show');
+                        let domain = $(this).attr("domain");
+                        $("#modal-content-domain").css("overflow-y", "auto").modal("show");
                         $("#domain").val(domain);
 
                         updateTableRecords(domain);
                     });
 
-                    $(".details-domain").on('click', function () {
-                        let domainId = $(this).attr('domain');
-                        $("#domain").val('');
+                    $(".details-domain").on("click", function () {
+                        let domainId = $(this).attr("domain");
+                        $("#domain").val("");
                         $("#domain").val(domainId);
                         $("#content-modal-recheck-dns-error").hide();
                         $("#content-modal-recheck-dns").show();
                         verifyDataDomain();
                     });
-
                 }
-
-            }
+            },
         });
     }
 
@@ -107,57 +106,55 @@ $(document).ready(function () {
      * @param domain
      */
     function deleteDomain(domain) {
-        $(".btn-delete-modal-domain").css('opacity', 1);
-        $("#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain").show();
+        $(".btn-delete-modal-domain").css("opacity", 1);
+        $(
+            "#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain"
+        ).show();
 
         $("#modal-delete-domain").modal("show");
 
-        btnDeleteDomain.unbind('click');
-        btnDeleteDomain.on('click', function () {
-            $(".btn-delete-modal-domain").css('opacity', 0);
+        btnDeleteDomain.unbind("click");
+        btnDeleteDomain.on("click", function () {
+            $(".btn-delete-modal-domain").css("opacity", 0);
 
-            loadOnAny('#modal-delete-domain-body', false, {
+            loadOnAny("#modal-delete-domain-body", false, {
                 styles: {
                     container: {
-                        minHeight: '240px'
-                    }
+                        minHeight: "240px",
+                    },
                 },
-                insertBefore: '.modal-delete-footer'
+                insertBefore: ".modal-delete-footer",
             });
 
             $.ajax({
-                method: 'DELETE',
-                url: '/api/project/' + projectId + '/domains/' + domain,
-                dataType: 'json',
+                method: "DELETE",
+                url: "/api/project/" + projectId + "/domains/" + domain,
+                dataType: "json",
                 data: {
-                    'project': projectId,
-                    'domain': domain,
+                    project: projectId,
+                    domain: domain,
                 },
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 error: function (response) {
-                    $('#close-modal-delete-domain').click();
-                    loadOnAny('#modal-delete-domain-body', true);
+                    $("#close-modal-delete-domain").click();
+                    loadOnAny("#modal-delete-domain-body", true);
 
                     errorAjaxResponse(response);
 
                     updateDomains();
-
                 },
                 success: function (response) {
+                    $("#close-modal-delete-domain").click();
+                    loadOnAny("#modal-delete-domain-body", true);
 
-                    $('#close-modal-delete-domain').click();
-                    loadOnAny('#modal-delete-domain-body', true);
-
-                    alertCustom('success', response.message);
+                    alertCustom("success", response.message);
                     updateDomains();
-                }
+                },
             });
-
-        })
-
+        });
     }
 
     /**
@@ -165,49 +162,65 @@ $(document).ready(function () {
      * @param value
      */
     function tableDomains(value) {
-        var dados = '';
-        dados += '<tr>';
-        dados += '<td class="text-center">' + value.domain + '</td>';
-        dados += '<td class="text-center"><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
-        dados += "<td style='text-align:center;'>"
+        var dados = "";
+        dados += "<tr>";
+        dados += '<td class="text-center">' + value.domain + "</td>";
+        dados +=
+            '<td class="text-center"><span class="badge badge-' +
+            statusDomain[value.status] +
+            '">' +
+            value.status_translated +
+            "</span></td>";
+        dados += "<td style='text-align:center;'>";
         dados += "<div class='d-flex justify-content-end align-items-center'>";
-        dados += "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><span class='o-eye-1'></span> </a>"
-        dados += "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><span class='o-edit-1'></span> </a>"
-        dados += "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><span class='o-bin-1'></span> </a>";
+        dados +=
+            "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" +
+            value.status +
+            "' domain='" +
+            value.id +
+            "' ><span class='o-eye-1'></span> </a>";
+        dados +=
+            "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" +
+            value.status +
+            "' domain='" +
+            value.id +
+            "' data-toggle='modal'><span class='o-edit-1'></span> </a>";
+        dados +=
+            "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" +
+            value.id +
+            "' data-toggle='modal'><span class='o-bin-1'></span> </a>";
         dados += "</div>";
         dados += "</td>";
-        dados += '</tr>';
+        dados += "</tr>";
         $("#domain-table-body").append(dados);
     }
 
     /**
      * Verifica dados e exibi modal para adicionar novo dominio
      */
-    $('.add-domain').off('click');
-    $(document).on('click', '.add-domain', function () {
+    $(".add-domain").off("click");
+    $(document).on("click", ".add-domain", function () {
         $("#btn-modal-add-input").show();
         $("#loaderModal").remove();
 
-        $("#modal-title-add-domain").html('Novo domínio');
+        $("#modal-title-add-domain").html("Novo domínio");
         $("#btn-modal-add-domain").show();
 
         $("#form-add-domain").submit(function () {
             return false;
         });
 
-        $('#modal-body-add-domain').show();
+        $("#modal-body-add-domain").show();
 
-        $("#modal-add-domain").modal('show');
-
+        $("#modal-add-domain").modal("show");
     });
 
-    $('#btn-modal-add-domain').off('click');
-    $(document).on('click', '#btn-modal-add-domain', function () {
-
+    $("#btn-modal-add-domain").off("click");
+    $(document).on("click", "#btn-modal-add-domain", function () {
         if ($.trim($(".name-domain").val()).length === 0) {
-            infoDomain.addClass('text-danger').html('Preencha corretamente o domínio').show();
+            infoDomain.addClass("text-danger").html("Preencha corretamente o domínio").show();
         } else {
-            $(".info-domain").html('');
+            $(".info-domain").html("");
             addNewDomain();
         }
     });
@@ -217,51 +230,49 @@ $(document).ready(function () {
      */
     function addNewDomain() {
         $("#especialModalTitle").remove();
-        $("#modal-title-add-domain").html('');
+        $("#modal-title-add-domain").html("");
         //loadOnModalDomainEspecial('#modal-content-add-domain');
-        loadOnModalDomainEspecial('#modal-body-add-domain');
+        loadOnModalDomainEspecial("#modal-body-add-domain");
         $("#btn-modal-add-domain").hide();
 
         btnAddDomainModal.hide();
 
-        let formData = new FormData(document.getElementById('form-add-domain'));
-        formData.append('project_id', projectId);
+        let formData = new FormData(document.getElementById("form-add-domain"));
+        formData.append("project_id", projectId);
 
         $.ajax({
             method: "POST",
-            url: '/api/project/' + projectId + '/domains',
+            url: "/api/project/" + projectId + "/domains",
             processData: false,
             contentType: false,
             cache: false,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             dataType: "json",
             data: formData,
             error: function (response) {
                 $("#especialModalTitle").remove();
 
-                loadOnAny('#modal-body-add-domain', true);
+                loadOnAny("#modal-body-add-domain", true);
 
-                $("#modal-title-add-domain").html('Novo domínio').show();
+                $("#modal-title-add-domain").html("Novo domínio").show();
                 $("#form-add-domain, #btn-modal-add-domain").show();
 
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadOnAny('#modal-body-add-domain', true);
+                loadOnAny("#modal-body-add-domain", true);
 
                 $("#modal-button-close").click();
-                alertCustom('success', response.message);
+                alertCustom("success", response.message);
                 updateDomains();
                 $(".btn-continue-domain").show();
                 infoDomain = response.data;
                 modalDomainEdit(response);
-
-            }
+            },
         });
-
     }
 
     /**
@@ -269,39 +280,39 @@ $(document).ready(function () {
      */
     function removeLoad() {
         $("#loaderModal").remove();
-        $('#especialModalTitle').remove();
+        $("#especialModalTitle").remove();
     }
 
     /**
      * Muda input quando for entrada MX
      */
     $("#type-register").change(function () {
-        if ($("#type-register option:selected").val() === 'MX') {
-            $("#name-register").parent().removeClass('col-lg-10').addClass('col-lg-8');
+        if ($("#type-register option:selected").val() === "MX") {
+            $("#name-register").parent().removeClass("col-lg-10").addClass("col-lg-8");
             $("#div-input-priority").remove();
-            $("#name-register").parent().after(
-                ' <div id="div-input-priority" class="col-sm-12 col-md-5 col-lg-2 mb-3">' +
-                '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
-                '</div>'
-            );
-            $("#proxy-active").attr('disabled', true);
-            $("#proxy-select ").val('0').change();
+            $("#name-register")
+                .parent()
+                .after(
+                    ' <div id="div-input-priority" class="col-sm-12 col-md-5 col-lg-2 mb-3">' +
+                        '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
+                        "</div>"
+                );
+            $("#proxy-active").attr("disabled", true);
+            $("#proxy-select ").val("0").change();
 
-            $('#value-priority').mask('0#');
-
-        } else if ($("#type-register option:selected").val() === 'TXT') {
+            $("#value-priority").mask("0#");
+        } else if ($("#type-register option:selected").val() === "TXT") {
             $("#div-input-priority").remove();
 
-            $("#proxy-active").attr('disabled', true);
-            $("#proxy-select").val('0').change();
-
+            $("#proxy-active").attr("disabled", true);
+            $("#proxy-select").val("0").change();
         } else {
             $("#div-input-priority").remove();
 
-            $("#proxy-active").removeAttr('disabled');
+            $("#proxy-active").removeAttr("disabled");
 
             $("#div-input-priority").remove();
-            $("#name-register").parent().removeClass('col-lg-8').addClass('col-lg-10');
+            $("#name-register").parent().removeClass("col-lg-8").addClass("col-lg-10");
         }
     });
 
@@ -317,27 +328,25 @@ $(document).ready(function () {
      * @param response
      */
     function modalDomainEdit(response) {
-
-        $("#domain").val('');
+        $("#domain").val("");
         $("#domain").val(response.data.id_code);
         $("#btn-modal-continue-domain").show();
 
-        $("#modal-content-domain").css('overflow-y', 'auto').modal('show');
+        $("#modal-content-domain").css("overflow-y", "auto").modal("show");
 
         updateTableRecords(response.data.id_code);
-
     }
 
     function verifyInputEmpty() {
         let returno = false;
-        if (($("#name-register").val().length === 0)) {
+        if ($("#name-register").val().length === 0) {
             $("#error-name-register-dns").show();
             returno = true;
         } else {
             $("#error-name-register-dns").hide();
         }
 
-        if (($("#value-record").val().length === 0)) {
+        if ($("#value-record").val().length === 0) {
             $("#error-value-record").show();
             returno = true;
         } else {
@@ -350,29 +359,29 @@ $(document).ready(function () {
     /**
      * Adiciona records ao dominio
      */
-    $("#bt-add-record").on('click', function () {
+    $("#bt-add-record").on("click", function () {
         if (verifyInputEmpty()) {
             return false;
         } else {
             $("#error-name-register-dns, #error-value-record").hide();
 
             let domainId = $("#domain").val();
-            loadOnTable('#table-body-new-records', '#new-registers-table');
+            loadOnTable("#table-body-new-records", "#new-registers-table");
 
-            let formData = new FormData(document.getElementById('form-modal-add-domain-record'));
-            formData.append('project', projectId);
+            let formData = new FormData(document.getElementById("form-modal-add-domain-record"));
+            formData.append("project", projectId);
 
-            formData.append('domain', domainId);
+            formData.append("domain", domainId);
 
             $.ajax({
-                method: 'POST',
-                url: '/api/project/' + projectId + '/domain/' + domainId + '/records',
+                method: "POST",
+                url: "/api/project/" + projectId + "/domain/" + domainId + "/records",
                 processData: false,
                 contentType: false,
                 cache: false,
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 data: formData,
                 dataType: "json",
@@ -381,19 +390,16 @@ $(document).ready(function () {
                     removeLoad();
                     errorAjaxResponse(response);
                     updateTableRecords(domainId);
-
                 },
                 success: function (response) {
                     $(".swal2-container").remove();
                     removeLoad();
-                    alertCustom('success', response.message);
-                    $('#name-register, #value-record').val('');
+                    alertCustom("success", response.message);
+                    $("#name-register, #value-record").val("");
                     updateTableRecords(domainId);
-
-                }
+                },
             });
         }
-
     });
 
     /**
@@ -401,61 +407,64 @@ $(document).ready(function () {
      * @property response.data.domainRecords
      */
     function updateTableRecords(domainId) {
-        loadOnTable('#table-body-new-records', '#new-registers-table');
+        loadOnTable("#table-body-new-records", "#new-registers-table");
         $.ajax({
-            method: 'GET',
-            url: '/api/project/' + projectId + '/domain/' + domainId + '/records',
+            method: "GET",
+            url: "/api/project/" + projectId + "/domain/" + domainId + "/records",
             processData: false,
             contentType: false,
             cache: false,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            dataType: 'json',
+            dataType: "json",
             error: function (response) {
                 errorAjaxResponse(response);
             },
             success: function (response) {
-                $("#table-body-new-records").html('');
+                $("#table-body-new-records").html("");
                 tableRecords(response.data.domainRecords, domainId);
 
-                $(".delete-domain-record").unbind('click');
-                $(".delete-domain-record").on('click', function () {
-                    if (isEmptyValue($(this).data('domain')) && isEmptyValue($(this).data('record'))) {
-                        deleteRecord(projectId, $(this).data('domain'), $(this).data('record'));
+                $(".delete-domain-record").unbind("click");
+                $(".delete-domain-record").on("click", function () {
+                    if (isEmptyValue($(this).data("domain")) && isEmptyValue($(this).data("record"))) {
+                        deleteRecord(projectId, $(this).data("domain"), $(this).data("record"));
                     }
                 });
 
-                $('.check-proxy').bind('change', function () {
-
-                    if ($(this).is(':checked')) {
+                $(".check-proxy").bind("change", function () {
+                    if ($(this).is(":checked")) {
                         $(this).val(1);
                     } else {
                         $(this).val(0);
                     }
 
-                    if (!$(this).data('system')) {
+                    if (!$(this).data("system")) {
                         $.ajax({
-                            method: 'PUT',
-                            url: '/api/project/' + projectId + '/domain/' + $(this).data('domain') + '/records/' + $(this).data('record'),
+                            method: "PUT",
+                            url:
+                                "/api/project/" +
+                                projectId +
+                                "/domain/" +
+                                $(this).data("domain") +
+                                "/records/" +
+                                $(this).data("record"),
                             data: {
-                                proxy: this.value
+                                proxy: this.value,
                             },
                             headers: {
-                                'Authorization': $('meta[name="access-token"]').attr('content'),
-                                'Accept': 'application/json',
+                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Accept: "application/json",
                             },
-                            error: function (response) {
-
-                            }, success: function (response) {
-                                alertCustom('success', response.message);
-                            }
+                            error: function (response) {},
+                            success: function (response) {
+                                alertCustom("success", response.message);
+                            },
                         });
                     }
                 });
-
-            }
+            },
         });
     }
 
@@ -467,14 +476,14 @@ $(document).ready(function () {
      * @param domainRecords.value.domain_name
      */
     function tableRecords(domainRecords, domainId) {
-        let data = '';
+        let data = "";
         let cont = 0;
-        let proxyVar = 'checked';
-        let disable = '';
+        let proxyVar = "checked";
+        let disable = "";
         $.each(domainRecords, function (index, value) {
-            data += '<tr>';
-            data += '<td >' + value.type + '</td>';
-            data += '<td style="word-break: break-word;">' + value.name + '</td>';
+            data += "<tr>";
+            data += "<td >" + value.type + "</td>";
+            data += '<td style="word-break: break-word;">' + value.name + "</td>";
             data += `<td style="word-break: break-word;">
                         <div class="row align-items-center">
                             <!-- Target -->
@@ -494,75 +503,110 @@ $(document).ready(function () {
                     </td>`;
 
             if (!value.proxy) {
-                proxyVar = '';
+                proxyVar = "";
             } else {
-                proxyVar = 'checked'
+                proxyVar = "checked";
             }
 
-            if (value.type === 'MX' || value.type === 'TXT') {
-                disable = 'disabled';
+            if (value.type === "MX" || value.type === "TXT") {
+                disable = "disabled";
             }
 
             if (!value.system_flag) {
-                data += '<td><div class="switch-holder">' +
-                    '<label class="switch">';
+                data += '<td><div class="switch-holder">' + '<label class="switch">';
 
-                data += '<input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy"  class="check check-proxy" data-domain="' + domainId + '" data-system="' + value.system_flag + '" data-record="' + value.id + '"  ' + proxyVar + '' + disable + '  >' +
+                data +=
+                    '<input type="checkbox" value="' +
+                    value.proxy +
+                    '" name="proxy" id="proxy"  class="check check-proxy" data-domain="' +
+                    domainId +
+                    '" data-system="' +
+                    value.system_flag +
+                    '" data-record="' +
+                    value.id +
+                    '"  ' +
+                    proxyVar +
+                    "" +
+                    disable +
+                    "  >" +
                     '<span class="slider round"></span>' +
-                    '</label>' +
-                    '</div></td>';
-                data += "<td><button style='background-color: transparent;' role='button' title='Excluir' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><span class='o-bin-1'></span> </button></td>";
-
+                    "</label>" +
+                    "</div></td>";
+                data +=
+                    "<td><button style='background-color: transparent;' role='button' title='Excluir' class='btn mg-responsive delete-domain-record pointer' data-domain='" +
+                    domainId +
+                    "' data-system='" +
+                    value.system_flag +
+                    "' data-record='" +
+                    value.id +
+                    "'><span class='o-bin-1'></span> </button></td>";
             } else {
                 cont++;
-                let enabledA = '';
-                let enabledEntrada = 'disabled';
-                if ((value.type === 'A' && value.name === value.domain_name) || (value.type === 'CNAME' && value.name === 'www') || (value.type === 'CNAME' && value.name.indexOf('mail.') === 0)) {
-                    enabledA = "<td><button style='background-color: transparent;' role='button' title='Excluir' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><span class='o-bin-1'></span> </button></td>";
+                let enabledA = "";
+                let enabledEntrada = "disabled";
+                if (
+                    (value.type === "A" && value.name === value.domain_name) ||
+                    (value.type === "CNAME" && value.name === "www") ||
+                    (value.type === "CNAME" && value.name.indexOf("mail.") === 0)
+                ) {
+                    enabledA =
+                        "<td><button style='background-color: transparent;' role='button' title='Excluir' class='btn mg-responsive delete-domain-record pointer' data-domain='" +
+                        domainId +
+                        "' data-system='" +
+                        value.system_flag +
+                        "' data-record='" +
+                        value.id +
+                        "'><span class='o-bin-1'></span> </button></td>";
                 } else {
-                    enabledA = "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " + enabledEntrada + "><span class='o-bin-1'></span> </a></td>";
+                    enabledA =
+                        "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " +
+                        enabledEntrada +
+                        "><span class='o-bin-1'></span> </a></td>";
                 }
-                data += '<td><div class="switch-holder" style=" opacity: 0.5;">' +
+                data +=
+                    '<td><div class="switch-holder" style=" opacity: 0.5;">' +
                     '                    <label class="switch" style="cursor: not-allowed">' +
-                    '                        <input type="checkbox" style="cursor: not-allowed" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + '  ' + enabledEntrada + ' >' +
+                    '                        <input type="checkbox" style="cursor: not-allowed" value="' +
+                    value.proxy +
+                    '" name="proxy" id="proxy" class="check check-proxy" ' +
+                    proxyVar +
+                    "  " +
+                    enabledEntrada +
+                    " >" +
                     '                        <span class="slider round" style="cursor: not-allowed"></span>' +
-                    '                    </label>' +
-                    '                </div></td>';
+                    "                    </label>" +
+                    "                </div></td>";
                 data += enabledA;
-
             }
 
             data += "</td>";
-            data += '</tr>';
+            data += "</tr>";
         });
 
-
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-
+            $('[data-toggle="tooltip"]').tooltip();
 
             $(".copy-data").on("click", function () {
-                var clipboard = new ClipboardJS('.copy-data')
+                var clipboard = new ClipboardJS(".copy-data");
 
-                clipboard.on('success', function(e) {
-                    console.info('Action:', e.action);
-                    console.info('Text:', e.text);
-                    console.info('Trigger:', e.trigger);
-                    alertCustom('success', 'Link copiado!');
+                clipboard.on("success", function (e) {
+                    console.info("Action:", e.action);
+                    console.info("Text:", e.text);
+                    console.info("Trigger:", e.trigger);
+                    alertCustom("success", "Link copiado!");
                     e.clearSelection();
                 });
             });
-        })
+        });
 
         $("#loaderLine").remove();
-        $("#new-registers-table").addClass('table-striped');
+        $("#new-registers-table").addClass("table-striped");
         if (cont > 0) {
             $("#empty-info").hide();
         } else {
             $("#empty-info").show();
         }
         $("#table-body-new-records").append(data);
-
     }
 
     /**
@@ -574,31 +618,29 @@ $(document).ready(function () {
     function deleteRecord(projectId, domain, record) {
         if (isEmptyValue(projectId) && isEmptyValue(domain) && isEmptyValue(record)) {
             $.ajax({
-                method: 'DELETE',
-                url: '/api/project/' + projectId + '/domain/' + domain + '/records/' + record,
+                method: "DELETE",
+                url: "/api/project/" + projectId + "/domain/" + domain + "/records/" + record,
                 processData: false,
                 contentType: false,
                 cache: false,
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
-                dataType: 'json',
+                dataType: "json",
                 error: function (response) {
                     errorAjaxResponse(response);
-                    $("#table-body-new-records").html('');
+                    $("#table-body-new-records").html("");
                     updateTableRecords(domain);
-
                 },
                 success: function (response) {
-                    alertCustom('success', response.message);
-                    $("#table-body-new-records").html('');
+                    alertCustom("success", response.message);
+                    $("#table-body-new-records").html("");
                     updateTableRecords(domain);
-                }
+                },
             });
-
         } else {
-            alertCustom('error', 'Ocorreu um erro, tente novamente mais tarde!');
+            alertCustom("error", "Ocorreu um erro, tente novamente mais tarde!");
         }
     }
 
@@ -607,11 +649,11 @@ $(document).ready(function () {
      */
     function verifyDataDomain() {
         $.ajax({
-            method: 'GET',
-            url: '/api/project/' + projectId + '/domains/' + $("#domain").val(),
+            method: "GET",
+            url: "/api/project/" + projectId + "/domains/" + $("#domain").val(),
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function (response) {
                 errorAjaxResponse(response);
@@ -621,62 +663,61 @@ $(document).ready(function () {
                 if (response.data.status === 3) {
                     $("#content-modal-recheck-dns").hide();
                     $("#modal-info-dsn-success-body, #content-modal-recheck-dns-success").show();
-
                 } else {
-
-                    var data = '';
+                    var data = "";
                     $.each(response.data.zones, function (index, value) {
-                        data += '<tr class="table-title-entry">' +
+                        data +=
+                            '<tr class="table-title-entry">' +
                             '<td class= "table-title" > <b>Novo servidor DNS: </b></td>' +
-                            '<td> ' + value + ' </td>' +
-                            '</tr>';
+                            "<td> " +
+                            value +
+                            " </td>" +
+                            "</tr>";
                     });
 
                     $("#table-zones-add").append(data);
                     if (response.data.domainHost) {
                         $("#nameHost").html(response.data.domainHost);
                     } else {
-                        $("#nameHost").html('');
+                        $("#nameHost").html("");
                     }
                     $("#content-modal-recheck-dns-success").hide();
 
                     $("#modal-title-dns-recheck, #modal-info-dsn-body, #content-modal-recheck-dns").show();
                 }
 
-                $("#modal-info-dns").modal('show');
-
-            }
+                $("#modal-info-dns").modal("show");
+            },
         });
     }
 
     /**
      * Mostra modal para validar entradas
      */
-    $(".btn-continue-domain").on('click', function () {
+    $(".btn-continue-domain").on("click", function () {
         $("#modal-button-close-edit-domain-record").click();
 
         $("#content-modal-recheck-dns-error").hide();
         $("#content-modal-recheck-dns").show();
         verifyDataDomain();
-
     });
 
     /**
      * Recheck dominio
      */
-    $(".btn-verify-domain").unbind('click');
-    $(document).on('click', '.btn-verify-domain', function () {
+    $(".btn-verify-domain").unbind("click");
+    $(document).on("click", ".btn-verify-domain", function () {
         let domainId = $("#domain").val();
         $("#modal-title-dns-recheck").hide();
 
-        loadOnModal('.content-dns');
+        loadOnModal(".content-dns");
         // #modal-info-dsn-body
         $.ajax({
-            method: 'GET',
-            url: '/api/project/' + projectId + '/domain/' + domainId + '/recheck',
+            method: "GET",
+            url: "/api/project/" + projectId + "/domain/" + domainId + "/recheck",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function (response) {
                 $(".swal2-container").remove();
@@ -685,19 +726,17 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
                 $("#content-modal-recheck-dns").hide();
                 $("#content-modal-recheck-dns-error").show();
-
             },
             success: function (response) {
                 $(".swal2-container").remove();
                 removeLoad();
                 $("#loaderModal").remove();
-                alertCustom('success', response.message);
+                alertCustom("success", response.message);
                 $("#content-modal-recheck-dns").hide();
                 $("#modal-info-dsn-success-body, #content-modal-recheck-dns-success").show();
                 updateDomains();
-            }
+            },
         });
-
     });
 
     /**
@@ -705,33 +744,32 @@ $(document).ready(function () {
      * @param whereToLoad
      */
     function loadOnModalDomainEspecial(whereToLoad) {
-
-        $('#modal-title-add-domain').after('<h3 id="especialModalTitle" style="font-weight:bold; color:black"></h3>');
-        $('#modal-title-add-domain').hide();
+        $("#modal-title-add-domain").after('<h3 id="especialModalTitle" style="font-weight:bold; color:black"></h3>');
+        $("#modal-title-add-domain").hide();
         loadOnAny(whereToLoad, false, {
             styles: {
                 container: {
-                    minHeight: '180px'
-                }
-            }
+                    minHeight: "180px",
+                },
+            },
         });
 
-        $('#especialModalTitle').html('Iniciando ... ');
+        $("#especialModalTitle").html("Iniciando ... ");
 
         setTimeout(function () {
-            $('#especialModalTitle').html('Configurando domínio');
+            $("#especialModalTitle").html("Configurando domínio");
         }, 1000);
         setTimeout(function () {
-            $('#especialModalTitle').html('Configurando entradas DNS');
+            $("#especialModalTitle").html("Configurando entradas DNS");
         }, 6000);
         setTimeout(function () {
-            $('#especialModalTitle').html('Preparando servidores de Email');
+            $("#especialModalTitle").html("Preparando servidores de Email");
         }, 13000);
         setTimeout(function () {
-            $('#especialModalTitle').html('Preparando checkout transparente');
+            $("#especialModalTitle").html("Preparando checkout transparente");
         }, 20000);
         setTimeout(function () {
-            $('#especialModalTitle').html('Finalizando ... ');
+            $("#especialModalTitle").html("Finalizando ... ");
         }, 25000);
     }
 
@@ -739,21 +777,21 @@ $(document).ready(function () {
      * Presenter
      */
     let statusDomain = {
-        1: 'warning',
-        2: 'warning',
-        3: 'success',
-        4: 'danger'
+        1: "warning",
+        2: "warning",
+        3: "success",
+        4: "danger",
     };
 
     /**
      * Não sei o que faz
      */
-    $('.modal').on('hidden.bs.modal', function () {
+    $(".modal").on("hidden.bs.modal", function () {
         resetHtml();
-        $('.modal-footer').css('display', '');
-        $('#btn-modal').show();
-        $('#modal-title').show();
-        $('#especialModalTitle').remove();
+        $(".modal-footer").css("display", "");
+        $("#btn-modal").show();
+        $("#modal-title").show();
+        $("#especialModalTitle").remove();
     });
 
     /**
@@ -761,13 +799,17 @@ $(document).ready(function () {
      * @param whereToReset
      */
     function resetHtml(whereToReset) {
-        $(whereToReset).html('');
+        $(whereToReset).html("");
     }
     function verifyCompanyDocuments(response) {
-        if (response.data[0].document_status == 'approved') {
-            $('#div-recheck-dns').html("<button class='btn btn-success btn-verify-domain' domain='' style='font-size: 25px;'>Verificar</button>")
+        if (response.data[0].document_status == "approved") {
+            $("#div-recheck-dns").html(
+                "<button class='btn btn-success btn-verify-domain' domain='' style='font-size: 25px;'>Verificar</button>"
+            );
         } else {
-            $('#div-recheck-dns').html('<span class="table-title">A aprovação do domínio só ficará disponível quando seus documentos e da sua empresa estiverem aprovados</span>');
+            $("#div-recheck-dns").html(
+                '<span class="table-title">A aprovação do domínio só ficará disponível quando seus documentos e da sua empresa estiverem aprovados</span>'
+            );
         }
     }
 });

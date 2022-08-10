@@ -14,7 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware("auth");
     }
 
     /**
@@ -24,23 +24,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view("home");
     }
 
     public function generateZendesktoken()
     {
-
         $user = \Auth::user();
         $carbon = \Carbon\Carbon::now()->timestamp;
 
         $payload = [
-            'name' =>  $user->name ,
-            'email' =>  $user->email,
-            'iat' => $carbon,
-            'external_id' => "user-" . $user->id,
+            "name" => $user->name,
+            "email" => $user->email,
+            "iat" => $carbon,
+            "external_id" => "user-" . $user->id,
         ];
 
-        $token = JWT::encode($payload, '7EAD23D4B97270A42FC02EDEFADE37FE91C111F102B8001A68EE0EB9DC7E15EB');
+        $token = JWT::encode($payload, "7EAD23D4B97270A42FC02EDEFADE37FE91C111F102B8001A68EE0EB9DC7E15EB");
         return response()->json($token);
     }
 }

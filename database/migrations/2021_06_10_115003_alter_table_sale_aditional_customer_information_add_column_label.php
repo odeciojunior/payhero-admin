@@ -13,7 +13,9 @@ class AlterTableSaleAditionalCustomerInformationAddColumnLabel extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE sale_additional_customer_informations ADD COLUMN label varchar(100) null default null after line;");
+        DB::statement(
+            "ALTER TABLE sale_additional_customer_informations ADD COLUMN label varchar(100) null default null after line;"
+        );
     }
 
     /**

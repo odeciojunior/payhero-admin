@@ -13,15 +13,21 @@ class CreateAsaasAnticipationRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('asaas_anticipation_requests', function (Blueprint $table) {
+        Schema::create("asaas_anticipation_requests", function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('company_id');
-            $table->unsignedBigInteger('sale_id');
-            $table->json('sent_data')->nullable();
-            $table->json('response')->nullable();
+            $table->unsignedInteger("company_id");
+            $table->unsignedBigInteger("sale_id");
+            $table->json("sent_data")->nullable();
+            $table->json("response")->nullable();
             $table->timestamps();
-            $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('sale_id')->references('id')->on('sales');
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 
@@ -32,6 +38,6 @@ class CreateAsaasAnticipationRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asaas_anticipations_requests');
+        Schema::dropIfExists("asaas_anticipations_requests");
     }
 }

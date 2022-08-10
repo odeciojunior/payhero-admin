@@ -10,9 +10,9 @@ use Modules\Core\Services\GetnetBackOfficeService;
 
 class UpdateConfirmDateFromDebtPending extends Command
 {
-    protected $signature = 'getnet:update-confirm-date-debt-pending';
+    protected $signature = "getnet:update-confirm-date-debt-pending";
 
-    protected $description = 'Atualiza os debitos pendentes';
+    protected $description = "Atualiza os debitos pendentes";
 
     public function __construct()
     {
@@ -21,18 +21,16 @@ class UpdateConfirmDateFromDebtPending extends Command
 
     public function handle()
     {
-
         try {
-
             $getnetService = new GetnetBackOfficeService();
-            $data = Carbon::createFromFormat('d/m/Y', '01/01/2021');
+            $data = Carbon::createFromFormat("d/m/Y", "01/01/2021");
 
             while ($data->lessThan(Carbon::now())) {
-                $pendingDebts = PendingDebt::whereNull('confirm_date')->get();
+                $pendingDebts = PendingDebt::whereNull("confirm_date")->get();
                 $response = $getnetService
                     ->setStatementStartDate($data)
                     ->setStatementEndDate($data->addDays(29))
-                    ->setStatementDateField('schedule')
+                    ->setStatementDateField("schedule")
                     ->getStatement();
                 $gatewaySale = json_decode($response);
 
@@ -46,17 +44,17 @@ class UpdateConfirmDateFromDebtPending extends Command
                                 !is_null($adjustment->subseller_rate_confirm_date)
                             ) {
                                 $pendingDebt->update([
-                                                         'confirm_date' => Carbon::parse($adjustment->subseller_rate_confirm_date)->format('Y-m-d')
-                                                     ]);
+                                    "confirm_date" => Carbon::parse($adjustment->subseller_rate_confirm_date)->format(
+                                        "Y-m-d"
+                                    ),
+                                ]);
                             }
                         }
                     }
                 }
             }
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

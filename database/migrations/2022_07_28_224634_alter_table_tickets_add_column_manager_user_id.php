@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEventColumnToActivityLogTable extends Migration
+class AlterTableTicketsAddColumnManagerUserId extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class AddEventColumnToActivityLogTable extends Migration
      */
     public function up()
     {
-        // Schema::table('activity_log', function (Blueprint $table) {
-        //     $table->string('event')->nullable()->after('subject_type');
-        // });
+        Schema::table('tickets', function (Blueprint $table) {
+            $table->integer('manager_user_id')->unsigned()->nullable()->index()->after('customer_id');
+            $table->foreign('manager_user_id')->references('id')->on('users');
+        });
     }
 
     /**
@@ -25,8 +26,6 @@ class AddEventColumnToActivityLogTable extends Migration
      */
     public function down()
     {
-        Schema::table('activity_log', function (Blueprint $table) {
-            $table->dropColumn('event');
-        });
+        //
     }
 }

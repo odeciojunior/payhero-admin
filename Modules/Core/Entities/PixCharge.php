@@ -7,23 +7,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PixCharge extends Model
 {
-
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'gateway_id',
-        'txid',
-        'e2eId',
-        'location_id',
-        'location',
-        'qrcode',
-        'qrcode_image',
-        'status',
-        'expiration_date',
-        'created_at',
-        'updated_at'
+        "sale_id",
+        "gateway_id",
+        "txid",
+        "e2eId",
+        "location_id",
+        "location",
+        "qrcode",
+        "qrcode_image",
+        "status",
+        "expiration_date",
+        "created_at",
+        "updated_at",
     ];
 
     /**

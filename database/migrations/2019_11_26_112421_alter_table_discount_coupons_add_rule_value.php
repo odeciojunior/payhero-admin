@@ -13,8 +13,11 @@ class AlterTableDiscountCouponsAddRuleValue extends Migration
      */
     public function up()
     {
-        Schema::table('discount_coupons', function (Blueprint $table) {
-            $table->integer('rule_value')->default(0)->after('status');
+        Schema::table("discount_coupons", function (Blueprint $table) {
+            $table
+                ->integer("rule_value")
+                ->default(0)
+                ->after("status");
         });
     }
 
@@ -25,8 +28,8 @@ class AlterTableDiscountCouponsAddRuleValue extends Migration
      */
     public function down()
     {
-        Schema::table('discount_coupons', function (Blueprint $table) {
-            $table->dropColumn('rule_value');
+        Schema::table("discount_coupons", function (Blueprint $table) {
+            $table->dropColumn("rule_value");
         });
     }
 }

@@ -13,7 +13,7 @@ class RemoveTableUserShopping extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('user_shopping');
+        Schema::dropIfExists("user_shopping");
     }
 
     /**

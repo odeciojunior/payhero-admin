@@ -18,7 +18,7 @@ class AttendanceServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class AttendanceServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('attendance.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'attendance'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("attendance.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "attendance");
     }
 
     /**
@@ -53,17 +54,26 @@ class AttendanceServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/attendance');
+        $viewPath = resource_path("views/modules/attendance");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/attendance';
-        }, \Config::get('view.paths')), [$sourcePath]), 'attendance');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/attendance";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "attendance"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class AttendanceServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/attendance');
+        $langPath = resource_path("lang/modules/attendance");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'attendance');
+            $this->loadTranslationsFrom($langPath, "attendance");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'attendance');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "attendance");
         }
     }
 
@@ -89,8 +99,8 @@ class AttendanceServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

@@ -14,7 +14,7 @@ class SmartfunnelController extends Controller
      */
     public function index()
     {
-        return view('smartfunnel::index');
+        return view("smartfunnel::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class SmartfunnelController extends Controller
      */
     public function create()
     {
-        return view('smartfunnel::create');
+        return view("smartfunnel::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class SmartfunnelController extends Controller
      */
     public function show($id)
     {
-        return view('smartfunnel::show');
+        return view("smartfunnel::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class SmartfunnelController extends Controller
      */
     public function edit($id)
     {
-        return view('smartfunnel::edit');
+        return view("smartfunnel::edit");
     }
 
     /**

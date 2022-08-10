@@ -39,18 +39,11 @@ class BlockReasonSale extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'sale_id',
-        'blocked_reason_id',
-        'status',
-        'observation',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ["sale_id", "blocked_reason_id", "status", "observation", "created_at", "updated_at"];
     /**
      * @var bool
      */
@@ -90,5 +83,4 @@ class BlockReasonSale extends Model
     {
         return $this->BelongsTo(BlockReason::class);
     }
-
 }

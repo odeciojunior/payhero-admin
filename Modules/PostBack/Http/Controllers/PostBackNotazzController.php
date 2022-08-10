@@ -32,99 +32,119 @@ class PostBackNotazzController extends Controller
 
             if (strlen($dataJson) > 5) {
                 $postBackLogModel->create([
-                    'origin' => $postBackLogModel->present()->getOrigin('notazz'),
-                    'data' => $dataJson,
-                    'description' => 'notazz',
+                    "origin" => $postBackLogModel->present()->getOrigin("notazz"),
+                    "data" => $dataJson,
+                    "description" => "notazz",
                 ]);
             }
 
             if (empty($requestData["external_id"])) {
-                return response()->json([
-                    'message' => 'Invoice não encontrada',
-                ], 400);
+                return response()->json(
+                    [
+                        "message" => "Invoice não encontrada",
+                    ],
+                    400
+                );
             }
 
-            if(str_contains($requestData["external_id"],'cloudfox')){
+            if (str_contains($requestData["external_id"], "cloudfox")) {
                 $externalId = preg_replace("/[^0-9]/", "", $requestData["external_id"]);
                 $notazzInvoice = $notazzInvoiceModel->find($externalId);
                 if (empty($notazzInvoice)) {
-                    return response()->json([
-                        'message' => 'Invoice não encontrada',
-                    ], 400);
+                    return response()->json(
+                        [
+                            "message" => "Invoice não encontrada",
+                        ],
+                        400
+                    );
                 }
-            }else{
-                return response()->json([
-                    'message' => 'Invoice inválida',
-                ], 400);
+            } else {
+                return response()->json(
+                    [
+                        "message" => "Invoice inválida",
+                    ],
+                    400
+                );
             }
-
 
             /**
              * webhook referente ao evento do rastreio disponivel, apenas ignoramos.
              */
             if (empty($requestData["statusNota"])) {
-                return response()->json([
-                    'message' => 'sucesso',
-                ], 200);
+                return response()->json(
+                    [
+                        "message" => "sucesso",
+                    ],
+                    200
+                );
             }
 
             /**
              * webhook referente ao evento de nota autorizada
              */
             switch ($requestData["statusNota"]) {
-                case 'Autorizada':
+                case "Autorizada":
                     if (in_array($notazzInvoice->status, [1, 2])) {
                         $notazzInvoice->update([
-                            'xml' => $requestData["xml"],
-                            'pdf' => $requestData["pdf"],
-                            'status' => $notazzInvoiceModel->present()
-                                ->getStatus('completed'),
-                            'date_completed' => Carbon::now()->toDateTime(),
+                            "xml" => $requestData["xml"],
+                            "pdf" => $requestData["pdf"],
+                            "status" => $notazzInvoiceModel->present()->getStatus("completed"),
+                            "date_completed" => Carbon::now()->toDateTime(),
                         ]);
                     }
 
-                    return response()->json([
-                        'message' => 'sucesso',
-                    ], 200);
+                    return response()->json(
+                        [
+                            "message" => "sucesso",
+                        ],
+                        200
+                    );
 
                     break;
-                case 'Cancelada':
+                case "Cancelada":
                     if (in_array($notazzInvoice->status, [3])) {
                         $notazzInvoice->update([
-                            'xml' => $requestData["xml"],
-                            'pdf' => $requestData["pdf"],
-                            'status' => $notazzInvoiceModel->present()
-                                ->getStatus('canceled'),
-                            'date_canceled' => Carbon::now()->toDateTime(),
+                            "xml" => $requestData["xml"],
+                            "pdf" => $requestData["pdf"],
+                            "status" => $notazzInvoiceModel->present()->getStatus("canceled"),
+                            "date_canceled" => Carbon::now()->toDateTime(),
                         ]);
                     }
 
-                    return response()->json([
-                        'message' => 'sucesso',
-                    ], 200);
+                    return response()->json(
+                        [
+                            "message" => "sucesso",
+                        ],
+                        200
+                    );
                     break;
-                case 'Rejeitada':
+                case "Rejeitada":
                     if (in_array($notazzInvoice->status, [1, 2])) {
                         $notazzInvoice->update([
-                            'status' => $notazzInvoiceModel->present()
-                                ->getStatus('rejected'),
-                            'date_rejected' => Carbon::now()->toDateTime(),
-                            'postback_message' => $requestData['motivoStatus'],
+                            "status" => $notazzInvoiceModel->present()->getStatus("rejected"),
+                            "date_rejected" => Carbon::now()->toDateTime(),
+                            "postback_message" => $requestData["motivoStatus"],
                         ]);
                     }
 
-                    return response()->json([
-                        'message' => 'sucesso',
-                    ], 200);
+                    return response()->json(
+                        [
+                            "message" => "sucesso",
+                        ],
+                        200
+                    );
                     break;
                 default:
             }
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                'message' => 'Invoice não encontrada',
-            ], 400);
+            return response()->json(
+                [
+                    "message" => "Invoice não encontrada",
+                ],
+                400
+            );
         }
     }
 }

@@ -12,10 +12,19 @@ class AlterTableCompaniesAddStatusColumn extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function(Blueprint $table) {
-            $table->tinyInteger('contract_document_status')->after('balance')->default(1);
-            $table->tinyInteger('address_document_status')->after('balance')->default(1);
-            $table->tinyInteger('bank_document_status')->after('balance')->default(1);
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->tinyInteger("contract_document_status")
+                ->after("balance")
+                ->default(1);
+            $table
+                ->tinyInteger("address_document_status")
+                ->after("balance")
+                ->default(1);
+            $table
+                ->tinyInteger("bank_document_status")
+                ->after("balance")
+                ->default(1);
         });
     }
 
@@ -25,10 +34,10 @@ class AlterTableCompaniesAddStatusColumn extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function(Blueprint $table) {
-            $table->dropColumn('contract_document_status');
-            $table->dropColumn('address_document_status');
-            $table->dropColumn('bank_document_status');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("contract_document_status");
+            $table->dropColumn("address_document_status");
+            $table->dropColumn("bank_document_status");
         });
     }
 }

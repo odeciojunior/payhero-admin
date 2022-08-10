@@ -14,7 +14,7 @@ class ProjectReviewsController extends Controller
      */
     public function index()
     {
-        return view('projectreviews::index');
+        return view("projectreviews::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class ProjectReviewsController extends Controller
      */
     public function create()
     {
-        return view('projectreviews::create');
+        return view("projectreviews::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class ProjectReviewsController extends Controller
      */
     public function show($id)
     {
-        return view('projectreviews::show');
+        return view("projectreviews::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class ProjectReviewsController extends Controller
      */
     public function edit($id)
     {
-        return view('projectreviews::edit');
+        return view("projectreviews::edit");
     }
 
     /**

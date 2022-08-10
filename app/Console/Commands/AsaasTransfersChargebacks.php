@@ -17,14 +17,14 @@ class AsaasTransfersChargebacks extends Command
      *
      * @var string
      */
-    protected $signature = 'asaas:transfers-chargebacks';
+    protected $signature = "asaas:transfers-chargebacks";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     protected $gatewayId = 0;
 
@@ -46,17 +46,15 @@ class AsaasTransfersChargebacks extends Command
      */
     public function handle()
     {
-
         try {
-
-            $transfers = Transfer::whereDoesntHave('asaasTransfer',function($qr){
-                $qr->where('status','DONE');
+            $transfers = Transfer::whereDoesntHave("asaasTransfer", function ($qr) {
+                $qr->where("status", "DONE");
             })
-                ->whereHas('transaction',function($q){
-                    $q->where('gateway_id',Gateway::GETNET_PRODUCTION_ID);
+                ->whereHas("transaction", function ($q) {
+                    $q->where("gateway_id", Gateway::GETNET_PRODUCTION_ID);
                 })
-                ->where('reason','chargedback')
-                ->where('gateway_id',$this->gatewayId)
+                ->where("reason", "chargedback")
+                ->where("gateway_id", $this->gatewayId)
                 ->get();
 
             $total = count($transfers);
@@ -67,30 +65,26 @@ class AsaasTransfersChargebacks extends Command
 
             $checkoutGateway = new CheckoutGateway($this->gatewayId);
 
-            foreach($transfers as $transfer){
-
+            foreach ($transfers as $transfer) {
                 $progress->advance();
 
                 $response = $checkoutGateway->transferSubSellerToSeller(
-                    $transfer->company_id, $transfer->value, $transfer->id
+                    $transfer->company_id,
+                    $transfer->value,
+                    $transfer->id
                 );
 
-                if(empty($response) || empty($response->status) || $response->status=='error'){
-                    $this->error(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Error');
+                if (empty($response) || empty($response->status) || $response->status == "error") {
+                    $this->error(str_pad($transfer->id, 10, ".", STR_PAD_RIGHT) . " Error");
                     continue;
                 }
 
-                $this->line(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Done');
+                $this->line(str_pad($transfer->id, 10, ".", STR_PAD_RIGHT) . " Done");
             }
 
             $progress->finish();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }
-
-
-

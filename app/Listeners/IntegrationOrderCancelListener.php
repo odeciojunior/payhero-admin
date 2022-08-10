@@ -39,13 +39,9 @@ class IntegrationOrderCancelListener implements ShouldQueue
 
         //Shopify
         if (!empty($sale->shopify_order)) {
-            $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+            $shopifyIntegration = ShopifyIntegration::where("project_id", $sale->project_id)->first();
             if (!empty($shopifyIntegration)) {
-                $shopifyService = new ShopifyService(
-                    $shopifyIntegration->url_store,
-                    $shopifyIntegration->token,
-                    false
-                );
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token, false);
                 $shopifyService->refundOrder($sale);
                 $shopifyService->saveSaleShopifyRequest();
             }
@@ -53,7 +49,7 @@ class IntegrationOrderCancelListener implements ShouldQueue
 
         //WooCommerce
         if (!empty($sale->woocommerce_order)) {
-            $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
+            $integration = WooCommerceIntegration::where("project_id", $sale->project_id)->first();
             if (!empty($integration)) {
                 $service = new WooCommerceService(
                     $integration->url_store,
@@ -61,7 +57,7 @@ class IntegrationOrderCancelListener implements ShouldQueue
                     $integration->token_pass
                 );
 
-                $service->cancelOrder($sale, 'Estorno');
+                $service->cancelOrder($sale, "Estorno");
             }
         }
     }

@@ -13,8 +13,8 @@ class AddTrackingCodeIndexToTrackings extends Migration
      */
     public function up()
     {
-        Schema::table('trackings', function (Blueprint $table) {
-            $table->index('tracking_code');
+        Schema::table("trackings", function (Blueprint $table) {
+            $table->index("tracking_code");
         });
     }
 
@@ -25,8 +25,8 @@ class AddTrackingCodeIndexToTrackings extends Migration
      */
     public function down()
     {
-        Schema::table('trackings', function (Blueprint $table) {
-            $table->dropIndex(['tracking_code']);
+        Schema::table("trackings", function (Blueprint $table) {
+            $table->dropIndex(["tracking_code"]);
         });
     }
 }

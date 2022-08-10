@@ -13,12 +13,18 @@ class CreateUserAndCompanyBureauResultColumn extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->json('bureau_result')->after('id_wall_result')->nullable();
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->json("bureau_result")
+                ->after("id_wall_result")
+                ->nullable();
         });
 
-        Schema::table('companies', function (Blueprint $table) {
-            $table->json('bureau_result')->after('id_wall_date_update')->nullable();
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->json("bureau_result")
+                ->after("id_wall_date_update")
+                ->nullable();
         });
     }
 
@@ -29,12 +35,12 @@ class CreateUserAndCompanyBureauResultColumn extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('bureau_result');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("bureau_result");
         });
 
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('bureau_result');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("bureau_result");
         });
     }
 }

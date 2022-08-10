@@ -14,12 +14,23 @@ class AddNewCollumsDiscountTable extends Migration
     public function up()
     {
         //
-        Schema::table('discount_coupons', function (Blueprint $table) {
-            $table->json('progressive_rules')->after('rule_value')->nullable();
-            $table->json('plans')->after('progressive_rules')->nullable();
-            $table->tinyInteger('discount')->after('plans')->default(0);
-            $table->dateTime('expires')->nullable()->after('code');
-
+        Schema::table("discount_coupons", function (Blueprint $table) {
+            $table
+                ->json("progressive_rules")
+                ->after("rule_value")
+                ->nullable();
+            $table
+                ->json("plans")
+                ->after("progressive_rules")
+                ->nullable();
+            $table
+                ->tinyInteger("discount")
+                ->after("plans")
+                ->default(0);
+            $table
+                ->dateTime("expires")
+                ->nullable()
+                ->after("code");
         });
     }
 
@@ -31,12 +42,11 @@ class AddNewCollumsDiscountTable extends Migration
     public function down()
     {
         //
-        Schema::table('discount_coupons', function (Blueprint $table) {
-            $table->dropColumn(['progressive_rules']);
-            $table->dropColumn(['plans']);
-            $table->dropColumn(['discount']);
-            $table->dropColumn(['expires']);
+        Schema::table("discount_coupons", function (Blueprint $table) {
+            $table->dropColumn(["progressive_rules"]);
+            $table->dropColumn(["plans"]);
+            $table->dropColumn(["discount"]);
+            $table->dropColumn(["expires"]);
         });
-
     }
 }

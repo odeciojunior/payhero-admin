@@ -13,33 +13,34 @@ class CreateHotbilletIntegrationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hotbillet_integrations', function (Blueprint $table) {
-            
-            $table->bigIncrements('id');
-            $table->string('link');
+        Schema::create("hotbillet_integrations", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("link");
 
-            $table->boolean('boleto_generated')->default(true);
-            $table->boolean('boleto_paid')->default(true);
-            $table->boolean('credit_card_refused')->default(true);
-            $table->boolean('credit_card_paid')->default(true);
+            $table->boolean("boleto_generated")->default(true);
+            $table->boolean("boleto_paid")->default(true);
+            $table->boolean("credit_card_refused")->default(true);
+            $table->boolean("credit_card_paid")->default(true);
 
-            $table->boolean('abandoned_cart')->default(true);
-            $table->boolean('pix_generated')->default(true);
-            $table->boolean('pix_paid')->default(true);
-            $table->boolean('pix_expired')->default(true);
+            $table->boolean("abandoned_cart")->default(true);
+            $table->boolean("pix_generated")->default(true);
+            $table->boolean("pix_paid")->default(true);
+            $table->boolean("pix_expired")->default(true);
 
+            $table->integer("project_id")->unsigned();
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
 
-            $table->integer('project_id')->unsigned();
-            $table->foreign('project_id')->references('id')->on('projects');
-
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('projects');
+            $table->integer("user_id")->unsigned();
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("projects");
 
             $table->timestamps();
             $table->softDeletes();
-        
-
-
         });
     }
 
@@ -50,6 +51,6 @@ class CreateHotbilletIntegrationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hotbillet_integrations');
+        Schema::dropIfExists("hotbillet_integrations");
     }
 }

@@ -2,7 +2,7 @@ jQuery(function () {
     let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
     let lastPage = document.referrer;
     if (!lastPage.match(regexp)) {
-        localStorage.removeItem('filtersApplied')
+        localStorage.removeItem("filtersApplied");
     }
 
     var pageCurrent;
@@ -28,7 +28,7 @@ jQuery(function () {
         } else {
             return 0;
         }
-    }
+    };
 
     function getProjects() {
         loadingOnScreen();
@@ -57,17 +57,16 @@ jQuery(function () {
                         $("#div-create").show();
                     }
                     $.each(appsList, function (index, value) {
-                        let exist_shopify = 'n';
-                        let exist_woocommerce = 'n';
+                        let exist_shopify = "n";
+                        let exist_woocommerce = "n";
                         $.each(response.data, function (index, value) {
                             if (value.shopify) {
-                                exist_shopify = 's';
-                            }
-                            else if (value.woocommerce) {
-                                exist_woocommerce = 's';
+                                exist_shopify = "s";
+                            } else if (value.woocommerce) {
+                                exist_woocommerce = "s";
                             }
                         });
-                        if (index == 1 && exist_shopify == 's') {
+                        if (index == 1 && exist_shopify == "s") {
                             $("#type-products").append(
                                 $("<option>", {
                                     value: index,
@@ -75,7 +74,7 @@ jQuery(function () {
                                 })
                             );
                         }
-                        if (index == 2 && exist_woocommerce == 's') {
+                        if (index == 2 && exist_woocommerce == "s") {
                             $("#type-products").append(
                                 $("<option>", {
                                     value: index,
@@ -92,8 +91,7 @@ jQuery(function () {
                                     text: value.name,
                                 })
                             );
-                        }
-                        else if (value.woocommerce) {
+                        } else if (value.woocommerce) {
                             $("#select-projects-2").append(
                                 $("<option>", {
                                     value: value.id,
@@ -101,7 +99,7 @@ jQuery(function () {
                                 })
                             );
                         }
-                    })
+                    });
                     handleLocalStorage();
                     updateProducts();
                 } else {
@@ -115,18 +113,18 @@ jQuery(function () {
     }
 
     function updateProducts(link = null) {
-        pageCurrent = link
+        pageCurrent = link;
         let existFilters = () => {
-            if (localStorage.getItem('filtersApplied') != null) {
-                let getFilters = JSON.parse(localStorage.getItem('filtersApplied'))
+            if (localStorage.getItem("filtersApplied") != null) {
+                let getFilters = JSON.parse(localStorage.getItem("filtersApplied"));
                 return getFilters;
             } else {
                 return null;
-            };
+            }
         };
         if (link != null) {
             let getPage = {
-                atualPage: pageCurrent
+                atualPage: pageCurrent,
             };
             localStorage.setItem("page", JSON.stringify(getPage));
         }
@@ -142,24 +140,22 @@ jQuery(function () {
             parsePage = JSON.parse(localStorage.getItem("page"));
             pageCurrent = parsePage.atualPage;
         }
-        link = pageCurrent
+        link = pageCurrent;
         loadOnAny(".page-content");
         let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
         let name = existFilters() != null ? existFilters().getName : $("#name").val();
-        let project = '';
+        let project = "";
         if (existFilters() != null) {
-            if (type == 1 && existFilters().getProject_1){
+            if (type == 1 && existFilters().getProject_1) {
                 project = existFilters().getProject_1;
-            }
-            else if (type == 2 && existFilters().getProject_2){
+            } else if (type == 2 && existFilters().getProject_2) {
                 project = existFilters().getProject_2;
             }
-        }
-        else {
-            if ($('#select-projects-1 option:selected').val() != '')
-                project = $('#select-projects-1 option:selected').val();
-            else if ($('#select-projects-2 option:selected').val() != '')
-                project = $('#select-projects-2 option:selected').val();
+        } else {
+            if ($("#select-projects-1 option:selected").val() != "")
+                project = $("#select-projects-1 option:selected").val();
+            else if ($("#select-projects-2 option:selected").val() != "")
+                project = $("#select-projects-2 option:selected").val();
         }
         if (link == null) {
             link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
@@ -191,12 +187,17 @@ jQuery(function () {
                                 <div style="margin: 10px 10px 0px 0px;position: absolute;right: 0px;">
                                     <button type="button" class="menu_product" data-id="${value.id}">&#8942;</button>
                                 </div>
-                                <img class="card-img-top product-image pointer" src="${value.image}" alt="Imagem do produto" data-link="/products/${value.id}/edit">
-                                ${value.type_enum == 2
-                                ? `<span class="ribbon-inner ribbon-primary" style="background-color:${badgeList[value.status_enum]};border-radius: 0px 10px 10px 0px;"> ${statusList[value.status_enum]}
+                                <img class="card-img-top product-image pointer" src="${
+                                    value.image
+                                }" alt="Imagem do produto" data-link="/products/${value.id}/edit">
+                                ${
+                                    value.type_enum == 2
+                                        ? `<span class="ribbon-inner ribbon-primary" style="background-color:${
+                                              badgeList[value.status_enum]
+                                          };border-radius: 0px 10px 10px 0px;"> ${statusList[value.status_enum]}
                                         </span>`
-                                : ""
-                            }
+                                        : ""
+                                }
                                 <hr class="mt-0">
                                 <div class="card-body py-0">
                                     <h5 class="card-title">${value.name}</h5>
@@ -207,14 +208,17 @@ jQuery(function () {
                                 </div>
                             </div>
                             <div class="menu_product_tooltip" data-id="${value.id}">
-                                <a id="bt_editar" href="/products/${value.id}/edit" class="mx-20"><span class="o-edit-1 mr-10" />Editar produto</a>
-                                ${shopifyProduct == false
-                                ? `
+                                <a id="bt_editar" href="/products/${
+                                    value.id
+                                }/edit" class="mx-20"><span class="o-edit-1 mr-10" />Editar produto</a>
+                                ${
+                                    shopifyProduct == false
+                                        ? `
                                     <hr class="my-5">
                                     <a href="#" class="mx-20 bt_excluir" data-id="${value.id}"><span class="o-bin-1 mr-10" />Excluir produto</a>
                                 `
-                                : ""
-                            }
+                                        : ""
+                                }
                             </div>
                         </div>
                         `;
@@ -222,7 +226,7 @@ jQuery(function () {
                     });
                     $(".product-image").off("click");
                     $(".product-image").on("click", function () {
-                        window.location.href = $(this).attr('data-link');
+                        window.location.href = $(this).attr("data-link");
                     });
 
                     function closeTooltips(except = "") {
@@ -231,65 +235,62 @@ jQuery(function () {
                                 return;
                             }
 
-                            tooltip.style.display = 'none';
+                            tooltip.style.display = "none";
                         });
                     }
 
-                    $('.menu_product').off('click');
-                    $('.menu_product').on('click', function () {
-                        var tooltip = $(`.menu_product_tooltip[data-id="${this.dataset.id}"]`)
+                    $(".menu_product").off("click");
+                    $(".menu_product").on("click", function () {
+                        var tooltip = $(`.menu_product_tooltip[data-id="${this.dataset.id}"]`);
                         closeTooltips(tooltip);
                         tooltip.toggle();
                     });
-                    $('.menu_product').off('focusout');
-                    $('.menu_product').on('focusout', function (event) {
-                        if ($(event.relatedTarget).hasClass('menu_product')) {
+                    $(".menu_product").off("focusout");
+                    $(".menu_product").on("focusout", function (event) {
+                        if ($(event.relatedTarget).hasClass("menu_product")) {
                             return;
                         }
                         setTimeout(() => closeTooltips(), 200);
                     });
-                    $('.bt_excluir').off('click');
-                    $('.bt_excluir').on('click', function (event) {
+                    $(".bt_excluir").off("click");
+                    $(".bt_excluir").on("click", function (event) {
                         event.preventDefault();
-                        $(".bt_excluir_modal").attr('data-id', this.dataset.id);
+                        $(".bt_excluir_modal").attr("data-id", this.dataset.id);
                         $("#modal-delete").modal();
                     });
-                    $('.bt_excluir_modal').off('click');
-                    $('.bt_excluir_modal').on('click', function (event) {
+                    $(".bt_excluir_modal").off("click");
+                    $(".bt_excluir_modal").on("click", function (event) {
                         event.preventDefault();
                         loadingOnScreen();
                         $.ajax({
-                            method: 'DELETE',
-                            url: '/api/products/' + this.dataset.id,
+                            method: "DELETE",
+                            url: "/api/products/" + this.dataset.id,
                             dataType: "json",
                             headers: {
-                                'Authorization': $('meta[name="access-token"]').attr('content'),
-                                'Accept': 'application/json',
+                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Accept: "application/json",
                             },
                             error: function (response) {
                                 errorAjaxResponse(response);
 
-                                $(".bt_excluir_modal").attr('data-id', "");
+                                $(".bt_excluir_modal").attr("data-id", "");
                                 loadingOnScreenRemove();
                             },
                             success: function success(response) {
-                                alertCustom('success', response.message);
+                                alertCustom("success", response.message);
 
                                 window.location = "/products";
-                            }
+                            },
                         });
                     });
                     $("img").on("error", function () {
-                        $(this).attr(
-                            "src",
-                            "https://cloudfox-files.s3.amazonaws.com/produto.svg"
-                        );
+                        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                     });
                     pagination(response, "products", updateProducts);
                     $(".products-is-empty").hide();
                 } else {
-                    if (localStorage.getItem('filtersApplied') != null && localStorage.getItem('page') != null) {
-                        localStorage.removeItem('page');
+                    if (localStorage.getItem("filtersApplied") != null && localStorage.getItem("page") != null) {
+                        localStorage.removeItem("page");
                         $("#btn-filtro").trigger("click");
                     } else {
                         $("#data-table-products, #pagination-products").html("");
@@ -300,12 +301,38 @@ jQuery(function () {
                     loadOnAny(".page-content", true);
                 }, 2000);
             },
+            complete: response => {
+                unlockSearch($('#btn-filtro'));
+            }
         });
     }
 
+    function searchIsLocked(elementButton) {
+        return elementButton.attr('block_search');
+    }
+
+    function lockSearch(elementButton) {
+        elementButton.attr('block_search', 'true');
+        //set layout do button block
+    }
+
+    function unlockSearch(elementButton) {
+        elementButton.attr('block_search', 'false');
+        //layout do button block
+    }
+
+    function loadData() {
+        elementButton = $('#btn-filtro');
+        if (searchIsLocked(elementButton) != 'true') {
+            lockSearch(elementButton);
+            console.log(elementButton.attr('block_search'));
+            updateProducts();
+        }
+    }
+
     function handleLocalStorage() {
-        if (localStorage.getItem('filtersApplied') != null) {
-            let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApplied'));
+        if (localStorage.getItem("filtersApplied") != null) {
+            let parseLocalStorage = JSON.parse(localStorage.getItem("filtersApplied"));
             $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
             $("#select-projects-1").val(parseLocalStorage.getProject_1).trigger("change");
             $("#select-projects-2").val(parseLocalStorage.getProject_2).trigger("change");
@@ -313,10 +340,12 @@ jQuery(function () {
             $("#projects-list, .box-projects").addClass("d-none");
             type = parseLocalStorage.getTypeProducts;
             if (type != 0) {
-                $("#projects-list #select-projects-" + type).prop("disabled", false).removeClass("disabled");
+                $("#projects-list #select-projects-" + type)
+                    .prop("disabled", false)
+                    .removeClass("disabled");
                 //$("#projects-list #box-projects-" + type + " .opcao-vazia").remove();
-                $("#box-projects-" + type).removeClass('d-none');
-                $("#projects-list").removeClass('d-none');
+                $("#box-projects-" + type).removeClass("d-none");
+                $("#projects-list").removeClass("d-none");
             }
         }
     }
@@ -327,57 +356,58 @@ jQuery(function () {
         }
     });
 
-    $("#type-products").on("change",
-        function () {
-            $("#name").val('');
-            //$("#select-projects-1 .opcao-vazia, #select-projects-2 .opcao-vazia").remove();
-            //$("#select-projects-1, #select-projects-2").prepend("<option class='opcao-vazia'>");
-            $("#select-projects-1").val($("#select-projects-1 option:first").val());
-            $("#select-projects-2").val($("#select-projects-2 option:first").val());
+    $("#type-products").on("change", function () {
+        $("#name").val("");
+        //$("#select-projects-1 .opcao-vazia, #select-projects-2 .opcao-vazia").remove();
+        //$("#select-projects-1, #select-projects-2").prepend("<option class='opcao-vazia'>");
+        $("#select-projects-1").val($("#select-projects-1 option:first").val());
+        $("#select-projects-2").val($("#select-projects-2 option:first").val());
+        $("#projects-list select").prop("disabled", true).addClass("disabled");
+        $("#projects-list, .box-projects").addClass("d-none");
+        const type = $(this).val();
+        if (type != 0) {
+            $("#projects-list").removeClass("d-none");
+            $("#box-projects-" + type).removeClass("d-none");
+            $("#box-projects-" + type + " select")
+                .prop("disabled", false)
+                .removeClass("disabled");
+            //$("#select-projects-" + type + " .opcao-vazia").remove();
+        } else {
             $("#projects-list select").prop("disabled", true).addClass("disabled");
-            $("#projects-list, .box-projects").addClass("d-none");
-            const type = $(this).val();
-            if (type != 0) {
-                $('#projects-list').removeClass('d-none');
-                $('#box-projects-' + type).removeClass('d-none');
-                $("#box-projects-" + type + " select").prop("disabled", false).removeClass("disabled");
-                //$("#select-projects-" + type + " .opcao-vazia").remove();
-            }
-            else {
-                $("#projects-list select").prop("disabled", true).addClass("disabled");
-                $("#projects-list").addClass("d-none");
-            }
+            $("#projects-list").addClass("d-none");
         }
-    );
-
-    $('#new-product-button').on('click', function (event) {
-        event.preventDefault();
-        $('#new-product-modal').show();
     });
 
-    $('.new-product-btn').on('click', function () {
-        $('.new-product-btn').removeClass('active');
-        $(this).addClass('active');
+    $("#new-product-button").on("click", function (event) {
+        event.preventDefault();
+        $("#new-product-modal").show();
+    });
 
-        if ($(this).attr('data-add-url') === '/products/create/physical') {
-            $('#selected-option-desc').text('Em vendas de produtos físicos, será solicitado o rastreio para liberação da comissão da venda.');
+    $(".new-product-btn").on("click", function () {
+        $(".new-product-btn").removeClass("active");
+        $(this).addClass("active");
+
+        if ($(this).attr("data-add-url") === "/products/create/physical") {
+            $("#selected-option-desc").text(
+                "Em vendas de produtos físicos, será solicitado o rastreio para liberação da comissão da venda."
+            );
         }
 
-        if ($(this).attr('data-add-url') === '/products/create/digital') {
-            $('#selected-option-desc').text('Ao selecionar produto digital, avance e preencha os dados.');
+        if ($(this).attr("data-add-url") === "/products/create/digital") {
+            $("#selected-option-desc").text("Ao selecionar produto digital, avance e preencha os dados.");
         }
 
-        $('#selected-option-url').attr('href', $(this).attr('data-add-url'));
+        $("#selected-option-url").attr("href", $(this).attr("data-add-url"));
 
-        $('#next-btn-container').addClass('d-flex flex-column')
-            .show();
+        $("#next-btn-container").addClass("d-flex flex-column").show();
     });
 
     $("#btn-filtro").on("click", function () {
-        if (storeTypeProduct().getTypeProducts != $("#type-products option:selected").val()
-            || storeTypeProduct().getName != $('#name').val()
-            || storeTypeProduct().getProject_1 != $('#select-projects-1 option:selected').val()
-            || storeTypeProduct().getProject_2 != $('#select-projects-2 option:selected').val()
+        if (
+            storeTypeProduct().getTypeProducts != $("#type-products option:selected").val() ||
+            storeTypeProduct().getName != $("#name").val() ||
+            storeTypeProduct().getProject_1 != $("#select-projects-1 option:selected").val() ||
+            storeTypeProduct().getProject_2 != $("#select-projects-2 option:selected").val()
         ) {
             if (localStorage.getItem("page") != null) {
                 let getPageStored = JSON.parse(localStorage.getItem("page"));
@@ -387,12 +417,12 @@ jQuery(function () {
         }
         let filtersApplied = {
             getTypeProducts: $("#type-products option:selected").val(),
-            getProject_1: $('#select-projects-1 option:selected').val(),
-            getProject_2: $('#select-projects-2 option:selected').val(),
-            getName: $("#name").val()
+            getProject_1: $("#select-projects-1 option:selected").val(),
+            getProject_2: $("#select-projects-2 option:selected").val(),
+            getName: $("#name").val(),
         };
-        localStorage.setItem('filtersApplied', JSON.stringify(filtersApplied));
-        updateProducts();
+        localStorage.setItem("filtersApplied", JSON.stringify(filtersApplied));
+        loadData();
     });
 
     getProjects();

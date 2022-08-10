@@ -13,7 +13,9 @@ class UpdateFilenameInTicketAttachments extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\DB::statement("update ticket_attachments set filename = SUBSTRING_INDEX(file, '/', -1)");
+        \Illuminate\Support\Facades\DB::statement(
+            "update ticket_attachments set filename = SUBSTRING_INDEX(file, '/', -1)"
+        );
     }
 
     /**

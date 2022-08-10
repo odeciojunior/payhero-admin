@@ -27,7 +27,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
     public function __construct(Project $project, $restartWebhooks = true)
     {
-        $this->allOnQueue('low');
+        $this->allOnQueue("low");
 
         $this->project = $project;
         $this->restartWebhooks = $restartWebhooks;
@@ -40,19 +40,18 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
         $this->restartWebhooks();
 
-        Sale::with([
-            'productsPlansSale.tracking',
-            'productsPlansSale.product',
-            'productsSaleApi',
-        ])->where('project_id', $this->project->id)
-            ->where('status', Sale::STATUS_APPROVED)
-            ->whereNotNull('shopify_order')
-            ->whereNotNull('delivery_id')
-            ->whereHas('productsPlansSale', function ($query) {
-                $query->whereDoesntHave('tracking');
-            })->whereHas('transactions', function ($query) {
-                $query->where('tracking_required', true);
-            })->chunk(1000, function ($sales) {
+        Sale::with(["productsPlansSale.tracking", "productsPlansSale.product", "productsSaleApi"])
+            ->where("project_id", $this->project->id)
+            ->where("status", Sale::STATUS_APPROVED)
+            ->whereNotNull("shopify_order")
+            ->whereNotNull("delivery_id")
+            ->whereHas("productsPlansSale", function ($query) {
+                $query->whereDoesntHave("tracking");
+            })
+            ->whereHas("transactions", function ($query) {
+                $query->where("tracking_required", true);
+            })
+            ->chunk(1000, function ($sales) {
                 foreach ($sales as $sale) {
                     try {
                         $fulfillments = $this->shopifyService->findFulfillments($sale->shopify_order);
@@ -73,19 +72,20 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
             $this->shopifyService->createShopWebhook([
                 "topic" => "products/create",
-                "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($this->project->id),
+                "address" => "https://sirius.cloudfox.net/postback/shopify/" . Hashids::encode($this->project->id),
                 "format" => "json",
             ]);
 
             $this->shopifyService->createShopWebhook([
                 "topic" => "products/update",
-                "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($this->project->id),
+                "address" => "https://sirius.cloudfox.net/postback/shopify/" . Hashids::encode($this->project->id),
                 "format" => "json",
             ]);
 
             $this->shopifyService->createShopWebhook([
                 "topic" => "orders/updated",
-                "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($this->project->id) . '/tracking',
+                "address" =>
+                    "https://sirius.cloudfox.net/postback/shopify/" . Hashids::encode($this->project->id) . "/tracking",
                 "format" => "json",
             ]);
         }
@@ -104,17 +104,16 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                 $lineItems = $fulfillment->getLineItems();
                 $fulfillmentWithMultipleTracking = count($trackingCodes) === count($lineItems);
                 foreach ($lineItems as $key => $lineItem) {
-
-                    $trackingCode = $fulfillmentWithMultipleTracking ? $trackingCodes[$key] :$trackingCodes[0];
+                    $trackingCode = $fulfillmentWithMultipleTracking ? $trackingCodes[$key] : $trackingCodes[0];
 
                     $products = $saleProducts
-                        ->where('shopify_variant_id', $lineItem->getVariantId())
-                        ->where('amount', $lineItem->getQuantity());
+                        ->where("shopify_variant_id", $lineItem->getVariantId())
+                        ->where("amount", $lineItem->getQuantity());
                     if (!$products->count()) {
                         $products = $saleProducts
-                            ->where('name', $lineItem->getTitle())
-                            ->where('description', $lineItem->getVariantTitle())
-                            ->where('amount', $lineItem->getQuantity());
+                            ->where("name", $lineItem->getTitle())
+                            ->where("description", $lineItem->getVariantTitle())
+                            ->where("amount", $lineItem->getQuantity());
                     }
 
                     // Camila Monteiro

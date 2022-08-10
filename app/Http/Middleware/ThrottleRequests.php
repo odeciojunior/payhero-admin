@@ -44,19 +44,19 @@ class ThrottleRequests
      *
      * @throws \Illuminate\Http\Exceptions\ThrottleRequestsException
      */
-    public function handle($request, Closure $next, $maxAttempts = 60, $decayMinutes = 1, $prefix = '')
+    public function handle($request, Closure $next, $maxAttempts = 60, $decayMinutes = 1, $prefix = "")
     {
         //subscribe if it was defined globally
         $middlewares = $request->route()->computedMiddleware;
         foreach ($middlewares as $middleware) {
-            preg_match('/throttle:(\d+),(\d+)/',  $middleware, $matches);
-            if(!empty($matches)){
+            preg_match("/throttle:(\d+),(\d+)/", $middleware, $matches);
+            if (!empty($matches)) {
                 $maxAttempts = $matches[1] ?? $maxAttempts;
                 $decayMinutes = $matches[2] ?? $decayMinutes;
             }
         }
 
-        $key = $prefix.$this->resolveRequestSignature($request);
+        $key = $prefix . $this->resolveRequestSignature($request);
 
         $maxAttempts = $this->resolveMaxAttempts($request, $maxAttempts);
 
@@ -68,10 +68,7 @@ class ThrottleRequests
 
         $response = $next($request);
 
-        return $this->addHeaders(
-            $response, $maxAttempts,
-            $this->calculateRemainingAttempts($key, $maxAttempts)
-        );
+        return $this->addHeaders($response, $maxAttempts, $this->calculateRemainingAttempts($key, $maxAttempts));
     }
 
     /**
@@ -83,8 +80,8 @@ class ThrottleRequests
      */
     protected function resolveMaxAttempts($request, $maxAttempts)
     {
-        if (Str::contains($maxAttempts, '|')) {
-            $maxAttempts = explode('|', $maxAttempts, 2)[$request->user() ? 1 : 0];
+        if (Str::contains($maxAttempts, "|")) {
+            $maxAttempts = explode("|", $maxAttempts, 2)[$request->user() ? 1 : 0];
         }
 
         if (!is_numeric($maxAttempts) && $request->user()) {
@@ -109,10 +106,10 @@ class ThrottleRequests
         }
 
         if ($route = $request->route()) {
-            return sha1($route->getDomain().'|'.$request->ip());
+            return sha1($route->getDomain() . "|" . $request->ip());
         }
 
-        throw new RuntimeException('Unable to generate the request signature. Route unavailable.');
+        throw new RuntimeException("Unable to generate the request signature. Route unavailable.");
     }
 
     /**
@@ -132,9 +129,7 @@ class ThrottleRequests
             $retryAfter
         );
 
-        return new ThrottleRequestsException(
-            'Too Many Attempts.', null, $headers
-        );
+        return new ThrottleRequestsException("Too Many Attempts.", null, $headers);
     }
 
     /**
@@ -159,9 +154,7 @@ class ThrottleRequests
      */
     protected function addHeaders(Response $response, $maxAttempts, $remainingAttempts, $retryAfter = null)
     {
-        $response->headers->add(
-            $this->getHeaders($maxAttempts, $remainingAttempts, $retryAfter)
-        );
+        $response->headers->add($this->getHeaders($maxAttempts, $remainingAttempts, $retryAfter));
 
         return $response;
     }
@@ -177,13 +170,13 @@ class ThrottleRequests
     protected function getHeaders($maxAttempts, $remainingAttempts, $retryAfter = null)
     {
         $headers = [
-            'X-RateLimit-Limit' => $maxAttempts,
-            'X-RateLimit-Remaining' => $remainingAttempts,
+            "X-RateLimit-Limit" => $maxAttempts,
+            "X-RateLimit-Remaining" => $remainingAttempts,
         ];
 
         if (!is_null($retryAfter)) {
-            $headers['Retry-After'] = $retryAfter;
-            $headers['X-RateLimit-Reset'] = $this->availableAt($retryAfter);
+            $headers["Retry-After"] = $retryAfter;
+            $headers["X-RateLimit-Reset"] = $this->availableAt($retryAfter);
         }
 
         return $headers;

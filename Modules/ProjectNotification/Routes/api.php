@@ -15,15 +15,15 @@ use Illuminate\Http\Request;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        "middleware" => ["auth:api", "scopes:admin"],
     ],
-    function() {
+    function () {
+        Route::get("/project/{projectId}/projectnotification", "ProjectNotificationApiController@index");
+        Route::get("/project/{projectId}/projectnotification/{id}", "ProjectNotificationApiController@show");
+        Route::get("/project/{projectId}/projectnotification/{id}/edit", "ProjectNotificationApiController@edit");
 
-        Route::get('/project/{projectId}/projectnotification', 'ProjectNotificationApiController@index');
-        Route::get('/project/{projectId}/projectnotification/{id}', 'ProjectNotificationApiController@show');
-        Route::get('/project/{projectId}/projectnotification/{id}/edit', 'ProjectNotificationApiController@edit');
-
-        Route::apiResource('/project/{projectId}/projectnotification', 'ProjectNotificationApiController')
-            ->only('store', 'update', 'destroy')->middleware('permission:projects_manage');
+        Route::apiResource("/project/{projectId}/projectnotification", "ProjectNotificationApiController")
+            ->only("store", "update", "destroy")
+            ->middleware("permission:projects_manage");
     }
 );

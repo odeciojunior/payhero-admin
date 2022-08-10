@@ -16,33 +16,33 @@ class NewRegisterGatewayFlagsBilletAsaas extends Migration
     public function up()
     {
         $rowFlagProduction = GatewayFlag::create([
-            'name'=>'Boleto',
-            'slug'=>'boleto',
-            'gateway_id'=>8,
-            'card_flag_enum'=>'10',
-            'active_flag'=>1
+            "name" => "Boleto",
+            "slug" => "boleto",
+            "gateway_id" => 8,
+            "card_flag_enum" => "10",
+            "active_flag" => 1,
         ]);
-        GatewayFlagTax::create([            
-            'gateway_flag_id'=>$rowFlagProduction->id,
-            'installments'=>1,
-            'type_enum'=>1,
-            'percent'=>1.59,
-            'active_flag'=>1            
+        GatewayFlagTax::create([
+            "gateway_flag_id" => $rowFlagProduction->id,
+            "installments" => 1,
+            "type_enum" => 1,
+            "percent" => 1.59,
+            "active_flag" => 1,
         ]);
 
-        $rowFlagSandbox= GatewayFlag::create([
-            'name'=>'Boleto',
-            'slug'=>'boleto',
-            'gateway_id'=>20,
-            'card_flag_enum'=>'10',
-            'active_flag'=>1
+        $rowFlagSandbox = GatewayFlag::create([
+            "name" => "Boleto",
+            "slug" => "boleto",
+            "gateway_id" => 20,
+            "card_flag_enum" => "10",
+            "active_flag" => 1,
         ]);
-        GatewayFlagTax::create([            
-            'gateway_flag_id'=>$rowFlagSandbox->id,
-            'installments'=>1,
-            'type_enum'=>1,
-            'percent'=>1.59,
-            'active_flag'=>1            
+        GatewayFlagTax::create([
+            "gateway_flag_id" => $rowFlagSandbox->id,
+            "installments" => 1,
+            "type_enum" => 1,
+            "percent" => 1.59,
+            "active_flag" => 1,
         ]);
     }
 

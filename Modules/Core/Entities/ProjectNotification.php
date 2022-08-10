@@ -57,15 +57,11 @@ class ProjectNotification extends Model
     /**
      * @var array
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["created_at", "updated_at", "deleted_at"];
     /**
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = ["id_code"];
     /**
      * @var string
      */
@@ -73,20 +69,20 @@ class ProjectNotification extends Model
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'status',
-        'type_enum',
-        'event_enum',
-        'notification_enum',
-        'time',
-        'message',
-        'created_at',
-        'updated_at',
+        "project_id",
+        "status",
+        "type_enum",
+        "event_enum",
+        "notification_enum",
+        "time",
+        "message",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -113,12 +109,12 @@ class ProjectNotification extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Notificação do projeto ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Notificação do projeto ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Notificação do projeto ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Notificação do projeto " . $this->name . " foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Notificação do projeto " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Notificação do projeto " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -137,7 +133,6 @@ class ProjectNotification extends Model
      */
     public function userProject()
     {
-        return $this->hasMany(UserProject::class, 'project_id', 'project_id');
+        return $this->hasMany(UserProject::class, "project_id", "project_id");
     }
 }
-

@@ -29,21 +29,18 @@ class AccountHealthService
 
     public function userHasMinimumSalesAmount(User $user): bool
     {
-        $approvedSales = Sale::whereIn('status', [
+        $approvedSalesAmount = Sale::whereIn("status", [
             Sale::STATUS_APPROVED,
             Sale::STATUS_CHARGEBACK,
             Sale::STATUS_REFUNDED,
             Sale::STATUS_IN_DISPUTE,
             Sale::STATUS_CANCELED_ANTIFRAUD,
-            Sale::STATUS_IN_REVIEW
+            Sale::STATUS_IN_REVIEW,
         ])->where(function ($query) use ($user) {
-            $query->where('owner_id', $user->id)
-                ->orWhere('affiliate_id', $user->id);
-        });
+            $query->where("owner_id", $user->id)->orWhere("affiliate_id", $user->id);
+        })->count();
 
-        $approvedSalesAmount = $approvedSales->count();
-        $minimumSalesToEvaluate = 100;
-        return $approvedSalesAmount >= $minimumSalesToEvaluate;
+        return $approvedSalesAmount >= 100;
     }
 
     public function getAttendanceScore(User $user): float
@@ -55,8 +52,8 @@ class AccountHealthService
         $minimumDaysToMaxScore = 1;
         if ($averageResponseTime <= $minimumDaysToMaxScore) {
             $responseTimeScore = 10;
-        } else if ($averageResponseTime <= 5) {
-            $responseTimeScore = ($maxResponseTimeScore + $minimumDaysToMaxScore) - ($averageResponseTime * 2);
+        } elseif ($averageResponseTime <= 5) {
+            $responseTimeScore = $maxResponseTimeScore + $minimumDaysToMaxScore - $averageResponseTime * 2;
         }
 
         /** Complaint Tickets Score */
@@ -72,8 +69,12 @@ class AccountHealthService
 
     public function getTicketsPerApprovedSaleScore(User $user): float
     {
-        $startDate = now()->startOfDay()->subDays(41);
-        $endDate = now()->endOfDay()->subDay();
+        $startDate = now()
+            ->startOfDay()
+            ->subDays(41);
+        $endDate = now()
+            ->endOfDay()
+            ->subDay();
         $rate = $this->attendanceService->getTicketsPerApprovedSaleRate($user, $startDate, $endDate);
         $maxScore = 10;
         $score = round($maxScore - $rate, 2);
@@ -82,15 +83,19 @@ class AccountHealthService
 
     private function getTicketsScore(User $user): float
     {
-        $startDate = now()->startOfDay()->subDays(41);
-        $endDate = now()->endOfDay()->subDay();
+        $startDate = now()
+            ->startOfDay()
+            ->subDays(41);
+        $endDate = now()
+            ->endOfDay()
+            ->subDay();
         $complaintTickets = $this->attendanceService->getComplaintTicketsInPeriod($user, $startDate, $endDate);
         $totalComplaintTickets = count($complaintTickets);
         $totalScore = 0;
 
         if (!$totalComplaintTickets) {
             return 10;
-        } else if ($totalComplaintTickets <= 20) {
+        } elseif ($totalComplaintTickets <= 20) {
             return 6;
         }
 
@@ -104,45 +109,41 @@ class AccountHealthService
     {
         $scores = [
             //Delivered Items
-            Ticket::SUBJECT_DIFFERS_FROM_ADVERTISED    => 0,
-            Ticket::SUBJECT_DAMAGED_BY_TRANSPORT       => 4,
-            Ticket::SUBJECT_MANUFACTURING_DEFECT       => 4,
+            Ticket::SUBJECT_DIFFERS_FROM_ADVERTISED => 0,
+            Ticket::SUBJECT_DAMAGED_BY_TRANSPORT => 4,
+            Ticket::SUBJECT_MANUFACTURING_DEFECT => 4,
 
             //Not delivered Items
-            Ticket::SUBJECT_TRACKING_CODE_NOT_RECEIVED => (new TrackingCodeNotInformed)->calculateScore($ticket),
-            Ticket::SUBJECT_NON_TRACKABLE_ORDER        => (new NonTrackableOrder)->calculateScore($ticket),
-            Ticket::SUBJECT_DELIVERY_DELAY             => (new DeliveryDelay)->calculateScore($ticket),
-            Ticket::SUBJECT_DELIVERY_TO_WRONG_ADDRESS  => 0,
+            Ticket::SUBJECT_TRACKING_CODE_NOT_RECEIVED => (new TrackingCodeNotInformed())->calculateScore($ticket),
+            Ticket::SUBJECT_NON_TRACKABLE_ORDER => (new NonTrackableOrder())->calculateScore($ticket),
+            Ticket::SUBJECT_DELIVERY_DELAY => (new DeliveryDelay())->calculateScore($ticket),
+            Ticket::SUBJECT_DELIVERY_TO_WRONG_ADDRESS => 0,
 
             //Others
-            Ticket::SUBJECT_OTHERS                     => 10,
+            Ticket::SUBJECT_OTHERS => 10,
         ];
 
         return isset($scores[$ticket->subject_enum]) ? $scores[$ticket->subject_enum] : 0;
     }
 
-    public function getChargebackScore(User $user): float
+    public function getChargebackScore($chargebackRate, $contestationRate): float
     {
-        $startDate = now()->startOfDay()->subDays(150);
-        $endDate = now()->endOfDay()->subDays(20);
-        $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
         $maxChargebackScore = 10;
         //each 0.3% of chargebacks rate means -1 point of score
         $chargebackScoreReference = 0.3;
 
         $chargebackScore = 0;
         if ($chargebackRate <= 3) {
-            $chargebackScore = round(($maxChargebackScore - $chargebackRate / $chargebackScoreReference), 2);
+            $chargebackScore = round($maxChargebackScore - $chargebackRate / $chargebackScoreReference, 2);
         }
 
-        $contestationRate = $this->chargebackService->getContestationRateInPeriod($user, $startDate, now()->endOfDay());
         $maxContestationScore = 10;
         //each 0.5% of contestation rate means -1 point of score
         $contestationScoreReference = 0.5;
 
         $contestationScore = 0;
         if ($contestationRate <= 5) {
-            $contestationScore = round(($maxContestationScore - $contestationRate / $contestationScoreReference), 2);
+            $contestationScore = round($maxContestationScore - $contestationRate / $contestationScoreReference, 2);
         }
 
         return round(($chargebackScore + $contestationScore) / 2, 2);
@@ -153,13 +154,15 @@ class AccountHealthService
         $averagePostingTimeScore = $this->getAveragePostingTimeScore($user);
         $uninformedTrackingScore = $this->getUninformedTrackingCodeScore($user);
         $trackingCodeProblemScore = $this->getTrackingCodeProblemScore($user);
-        $score = (($averagePostingTimeScore * 2) + $uninformedTrackingScore + $trackingCodeProblemScore) / 4;
+        $score = ($averagePostingTimeScore * 2 + $uninformedTrackingScore + $trackingCodeProblemScore) / 4;
         return round($score, 2);
     }
 
     private function getAveragePostingTimeScore(User $user): float
     {
-        $startDate = now()->startOfDay()->subDays(30);
+        $startDate = now()
+            ->startOfDay()
+            ->subDays(30);
         $endDate = now()->endOfDay();
         $avgPostingTime = $this->trackingService->getAveragePostingTimeInPeriod($user, $startDate, $endDate);
         $score = 0;
@@ -167,7 +170,7 @@ class AccountHealthService
         $minimumDaysToMaxScore = 2;
         if ($avgPostingTime < $minimumDaysToMaxScore) {
             $score = 10;
-        } else if ($avgPostingTime < 10) {
+        } elseif ($avgPostingTime < 10) {
             $score = $maxScore + $minimumDaysToMaxScore - $avgPostingTime;
         }
         return $score;
@@ -175,15 +178,21 @@ class AccountHealthService
 
     private function getTrackingCodeProblemScore(User $user): float
     {
-        $startDate = now()->startOfDay()->subDays(90);
+        $startDate = now()
+            ->startOfDay()
+            ->subDays(90);
         $endDate = now()->endOfDay();
-        $trackingCodeProblemRate = $this->trackingService->getTrackingCodeProblemRateInPeriod($user, $startDate, $endDate);
+        $trackingCodeProblemRate = $this->trackingService->getTrackingCodeProblemRateInPeriod(
+            $user,
+            $startDate,
+            $endDate
+        );
         $maxScore = 10;
         $trackingCodeProblemScoreReference = 2;
         $score = 0;
         if ($trackingCodeProblemRate < 1) {
             $score = 10;
-        } else if ($trackingCodeProblemRate <= 5) {
+        } elseif ($trackingCodeProblemRate <= 5) {
             //each 1% of problem rate means -2 points of score
             $score = $maxScore - $trackingCodeProblemRate * $trackingCodeProblemScoreReference;
         }
@@ -192,16 +201,18 @@ class AccountHealthService
 
     private function getUninformedTrackingCodeScore(User $user): float
     {
-        $startDate = now()->startOfDay()->subDays(20);
+        $startDate = now()
+            ->startOfDay()
+            ->subDays(20);
         $endDate = now()->endOfDay();
         $uninformedRate = $this->trackingService->getUninformedTrackingCodeRateInPeriod($user, $startDate, $endDate);
         $maxScore = 10;
         $score = 0;
         if ($uninformedRate <= 3) {
             $score = $maxScore;
-        } else if ($uninformedRate <= 13) {
+        } elseif ($uninformedRate <= 13) {
             //after 3% every 1% of uninformed rate means -1 point of score
-            $score = ($maxScore + 3) - $uninformedRate;
+            $score = $maxScore + 3 - $uninformedRate;
         }
         return $score;
     }
@@ -213,25 +224,28 @@ class AccountHealthService
                 return false;
             }
 
-            $startDate = now()->startOfDay()->subDays(150);
-            $endDate = now()->endOfDay()->subDays(20);
+            $startDate = now()
+                ->startOfDay()
+                ->subDays(150);
+            $endDate = now()
+                ->endOfDay()
+                ->subDays(20);
 
             $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
-            $contastationRate = $this->chargebackService->getContestationRateInPeriod($user, $startDate, $endDate);
+            $contestationRate = $this->chargebackService->getContestationRateInPeriod($user, $startDate, now());
             $attendanceScore = $this->getAttendanceScore($user);
-            $chargebackScore = $this->getChargebackScore($user);
+            $chargebackScore = $this->getChargebackScore($chargebackRate, $contestationRate);
             $trackingScore = $this->getTrackingScore($user);
             $accountScore = round(($chargebackScore + $attendanceScore + $trackingScore) / 3, 2);
 
             $user->update([
-                'account_score'     => $accountScore,
-                'attendance_score'  => $attendanceScore,
-                'chargeback_score'  => $chargebackScore,
-                'chargeback_rate'   => $chargebackRate,
-                'contestation_rate' => $contastationRate,
-                'tracking_score'    => $trackingScore
+                "account_score" => $accountScore,
+                "attendance_score" => $attendanceScore,
+                "chargeback_score" => $chargebackScore,
+                "chargeback_rate" => $chargebackRate,
+                "contestation_rate" => $contestationRate,
+                "tracking_score" => $trackingScore,
             ]);
-
         } catch (\Exception $e) {
             report($e);
         }

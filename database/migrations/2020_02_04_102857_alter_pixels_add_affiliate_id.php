@@ -13,11 +13,17 @@ class AlterPixelsAddAffiliateId extends Migration
      */
     public function up()
     {
-        Schema::table('pixels', function(Blueprint $table) {
-            $table->unsignedBigInteger('affiliate_id')->nullable()->after('purchase_card');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("affiliate_id")
+                ->nullable()
+                ->after("purchase_card");
         });
-        Schema::table('pixels', function(Blueprint $table) {
-            $table->foreign('affiliate_id')->references('id')->on('affiliates');
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->foreign("affiliate_id")
+                ->references("id")
+                ->on("affiliates");
         });
     }
 
@@ -28,9 +34,9 @@ class AlterPixelsAddAffiliateId extends Migration
      */
     public function down()
     {
-        Schema::table('pixels', function(Blueprint $table) {
+        Schema::table("pixels", function (Blueprint $table) {
             $table->dropForeign(["affiliate_id"]);
-            $table->dropColumn('affiliate_id');
+            $table->dropColumn("affiliate_id");
         });
     }
 }

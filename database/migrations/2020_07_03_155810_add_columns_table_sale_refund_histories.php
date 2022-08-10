@@ -12,12 +12,21 @@ class AddColumnsTableSaleRefundHistories extends Migration
      */
     public function up()
     {
-        Schema::table('sale_refund_histories', function(Blueprint $table) {
-            $table->unsignedInteger('user_id')->nullable()->after('sale_id');
-            $table->text('refund_observation')->nullable()->after('refund_value');
+        Schema::table("sale_refund_histories", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("user_id")
+                ->nullable()
+                ->after("sale_id");
+            $table
+                ->text("refund_observation")
+                ->nullable()
+                ->after("refund_value");
         });
-        Schema::table('sale_refund_histories', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("sale_refund_histories", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -27,17 +36,9 @@ class AddColumnsTableSaleRefundHistories extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'sale_refund_histories',
-            function(Blueprint $table) {
-                $table->dropForeign(['user_id']);
-                $table->dropColumn(
-                    [
-                        'refund_observation',
-                        'user_id',
-                    ]
-                );
-            }
-        );
+        Schema::table("sale_refund_histories", function (Blueprint $table) {
+            $table->dropForeign(["user_id"]);
+            $table->dropColumn(["refund_observation", "user_id"]);
+        });
     }
 }

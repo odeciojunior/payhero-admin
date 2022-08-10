@@ -13,16 +13,19 @@ class CreateNethoneAntifraudTransactionTable extends Migration
      */
     public function up()
     {
-        Schema::create('nethone_antifraud_transaction', function (Blueprint $table) {
+        Schema::create("nethone_antifraud_transaction", function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sale_id');
-            $table->unsignedBigInteger('transaction_id')->nullable();
-            $table->json('result')->nullable();
+            $table->unsignedBigInteger("sale_id");
+            $table->unsignedBigInteger("transaction_id")->nullable();
+            $table->json("result")->nullable();
             $table->timestamps();
         });
 
-        Schema::table('nethone_antifraud_transaction', function (Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
+        Schema::table("nethone_antifraud_transaction", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 
@@ -33,6 +36,6 @@ class CreateNethoneAntifraudTransactionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nethone_antifraud_transaction');
+        Schema::dropIfExists("nethone_antifraud_transaction");
     }
 }

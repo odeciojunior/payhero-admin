@@ -11,15 +11,14 @@
 |
 */
 
-
 Route::group(
     [
-        'middleware' => ['web', 'auth'],
+        "middleware" => ["web", "auth"],
     ],
     function () {
-
-        Route::Resource('/projectreviews', 'ProjectReviewsController')
-            ->only('index', 'create', 'edit')->middleware('role:account_owner|admin');
+        Route::Resource("/projectreviews", "ProjectReviewsController")
+            ->only("index", "create", "edit")
+            ->middleware("role:account_owner|admin");
     }
 );
 

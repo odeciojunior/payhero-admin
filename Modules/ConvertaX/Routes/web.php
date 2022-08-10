@@ -11,7 +11,6 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth','permission:apps']], function() {
-    Route::Resource('apps/convertax', 'ConvertaXController')
-         ->only('index');
+Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
+    Route::Resource("apps/convertax", "ConvertaXController")->only("index");
 });

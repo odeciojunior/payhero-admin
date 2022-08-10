@@ -45,36 +45,36 @@ class Shipping extends Model
     public const STATUS_ACTIVE = 1;
     public const STATUS_DISABLED = 0;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $appends = ['id_code'];
+    protected $appends = ["id_code"];
 
     protected $presenter = ShippingPresenter::class;
 
     protected $fillable = [
-        'project_id',
-        'name',
-        'information',
-        'value',
-        'regions_values',
-        'type',
-        'type_enum',
-        'zip_code_origin',
-        'melhorenvio_integration_id',
-        'status',
-        'rule_value',
-        'pre_selected',
-        'use_variants',
-        'apply_on_plans',
-        'not_apply_on_plans',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "name",
+        "information",
+        "value",
+        "regions_values",
+        "type",
+        "type_enum",
+        "zip_code_origin",
+        "melhorenvio_integration_id",
+        "status",
+        "rule_value",
+        "pre_selected",
+        "use_variants",
+        "apply_on_plans",
+        "not_apply_on_plans",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     protected $attributes = [
-        'apply_on_plans' => ['all'],
-        'not_apply_on_plans' => []
+        "apply_on_plans" => ["all"],
+        "not_apply_on_plans" => [],
     ];
 
     protected static $logFillable = true;
@@ -93,14 +93,14 @@ class Shipping extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
-                $activity->description = 'Frete ' . $this->name . ' foi deletado.';
+            case "deleted":
+                $activity->description = "Frete " . $this->name . " foi deletado.";
                 break;
-            case 'updated':
-                $activity->description = 'Frete ' . $this->name . ' foi atualizado.';
+            case "updated":
+                $activity->description = "Frete " . $this->name . " foi atualizado.";
                 break;
-            case 'created':
-                $activity->description = 'Frete ' . $this->name . ' foi criado.';
+            case "created":
+                $activity->description = "Frete " . $this->name . " foi criado.";
                 break;
             default:
                 $activity->description = $eventName;

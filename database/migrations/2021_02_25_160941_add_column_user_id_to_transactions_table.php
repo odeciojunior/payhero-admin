@@ -13,12 +13,18 @@ class AddColumnUserIdToTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->unsignedInteger('user_id')->nullable()->after('company_id');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("user_id")
+                ->nullable()
+                ->after("company_id");
         });
 
-        Schema::table('transactions', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -29,8 +35,8 @@ class AddColumnUserIdToTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("user_id");
         });
     }
 }

@@ -1,4 +1,11 @@
-label, h1, h4, a, a:hover, .o-arrow-right-1::before, .btn-cancelar, .btn-excluir {
+label,
+h1,
+h4,
+a,
+a:hover,
+.o-arrow-right-1::before,
+.btn-cancelar,
+.btn-excluir {
     color: #707070;
 }
 
@@ -37,28 +44,32 @@ a:hover,
 .btn-excluir,
 .btn-excluir > span {
     font-size: 18px;
-    color: #F10800;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: #f10800;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
 }
 
 .btn-excluir:hover,
 .btn-excluir:hover > span {
     color: #9b0400;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
 }
 
 .btn-cancelar:hover,
 .btn-excluir:hover,
 .btn-converter:hover {
-    background-color: #FFF;
+    background-color: #fff;
 }
 
-.btn-converter:hover, .btn-converter:hover > .svg-converter > path {
-    color: #2E85EC;
-    fill:  #2E85EC;
+.btn-converter:hover,
+.btn-converter:hover > .svg-converter > path {
+    color: #2e85ec;
+    fill: #2e85ec;
 }
 
-#modal-converte h3, #modal-converte p.title{
+#modal-converte h3,
+#modal-converte p.title {
     color: #464646;
     font-style: normal;
     font-weight: 700;
@@ -66,17 +77,17 @@ a:hover,
     letter-spacing: 0em;
 }
 
-#modal-converte h3{
+#modal-converte h3 {
     font-size: 22px;
 }
 
-#modal-converte p.title{
+#modal-converte p.title {
     font-size: 22px;
     margin-top: 16px;
 }
 
-#modal-converte p.aviso{
-    color: #5B5B5B;
+#modal-converte p.aviso {
+    color: #5b5b5b;
     font-size: 14px;
     font-style: Medium;
     line-height: 20px;
@@ -87,7 +98,7 @@ a:hover,
 }
 
 .o-bin-1::before {
-	-webkit-text-stroke: 1px;
+    -webkit-text-stroke: 1px;
 }
 
 .form-group input,
@@ -98,12 +109,12 @@ a:hover,
     font-size: 16px;
     padding: 16px 14px 16px 16px;
     border-radius: 8px;
-    border-color: #7070704D;
+    border-color: #7070704d;
     height: auto;
 }
 
 .input-group-text {
-    background-color: #F3F3F3;
+    background-color: #f3f3f3;
     border-left: 0px;
 }
 
@@ -115,11 +126,11 @@ a:hover,
     justify-content: center;
     height: 250px !important;
     width: 250px !important;
-    border: 2px dashed #2E85EC;
+    border: 2px dashed #2e85ec;
     border-radius: 8px;
     margin: auto;
     font-weight: bold;
-    background-color: #F8FDFF;
+    background-color: #f8fdff;
 }
 
 .dropify-wrapper .dropify-message {
@@ -143,8 +154,9 @@ a:hover,
     display: none;
 }
 
-.dropify-wrapper .dropify-message span.file-icon, p {
-    color: #0D2C54;
+.dropify-wrapper .dropify-message span.file-icon,
+p {
+    color: #0d2c54;
 }
 
 .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
@@ -152,7 +164,7 @@ a:hover,
 }
 
 .dropify-filename span.file-icon::before {
-    content: '\e800';
+    content: "\e800";
 }
 
 .dropify-filename span.file-icon {
@@ -162,38 +174,37 @@ a:hover,
 }
 
 .dropify-wrapper .dropify-clear {
-	color: #0D2C54;
-	border: 2px solid #0D2C54;
+    color: #0d2c54;
+    border: 2px solid #0d2c54;
 }
 
 .dropify-wrapper .dropify-preview .dropify-infos {
-    background: #F8FDFFE6;
+    background: #f8fdffe6;
 }
 
 .dropify-wrapper:hover .dropify-preview .dropify-infos {
-	opacity: .9;
+    opacity: 0.9;
 }
 
 .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
-	line-height: 14px;
-	color: #0D2C54;
-	text-align: center;
+    line-height: 14px;
+    color: #0d2c54;
+    text-align: center;
 }
 
 .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
     margin-top: 0;
     padding-top: 8px;
-
 }
 
 .dropify-wrapper .dropify-clear {
-    content: '';
-	color: #0D2C54;
-	border: 2px solid #0D2C54;
-	border-radius: 8px;
-	width: 40px;
-	height: 40px;
-	font-size: 20px;
+    content: "";
+    color: #0d2c54;
+    border: 2px solid #0d2c54;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
 }
 
 /* Upload Digital Product Input */
@@ -212,9 +223,9 @@ a:hover,
 }
 
 .input-file-trigger {
-    color: #3B8CED;
+    color: #3b8ced;
     cursor: pointer;
-    background-color: #F8FDFF;
+    background-color: #f8fdff;
     border-radius: 16px;
     display: inline-flex;
     align-items: center;

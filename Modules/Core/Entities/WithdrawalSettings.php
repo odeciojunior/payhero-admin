@@ -27,33 +27,20 @@ class WithdrawalSettings extends Model
 {
     use LogsActivity, PresentableTrait, FoxModelTrait, SoftDeletes;
 
-    const RULE_PERIOD = 'period';
-    const RULE_AMOUNT = 'amount';
+    const RULE_PERIOD = "period";
+    const RULE_AMOUNT = "amount";
 
-    const FREQUENCY_DAILY = 'daily';
-    const FREQUENCY_WEEKLY = 'weekly';
-    const FREQUENCY_MONTHLY = 'monthly';
+    const FREQUENCY_DAILY = "daily";
+    const FREQUENCY_WEEKLY = "weekly";
+    const FREQUENCY_MONTHLY = "monthly";
 
     protected $presenter = WithdrawalPresenter::class;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["created_at", "updated_at", "deleted_at"];
 
-    protected $fillable = [
-        'company_id',
-        'rule',
-        'frequency',
-        'weekday',
-        'day',
-        'amount',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ["company_id", "rule", "frequency", "weekday", "day", "amount", "created_at", "updated_at"];
 
     /**
      * @var bool
@@ -79,12 +66,12 @@ class WithdrawalSettings extends Model
 
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Configurações de saque automático foi deletado.';
-        } elseif ($eventName == 'updated') {
-            $activity->description = 'Configurações de saque automático foi atualizado.';
-        } elseif ($eventName == 'created') {
-            $activity->description = 'Configurações de saque automático foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Configurações de saque automático foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Configurações de saque automático foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Configurações de saque automático foi criado.";
         } else {
             $activity->description = $eventName;
         }

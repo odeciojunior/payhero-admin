@@ -13,11 +13,11 @@ class CreateSaleLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_logs', function (Blueprint $table) {
+        Schema::create("sale_logs", function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('sale_id')->unsigned();
-            $table->integer('status_enum')->unsigned();
-            $table->string('status',50);
+            $table->bigInteger("sale_id")->unsigned();
+            $table->integer("status_enum")->unsigned();
+            $table->string("status", 50);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateSaleLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_logs');
+        Schema::dropIfExists("sale_logs");
     }
 }

@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Smartfunnel\\Providers\\SmartfunnelServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

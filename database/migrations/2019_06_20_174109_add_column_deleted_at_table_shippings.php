@@ -12,7 +12,7 @@ class AddColumnDeletedAtTableShippings extends Migration
      */
     public function up()
     {
-        Schema::table('shippings', function(Blueprint $table) {
+        Schema::table("shippings", function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -23,7 +23,7 @@ class AddColumnDeletedAtTableShippings extends Migration
      */
     public function down()
     {
-        Schema::table('shippings', function(Blueprint $table) {
+        Schema::table("shippings", function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
     }

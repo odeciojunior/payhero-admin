@@ -13,21 +13,24 @@ class CreateProjectNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_notifications', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('project_id')->index();
-            $table->boolean('status')->default(1);
-            $table->tinyInteger('type_enum');
-            $table->tinyInteger('event_enum');
-            $table->tinyInteger('notification_enum')->nullable();
-            $table->string('time');
-            $table->text('message');
+        Schema::create("project_notifications", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("project_id")->index();
+            $table->boolean("status")->default(1);
+            $table->tinyInteger("type_enum");
+            $table->tinyInteger("event_enum");
+            $table->tinyInteger("notification_enum")->nullable();
+            $table->string("time");
+            $table->text("message");
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('project_notifications', function(Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
+        Schema::table("project_notifications", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
     }
 
@@ -38,6 +41,6 @@ class CreateProjectNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_notifications');
+        Schema::dropIfExists("project_notifications");
     }
 }

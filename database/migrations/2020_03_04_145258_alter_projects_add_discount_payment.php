@@ -13,9 +13,15 @@ class AlterProjectsAddDiscountPayment extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->bigInteger('credit_card_discount')->default(0)->after('discount_recovery_value');
-            $table->bigInteger('billet_discount')->default(0)->after('discount_recovery_value');
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->bigInteger("credit_card_discount")
+                ->default(0)
+                ->after("discount_recovery_value");
+            $table
+                ->bigInteger("billet_discount")
+                ->default(0)
+                ->after("discount_recovery_value");
         });
     }
 
@@ -26,9 +32,9 @@ class AlterProjectsAddDiscountPayment extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->dropColumn('credit_card_discount');
-            $table->dropColumn('billet_discount');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("credit_card_discount");
+            $table->dropColumn("billet_discount");
         });
     }
 }

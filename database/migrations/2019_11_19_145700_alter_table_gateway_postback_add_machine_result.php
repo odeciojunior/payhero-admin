@@ -13,8 +13,8 @@ class AlterTableGatewayPostbackAddMachineResult extends Migration
      */
     public function up()
     {
-        Schema::table('gateway_postbacks', function(Blueprint $table) {
-            $table->text('machine_result')->nullable();
+        Schema::table("gateway_postbacks", function (Blueprint $table) {
+            $table->text("machine_result")->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AlterTableGatewayPostbackAddMachineResult extends Migration
      */
     public function down()
     {
-        Schema::table('gateway_postbacks', function(Blueprint $table) {
-            $table->dropColumn('machine_result');
+        Schema::table("gateway_postbacks", function (Blueprint $table) {
+            $table->dropColumn("machine_result");
         });
     }
 }

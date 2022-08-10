@@ -13,13 +13,15 @@ class AddTrackingAndExpiredColumnsToReportanaIntegrations extends Migration
      */
     public function up()
     {
-        Schema::table('reportana_integrations', function (Blueprint $table) {
-            $table->boolean('billet_expired')
+        Schema::table("reportana_integrations", function (Blueprint $table) {
+            $table
+                ->boolean("billet_expired")
                 ->default(true)
-                ->after('billet_paid');
-            $table->boolean('pix_expired')
+                ->after("billet_paid");
+            $table
+                ->boolean("pix_expired")
                 ->default(true)
-                ->after('pix_paid');
+                ->after("pix_paid");
         });
     }
 
@@ -30,8 +32,8 @@ class AddTrackingAndExpiredColumnsToReportanaIntegrations extends Migration
      */
     public function down()
     {
-        Schema::table('reportana_integrations', function (Blueprint $table) {
-            $table->dropColumn(['billet_expired', 'pix_expired']);
+        Schema::table("reportana_integrations", function (Blueprint $table) {
+            $table->dropColumn(["billet_expired", "pix_expired"]);
         });
     }
 }

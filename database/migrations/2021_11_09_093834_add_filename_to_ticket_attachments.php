@@ -13,8 +13,11 @@ class AddFilenameToTicketAttachments extends Migration
      */
     public function up()
     {
-        Schema::table('ticket_attachments', function (Blueprint $table) {
-            $table->string('filename')->nullable()->after('file');
+        Schema::table("ticket_attachments", function (Blueprint $table) {
+            $table
+                ->string("filename")
+                ->nullable()
+                ->after("file");
         });
     }
 
@@ -25,8 +28,8 @@ class AddFilenameToTicketAttachments extends Migration
      */
     public function down()
     {
-        Schema::table('ticket_attachments', function (Blueprint $table) {
-            $table->dropColumn('filename');
+        Schema::table("ticket_attachments", function (Blueprint $table) {
+            $table->dropColumn("filename");
         });
     }
 }

@@ -22,14 +22,14 @@ class CheckWithdrawalsReleasedCloudfox extends Command
      *
      * @var string
      */
-    protected $signature = 'getnet:check-withdrawals-released-cloudfox';
+    protected $signature = "getnet:check-withdrawals-released-cloudfox";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -48,9 +48,7 @@ class CheckWithdrawalsReleasedCloudfox extends Command
      */
     public function handle()
     {
-
         try {
-
             $query = "select t.id as transaction_id, t.gateway_id, t.user_id, t.status, t.status_enum, s.id as sale_id, s.gateway_id,
              s.owner_id, s.created_at, tc.id as transaction_cloudfox_id, tc.release_date, tc.gateway_released_at
             from transactions as t  inner join sales as s on s.id = t.sale_id
@@ -60,7 +58,6 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                         and tc.gateway_released_at is null
                         and t.deleted_at IS NULL
             order by s.id asc ";
-
 
             $dbResults = DB::select($query);
 
@@ -81,12 +78,12 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                 }
                 $aux++;
 
-                $transaction = Transaction::with('sale')->find($dbResult->transaction_id);
+                $transaction = Transaction::with("sale")->find($dbResult->transaction_id);
                 $sale = $transaction->sale;
                 $orderId = $sale->gateway_order_id;
 
                 $response = $getnetService
-                    ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                    ->setStatementSaleHashId(hashids_encode($sale->id, "sale_id"))
                     ->setStatementSubSellerId(CompanyService::getSubsellerId($company))
                     ->getStatement();
 
@@ -100,58 +97,71 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                     isset($gatewaySale->list_transactions[0]->details[0]->release_status)
                 ) {
                     foreach ($gatewaySale->list_transactions[0]->details as $detail) {
-                        if ($detail->release_status == 'N' and $detail->transaction_sign = '+') {
-
-                            $transactionCloudfox = TransactionCloudfox::where('sale_id', $sale->id)->first();
+                        if ($detail->release_status == "N" and ($detail->transaction_sign = "+")) {
+                            $transactionCloudfox = TransactionCloudfox::where("sale_id", $sale->id)->first();
                             if (empty($transactionCloudfox)) {
-                                    $transactionCloudfox = TransactionCloudfox::create(
-                                        [
-                                            'sale_id' => $sale->id,
-                                            'gateway_id' => $transaction->gateway_id,
-                                            'company_id' => $company->id,
-                                            'user_id' => $company->user_id,
-                                            'value' => $detail->subseller_rate_amount,
-                                            'value_total' => $detail->installment_amount,
-                                            'status' => 'paid',
-                                            'status_enum' => 2,
-                                            'release_date' => now()->format('Y-m-d')
-                                        ]
-                                    );
+                                $transactionCloudfox = TransactionCloudfox::create([
+                                    "sale_id" => $sale->id,
+                                    "gateway_id" => $transaction->gateway_id,
+                                    "company_id" => $company->id,
+                                    "user_id" => $company->user_id,
+                                    "value" => $detail->subseller_rate_amount,
+                                    "value_total" => $detail->installment_amount,
+                                    "status" => "paid",
+                                    "status_enum" => 2,
+                                    "release_date" => now()->format("Y-m-d"),
+                                ]);
                             }
 
                             if (!foxutils()->isProduction()) {
-                                $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
+                                $this->line(
+                                    "Sale id: " .
+                                        $sale->id .
+                                        ", Transaction id: " .
+                                        $transaction->id .
+                                        ", Transaction Cloudfox id: " .
+                                        $transactionCloudfox->id
+                                );
                             }
 
                             if (!empty($transactionCloudfox->release_date)) {
                                 $data = [
-                                    'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
+                                    "transaction_cloudfox_id" => Hashids::encode($transactionCloudfox->id),
                                 ];
 
-                            $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
-                            //dd($responseCheckout);
+                                $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+                                //dd($responseCheckout);
                             }
                         }
                     }
-                }else {
+                } else {
                     if (isset($gatewaySale->list_transactions)) {
-                        $errorGetnet = 'Comissão da cloudfox, erro na estrutura da venda da Getnet. $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
+                        $errorGetnet =
+                            'Comissão da cloudfox, erro na estrutura da venda da Getnet. $sale->id = ' .
+                            $sale->id .
+                            ' $orderId = ' .
+                            $orderId;
 
                         if (count($gatewaySale->list_transactions) == 0) {
                             $response = $getnetService
-                                ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                                ->setStatementSaleHashId(hashids_encode($sale->id, "sale_id"))
                                 ->getStatement();
 
                             $gatewaySale = json_decode($response);
 
                             if (
-                                isset($gatewaySale->list_transactions)
-                                && isset($gatewaySale->list_transactions[0])
-                                && isset($gatewaySale->list_transactions[0]->summary)
-                                && isset($gatewaySale->list_transactions[0]->summary->reason_message)
-                                && $gatewaySale->list_transactions[0]->summary->reason_message == 'CANCELADA NAO CONFIRMADA'
+                                isset($gatewaySale->list_transactions) &&
+                                isset($gatewaySale->list_transactions[0]) &&
+                                isset($gatewaySale->list_transactions[0]->summary) &&
+                                isset($gatewaySale->list_transactions[0]->summary->reason_message) &&
+                                $gatewaySale->list_transactions[0]->summary->reason_message ==
+                                    "CANCELADA NAO CONFIRMADA"
                             ) {
-                                $errorGetnet = 'Comissão da cloudfox, venda na Getnet está como "CANCELADA NAO CONFIRMADA". $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
+                                $errorGetnet =
+                                    'Comissão da cloudfox, venda na Getnet está como "CANCELADA NAO CONFIRMADA". $sale->id = ' .
+                                    $sale->id .
+                                    ' $orderId = ' .
+                                    $orderId;
                             }
                         }
                         if (!foxutils()->isProduction()) {
@@ -166,20 +176,19 @@ class CheckWithdrawalsReleasedCloudfox extends Command
             }
 
             $bar->finish();
-        } catch ( Exception $e) {
+        } catch (Exception $e) {
             report($e);
         }
-
     }
 
     private function tryFixGatewayOrderIdAndGatewayTransactionId(Sale $sale)
     {
         $saleId = $sale->id;
 
-        $gatewayPostBacks = DB::table('gateway_postbacks')
-            ->select('data')
-            ->where('sale_id', $saleId)
-            ->orderByDesc('id')
+        $gatewayPostBacks = DB::table("gateway_postbacks")
+            ->select("data")
+            ->where("sale_id", $saleId)
+            ->orderByDesc("id")
             ->get();
 
         $paidId = null;
@@ -194,11 +203,11 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                 $paymentId = $gatewayPostBack->payment_id;
 
                 if ($orderId != $sale->gateway_order_id) {
-                    Sale::find($saleId)->update(['gateway_order_id' => $orderId]);
+                    Sale::find($saleId)->update(["gateway_order_id" => $orderId]);
                 }
 
                 if ($paymentId != $sale->gateway_transaction_id) {
-                    Sale::find($saleId)->update(['gateway_transaction_id' => $paymentId]);
+                    Sale::find($saleId)->update(["gateway_transaction_id" => $paymentId]);
                 }
             }
         }

@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::get('tickets/file/{id}', 'TicketsApiController@getFile')->name('api.tickets.getfile');
-Route::group(['middleware' => ['auth:api', 'scopes:admin']], function() {
-    Route::post('tickets/sendmessage', 'TicketsApiController@sendMessage')->name('api.tickets.sendmessage')->middleware('permission:attendance_manage');
-    Route::get('tickets/getvalues', 'TicketsApiController@getTotalValues')->name('api.tickets.getvalues');
-    Route::put('tickets/{id}', 'TicketsApiController@update')->middleware('permission:attendance_manage');
-    Route::apiResource('tickets', 'TicketsApiController')->only('index', 'show')->names('api.tickets');
+Route::get("tickets/file/{id}", "TicketsApiController@getFile")->name("api.tickets.getfile");
+Route::group(["middleware" => ["auth:api", "scopes:admin"]], function () {
+    Route::post("tickets/sendmessage", "TicketsApiController@sendMessage")
+        ->name("api.tickets.sendmessage")
+        ->middleware("permission:attendance_manage");
+    Route::get("tickets/getvalues", "TicketsApiController@getTotalValues")->name("api.tickets.getvalues");
+    Route::put("tickets/{id}", "TicketsApiController@update")->middleware("permission:attendance_manage");
+    Route::apiResource("tickets", "TicketsApiController")
+        ->only("index", "show")
+        ->names("api.tickets");
 });

@@ -14,23 +14,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class GatewaysBackofficeRequests extends Model
 {
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $fillable = [
-        'company_id',
-        'gateway_id',
-        'sent_data',
-        'response',
-        'created_at',
-        'updated_at'
-    ];
+    protected $fillable = ["company_id", "gateway_id", "sent_data", "response", "created_at", "updated_at"];
 
     /**
      * @return BelongsTo
      */
     public function company()
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 
     /**
@@ -38,6 +31,6 @@ class GatewaysBackofficeRequests extends Model
      */
     public function gateway(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Gateway');
+        return $this->belongsTo("Modules\Core\Entities\Gateway");
     }
 }

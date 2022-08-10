@@ -13,7 +13,9 @@ class AlterTablePlansAddConfigPersonalizationProduct extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE `plans` ADD COLUMN `config_personalization_product` JSON NULL DEFAULT NULL AFTER `shopify_variant_id`;");
+        DB::statement(
+            "ALTER TABLE `plans` ADD COLUMN `config_personalization_product` JSON NULL DEFAULT NULL AFTER `shopify_variant_id`;"
+        );
     }
 
     /**

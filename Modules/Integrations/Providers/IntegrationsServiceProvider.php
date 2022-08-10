@@ -18,7 +18,7 @@ class IntegrationsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -27,12 +27,12 @@ class IntegrationsServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/integrations');
+        $langPath = resource_path("lang/modules/integrations");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'integrations');
+            $this->loadTranslationsFrom($langPath, "integrations");
         } else {
-            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'integrations');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "integrations");
         }
     }
 
@@ -42,12 +42,13 @@ class IntegrationsServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-                             __DIR__ . '/../Config/config.php' => config_path('integrations.php'),
-                         ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__ . '/../Config/config.php', 'integrations'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("integrations.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "integrations");
     }
 
     /**
@@ -56,17 +57,26 @@ class IntegrationsServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/integrations');
+        $viewPath = resource_path("views/modules/integrations");
 
-        $sourcePath = __DIR__ . '/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-                             $sourcePath => $viewPath,
-                         ], 'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function($path) {
-            return $path . '/modules/integrations';
-        }, Config::get('view.paths')), [$sourcePath]), 'integrations');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/integrations";
+                }, Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "integrations"
+        );
     }
 
     /**
@@ -75,8 +85,8 @@ class IntegrationsServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (!app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

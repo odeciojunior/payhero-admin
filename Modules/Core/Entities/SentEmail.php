@@ -26,20 +26,20 @@ class SentEmail extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'from_email',
-        'from_name',
-        'to_email',
-        'to_name',
-        'template_id',
-        'template_data',
-        'status_code',
-        'status',
-        'log_error',
+        "from_email",
+        "from_name",
+        "to_email",
+        "to_name",
+        "template_id",
+        "template_data",
+        "status_code",
+        "status",
+        "log_error",
     ];
     /**
      * @var bool
@@ -66,12 +66,12 @@ class SentEmail extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Email ' . $this->name . ' foi deletado.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Email ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Email ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Email " . $this->name . " foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Email " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Email " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }

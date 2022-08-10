@@ -12,11 +12,17 @@ class AddColumnCompanyIdAffiliateRequestTable extends Migration
      */
     public function up()
     {
-        Schema::table('affiliate_requests', function(Blueprint $table) {
-            $table->unsignedInteger('company_id')->nullable()->after('project_id');
+        Schema::table("affiliate_requests", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("company_id")
+                ->nullable()
+                ->after("project_id");
         });
-        Schema::table('affiliate_requests', function(Blueprint $table) {
-            $table->foreign('company_id')->references('id')->on('companies');
+        Schema::table("affiliate_requests", function (Blueprint $table) {
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
     }
 
@@ -26,9 +32,9 @@ class AddColumnCompanyIdAffiliateRequestTable extends Migration
      */
     public function down()
     {
-        Schema::table('affiliate_requests', function(Blueprint $table) {
+        Schema::table("affiliate_requests", function (Blueprint $table) {
             $table->dropForeign(["company_id"]);
-            $table->dropColumn('company_id');
+            $table->dropColumn("company_id");
         });
     }
 }

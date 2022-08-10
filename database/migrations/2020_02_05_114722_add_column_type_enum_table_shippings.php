@@ -12,8 +12,8 @@ class AddColumnTypeEnumTableShippings extends Migration
      */
     public function up()
     {
-        Schema::table('shippings', function (Blueprint $table) {
-            $table->integer('type_enum')->nullable();
+        Schema::table("shippings", function (Blueprint $table) {
+            $table->integer("type_enum")->nullable();
         });
     }
 
@@ -24,10 +24,8 @@ class AddColumnTypeEnumTableShippings extends Migration
      */
     public function down()
     {
-        Schema::table('shippings', function (Blueprint $table) {
-            $table->dropColumn(['type_enum']);
+        Schema::table("shippings", function (Blueprint $table) {
+            $table->dropColumn(["type_enum"]);
         });
     }
 }
-
-

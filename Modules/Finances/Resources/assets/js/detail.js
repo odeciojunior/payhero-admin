@@ -2,12 +2,10 @@ $(() => {
     // MODAL DETALHES DA TRANSAÇÃO
 
     $(document).on("click", ".details_transaction", function () {
-
         let withdrawal = $(this).attr("withdrawal");
 
         loadOnAny("#modal-transactionsDetails > .modal-body", false, {
-            message:
-                "Aguarde enquanto os dados do <br> saque estão sendo carregados.",
+            message: "Aguarde enquanto os dados do <br> saque estão sendo carregados.",
         });
 
         $("#withdrawal-code").html("");
@@ -32,10 +30,7 @@ $(() => {
                     `<span class="mr-30">ID #${response.id}</span><span>Solicitado em ${response.date_request}</span>`
                 );
 
-                if (
-                    response.debt_pending_value != null &&
-                    response.debt_pending_value != "R$ 0,00"
-                ) {
+                if (response.debt_pending_value != null && response.debt_pending_value != "R$ 0,00") {
                     $("#pending_debt").show().html(`
                         <span class="mr-30" style="color:#FF0404;">
                             Desconto de - ${response.debt_pending_value} em débitos pendentes
@@ -111,23 +106,18 @@ $(() => {
             exportFinanceFormat = "csv";
         });
 
-        $(".btn-confirm-export-finance-getnet-transfer").on(
-            "click",
-            function () {
-                var regexEmail = new RegExp(
-                    /^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/
-                );
-                var email = $("#email_finance_export_transfer").val();
+        $(".btn-confirm-export-finance-getnet-transfer").on("click", function () {
+            var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+            var email = $("#email_finance_export_transfer").val();
 
-                if (email == "" || !regexEmail.test(email)) {
-                    alertCustom("error", "Preencha o e-mail corretamente");
-                    return false;
-                } else {
-                    financesGetnetExport(exportFinanceFormat);
-                    $("#export-finance-getnet-transfer").addClass("d-none");
-                }
+            if (email == "" || !regexEmail.test(email)) {
+                alertCustom("error", "Preencha o e-mail corretamente");
+                return false;
+            } else {
+                financesGetnetExport(exportFinanceFormat);
+                $("#export-finance-getnet-transfer").addClass("d-none");
             }
-        );
+        });
 
         // // Download do relatorio
         function financesGetnetExport(fileFormat) {
@@ -143,9 +133,7 @@ $(() => {
                 },
                 dataType: "json",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
+                    Authorization: $('meta[name="access-token"]').attr("content"),
                     Accept: "application/json",
                 },
                 error: (response) => {

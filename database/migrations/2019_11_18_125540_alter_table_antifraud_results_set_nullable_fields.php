@@ -12,9 +12,15 @@ class AlterTableAntifraudResultsSetNullableFields extends Migration
      */
     public function up()
     {
-        Schema::table('sale_antifraud_results', function(Blueprint $table) {
-            $table->json('send_data')->nullable()->change();
-            $table->string('status', 255)->nullable()->change();
+        Schema::table("sale_antifraud_results", function (Blueprint $table) {
+            $table
+                ->json("send_data")
+                ->nullable()
+                ->change();
+            $table
+                ->string("status", 255)
+                ->nullable()
+                ->change();
         });
     }
 
@@ -24,9 +30,9 @@ class AlterTableAntifraudResultsSetNullableFields extends Migration
      */
     public function down()
     {
-        Schema::table('sale_antifraud_results', function(Blueprint $table) {
-            $table->json('send_data')->change();
-            $table->string('status', 255)->change();
+        Schema::table("sale_antifraud_results", function (Blueprint $table) {
+            $table->json("send_data")->change();
+            $table->string("status", 255)->change();
         });
     }
 }

@@ -48,18 +48,18 @@ class ProcessWooCommercePostbackTracking implements ShouldQueue
         $productService = new ProductService();
         $trackingService = new TrackingService();
 
-        if (!isset($this->postback['id'])) {
+        if (!isset($this->postback["id"])) {
             return;
         }
 
-        $order = $this->postback['id'];
+        $order = $this->postback["id"];
 
-        $sales = Sale::where('woocommerce_order', $order)
-                ->where('project_id', $this->projectId)
-                ->where('status', Sale::STATUS_APPROVED)
-                ->get();
+        $sales = Sale::where("woocommerce_order", $order)
+            ->where("project_id", $this->projectId)
+            ->where("status", Sale::STATUS_APPROVED)
+            ->get();
 
-        if(empty($sales)){
+        if (empty($sales)) {
             return;
         }
 
@@ -68,14 +68,10 @@ class ProcessWooCommercePostbackTracking implements ShouldQueue
                 $saleProducts = $productService->getProductsBySale($sale);
 
                 foreach ($saleProducts as $product) {
-                        
                     $trackingCode = $this->postback["correios_tracking_code"];
-                    
+
                     if (!empty($trackingCode)) {
-                        
-                       
                         $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
-                        
                     }
                 }
 

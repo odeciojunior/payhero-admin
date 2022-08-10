@@ -18,14 +18,14 @@ class ResendBankSlipWebhookSafe2pay extends Command
      *
      * @var string
      */
-    protected $signature = 'safe2pay:resend-bankslip-webhook';
+    protected $signature = "safe2pay:resend-bankslip-webhook";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -51,57 +51,53 @@ class ResendBankSlipWebhookSafe2pay extends Command
     public function verifyBankSlip($option)
     {
         $safe = new Safe2payGateway();
-        
+
         $pageNumber = 1;
         $limit = 100;
         $total = 0;
         $itens = 0;
 
-        $sales = DB::table('sales')->select('id','status','gateway_transaction_id')
-                ->where('gateway_id',Gateway::SAFE2PAY_PRODUCTION_ID)
-                ->where('status',[Sale::STATUS_PENDING])
-                ->get();
-        
-        if(count($sales) == 0){
-            exit;
-        }        
-        
+        $sales = DB::table("sales")
+            ->select("id", "status", "gateway_transaction_id")
+            ->where("gateway_id", Gateway::SAFE2PAY_PRODUCTION_ID)
+            ->where("status", [Sale::STATUS_PENDING])
+            ->get();
+
+        if (count($sales) == 0) {
+            exit();
+        }
+
         do {
             $response = $safe->listTransactions([
-                'PageNumber'=>$pageNumber,
-                'RowsPerPage'=>$limit,
-                'Object.PaymentMethod.Code'=>1,
-                'Object.TransactionStatus.Code'=>$option
+                "PageNumber" => $pageNumber,
+                "RowsPerPage" => $limit,
+                "Object.PaymentMethod.Code" => 1,
+                "Object.TransactionStatus.Code" => $option,
             ]);
-            
+
             $total = 0;
-            if(!empty($response->ResponseDetail))
-            {
+            if (!empty($response->ResponseDetail)) {
                 $total = $response->ResponseDetail->TotalItems;
                 $pageNumber++;
 
-                foreach($response->ResponseDetail->Objects as $row)
-                {
+                foreach ($response->ResponseDetail->Objects as $row) {
                     $this->line($row->Reference);
                     $itens++;
 
-                    foreach($sales as $key=>$sale)
-                    {
-                        if($sale->gateway_transaction_id == $row->IdTransaction)
-                        {                            
+                    foreach ($sales as $key => $sale) {
+                        if ($sale->gateway_transaction_id == $row->IdTransaction) {
                             $this->comment($sale->id);
-                            $safe->resendWebhook($sale->gateway_transaction_id);   
-                            
+                            $safe->resendWebhook($sale->gateway_transaction_id);
+
                             unset($sales[$key]);
                         }
                     }
                 }
 
-                if(count($sales) == 0){
-                    exit;
+                if (count($sales) == 0) {
+                    exit();
                 }
             }
-            
         } while ($itens < $total);
     }
 }

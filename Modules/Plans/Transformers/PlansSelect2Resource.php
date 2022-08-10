@@ -12,9 +12,9 @@ class PlansSelect2Resource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => hashids_encode($this->id),
-            'name' => $this->name,
-            'description' => $this->description,
+            "id" => hashids_encode($this->id),
+            "name" => $this->name,
+            "description" => $this->description,
         ];
     }
 }

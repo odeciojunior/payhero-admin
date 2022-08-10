@@ -25,6 +25,5 @@ class CompanyObserver
 
         $accountApprovedService = new AccountApprovedService();
         $accountApprovedService->checkAccountIsApproved($user);
-
     }
 }

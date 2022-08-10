@@ -26,25 +26,25 @@ class DigitalmanagerSent extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'digitalmanager_sent';
+    protected $table = "digitalmanager_sent";
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'digitalmanager_integration_id',
-        'data',
-        'response',
-        'sent_status',
-        'event_sale',
-        'instance_id',
-        'instance',
-        'created_at',
-        'updated_at',
+        "digitalmanager_integration_id",
+        "data",
+        "response",
+        "sent_status",
+        "event_sale",
+        "instance_id",
+        "instance",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -70,6 +70,6 @@ class DigitalmanagerSent extends Model
      */
     public function digitalmanagerIntegration()
     {
-        return $this->belongsTo('Modules\Core\Entities\DigitalmanagerIntegration');
+        return $this->belongsTo("Modules\Core\Entities\DigitalmanagerIntegration");
     }
 }

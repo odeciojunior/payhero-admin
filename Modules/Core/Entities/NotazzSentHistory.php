@@ -27,7 +27,7 @@ class NotazzSentHistory extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var string
      */
@@ -36,13 +36,13 @@ class NotazzSentHistory extends Model
      * @var array
      */
     protected $fillable = [
-        'notazz_invoice_id',
-        'sent_type_enum',
-        'url',
-        'data_sent',
-        'response',
-        'created_at',
-        'updated_at',
+        "notazz_invoice_id",
+        "sent_type_enum",
+        "url",
+        "data_sent",
+        "response",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -68,6 +68,6 @@ class NotazzSentHistory extends Model
      */
     public function notazzInvoice()
     {
-        return $this->belongsTo('Modules\Core\Entities\NotazzInvoice');
+        return $this->belongsTo("Modules\Core\Entities\NotazzInvoice");
     }
 }

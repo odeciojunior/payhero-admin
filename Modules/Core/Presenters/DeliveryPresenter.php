@@ -11,7 +11,7 @@ class DeliveryPresenter extends Presenter
      */
     public function getCep()
     {
-        return substr($this->zip_code, 0, 5) . '-' . substr($this->zip_code, 5, 3);
+        return substr($this->zip_code, 0, 5) . "-" . substr($this->zip_code, 5, 3);
     }
 
     /**
@@ -19,7 +19,7 @@ class DeliveryPresenter extends Presenter
      */
     public function getReceiverFirstName()
     {
-        return explode(' ', $this->receiver_name)[0];
+        return explode(" ", $this->receiver_name)[0];
     }
 
     /**
@@ -27,8 +27,6 @@ class DeliveryPresenter extends Presenter
      */
     public function getReceiverLastName()
     {
-        return explode(' ', $this->receiver_name)[count(explode(' ', $this->receiver_name)) - 1];
+        return explode(" ", $this->receiver_name)[count(explode(" ", $this->receiver_name)) - 1];
     }
-
 }
-

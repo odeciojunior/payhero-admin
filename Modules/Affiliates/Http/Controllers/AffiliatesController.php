@@ -18,12 +18,15 @@ class AffiliatesController extends Controller
     public function index($projectId)
     {
         $projectModel = new Project();
-        $projectId    = current(Hashids::decode($projectId));
-        $project      = $projectModel->where('id', $projectId)->where('status','!=', $projectModel->present()->getStatus('disabled'))->first();
+        $projectId = current(Hashids::decode($projectId));
+        $project = $projectModel
+            ->where("id", $projectId)
+            ->where("status", "!=", $projectModel->present()->getStatus("disabled"))
+            ->first();
         if ($project) {
-            return view('affiliates::index');
+            return view("affiliates::index");
         } else {
-            return view('errors.404');
+            return view("errors.404");
         }
     }
 
@@ -33,7 +36,7 @@ class AffiliatesController extends Controller
      */
     public function create()
     {
-        return view('affiliates::create');
+        return view("affiliates::create");
     }
 
     /**
@@ -43,7 +46,7 @@ class AffiliatesController extends Controller
      */
     public function show($id)
     {
-        return view('affiliates::show');
+        return view("affiliates::show");
     }
 
     /**
@@ -53,11 +56,11 @@ class AffiliatesController extends Controller
      */
     public function edit($id)
     {
-        return view('affiliates::edit');
+        return view("affiliates::edit");
     }
 
     public function projectAffiliates()
     {
-        return view('affiliates::projectaffiliates');
+        return view("affiliates::projectaffiliates");
     }
 }

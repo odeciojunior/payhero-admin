@@ -1,7 +1,7 @@
 <?php namespace Modules\Core\Services\Gateways;
 
-abstract class GatewayAbstract{
-
+abstract class GatewayAbstract
+{
     public $gatewayId;
     public $gatewayResult = [];
     public $exceptions = [];
@@ -18,14 +18,14 @@ abstract class GatewayAbstract{
     {
         $arrEndpoint = $this->getEndpoint($option);
 
-        $urlApi = (!empty($option->baseUrl)? $option->baseUrl : $this->baseUrl) . $arrEndpoint['route'];
+        $urlApi = (!empty($option->baseUrl) ? $option->baseUrl : $this->baseUrl) . $arrEndpoint["route"];
 
         $curl = curl_init($urlApi);
 
         $headers = $option->headers ?? $this->getDefaultHeader();
-        
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $arrEndpoint['method']);
+
+        curl_setopt($curl, CURLOPT_ENCODING, "");
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $arrEndpoint["method"]);
 
         if (!is_null($option->data)) {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $option->getData());
@@ -43,9 +43,9 @@ abstract class GatewayAbstract{
         $result = curl_exec($curl);
 
         $this->curlInfo = curl_getinfo($curl);
-        
+
         curl_close($curl);
-        
+
         return $result;
     }
 
@@ -55,32 +55,30 @@ abstract class GatewayAbstract{
      * @return mixed
      */
     public function getEndpoint(GatewayCurlOptions $option)
-    {       
-        $tempEndpoint = $this->endpoints[$option->endpoint] ?? null; 
-        
-        if (!empty($tempEndpoint))
-        {            
-            if (!empty($option->variables))
-            {                
-                $route = $tempEndpoint['route'];
-                preg_match_all('/\:(\w+)/im', $route, $matches);
+    {
+        $tempEndpoint = $this->endpoints[$option->endpoint] ?? null;
+
+        if (!empty($tempEndpoint)) {
+            if (!empty($option->variables)) {
+                $route = $tempEndpoint["route"];
+                preg_match_all("/\:(\w+)/im", $route, $matches);
                 $varsRoute = $matches[1];
                 $i = 0;
                 foreach ($varsRoute as $value) {
                     if (isset($option->variables[$i])) {
-                        $route = str_replace(':' . $value, $option->variables[$i], $route);                        
+                        $route = str_replace(":" . $value, $option->variables[$i], $route);
                     }
                     $i++;
                 }
-                $tempEndpoint['route'] = $route;
+                $tempEndpoint["route"] = $route;
             }
 
             if (!empty($option->queryString)) {
-                $route = $tempEndpoint['route'];
+                $route = $tempEndpoint["route"];
 
-                $queryString = http_build_query($option->queryString, '=>');
+                $queryString = http_build_query($option->queryString, "=>");
 
-                $tempEndpoint['route'] = $route . '?' . $queryString;
+                $tempEndpoint["route"] = $route . "?" . $queryString;
             }
 
             return $tempEndpoint;
@@ -88,7 +86,8 @@ abstract class GatewayAbstract{
         return null;
     }
 
-    public function getBaseUrl(){
+    public function getBaseUrl()
+    {
         return $this->baseUrl;
     }
 }

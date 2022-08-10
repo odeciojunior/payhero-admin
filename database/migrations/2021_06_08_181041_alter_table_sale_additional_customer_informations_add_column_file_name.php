@@ -13,7 +13,9 @@ class AlterTableSaleAdditionalCustomerInformationsAddColumnFileName extends Migr
      */
     public function up()
     {
-        DB::statement("ALTER TABLE sale_additional_customer_informations ADD COLUMN file_name varchar(100) null default null after value;");
+        DB::statement(
+            "ALTER TABLE sale_additional_customer_informations ADD COLUMN file_name varchar(100) null default null after value;"
+        );
     }
 
     /**
