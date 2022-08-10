@@ -175,8 +175,8 @@ class ChargebackService
     {
         $approvedSalesAmount = (new SaleService())->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
 
-        if ($approvedSalesAmount < 50) {
-            return 1.2;
+        if ($approvedSalesAmount < 20) {
+            return 0.0;
         }
 
         $chargebacksAmount = $this->getTotalChargebacksInPeriod($user, $startDate);
@@ -242,13 +242,13 @@ class ChargebackService
             ->count();
 
         if ($contestationsCount == 0) {
-            return 2.0;
+            return 0.0;
         }
 
         $approvedSales = (new SaleService())->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
 
         if ($approvedSales < 20) {
-            return 2.0;
+            return 0.0;
         }
 
         return round(($contestationsCount * 100) / $approvedSales, 2);

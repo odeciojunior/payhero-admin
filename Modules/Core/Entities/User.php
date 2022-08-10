@@ -173,6 +173,8 @@ class User extends Authenticable
         "release_count",
         "has_security_reserve",
         "security_reserve_rule",
+        "contestation_penalty",
+        "contestation_penalties_taxes",
         "level",
         "ignore_automatic_benefits_updates",
         "total_commission_value",
@@ -214,9 +216,11 @@ class User extends Authenticable
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == "deleted") {
-            $activity->description = "Usuário " . $this->name . " foi deletado.";
+            $activity->description =
+                "Usuário " . $this->name . " foi deletado.";
         } elseif ($eventName == "updated") {
-            $activity->description = "Usuário " . $this->name . " foi atualizado.";
+            $activity->description =
+                "Usuário " . $this->name . " foi atualizado.";
         } elseif ($eventName == "created") {
             $activity->description = "Usuário " . $this->name . " foi criado.";
         } else {
@@ -357,7 +361,12 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany(Project::class, "users_projects", "user_id", "project_id");
+        return $this->belongsToMany(
+            Project::class,
+            "users_projects",
+            "user_id",
+            "project_id"
+        );
     }
 
     /**
@@ -413,7 +422,12 @@ class User extends Authenticable
      */
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, "tasks_users", "user_id", "task_id");
+        return $this->belongsToMany(
+            Task::class,
+            "tasks_users",
+            "user_id",
+            "task_id"
+        );
     }
 
     /**
@@ -423,6 +437,11 @@ class User extends Authenticable
     {
         return $this->hasMany(UserBenefit::class)
             ->join("benefits", "benefits.id", "=", "user_benefits.benefit_id")
-            ->select("user_benefits.*", "benefits.name", "benefits.description", "benefits.level");
+            ->select(
+                "user_benefits.*",
+                "benefits.name",
+                "benefits.description",
+                "benefits.level"
+            );
     }
 }
