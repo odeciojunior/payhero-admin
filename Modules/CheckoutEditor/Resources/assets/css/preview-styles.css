@@ -179,10 +179,9 @@
 
 .logo-desktop-div.has-retangle-banner {
     height: 50px;
-    margin-top: -20px;
     padding: 0px 70px 0 80px;
+    margin-top: -20px;
 }
-
 
 .logo-desktop-div .logo-desktop {
     display: flex;

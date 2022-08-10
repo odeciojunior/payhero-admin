@@ -649,13 +649,13 @@ $(() => {
             if (checkout.checkout_banner_type === 1) {
                 $("#checkout_editor #banner_type_wide").prop("checked", true);
                 $(".preview-banner").removeClass("retangle-banner");
-                $(".logo-div").removeClass("has-retangle-banner");
                 $(".preview-banner").addClass("wide-banner");
+                $(".logo-div").removeClass("has-retangle-banner");
             } else {
                 $("#checkout_editor #banner_type_square").prop("checked", true);
                 $(".preview-banner").addClass("retangle-banner");
-                $(".logo-div").addClass("has-retangle-banner");
                 $(".preview-banner").removeClass("wide-banner");
+                $(".logo-div").addClass("has-retangle-banner");
             }
 
             if (checkout.countdown_enabled) {
