@@ -51,6 +51,7 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes();
 
         $schedule->command("check:systems")->everyTenMinutes();
+        $schedule->command("ethoca:proccess-postback")->everyTenMinutes();
 
         $schedule->command("check:underattack")->everyThirtyMinutes();
         $schedule

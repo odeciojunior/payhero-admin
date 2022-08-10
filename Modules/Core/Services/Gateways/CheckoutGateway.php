@@ -166,6 +166,14 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
+    public function processPostbackEthoca($postbackId){
+        $options = new GatewayCurlOptions([
+            "endpoint" => "processPostbackEthoca",
+            "data"=>['postback_id'=>$postbackId]
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
     public function setBaseUrl($newUrl)
     {
         $this->baseUrl = $newUrl;
@@ -235,6 +243,10 @@ class CheckoutGateway extends GatewayAbstract
                 "route" => "withdrawal/safe2pay/anticipation",
                 "method" => "GET",
             ],
+            "processPostbackEthoca"=>[
+                "route" => "postback/ethoca",
+                "method" => "POST",
+            ]
         ];
     }
 
