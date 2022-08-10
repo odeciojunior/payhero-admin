@@ -244,7 +244,7 @@ class CheckoutGateway extends GatewayAbstract
                 "method" => "GET",
             ],
             "processPostbackEthoca"=>[
-                "route" => "postback/ethoca",
+                "route" => "postback/process/ethoca",
                 "method" => "POST",
             ]
         ];
