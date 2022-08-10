@@ -44,7 +44,7 @@ class NotifyMediation extends Command
         $sendGridService = new SendgridService();
         $smsService = new SmsService();
 
-        $daysWithoutUserResponse = 2;
+        $daysWithoutUserResponse = 5;
 
         $query = Ticket::with(["sale.customer", "sale.project"])
             ->where("ticket_status_enum", Ticket::STATUS_OPEN)
