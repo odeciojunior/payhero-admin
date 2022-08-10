@@ -93,9 +93,16 @@
                             <div class="logo-content low-opacity">
 
                                 <div id='upload_logo'>
-                                    <input type="file" id="checkout_logo" name="checkout_logo"
-                                        data-max-file-size="10M" data-min-height="63" data-min-width="63" data-allowed-file-extensions="jpg jpeg png">
-                                    <input type="hidden" id="has_checkout_logo" value="false">
+                                    <input type="file"
+                                           id="checkout_logo"
+                                           name="checkout_logo"
+                                           data-max-file-size="10M"
+                                           data-min-height="63"
+                                           data-min-width="63"
+                                           data-allowed-file-extensions="jpg jpeg png">
+                                    <input type="hidden"
+                                           id="has_checkout_logo"
+                                           value="false">
                                 </div>
 
                                 <div class="instrunctios">
@@ -636,9 +643,12 @@
                                     <label for="timeout-message"
                                            class="checkout-label">Mensagem ao encerrar o
                                         tempo</label>
-                                    <textarea class="checkout-textarea" id="countdown_finish_message"
-                                        name="countdown_finish_message" rows="3" maxlength="55"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
+                                    <textarea class="checkout-textarea"
+                                              id="countdown_finish_message"
+                                              name="countdown_finish_message"
+                                              rows="3"
+                                              maxlength="55"
+                                              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 
                                     <div id="countdown_finish_message_error"
                                          class="checkout-error"
@@ -1617,7 +1627,7 @@
                                 </div>
 
                                 <div id="logo_preview_desktop_div"
-                                     class="logo-div logo-desktop-div desktop">
+                                     class="logo-div logo-desktop-div  desktop">
                                     <div class="logo-desktop logo-preview-container"
                                          style="display: none">
                                         <img id="logo_preview_desktop"
@@ -1699,19 +1709,24 @@
                                         </div>
                                     </div>
 
-                                    <div class="logo-div logo-menu-bar has-banner" style="overflow-y:hidden">
+                                    <div class="logo-div logo-menu-bar has-banner"
+                                         style="overflow-y:hidden">
                                         <div class="purchase-menu-mobile">
 
                                             <div>
-                                                <div class="logo-mobile-div logo-preview-container" style="display: none">
-                                                    <img id="logo_preview_mobile" class="preview-logo mobile" />
+                                                <div class="logo-mobile-div logo-preview-container"
+                                                     style="display: none">
+                                                    <img id="logo_preview_mobile"
+                                                         class="preview-logo mobile" />
                                                 </div>
                                             </div>
 
                                             <div class="d-flex justify-between align-center">
-                                                <img class="arrow-icon-mobile" src="{{ mix('build/layouts/checkouteditor/img/svg/purchase-icon.svg') }}">
+                                                <img class="arrow-icon-mobile"
+                                                     src="{{ mix('build/layouts/checkouteditor/img/svg/purchase-icon.svg') }}">
                                                 <div class="menu-circle-mobile primary-color"></div>
-                                                <img class="arrow-icon-mobile" src="{{ mix('build/layouts/checkouteditor/img/svg/menu-arrow.svg') }}">
+                                                <img class="arrow-icon-mobile"
+                                                     src="{{ mix('build/layouts/checkouteditor/img/svg/menu-arrow.svg') }}">
                                             </div>
                                         </div>
                                     </div>
