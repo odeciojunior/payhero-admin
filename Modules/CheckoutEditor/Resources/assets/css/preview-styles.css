@@ -177,12 +177,6 @@
     padding: 0px 70px 0 70px;
 }
 
-.logo-desktop-div.has-retangle-banner {
-    height: 50px;
-    padding: 0px 70px 0 80px;
-    margin-top: -20px;
-}
-
 .logo-desktop-div .logo-desktop {
     display: flex;
     justify-content: center;
@@ -199,6 +193,12 @@
     max-width: 90px;
     object-fit: contain;
     background-color: #fff;
+}
+
+.logo-desktop-div.has-retangle-banner {
+    height: 50px;
+    margin-top: -20px;
+    padding: 0px 70px 0 80px !important;
 }
 
 /* ----------- Menubar Mobile Preview ----------- */
