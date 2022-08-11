@@ -12,7 +12,7 @@
 
         <div id="project-empty-title">
             <div class="page-header container px-25 px-md-30" style="padding-bottom: 0; padding-top:30px; display: none;">
-                <div class="col-12 col-md-7 order-0 px-md-15" style="padding: 10px 0 20px">
+                <div class="col-12 col-md-7 order-0" style="padding: 10px 0 20px">
                     <h1 class="page-title d-flex">
                         Finanças
                     </h1>
