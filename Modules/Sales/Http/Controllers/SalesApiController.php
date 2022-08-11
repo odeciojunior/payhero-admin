@@ -378,7 +378,6 @@ class SalesApiController extends Controller
                 }
                 return PlansSelectResource::collection($plans);
             } else {
-                $userId = auth()->user()->account_owner_id;
                 $userProjects = UserProject::
                      where('user_id', $userId)
                      ->pluck('project_id');
