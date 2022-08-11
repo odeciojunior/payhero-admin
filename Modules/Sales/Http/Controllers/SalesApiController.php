@@ -382,27 +382,23 @@ class SalesApiController extends Controller
                      where('user_id', $userId)
                      ->pluck('project_id');
 
-                //$plans = null;
+                if(!$user->deleted_project_filter){
+                    $userProjects = UserProject::
+                        join('projects','projects.id','=','users_projects.project_id')
+                        ->where('projects.status', '!=', 2)
+                        ->where('users_projects.user_id', $userId)
+                        ->pluck('users_projects.project_id');
+                }
 
                 if (!empty($data['search'])) {
                     $plans = Plan::
-                        //select('plans.*')
-                        //->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
-                        //->join('companies as c', 'c.id', '=', 'cc.company_id')
                         where('name', 'like', '%' . $data['search'] . '%')
-                        //->where('cc.company_id', $user->company_default)
-                        //->where('c.user_id', $userId)
                         ->whereIn("project_id", $userProjects)
                         ->limit(30)
                         ->get();
 
                 } else {
                     $plans = Plan::
-                        //select('plans.*')
-                        //->join('checkout_configs as cc', 'cc.project_id', '=', 'plans.project_id')
-                        //->join('companies as c', 'c.id', '=', 'cc.company_id')
-                        //->where('cc.company_id', $user->company_default)
-                        //->where('c.user_id', $userId)
                         whereIn("project_id", $userProjects)
                         ->limit(30)
                         ->get();
