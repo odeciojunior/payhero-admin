@@ -6,7 +6,6 @@ use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-
 class PixTransferRequest extends Model
 {
     use FoxModelTrait;
@@ -16,20 +15,9 @@ class PixTransferRequest extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
+    protected $dates = ["created_at", "updated_at"];
 
-    protected $fillable = [
-        'withdrawal_id',
-        'company_id',
-        'pix_key',
-        'value',
-        'request',
-        'response',
-    ];
-
+    protected $fillable = ["withdrawal_id", "company_id", "pix_key", "value", "request", "response"];
 }

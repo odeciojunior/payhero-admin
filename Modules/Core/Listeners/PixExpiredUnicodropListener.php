@@ -25,9 +25,9 @@ class PixExpiredUnicodropListener
     public function handle($event)
     {
         try {
-            $unicodropIntegration = UnicodropIntegration::where('project_id', $event->sale->project_id)
-                                                        ->where('pix', 1)
-                                                        ->first();
+            $unicodropIntegration = UnicodropIntegration::where("project_id", $event->sale->project_id)
+                ->where("pix", 1)
+                ->first();
 
             if (!empty($unicodropIntegration)) {
                 $unicodropService = new UnicodropService($unicodropIntegration);

@@ -49,7 +49,7 @@ class NotifyUserShopifyIntegrationStoreListener implements ShouldQueue
                 Notification::send($user, new UserShopifyIntegrationStoreNotification($event->user, $event->project));
             }
         } catch (Exception $e) {
-            Log::warning('Erro listener shopifyIntegrationReady');
+            Log::warning("Erro listener shopifyIntegrationReady");
             report($e);
         }
     }

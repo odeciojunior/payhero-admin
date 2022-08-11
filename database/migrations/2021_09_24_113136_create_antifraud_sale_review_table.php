@@ -16,14 +16,14 @@ class CreateAntifraudSaleReviewTable extends Migration
      */
     public function up()
     {
-        Schema::create('antifraud_sale_reviews', function (Blueprint $table) {
+        Schema::create("antifraud_sale_reviews", function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Sale::class);
             $table->foreignIdFor(User::class)->nullable();
-            $table->text('observation')->nullable();
-            $table->string('status')->nullable();
-            $table->string('card_status')->nullable();
-            $table->string('result')->nullable();
+            $table->text("observation")->nullable();
+            $table->string("status")->nullable();
+            $table->string("card_status")->nullable();
+            $table->string("result")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -49,6 +49,6 @@ class CreateAntifraudSaleReviewTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('antifraud_sale_reviews');
+        Schema::dropIfExists("antifraud_sale_reviews");
     }
 }

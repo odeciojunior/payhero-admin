@@ -112,7 +112,7 @@ class Company extends Model
     public const GATEWAY_TAX_2 = 6.9;
     public const GATEWAY_TAX_15 = 5.9;
     public const GATEWAY_TAX_30 = 4.9;
-    
+
     public const DEMO_ID = 1;
 
     protected $presenter = CompanyPresenter::class;
@@ -120,57 +120,57 @@ class Company extends Model
      * The accessors to append to the model's array form.
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = ["id_code"];
 
     protected $fillable = [
-        'user_id',
-        'fantasy_name',
-        'document',
-        'zip_code',
-        'country',
-        'state',
-        'city',
-        'street',
-        'complement',
-        'neighborhood',
-        'number',
-        'support_email',
-        'support_telephone',
-        'cielo_balance',
-        'asaas_balance',
-        'safe2pay_balance',
-        'address_document_status',
-        'contract_document_status',
-        'date_last_document_notification',
-        'company_type',
-        'order_priority',
-        'capture_transaction_enabled',
-        'account_type',
-        'active_flag',
-        'gateway_tax',
-        'tax_default',
-        'credit_card_tax',
-        'credit_card_rule',
-        'pix_tax',
-        'pix_rule',
-        'boleto_tax',
-        'boleto_rule',
-        'installment_tax',
-        'checkout_tax',
-        'gateway_release_money_days',
-        'document_issue_date',
-        'document_issuer',
-        'document_issuer_state',
-        'extra_document',
-        'id_wall_result',
-        'id_wall_date_update',
-        'bureau_result',
-        'transaction_tax',
-        'block_checkout',
-        'annual_income',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "user_id",
+        "fantasy_name",
+        "document",
+        "zip_code",
+        "country",
+        "state",
+        "city",
+        "street",
+        "complement",
+        "neighborhood",
+        "number",
+        "support_email",
+        "support_telephone",
+        "cielo_balance",
+        "asaas_balance",
+        "safe2pay_balance",
+        "address_document_status",
+        "contract_document_status",
+        "date_last_document_notification",
+        "company_type",
+        "order_priority",
+        "capture_transaction_enabled",
+        "account_type",
+        "active_flag",
+        "gateway_tax",
+        "tax_default",
+        "credit_card_tax",
+        "credit_card_rule",
+        "pix_tax",
+        "pix_rule",
+        "boleto_tax",
+        "boleto_rule",
+        "installment_tax",
+        "checkout_tax",
+        "gateway_release_money_days",
+        "document_issue_date",
+        "document_issuer",
+        "document_issuer_state",
+        "extra_document",
+        "id_wall_result",
+        "id_wall_date_update",
+        "bureau_result",
+        "transaction_tax",
+        "block_checkout",
+        "annual_income",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**
@@ -195,13 +195,13 @@ class Company extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
+            case "deleted":
                 $activity->description = "Empresa {$this->fantasy_name} foi deletado.";
                 break;
-            case 'updated':
+            case "updated":
                 $activity->description = "Empresa {$this->fantasy_name}  foi atualizado.";
                 break;
-            case 'created':
+            case "created":
                 $activity->description = "Empresa {$this->fantasy_name} foi criado.";
                 break;
             default:
@@ -211,91 +211,97 @@ class Company extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 
     public function affiliates(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\Affiliate');
+        return $this->hasMany("Modules\Core\Entities\Affiliate");
     }
 
     public function companyDocuments(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\CompanyDocument');
+        return $this->hasMany("Modules\Core\Entities\CompanyDocument");
     }
 
     public function hotzappIntegrations(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
+        return $this->hasMany("Modules\Core\Entities\HotzappIntegration");
     }
 
     public function invitations(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\Invitation');
+        return $this->hasMany("Modules\Core\Entities\Invitation");
     }
 
     public function transactions(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\Transaction');
+        return $this->hasMany("Modules\Core\Entities\Transaction");
     }
 
     public function transfers(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\Transfer');
+        return $this->hasMany("Modules\Core\Entities\Transfer");
     }
 
     public function usersProjects(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\UserProject');
+        return $this->hasMany("Modules\Core\Entities\UserProject");
     }
 
     public function withdrawals(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\Withdrawal');
+        return $this->hasMany("Modules\Core\Entities\Withdrawal");
     }
 
     public function companyBankAccounts(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\CompanyBankAccount');
+        return $this->hasMany("Modules\Core\Entities\CompanyBankAccount");
     }
 
     public function gatewayCompanyCredential(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\GatewaysCompaniesCredential');
+        return $this->hasMany("Modules\Core\Entities\GatewaysCompaniesCredential");
     }
 
     public function gatewayCredential($gateway_id)
     {
-        return $this->gatewayCompanyCredential->where('gateway_id', $gateway_id)->first() ?? null;
+        return $this->gatewayCompanyCredential->where("gateway_id", $gateway_id)->first() ?? null;
     }
 
     public function getGatewayStatus($gateway_id)
     {
-        return $this->gatewayCompanyCredential->where('gateway_id', $gateway_id)->first()->gateway_status ?? null;
+        return $this->gatewayCompanyCredential->where("gateway_id", $gateway_id)->first()->gateway_status ?? null;
     }
 
     public function getGatewaySubsellerId($gateway_id)
     {
-        return $this->gatewayCompanyCredential->where('gateway_id', $gateway_id)->first()->gateway_subseller_id ?? null;
+        return $this->gatewayCompanyCredential->where("gateway_id", $gateway_id)->first()->gateway_subseller_id ?? null;
     }
 
     public function getGatewayApiKey($gatewayId)
     {
-        return $this->gatewayCompanyCredential->where('gateway_id', $gatewayId)->first()->gateway_api_key ?? null;
+        return $this->gatewayCompanyCredential->where("gateway_id", $gatewayId)->first()->gateway_api_key ?? null;
     }
 
     public function gatewayBackofficeRequests(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\GatewaysBackofficeRequests');
+        return $this->hasMany("Modules\Core\Entities\GatewaysBackofficeRequests");
     }
 
     public function getDefaultBankAccount()
     {
-        return $this->companyBankAccounts->where('is_default', true)->where('status', 'VERIFIED')->first() ?? null;
+        return $this->companyBankAccounts
+            ->where("is_default", true)
+            ->where("status", "VERIFIED")
+            ->first() ?? null;
     }
 
     public function getBankAccountTED()
     {
-        return $this->companyBankAccounts->where('transfer_type', 'TED')->where('status', 'VERIFIED')->first() ?? null;
+        return $this->companyBankAccounts
+            ->where("transfer_type", "TED")
+            ->where("status", "VERIFIED")
+            ->first() ?? null;
     }
 }

@@ -11,15 +11,18 @@ class AddColumnClientNameTableCheckout extends Migration
 {
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->string('client_name')->nullable()->after('is_mobile');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table
+                ->string("client_name")
+                ->nullable()
+                ->after("is_mobile");
         });
     }
 
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->dropColumn('client_name');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("client_name");
         });
     }
 }

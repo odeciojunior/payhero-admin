@@ -13,8 +13,11 @@ class AddColumnPixExpiredTableWhatsapp2Integrations extends Migration
      */
     public function up()
     {
-        Schema::table('whatsapp2_integrations', function (Blueprint $table) {
-            $table->integer('pix_expired')->after('abandoned_cart')->default(1);
+        Schema::table("whatsapp2_integrations", function (Blueprint $table) {
+            $table
+                ->integer("pix_expired")
+                ->after("abandoned_cart")
+                ->default(1);
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnPixExpiredTableWhatsapp2Integrations extends Migration
      */
     public function down()
     {
-        Schema::table('whatsapp2_integrations', function (Blueprint $table) {
-            $table->dropColumn(['pix_expired']);
+        Schema::table("whatsapp2_integrations", function (Blueprint $table) {
+            $table->dropColumn(["pix_expired"]);
         });
     }
 }

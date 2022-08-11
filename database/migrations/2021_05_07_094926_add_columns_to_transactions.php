@@ -13,13 +13,15 @@ class AddColumnsToTransactions extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->boolean('tracking_required')
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->boolean("tracking_required")
                 ->default(true)
-                ->after('is_waiting_withdrawal');
-            $table->boolean('is_security_reserve')
+                ->after("is_waiting_withdrawal");
+            $table
+                ->boolean("is_security_reserve")
                 ->default(false)
-                ->after('tracking_required');
+                ->after("tracking_required");
         });
     }
 
@@ -30,8 +32,8 @@ class AddColumnsToTransactions extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn(['tracking_required', 'is_security_reserve']);
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn(["tracking_required", "is_security_reserve"]);
         });
     }
 }

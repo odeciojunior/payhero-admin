@@ -19,14 +19,14 @@ class AsaasChargeback extends Command
      *
      * @var string
      */
-    protected $signature = 'asaas:chargeback';
+    protected $signature = "asaas:chargeback";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -40,21 +40,19 @@ class AsaasChargeback extends Command
 
     public function handle()
     {
-
         try {
-
             $getnetChargebacks = null;
 
-            $getnetChargebacks = Sale::whereDoesntHave('pendingDebts')
-                ->whereHas('transactions', function($q) {
-                    $q->whereDoesntHave('transfers', function($qu) {
-                        $qu->where('reason', 'chargedback');
+            $getnetChargebacks = Sale::whereDoesntHave("pendingDebts")
+                ->whereHas("transactions", function ($q) {
+                    $q->whereDoesntHave("transfers", function ($qu) {
+                        $qu->where("reason", "chargedback");
                     });
-                    $q->whereNotNull('company_id');
+                    $q->whereNotNull("company_id");
                 })
-                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
-                ->where('status', Sale::STATUS_CHARGEBACK)
-                ->with('saleLogs')
+                ->where("gateway_id", Gateway::GETNET_PRODUCTION_ID)
+                ->where("status", Sale::STATUS_CHARGEBACK)
+                ->with("saleLogs")
                 ->get();
 
             $totalValue = 0;
@@ -65,12 +63,11 @@ class AsaasChargeback extends Command
 
             $saleService = new SaleService();
 
-            foreach($getnetChargebacks as $sale) {
-
+            foreach ($getnetChargebacks as $sale) {
                 $progress->advance();
 
-                $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
-                $saleTax = $saleService->getSaleTax($sale,$cashbackValue);
+                $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value : 0;
+                $saleTax = $saleService->getSaleTax($sale, $cashbackValue);
 
                 foreach ($sale->transactions as $transaction) {
                     if (empty($transaction->company)) {
@@ -88,36 +85,33 @@ class AsaasChargeback extends Command
                     $company = $transaction->company;
 
                     $company->update([
-                                         'asaas_balance' => $company->asaas_balance -= $chargebackValue
-                                     ]);
+                        "asaas_balance" => ($company->asaas_balance -= $chargebackValue),
+                    ]);
 
-                    Transfer::create(
-                        [
-                            'user_id' => $company->user_id,
-                            'company_id' => $company->id,
-                            'transaction_id' => $transaction->id,
-                            'value' => $chargebackValue,
-                            'type' => 'out',
-                            'type_enum' => Transfer::TYPE_OUT,
-                            'reason' => 'chargedback',
-                            'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID,
-                        ]
-                    );
+                    Transfer::create([
+                        "user_id" => $company->user_id,
+                        "company_id" => $company->id,
+                        "transaction_id" => $transaction->id,
+                        "value" => $chargebackValue,
+                        "type" => "out",
+                        "type_enum" => Transfer::TYPE_OUT,
+                        "reason" => "chargedback",
+                        "gateway_id" => foxutils()->isProduction()
+                            ? Gateway::ASAAS_PRODUCTION_ID
+                            : Gateway::ASAAS_SANDBOX_ID,
+                    ]);
 
                     $totalValue += $chargebackValue;
                 }
 
-                $this->line($sale->id . ' - chargeback criado com sucesso');
+                $this->line($sale->id . " - chargeback criado com sucesso");
             }
 
             $progress->finish();
 
             $this->line("Valor total {$totalValue}");
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
-
 }

@@ -13,8 +13,11 @@ class AddColumnAmountTableProductsPlansSales extends Migration
      */
     public function up()
     {
-        Schema::table('products_plans_sales', function(Blueprint $table) {
-            $table->integer('amount')->nullable()->after('sale_id');
+        Schema::table("products_plans_sales", function (Blueprint $table) {
+            $table
+                ->integer("amount")
+                ->nullable()
+                ->after("sale_id");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnAmountTableProductsPlansSales extends Migration
      */
     public function down()
     {
-        Schema::table('products_plans_sales', function(Blueprint $table) {
-            $table->dropColumn('amount');
+        Schema::table("products_plans_sales", function (Blueprint $table) {
+            $table->dropColumn("amount");
         });
     }
 }

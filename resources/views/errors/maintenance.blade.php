@@ -3,27 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
     <title>Manutenção | CloudFox App </title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap"
+          rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="page-holder">
+    <div class="page-holder">
 
-    <div class="content-error d-flex text-center">
-        <img src="{!! mix('build/global/img/manutencao.svg') !!}" alt="CloudFox">
-        <h1 class="big">Voltaremos em breve!</h1>
-        <p style="font-size:12px; max-width: 400px;">Desculpe pelo transtorno, nós estamos realizando uma manutenção no momento e voltaremos em breve.</p>
+        <div class="content-error d-flex text-center">
+            <img src="{!! mix('build/global/img/manutencao.svg') !!}"
+                 alt="CloudFox">
+            <h1 class="big">Voltaremos em breve!</h1>
+            <p style="font-size:12px; max-width: 400px;">Desculpe pelo transtorno, nós estamos realizando uma manutenção
+                no
+                momento e voltaremos em breve.</p>
+        </div>
+
     </div>
-
-</div>
 
 </body>
 

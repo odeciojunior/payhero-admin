@@ -15,14 +15,14 @@ class ValidateLastDomains extends Command
      *
      * @var string
      */
-    protected $signature = 'command:validateLastDomains';
+    protected $signature = "command:validateLastDomains";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -36,22 +36,20 @@ class ValidateLastDomains extends Command
 
     public function handle()
     {
-
         try {
-
             $domainModel = new Domain();
             $sendgridService = new SendgridService();
 
-            $domains = $domainModel->where('status', $domainModel->present()->getStatus('approved'))
-                ->where('created_at', '>', Carbon::today()->subDays(3))
+            $domains = $domainModel
+                ->where("status", $domainModel->present()->getStatus("approved"))
+                ->where("created_at", ">", Carbon::today()->subDays(3))
                 ->get();
 
             $total = $domains->count();
             $count = 1;
 
             foreach ($domains as $domain) {
-
-                $this->line($count . ' de ' . $total . '. Validando o domínio: ' . $domain->name);
+                $this->line($count . " de " . $total . ". Validando o domínio: " . $domain->name);
 
                 $responseValidateDomain = null;
                 $responseValidateLink = null;
@@ -66,10 +64,8 @@ class ValidateLastDomains extends Command
 
                 $count++;
             }
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

@@ -14,12 +14,18 @@ class AddObservationsInSales extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->text('observation')->nullable()->change();
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->text("observation")
+                ->nullable()
+                ->change();
         });
 
-        Schema::table('sales', function (Blueprint $table) {
-            $table->text('observation')->nullable()->after('has_valid_tracking');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->text("observation")
+                ->nullable()
+                ->after("has_valid_tracking");
         });
 
         DB::statement("ALTER TABLE sales MODIFY COLUMN created_at timestamp AFTER observation");
@@ -34,8 +40,8 @@ class AddObservationsInSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('observation');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("observation");
         });
     }
 }

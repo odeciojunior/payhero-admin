@@ -13,19 +13,22 @@ class CreateCustomerBankAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('customer_bank_accounts', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('customer_id')->unsigned();
-            $table->foreign('customer_id')->references('id')->on('customers');
-            $table->string('holder_name');
-            $table->string('holder_document');
-            $table->unsignedSmallInteger('account_type');
-            $table->unsignedSmallInteger('bank');
-            $table->string('agency');
-            $table->string('account');
+        Schema::create("customer_bank_accounts", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->bigInteger("customer_id")->unsigned();
+            $table
+                ->foreign("customer_id")
+                ->references("id")
+                ->on("customers");
+            $table->string("holder_name");
+            $table->string("holder_document");
+            $table->unsignedSmallInteger("account_type");
+            $table->unsignedSmallInteger("bank");
+            $table->string("agency");
+            $table->string("account");
             $table->timestamps();
             $table->softDeletes();
-        });;
+        });
     }
 
     /**
@@ -35,6 +38,6 @@ class CreateCustomerBankAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customer_bank_accounts');
+        Schema::dropIfExists("customer_bank_accounts");
     }
 }

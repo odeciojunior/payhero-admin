@@ -10,5 +10,4 @@ use Illuminate\Routing\Controller;
  */
 class PixelsController extends Controller
 {
-
 }

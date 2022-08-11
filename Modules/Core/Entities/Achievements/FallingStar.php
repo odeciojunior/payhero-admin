@@ -20,7 +20,8 @@ class FallingStar extends Achievement implements AchievementCheck
         return false;
 
         //TODO: Refactor with query builder
-        $sql = 'SELECT u.id, count(*) AS total_affiliates
+        $sql =
+            'SELECT u.id, count(*) AS total_affiliates
                 FROM users u
                          INNER JOIN users_projects up ON u.id = up.user_id
                          INNER JOIN projects p ON p.id = up.project_id AND p.status_url_affiliates = TRUE
@@ -29,10 +30,18 @@ class FallingStar extends Achievement implements AchievementCheck
                     FROM sales s
                     WHERE a.id = s.affiliate_id
                       AND owner_id = u.id
-                      AND s.status IN (' . Sale::STATUS_APPROVED . ',
-                                       ' . Sale::STATUS_CHARGEBACK . ',
-                                       ' . Sale::STATUS_REFUNDED . ',
-                                       ' . Sale::STATUS_IN_DISPUTE . '
+                      AND s.status IN (' .
+            Sale::STATUS_APPROVED .
+            ',
+                                       ' .
+            Sale::STATUS_CHARGEBACK .
+            ',
+                                       ' .
+            Sale::STATUS_REFUNDED .
+            ',
+                                       ' .
+            Sale::STATUS_IN_DISPUTE .
+            '
                                        )
                 )
                 WHERE u.id = ?

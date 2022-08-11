@@ -23,12 +23,11 @@ class SetGetProductionGatewaysTable extends Migration
                 "gateway_enum" => 13,
                 "name" => "getnet_production",
                 "json_config" => FoxUtils::xorEncrypt(
-                    json_encode(
-                        [
-                            "public_token" => "c33acdd9-a0ad-4076-8fec-f4c2cbb193f1",
-                            "private_token" => "513123f8-589b-49f2-ad1b-29b2e9133deb",
-                        ]
-                    )),
+                    json_encode([
+                        "public_token" => "c33acdd9-a0ad-4076-8fec-f4c2cbb193f1",
+                        "private_token" => "513123f8-589b-49f2-ad1b-29b2e9133deb",
+                    ])
+                ),
                 "production_flag" => 1,
                 "enabled_flag" => 1,
             ]

@@ -29,7 +29,7 @@ class NotifyTrackingsImportedListener implements ShouldQueue
             $user = $event->user ?? null;
             Notification::send($user, new TrackingsImportedNotification($user));
         } catch (Exception $e) {
-            Log::warning('Erro listener NotifyTrackingsImportedListener');
+            Log::warning("Erro listener NotifyTrackingsImportedListener");
             report($e);
         }
     }

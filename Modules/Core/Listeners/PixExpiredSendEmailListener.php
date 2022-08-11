@@ -51,66 +51,59 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $projectNotificationService = new ProjectNotificationService();
             $domainPresent = (new Domain())->present();
 
-            $project = Project::with('checkoutConfig')->find($event->sale->project_id);
+            $project = Project::with("checkoutConfig")->find($event->sale->project_id);
             $checkoutConfig = $project->checkoutConfig;
             $checkout = Checkout::find($event->sale->checkout_id);
-            $domain = Domain::where('project_id', $project->id)
-                ->where('status', $domainPresent->getStatus('approved'))->first();
+            $domain = Domain::where("project_id", $project->id)
+                ->where("status", $domainPresent->getStatus("approved"))
+                ->first();
 
             $customer = $event->sale->customer;
-            if (stristr($customer->email, 'invalido') !== false) {
+            if (stristr($customer->email, "invalido") !== false) {
                 return false;
             }
 
-            $saleCode = Hashids::connection('sale_id')->encode($sale->id);
+            $saleCode = Hashids::connection("sale_id")->encode($sale->id);
             $products = $saleService->getEmailProducts($sale->id);
 
             $sale->total_paid_value = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
             $sale->total_paid_value = substr_replace(
                 $sale->total_paid_value,
-                ',',
+                ",",
                 strlen($sale->total_paid_value) - 2,
                 0
             );
             $sale->shipment_value = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-            $sale->shipment_value = substr_replace(
-                $sale->shipment_value,
-                ',',
-                strlen($sale->shipment_value) - 2,
-                0
-            );
+            $sale->shipment_value = substr_replace($sale->shipment_value, ",", strlen($sale->shipment_value) - 2, 0);
 
             $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
-            $subTotal = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+            $subTotal = substr_replace($subTotal, ",", strlen($subTotal) - 2, 0);
 
             $shopify_discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
             $discount = intval($shopify_discount) + $sale->automatic_discount;
 
             if ($discount == 0 || $discount == null) {
-                $discount = '';
+                $discount = "";
             }
-            if ($discount != '') {
-                $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
+            if ($discount != "") {
+                $discount = substr_replace($discount, ",", strlen($discount) - 2, 0);
             }
 
             if (FoxUtils::isProduction()) {
-                if(!foxutils()->isEmpty($domain)) {
-                    $link = 'https://checkout.' . $domain->name;
+                if (!foxutils()->isEmpty($domain)) {
+                    $link = "https://checkout." . $domain->name;
                 } else {
-                    $link = 'https://checkout.cloudfox.net';
+                    $link = "https://checkout.cloudfox.net";
                 }
-
             } else {
-                $link = env('APP_URL', 'http://dev.checkout.com.br');
+                $link = env("APP_URL", "http://dev.checkout.com.br");
             }
 
             //Traz o assunto, titulo e texto do email formatados
-            $projectNotificationEmail = $projectNotificationModel->where('project_id', $project->id)
-                ->where(
-                    'notification_enum',
-                    ProjectNotification::NOTIFICATION_EMAIL_PIX_EXPIRED_AN_HOUR_LATER
-                )
-                ->where('status', ProjectNotification::STATUS_ACTIVE)
+            $projectNotificationEmail = $projectNotificationModel
+                ->where("project_id", $project->id)
+                ->where("notification_enum", ProjectNotification::NOTIFICATION_EMAIL_PIX_EXPIRED_AN_HOUR_LATER)
+                ->where("status", ProjectNotification::STATUS_ACTIVE)
                 ->first();
 
             if (empty($projectNotificationEmail)) {
@@ -121,29 +114,17 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $checkout->save();
 
             $message = json_decode($projectNotificationEmail->message);
-            $subjectMessage = $projectNotificationService->formatNotificationData(
-                $message->subject,
-                $sale,
-                $project
-            );
-            $titleMessage = $projectNotificationService->formatNotificationData(
-                $message->title,
-                $sale,
-                $project
-            );
-            $contentMessage = $projectNotificationService->formatNotificationData(
-                $message->content,
-                $sale,
-                $project
-            );
+            $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $sale, $project);
+            $titleMessage = $projectNotificationService->formatNotificationData($message->title, $sale, $project);
+            $contentMessage = $projectNotificationService->formatNotificationData($message->content, $sale, $project);
 
             $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
 
             $data = [
-                'first_name' => $customer->present()->getFirstName(),
-                'pix_link' => $link . '/pix/' . Hashids::connection('sale_id')->encode($sale->id),
+                "first_name" => $customer->present()->getFirstName(),
+                "pix_link" => $link . "/pix/" . Hashids::connection("sale_id")->encode($sale->id),
                 "store_logo" => $checkoutConfig->checkout_logo,
-                'sale_code' => $saleCode,
+                "sale_code" => $saleCode,
                 "products" => $products,
                 "total_value" => $sale->total_paid_value,
                 "shipment_value" => $sale->present()->getFormattedShipmentValue(),
@@ -151,16 +132,16 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 "subject" => $subjectMessage,
                 "title" => $titleMessage,
                 "content" => $contentMessage,
-                'discount' => $discount,
+                "discount" => $discount,
             ];
 
-            $fromEmail = 'noreply@' . ($domain ? $domain->name : 'cloudfox.net');
+            $fromEmail = "noreply@" . ($domain ? $domain->name : "cloudfox.net");
             $sendGridService->sendEmail(
                 $fromEmail,
-                $project['name'],
-                $customer['email'],
-                $customer['name'],
-                'd-4d7a93530c5145b88af3a5e61b19f01d',
+                $project["name"],
+                $customer["email"],
+                $customer["name"],
+                "d-4d7a93530c5145b88af3a5e61b19f01d",
                 $data
             );
         } catch (Exception $e) {

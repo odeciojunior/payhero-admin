@@ -30,10 +30,9 @@ class UserService
         }
 
         $userPresenter = $userModel->present();
-        if (!empty($user))
-        {
-            return  $user->address_document_status == User::DOCUMENT_STATUS_APPROVED &&
-                    $user->personal_document_status == User::DOCUMENT_STATUS_APPROVED;
+        if (!empty($user)) {
+            return $user->address_document_status == User::DOCUMENT_STATUS_APPROVED &&
+                $user->personal_document_status == User::DOCUMENT_STATUS_APPROVED;
         }
 
         return false;
@@ -43,7 +42,10 @@ class UserService
     {
         $user = User::find(auth()->user()->account_owner_id);
 
-        if ($user->address_document_status == UserDocument::STATUS_APPROVED && $user->personal_document_status == UserDocument::STATUS_APPROVED) {
+        if (
+            $user->address_document_status == UserDocument::STATUS_APPROVED &&
+            $user->personal_document_status == UserDocument::STATUS_APPROVED
+        ) {
             return true;
         }
 
@@ -54,7 +56,10 @@ class UserService
     {
         $user = User::find(auth()->user()->account_owner_id);
 
-        if ($user->address_document_status == UserDocument::STATUS_PENDING || $user->personal_document_status == UserDocument::STATUS_PENDING) {
+        if (
+            $user->address_document_status == UserDocument::STATUS_PENDING ||
+            $user->personal_document_status == UserDocument::STATUS_PENDING
+        ) {
             return true;
         }
 
@@ -65,7 +70,10 @@ class UserService
     {
         $user = User::find(auth()->user()->account_owner_id);
 
-        if ($user->address_document_status == UserDocument::STATUS_ANALYZING || $user->personal_document_status == UserDocument::STATUS_ANALYZING) {
+        if (
+            $user->address_document_status == UserDocument::STATUS_ANALYZING ||
+            $user->personal_document_status == UserDocument::STATUS_ANALYZING
+        ) {
             return true;
         }
 
@@ -76,7 +84,10 @@ class UserService
     {
         $user = User::find(auth()->user()->account_owner_id);
 
-        if ($user->address_document_status == UserDocument::STATUS_REFUSED || $user->personal_document_status == UserDocument::STATUS_REFUSED) {
+        if (
+            $user->address_document_status == UserDocument::STATUS_REFUSED ||
+            $user->personal_document_status == UserDocument::STATUS_REFUSED
+        ) {
             return true;
         }
 
@@ -87,52 +98,76 @@ class UserService
     {
         $userModel = new User();
         $user = $userModel->find(auth()->user()->account_owner_id);
-        if($user->address_document_status == User::DOCUMENT_STATUS_APPROVED && $user->personal_document_status == User::DOCUMENT_STATUS_APPROVED) {
+        if (
+            $user->address_document_status == User::DOCUMENT_STATUS_APPROVED &&
+            $user->personal_document_status == User::DOCUMENT_STATUS_APPROVED
+        ) {
             return [
-                'status' => 'approved',
-                'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
-                'personal_document' => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
-                'document' => $user->document,
-                'email' => $user->email,
-                'link' => '/personal-info'
+                "status" => "approved",
+                "address_document" => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
+                "personal_document" => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
+                "document" => $user->document,
+                "email" => $user->email,
+                "link" => "/personal-info",
             ];
         } else {
-            if($user->address_document_status == User::DOCUMENT_STATUS_PENDING || $user->personal_document_status == User::DOCUMENT_STATUS_PENDING) {
+            if (
+                $user->address_document_status == User::DOCUMENT_STATUS_PENDING ||
+                $user->personal_document_status == User::DOCUMENT_STATUS_PENDING
+            ) {
                 return [
-                    'status' => 'pending',
-                    'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
-                    'personal_document' => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
-                    'document' => $user->document,
-                    'email' => $user->email,
-                    'link' => '/personal-info'
+                    "status" => "pending",
+                    "address_document" => $userModel
+                        ->present()
+                        ->getAddressDocumentStatus($user->address_document_status),
+                    "personal_document" => $userModel
+                        ->present()
+                        ->getAddressDocumentStatus($user->personal_document_status),
+                    "document" => $user->document,
+                    "email" => $user->email,
+                    "link" => "/personal-info",
                 ];
             }
 
-            if($user->address_document_status == User::DOCUMENT_STATUS_ANALYZING || $user->personal_document_status == User::DOCUMENT_STATUS_ANALYZING) {
+            if (
+                $user->address_document_status == User::DOCUMENT_STATUS_ANALYZING ||
+                $user->personal_document_status == User::DOCUMENT_STATUS_ANALYZING
+            ) {
                 return [
-                    'status' => 'analyzing',
-                    'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
-                    'personal_document' => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
-                    'document' => $user->document,
-                    'email' => $user->email,
-                    'link' => '/personal-info'
+                    "status" => "analyzing",
+                    "address_document" => $userModel
+                        ->present()
+                        ->getAddressDocumentStatus($user->address_document_status),
+                    "personal_document" => $userModel
+                        ->present()
+                        ->getAddressDocumentStatus($user->personal_document_status),
+                    "document" => $user->document,
+                    "email" => $user->email,
+                    "link" => "/personal-info",
                 ];
             }
 
-            if($user->address_document_status == User::DOCUMENT_STATUS_REFUSED || $user->personal_document_status == User::DOCUMENT_STATUS_REFUSED) {
+            if (
+                $user->address_document_status == User::DOCUMENT_STATUS_REFUSED ||
+                $user->personal_document_status == User::DOCUMENT_STATUS_REFUSED
+            ) {
                 return [
-                    'status' => 'refused',
-                    'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
-                    'personal_document' => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
-                    'document' => $user->document,
-                    'email' => $user->email,
-                    'link' => '/personal-info'
+                    "status" => "refused",
+                    "address_document" => $userModel
+                        ->present()
+                        ->getAddressDocumentStatus($user->address_document_status),
+                    "personal_document" => $userModel
+                        ->present()
+                        ->getAddressDocumentStatus($user->personal_document_status),
+                    "document" => $user->document,
+                    "email" => $user->email,
+                    "link" => "/personal-info",
                 ];
             }
         }
 
         return [
-            'status' => null
+            "status" => null,
         ];
     }
 
@@ -146,14 +181,13 @@ class UserService
             foreach ($user->userDocuments as $document) {
                 if (!empty($document->refused_reason)) {
                     $dataDocument = [
-                        'date' => $document->created_at->format('d/m/Y'),
-                        'type_translated' => __(
-                            'definitions.enum.user_document_type.' . $userPresenter->getDocumentType(
-                                $document->document_type_enum
-                            )
+                        "date" => $document->created_at->format("d/m/Y"),
+                        "type_translated" => __(
+                            "definitions.enum.user_document_type." .
+                                $userPresenter->getDocumentType($document->document_type_enum)
                         ),
-                        'document_url' => $document->document_url,
-                        'refused_reason' => $document->refused_reason,
+                        "document_url" => $document->document_url,
+                        "refused_reason" => $document->refused_reason,
                     ];
                     $refusedDocuments->push(collect($dataDocument));
                 }
@@ -169,13 +203,13 @@ class UserService
         $cpf = preg_replace("/[^0-9]/", "", $cpf);
         $userPresenter = $userModel->present();
 
-        $user = $userModel->where(
-            [
-                ['document', $cpf],
-                ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')],
-                ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')],
-            ]
-        )->first();
+        $user = $userModel
+            ->where([
+                ["document", $cpf],
+                ["address_document_status", $userPresenter->getAddressDocumentStatus("approved")],
+                ["personal_document_status", $userPresenter->getPersonalDocumentStatus("approved")],
+            ])
+            ->first();
         if (!empty($user)) {
             return true;
         }
@@ -212,7 +246,7 @@ class UserService
 
     public function verifyIsValidCPF($cpf): bool
     {
-        $cpf = preg_replace('/[^0-9]/is', '', $cpf);
+        $cpf = preg_replace("/[^0-9]/is", "", $cpf);
 
         if (strlen($cpf) != 11) {
             return false;
@@ -224,7 +258,7 @@ class UserService
 
         for ($t = 9; $t < 11; $t++) {
             for ($d = 0, $c = 0; $c < $t; $c++) {
-                $d += $cpf[$c] * (($t + 1) - $c);
+                $d += $cpf[$c] * ($t + 1 - $c);
             }
             $d = ((10 * $d) % 11) % 10;
             if ($cpf[$c] != $d) {
@@ -240,7 +274,7 @@ class UserService
         $userModel = new User();
         $cpf = preg_replace("/[^0-9]/", "", $cpf);
 
-        $user = $userModel->where('document', $cpf)->first();
+        $user = $userModel->where("document", $cpf)->first();
         if (!empty($user)) {
             return true;
         }
@@ -253,14 +287,14 @@ class UserService
         try {
             $idewallService = new IdwallService();
             $userStatus = json_decode($idewallService->getGenerateProtocolByCPF($cpf), true);
-            $userProtocol = $userStatus['result']['numero'];
+            $userProtocol = $userStatus["result"]["numero"];
 
             /**
              * SLEEP É NECESSÁRIO PARA TER TEMPO DE PROCESSAR O RELATÓRIO
              */
             sleep(3);
 
-            if (!empty($userProtocol) && $userStatus['status_code'] == 200) {
+            if (!empty($userProtocol) && $userStatus["status_code"] == 200) {
                 $user = $idewallService->getReportByProtocolNumber($userProtocol);
 
                 return json_decode($user, true);
@@ -274,28 +308,30 @@ class UserService
 
     public function userWithdrawalBlocked($user): bool
     {
-        if ($user->status == (new User())->present()->getStatus('withdrawal blocked')) {
+        if ($user->status == (new User())->present()->getStatus("withdrawal blocked")) {
             return true;
         }
 
         return false;
     }
 
-    public function removePromotionalTax(PromotionalTax $promotionalTax) : void
+    public function removePromotionalTax(PromotionalTax $promotionalTax): void
     {
         try {
             DB::beginTransaction();
             $old_taxes = explode(",", $promotionalTax->old_tax);
 
             foreach ($old_taxes as $old_tax) {
-                if (empty($old_tax)){
+                if (empty($old_tax)) {
                     continue;
                 }
 
                 $res = explode(":", $old_tax);
                 $company_id = $res[0];
                 $tax = $res[1];
-                $company = Company::where('user_id', $promotionalTax->user_id)->where('id', $company_id)->first();
+                $company = Company::where("user_id", $promotionalTax->user_id)
+                    ->where("id", $company_id)
+                    ->first();
 
                 if ($tax == PromotionalTax::PROMOTIONAL_TAX) {
                     $tax = (new CompanyService())->getTax($company->gateway_release_money_days);
@@ -305,14 +341,13 @@ class UserService
                     $company->gateway_tax = $tax;
                     $company->save();
                 }
-
             }
 
             $promotionalTax->delete();
             DB::commit();
         } catch (Exception $e) {
             report($e);
-           DB::rollback();
+            DB::rollback();
         }
     }
 
@@ -322,26 +357,25 @@ class UserService
             DB::beginTransaction();
 
             $user = $promotionalTax->user;
-            $old_tax = '';
+            $old_tax = "";
 
             $date = Carbon::parse($promotionalTax->created_at);
             $hasSale = (new SaleService())->verifyIfUserHasSalesByDate($date, $user->id);
 
-
             if ($hasSale) {
                 foreach ($user->companies as $company) {
-                    $old_tax .= $company->id . ':' . $company->gateway_tax . ',';
+                    $old_tax .= $company->id . ":" . $company->gateway_tax . ",";
                     $company->gateway_tax = PromotionalTax::PROMOTIONAL_TAX;
                     $company->update();
                 }
 
                 PromotionalTax::updateOrCreate(
-                    ['user_id' => $user->id],
+                    ["user_id" => $user->id],
                     [
-                        'tax' => PromotionalTax::PROMOTIONAL_TAX,
-                        'old_tax' => $old_tax,
-                        'expiration' => Carbon::today()->addDays(30),
-                        'active' => true
+                        "tax" => PromotionalTax::PROMOTIONAL_TAX,
+                        "old_tax" => $old_tax,
+                        "expiration" => Carbon::today()->addDays(30),
+                        "active" => true,
                     ]
                 );
             }

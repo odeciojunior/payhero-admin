@@ -25,6 +25,6 @@ class PopulateUserBenefits extends Migration
      */
     public function down()
     {
-       UserBenefit::query()->delete();
+        UserBenefit::query()->delete();
     }
 }

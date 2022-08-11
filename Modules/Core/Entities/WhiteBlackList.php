@@ -60,7 +60,7 @@ class WhiteBlackList extends Model
     public const RULE_CEP_ENUM = 7;
     public const RULE_NAME_ENUM = 8;
 
-    protected $table = 'white_black_list';
+    protected $table = "white_black_list";
 
     protected $fillable = [
         "type_enum",

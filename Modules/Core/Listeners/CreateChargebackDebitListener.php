@@ -22,13 +22,12 @@ class CreateChargebackDebitListener implements ShouldQueue
 
     public function handle(NewChargebackEvent $event)
     {
-        try{
-
+        try {
             $sale = $event->sale;
 
             $saleService = new SaleService();
-            $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
-            $saleTax = $saleService->getSaleTax($sale,$cashbackValue);
+            $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value : 0;
+            $saleTax = $saleService->getSaleTax($sale, $cashbackValue);
 
             foreach ($sale->transactions as $transaction) {
                 if (empty($transaction->company)) {
@@ -45,43 +44,40 @@ class CreateChargebackDebitListener implements ShouldQueue
 
                 $company = $transaction->company;
 
-                Transfer::create(
-                    [
-                        'user_id' => $company->user_id,
-                        'company_id' => $company->id,
-                        'transaction_id' => $transaction->id,
-                        'value' => $chargebackValue,
-                        'type' => 'out',
-                        'type_enum' => Transfer::TYPE_OUT,
-                        'reason' => 'chargedback',
-                        'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID,
-                    ]
-                );
-
-                $company->update([
-                    'safe2pay_balance' => $company->safe2pay_balance - $chargebackValue
+                Transfer::create([
+                    "user_id" => $company->user_id,
+                    "company_id" => $company->id,
+                    "transaction_id" => $transaction->id,
+                    "value" => $chargebackValue,
+                    "type" => "out",
+                    "type_enum" => Transfer::TYPE_OUT,
+                    "reason" => "chargedback",
+                    "gateway_id" => foxutils()->isProduction()
+                        ? Gateway::SAFE2PAY_PRODUCTION_ID
+                        : Gateway::SAFE2PAY_SANDBOX_ID,
                 ]);
 
+                $company->update([
+                    "safe2pay_balance" => $company->safe2pay_balance - $chargebackValue,
+                ]);
             }
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
         }
-
     }
 
     private function getnetKeys(): array
     {
         if (foxutils()->isProduction()) {
             return [
-                'merchantId' => env('GET_NET_MERCHANT_ID_PRODUCTION'),
-                'sellerId' => env('GET_NET_SELLER_ID_PRODUCTION'),
+                "merchantId" => env("GET_NET_MERCHANT_ID_PRODUCTION"),
+                "sellerId" => env("GET_NET_SELLER_ID_PRODUCTION"),
             ];
         }
 
         return [
-            'merchantId' => env('GET_NET_MERCHANT_ID_SANDBOX'),
-            'sellerId' => env('GET_NET_SELLER_ID_SANDBOX'),
+            "merchantId" => env("GET_NET_MERCHANT_ID_SANDBOX"),
+            "sellerId" => env("GET_NET_SELLER_ID_SANDBOX"),
         ];
     }
 }

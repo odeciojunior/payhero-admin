@@ -24,30 +24,30 @@ class WithdrawalsSettingsApiController
             $companyModel = new Company();
             $companyId = current(Hashids::decode($request->company));
 
-//            if (empty($request->input('page')) || $request->input('page') == '1') {
-//                activity()->on($withdrawalSettingsModel)->tap(
-//                    function (Activity $activity) {
-//                        $activity->log_name = 'visualization';
-//                    }
-//                )->log('Visualizou tela configurações do saque automático');
-//            }
+            //            if (empty($request->input('page')) || $request->input('page') == '1') {
+            //                activity()->on($withdrawalSettingsModel)->tap(
+            //                    function (Activity $activity) {
+            //                        $activity->log_name = 'visualization';
+            //                    }
+            //                )->log('Visualizou tela configurações do saque automático');
+            //            }
 
             if (empty($companyId)) {
-                return response()->json(['message' => 'Empresa não encontrada',], 404);
+                return response()->json(["message" => "Empresa não encontrada"], 404);
             }
 
             $company = $companyModel->find($companyId);
 
-            if (!Gate::allows('edit', [$company])) {
-                return response()->json(['message' => 'Sem permissão para visualizar saques',], 403);
+            if (!Gate::allows("edit", [$company])) {
+                return response()->json(["message" => "Sem permissão para visualizar saques"], 403);
             }
 
-            $withdrawals = $withdrawalSettingsModel->where('company_id', $companyId)->orderBy('id', 'DESC');
+            $withdrawals = $withdrawalSettingsModel->where("company_id", $companyId)->orderBy("id", "DESC");
 
             return WithdrawalSettingsResource::collection($withdrawals->paginate(10));
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao visualizar saques',], 400);
+            return response()->json(["message" => "Erro ao visualizar saques"], 400);
         }
     }
 
@@ -67,25 +67,31 @@ class WithdrawalsSettingsApiController
                 if ($settingsId) {
                     $settings = $withdrawalSettingsModel->findOrFail($settingsId);
                 } else {
-                    $settings = $withdrawalSettingsModel->where('company_id', $companyId)
-                            ->whereNull('deleted_at')
-                            ->orderBy('id', 'desc')
+                    $settings =
+                        $withdrawalSettingsModel
+                            ->where("company_id", $companyId)
+                            ->whereNull("deleted_at")
+                            ->orderBy("id", "desc")
                             ->first() ?? null;
                 }
 
                 if ($settings) {
                     return new WithdrawalSettingsResource($settings);
                 } else {
-                    return response()->json(['message' => 'Nenhuma configuração de saques automáticos foi encontrada'],
-                        404);
+                    return response()->json(
+                        ["message" => "Nenhuma configuração de saques automáticos foi encontrada"],
+                        404
+                    );
                 }
             } else {
-                return response()->json(['message' => 'Erro ao carregar configurações de saques automáticos da empresa'],
-                    400);
+                return response()->json(
+                    ["message" => "Erro ao carregar configurações de saques automáticos da empresa"],
+                    400
+                );
             }
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(["message" => $e->getMessage()], 500);
         }
     }
 
@@ -94,34 +100,37 @@ class WithdrawalsSettingsApiController
         try {
             $requestData = $request->validated();
 
-            $company = Company::find(hashids_decode($requestData['company_id']));
+            $company = Company::find(hashids_decode($requestData["company_id"]));
 
-            if (!Gate::allows('edit', [$company]) ||
+            if (
+                !Gate::allows("edit", [$company]) ||
                 in_array(Auth::user()->status, [User::STATUS_ACCOUNT_BLOCKED, User::STATUS_WITHDRAWAL_BLOCKED])
             ) {
-                return response()->json(['message' => 'Sem permissão para salvar configurações de saques'], 403);
+                return response()->json(["message" => "Sem permissão para salvar configurações de saques"], 403);
             }
 
-            $withdrawalSettings = WithdrawalSettings::firstOrNew(
-                [
-                    'company_id' => $company->id,
-                ]
-            );
+            $withdrawalSettings = WithdrawalSettings::firstOrNew([
+                "company_id" => $company->id,
+            ]);
 
-            $withdrawalSettings->rule = $requestData['rule'];
-            $withdrawalSettings->frequency = $requestData['frequency'] ?? null;
-            $withdrawalSettings->weekday = $requestData['weekday'] ?? null;
-            $withdrawalSettings->day = $requestData['day'] ?? null;
-            $withdrawalSettings->amount = !empty($requestData['amount']) ? FoxUtils::onlyNumbers($requestData['amount']) : null;
+            $withdrawalSettings->rule = $requestData["rule"];
+            $withdrawalSettings->frequency = $requestData["frequency"] ?? null;
+            $withdrawalSettings->weekday = $requestData["weekday"] ?? null;
+            $withdrawalSettings->day = $requestData["day"] ?? null;
+            $withdrawalSettings->amount = !empty($requestData["amount"])
+                ? FoxUtils::onlyNumbers($requestData["amount"])
+                : null;
             $withdrawalSettings->save();
             return response()->json([
-                'message' => 'Configurações de saques automáticos salvos com sucesso',
-                'data' => WithdrawalSettingsResource::make($withdrawalSettings)
+                "message" => "Configurações de saques automáticos salvos com sucesso",
+                "data" => WithdrawalSettingsResource::make($withdrawalSettings),
             ]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde! ' . $e->getMessage()],
-                500);
+            return response()->json(
+                ["message" => "Ocorreu um erro, tente novamnte mais tarde! " . $e->getMessage()],
+                500
+            );
         }
     }
 
@@ -135,34 +144,35 @@ class WithdrawalsSettingsApiController
         try {
             $requestData = $request->validated();
 
-            $company = Company::find(hashids_decode($requestData['company_id']));
+            $company = Company::find(hashids_decode($requestData["company_id"]));
 
             $withdrawalSettings = WithdrawalSettings::find(current(Hashids::decode($id)));
 
-            if (!Gate::allows('edit', [$company]) ||
+            if (
+                !Gate::allows("edit", [$company]) ||
                 in_array(Auth::user()->status, [User::STATUS_ACCOUNT_BLOCKED, User::STATUS_WITHDRAWAL_BLOCKED])
             ) {
-                return response()->json(['message' => 'Sem permissão para salvar configurações de saques'], 403);
+                return response()->json(["message" => "Sem permissão para salvar configurações de saques"], 403);
             }
 
-            $withdrawalSettings->update(
-                [
-                    'rule' => $requestData['rule'],
-                    'frequency' => $requestData['frequency'] ?? null,
-                    'weekday' => $requestData['weekday'] ?? null,
-                    'day' => $requestData['day'] ?? null,
-                    'amount' => !empty($requestData['amount']) ? FoxUtils::onlyNumbers($requestData['amount']) : null,
-                ]
-            );
+            $withdrawalSettings->update([
+                "rule" => $requestData["rule"],
+                "frequency" => $requestData["frequency"] ?? null,
+                "weekday" => $requestData["weekday"] ?? null,
+                "day" => $requestData["day"] ?? null,
+                "amount" => !empty($requestData["amount"]) ? FoxUtils::onlyNumbers($requestData["amount"]) : null,
+            ]);
 
             return response()->json([
-                'message' => 'Configurações de saques automáticos salvos com sucesso',
-                'data' => WithdrawalSettingsResource::make($withdrawalSettings)
+                "message" => "Configurações de saques automáticos salvos com sucesso",
+                "data" => WithdrawalSettingsResource::make($withdrawalSettings),
             ]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde! ' . $e->getMessage()],
-                500);
+            return response()->json(
+                ["message" => "Ocorreu um erro, tente novamnte mais tarde! " . $e->getMessage()],
+                500
+            );
         }
     }
 
@@ -175,7 +185,7 @@ class WithdrawalsSettingsApiController
     {
         try {
             if (empty($id)) {
-                return response()->json(['message' => 'Configuração de saque automático não encontrado'], 404);
+                return response()->json(["message" => "Configuração de saque automático não encontrado"], 404);
             }
 
             $withdrawalSettingsModel = new WithdrawalSettings();
@@ -184,14 +194,14 @@ class WithdrawalsSettingsApiController
             if (!empty($settings)) {
                 $settingsDeleted = $settings->delete();
                 if ($settingsDeleted) {
-                    return response()->json(['message' => 'Configuração de saque automático deletada com sucesso!']);
+                    return response()->json(["message" => "Configuração de saque automático deletada com sucesso!"]);
                 }
             }
 
-            return response()->json(['message' => 'Erro ao deletar Configuração de saque automático'], 400);
+            return response()->json(["message" => "Erro ao deletar Configuração de saque automático"], 400);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao deletar Configuração de saque automático'], 400);
+            return response()->json(["message" => "Erro ao deletar Configuração de saque automático"], 400);
         }
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Core\Services;
-
 
 use Carbon\Carbon;
 use LogicException;
@@ -61,7 +59,7 @@ class AdjustmentRequest
     public function setTypeAdjustment(int $typeAdjustment): AdjustmentRequest
     {
         if (!in_array($typeAdjustment, [self::CREDIT_ADJUSTMENT, self::DEBIT_ADJUSTMENT])) {
-            throw new LogicException('Valor inválido para setTypeAdjustment(' . $typeAdjustment . ')');
+            throw new LogicException("Valor inválido para setTypeAdjustment(" . $typeAdjustment . ")");
         }
 
         $this->typeAdjustment = $typeAdjustment;
@@ -70,7 +68,14 @@ class AdjustmentRequest
 
     public function isValid(): bool
     {
-        if (isset($this->sellerId) && isset($this->merchantId) && isset($this->description) && isset($this->subSellerId) && isset($this->typeAdjustment) && isset($this->amount)) {
+        if (
+            isset($this->sellerId) &&
+            isset($this->merchantId) &&
+            isset($this->description) &&
+            isset($this->subSellerId) &&
+            isset($this->typeAdjustment) &&
+            isset($this->amount)
+        ) {
             return true;
         }
         return false;
@@ -79,13 +84,16 @@ class AdjustmentRequest
     public function formatToSendApi(): array
     {
         return [
-            'seller_id' => $this->getSellerId(),
-            'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => $this->getSubSellerId(),
-            'type_adjustment' => $this->getTypeAdjustment(),
-            'amount' => $this->getAmount(),
-            'date_adjustment' => today()->addDay()->format('Y-m-d\TH:i:s') . 'Z', //2020-11-26T13:58:17Z
-            'description' => $this->getDescription(),
+            "seller_id" => $this->getSellerId(),
+            "merchant_id" => $this->getMerchantId(),
+            "subseller_id" => $this->getSubSellerId(),
+            "type_adjustment" => $this->getTypeAdjustment(),
+            "amount" => $this->getAmount(),
+            "date_adjustment" =>
+                today()
+                    ->addDay()
+                    ->format("Y-m-d\TH:i:s") . "Z", //2020-11-26T13:58:17Z
+            "description" => $this->getDescription(),
         ];
     }
 
@@ -128,5 +136,4 @@ class AdjustmentRequest
     {
         return $this->companyId;
     }
-
 }

@@ -13,9 +13,15 @@ class AlterTableAsaasTransfersAddColumnTransferId extends Migration
      */
     public function up()
     {
-        Schema::table('asaas_transfers',function(Blueprint $table){
-            $table->unsignedBigInteger("transfer_id")->nullable()->after('withdrawal_id');
-            $table->foreign('transfer_id')->references('id')->on('transfers');
+        Schema::table("asaas_transfers", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("transfer_id")
+                ->nullable()
+                ->after("withdrawal_id");
+            $table
+                ->foreign("transfer_id")
+                ->references("id")
+                ->on("transfers");
         });
     }
 
@@ -26,9 +32,9 @@ class AlterTableAsaasTransfersAddColumnTransferId extends Migration
      */
     public function down()
     {
-        Schema::table('asaas_transfers', function (Blueprint $table) {
-            $table->dropForeign('asaas_transfers_transfer_id_foreign');
-            $table->dropColumn('transfer_id');
+        Schema::table("asaas_transfers", function (Blueprint $table) {
+            $table->dropForeign("asaas_transfers_transfer_id_foreign");
+            $table->dropColumn("transfer_id");
         });
     }
 }

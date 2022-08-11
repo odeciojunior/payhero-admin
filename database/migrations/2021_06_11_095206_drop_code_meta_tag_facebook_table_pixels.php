@@ -13,12 +13,9 @@ class DropCodeMetaTagFacebookTablePixels extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->dropColumn(['code_meta_tag_facebook']);
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn(["code_meta_tag_facebook"]);
+        });
     }
 
     /**

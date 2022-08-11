@@ -14,11 +14,13 @@ class RoleMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
-        $roles = is_array($role)
-            ? $role
-            : explode('|', $role);
+        $roles = is_array($role) ? $role : explode("|", $role);
 
-        if (! Auth::guard($guard)->user()->hasAnyRole($roles)) {
+        if (
+            !Auth::guard($guard)
+                ->user()
+                ->hasAnyRole($roles)
+        ) {
             throw UnauthorizedException::forRoles($roles);
         }
 

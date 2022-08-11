@@ -14,7 +14,7 @@ class ReportanaController extends Controller
      */
     public function index()
     {
-        return view('reportana::index');
+        return view("reportana::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class ReportanaController extends Controller
      */
     public function create()
     {
-        return view('reportana::create');
+        return view("reportana::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class ReportanaController extends Controller
      */
     public function show($id)
     {
-        return view('reportana::show');
+        return view("reportana::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class ReportanaController extends Controller
      */
     public function edit($id)
     {
-        return view('reportana::edit');
+        return view("reportana::edit");
     }
 
     /**

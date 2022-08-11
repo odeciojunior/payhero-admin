@@ -11,10 +11,16 @@ class AddColumnInvitationAtTransaction extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function($table) {
-            $table->bigInteger('invitation_id')->unsigned()->nullable();
+        Schema::table("transactions", function ($table) {
+            $table
+                ->bigInteger("invitation_id")
+                ->unsigned()
+                ->nullable();
 
-            $table->foreign('invitation_id')->references('id')->on('invitations');
+            $table
+                ->foreign("invitation_id")
+                ->references("id")
+                ->on("invitations");
         });
     }
 
@@ -24,11 +30,10 @@ class AddColumnInvitationAtTransaction extends Migration
      */
     public function down()
     {
+        Schema::table("transactions", function ($table) {
+            $table->dropForeign(["invitation_id"]);
 
-        Schema::table('transactions', function($table) {
-            $table->dropForeign(['invitation_id']);
-
-            $table->dropColumn('invitation_id');
+            $table->dropColumn("invitation_id");
         });
     }
 }

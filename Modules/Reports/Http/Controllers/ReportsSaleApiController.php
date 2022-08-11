@@ -14,7 +14,7 @@ class ReportsSaleApiController extends Controller
         try {
             $request->validate([
                 'date_range' => 'required',
-                'project_id' => 'required'                
+                'project_id' => 'required'
             ]);
 
             $data = $request->all();
@@ -22,11 +22,10 @@ class ReportsSaleApiController extends Controller
             $reportService = new ReportSaleService();
             $sales = $reportService->getResumeSales($data);
 
-            return response()->json(['data' => $sales]);
-        }
-        catch(Exception $e) {
+            return response()->json(["data" => $sales]);
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de comissões'], 400);
+            return response()->json(["message" => "Erro ao obter dados de comissões"], 400);
         }
     }
 
@@ -35,7 +34,7 @@ class ReportsSaleApiController extends Controller
         try {
             $request->validate([
                 'date_range' => 'required',
-                'project_id' => 'required'                
+                'project_id' => 'required'
             ]);
 
             $data = $request->all();
@@ -44,12 +43,11 @@ class ReportsSaleApiController extends Controller
             $typePayments = $reportService->getResumeTypePayments($data);
 
             return response()->json([
-                'data' => $typePayments
+                "data" => $typePayments,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de tipos de pagamento'], 400);
+            return response()->json(["message" => "Erro ao obter dados de tipos de pagamento"], 400);
         }
     }
 
@@ -68,12 +66,11 @@ class ReportsSaleApiController extends Controller
             $products = $reportService->getResumeProducts($data);
 
             return response()->json([
-                'data' => $products
+                "data" => $products,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de produtos'], 400);
+            return response()->json(["message" => "Erro ao obter dados de produtos"], 400);
         }
     }
 
@@ -81,8 +78,8 @@ class ReportsSaleApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required',
-                'project_id' => 'required'
+                "date_range" => "required",
+                "project_id" => "required",
             ]);
 
             $data = $request->all();
@@ -91,12 +88,11 @@ class ReportsSaleApiController extends Controller
             $resume = $reportService->getSalesResume($data);
 
             return response()->json([
-                'data' => $resume
+                "data" => $resume,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de comissões'], 400);
+            return response()->json(["message" => "Erro ao obter dados de comissões"], 400);
         }
     }
 
@@ -104,8 +100,8 @@ class ReportsSaleApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required',
-                'project_id' => 'required'
+                "date_range" => "required",
+                "project_id" => "required",
             ]);
 
             $data = $request->all();
@@ -114,12 +110,11 @@ class ReportsSaleApiController extends Controller
             $resume = $reportService->getSalesDistribuitions($data);
 
             return response()->json([
-                'data' => $resume
+                "data" => $resume,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de comissões'], 400);
+            return response()->json(["message" => "Erro ao obter dados de comissões"], 400);
         }
     }
 
@@ -127,7 +122,7 @@ class ReportsSaleApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required'
+                "date_range" => "required",
             ]);
 
             $data = $request->all();
@@ -136,12 +131,11 @@ class ReportsSaleApiController extends Controller
             $products = $reportService->getAbandonedCarts($data);
 
             return response()->json([
-                'data' => $products
+                "data" => $products,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de carrinhos abandonados'], 400);
+            return response()->json(["message" => "Erro ao obter dados de carrinhos abandonados"], 400);
         }
     }
 
@@ -149,7 +143,7 @@ class ReportsSaleApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required'
+                "date_range" => "required",
             ]);
 
             $data = $request->all();
@@ -158,12 +152,11 @@ class ReportsSaleApiController extends Controller
             $products = $reportService->getOrderBump($data);
 
             return response()->json([
-                'data' => $products
+                "data" => $products,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de order bump'], 400);
+            return response()->json(["message" => "Erro ao obter dados de order bump"], 400);
         }
     }
 
@@ -171,7 +164,7 @@ class ReportsSaleApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required'
+                "date_range" => "required",
             ]);
 
             $data = $request->all();
@@ -180,12 +173,11 @@ class ReportsSaleApiController extends Controller
             $products = $reportService->getUpsell($data);
 
             return response()->json([
-                'data' => $products
+                "data" => $products,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de upsell'], 400);
+            return response()->json(["message" => "Erro ao obter dados de upsell"], 400);
         }
     }
 
@@ -193,7 +185,7 @@ class ReportsSaleApiController extends Controller
     {
         try {
             $request->validate([
-                'date_range' => 'required'
+                "date_range" => "required",
             ]);
 
             $data = $request->all();
@@ -202,12 +194,11 @@ class ReportsSaleApiController extends Controller
             $products = $reportService->getConversion($data);
 
             return response()->json([
-                'data' => $products
+                "data" => $products,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de conversão'], 400);
+            return response()->json(["message" => "Erro ao obter dados de conversão"], 400);
         }
     }
 
@@ -215,7 +206,7 @@ class ReportsSaleApiController extends Controller
     {
         try {
             $request->validate([
-                'project_id' => 'required'
+                "project_id" => "required",
             ]);
 
             $data = $request->all();
@@ -224,12 +215,11 @@ class ReportsSaleApiController extends Controller
             $products = $reportService->getRecurrence($data);
 
             return response()->json([
-                'data' => $products
+                "data" => $products,
             ]);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao obter dados de pagamentos recorrentes'], 400);
+            return response()->json(["message" => "Erro ao obter dados de pagamentos recorrentes"], 400);
         }
     }
 }

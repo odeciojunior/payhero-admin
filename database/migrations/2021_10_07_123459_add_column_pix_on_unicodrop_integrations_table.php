@@ -13,8 +13,11 @@ class AddColumnPixOnUnicodropIntegrationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('unicodrop_integrations', function (Blueprint $table) {
-            $table->boolean('pix')->default(true)->after('credit_card_refused');
+        Schema::table("unicodrop_integrations", function (Blueprint $table) {
+            $table
+                ->boolean("pix")
+                ->default(true)
+                ->after("credit_card_refused");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnPixOnUnicodropIntegrationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('unicodrop_integrations', function (Blueprint $table) {
-            $table->dropColumn('pix');
+        Schema::table("unicodrop_integrations", function (Blueprint $table) {
+            $table->dropColumn("pix");
         });
     }
 }

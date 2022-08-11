@@ -15,14 +15,15 @@ use Illuminate\Http\Request;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'demo_account','scopes:admin','permission:apps'],
+        "middleware" => ["auth:api", "demo_account","scopes:admin", "permission:apps"],
     ],
-    function() {
-        Route::get('/apps/notificacoesinteligentes', 'NotificacoesInteligentesApiController@index');
-        Route::get('/apps/notificacoesinteligentes/{id}', 'NotificacoesInteligentesApiController@show');
-        Route::get('/apps/notificacoesinteligentes/{id}/edit', 'NotificacoesInteligentesApiController@edit');
+    function () {
+        Route::get("/apps/notificacoesinteligentes", "NotificacoesInteligentesApiController@index");
+        Route::get("/apps/notificacoesinteligentes/{id}", "NotificacoesInteligentesApiController@show");
+        Route::get("/apps/notificacoesinteligentes/{id}/edit", "NotificacoesInteligentesApiController@edit");
 
-        Route::apiResource('/apps/notificacoesinteligentes', 'NotificacoesInteligentesApiController')
-            ->only('store', 'update', 'destroy')->middleware('permission:apps_manage');
+        Route::apiResource("/apps/notificacoesinteligentes", "NotificacoesInteligentesApiController")
+            ->only("store", "update", "destroy")
+            ->middleware("permission:apps_manage");
     }
 );

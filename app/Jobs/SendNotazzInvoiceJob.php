@@ -38,12 +38,11 @@ class SendNotazzInvoiceJob implements ShouldQueue
     public function handle()
     {
         try {
-
             $notazzService = new NotazzService();
 
             $notazzService->sendInvoice($this->notazzInvoiceId);
         } catch (Exception $e) {
-            Log::warning('SendNotazzInvoiceJob - Erro no job ');
+            Log::warning("SendNotazzInvoiceJob - Erro no job ");
             report($e);
         }
     }

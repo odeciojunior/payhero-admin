@@ -13,14 +13,20 @@ class CreatePendingDebtWithdrawalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pending_debt_withdrawals', function (Blueprint $table) {
+        Schema::create("pending_debt_withdrawals", function (Blueprint $table) {
             $table->unsignedBigInteger("pending_debt_id")->nullable();
-            $table->foreign('pending_debt_id')->references('id')->on('pending_debts');
+            $table
+                ->foreign("pending_debt_id")
+                ->references("id")
+                ->on("pending_debts");
 
             $table->unsignedBigInteger("withdrawal_id")->nullable();
-            $table->foreign('withdrawal_id')->references('id')->on('withdrawals');
+            $table
+                ->foreign("withdrawal_id")
+                ->references("id")
+                ->on("withdrawals");
 
-            $table->primary(['pending_debt_id', 'withdrawal_id']);
+            $table->primary(["pending_debt_id", "withdrawal_id"]);
         });
     }
 
@@ -31,6 +37,6 @@ class CreatePendingDebtWithdrawalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pending_debt_withdrawals');
+        Schema::dropIfExists("pending_debt_withdrawals");
     }
 }

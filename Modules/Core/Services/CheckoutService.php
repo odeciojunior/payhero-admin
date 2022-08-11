@@ -37,30 +37,24 @@ class CheckoutService
             $projectIds = UserProject::where('user_id', $ownerId)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
 
         } else {
-            $projects = explode(',', request('project'));
-            foreach($projects as $project){
+            $projects = explode(",", request("project"));
+            foreach ($projects as $project) {
                 array_push($projectIds, hashids_decode($project));
             }
-
         }
 
-        $dateRange = foxutils()->validateDateRange(request('date_range'));
+        $dateRange = foxutils()->validateDateRange(request("date_range"));
 
-        $abandonedCartsStatus = [
-            Checkout::STATUS_RECOVERED,
-            Checkout::STATUS_ABANDONED_CART
-        ];
+        $abandonedCartsStatus = [Checkout::STATUS_RECOVERED, Checkout::STATUS_ABANDONED_CART];
 
         $plansIds = [];
-        if (request('plan') == 'all') {
-            $plansIds = '';
-
+        if (request("plan") == "all") {
+            $plansIds = "";
         } else {
-            $plans = explode(',', request('plan'));
-            foreach($plans as $plan){
+            $plans = explode(",", request("plan"));
+            foreach ($plans as $plan) {
                 array_push($plansIds, hashids_decode($plan));
             }
-
         }
 
         $abandonedCarts = Checkout::
@@ -112,7 +106,7 @@ class CheckoutService
             ->whereIn('project_id', $projectIds)->pluck('id')->toArray();
 
         if (!empty($affiliateIds) && count($affiliateIds) > 0) {
-            $abandonedCarts->whereIn('affiliate_id', $affiliateIds);
+            $abandonedCarts->whereIn("affiliate_id", $affiliateIds);
         }
 
         return $abandonedCarts->orderBy('checkouts.id', 'DESC')->paginate(10);
@@ -127,13 +121,8 @@ class CheckoutService
         $total = 0;
         foreach ($checkoutPlans as $checkoutPlan) {
             if (!empty($checkoutPlan->plan)) {
-                $total += intval(
-                        preg_replace(
-                            "/[^0-9]/",
-                            "",
-                            $checkoutPlan->plan->price
-                        )
-                    ) * intval($checkoutPlan->amount);
+                $total +=
+                    intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
             }
         }
 
@@ -143,37 +132,36 @@ class CheckoutService
     public function cancelPaymentCheckout($sale): array
     {
         try {
-            $idEncoded = hashids_encode($sale->id, 'sale_id');
+            $idEncoded = hashids_encode($sale->id, "sale_id");
             if (foxutils()->isProduction()) {
                 $urlCancelPayment = "https://checkout.cloudfox.net/api/payment/cancel/{$idEncoded}";
             } else {
-                $urlCancelPayment = env('CHECKOUT_URL') . "/api/payment/cancel/{$idEncoded}";
+                $urlCancelPayment = env("CHECKOUT_URL") . "/api/payment/cancel/{$idEncoded}";
             }
 
-            $response = $this->runCurl($urlCancelPayment, 'POST');
+            $response = $this->runCurl($urlCancelPayment, "POST");
 
-            if (!empty($response) && ($response->status ?? '') == 'success') {
+            if (!empty($response) && ($response->status ?? "") == "success") {
                 return [
-                    'status' => 'success',
-                    'message' => $response->message??'Venda estornada com sucesso.',
-                    'response' => $response
+                    "status" => "success",
+                    "message" => $response->message ?? "Venda estornada com sucesso.",
+                    "response" => $response,
                 ];
             }
 
             return [
-                'status' => 'error',
-                'message' => $response->message??'Error ao tentar estornar venda.',
-                'response' => $response??[]
+                "status" => "error",
+                "message" => $response->message ?? "Error ao tentar estornar venda.",
+                "response" => $response ?? [],
             ];
-
         } catch (Exception $ex) {
             report($ex);
 
             return [
-                'status' => 'error',
-                'message' => 'Ocorreu algum erro, tente novamente em alguns minutos.',
-                'response' => [],
-                'error' => $ex->getMessage()
+                "status" => "error",
+                "message" => "Ocorreu algum erro, tente novamente em alguns minutos.",
+                "response" => [],
+                "error" => $ex->getMessage(),
             ];
         }
     }
@@ -187,45 +175,46 @@ class CheckoutService
     public function regenerateBillet($saleId, $totalPaidValue, $dueDate)
     {
         try {
-            $saleIdDecode = current(Hashids::connection('sale_id')->decode($saleId));
+            $saleIdDecode = current(Hashids::connection("sale_id")->decode($saleId));
             $saleModel = new Sale();
-            $sale = $saleModel::with('project.domains')->where('id', $saleIdDecode)->first();
+            $sale = $saleModel
+                ::with("project.domains")
+                ->where("id", $saleIdDecode)
+                ->first();
 
-            $billets = RegeneratedBillet::where('sale_id', $saleIdDecode)
-                ->orWhere('owner_id', $sale->owner_id)
+            $billets = RegeneratedBillet::where("sale_id", $saleIdDecode)
+                ->orWhere("owner_id", $sale->owner_id)
                 ->limit(6)
                 ->get();
 
-            if ($billets->where('sale_id', $saleIdDecode)->count() > 4) {
+            if ($billets->where("sale_id", $saleIdDecode)->count() > 4) {
                 return [
-                    'status' => 'error',
-                    'error' => 'error',
-                    'message' => 'Só é permitido regerar 4 boletos por venda',
+                    "status" => "error",
+                    "error" => "error",
+                    "message" => "Só é permitido regerar 4 boletos por venda",
                 ];
             }
 
-            if ($billets->where('created_at', '>', Carbon::now()->subMinute())->count() > 1) {
+            if ($billets->where("created_at", ">", Carbon::now()->subMinute())->count() > 1) {
                 return [
-                    'status' => 'error',
-                    'error' => 'error',
-                    'message' => 'Aguarde um instante, só é permitido regerar 2 boletos por minuto',
+                    "status" => "error",
+                    "error" => "error",
+                    "message" => "Aguarde um instante, só é permitido regerar 2 boletos por minuto",
                 ];
             }
 
-            $domain = $sale->project->domains->where('status', 3)->first();
+            $domain = $sale->project->domains->where("status", 3)->first();
             if (foxutils()->isProduction()) {
-                $regenerateBilletUrl = 'https://checkout.cloudfox.net/api/payment/regeneratebillet';
+                $regenerateBilletUrl = "https://checkout.cloudfox.net/api/payment/regeneratebillet";
             } else {
-                $regenerateBilletUrl = env(
-                        'CHECKOUT_URL',
-                        'http://dev.checkout.com.br'
-                    ) . '/api/payment/regeneratebillet';
+                $regenerateBilletUrl =
+                    env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/regeneratebillet";
             }
 
             $data = [
-                'sale_id' => $saleId,
-                'due_date' => $dueDate,
-                'total_paid_value' => $totalPaidValue,
+                "sale_id" => $saleId,
+                "due_date" => $dueDate,
+                "total_paid_value" => $totalPaidValue,
             ];
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
@@ -244,9 +233,9 @@ class CheckoutService
                     ]
                 );
                 $result = [
-                    'status' => 'success',
-                    'message' => print_r($response->message, true) ?? '',
-                    'response' => $response,
+                    "status" => "success",
+                    "message" => print_r($response->message, true) ?? "",
+                    "response" => $response,
                 ];
                 // } else {
                 //     $result = [
@@ -256,12 +245,12 @@ class CheckoutService
                 //         'response' => $response,
                 //     ];
                 // }
-            } else {                
+            } else {
                 $result = [
-                    'status' => 'error',
-                    'error' => 'error',
-                    'message' => 'Error ao tentar regerar boleto, tente novamente em instantes!',
-                    'response' => $response,
+                    "status" => "error",
+                    "error" => "error",
+                    "message" => "Error ao tentar regerar boleto, tente novamente em instantes!",
+                    "response" => $response,
                 ];
             }
 
@@ -270,9 +259,9 @@ class CheckoutService
             report($ex);
 
             return [
-                'status' => 'error',
-                'message' => 'Error ao tentar regerar boleto.',
-                'error' => $ex->getMessage(),
+                "status" => "error",
+                "message" => "Error ao tentar regerar boleto.",
+                "error" => $ex->getMessage(),
             ];
         }
     }
@@ -280,17 +269,14 @@ class CheckoutService
     /**
      * @throws Exception
      */
-    public function runCurl($url, $method = 'GET', $data = null)
+    public function runCurl($url, $method = "GET", $data = null)
     {
         try {
-            $this->internalApiToken = env('ADMIN_TOKEN');
-            $headers = [
-                'Content-Type: application/json',
-                'Accept: application/json',
-            ];
+            $this->internalApiToken = env("ADMIN_TOKEN");
+            $headers = ["Content-Type: application/json", "Accept: application/json"];
             if (!empty($this->internalApiToken)) {
-                $headers[] = 'Api-name:ADMIN';
-                $headers[] = 'Api-token:' . $this->internalApiToken;
+                $headers[] = "Api-name:ADMIN";
+                $headers[] = "Api-token:" . $this->internalApiToken;
             }
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -315,30 +301,24 @@ class CheckoutService
     {
         $cloudFlareService = new CloudFlareService();
 
-        if (!$cloudFlareService->checkHtmlMetadata('https://checkout.cloudfox.net/', 'checkout-cloudfox', '1')) {
+        if (!$cloudFlareService->checkHtmlMetadata("https://checkout.cloudfox.net/", "checkout-cloudfox", "1")) {
             // checkout OFF
 
             // email addresses for notify
-            $emails = [
-                'julioleichtweis@gmail.com',
-                'felixlorram@gmail.com',
-            ];
+            $emails = ["julioleichtweis@gmail.com", "felixlorram@gmail.com"];
 
             // phone numbers for notify
-            $phoneNumbers = [
-                '5555996931098',
-                '5522981071202',
-            ];
+            $phoneNumbers = ["5555996931098", "5522981071202"];
 
-            $sendgrid = new SendGrid(getenv('SENDGRID_API_KEY'));
+            $sendgrid = new SendGrid(getenv("SENDGRID_API_KEY"));
             $smsService = new SmsService();
 
             foreach ($emails as $email) {
                 try {
                     $sendgridMail = new Mail();
-                    $sendgridMail->setFrom('help@cloudfox.net', 'cloudfox');
-                    $sendgridMail->addTo($email, 'cloudfox');
-                    $sendgridMail->setTemplateId('d-f44033c3eaec46d2a6226f796313d9fc');
+                    $sendgridMail->setFrom("help@cloudfox.net", "cloudfox");
+                    $sendgridMail->addTo($email, "cloudfox");
+                    $sendgridMail->setTemplateId("d-f44033c3eaec46d2a6226f796313d9fc");
 
                     $response = $sendgrid->send($sendgridMail);
                 } catch (Exception $e) {
@@ -348,7 +328,7 @@ class CheckoutService
 
             foreach ($phoneNumbers as $phoneNumber) {
                 try {
-                    $smsService->sendSms($phoneNumber, 'Checkout caiu');
+                    $smsService->sendSms($phoneNumber, "Checkout caiu");
                 } catch (Exception $e) {
                     //
                 }
@@ -364,16 +344,16 @@ class CheckoutService
     public function releasePaymentGetnet($transactionId)
     {
         if (foxutils()->isProduction()) {
-            $url = 'https://checkout.cloudfox.net/api/payment/releasepaymentgetnet';
+            $url = "https://checkout.cloudfox.net/api/payment/releasepaymentgetnet";
         } else {
-            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasepaymentgetnet';
+            $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/releasepaymentgetnet";
         }
 
         $data = [
-            'transaction_id' => hashids_encode($transactionId)
+            "transaction_id" => hashids_encode($transactionId),
         ];
 
-        return $this->runCurl($url, 'POST', $data);
+        return $this->runCurl($url, "POST", $data);
     }
 
     /**
@@ -382,12 +362,12 @@ class CheckoutService
     public function releaseCloudfoxPaymentGetnet($data)
     {
         if (foxutils()->isProduction()) {
-            $url = 'https://checkout.cloudfox.net/api/payment/releasecloudfoxpaymentgetnet';
+            $url = "https://checkout.cloudfox.net/api/payment/releasecloudfoxpaymentgetnet";
         } else {
-            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasecloudfoxpaymentgetnet';
+            $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/releasecloudfoxpaymentgetnet";
         }
 
-        return $this->runCurl($url, 'POST', $data);
+        return $this->runCurl($url, "POST", $data);
     }
 
     /**
@@ -396,12 +376,11 @@ class CheckoutService
     public function checkPaymentPix($data)
     {
         if (foxutils()->isProduction()) {
-            $url = 'https://checkout.cloudfox.net/api/payment/check-payment-pix';
+            $url = "https://checkout.cloudfox.net/api/payment/check-payment-pix";
         } else {
-            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/check-payment-pix';
+            $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/check-payment-pix";
         }
 
-        return $this->runCurl($url, 'POST', $data);
+        return $this->runCurl($url, "POST", $data);
     }
-
 }

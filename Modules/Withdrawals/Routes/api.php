@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin','demo_account'],
+        "middleware" => ["auth:api", "scopes:admin", "demo_account"],
     ],
     function () {
 
@@ -34,4 +34,3 @@ Route::group(
         Route::get('/withdrawals/get-resume/', 'WithdrawalsApiController@getResume');
     }
 );
-

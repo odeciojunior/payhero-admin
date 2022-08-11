@@ -13,8 +13,11 @@ class AlterNotazzIntegrationChangeTokenLogisticsColumn extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->text('token_logistics')->nullable()->change();
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table
+                ->text("token_logistics")
+                ->nullable()
+                ->change();
         });
     }
 
@@ -25,8 +28,8 @@ class AlterNotazzIntegrationChangeTokenLogisticsColumn extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->text('token_logistics')->change();
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table->text("token_logistics")->change();
         });
     }
 }

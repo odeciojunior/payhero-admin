@@ -13,8 +13,11 @@ class AlterTableGatewaysCompaniesCredencialsAddColumnHasWebhook extends Migratio
      */
     public function up()
     {
-        Schema::table('gateways_companies_credentials', function (Blueprint $table) {
-            $table->tinyInteger('has_webhook')->nullable()->after('capture_transaction_enabled');
+        Schema::table("gateways_companies_credentials", function (Blueprint $table) {
+            $table
+                ->tinyInteger("has_webhook")
+                ->nullable()
+                ->after("capture_transaction_enabled");
         });
     }
 
@@ -25,8 +28,8 @@ class AlterTableGatewaysCompaniesCredencialsAddColumnHasWebhook extends Migratio
      */
     public function down()
     {
-        Schema::table('gateways_companies_credentials', function (Blueprint $table) {
-            $table->dropColumn('has_webhook');
+        Schema::table("gateways_companies_credentials", function (Blueprint $table) {
+            $table->dropColumn("has_webhook");
         });
     }
 }

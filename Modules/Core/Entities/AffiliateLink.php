@@ -29,21 +29,21 @@ class AffiliateLink extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'affiliate_id',
-        'campaign_id',
-        'plan_id',
-        'parameter',
-        'name',
-        'link',
-        'clicks_amount',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "affiliate_id",
+        "campaign_id",
+        "plan_id",
+        "parameter",
+        "name",
+        "link",
+        "clicks_amount",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -69,7 +69,7 @@ class AffiliateLink extends Model
      */
     public function affiliate()
     {
-        return $this->belongsTo('Modules\Core\Entities\Affiliate');
+        return $this->belongsTo("Modules\Core\Entities\Affiliate");
     }
 
     /**
@@ -77,7 +77,7 @@ class AffiliateLink extends Model
      */
     public function campaign()
     {
-        return $this->belongsTo('Modules\Core\Entities\Campaign');
+        return $this->belongsTo("Modules\Core\Entities\Campaign");
     }
 
     /**
@@ -85,6 +85,6 @@ class AffiliateLink extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('Modules\Core\Entities\Plan');
+        return $this->belongsTo("Modules\Core\Entities\Plan");
     }
 }

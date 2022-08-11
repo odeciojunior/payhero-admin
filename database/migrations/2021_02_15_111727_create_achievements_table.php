@@ -18,13 +18,12 @@ class CreateAchievementsTable extends Migration
         DB::statement("DROP TABLE IF EXISTS achievements");
         DB::statement("SET FOREIGN_KEY_CHECKS = 1");
 
-
-        Schema::create('achievements', function (Blueprint $table) {
+        Schema::create("achievements", function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->string('description', 100);
-            $table->text('storytelling');
-            $table->string('icon', 100);
+            $table->string("name", 100);
+            $table->string("description", 100);
+            $table->text("storytelling");
+            $table->string("icon", 100);
             $table->timestamps();
         });
 
@@ -50,6 +49,6 @@ class CreateAchievementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('achievements');
+        Schema::dropIfExists("achievements");
     }
 }

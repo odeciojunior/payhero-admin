@@ -13,8 +13,11 @@ class AlterProjectsAddAffiliatesFields extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->text('terms_affiliates')->nullable()->after('percentage_affiliates');
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->text("terms_affiliates")
+                ->nullable()
+                ->after("percentage_affiliates");
         });
     }
 
@@ -25,8 +28,8 @@ class AlterProjectsAddAffiliatesFields extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('terms_affiliates');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("terms_affiliates");
         });
     }
 }

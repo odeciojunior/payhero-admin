@@ -26,18 +26,11 @@ class CheckoutPlan extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'checkout_id',
-        'plan_id',
-        'amount',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ["checkout_id", "plan_id", "amount", "created_at", "updated_at", "deleted_at"];
     /**
      * @var bool
      */
@@ -62,7 +55,7 @@ class CheckoutPlan extends Model
      */
     public function checkout()
     {
-        return $this->belongsTo('Modules\Core\Entities\Checkout');
+        return $this->belongsTo("Modules\Core\Entities\Checkout");
     }
 
     /**
@@ -70,6 +63,6 @@ class CheckoutPlan extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('Modules\Core\Entities\Plan');
+        return $this->belongsTo("Modules\Core\Entities\Plan");
     }
 }

@@ -13,12 +13,12 @@ class ProjectPresenter extends Presenter
      */
     public function getProjects()
     {
-        $projectModel     = new Project();
+        $projectModel = new Project();
         $userProjectModel = new UserProject();
 
-        $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner_id)->pluck('project_id');
+        $userProjects = $userProjectModel->where("user_id", auth()->user()->account_owner_id)->pluck("project_id");
 
-        return $projectModel->whereIn('id', $userProjects)->get();
+        return $projectModel->whereIn("id", $userProjects)->get();
     }
 
     /**
@@ -30,21 +30,21 @@ class ProjectPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'active';
+                    return "active";
                 case 2:
-                    return 'disabled';
+                    return "disabled";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'active':
+                case "active":
                     return 1;
-                case 'disabled':
+                case "disabled":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -57,21 +57,21 @@ class ProjectPresenter extends Presenter
         if (is_numeric($currency)) {
             switch ($currency) {
                 case 1:
-                    return 'BRL';
+                    return "BRL";
                 case 2:
-                    return 'USD';
+                    return "USD";
             }
 
-            return '';
+            return "";
         } else {
             switch ($currency) {
-                case 'BRL':
+                case "BRL":
                     return 1;
-                case 'USD':
+                case "USD":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -84,21 +84,21 @@ class ProjectPresenter extends Presenter
         if (is_numeric($commissionType)) {
             switch ($commissionType) {
                 case 1:
-                    return 'first_click';
+                    return "first_click";
                 case 2:
-                    return 'last_click';
+                    return "last_click";
             }
 
-            return '';
+            return "";
         } else {
             switch ($commissionType) {
-                case 'first_click':
+                case "first_click":
                     return 1;
-                case 'last_click':
+                case "last_click":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -111,25 +111,25 @@ class ProjectPresenter extends Presenter
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:
-                    return 'CPF';
+                    return "CPF";
                 case 2:
-                    return 'CNPJ';
+                    return "CNPJ";
                 case 3:
-                    return 'CPF/CNPJ';
+                    return "CPF/CNPJ";
             }
 
-            return '';
+            return "";
         } else {
             switch ($type) {
-                case 'CPF':
+                case "CPF":
                     return 1;
-                case 'CNPJ':
+                case "CNPJ":
                     return 2;
-                case 'CPF/CNPJ':
+                case "CPF/CNPJ":
                     return 3;
             }
 
-            return '';
+            return "";
         }
     }
 }

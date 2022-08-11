@@ -13,8 +13,8 @@ class ChangeInvitationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('invitations', function(Blueprint $table) {
-            $table->renameColumn('company', 'company_id');
+        Schema::table("invitations", function (Blueprint $table) {
+            $table->renameColumn("company", "company_id");
         });
     }
 
@@ -25,8 +25,8 @@ class ChangeInvitationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('invitations', function(Blueprint $table) {
-            $table->renameColumn('company_id', 'company');
+        Schema::table("invitations", function (Blueprint $table) {
+            $table->renameColumn("company_id", "company");
         });
     }
 }

@@ -22,15 +22,19 @@ class CheckAccountStatusApi
      */
     public function handle($request, Closure $next)
     {
-        if(in_array((auth()->user()->status ?? null), [User::STATUS_ACCOUNT_BLOCKED, User::STATUS_ACCOUNT_EXCLUDED])) {
+        if (in_array(auth()->user()->status ?? null, [User::STATUS_ACCOUNT_BLOCKED, User::STATUS_ACCOUNT_EXCLUDED])) {
+            activity()
+                ->tap(function (Activity $activity) {
+                    $activity->log_name = "logout";
+                })
+                ->log("Logout automatic system");
 
-            activity()->tap(function(Activity $activity) {
-                $activity->log_name = 'logout';
-            })->log('Logout automatic system');
+            auth()
+                ->user()
+                ->token()
+                ->revoke();
 
-            auth()->user()->token()->revoke();
-
-            return response()->json(['message' => 'Unauthenticated'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(["message" => "Unauthenticated"], Response::HTTP_UNAUTHORIZED);
         }
 
         return $next($request);

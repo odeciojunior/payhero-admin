@@ -5,9 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 0,
-    "providers": [
-        "Modules\\ConvertaX\\Providers\\ConvertaXServiceProvider"
-    ],
+    "providers": ["Modules\\ConvertaX\\Providers\\ConvertaXServiceProvider"],
     "aliases": {},
     "files": [],
     "requires": []

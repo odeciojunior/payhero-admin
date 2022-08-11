@@ -13,9 +13,9 @@ class AddAsaasIdColumnsToCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('asaas_id');
-            $table->string('asaas_homolog_id');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->string("asaas_id");
+            $table->string("asaas_homolog_id");
         });
     }
 
@@ -26,9 +26,9 @@ class AddAsaasIdColumnsToCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('asaas_id');
-            $table->dropColumn('asaas_homolog_id');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("asaas_id");
+            $table->dropColumn("asaas_homolog_id");
         });
     }
 }

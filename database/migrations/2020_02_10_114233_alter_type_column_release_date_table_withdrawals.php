@@ -13,8 +13,8 @@ class AlterTypeColumnReleaseDateTableWithdrawals extends Migration
      */
     public function up()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->timestamp('release_date_new')->nullable();
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->timestamp("release_date_new")->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AlterTypeColumnReleaseDateTableWithdrawals extends Migration
      */
     public function down()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->dropColumn('release_date_new');
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->dropColumn("release_date_new");
         });
     }
 }

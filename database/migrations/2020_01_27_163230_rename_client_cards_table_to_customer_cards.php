@@ -13,7 +13,7 @@ class RenameClientCardsTableToCustomerCards extends Migration
      */
     public function up()
     {
-        Schema::rename('client_cards', 'customer_cards');
+        Schema::rename("client_cards", "customer_cards");
     }
 
     /**
@@ -23,6 +23,6 @@ class RenameClientCardsTableToCustomerCards extends Migration
      */
     public function down()
     {
-        Schema::rename('customer_cards', 'client_cards');
+        Schema::rename("customer_cards", "client_cards");
     }
 }

@@ -33,11 +33,9 @@ class PostBackGetnetController
         try {
             $requestData = $request->all();
 
-            $this->getnetPostBackLogModel->create(
-                [
-                    'data' => json_encode($requestData),
-                ]
-            );
+            $this->getnetPostBackLogModel->create([
+                "data" => json_encode($requestData),
+            ]);
         } catch (\Exception $e) {
             report($e);
         }

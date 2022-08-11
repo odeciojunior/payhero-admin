@@ -25,9 +25,9 @@ class DiscountCouponsPolicy
      */
     public function show(User $user, Project $project)
     {
-        $userProject = UserProject::where('user_id', $user->account_owner_id)
-                                  ->where('project_id', $project->id)
-                                  ->first();
+        $userProject = UserProject::where("user_id", $user->account_owner_id)
+            ->where("project_id", $project->id)
+            ->first();
         if ($userProject) {
             return true;
         } else {

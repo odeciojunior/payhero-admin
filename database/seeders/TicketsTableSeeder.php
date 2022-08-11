@@ -12,7 +12,7 @@ class TicketsTableSeeder extends Seeder
      */
     public function run()
     {
-        if (env('APP_ENV', 'local') != 'production') {
+        if (env("APP_ENV", "local") != "production") {
             //            $tickets         = Ticket::all();
             //            $ticketPresenter = (new Ticket())->present();
             //            if (count($tickets) == 0) {

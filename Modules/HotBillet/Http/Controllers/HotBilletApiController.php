@@ -64,12 +64,12 @@ class HotBilletApiController extends Controller
                 }
             }
             return response()->json([
-                                        'integrations' => HotBilletResource::collection($hotBilletIntegrations),
-                                        'projects'     => ProjectsSelectResource::collection($projects),
-                                    ]);
+                "integrations" => HotBilletResource::collection($hotBilletIntegrations),
+                "projects" => ProjectsSelectResource::collection($projects),
+            ]);
         } catch (Exception $e) {
             Log::debug($e);
-            return response()->json(['message' => 'Ocorreu algum erro'], 400);
+            return response()->json(["message" => "Ocorreu algum erro"], 400);
         }
     }
 
@@ -79,9 +79,8 @@ class HotBilletApiController extends Controller
      */
     public function show($id)
     {
-
         $hotBilletIntegrationModel = new HotbilletIntegration();
-        $hotBilletIntegration      = $hotBilletIntegrationModel->find(current(Hashids::decode($id)));
+        $hotBilletIntegration = $hotBilletIntegrationModel->find(current(Hashids::decode($id)));
 
         return new HotBilletResource($hotBilletIntegration);
     }
@@ -92,82 +91,94 @@ class HotBilletApiController extends Controller
      */
     public function store(Request $request)
     {
-
         try {
-            $data                    = $request->all();
+            $data = $request->all();
             $hotBilletIntegrationModel = new HotbilletIntegration();
 
-            $projectId = current(Hashids::decode($data['project_id']));
+            $projectId = current(Hashids::decode($data["project_id"]));
             if (!empty($projectId)) {
-                $integration = $hotBilletIntegrationModel->where('project_id', $projectId)->first();
+                $integration = $hotBilletIntegrationModel->where("project_id", $projectId)->first();
                 if ($integration) {
-                    return response()->json([
-                                                'message' => 'Projeto já integrado',
-                                            ], 400);
+                    return response()->json(
+                        [
+                            "message" => "Projeto já integrado",
+                        ],
+                        400
+                    );
                 }
-                if (empty($data['boleto_generated'])) {
-                    $data['boleto_generated'] = 0;
+                if (empty($data["boleto_generated"])) {
+                    $data["boleto_generated"] = 0;
                 }
-                if (empty($data['boleto_paid'])) {
-                    $data['boleto_paid'] = 0;
+                if (empty($data["boleto_paid"])) {
+                    $data["boleto_paid"] = 0;
                 }
-                if (empty($data['credit_card_paid'])) {
-                    $data['credit_card_paid'] = 0;
+                if (empty($data["credit_card_paid"])) {
+                    $data["credit_card_paid"] = 0;
                 }
-                if (empty($data['credit_card_refused'])) {
-                    $data['credit_card_refused'] = 0;
+                if (empty($data["credit_card_refused"])) {
+                    $data["credit_card_refused"] = 0;
                 }
-                if (empty($data['abandoned_cart'])) {
-                    $data['abandoned_cart'] = 0;
+                if (empty($data["abandoned_cart"])) {
+                    $data["abandoned_cart"] = 0;
                 }
 
-                if (empty($data['pix_paid'])) {
-                    $data['pix_paid'] = 0;
+                if (empty($data["pix_paid"])) {
+                    $data["pix_paid"] = 0;
                 }
-                if (empty($data['pix_generated'])) {
-                    $data['pix_generated'] = 0;
+                if (empty($data["pix_generated"])) {
+                    $data["pix_generated"] = 0;
                 }
-                if (empty($data['pix_expired'])) {
-                    $data['pix_expired'] = 0;
+                if (empty($data["pix_expired"])) {
+                    $data["pix_expired"] = 0;
                 }
 
                 $integrationCreated = $hotBilletIntegrationModel->create([
-                                                                           'link'                => $data['link'],
-                                                                           'boleto_generated'    => $data['boleto_generated'],
-                                                                           'boleto_paid'         => $data['boleto_paid'],
-                                                                           'credit_card_refused' => $data['credit_card_refused'],
-                                                                           'credit_card_paid'    => $data['credit_card_paid'],
-                                                                           'abandoned_cart'      => $data['abandoned_cart'],
-                                                                           'pix_generated'       => $data['pix_generated'],
-                                                                           'pix_paid'            => $data['pix_paid'],
-                                                                           'pix_expired'         => $data['pix_expired'],
-                                                                           'project_id'          => $projectId,
-                                                                           'user_id'             => auth()->user()->account_owner_id,
-                                                                       ]);
+                    "link" => $data["link"],
+                    "boleto_generated" => $data["boleto_generated"],
+                    "boleto_paid" => $data["boleto_paid"],
+                    "credit_card_refused" => $data["credit_card_refused"],
+                    "credit_card_paid" => $data["credit_card_paid"],
+                    "abandoned_cart" => $data["abandoned_cart"],
+                    "pix_generated" => $data["pix_generated"],
+                    "pix_paid" => $data["pix_paid"],
+                    "pix_expired" => $data["pix_expired"],
+                    "project_id" => $projectId,
+                    "user_id" => auth()->user()->account_owner_id,
+                ]);
 
                 if ($integrationCreated) {
-                    return response()->json([
-                                                'message' => 'Integração criada com sucesso!',
-                                            ], 200);
+                    return response()->json(
+                        [
+                            "message" => "Integração criada com sucesso!",
+                        ],
+                        200
+                    );
                 } else {
-
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro ao realizar a integração',
-                                            ], 400);
+                    return response()->json(
+                        [
+                            "message" => "Ocorreu um erro ao realizar a integração",
+                        ],
+                        400
+                    );
                 }
             } else {
-
-                return response()->json([
-                                            'message' => 'Ocorreu um erro ao realizar a integração',
-                                        ], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro ao realizar a integração",
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao realizar integração  HotBilletController - store');
+            Log::warning("Erro ao realizar integração  HotBilletController - store");
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro ao realizar a integração',
-                                    ], 400);
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao realizar a integração",
+                ],
+                400
+            );
         }
     }
 
@@ -180,33 +191,41 @@ class HotBilletApiController extends Controller
         try {
             if (!empty($id)) {
                 $hotBilletIntegrationModel = new HotbilletIntegration();
-                $projectService          = new ProjectService();
+                $projectService = new ProjectService();
 
                 $projects = $projectService->getMyProjects();
 
-                $projectId   = current(Hashids::decode($id));
-                $integration = $hotBilletIntegrationModel->where('project_id', $projectId)->first();
+                $projectId = current(Hashids::decode($id));
+                $integration = $hotBilletIntegrationModel->where("project_id", $projectId)->first();
 
                 if ($integration) {
-                    return response()->json(['projects' => $projects, 'integration' => $integration]);
+                    return response()->json(["projects" => $projects, "integration" => $integration]);
                 } else {
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                            ], 400);
+                    return response()->json(
+                        [
+                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                        ],
+                        400
+                    );
                 }
             } else {
-
-                return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                        ], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar tela editar Integração HotBillet (HotBilletController - edit)');
+            Log::warning("Erro ao tentar acessar tela editar Integração HotBillet (HotBilletController - edit)");
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                    ], 400);
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                ],
+                400
+            );
         }
     }
 
@@ -218,59 +237,65 @@ class HotBilletApiController extends Controller
     public function update(Request $request, $id)
     {
         $hotBilletIntegrationModel = new HotbilletIntegration();
-        $data                    = $request->all();
-        $integrationId           = current(Hashids::decode($id));
-        $hotBilletIntegration      = $hotBilletIntegrationModel->find($integrationId);
-        if (empty($data['boleto_generated'])) {
-            $data['boleto_generated'] = 0;
+        $data = $request->all();
+        $integrationId = current(Hashids::decode($id));
+        $hotBilletIntegration = $hotBilletIntegrationModel->find($integrationId);
+        if (empty($data["boleto_generated"])) {
+            $data["boleto_generated"] = 0;
         }
-        if (empty($data['boleto_paid'])) {
-            $data['boleto_paid'] = 0;
+        if (empty($data["boleto_paid"])) {
+            $data["boleto_paid"] = 0;
         }
-        if (empty($data['credit_card_paid'])) {
-            $data['credit_card_paid'] = 0;
+        if (empty($data["credit_card_paid"])) {
+            $data["credit_card_paid"] = 0;
         }
-        if (empty($data['credit_card_refused'])) {
-            $data['credit_card_refused'] = 0;
+        if (empty($data["credit_card_refused"])) {
+            $data["credit_card_refused"] = 0;
         }
-        if (empty($data['abandoned_cart'])) {
-            $data['abandoned_cart'] = 0;
+        if (empty($data["abandoned_cart"])) {
+            $data["abandoned_cart"] = 0;
         }
-        if (empty($data['abandoned_cart'])) {
-            $data['abandoned_cart'] = 0;
+        if (empty($data["abandoned_cart"])) {
+            $data["abandoned_cart"] = 0;
         }
 
-        if (empty($data['pix_generated'])) {
-            $data['pix_generated'] = 0;
+        if (empty($data["pix_generated"])) {
+            $data["pix_generated"] = 0;
         }
-        if (empty($data['pix_paid'])) {
-            $data['pix_paid'] = 0;
+        if (empty($data["pix_paid"])) {
+            $data["pix_paid"] = 0;
         }
-        if (empty($data['pix_expired'])) {
-            $data['pix_expired'] = 0;
+        if (empty($data["pix_expired"])) {
+            $data["pix_expired"] = 0;
         }
 
         $integrationUpdated = $hotBilletIntegration->update([
-                                                              'link'                => $data['link'],
-                                                              'boleto_generated'    => $data['boleto_generated'],
-                                                              'boleto_paid'         => $data['boleto_paid'],
-                                                              'credit_card_refused' => $data['credit_card_refused'],
-                                                              'credit_card_paid'    => $data['credit_card_paid'],
-                                                              'abandoned_cart'      => $data['abandoned_cart'],
+            "link" => $data["link"],
+            "boleto_generated" => $data["boleto_generated"],
+            "boleto_paid" => $data["boleto_paid"],
+            "credit_card_refused" => $data["credit_card_refused"],
+            "credit_card_paid" => $data["credit_card_paid"],
+            "abandoned_cart" => $data["abandoned_cart"],
 
-                                                              'pix_generated'       => $data['pix_generated'],
-                                                              'pix_paid'            => $data['pix_paid'],
-                                                              'pix_expired'         => $data['pix_expired'],
-                                                          ]);
+            "pix_generated" => $data["pix_generated"],
+            "pix_paid" => $data["pix_paid"],
+            "pix_expired" => $data["pix_expired"],
+        ]);
         if ($integrationUpdated) {
-            return response()->json([
-                                        'message' => 'Integração atualizada com sucesso!',
-                                    ], 200);
+            return response()->json(
+                [
+                    "message" => "Integração atualizada com sucesso!",
+                ],
+                200
+            );
         }
 
-        return response()->json([
-                                    'message' => 'Ocorreu um erro ao atualizar a integração',
-                                ], 400);
+        return response()->json(
+            [
+                "message" => "Ocorreu um erro ao atualizar a integração",
+            ],
+            400
+        );
     }
 
     /**
@@ -280,51 +305,65 @@ class HotBilletApiController extends Controller
     public function destroy($id)
     {
         try {
-            $integrationId           = current(Hashids::decode($id));
+            $integrationId = current(Hashids::decode($id));
             $hotBilletIntegrationModel = new HotbilletIntegration();
-            $integration             = $hotBilletIntegrationModel->find($integrationId);
-            $integrationDeleted      = $integration->delete();
+            $integration = $hotBilletIntegrationModel->find($integrationId);
+            $integrationDeleted = $integration->delete();
             if ($integrationDeleted) {
-                return response()->json([
-                                            'message' => 'Integração Removida com sucesso!',
-                                        ], 200);
+                return response()->json(
+                    [
+                        "message" => "Integração Removida com sucesso!",
+                    ],
+                    200
+                );
             }
 
-            return response()->json([
-                                        'message' => 'Erro ao tentar remover Integração',
-                                    ], 400);
+            return response()->json(
+                [
+                    "message" => "Erro ao tentar remover Integração",
+                ],
+                400
+            );
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar remover Integração HotBillet (HotBilletController - destroy)');
+            Log::warning("Erro ao tentar remover Integração HotBillet (HotBilletController - destroy)");
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',
-                                    ], 400);
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao tentar remover, tente novamente mais tarde!",
+                ],
+                400
+            );
         }
     }
 
     public function regenerateBoleto(Request $request)
     {
-
         $saleId = current(Hashids::decode($request->boleto_id));
 
-        $sale = Sale::with(['project'])->find($saleId);
+        $sale = Sale::with(["project"])->find($saleId);
 
         if (!empty($sale)) {
-
             $project = $sale->project;
 
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->sub_total);
-            $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-            $dueDays        = $project->boleto_due_days ?? 3;
-            $dueDate        = Carbon::now()->addDays($dueDays)->format('Y-m-d');
+            $shippingPrice = preg_replace("/[^0-9]/", "", $sale->shipment_value);
+            $dueDays = $project->boleto_due_days ?? 3;
+            $dueDate = Carbon::now()
+                ->addDays($dueDays)
+                ->format("Y-m-d");
             if (Carbon::parse($dueDate)->isWeekend()) {
-                $dueDate = Carbon::parse($dueDate)->nextWeekday()->format('Y-m-d');
+                $dueDate = Carbon::parse($dueDate)
+                    ->nextWeekday()
+                    ->format("Y-m-d");
             }
             //            if (in_array($sale->gateway_id, [7])) {
-            $checkoutService   = new CheckoutService();
-            $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
-                                                                           ->encode($sale->id), ($totalPaidValue + $shippingPrice), $dueDate);
+            $checkoutService = new CheckoutService();
+            $boletoRegenerated = $checkoutService->regenerateBillet(
+                Hashids::connection("sale_id")->encode($sale->id),
+                $totalPaidValue + $shippingPrice,
+                $dueDate
+            );
             //            } else {
             //                $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
             //
@@ -333,14 +372,20 @@ class HotBilletApiController extends Controller
 
             $sale = Sale::find($saleId);
 
-            return response()->json([
-                                        'boleto_link'    => $sale->boleto_link,
-                                        'digitable_line' => $sale->boleto_digitable_line,
-                                    ], 200);
+            return response()->json(
+                [
+                    "boleto_link" => $sale->boleto_link,
+                    "digitable_line" => $sale->boleto_digitable_line,
+                ],
+                200
+            );
         } else {
-            return response()->json([
-                                        'error' => 'sale not found',
-                                    ], 400);
+            return response()->json(
+                [
+                    "error" => "sale not found",
+                ],
+                400
+            );
         }
     }
 }

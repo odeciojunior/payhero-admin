@@ -13,14 +13,19 @@ class ChangeNameColumnToNullableOnPlansAndProducts extends Migration
      */
     public function up()
     {
-        Schema::table('plans', function (Blueprint $table) {
-            $table->string('name')->default('sem nome')->change();
+        Schema::table("plans", function (Blueprint $table) {
+            $table
+                ->string("name")
+                ->default("sem nome")
+                ->change();
         });
 
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('name')->default('sem nome')->change();
+        Schema::table("products", function (Blueprint $table) {
+            $table
+                ->string("name")
+                ->default("sem nome")
+                ->change();
         });
-
     }
 
     /**
@@ -30,14 +35,18 @@ class ChangeNameColumnToNullableOnPlansAndProducts extends Migration
      */
     public function down()
     {
-        Schema::table('plans', function (Blueprint $table) {
-            $table->string('name')->default('')->change();
+        Schema::table("plans", function (Blueprint $table) {
+            $table
+                ->string("name")
+                ->default("")
+                ->change();
         });
 
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('name')->default('')->change();
+        Schema::table("products", function (Blueprint $table) {
+            $table
+                ->string("name")
+                ->default("")
+                ->change();
         });
     }
-
 }
-

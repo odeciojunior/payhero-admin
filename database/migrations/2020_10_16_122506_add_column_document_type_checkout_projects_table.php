@@ -13,8 +13,8 @@ class AddColumnDocumentTypeCheckoutProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->unsignedInteger('document_type_checkout')->default(3);
+        Schema::table("projects", function (Blueprint $table) {
+            $table->unsignedInteger("document_type_checkout")->default(3);
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnDocumentTypeCheckoutProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->dropColumn('document_type_checkout');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("document_type_checkout");
         });
     }
 }

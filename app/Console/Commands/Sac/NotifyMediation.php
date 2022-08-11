@@ -15,14 +15,14 @@ class NotifyMediation extends Command
      *
      * @var string
      */
-    protected $signature = 'notify:mediation';
+    protected $signature = "notify:mediation";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Notifica os usuários informando que podem solicitar mediação';
+    protected $description = "Notifica os usuários informando que podem solicitar mediação";
 
     /**
      * Create a new command instance.
@@ -41,20 +41,17 @@ class NotifyMediation extends Command
      */
     public function handle()
     {
-
         $sendGridService = new SendgridService();
         $smsService = new SmsService();
 
         $daysWithoutUserResponse = 2;
 
-        $query = Ticket::with([
-            'sale.customer',
-            'sale.project'
-        ])->where('ticket_status_enum', Ticket::STATUS_OPEN)
-            ->where('ticket_category_enum', Ticket::CATEGORY_COMPLAINT)
-            ->where('mediation_notified', 0)
-            ->where('last_message_date', '<', now()->subDays($daysWithoutUserResponse))
-            ->where('last_message_type_enum', TicketMessage::TYPE_FROM_CUSTOMER);
+        $query = Ticket::with(["sale.customer", "sale.project"])
+            ->where("ticket_status_enum", Ticket::STATUS_OPEN)
+            ->where("ticket_category_enum", Ticket::CATEGORY_COMPLAINT)
+            ->where("mediation_notified", 0)
+            ->where("last_message_date", "<", now()->subDays($daysWithoutUserResponse))
+            ->where("last_message_type_enum", TicketMessage::TYPE_FROM_CUSTOMER);
 
         $bar = $this->getOutput()->createProgressBar($query->count());
         $bar->start();
@@ -66,23 +63,32 @@ class NotifyMediation extends Command
                     $projectName = $project->name;
 
                     $customer = $ticket->sale->customer;
-                    $customerName = current(explode(' ', $customer->name));
+                    $customerName = current(explode(" ", $customer->name));
                     $customerEmail = $customer->email;
 
                     if (empty($customerEmail)) {
                         $data = [
-                            'name' => $customerName,
-                            'project' => $projectName,
+                            "name" => $customerName,
+                            "project" => $projectName,
                         ];
 
-                        $sendGridService->sendEmail("noreply@cloudox.net", 'CloudFox', $customerEmail, $customerName, 'd-efa4d00c04334ad58fb3d419ddb3176c', $data);
+                        $sendGridService->sendEmail(
+                            "noreply@cloudox.net",
+                            "CloudFox",
+                            $customerEmail,
+                            $customerName,
+                            "d-efa4d00c04334ad58fb3d419ddb3176c",
+                            $data
+                        );
                     } else {
-                        $smsService->sendSms($customer->telephone, "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.cloudfox.net e solicite mediação.");
+                        $smsService->sendSms(
+                            $customer->telephone,
+                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.cloudfox.net e solicite mediação."
+                        );
                     }
 
                     $ticket->mediation_notified = 1;
                     $ticket->save();
-
                 } catch (\Exception $e) {
                     report($e);
                 }

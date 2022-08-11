@@ -13,8 +13,8 @@ class AddIndexEmailCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function($table) {
-            $table->index('email');
+        Schema::table("customers", function ($table) {
+            $table->index("email");
         });
     }
 

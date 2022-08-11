@@ -24,7 +24,6 @@ class BilletPaidDigitalManagerListener implements ShouldQueue
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -35,21 +34,25 @@ class BilletPaidDigitalManagerListener implements ShouldQueue
     public function handle($event)
     {
         try {
-            $digitalManagerIntegration = DigitalmanagerIntegration::where('project_id', $event->sale->project_id)
-                                                                  ->where('billet_paid', 1)
-                                                                  ->first();
+            $digitalManagerIntegration = DigitalmanagerIntegration::where("project_id", $event->sale->project_id)
+                ->where("billet_paid", 1)
+                ->first();
 
             if (!empty($digitalManagerIntegration)) {
-                $digitalManagerService = new DigitalManagerService($digitalManagerIntegration->url, $digitalManagerIntegration->api_token, $digitalManagerIntegration->id);
-                $sale                  = $event->sale;
-                $sale->load('client', 'delivery', 'checkout');
-                $productPlanSale = ProductPlanSale::where('sale_id', $sale->id)->first();
-                $productPlanSale->load('product');
+                $digitalManagerService = new DigitalManagerService(
+                    $digitalManagerIntegration->url,
+                    $digitalManagerIntegration->api_token,
+                    $digitalManagerIntegration->id
+                );
+                $sale = $event->sale;
+                $sale->load("client", "delivery", "checkout");
+                $productPlanSale = ProductPlanSale::where("sale_id", $sale->id)->first();
+                $productPlanSale->load("product");
 
                 return $digitalManagerService->sendSale($event->sale, $productPlanSale, $productPlanSale->product, 2);
             }
         } catch (Exception $e) {
-            Log::warning('erro ao enviar notificação para Digital Manager na venda ' . $event->sale->id);
+            Log::warning("erro ao enviar notificação para Digital Manager na venda " . $event->sale->id);
             report($e);
         }
     }

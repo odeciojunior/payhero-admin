@@ -22,48 +22,46 @@ class PixService
      */
     public function changePixToCanceled()
     {
-
         try {
-
-            $sales = Sale::with('transactions')
-            ->where('payment_method', '=', Sale::PIX_PAYMENT)
-            ->where('status', Sale::STATUS_PENDING)
-            ->whereHas(
-                'pixCharges',
-                function ($querySale) {
-                    $querySale->where('status', 'ATIVA');
-                    $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
-                }
-            );
+            $sales = Sale::with("transactions")
+                ->where("payment_method", "=", Sale::PIX_PAYMENT)
+                ->where("status", Sale::STATUS_PENDING)
+                ->whereHas("pixCharges", function ($querySale) {
+                    $querySale->where("status", "ATIVA");
+                    $querySale->where(
+                        "created_at",
+                        "<=",
+                        Carbon::now()
+                            ->subHour()
+                            ->toDateTimeString()
+                    );
+                });
 
             foreach ($sales->cursor() as $sale) {
-
-                $sale->update(['status' => Sale::STATUS_CANCELED]);
+                $sale->update(["status" => Sale::STATUS_CANCELED]);
 
                 foreach ($sale->transactions as $transaction) {
                     $transaction->update([
-                            'status' => 'canceled',
-                            'status_enum' => Transaction::STATUS_CANCELED,
+                        "status" => "canceled",
+                        "status_enum" => Transaction::STATUS_CANCELED,
                     ]);
                 }
 
-                SaleLog::create(
-                    [
-                        'status' => 'canceled',
-                        'status_enum' => 5,
-                        'sale_id' => $sale->id,
-                    ]
-                );
+                SaleLog::create([
+                    "status" => "canceled",
+                    "status_enum" => 5,
+                    "sale_id" => $sale->id,
+                ]);
 
-                $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
+                $pix = $sale->pixCharges->where("status", "ATIVA")->first();
 
                 if (!FoxUtils::isEmpty($pix)) {
                     //Atualizar pixCharges
-                    $pix->update(['status' => 'EXPIRED']);
+                    $pix->update(["status" => "EXPIRED"]);
                 }
 
                 if (!$sale->api_flag && $sale->owner_id > User::DEMO_ID) {
-                    event(new PixExpiredEvent($sale));                    
+                    event(new PixExpiredEvent($sale));
                 }
 
             }
@@ -72,4 +70,3 @@ class PixService
         }
     }
 }
-

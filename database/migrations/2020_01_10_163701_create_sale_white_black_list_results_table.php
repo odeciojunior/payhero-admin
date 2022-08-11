@@ -12,17 +12,20 @@ class CreateSaleWhiteBlackListResultsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_white_black_list_results', function(Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create("sale_white_black_list_results", function (Blueprint $table) {
+            $table->bigIncrements("id");
             $table->unsignedBigInteger("sale_id");
-            $table->boolean('whitelist')->comment('True (Está na whitelist) - False (Não está na whitelist)');
-            $table->boolean('blacklist')->comment('True (Está na blacklist) - False (Não está na blacklist)');
-            $table->json('whiteblacklist_json')->comment('Regras que caíram no black/white list');
+            $table->boolean("whitelist")->comment("True (Está na whitelist) - False (Não está na whitelist)");
+            $table->boolean("blacklist")->comment("True (Está na blacklist) - False (Não está na blacklist)");
+            $table->json("whiteblacklist_json")->comment("Regras que caíram no black/white list");
             $table->timestamps();
         });
 
-        Schema::table('sale_white_black_list_results', function(Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
+        Schema::table("sale_white_black_list_results", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 
@@ -32,10 +35,10 @@ class CreateSaleWhiteBlackListResultsTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_white_black_list_results', function(Blueprint $table) {
+        Schema::table("sale_white_black_list_results", function (Blueprint $table) {
             $table->dropForeign(["sale_id"]);
         });
 
-        Schema::dropIfExists('sale_white_black_list_results');
+        Schema::dropIfExists("sale_white_black_list_results");
     }
 }

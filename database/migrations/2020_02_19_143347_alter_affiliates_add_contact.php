@@ -13,11 +13,23 @@ class AlterAffiliatesAddContact extends Migration
      */
     public function up()
     {
-        Schema::table('affiliates', function (Blueprint $table) {
-            $table->boolean('suport_phone_verified')->default(0)->after('status_enum');
-            $table->string('suport_phone', 20)->nullable()->after('status_enum');
-            $table->boolean('suport_contact_verified')->default(0)->after('status_enum');
-            $table->string('suport_contact')->nullable()->after('status_enum');
+        Schema::table("affiliates", function (Blueprint $table) {
+            $table
+                ->boolean("suport_phone_verified")
+                ->default(0)
+                ->after("status_enum");
+            $table
+                ->string("suport_phone", 20)
+                ->nullable()
+                ->after("status_enum");
+            $table
+                ->boolean("suport_contact_verified")
+                ->default(0)
+                ->after("status_enum");
+            $table
+                ->string("suport_contact")
+                ->nullable()
+                ->after("status_enum");
         });
     }
 
@@ -28,11 +40,11 @@ class AlterAffiliatesAddContact extends Migration
      */
     public function down()
     {
-        Schema::table('affiliates', function (Blueprint $table) {
-            $table->dropColumn('suport_phone_verified');
-            $table->dropColumn('suport_phone');
-            $table->dropColumn('suport_contact_verified');
-            $table->dropColumn('suport_contact');
+        Schema::table("affiliates", function (Blueprint $table) {
+            $table->dropColumn("suport_phone_verified");
+            $table->dropColumn("suport_phone");
+            $table->dropColumn("suport_contact_verified");
+            $table->dropColumn("suport_contact");
         });
     }
 }

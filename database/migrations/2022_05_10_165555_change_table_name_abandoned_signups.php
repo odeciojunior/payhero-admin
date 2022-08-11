@@ -13,7 +13,7 @@ class ChangeTableNameAbandonedSignups extends Migration
      */
     public function up()
     {
-        Schema::rename('abandoned_signups', 'user_informations');
+        Schema::rename("abandoned_signups", "user_informations");
     }
 
     /**
@@ -23,6 +23,6 @@ class ChangeTableNameAbandonedSignups extends Migration
      */
     public function down()
     {
-        Schema::rename('user_informations', 'abandoned_signups');
+        Schema::rename("user_informations", "abandoned_signups");
     }
 }

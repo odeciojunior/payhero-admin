@@ -13,17 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/reportana', function (Request $request) {
+Route::middleware("auth:api")->get("/reportana", function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => ['auth:api','permission:apps','demo_account']], function() {
+Route::group(["middleware" => ["auth:api", "permission:apps", "demo_account"]], function () {
+    Route::get("apps/reportana", "ReportanaApiController@index");
+    Route::get("apps/reportana/{id}", "ReportanaApiController@show");
+    Route::get("apps/reportana/{id}/edit", "ReportanaApiController@edit");
 
-    Route::get('apps/reportana', 'ReportanaApiController@index');
-    Route::get('apps/reportana/{id}', 'ReportanaApiController@show');
-    Route::get('apps/reportana/{id}/edit', 'ReportanaApiController@edit');
-
-    Route::apiResource('apps/reportana', 'ReportanaApiController')
-         ->only('create', 'store', 'update', 'destroy')->middleware('permission:apps_manage');
-
+    Route::apiResource("apps/reportana", "ReportanaApiController")
+        ->only("create", "store", "update", "destroy")
+        ->middleware("permission:apps_manage");
 });

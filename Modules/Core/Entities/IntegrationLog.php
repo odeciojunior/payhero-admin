@@ -11,17 +11,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $request
  * @property string $response
  * @property string $created_at
- * @property string $updated_at 
+ * @property string $updated_at
  */
 class IntegrationLog extends Model
 {
-    protected $fillable = [
-        'source_table',
-        'source_id',
-        'request',
-        'response',
-        'api',
-        'created_at',
-        'updated_at'        
-    ];    
+    protected $fillable = ["source_table", "source_id", "request", "response", "api", "created_at", "updated_at"];
 }

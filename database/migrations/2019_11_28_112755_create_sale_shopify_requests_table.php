@@ -12,18 +12,21 @@ class CreateSaleShopifyRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_shopify_requests', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('project');
-            $table->string('method');
-            $table->unsignedBigInteger('sale_id');
-            $table->json('send_data')->nullable();
-            $table->json('received_data')->nullable();
-            $table->json('exceptions')->nullable();
+        Schema::create("sale_shopify_requests", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->string("project");
+            $table->string("method");
+            $table->unsignedBigInteger("sale_id");
+            $table->json("send_data")->nullable();
+            $table->json("received_data")->nullable();
+            $table->json("exceptions")->nullable();
             $table->timestamps();
         });
-        Schema::table('sale_shopify_requests', function(Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
+        Schema::table("sale_shopify_requests", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 
@@ -33,9 +36,9 @@ class CreateSaleShopifyRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_shopify_requests', function(Blueprint $table) {
+        Schema::table("sale_shopify_requests", function (Blueprint $table) {
             $table->dropForeign(["sale_id"]);
         });
-        Schema::dropIfExists('sale_shopify_requests');
+        Schema::dropIfExists("sale_shopify_requests");
     }
 }

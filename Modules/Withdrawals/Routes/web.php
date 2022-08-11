@@ -11,7 +11,8 @@
 |
 */
 
-Route::middleware(['web', 'auth'])->prefix('withdrawals')->group(function() {
-    Route::get('/download/{filename}', 'WithdrawalsController@download')->middleware('permission:finances_manage');
-});
-
+Route::middleware(["web", "auth"])
+    ->prefix("withdrawals")
+    ->group(function () {
+        Route::get("/download/{filename}", "WithdrawalsController@download")->middleware("permission:finances_manage");
+    });

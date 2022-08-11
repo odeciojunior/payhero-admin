@@ -19,16 +19,15 @@ class SalesBlackListAntiFraudDetaislResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'             => Hashids::connection('sale_id')->encode($this->id),
-            'delivery_id'    => Hashids::encode($this->delivery_id),
-            'checkout_id'    => Hashids::encode($this->checkout_id),
-            'customer_id'    => Hashids::encode($this->customer_id),
+            "id" => Hashids::connection("sale_id")->encode($this->id),
+            "delivery_id" => Hashids::encode($this->delivery_id),
+            "checkout_id" => Hashids::encode($this->checkout_id),
+            "customer_id" => Hashids::encode($this->customer_id),
             //sale
-            'payment_method' => $this->payment_method,
-            'flag'           => !empty($this->flag)?$this->flag:$this->present()->getPaymentFlag(),
-            'start_date'     => \Carbon\Carbon::parse($this->start_date)->format('d/m/Y H:i:s'),
-            'status'         => $this->status,
-
+            "payment_method" => $this->payment_method,
+            "flag" => !empty($this->flag) ? $this->flag : $this->present()->getPaymentFlag(),
+            "start_date" => \Carbon\Carbon::parse($this->start_date)->format("d/m/Y H:i:s"),
+            "status" => $this->status,
         ];
     }
 }

@@ -32,16 +32,16 @@ class ProductService
         $productModel = Product::query();
 
         if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
-            $productModel->where('project_id', $projectId);
+            $productModel->where("project_id", $projectId);
         } else {
-            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
+            $productModel->where("shopify", 0)->whereNull("shopify_variant_id");
         }
 
         return $productModel
-        ->with('productsPlans')
-        ->where('user_id', auth()->user()->account_owner_id)
-        ->take(16)
-        ->get();
+            ->with("productsPlans")
+            ->where("user_id", auth()->user()->account_owner_id)
+            ->take(16)
+            ->get();
     }
 
     public function getTopSellingProducts(int $projectId, string $product, string $description)
@@ -52,26 +52,26 @@ class ProductService
         $productModel = Product::query();
 
         if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
-            $productModel->where('project_id', $projectId);
+            $productModel->where("project_id", $projectId);
         } else {
-            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
+            $productModel->where("shopify", 0)->whereNull("shopify_variant_id");
         }
 
         if (!empty($product)) {
-            $productModel->where('name', 'like', '%'. $product .'%');
+            $productModel->where("name", "like", "%" . $product . "%");
         }
 
         if (!empty($description)) {
-            $productModel->where('description', 'like', '%'. $description .'%');
+            $productModel->where("description", "like", "%" . $description . "%");
         }
 
         return $productModel
-        ->with('productsPlanSales')
-        ->with('productsPlans')
-        ->where('user_id', auth()->user()->getAccountOwnerId())
-        ->withCount('productsPlanSales')
-        ->take(16)
-        ->get();
+            ->with("productsPlanSales")
+            ->with("productsPlans")
+            ->where("user_id", auth()->user()->getAccountOwnerId())
+            ->withCount("productsPlanSales")
+            ->take(16)
+            ->get();
     }
 
     public function getProductsFilter(int $projectId, string $product, bool $variants = false)
@@ -82,53 +82,46 @@ class ProductService
         $productModel = Product::query();
 
         $productModel
-        ->with('productsPlanSales')
-        ->with('productsPlans')
-        ->where('user_id', auth()->user()->account_owner_id);
+            ->with("productsPlanSales")
+            ->with("productsPlans")
+            ->where("user_id", auth()->user()->account_owner_id);
 
-        if (!empty($projectId) && !empty($project->shopify_id) || !empty($project->woocommerce_id)) {
-            $productModel->where('project_id', $projectId);
+        if ((!empty($projectId) && !empty($project->shopify_id)) || !empty($project->woocommerce_id)) {
+            $productModel->where("project_id", $projectId);
         } else {
-            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
+            $productModel->where("shopify", 0)->whereNull("shopify_variant_id");
         }
 
         if (!empty($product)) {
-            $productModel->where('name', 'like', '%'. $product .'%');
+            $productModel->where("name", "like", "%" . $product . "%");
         }
 
         return $productModel
-        ->get()
-        ->sortByDesc(function($query) {
-            return $query->productsPlanSales->count();
-        })->take(16);
+            ->get()
+            ->sortByDesc(function ($query) {
+                return $query->productsPlanSales->count();
+            })
+            ->take(16);
     }
 
     public function getProductsBySale($saleParam)
     {
         if ($saleParam instanceof Sale) {
             $sale = $saleParam;
-            $sale->loadMissing([
-                'productsPlansSale.tracking',
-                'productsPlansSale.product',
-                'productsSaleApi'
-            ]);
+            $sale->loadMissing(["productsPlansSale.tracking", "productsPlansSale.product", "productsSaleApi"]);
         } else {
             if (is_int($saleParam)) {
                 $saleModel = new Sale();
-                $sale = $saleModel->with([
-                    'productsPlansSale.tracking',
-                    'productsPlansSale.product',
-                    'productsSaleApi'
-                ])->find($saleParam);
+                $sale = $saleModel
+                    ->with(["productsPlansSale.tracking", "productsPlansSale.product", "productsSaleApi"])
+                    ->find($saleParam);
             } else {
                 if (is_string($saleParam)) {
                     $saleModel = new Sale();
-                    $saleId = current(Hashids::connection('sale_id')->decode($saleParam));
-                    $sale = $saleModel->with([
-                        'productsPlansSale.tracking',
-                        'productsPlansSale.product',
-                        'productsSaleApi'
-                    ])->find($saleId);
+                    $saleId = current(Hashids::connection("sale_id")->decode($saleParam));
+                    $sale = $saleModel
+                        ->with(["productsPlansSale.tracking", "productsPlansSale.product", "productsSaleApi"])
+                        ->find($saleId);
                 }
             }
         }
@@ -140,49 +133,70 @@ class ProductService
                 foreach ($sale->productsSaleApi as $productsApi) {
                     $product = $productsApi->toArray();
 
-                    $product['tracking_id'] = '';
-                    $product['tracking_code'] = '';
-                    $product['tracking_status_enum'] = 'Não Informado';
-                    $product['tracking_created_at'] = '';
+                    $product["tracking_id"] = "";
+                    $product["tracking_code"] = "";
+                    $product["tracking_status_enum"] = "Não Informado";
+                    $product["tracking_created_at"] = "";
 
-                    $product['sale_status'] = $sale->status;
-                    $product['amount'] = $productsApi->quantity;
-                    $product['sale_id'] = $productsApi->sale_id;
+                    $product["sale_status"] = $sale->status;
+                    $product["amount"] = $productsApi->quantity;
+                    $product["sale_id"] = $productsApi->sale_id;
 
-                    $productsSale->add((object)$product);
+                    $productsSale->add((object) $product);
                 }
             } else {
                 foreach ($sale->productsPlansSale as $productsPlanSale) {
-                    $product = $productsPlanSale->product()->withTrashed()->first()->toArray();
+                    $product = $productsPlanSale
+                        ->product()
+                        ->withTrashed()
+                        ->first()
+                        ->toArray();
                     $tracking = $productsPlanSale->tracking;
 
-                    if(!is_null($product['deleted_at'])) {
-                        $product['name'] .= ' (Excluído)';
+                    if (!is_null($product["deleted_at"])) {
+                        $product["name"] .= " (Excluído)";
                     }
 
-                    $product['product_plan_sale_id'] = $productsPlanSale->id;
-                    $product['sale_status'] = $sale->status;
-                    $product['amount'] = $productsPlanSale->amount;
+                    $product["product_plan_sale_id"] = $productsPlanSale->id;
+                    $product["sale_status"] = $sale->status;
+                    $product["amount"] = $productsPlanSale->amount;
 
                     if (!empty($tracking)) {
-                        $trackingCode = $tracking->tracking_code == "CLOUDFOX000XX" ? '' : $tracking->tracking_code;
-                        $product['tracking_id'] = Hashids::encode($tracking->id);
-                        $product['tracking_code'] = $trackingCode;
-                        $product['tracking_status_enum'] = $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não Informado';
-                        $product['tracking_created_at'] = Carbon::parse($tracking->created_at)->format('d/m/Y H:i:s');
+                        $trackingCode = $tracking->tracking_code == "CLOUDFOX000XX" ? "" : $tracking->tracking_code;
+                        $product["tracking_id"] = Hashids::encode($tracking->id);
+                        $product["tracking_code"] = $trackingCode;
+                        $product["tracking_status_enum"] = $tracking->tracking_status_enum
+                            ? __(
+                                "definitions.enum.tracking.tracking_status_enum." .
+                                    $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)
+                            )
+                            : "Não Informado";
+                        $product["tracking_created_at"] = Carbon::parse($tracking->created_at)->format("d/m/Y H:i:s");
                     } else {
-                        $product['tracking_id'] = '';
-                        $product['tracking_code'] = '';
-                        $product['tracking_status_enum'] = 'Não Informado';
-                        $product['tracking_created_at'] = '';
+                        $product["tracking_id"] = "";
+                        $product["tracking_code"] = "";
+                        $product["tracking_status_enum"] = "Não Informado";
+                        $product["tracking_created_at"] = "";
                     }
 
-                    $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
-                    $product['custom_products'] = SaleAdditionalCustomerInformation::select('id', 'type_enum', 'value', 'file_name', 'line')
-                        ->where('sale_id', $productsPlanSale->sale_id)->where('plan_id', $productsPlanSale->plan_id)
-                        ->where('product_id', $productsPlanSale->product_id)->orderBy('line', 'asc')->orderBy('order', 'asc')->get();
-                    $product['sale_id'] = $productsPlanSale->sale_id;
-                    $productsSale->add((object)$product);
+                    $product["photo"] = FoxUtils::checkFileExistUrl($product["photo"])
+                        ? $product["photo"]
+                        : "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png";
+                    $product["custom_products"] = SaleAdditionalCustomerInformation::select(
+                        "id",
+                        "type_enum",
+                        "value",
+                        "file_name",
+                        "line"
+                    )
+                        ->where("sale_id", $productsPlanSale->sale_id)
+                        ->where("plan_id", $productsPlanSale->plan_id)
+                        ->where("product_id", $productsPlanSale->product_id)
+                        ->orderBy("line", "asc")
+                        ->orderBy("order", "asc")
+                        ->get();
+                    $product["sale_id"] = $productsPlanSale->sale_id;
+                    $productsSale->add((object) $product);
                 }
             }
         }
@@ -194,12 +208,12 @@ class ProductService
     {
         if (!empty($sale)) {
             $products = [];
-            $sale->load(['plansSales.plan.productsPlans.product']);
+            $sale->load(["plansSales.plan.productsPlans.product"]);
 
             foreach ($sale->plansSales as $planSale) {
                 foreach ($planSale->plan->productsPlans as $productPlan) {
                     $products[] = [
-                        'name' => $productPlan->amount * $planSale->amount . 'x ' . $planSale->plan->name,
+                        "name" => $productPlan->amount * $planSale->amount . "x " . $planSale->plan->name,
                     ];
                 }
             }

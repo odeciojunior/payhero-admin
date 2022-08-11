@@ -8,7 +8,6 @@ use Modules\ActiveCampaign\Providers\AuthServiceProvider;
 
 class ActiveCampaignServiceProvider extends ServiceProvider
 {
-
     /**
      * Boot the application events.
      *
@@ -20,7 +19,7 @@ class ActiveCampaignServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -41,12 +40,13 @@ class ActiveCampaignServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('activecampaign.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'activecampaign'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("activecampaign.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "activecampaign");
     }
 
     /**
@@ -56,17 +56,26 @@ class ActiveCampaignServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/activecampaign');
+        $viewPath = resource_path("views/modules/activecampaign");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/activecampaign';
-        }, \Config::get('view.paths')), [$sourcePath]), 'activecampaign');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/activecampaign";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "activecampaign"
+        );
     }
 
     /**
@@ -76,12 +85,12 @@ class ActiveCampaignServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/activecampaign');
+        $langPath = resource_path("lang/modules/activecampaign");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'activecampaign');
+            $this->loadTranslationsFrom($langPath, "activecampaign");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'activecampaign');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "activecampaign");
         }
     }
 
@@ -92,8 +101,8 @@ class ActiveCampaignServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

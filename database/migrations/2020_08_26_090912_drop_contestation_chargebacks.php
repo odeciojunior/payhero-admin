@@ -13,7 +13,7 @@ class DropContestationChargebacks extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('contestation_chargebacks');
+        Schema::dropIfExists("contestation_chargebacks");
     }
 
     /**

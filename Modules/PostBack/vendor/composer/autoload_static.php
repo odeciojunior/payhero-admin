@@ -6,32 +6,35 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit8955b9da2bc9fbf4911de5f40d49bd28
 {
-    public static $prefixLengthsPsr4 = array (
-        'M' => 
-        array (
-            'Modules\\PostBack\\' => 17,
-        ),
-    );
+    public static $prefixLengthsPsr4 = [
+        "M" => [
+            "Modules\\PostBack\\" => 17,
+        ],
+    ];
 
-    public static $prefixDirsPsr4 = array (
-        'Modules\\PostBack\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/',
-        ),
-    );
+    public static $prefixDirsPsr4 = [
+        "Modules\\PostBack\\" => [
+            0 => __DIR__ . "/../.." . "/",
+        ],
+    ];
 
-    public static $classMap = array (
-        'Modules\\PostBack\\Http\\Controllers\\PostBackController' => __DIR__ . '/../..' . '/Http/Controllers/PostBackController.php',
-        'Modules\\PostBack\\Providers\\PostBackServiceProvider' => __DIR__ . '/../..' . '/Providers/PostBackServiceProvider.php',
-    );
+    public static $classMap = [
+        "Modules\\PostBack\\Http\\Controllers\\PostBackController" =>
+            __DIR__ . "/../.." . "/Http/Controllers/PostBackController.php",
+        "Modules\\PostBack\\Providers\\PostBackServiceProvider" =>
+            __DIR__ . "/../.." . "/Providers/PostBackServiceProvider.php",
+    ];
 
     public static function getInitializer(ClassLoader $loader)
     {
-        return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8955b9da2bc9fbf4911de5f40d49bd28::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8955b9da2bc9fbf4911de5f40d49bd28::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8955b9da2bc9fbf4911de5f40d49bd28::$classMap;
-
-        }, null, ClassLoader::class);
+        return \Closure::bind(
+            function () use ($loader) {
+                $loader->prefixLengthsPsr4 = ComposerStaticInit8955b9da2bc9fbf4911de5f40d49bd28::$prefixLengthsPsr4;
+                $loader->prefixDirsPsr4 = ComposerStaticInit8955b9da2bc9fbf4911de5f40d49bd28::$prefixDirsPsr4;
+                $loader->classMap = ComposerStaticInit8955b9da2bc9fbf4911de5f40d49bd28::$classMap;
+            },
+            null,
+            ClassLoader::class
+        );
     }
 }

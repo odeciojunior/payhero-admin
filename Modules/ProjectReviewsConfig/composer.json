@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\ProjectReviewsConfig\\Providers\\ProjectReviewsConfigServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

@@ -6,6 +6,4 @@ use Illuminate\Routing\Controller;
 
 class ShippingController extends Controller
 {
-
 }
-

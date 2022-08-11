@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\WooCommerceService;
 use Modules\Core\Entities\WooCommerceIntegration;
 
-
-
 class ImportWooCommerceProductVariation implements ShouldQueue
 {
     use Dispatchable;
@@ -38,35 +36,21 @@ class ImportWooCommerceProductVariation implements ShouldQueue
     public function handle()
     {
         try {
-            
-            $integration = WooCommerceIntegration::where('project_id', $this->projectId)->first();
+            $integration = WooCommerceIntegration::where("project_id", $this->projectId)->first();
 
-            if(!empty($integration)){
-
-                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-                
-                $variation = $service->woocommerce->get('products/'.$this->variationId);
-                
-                $service->importProductVariation(
-                    $variation,
-                    $this->_product,
-                    $this->projectId, 
-                    $this->userId, 
+            if (!empty($integration)) {
+                $service = new WooCommerceService(
+                    $integration->url_store,
+                    $integration->token_user,
+                    $integration->token_pass
                 );
-                
 
+                $variation = $service->woocommerce->get("products/" . $this->variationId);
+
+                $service->importProductVariation($variation, $this->_product, $this->projectId, $this->userId);
             }
-
-            
-
-            
-
         } catch (Exception $e) {
-            
-            
             report($e);
-
-            
         }
     }
 }

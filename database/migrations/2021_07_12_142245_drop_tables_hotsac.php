@@ -12,8 +12,8 @@ class DropTablesHotsac extends Migration
      */
     public function up()
     {
-        Schema::drop('hotsac_sent');
-        Schema::drop('hotsac_integrations');
+        Schema::drop("hotsac_sent");
+        Schema::drop("hotsac_integrations");
     }
 
     /**

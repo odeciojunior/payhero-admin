@@ -14,8 +14,11 @@ class AlterTableProjectsAddWoocommerceId extends Migration
     public function up()
     {
         //
-        Schema::table('projects', function (Blueprint $table) {
-            $table->string('woocommerce_id')->nullable()->after('shopify_id');
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->string("woocommerce_id")
+                ->nullable()
+                ->after("shopify_id");
         });
     }
 

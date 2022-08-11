@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([ 'middleware' => ['auth:api', 'scopes:admin'] ], function () {
-    Route::post('/user-informations', 'UserInformationsApiController@store');
+Route::group(["middleware" => ["auth:api", "scopes:admin"]], function () {
+    Route::post("/user-informations", "UserInformationsApiController@store");
 });

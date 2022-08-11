@@ -78,9 +78,9 @@ class SaleInformation extends Model
 {
     use HasFactory;
 
-    protected $table = 'sale_informations';
+    protected $table = "sale_informations";
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     protected $fillable = [
         "sale_id",

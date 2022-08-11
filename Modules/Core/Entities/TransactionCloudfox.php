@@ -53,33 +53,29 @@ class TransactionCloudfox extends Model
      *
      * @var string
      */
-    protected $table = 'transaction_cloudfox';
+    protected $table = "transaction_cloudfox";
 
     protected $presenter = TransactionPresenter::class;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["created_at", "updated_at", "deleted_at"];
 
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'gateway_id',
-        'company_id',
-        'user_id',
-        'value',
-        'value_total',
-        'status',
-        'status_enum',
-        'release_date',
-        'gateway_released_at',
-        'gateway_transferred_at'
+        "sale_id",
+        "gateway_id",
+        "company_id",
+        "user_id",
+        "value",
+        "value_total",
+        "status",
+        "status_enum",
+        "release_date",
+        "gateway_released_at",
+        "gateway_transferred_at",
     ];
 
     public function company()

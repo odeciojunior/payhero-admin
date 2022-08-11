@@ -13,8 +13,8 @@ class AddColumnSkipToCartOnShopifyIntegrationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('shopify_integrations', function (Blueprint $table) {
-            $table->boolean('skip_to_cart')->default(false);
+        Schema::table("shopify_integrations", function (Blueprint $table) {
+            $table->boolean("skip_to_cart")->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnSkipToCartOnShopifyIntegrationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('shopify_integrations', function (Blueprint $table) {
-            $table->dropColumn(['skip_to_cart']);
+        Schema::table("shopify_integrations", function (Blueprint $table) {
+            $table->dropColumn(["skip_to_cart"]);
         });
     }
 }

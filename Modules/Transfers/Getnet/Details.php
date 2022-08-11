@@ -1,24 +1,21 @@
 <?php
 
-
 namespace Modules\Transfers\Getnet;
-
 
 use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;
 
 class Details implements JsonSerializable, Arrayable
 {
-
-    const STATUS_WAITING_FOR_VALID_POST = 'WAITING_FOR_VALID_POST';
-    const STATUS_WAITING_LIQUIDATION = 'WAITING_LIQUIDATION';
-    const STATUS_WAITING_WITHDRAWAL = 'WAITING_WITHDRAWAL';
-    const STATUS_WAITING_RELEASE = 'WAITING_RELEASE';
-    const STATUS_PAID = 'PAID';
-    const STATUS_REVERSED = 'REVERSED';
-    const STATUS_ADJUSTMENT_CREDIT = 'ADJUSTMENT_CREDIT';
-    const STATUS_ADJUSTMENT_DEBIT = 'ADJUSTMENT_DEBIT';
-    const STATUS_ERROR = 'ERROR';
+    const STATUS_WAITING_FOR_VALID_POST = "WAITING_FOR_VALID_POST";
+    const STATUS_WAITING_LIQUIDATION = "WAITING_LIQUIDATION";
+    const STATUS_WAITING_WITHDRAWAL = "WAITING_WITHDRAWAL";
+    const STATUS_WAITING_RELEASE = "WAITING_RELEASE";
+    const STATUS_PAID = "PAID";
+    const STATUS_REVERSED = "REVERSED";
+    const STATUS_ADJUSTMENT_CREDIT = "ADJUSTMENT_CREDIT";
+    const STATUS_ADJUSTMENT_DEBIT = "ADJUSTMENT_DEBIT";
+    const STATUS_ERROR = "ERROR";
     protected string $status, $description, $type;
 
     /**
@@ -49,9 +46,9 @@ class Details implements JsonSerializable, Arrayable
     public function toArray()
     {
         return [
-            'status' => $this->getStatus(),
-            'description' => $this->getDescription(),
-            'type' => $this->getType()
+            "status" => $this->getStatus(),
+            "description" => $this->getDescription(),
+            "type" => $this->getType(),
         ];
     }
 

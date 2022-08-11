@@ -20,20 +20,26 @@ class CompaniesSelectResource extends JsonResource
         $companyService = new CompanyService();
         $companyDocumentValidated = $companyService->isDocumentValidated($this->id);
 
-        $companyDocumentStatus = ($companyDocumentValidated) ? 'approved' : 'pending';
+        $companyDocumentStatus = $companyDocumentValidated ? "approved" : "pending";
 
-        $user = $this->user;
-        $userAddressDocumentStatus = $user->present()->getAddressDocumentStatus(
-            $user->address_document_status
+        $userAddressDocumentStatus = (new User())->present()->getAddressDocumentStatus(
+            $this->user->address_document_status
         );
-        $userPersonalDocumentStatus = $user->present()->getAddressDocumentStatus(
-            $user->personal_document_status
+        $userPersonalDocumentStatus = (new User())->present()->getAddressDocumentStatus(
+            $this->user->personal_document_status
         );
 
-        $bankAccount = CompanyBankAccount::where('company_id',$this->id)->where('is_default',true)->where('status','VERIFIED')->first();
+        $bankAccount = CompanyBankAccount::where("company_id", $this->id)
+            ->where("is_default", true)
+            ->where("status", "VERIFIED")
+            ->first();
 
         $companyIsApproved = false;
-        if($companyDocumentStatus == "approved" && $userAddressDocumentStatus == "approved" && $userPersonalDocumentStatus == "approved" ) {
+        if (
+            $companyDocumentStatus == "approved" &&
+            $userAddressDocumentStatus == "approved" &&
+            $userPersonalDocumentStatus == "approved"
+        ) {
             $companyIsApproved = true;
         }
 
@@ -63,7 +69,7 @@ class CompaniesSelectResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'country' => $this->country,
-            'name' => $this->company_type == 1 ? 'Pessoa Física' : ucwords(strtolower($this->fantasy_name)),
+            'name' => $this->company_type == 1 ? 'Pessoa física' : $this->fantasy_name,
             'document' => foxutils()->getDocument($this->document),
             'company_document_status' => $companyDocumentStatus,
             'company_has_sale_before_getnet' => auth()->user()->has_sale_before_getnet,

@@ -13,8 +13,12 @@ class AlterSaleRefundHistories extends Migration
      */
     public function up()
     {
-        Schema::table('sale_refund_histories', function (Blueprint $table) {
-            $table->integer('refund_value')->unsigned()->default(0)->after('gateway_response');
+        Schema::table("sale_refund_histories", function (Blueprint $table) {
+            $table
+                ->integer("refund_value")
+                ->unsigned()
+                ->default(0)
+                ->after("gateway_response");
         });
     }
 
@@ -25,8 +29,8 @@ class AlterSaleRefundHistories extends Migration
      */
     public function down()
     {
-        Schema::table('sale_refund_histories', function (Blueprint $table) {
-            $table->dropColumn('refund_value');
+        Schema::table("sale_refund_histories", function (Blueprint $table) {
+            $table->dropColumn("refund_value");
         });
     }
 }

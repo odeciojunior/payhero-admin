@@ -1,27 +1,27 @@
 // CORES DO GRAFICO
 const chartDefaultColorsLabel = [
-    'rgba(51, 99, 143, 1)', // POSTADO (DARK-BLUE)
-    'rgba(255, 205, 27, 1)', // EM TRÂNSITO (YELLOW)
-    'rgba(0, 177, 255, 1)', // SAIU PARA ENTREGA (LIGHT-BLUE)
-    'rgba(255, 47, 47, 1)', // PROBLEMA NA ENTREGA (RED)
-    'rgba(185, 185, 185, 1)', // NAO INFORMADO (GRAY)
-    'rgba(27, 228, 168, 1)', // ENTREGUES (LIGHT GREEN)
+    "rgba(51, 99, 143, 1)", // POSTADO (DARK-BLUE)
+    "rgba(255, 205, 27, 1)", // EM TRÂNSITO (YELLOW)
+    "rgba(0, 177, 255, 1)", // SAIU PARA ENTREGA (LIGHT-BLUE)
+    "rgba(255, 47, 47, 1)", // PROBLEMA NA ENTREGA (RED)
+    "rgba(185, 185, 185, 1)", // NAO INFORMADO (GRAY)
+    "rgba(27, 228, 168, 1)", // ENTREGUES (LIGHT GREEN)
 ];
 
 //CORES DA LEGENDA DO GRAFICO //
-let tracking_id = 'undefined';
+let tracking_id = "undefined";
 const statusEnum = {
-    1: 'statusPosted',
-    2: 'statusInTransit',
-    3: 'statusDelivered',
-    4: 'statusOnDelivery',
-    5: 'statusProblem',
-    '': 'statusWithoutInfo',
+    1: "statusPosted",
+    2: "statusInTransit",
+    3: "statusDelivered",
+    4: "statusOnDelivery",
+    5: "statusProblem",
+    "": "statusWithoutInfo",
 };
 
 //ICONES DO STATUS //
 const systemStatus = {
-    1: '',
+    1: "",
     2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
     3: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`,
     4: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`,
@@ -69,9 +69,8 @@ $('.company-navbar').change(function () {
 });
 
 $(() => {
-
-    $('.applySelect2').select2({
-        width: '100%',
+    $(".applySelect2").select2({
+        width: "100%",
         multiple: true,
         language: {
             noResults: function () {
@@ -80,63 +79,68 @@ $(() => {
             searching: function () {
                 return "Procurando...";
             },
-        }
+        },
     });
 
-    $('#tracking-product-image').on('error', function () {
-        $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
+    $("#tracking-product-image").on("error", function () {
+        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
     });
 
-    $('#sale').on('change paste keyup select', function () {
+    $("#sale").on("change paste keyup select", function () {
         let val = $(this).val();
 
-        if (val === '') {
-            $('#date_updated').attr('disabled', false).removeClass('disableFields');
+        if (val === "") {
+            $("#date_updated").attr("disabled", false).removeClass("disableFields");
         } else {
-            $('#date_updated').val(moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY"));
-            $('#date_updated').attr('disabled', true).addClass('disableFields');
+            $("#date_updated").val(moment("2018-01-01").format("DD/MM/YYYY") + " - " + moment().format("DD/MM/YYYY"));
+            $("#date_updated").attr("disabled", true).addClass("disableFields");
         }
     });
 
-    $(document).on('click', '.copy', function () {
+    $(document).on("click", ".copy", function () {
         let temp = $("<input>");
         $("body").append(temp);
         temp.val($(this).html()).select();
         document.execCommand("copy");
         temp.remove();
-        alertCustom('success', 'Código copiado!');
+        alertCustom("success", "Código copiado!");
     });
 
-    $(document).on('click', '.tracking-add, .tracking-edit', function (event) {
-        $(event.target).closest('.edit-detail').removeClass('col-5');
+    $(document).on("click", ".tracking-add, .tracking-edit", function (event) {
+        $(event.target).closest(".edit-detail").removeClass("col-5");
 
         let row = $(this).parent().parent();
-        row.find('.input-tracking-code').removeClass('fake-label').prop('readonly', false).focus().removeAttr('placeholder');
-        row.find('.tracking-save, .tracking-close').show();
-        row.find('.tracking-detail, .tracking-add').hide();
+        row.find(".input-tracking-code")
+            .removeClass("fake-label")
+            .prop("readonly", false)
+            .focus()
+            .removeAttr("placeholder");
+        row.find(".tracking-save, .tracking-close").show();
+        row.find(".tracking-detail, .tracking-add").hide();
         $(this).hide();
     });
 
-    $(document).on('click', '.tracking-close', function (event) {
-        $(event.target).parent().prev().addClass('col-5');
+    $(document).on("click", ".tracking-close", function (event) {
+        $(event.target).parent().prev().addClass("col-5");
 
         let row = $(this).parent().parent();
-        row.find('.input-tracking-code')
-            .prop('readonly', true).blur()
-            .removeClass('border-danger')
-            .attr('placeholder', 'Clique para adicionar');
+        row.find(".input-tracking-code")
+            .prop("readonly", true)
+            .blur()
+            .removeClass("border-danger")
+            .attr("placeholder", "Clique para adicionar");
 
-        if ($(this).attr('data-code').length < 1) {
-            row.find('.input-tracking-code').addClass('fake-label').val('');
+        if ($(this).attr("data-code").length < 1) {
+            row.find(".input-tracking-code").addClass("fake-label").val("");
         }
 
-        let compare = $(this).attr('data-code');
-        if (row.find('.input-tracking-code').val() !== compare) {
-            row.find('.input-tracking-code').val(compare);
+        let compare = $(this).attr("data-code");
+        if (row.find(".input-tracking-code").val() !== compare) {
+            row.find(".input-tracking-code").val(compare);
         }
 
-        row.find('.tracking-add, .tracking-detail, .tracking-edit').show();
-        row.find('.tracking-save, .tracking-close').hide();
+        row.find(".tracking-add, .tracking-detail, .tracking-edit").show();
+        row.find(".tracking-save, .tracking-close").hide();
         $(this).hide();
     });
 
@@ -144,54 +148,73 @@ $(() => {
         window.loadData();
     });
 
-    let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-    let endDate = moment().format('YYYY-MM-DD');
-    $('#date_updated').daterangepicker({
-        startDate: moment().subtract(30, 'days'),
-        endDate: moment(),
-        opens: 'right',
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
+    let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    $("#date_updated").daterangepicker(
+        {
+            startDate: moment().subtract(30, "days"),
+            endDate: moment(),
+            opens: "right",
+            maxDate: moment().endOf("day"),
+            alwaysShowCalendar: true,
+            showCustomRangeLabel: "Customizado",
+            autoUpdateInput: true,
+            locale: {
+                locale: "pt-br",
+                format: "DD/MM/YYYY",
+                applyLabel: "Aplicar",
+                cancelLabel: "Limpar",
+                fromLabel: "De",
+                toLabel: "Até",
+                customRangeLabel: "Customizado",
+                weekLabel: "W",
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro",
+                ],
+                firstDay: 0,
+            },
+            ranges: {
+                Hoje: [moment(), moment()],
+                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
+                "Últimos 30 dias": [moment().subtract(30, "days"), moment()],
+                "Este mês": [moment().startOf("month"), moment().endOf("month")],
+                "Mês passado": [
+                    moment().subtract(1, "month").startOf("month"),
+                    moment().subtract(1, "month").endOf("month"),
+                ],
+                Vitalício: [moment("2018-01-01 00:00:00"), moment()],
+            },
         },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(30, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+        function (start, end) {
+            startDate = start.format("YYYY-MM-DD");
+            endDate = end.format("YYYY-MM-DD");
         }
-    }, function (start, end) {
-        startDate = start.format('YYYY-MM-DD');
-        endDate = end.format('YYYY-MM-DD');
-    });
+    );
 
     function searchIsLocked(elementButton) {
-        return elementButton.attr('block_search');
+        return elementButton.attr("block_search");
     }
 
     function lockSearch(elementButton) {
-        elementButton.attr('block_search', 'true');
+        elementButton.attr("block_search", "true");
         //set layout do button block
     }
 
     function unlockSearch(elementButton) {
-        elementButton.attr('block_search', 'false');
+        elementButton.attr("block_search", "false");
         //layout do button block
     }
 
@@ -202,9 +225,8 @@ $(() => {
             //console.log(elementButton.attr('block_search'));
             index();
             getResume();
-        };
+        }
     }
-
 
     function getFilters(urlParams = false) {
         let data = {
@@ -220,7 +242,7 @@ $(() => {
         if (urlParams) {
             let params = "";
             for (let param in data) {
-                params += '&' + param + '=' + data[param];
+                params += "&" + param + "=" + data[param];
             }
             return encodeURI(params);
         } else {
@@ -298,19 +320,18 @@ $(() => {
         //             $("#project-not-empty").show();
         //             $("#export-excel").show()
 
-        //             if (response.data != 'api sales') {
-
+        //             if (response.data != "api sales") {
         //                 $.each(response.data, function (i, project) {
-        //                     $("#project-select").append($('<option>', {
-        //                         value: project.id,
-        //                         text: project.name
-        //                     }));
+        //                     $("#project-select").append($("<option>", {
+            //                         value: project.id,
+            //                         text: project.name,
+        //                         }));
         //                 });
         //             }
 
         //             window.loadData();
         //         } else {
-        //             $("#export-excel").hide()
+        //             $("#export-excel").hide();
         //             $("#project-not-empty").hide();
         //             $("#project-empty").show();
         //         }
@@ -332,19 +353,28 @@ $(() => {
         if (myChart !== null) {
             myChart.destroy();
         }
-        const ctx = document.getElementById('myChart');
+        const ctx = document.getElementById("myChart");
         myChart = new Chart(ctx, {
-            id: 'custom_canvas_background_color',
-            type: 'doughnut',
+            id: "custom_canvas_background_color",
+            type: "doughnut",
             data: {
-                labels: ['Postados: ', 'Em trânsito: ', 'Saiu para entrega: ', 'Problema na entrega: ', 'Não informado: ', 'Entregues: '],
-                datasets: [{
-                    data: dataValues,
-                    backgroundColor: colors,
-                    borderColor: colors,
-                    borderWidth: 1,
-                    cutout: "83%",
-                }]
+                labels: [
+                    "Postados: ",
+                    "Em trânsito: ",
+                    "Saiu para entrega: ",
+                    "Problema na entrega: ",
+                    "Não informado: ",
+                    "Entregues: ",
+                ],
+                datasets: [
+                    {
+                        data: dataValues,
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        borderWidth: 1,
+                        cutout: "83%",
+                    },
+                ],
             },
             options: {
                 responsive: true,
@@ -354,66 +384,67 @@ $(() => {
                         enabled: true,
                         callbacks: {
                             title: (tooltipItem) => `${tooltipItem[0].label}`,
-                            label: (tooltipItem) => tooltipItem.dataset.data[tooltipItem.dataIndex] > 10000 ? Math.round(tooltipItem.dataset.data[tooltipItem.dataIndex] / 1000, 1) + 'K' : numberWithDecimal(tooltipItem.dataset.data[tooltipItem.dataIndex])
-                        }
+                            label: (tooltipItem) =>
+                                tooltipItem.dataset.data[tooltipItem.dataIndex] > 10000
+                                    ? Math.round(tooltipItem.dataset.data[tooltipItem.dataIndex] / 1000, 1) + "K"
+                                    : numberWithDecimal(tooltipItem.dataset.data[tooltipItem.dataIndex]),
+                        },
                     },
                 },
-            }
+            },
         });
-
     }
 
     window.showLoading = function(loadOnAny, loadingSelector, loadingSettings) {
         loadOnAny(loadingSelector, false, loadingSettings);
-        $('#graphic-loading').append($('.loader-any-container')[6]).show().css('z-index', '2');
+        $("#graphic-loading").append($(".loader-any-container")[6]).show().css("z-index", "2");
     }
 
     //GERANDO DADOS DO CARD E DO GRAFICO
     function getResume() {
-        let loadingSelector = '#percentual-posted, #percentual-dispatched, #percentual-out, #percentual-exception, #percentual-unknown, #percentual-delivered, #graphic-loading';
+        let loadingSelector =
+            "#percentual-posted, #percentual-dispatched, #percentual-out, #percentual-exception, #percentual-unknown, #percentual-delivered, #graphic-loading";
         let loadingSettings = {
             styles: {
                 container: {
-                    height: '36px',
+                    height: "36px",
                     minHeight: "0px",
                     justifyContent: "center",
                 },
                 loader: {
-                    width: '20px',
-                    height: '20px',
-                    borderWidth: '3px',
-                }
-            }
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "3px",
+                },
+            },
         };
 
         window.showLoading(loadOnAny, loadingSelector, loadingSettings);
 
         $.ajax({
-            method: 'GET',
-            url: '/api/tracking/resume?' + getFilters(true).substr(1),
-            dataType: 'json',
+            method: "GET",
+            url: "/api/tracking/resume?" + getFilters(true).substr(1),
+            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
+            error: (response) => {
                 errorAjaxResponse(response);
                 inicializeChart(chartDefaultColorsLabel, [1, 0, 0, 0, 0, 0]);
                 loadOnAny(loadingSelector, true);
-                $('#graphic-loading').append($('.loader-any-container')[6]).hide();
-
+                $("#graphic-loading").append($(".loader-any-container")[6]).hide();
             },
-            success: response => {
+            success: (response) => {
                 if (isEmpty(response.data)) {
-                    alertCustom('error', 'Erro ao carregar resumo dos rastreios');
+                    alertCustom("error", "Erro ao carregar resumo dos rastreios");
                     inicializeChart(chartDefaultColorsLabel, [1, 0, 0, 0, 0, 0]);
                     return;
                 }
                 setDataView(response.data);
                 loadOnAny(loadingSelector, true);
-                $('#graphic-loading').append($('.loader-any-container')[6]).hide();
-
-            }
+                $("#graphic-loading").append($(".loader-any-container")[6]).hide();
+            },
         });
     }
 
@@ -429,69 +460,85 @@ $(() => {
         const thousand = 10000;
 
         if (verifyValueIsZero(data.total)) {
-            if ($('#noData').length > 0) {
+            if ($("#noData").length > 0) {
                 return;
             }
-            $('#dataCharts').append('<img id="noData" src="/build/global/img/sem-dados.svg" />')
-            $('#data-labels').append('<span id="warning-text" class="d-flex"> Nenhum rastreamento encontrado </span>')
-            $('#myChart, .labels, .total-container').hide();
-
+            $("#dataCharts").append('<img id="noData" src="/build/global/img/sem-dados.svg" />');
+            $("#data-labels").append('<span id="warning-text" class="d-flex"> Nenhum rastreamento encontrado </span>');
+            $("#myChart, .labels, .total-container").hide();
         } else {
-            if ($('#noData').length > 0) {
-                $('#noData, #warning-text').remove();
+            if ($("#noData").length > 0) {
+                $("#noData, #warning-text").remove();
             }
 
-            $('#myChart, .labels, .total-container').show();
-            inicializeChart(chartDefaultColorsLabel, [posted, dispatched, out_for_delivery, exception, unknown, delivered]);
+            $("#myChart, .labels, .total-container").show();
+            inicializeChart(chartDefaultColorsLabel, [
+                posted,
+                dispatched,
+                out_for_delivery,
+                exception,
+                unknown,
+                delivered,
+            ]);
         }
-        const formatTotal = '<div>Total:<br> <b>' + numberWithDecimal(total) + '</b> </div>';
+        const formatTotal = "<div>Total:<br> <b>" + numberWithDecimal(total) + "</b> </div>";
 
-        $('#total-products').text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total)).attr('data-original-title', formatTotal);
+        $("#total-products")
+            .text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total))
+            .attr("data-original-title", formatTotal);
 
-        $('#percentual-posted .resume-number').html(posted <= 0 ? posted = 0 : posted = numberWithDecimal(posted));
+        $("#percentual-posted .resume-number").html(posted <= 0 ? (posted = 0) : (posted = numberWithDecimal(posted)));
 
-        $('#percentual-dispatched .resume-number').html(dispatched <= 0 ? dispatched = 0 : dispatched = numberWithDecimal(dispatched));
+        $("#percentual-dispatched .resume-number").html(
+            dispatched <= 0 ? (dispatched = 0) : (dispatched = numberWithDecimal(dispatched))
+        );
 
-        $('#percentual-out .resume-number').html(out_for_delivery <= 0 ? out_for_delivery = 0 : out_for_delivery = numberWithDecimal(out_for_delivery));
+        $("#percentual-out .resume-number").html(
+            out_for_delivery <= 0 ? (out_for_delivery = 0) : (out_for_delivery = numberWithDecimal(out_for_delivery))
+        );
 
-        $('#percentual-exception .resume-number').html(exception <= 0 ? exception = 0 : exception = numberWithDecimal(exception));
+        $("#percentual-exception .resume-number").html(
+            exception <= 0 ? (exception = 0) : (exception = numberWithDecimal(exception))
+        );
 
-        $('#percentual-unknown .resume-number').html(unknown <= 0 ? unknown = 0 : unknown = numberWithDecimal(unknown));
+        $("#percentual-unknown .resume-number").html(
+            unknown <= 0 ? (unknown = 0) : (unknown = numberWithDecimal(unknown))
+        );
 
-        $('#percentual-delivered .resume-number').html(delivered <= 0 ? delivered = 0 : delivered = numberWithDecimal(delivered));
+        $("#percentual-delivered .resume-number").html(
+            delivered <= 0 ? (delivered = 0) : (delivered = numberWithDecimal(delivered))
+        );
 
         //add this line here for all $('#percentual-delivered .resume-percentual').html('(' + (delivered ? (delivered * total / 100).toFixed(2) : '0.00') + '%)');
         //add in html <span class="resume-percentual">(0.00%)</span> to show per cent
     }
 
     function index(link = null) {
-
         if (link == null) {
-            link = '/api/tracking?' + getFilters(true).substr(1);
+            link = "/api/tracking?" + getFilters(true).substr(1);
         } else {
-            link = '/api/tracking' + link + getFilters(true);
+            link = "/api/tracking" + link + getFilters(true);
         }
 
-        loadOnTable('#dados_tabela', '#tabela_trackings');
+        loadOnTable("#dados_tabela", "#tabela_trackings");
         $.ajax({
-            method: 'GET',
+            method: "GET",
             url: link,
-            dataType: 'json',
+            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: response => {
-                $('#dados_tabela').html('');
-                $('#tabela_trackings').addClass('table-striped');
-                $('#pagination-trackings').html("");
-
+            success: (response) => {
+                $("#dados_tabela").html("");
+                $("#tabela_trackings").addClass("table-striped");
+                $("#pagination-trackings").html("");
 
                 if (isEmpty(response.data)) {
-                    $('#dados_tabela').html(`
+                    $("#dados_tabela").html(`
                     <tr class="text-center">
                       <td colspan="6" style="vertical-align: middle;height:257px;">
                         <img style="width:124px;margin-right:12px;" src="${$("#dados_tabela").attr("img-empty")}">
@@ -502,10 +549,9 @@ $(() => {
                 }
 
                 let grayRow = false;
-                let lastSale = '';
+                let lastSale = "";
 
                 $.each(response.data, function (index, tracking) {
-
                     if (lastSale !== tracking.sale) {
                         grayRow = !grayRow;
                     }
@@ -515,9 +561,7 @@ $(() => {
 
                         <a class='tracking-add pointer mt-1 ml-10 px-0 default-buttons' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
-                        </a>`
-                        ;
-
+                        </a>`;
                     let htmlButtonEdit = `
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
 
@@ -528,24 +572,25 @@ $(() => {
                             <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
                                 <span class="o-eye-1"></span>
                             </a>
-                        </div>`
-                        ;
-
+                        </div>`;
                     let dados = `
-                        <tr ${grayRow ? 'class="td-odd"' : ''}>
+                        <tr ${grayRow ? 'class="td-odd"' : ""}>
 
-                            ${lastSale !== tracking.sale ? `
+                            ${
+                                lastSale !== tracking.sale
+                                    ? `
                                 <td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}">
                                     #${tracking.sale}
                                 </td>`
-                            :
-                            `<td>
+                                    : `<td>
                                 </td>`
-                        }
+                            }
 
                             <td class="col-sm-4">
                                 <span style="max-width: 330px; display:block; margin: 0px 0px 0px 0px;">
-                                    ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}
+                                    ${tracking.product.amount}x ${tracking.product.name} ${
+                        tracking.product.description ? "(" + tracking.product.description + ")" : ""
+                    }
                                 </span>
                             </td>
 
@@ -559,21 +604,33 @@ $(() => {
 
                             <td style="width: 2%;padding: 0px !important;">
                                 ${systemStatus[tracking.system_status_enum]}
-                                ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
+                                ${
+                                    tracking.is_chargeback_recovered
+                                        ? '<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">'
+                                        : ""
+                                }
                             </td>
 
                             <td class="text-left mb-0" style="max-height:74px!important;">
                                 <div class="d-flex">
 
-                                    ${tracking.tracking_status_enum ? `
-                                    <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
-                            : htmlButtonAdd}
+                                    ${
+                                        tracking.tracking_status_enum
+                                            ? `
+                                    <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` +
+                                              htmlButtonEdit
+                                            : htmlButtonAdd
+                                    }
 
                                     <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
 
-                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none"></a>
+                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${
+                                            tracking.pps_id
+                                        }'style="display:none"></a>
 
-                                        <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
+                                        <div class='tracking-close pointer' data-code='${
+                                            tracking.tracking_code
+                                        }' title="Fechar" style="display:none">
                                             &#x2715
                                         </div>
 
@@ -581,69 +638,73 @@ $(() => {
                                 </div>
                             </td>
 
-                        </tr>`
-                        ;
-                    $('#dados_tabela').append(dados);
+                        </tr>`;
+                    $("#dados_tabela").append(dados);
                     lastSale = tracking.sale;
                 });
-                pagination(response, 'trackings', index);
+                pagination(response, "trackings", index);
             },
-            complete: response => {
-                unlockSearch($('#bt_filter'));
-            }
+            complete: (response) => {
+                unlockSearch($("#bt_filter"));
+            },
         });
     }
 
     //modal de detalhes
-    $(document).on('click', '.tracking-detail', function () {
-        tracking_id = $(this).attr('tracking');
+    $(document).on("click", ".tracking-detail", function () {
+        tracking_id = $(this).attr("tracking");
 
-        loadOnAny('#modal-tracking-details');
-        $('#modal-tracking').modal('show');
+        loadOnAny("#modal-tracking-details");
+        $("#modal-tracking").modal("show");
 
         $.ajax({
-            method: 'GET',
-            url: '/api/tracking/' + $(this).attr('tracking'),
-            dataType: 'json',
+            method: "GET",
+            url: "/api/tracking/" + $(this).attr("tracking"),
+            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
-                loadOnAny('#modal-tracking-details', true);
+            error: (response) => {
+                loadOnAny("#modal-tracking-details", true);
                 errorAjaxResponse(response);
             },
-            success: response => {
-
+            success: (response) => {
                 let tracking = response.data;
 
                 //preenche os campos
-                $('#tracking-code').text(tracking.tracking_code);
-                $('#tracking-product-image').attr('src', tracking.product.photo);
-                $('#tracking-product-name').text(tracking.product.name + (tracking.product.description ? '(' + tracking.product.description + ')' : ''));
-                $('#tracking-product-amount').text(tracking.amount + 'x');
-                $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
-                $('#tracking-delivery-neighborhood').text('Bairro: ' + tracking.delivery.neighborhood);
-                $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
-                $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
-                $('#modal-tracking-details .btn-notify-trackingcode').attr('tracking', tracking.id);
+                $("#tracking-code").text(tracking.tracking_code);
+                $("#tracking-product-image").attr("src", tracking.product.photo);
+                $("#tracking-product-name").text(
+                    tracking.product.name +
+                        (tracking.product.description ? "(" + tracking.product.description + ")" : "")
+                );
+                $("#tracking-product-amount").text(tracking.amount + "x");
+                $("#tracking-delivery-address").text(
+                    "Endereço: " + tracking.delivery.street + ", " + tracking.delivery.number
+                );
+                $("#tracking-delivery-neighborhood").text("Bairro: " + tracking.delivery.neighborhood);
+                $("#tracking-delivery-zipcode").text("CEP: " + tracking.delivery.zip_code);
+                $("#tracking-delivery-city").text("Cidade: " + tracking.delivery.city + "/" + tracking.delivery.state);
+                $("#modal-tracking-details .btn-notify-trackingcode").attr("tracking", tracking.id);
 
                 if (tracking.link) {
-                    $('#link-tracking a').attr('href', tracking.link);
-                    $('#link-tracking').show();
+                    $("#link-tracking a").attr("href", tracking.link);
+                    $("#link-tracking").show();
                 } else {
-                    $('#link-tracking').hide();
+                    $("#link-tracking").hide();
                 }
 
-                $('#table-checkpoint').html('');
+                $("#table-checkpoint").html("");
                 if (!isEmpty(tracking.checkpoints)) {
                     for (let checkpoint of tracking.checkpoints) {
-
-                        $('#table-checkpoint').append(
+                        $("#table-checkpoint").append(
                             `<tr>
                               <td>${checkpoint.created_at}</td>
                               <td>
-                                  <span class="text-secondary badge badge-${statusEnum[checkpoint.tracking_status_enum]}">${checkpoint.tracking_status}</span>
+                                  <span class="text-secondary badge badge-${
+                                      statusEnum[checkpoint.tracking_status_enum]
+                                  }">${checkpoint.tracking_status}</span>
                               </td>
                               <td>${checkpoint.event}</td>
                           </tr>`
@@ -651,62 +712,62 @@ $(() => {
                     }
                 }
 
-                loadOnAny('#modal-tracking-details', true);
-            }
+                loadOnAny("#modal-tracking-details", true);
+            },
         });
     });
 
-    $(document).on('click', '.input-tracking-code', function () {
+    $(document).on("click", ".input-tracking-code", function () {
         let row = $(this).parent().parent();
-        $('.tracking-close').click();
-        row.find('.tracking-edit, .tracking-add').click();
+        $(".tracking-close").click();
+        row.find(".tracking-edit, .tracking-add").click();
     });
 
     //salvar tracking
-    $(document).on('click', '.tracking-save', function () {
-
+    $(document).on("click", ".tracking-save", function () {
         let btnSave = $(this);
-        btnSave.prop('disabled', true);
+        btnSave.prop("disabled", true);
 
-        let tracking_code = btnSave.parent().parent().find('.input-tracking-code').val();
-        let ppsId = btnSave.attr('pps');
+        let tracking_code = btnSave.parent().parent().find(".input-tracking-code").val();
+        let ppsId = btnSave.attr("pps");
 
         $.ajax({
             method: "POST",
-            url: '/api/tracking',
+            url: "/api/tracking",
             data: { tracking_code: tracking_code, product_plan_sale_id: ppsId },
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
-                btnSave.prop('disabled', false);
+                btnSave.prop("disabled", false);
                 errorAjaxResponse(response);
 
-                btnSave.parent().parent().find('.input-tracking-code').addClass('border-danger');
+                btnSave.parent().parent().find(".input-tracking-code").addClass("border-danger");
                 setTimeout(() => {
-                    btnSave.parent().parent()
-                        .find('.input-tracking-code')
-                        .val('').removeClass('border-danger')
-                        .attr('placeholder', 'Clique para adicionar')
-                    btnSave.parent().parent().find('.tracking-close').trigger('click')
+                    btnSave
+                        .parent()
+                        .parent()
+                        .find(".input-tracking-code")
+                        .val("")
+                        .removeClass("border-danger")
+                        .attr("placeholder", "Clique para adicionar");
+                    btnSave.parent().parent().find(".tracking-close").trigger("click");
                 }, 1000);
             },
             success: (response) => {
-
                 if (!isEmpty(response.data.tracking_status)) {
-
                     let tracking = response.data;
 
                     let td = btnSave.parent().parent();
-                    let saveClose = td.find('.save-close')
+                    let saveClose = td.find(".save-close");
 
-                    td.find('.tracking-add, .edit-detail').remove();
+                    td.find(".tracking-add, .edit-detail").remove();
 
-                    td.find('.tracking-close').attr('data-code', response.data.tracking_code).trigger('click');
+                    td.find(".tracking-close").attr("data-code", response.data.tracking_code).trigger("click");
 
-                    td.find('.input-tracking-code').removeClass('fake-label, border-danger');
+                    td.find(".input-tracking-code").removeClass("fake-label, border-danger");
 
                     let buttons = `
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
@@ -718,120 +779,123 @@ $(() => {
                             <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
                                 <span class="o-eye-1"></span>
                             </a>
-                        </div>`
-                        ;
-
+                        </div>`;
                     $(buttons).insertBefore(saveClose);
 
-                    let statusBadge = btnSave.parent().parent().parent().find('.badge');
-                    statusBadge.removeClass('statusPosted statusOnDelivery statusDelivered statusInTransit statusProblem statusWithoutInfo')
+                    let statusBadge = btnSave.parent().parent().parent().find(".badge");
+                    statusBadge
+                        .removeClass(
+                            "statusPosted statusOnDelivery statusDelivered statusInTransit statusProblem statusWithoutInfo"
+                        )
                         .addClass(statusEnum[tracking.tracking_status_enum])
                         .html(tracking.tracking_status);
 
-                    alertCustom('success', 'Código de rastreio salvo com sucesso')
+                    alertCustom("success", "Código de rastreio salvo com sucesso");
                 }
-                btnSave.prop('disabled', false).hide();
-            }
+                btnSave.prop("disabled", false).hide();
+            },
         });
     });
 
     //enviar e-mail com o codigo de rastreio
-    $(document).on('click', '#modal-tracking-details .btn-notify-trackingcode', function () {
+    $(document).on("click", "#modal-tracking-details .btn-notify-trackingcode", function () {
         $.ajax({
             method: "POST",
-            url: '/api/tracking/notify/' + tracking_id,
+            url: "/api/tracking/notify/" + tracking_id,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
                 errorAjaxResponse(response);
             },
             success: () => {
-                alertCustom('success', 'Notificação enviada com sucesso');
-            }
+                alertCustom("success", "Notificação enviada com sucesso");
+            },
         });
     });
 
     //exportar excel
     $("#btn-export-csv").on("click", function () {
-        trackingsExport('csv');
+        trackingsExport("csv");
     });
 
     $("#btn-export-xls").on("click", function () {
-        trackingsExport('xlsx');
+        trackingsExport("xlsx");
     });
 
     function trackingsExport(fileFormat) {
         let data = getFilters();
-        data['format'] = fileFormat;
+        data["format"] = fileFormat;
         $.ajax({
             method: "POST",
-            url: '/api/tracking/export',
+            url: "/api/tracking/export",
             data: data,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: response => {
-                $('#export-email').text(response.email);
-                $('#alert-export').show()
-                    .shake();
+            success: (response) => {
+                $("#export-email").text(response.email);
+                $("#alert-export").show().shake();
             },
         });
     }
 
     //importar excel
-    $('#btn-import-xls').on('click', function () {
-        $('#input-import-xls').click();
+    $("#btn-import-xls").on("click", function () {
+        $("#input-import-xls").click();
     });
 
-    $('#input-import-xls').on('change', function () {
-        $('#btn-import-xls').prop('disabled', true);
+    $("#input-import-xls").on("change", function () {
+        $("#btn-import-xls").prop("disabled", true);
         let form = new FormData();
-        form.append('import.xlsx', this.files[0]);
+        form.append("import.xlsx", this.files[0]);
         $(this).val(null);
         $.ajax({
-            url: '/api/tracking/import',
-            type: 'post',
+            url: "/api/tracking/import",
+            type: "post",
             processData: false,
             contentType: false,
             cache: false,
             data: form,
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
-            error: response => {
-                $('#btn-import-xls').prop('disabled', false);
+            error: (response) => {
+                $("#btn-import-xls").prop("disabled", false);
                 errorAjaxResponse(response);
             },
-            success: response => {
-                $('#btn-import-xls').prop('disabled', false);
-                alertCustom('success', 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!')
+            success: (response) => {
+                $("#btn-import-xls").prop("disabled", false);
+                alertCustom(
+                    "success",
+                    "A importação começou! Você receberá uma notificação quando tudo estiver pronto!"
+                );
             },
         });
     });
 
-    $('.btn-light-1').click(function () {
-        var collapse = $('#icon-filtro')
-        var text = $('#text-filtro')
+    $(".btn-light-1").click(function () {
+        var collapse = $("#icon-filtro");
+        var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
-            collapse.css('transform', 'rotate(180deg)')
-            text.text('Minimizar filtros').fadeIn();
+        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+            collapse.css("transform", "rotate(180deg)");
+            text.text("Minimizar filtros").fadeIn();
         } else {
-            collapse.css('transform', 'rotate(0deg)')
-            text.text('Filtros avançados').fadeIn()
+            collapse.css("transform", "rotate(0deg)");
+            text.text("Filtros avançados").fadeIn();
         }
     });
 
-    $('#filters').on('keypress', function (e) {
+    $("#filters").on("keypress", function (e) {
         if (e.keyCode == 13) {
             window.loadData();
         }
@@ -839,11 +903,11 @@ $(() => {
 
     //COMPORTAMENTO DO FILTRO MULTIPLO
     function behaviorMultipleFilter(data, selectId) {
-        var $select = $('#' + selectId);
+        var $select = $("#" + selectId);
         var values = $select.val();
 
-        if ($(`#${selectId}`).val()[0] == 'all' || $(`#${selectId}`).val()[0] == '') {
-            var valueToRemove = $(`#${selectId}`).val()[0]
+        if ($(`#${selectId}`).val()[0] == "all" || $(`#${selectId}`).val()[0] == "") {
+            var valueToRemove = $(`#${selectId}`).val()[0];
         }
 
         if (data.id != valueToRemove) {
@@ -872,36 +936,35 @@ $(() => {
         let valueAmount = $(`#${selectId}`).val().length;
 
         if (valueAmount === 0) {
-            if (selectId == 'project') {
-                arrayValues.push('all');
-                arrayValues = $(`#${selectId}`).val('all').trigger("change");
-
+            if (selectId == "project") {
+                arrayValues.push("all");
+                arrayValues = $(`#${selectId}`).val("all").trigger("change");
             } else {
-                arrayValues.push('');
-                arrayValues = $(`#${selectId}`).val('').trigger("change");
+                arrayValues.push("");
+                arrayValues = $(`#${selectId}`).val("").trigger("change");
             }
         }
     }
 
     $(".applySelect2").on("select2:select", function (evt) {
         var data = evt.params.data;
-        var selectId = $(this).attr('id');
+        var selectId = $(this).attr("id");
         behaviorMultipleFilter(data, selectId);
 
         $(`#${selectId}`).focus().scrollTop(0);
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
 
-    $(document).on('focusout', '.select2-selection__rendered', function () {
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    $(document).on("focusout", ".select2-selection__rendered", function () {
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
 
-    $(document).on('focusin', '.select2-selection__rendered', function () {
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    $(document).on("focusin", ".select2-selection__rendered", function () {
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
 
     $(".applySelect2").on("change", function () {
-        let idTarget = $(this).attr('id');
+        let idTarget = $(this).attr("id");
         deniedEmptyFilter(idTarget);
     });
     // FIM DO COMPORTAMENTO DO FILTRO

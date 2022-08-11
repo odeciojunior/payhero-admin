@@ -42,17 +42,17 @@ class PusherNotificationApprovedSaleListener implements ShouldQueue
             $user = $userModel->find($event->sale->owner);
 
             if (($event->sale->payment_method == 1 || $event->sale->payment_method == 3) && !empty($user)) {
-                $message = 'Venda aprovada no projeto ' . $event->project->name;
+                $message = "Venda aprovada no projeto " . $event->project->name;
 
                 $data = [
-                    'user'    => $user->account_owner_id,
-                    'message' => $message,
+                    "user" => $user->account_owner_id,
+                    "message" => $message,
                 ];
 
                 $pusher->sendPusher($data);
             }
         } catch (Exception $e) {
-            Log::warning('erro ao enviar notificação com pusher');
+            Log::warning("erro ao enviar notificação com pusher");
             report($e);
         }
     }

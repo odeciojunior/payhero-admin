@@ -12,8 +12,11 @@ class AddColumnCreditCardTableProjects extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->boolean('credit_card')->after('boleto')->default(1);
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->boolean("credit_card")
+                ->after("boleto")
+                ->default(1);
         });
     }
 
@@ -23,8 +26,8 @@ class AddColumnCreditCardTableProjects extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('credit_card');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("credit_card");
         });
     }
 }

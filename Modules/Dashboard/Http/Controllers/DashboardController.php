@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace Modules\Dashboard\Http\Controllers;
 
 use Illuminate\View\View;
@@ -11,13 +11,11 @@ use Illuminate\Routing\Controller;
  */
 class DashboardController extends Controller
 {
-
     /**
      * @return View
      */
     public function index()
     {
-        return view('dashboard::dashboard');
+        return view("dashboard::dashboard");
     }
 }
-

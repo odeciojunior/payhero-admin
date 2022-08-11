@@ -38,44 +38,44 @@ class NotazzInvoice extends Model
     /**
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = ["deleted_at"];
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'notazz_integration_id',
-        'currency_quotation_id',
-        'invoice_type',
-        'notazz_id',
-        'external_id',
-        'status',
-        'canceled_flag',
-        'schedule',
-        'attempts',
-        'xml',
-        'pdf',
-        'logistic_id',
-        'notazz_status',
-        'max_attempts',
-        'date_last_attempt',
-        'date_pending',
-        'date_sent',
-        'date_completed',
-        'date_error',
-        'date_rejected',
-        'date_canceled',
-        'return_message',
-        'return_http_code',
-        'return_status',
-        'data_json',
-        'created_at',
-        'updated_at',
+        "sale_id",
+        "notazz_integration_id",
+        "currency_quotation_id",
+        "invoice_type",
+        "notazz_id",
+        "external_id",
+        "status",
+        "canceled_flag",
+        "schedule",
+        "attempts",
+        "xml",
+        "pdf",
+        "logistic_id",
+        "notazz_status",
+        "max_attempts",
+        "date_last_attempt",
+        "date_pending",
+        "date_sent",
+        "date_completed",
+        "date_error",
+        "date_rejected",
+        "date_canceled",
+        "return_message",
+        "return_http_code",
+        "return_status",
+        "data_json",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -101,7 +101,7 @@ class NotazzInvoice extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('Modules\Core\Entities\Sale');
+        return $this->belongsTo("Modules\Core\Entities\Sale");
     }
 
     /**
@@ -109,6 +109,6 @@ class NotazzInvoice extends Model
      */
     public function notazzIntegration()
     {
-        return $this->belongsTo('Modules\Core\Entities\NotazzIntegration');
+        return $this->belongsTo("Modules\Core\Entities\NotazzIntegration");
     }
 }

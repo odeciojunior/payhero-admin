@@ -14,14 +14,14 @@ class UpdateDnsFromDomains extends Command
      *
      * @var string
      */
-    protected $signature = 'updatedns';
+    protected $signature = "updatedns";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -35,19 +35,19 @@ class UpdateDnsFromDomains extends Command
 
     public function handle()
     {
-
         try {
-
             $domains = Domain::with([
-                                        'domainsRecords' => function ($query) {
-                                            $query->whereIn('name', ['checkout', 'affiliate', 'tracking']);
-                                        }
-                                    ])->orderByDesc('id')->get();
+                "domainsRecords" => function ($query) {
+                    $query->whereIn("name", ["checkout", "affiliate", "tracking"]);
+                },
+            ])
+                ->orderByDesc("id")
+                ->get();
 
             $cloudFlareService = new CloudFlareService();
             $count = 0;
             foreach ($domains as $domain) {
-                $this->line('Atualizando dominio :' . $domain->name);
+                $this->line("Atualizando dominio :" . $domain->name);
                 if (empty($domain->cloudflare_domain_id)) {
                     continue;
                 }
@@ -56,70 +56,67 @@ class UpdateDnsFromDomains extends Command
                     $cloudFlareService = new CloudFlareService();
                 }
 
-                $checkoutDns = $domain->domainsRecords->where('name', 'checkout')->first();
-                $trackingDns = $domain->domainsRecords->where('name', 'tracking')->first();
-                $affiliateDns = $domain->domainsRecords->where('name', 'affiliate')->first();
+                $checkoutDns = $domain->domainsRecords->where("name", "checkout")->first();
+                $trackingDns = $domain->domainsRecords->where("name", "tracking")->first();
+                $affiliateDns = $domain->domainsRecords->where("name", "affiliate")->first();
 
                 if (!empty($checkoutDns)) {
-                    $this->line('Atualizando dns :' . $checkoutDns->name);
+                    $this->line("Atualizando dns :" . $checkoutDns->name);
 
                     $response = $cloudFlareService->updateRecordDetails(
                         $domain->cloudflare_domain_id,
                         $checkoutDns->cloudflare_record_id,
                         [
-                            'type' => $checkoutDns->type,
-                            'name' => $checkoutDns->name,
-                            'content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com',
-                            'proxied' => true
+                            "type" => $checkoutDns->type,
+                            "name" => $checkoutDns->name,
+                            "content" => "alb-production-1620949233.us-east-2.elb.amazonaws.com",
+                            "proxied" => true,
                         ]
                     );
 
-
                     if ($response) {
-                        $checkoutDns->update(['content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com']);
+                        $checkoutDns->update(["content" => "alb-production-1620949233.us-east-2.elb.amazonaws.com"]);
                     }
                 }
                 if (!empty($trackingDns)) {
-                    $this->line('Atualizando dns :' . $trackingDns->name);
+                    $this->line("Atualizando dns :" . $trackingDns->name);
 
                     $response = $cloudFlareService->updateRecordDetails(
                         $domain->cloudflare_domain_id,
                         $trackingDns->cloudflare_record_id,
                         [
-                            'type' => $trackingDns->type,
-                            'name' => $trackingDns->name,
-                            'content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com',
-                            'proxied' => true
+                            "type" => $trackingDns->type,
+                            "name" => $trackingDns->name,
+                            "content" => "alb-production-1620949233.us-east-2.elb.amazonaws.com",
+                            "proxied" => true,
                         ]
                     );
 
                     if ($response) {
-                        $trackingDns->update(['content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com']);
+                        $trackingDns->update(["content" => "alb-production-1620949233.us-east-2.elb.amazonaws.com"]);
                     }
                 }
                 if (!empty($affiliateDns)) {
-                    $this->line('Atualizando dns :' . $affiliateDns->name);
+                    $this->line("Atualizando dns :" . $affiliateDns->name);
 
                     $response = $cloudFlareService->updateRecordDetails(
                         $domain->cloudflare_domain_id,
                         $affiliateDns->cloudflare_record_id,
                         [
-                            'type' => $affiliateDns->type,
-                            'name' => $affiliateDns->name,
-                            'content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com',
-                            'proxied' => true
+                            "type" => $affiliateDns->type,
+                            "name" => $affiliateDns->name,
+                            "content" => "alb-production-1620949233.us-east-2.elb.amazonaws.com",
+                            "proxied" => true,
                         ]
                     );
 
                     if ($response) {
-                        $affiliateDns->update(['content' => 'alb-production-1620949233.us-east-2.elb.amazonaws.com']);
+                        $affiliateDns->update(["content" => "alb-production-1620949233.us-east-2.elb.amazonaws.com"]);
                     }
                 }
             }
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

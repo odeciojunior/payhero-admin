@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\ConvertaX\\Providers\\ConvertaXServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

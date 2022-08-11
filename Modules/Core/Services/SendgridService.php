@@ -26,9 +26,8 @@ class SendgridService
      */
     public function __construct()
     {
-        $this->sendgrid = new SendGrid(getenv('SENDGRID_API_KEY'));
+        $this->sendgrid = new SendGrid(getenv("SENDGRID_API_KEY"));
     }
-
 
     /**
      * @param bool $impersonateSubuser
@@ -39,7 +38,7 @@ class SendgridService
     {
         //faz a requisição como sub-usuário
         if (!empty($impersonateSubuser)) {
-            return new SendGrid(getenv('SENDGRID_API_KEY'));
+            return new SendGrid(getenv("SENDGRID_API_KEY"));
         } else {
             return $this->sendgrid;
         }
@@ -57,11 +56,16 @@ class SendgridService
                      "automatic_security": false,
                      "custom_spf" : true,
                      "default" : false,
-                     "domain" : "' . $domain . '"
+                     "domain" : "' .
+                $domain .
+                '"
                  }'
         );
 
-        $response = $this->sendgrid(true)->client->whitelabel()->domains()->post($requestBody);
+        $response = $this->sendgrid(true)
+            ->client->whitelabel()
+            ->domains()
+            ->post($requestBody);
 
         $data = json_decode($response->body());
         if ($autoSet) {
@@ -79,7 +83,11 @@ class SendgridService
     {
         $zone = $this->getZone($domain);
         if (!empty($zone)) {
-            $response = $this->sendgrid()->client->whitelabel()->domains()->_($zone->id)->delete(null, null, null, $retryOnLimit);
+            $response = $this->sendgrid()
+                ->client->whitelabel()
+                ->domains()
+                ->_($zone->id)
+                ->delete(null, null, null, $retryOnLimit);
             if ($response->statusCode() == 204) {
                 return true;
             } else {
@@ -96,10 +104,13 @@ class SendgridService
     public function getZones($limit = 50, $offset = 0, $retryOnLimit = false)
     {
         $queryParams = [
-            'limit' => $limit,
-            'offset' => $offset
+            "limit" => $limit,
+            "offset" => $offset,
         ];
-        $response = $this->sendgrid()->client->whitelabel()->domains()->get(null, $queryParams, null, $retryOnLimit);
+        $response = $this->sendgrid()
+            ->client->whitelabel()
+            ->domains()
+            ->get(null, $queryParams, null, $retryOnLimit);
 
         return json_decode($response->body());
     }
@@ -113,7 +124,10 @@ class SendgridService
         //exclude_subusers: false para trazer os domínios cadastrados por sub-usuários
         $queryParameters = json_decode('{"domain": "' . $domain . '", "exclude_subusers": false}');
 
-        $response = $this->sendgrid->client->whitelabel()->domains()->get(null, $queryParameters);
+        $response = $this->sendgrid->client
+            ->whitelabel()
+            ->domains()
+            ->get(null, $queryParameters);
 
         $sendgridDomains = json_decode($response->body());
         foreach ($sendgridDomains as $sendgridDomain) {
@@ -212,14 +226,19 @@ class SendgridService
         $request_body = json_decode(
             '{
                  "default": false,
-                 "domain": "' . $domain . '",
+                 "domain": "' .
+                $domain .
+                '",
                  "subdomain": "mail"
              }'
         );
 
         $query_params = json_decode('{"limit": 1, "offset": 1}');
 
-        $response = $this->sendgrid(true)->client->whitelabel()->links()->post($request_body, $query_params);
+        $response = $this->sendgrid(true)
+            ->client->whitelabel()
+            ->links()
+            ->post($request_body, $query_params);
 
         return json_decode($response->body());
     }
@@ -232,7 +251,10 @@ class SendgridService
     {
         $queryParameters = json_decode('{"domain": "' . $domain . '"}');
 
-        $response = $this->sendgrid()->client->whitelabel()->links()->get(null, $queryParameters);
+        $response = $this->sendgrid()
+            ->client->whitelabel()
+            ->links()
+            ->get(null, $queryParameters);
 
         $links = json_decode($response->body());
 
@@ -253,7 +275,11 @@ class SendgridService
     {
         $link = $this->getLinkBrand($domain);
         if (!empty($link)) {
-            $response = $this->sendgrid()->client->whitelabel()->links()->_($link->id)->delete();
+            $response = $this->sendgrid()
+                ->client->whitelabel()
+                ->links()
+                ->_($link->id)
+                ->delete();
             if ($response->statusCode() == 204) {
                 return true;
             } else {
@@ -271,7 +297,12 @@ class SendgridService
     public function validateDomain($domainId)
     {
         if (!empty($domainId)) {
-            $response = $this->sendgrid()->client->whitelabel()->domains()->_($domainId)->validate()->post();
+            $response = $this->sendgrid()
+                ->client->whitelabel()
+                ->domains()
+                ->_($domainId)
+                ->validate()
+                ->post();
             $response = json_decode($response->body());
 
             if ($response->valid == true) {
@@ -291,7 +322,12 @@ class SendgridService
     public function validateBrandLink($linkId)
     {
         if (!empty($linkId)) {
-            $response = $this->sendgrid()->client->whitelabel()->links()->_($linkId)->validate()->post();
+            $response = $this->sendgrid()
+                ->client->whitelabel()
+                ->links()
+                ->_($linkId)
+                ->validate()
+                ->post();
             $response = json_decode($response->body());
 
             if ($response->valid == true) {
@@ -304,20 +340,25 @@ class SendgridService
         }
     }
 
-    public function sendEmail(string $fromEmail, string $fromName, string $toEmail, string $toName, string $templateId, array $data): bool
-    {
+    public function sendEmail(
+        string $fromEmail,
+        string $fromName,
+        string $toEmail,
+        string $toName,
+        string $templateId,
+        array $data
+    ): bool {
         try {
-            if (env('APP_ENV') == 'production') {
+            if (env("APP_ENV") == "production") {
                 if (!foxutils()->validateEmail($toEmail)) {
                     return false;
                 }
             } else {
-                $toEmail = env('APP_EMAIL_TEST');
+                $toEmail = env("APP_EMAIL_TEST");
                 if (empty($toEmail)) {
                     return false;
                 }
             }
-
 
             $email = new \SendGrid\Mail\Mail();
             $email->setFrom($fromEmail, $fromName);
@@ -335,38 +376,32 @@ class SendgridService
                 $status = "error";
             }
 
-            SentEmail::create(
-                [
-                    'from_email' => $fromEmail,
-                    'from_name' => $fromName == '' ? ' vazio ' : $fromName,
-                    'to_email' => $toEmail,
-                    'to_name' => $toName,
-                    'template_id' => $templateId,
-                    'template_data' => json_encode($data),
-                    'status_code' => $statusCode,
-                    'status' => $status,
-                    'log_error' => $body,
-                ]
-            );
+            SentEmail::create([
+                "from_email" => $fromEmail,
+                "from_name" => $fromName == "" ? " vazio " : $fromName,
+                "to_email" => $toEmail,
+                "to_name" => $toName,
+                "template_id" => $templateId,
+                "template_data" => json_encode($data),
+                "status_code" => $statusCode,
+                "status" => $status,
+                "log_error" => $body,
+            ]);
 
             return true;
-
         } catch (Exception $e) {
-
             report($e);
-            SentEmail::create(
-                [
-                    'from_email' => $fromEmail,
-                    'from_name' => $fromName == '' ? ' vazio ' : $fromName,
-                    'to_email' => $toEmail,
-                    'to_name' => $toName,
-                    'template_id' => $templateId,
-                    'template_data' => json_encode($data),
-                    'status_code' => 400,
-                    'status' => "error",
-                    'log_error' => $e->getMessage(),
-                ]
-            );
+            SentEmail::create([
+                "from_email" => $fromEmail,
+                "from_name" => $fromName == "" ? " vazio " : $fromName,
+                "to_email" => $toEmail,
+                "to_name" => $toName,
+                "template_id" => $templateId,
+                "template_data" => json_encode($data),
+                "status_code" => 400,
+                "status" => "error",
+                "log_error" => $e->getMessage(),
+            ]);
 
             return false;
         }

@@ -13,18 +13,24 @@ class CreateBlockReasonSalesTable extends Migration
      */
     public function up()
     {
-        Schema::create('block_reason_sales', function (Blueprint $table) {
+        Schema::create("block_reason_sales", function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sale_id');
-            $table->unsignedBigInteger('blocked_reason_id');
-            $table->tinyInteger('status')->default(1);
-            $table->string('observation');
+            $table->unsignedBigInteger("sale_id");
+            $table->unsignedBigInteger("blocked_reason_id");
+            $table->tinyInteger("status")->default(1);
+            $table->string("observation");
             $table->timestamps();
         });
 
-        Schema::table('block_reason_sales', function (Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
-            $table->foreign('blocked_reason_id')->references('id')->on('block_reasons');
+        Schema::table("block_reason_sales", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
+            $table
+                ->foreign("blocked_reason_id")
+                ->references("id")
+                ->on("block_reasons");
         });
     }
 
@@ -35,6 +41,6 @@ class CreateBlockReasonSalesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('block_reason_sales');
+        Schema::dropIfExists("block_reason_sales");
     }
 }

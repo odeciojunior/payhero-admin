@@ -13,11 +13,11 @@ class ChangeTransactionsTableAddInformations extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function(Blueprint $table) {
-            $table->string('currency')->nullable();
-            $table->string('percentage_rate')->nullable();
-            $table->string('transaction_rate')->nullable();
-            $table->string('percentage_antecipable')->nullable();
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->string("currency")->nullable();
+            $table->string("percentage_rate")->nullable();
+            $table->string("transaction_rate")->nullable();
+            $table->string("percentage_antecipable")->nullable();
         });
     }
 
@@ -27,13 +27,11 @@ class ChangeTransactionsTableAddInformations extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function(Blueprint $table) {
-            $table->dropColumn('currency');
-            $table->dropColumn('percentage_rate');
-            $table->dropColumn('transaction_rate');
-            $table->dropColumn('percentage_antecipable');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("currency");
+            $table->dropColumn("percentage_rate");
+            $table->dropColumn("transaction_rate");
+            $table->dropColumn("percentage_antecipable");
         });
     }
-
-
 }

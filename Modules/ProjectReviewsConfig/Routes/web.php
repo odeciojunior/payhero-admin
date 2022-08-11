@@ -13,11 +13,11 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth'],
+        "middleware" => ["web", "auth"],
     ],
     function () {
-
-        Route::Resource('/projectreviewsconfig', 'ProjectReviewsConfigApiController')
-            ->only('index', 'create', 'edit')->middleware('role:account_owner|admin');
+        Route::Resource("/projectreviewsconfig", "ProjectReviewsConfigApiController")
+            ->only("index", "create", "edit")
+            ->middleware("role:account_owner|admin");
     }
 );

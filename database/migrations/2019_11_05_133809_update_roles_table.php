@@ -15,19 +15,19 @@ class UpdateRolesTable extends Migration
      */
     public function up()
     {
-        $sql = 'DELETE FROM model_has_roles';
+        $sql = "DELETE FROM model_has_roles";
         DB::select($sql);
 
-        $sql = 'DELETE FROM roles';
+        $sql = "DELETE FROM roles";
         DB::select($sql);
 
-        Role::create(['name' => 'account_owner']);
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'attendance']);
+        Role::create(["name" => "account_owner"]);
+        Role::create(["name" => "admin"]);
+        Role::create(["name" => "attendance"]);
 
         $users = User::all();
         foreach ($users as $user) {
-            $user->assignRole('account_owner');
+            $user->assignRole("account_owner");
         }
     }
 

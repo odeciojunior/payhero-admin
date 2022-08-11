@@ -18,7 +18,7 @@ class HotZappServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class HotZappServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('hotzapp.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'hotzapp'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("hotzapp.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "hotzapp");
     }
 
     /**
@@ -53,17 +54,26 @@ class HotZappServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/hotzapp');
+        $viewPath = resource_path("views/modules/hotzapp");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/hotzapp';
-        }, \Config::get('view.paths')), [$sourcePath]), 'hotzapp');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/hotzapp";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "hotzapp"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class HotZappServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/hotzapp');
+        $langPath = resource_path("lang/modules/hotzapp");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'hotzapp');
+            $this->loadTranslationsFrom($langPath, "hotzapp");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'hotzapp');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "hotzapp");
         }
     }
 
@@ -89,8 +99,8 @@ class HotZappServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

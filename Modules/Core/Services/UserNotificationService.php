@@ -36,7 +36,11 @@ class UserNotificationService
     public function verifyUserNotification($user, string $notification)
     {
         try {
-            if (!$user instanceof User || FoxUtils::isEmpty($notification) || !in_array($notification, $this->activeNotificationsConfigs)) {
+            if (
+                !$user instanceof User ||
+                FoxUtils::isEmpty($notification) ||
+                !in_array($notification, $this->activeNotificationsConfigs)
+            ) {
                 return true;
             }
 

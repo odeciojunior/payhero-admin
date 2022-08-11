@@ -24,18 +24,18 @@ class DomainResource extends JsonResource
      */
     public function toArray($request)
     {
-        $companyService           = new CompanyService();
-        $userService              = new UserService();
-        $companyId                = $this->project->usersProjects[0]->company->id;
+        $companyService = new CompanyService();
+        $userService = new UserService();
+        $companyId = $this->project->usersProjects[0]->company->id;
         $companyDocumentValidated = $companyService->isDocumentValidated($companyId);
-        $userDocumentValidated    = $userService->isDocumentValidated();
+        $userDocumentValidated = $userService->isDocumentValidated();
 
         return [
-            'id'                => Hashids::encode($this->id),
-            'domain'            => $this->name,
-            'status'            => $this->status,
-            'status_translated' => Lang::get('definitions.enum.status.' . $this->present()->getStatus($this->status)),
-            'document_status'   => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
+            "id" => Hashids::encode($this->id),
+            "domain" => $this->name,
+            "status" => $this->status,
+            "status_translated" => Lang::get("definitions.enum.status." . $this->present()->getStatus($this->status)),
+            "document_status" => $companyDocumentValidated && $userDocumentValidated ? "approved" : "pending",
         ];
     }
 }

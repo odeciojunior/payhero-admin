@@ -91,53 +91,53 @@ class Project extends Model
 
     protected $presenter = ProjectPresenter::class;
 
-    protected $appends = ['formatted_created_at', 'id_code'];
+    protected $appends = ["formatted_created_at", "id_code"];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ["deleted_at"];
 
     protected $fillable = [
-        'carrier_id',
-        'photo',
-        'visibility',
-        'status',
-        'name',
-        'description',
-        'percentage_affiliates',
-        'terms_affiliates',
-        'status_url_affiliates',
-        'commission_type_enum',
-        'url_page',
-        'automatic_affiliation',
-        'shopify_id',
-        'woocommerce_id',
-        'cookie_duration',
-        'url_cookies_checkout',
-        'boleto_redirect',
-        'card_redirect',
-        'pix_redirect',
-        'analyzing_redirect',
-        'cost_currency_type',
-        'discount_recovery_status',
-        'discount_recovery_value',
-        'reviews_config_icon_type',
-        'reviews_config_icon_color',
-        'notazz_configs',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "carrier_id",
+        "photo",
+        "visibility",
+        "status",
+        "name",
+        "description",
+        "percentage_affiliates",
+        "terms_affiliates",
+        "status_url_affiliates",
+        "commission_type_enum",
+        "url_page",
+        "automatic_affiliation",
+        "shopify_id",
+        "woocommerce_id",
+        "cookie_duration",
+        "url_cookies_checkout",
+        "boleto_redirect",
+        "card_redirect",
+        "pix_redirect",
+        "analyzing_redirect",
+        "cost_currency_type",
+        "discount_recovery_status",
+        "discount_recovery_value",
+        "reviews_config_icon_type",
+        "reviews_config_icon_color",
+        "notazz_configs",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
-                $activity->description = 'Projeto ' . $this->name . ' foi deletedo.';
+            case "deleted":
+                $activity->description = "Projeto " . $this->name . " foi deletedo.";
                 break;
-            case 'updated':
-                $activity->description = 'Projeto ' . $this->name . ' foi atualizado.';
+            case "updated":
+                $activity->description = "Projeto " . $this->name . " foi atualizado.";
                 break;
-            case 'created':
-                $activity->description = 'Projeto ' . $this->name . ' foi criado.';
+            case "created":
+                $activity->description = "Projeto " . $this->name . " foi criado.";
                 break;
             default:
                 $activity->description = $eventName;
@@ -216,7 +216,7 @@ class Project extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'users_projects', 'project_id', 'user_id');
+        return $this->belongsToMany(User::class, "users_projects", "project_id", "user_id");
     }
 
     public function notazzIntegration(): HasOne

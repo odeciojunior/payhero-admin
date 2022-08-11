@@ -12,17 +12,20 @@ class CreateClientCardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_cards', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('client_id');
-            $table->integer('first_four_digits');
-            $table->integer('last_four_digits');
-            $table->string('card_token');
-            $table->string('association_code');
+        Schema::create("client_cards", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedBigInteger("client_id");
+            $table->integer("first_four_digits");
+            $table->integer("last_four_digits");
+            $table->string("card_token");
+            $table->string("association_code");
             $table->timestamps();
         });
-        Schema::table('client_cards', function(Blueprint $table) {
-            $table->foreign('client_id')->references('id')->on('clients');
+        Schema::table("client_cards", function (Blueprint $table) {
+            $table
+                ->foreign("client_id")
+                ->references("id")
+                ->on("clients");
         });
     }
 
@@ -32,6 +35,6 @@ class CreateClientCardsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('client_cards');
+        Schema::dropIfExists("client_cards");
     }
 }

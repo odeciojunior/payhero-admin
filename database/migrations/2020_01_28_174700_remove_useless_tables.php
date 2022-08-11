@@ -15,17 +15,17 @@ class RemoveUselessTables extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::dropIfExists('anticipated_transactions');
-        Schema::dropIfExists('anticipations');
-        Schema::dropIfExists('campaigns');
-        Schema::dropIfExists('carriers');
-        Schema::dropIfExists('clients_cookie');
-        Schema::dropIfExists('extra_materials');
-        Schema::dropIfExists('gifts');
-        Schema::dropIfExists('hubsmart_invitation_request');
-        Schema::dropIfExists('layouts');
-        Schema::dropIfExists('plan_gifts');
-        Schema::dropIfExists('zenvia_sms');
+        Schema::dropIfExists("anticipated_transactions");
+        Schema::dropIfExists("anticipations");
+        Schema::dropIfExists("campaigns");
+        Schema::dropIfExists("carriers");
+        Schema::dropIfExists("clients_cookie");
+        Schema::dropIfExists("extra_materials");
+        Schema::dropIfExists("gifts");
+        Schema::dropIfExists("hubsmart_invitation_request");
+        Schema::dropIfExists("layouts");
+        Schema::dropIfExists("plan_gifts");
+        Schema::dropIfExists("zenvia_sms");
 
         Schema::enableForeignKeyConstraints();
     }

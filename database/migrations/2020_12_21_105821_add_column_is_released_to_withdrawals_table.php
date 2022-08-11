@@ -13,12 +13,9 @@ class AddColumnIsReleasedToWithdrawalsTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'withdrawals',
-            function (Blueprint $table) {
-                $table->boolean('is_released')->default(false);
-            }
-        );
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->boolean("is_released")->default(false);
+        });
     }
 
     /**
@@ -28,11 +25,8 @@ class AddColumnIsReleasedToWithdrawalsTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'withdrawals',
-            function (Blueprint $table) {
-                $table->dropColumn(['is_released']);
-            }
-        );
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->dropColumn(["is_released"]);
+        });
     }
 }

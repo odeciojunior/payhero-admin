@@ -1,7 +1,6 @@
-$('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
-
-    let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
-    let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
+$("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
+    let availableBalanceText = $(".available-balance").html().replace(",", "").replace(".", "");
+    let toTransferText = $("#custom-input-addon").val().replace(",", "").replace(".", "");
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
@@ -21,59 +20,53 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             withdrawal_value: $("#custom-input-addon").val(),
         },
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: (response) => {
             errorAjaxResponse(response);
         },
         success: (response) => {
             if (response.data.user_pending === true || response.data.company_pending === true) {
-                modalDocsPending(response.data)
+                modalDocsPending(response.data);
             } else {
                 dataWithdrawal = {
                     bigger_value: toTransfer,
                     lower_value: 0,
                 };
 
-                modalCustomWithdrawal(true, dataWithdrawal)
+                modalCustomWithdrawal(true, dataWithdrawal);
             }
 
             $("#modal-withdrawal-custom").modal("show");
         },
         complete: () => {
             $("#bt-withdrawal, #bt-withdrawal_m").removeAttr("disabled");
-        }
+        },
     });
 
     function modalDocsPending(data) {
-        const $modal = $("#debit-pending-informations")
-        const $footer = $("#modal-withdrawal-custom-footer")
+        const $modal = $("#debit-pending-informations");
+        const $footer = $("#modal-withdrawal-custom-footer");
 
-        const $modalCustomBody = $("#modal-body-withdrawal-custom")
-        const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+        const $modalCustomBody = $("#modal-body-withdrawal-custom");
+        const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-        let description =
-            `Parece que ainda existe pendencias com seus documentos <br>
-         Seria bom conferir se todos os documentos já foram cadastrados`
+        let description = `Parece que ainda existe pendencias com seus documentos <br>
+         Seria bom conferir se todos os documentos já foram cadastrados`;
 
         if (data.company_pending) {
-            description =
-                `Parece que ainda existe pendencias com os documentos de sua empresa <br>
-             Seria bom conferir se todos os documentos já foram cadastrados.`
+            description = `Parece que ainda existe pendencias com os documentos de sua empresa <br>
+             Seria bom conferir se todos os documentos já foram cadastrados.`;
         }
 
-        $modalCustomBody
-            .html('')
-            .addClass('d-none')
-        $modalCustomTitle
-            .text("Você tem documentos pendentes")
-            .parent()
-            .removeClass('debit-pending');
+        $modalCustomBody.html("").addClass("d-none");
+        $modalCustomTitle.text("Você tem documentos pendentes").parent().removeClass("debit-pending");
 
         $modal
-            .removeClass('d-none')
-            .html(`
+            .removeClass("d-none")
+            .html(
+                `
                 <div class="text-center my-10">
                     <svg width="151" height="150" viewBox="0 0 151 150" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M75.5 150C116.921 150 150.5 116.421 150.5 75C150.5 33.5786 116.921 0 75.5 0C34.0786 0 0.5 33.5786 0.5 75C0.5 116.421 34.0786 150 75.5 150Z" fill="url(#paint0_linear_729_70)"/>
@@ -96,11 +89,11 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
                 <p id="text-description-withdrawal-custom">
                     ${description}
                 </p>
-            `)
+            `
+            )
             .show();
 
-        $footer
-            .html(`
+        $footer.html(`
             <div class="row justify-content-center w-p100">
                 <a class="pointer" href="${data.route}">
                     <button class="btn col-auto s-btn-border mr-10" style="background-color: #2E85EC; color: #FFF">
@@ -118,24 +111,17 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
     function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue = 0) {
         const $options = optionsValuesWithdrawal(singleValue, dataWithdrawal);
 
-        const $modal = $("#modal-body-withdrawal-custom")
-        const $footer = $("#modal-withdrawal-custom-footer")
+        const $modal = $("#modal-body-withdrawal-custom");
+        const $footer = $("#modal-withdrawal-custom-footer");
 
-        const $modalDebitPending = $('#debit-pending-informations')
-        const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+        const $modalDebitPending = $("#debit-pending-informations");
+        const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-        $modalDebitPending
-            .html('')
-            .addClass('d-none')
+        $modalDebitPending.html("").addClass("d-none");
 
-        $modalCustomTitle
-            .text("Confirmar saque")
-            .parent()
-            .removeClass('debit-pending')
+        $modalCustomTitle.text("Confirmar saque").parent().removeClass("debit-pending");
 
-        $modal
-            .removeClass('d-none')
-            .html(`
+        $modal.removeClass("d-none").html(`
                 <h3 id="text-title-withdrawal-custom" class="text-center mb-1">
                     ${singleValue ? "Valor a ser sacado" : "Valores disponíveis:"}
                 </h3>
@@ -150,13 +136,14 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             `);
 
         if (!isEmptyValue(debitValue)) {
-            const $newValueSelected = $modal.find(".value-select")
+            const $newValueSelected = $modal.find(".value-select");
             const $value = $newValueSelected.text().trim();
 
-            let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue)
+            let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue);
             $modalDebitPending
-                .removeClass('d-none')
-                .html(`
+                .removeClass("d-none")
+                .html(
+                    `
                     <h3 class="text-center mt-10 mb-0" id="text-title-debit-pending"> Débitos pendentes </h3>
                     <p class="mt-5" id="text-description-debit-pending">
                         Você tem alguns valores em aberto
@@ -194,12 +181,12 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
                             </div>
                         </div>
                     </div>
-                `)
+                `
+                )
                 .show();
         }
 
-        $footer
-            .html(`
+        $footer.html(`
                 <div class="row justify-content-center w-p100">
                     <button id="bt-cancel-withdrawal" data-dismiss="modal" aria-label="Close"
                     class="btn col-auto s-btn-border mr-10"
@@ -215,7 +202,7 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
                 </div>
             `);
 
-        const $event = $("#bigger-value, #lower-value, #single-value")
+        const $event = $("#bigger-value, #lower-value, #single-value");
         $event.off("click");
         $event.on("click", function () {
             const $value = $(this);
@@ -226,24 +213,24 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             $amountWithdrawal.text($value.text().trim());
 
             if (debitValue != undefined) {
-                const $valueWithdrawal = $("#value-withdrawal-received")
+                const $valueWithdrawal = $("#value-withdrawal-received");
 
                 let result = $value.data("value") - removeFormatNumbers(debitValue);
                 $valueWithdrawal.text(formatMoney(result));
             }
         });
 
-        $(document).on('click', '#bt-confirm-withdrawal-modal-custom', function (e) {
+        $(document).on("click", "#bt-confirm-withdrawal-modal-custom", function (e) {
             var click = $(this);
-            if (click.data('clicked')) {
+            if (click.data("clicked")) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
-            click.data('clicked', true);
+            click.data("clicked", true);
 
-            window.setTimeout(function(){
-                click.removeData('clicked');
+            window.setTimeout(function () {
+                click.removeData("clicked");
             }, 2000);
 
             loadOnModal("#modal-body-withdrawal-custom");
@@ -315,8 +302,8 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             return false;
         }
 
-        if(toTransfer < 5000){
-            alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
+        if (toTransfer < 5000) {
+            alertCustom("error", "Valor mínimo de saque  R$ 50,00");
             return;
         }
 
@@ -371,12 +358,12 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
         </div>`);
     }
     function formatMoney(value) {
-        return (value / 100).toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-        })
-            .replace(/\s+/g, '')
-            .replace('-', '- ')
+        return (value / 100)
+            .toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+            })
+            .replace(/\s+/g, "")
+            .replace("-", "- ");
     }
-
 });

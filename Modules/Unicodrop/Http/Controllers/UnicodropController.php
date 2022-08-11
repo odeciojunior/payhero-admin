@@ -14,7 +14,7 @@ class UnicodropController extends Controller
      */
     public function index()
     {
-        return view('unicodrop::index');
+        return view("unicodrop::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class UnicodropController extends Controller
      */
     public function create()
     {
-        return view('unicodrop::create');
+        return view("unicodrop::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class UnicodropController extends Controller
      */
     public function show($id)
     {
-        return view('unicodrop::show');
+        return view("unicodrop::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class UnicodropController extends Controller
      */
     public function edit($id)
     {
-        return view('unicodrop::edit');
+        return view("unicodrop::edit");
     }
 
     /**

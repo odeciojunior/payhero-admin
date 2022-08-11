@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 class LinkShortenerService
 {
-    const BASE_URL = 'https://api.short.io';
+    const BASE_URL = "https://api.short.io";
 
     public function shorten($url, $path = null)
     {
@@ -15,18 +15,18 @@ class LinkShortenerService
         }
 
         $data = [
-            'domain' => 'mud.ae',
-            'originalURL' => $url,
-            'allowDuplicates' => false,
+            "domain" => "mud.ae",
+            "originalURL" => $url,
+            "allowDuplicates" => false,
         ];
         if (isset($path)) {
-            $data['path'] = $path;
+            $data["path"] = $path;
         }
 
-        $result = $this->doRequest('/links', 'POST', $data);
+        $result = $this->doRequest("/links", "POST", $data);
 
         if (empty($result)) {
-            Log::warning('Link URL invalido (LinkShortenerService - shorten) - ' . $url);
+            Log::warning("Link URL invalido (LinkShortenerService - shorten) - " . $url);
         }
 
         return $result->secureShortURL ?? false;
@@ -39,9 +39,9 @@ class LinkShortenerService
         $url = self::BASE_URL . $uri;
         $method = strtoupper($method);
         $headers = array_merge($headers, [
-            'Accept: application/json',
-            'Content-Type: application/json',
-            'Authorization: ' . env('SHORTIO_API_KEY'),
+            "Accept: application/json",
+            "Content-Type: application/json",
+            "Authorization: " . env("SHORTIO_API_KEY"),
         ]);
 
         if (!empty($data)) {
@@ -62,7 +62,7 @@ class LinkShortenerService
         $info = curl_getinfo($curl);
         curl_close($curl);
 
-        if (isset($info['http_code']) && $info['http_code'] != 200) {
+        if (isset($info["http_code"]) && $info["http_code"] != 200) {
             return false;
         }
 

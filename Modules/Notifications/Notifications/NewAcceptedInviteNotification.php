@@ -29,7 +29,7 @@ class NewAcceptedInviteNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ["mail"];
     }
 
     /**
@@ -40,10 +40,10 @@ class NewAcceptedInviteNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', 'https://laravel.com')
-                    ->line('Thank you for using our application!');
+        return (new MailMessage())
+            ->line("The introduction to the notification.")
+            ->action("Notification Action", "https://laravel.com")
+            ->line("Thank you for using our application!");
     }
 
     /**
@@ -55,7 +55,7 @@ class NewAcceptedInviteNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
-        ];
+                //
+            ];
     }
 }

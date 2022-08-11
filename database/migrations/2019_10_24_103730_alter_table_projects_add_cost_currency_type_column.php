@@ -12,8 +12,11 @@ class AlterTableProjectsAddCostCurrencyTypeColumn extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->unsignedInteger('cost_currency_type')->after('support_phone_verified')->default(1); //1- BRL, 2- USD
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("cost_currency_type")
+                ->after("support_phone_verified")
+                ->default(1); //1- BRL, 2- USD
         });
     }
 
@@ -23,8 +26,8 @@ class AlterTableProjectsAddCostCurrencyTypeColumn extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('cost_currency_type');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("cost_currency_type");
         });
     }
 }

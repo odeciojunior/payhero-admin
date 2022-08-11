@@ -13,12 +13,16 @@ class AlterTableSaleContestationsAddColumnGatewayId extends Migration
      */
     public function up()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) 
-        {
+        Schema::table("sale_contestations", function (Blueprint $table) {
             //gateway default Getnet
-            $table->unsignedBigInteger("gateway_id")->default(15)->after('sale_id');
-            $table->foreign('gateway_id')->references('id')->on('gateways');
-
+            $table
+                ->unsignedBigInteger("gateway_id")
+                ->default(15)
+                ->after("sale_id");
+            $table
+                ->foreign("gateway_id")
+                ->references("id")
+                ->on("gateways");
         });
     }
 
@@ -29,11 +33,9 @@ class AlterTableSaleContestationsAddColumnGatewayId extends Migration
      */
     public function down()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) 
-        {
-            $table->dropForeign('sale_contestations_gateway_id_foreign');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table->dropForeign("sale_contestations_gateway_id_foreign");
             $table->dropColumn("gateway_id");
         });
-        
     }
 }

@@ -16,28 +16,25 @@ class BigBoostService
 
     private function requestUserBasicData(string $cpf): array
     {
-        if (!env('BIGBOOST_TOKEN')) {
+        if (!env("BIGBOOST_TOKEN")) {
             return [];
         }
         try {
-            if (!env('ENABLE_BUREAU_DATA_QUERYING', FoxUtils::isProduction())) {
+            if (!env("ENABLE_BUREAU_DATA_QUERYING", FoxUtils::isProduction())) {
                 return [];
             }
-            $cache_key = 'bigboost-user-basic-data-' . $cpf;
+            $cache_key = "bigboost-user-basic-data-" . $cpf;
             $response = Cache::get($cache_key, []);
             if ($response) {
                 return $response;
             }
             $response = Http::acceptJson()
                 ->timeout(10)
-                ->post(
-                    'https://bigboost.bigdatacorp.com.br/peoplev2',
-                    [
-                        'Datasets' => 'basic_data',
-                        'q' => "doc{{$cpf}}",
-                        'AccessToken' => env('BIGBOOST_TOKEN'),
-                    ]
-                );
+                ->post("https://bigboost.bigdatacorp.com.br/peoplev2", [
+                    "Datasets" => "basic_data",
+                    "q" => "doc{{$cpf}}",
+                    "AccessToken" => env("BIGBOOST_TOKEN"),
+                ]);
             Cache::put($cache_key, $response->json(), now()->addDays(7));
             return $response->json();
         } catch (\Exception $e) {

@@ -13,8 +13,12 @@ class AddColumnOsEnumInAntifraudDeviceDataTable extends Migration
      */
     public function up()
     {
-        Schema::table('antifraud_device_data', function (Blueprint $table) {
-            $table->integer('os_enum')->index()->after('os')->default(0);
+        Schema::table("antifraud_device_data", function (Blueprint $table) {
+            $table
+                ->integer("os_enum")
+                ->index()
+                ->after("os")
+                ->default(0);
         });
     }
 
@@ -25,8 +29,8 @@ class AddColumnOsEnumInAntifraudDeviceDataTable extends Migration
      */
     public function down()
     {
-        Schema::table('antifraud_device_data', function (Blueprint $table) {
-            $table->dropColumn('os_enum');
+        Schema::table("antifraud_device_data", function (Blueprint $table) {
+            $table->dropColumn("os_enum");
         });
     }
 }

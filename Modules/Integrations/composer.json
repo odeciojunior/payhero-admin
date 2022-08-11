@@ -1,22 +1,21 @@
 {
-    "name"       : "nwidart/integrations",
+    "name": "nwidart/integrations",
     "description": "",
-    "authors"    : [
+    "authors": [
         {
-            "name" : "Nicolas Widart",
+            "name": "Nicolas Widart",
             "email": "n.widart@gmail.com"
         }
     ],
-    "extra"      : {
+    "extra": {
         "laravel": {
             "providers": [
                 "Modules\\Integrations\\Providers\\IntegrationsServiceProvider"
             ],
-            "aliases"  : {
-            }
+            "aliases": {}
         }
     },
-    "autoload"   : {
+    "autoload": {
         "psr-4": {
             "Modules\\Integrations\\": ""
         }

@@ -33,18 +33,17 @@ class NotifyUserShopifyIntegrationReadyListener implements ShouldQueue
      */
     public function handle(ShopifyIntegrationReadyEvent $event)
     {
-
         try {
             $pusherService = new PusherService();
 
             $data = [
-                'message' => 'Integração do seu projeto ' . $event->project->name . 'com o shopify está pronto',
-                'user'    => $event->user->id,
+                "message" => "Integração do seu projeto " . $event->project->name . "com o shopify está pronto",
+                "user" => $event->user->id,
             ];
 
             $pusherService->sendPusher($data);
         } catch (Exception $e) {
-            Log::warning('erro ao enviar notificação com pusher');
+            Log::warning("erro ao enviar notificação com pusher");
             report($e);
         }
     }

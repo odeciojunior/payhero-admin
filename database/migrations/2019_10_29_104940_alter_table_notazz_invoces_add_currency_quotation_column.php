@@ -12,12 +12,18 @@ class AlterTableNotazzInvocesAddCurrencyQuotationColumn extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_invoices', function(Blueprint $table) {
-            $table->unsignedBigInteger('currency_quotation_id')->after('sale_id')->nullable();
+        Schema::table("notazz_invoices", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("currency_quotation_id")
+                ->after("sale_id")
+                ->nullable();
         });
 
-        Schema::table('notazz_invoices', function(Blueprint $table) {
-            $table->foreign('currency_quotation_id')->references('id')->on('currency_quotations');
+        Schema::table("notazz_invoices", function (Blueprint $table) {
+            $table
+                ->foreign("currency_quotation_id")
+                ->references("id")
+                ->on("currency_quotations");
         });
     }
 
@@ -27,12 +33,12 @@ class AlterTableNotazzInvocesAddCurrencyQuotationColumn extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_invoices', function(Blueprint $table) {
-            $table->dropForeign(['currency_quotation_id']);
+        Schema::table("notazz_invoices", function (Blueprint $table) {
+            $table->dropForeign(["currency_quotation_id"]);
         });
 
-        Schema::table('notazz_invoices', function(Blueprint $table) {
-            $table->dropColumn('currency_quotation_id');
+        Schema::table("notazz_invoices", function (Blueprint $table) {
+            $table->dropColumn("currency_quotation_id");
         });
     }
 }

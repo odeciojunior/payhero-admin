@@ -15,12 +15,12 @@ class ShopifyReorderSalesHourly extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'command:ShopifyReorderSalesHourly';
+    protected $signature = "command:ShopifyReorderSalesHourly";
     /**
      * The console command description.
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -37,46 +37,42 @@ class ShopifyReorderSalesHourly extends Command
      */
     public function handle()
     {
-
         try {
-
             // 1:30 atrás até 0:30
-            $saleModel     = new Sale();
+            $saleModel = new Sale();
             $salePresenter = $saleModel->present();
-            $sales         = $saleModel->whereNull('shopify_order')
-                ->whereIn('status',
-                          [
-                              $salePresenter->getStatus('approved'),
-                              $salePresenter->getStatus('pending'),
-                          ])
-                ->whereBetween('created_at',
-                               [
-                                   Carbon::now()->subHour()->subMinutes(30)->toDateTimeString(),
-                                   Carbon::now()->subMinutes(30)->toDateTimeString(),
-                               ])
-                ->whereHas('project.shopifyIntegrations', function($query) {
-                    $query->where('status', 2);
+            $sales = $saleModel
+                ->whereNull("shopify_order")
+                ->whereIn("status", [$salePresenter->getStatus("approved"), $salePresenter->getStatus("pending")])
+                ->whereBetween("created_at", [
+                    Carbon::now()
+                        ->subHour()
+                        ->subMinutes(30)
+                        ->toDateTimeString(),
+                    Carbon::now()
+                        ->subMinutes(30)
+                        ->toDateTimeString(),
+                ])
+                ->whereHas("project.shopifyIntegrations", function ($query) {
+                    $query->where("status", 2);
                 })
                 ->get();
 
-
             foreach ($sales as $sale) {
                 try {
-                    $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+                    $shopifyIntegration = ShopifyIntegration::where("project_id", $sale->project_id)->first();
 
                     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                     $shopifyService->newOrder($sale);
 
-                    $this->line('sucesso');
+                    $this->line("sucesso");
                 } catch (Exception $e) {
-                    $this->line('erro -> ' . $e->getMessage());
+                    $this->line("erro -> " . $e->getMessage());
                 }
-            };
-
+            }
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

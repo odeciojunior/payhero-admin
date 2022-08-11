@@ -28,15 +28,14 @@ class CheckoutEditorApiController extends Controller
         try {
             $projectId = hashids_decode($projectId);
 
-            $config = CheckoutConfig::where('project_id', $projectId)->first();
+            $config = CheckoutConfig::where("project_id", $projectId)->first();
 
             return new CheckoutConfigResource($config);
-
         } catch (\Exception $e) {
             report($e);
             return foxutils()->isProduction()
-                ? response()->json(['message' => 'Erro ao obter as configurações do checkout'])
-                : response()->json(['message' => $e->getMessage()]);
+                ? response()->json(["message" => "Erro ao obter as configurações do checkout"])
+                : response()->json(["message" => $e->getMessage()]);
         }
     }
 
@@ -48,42 +47,54 @@ class CheckoutEditorApiController extends Controller
             $id = hashids_decode($id);
 
             $data = $request->all();
-            $data['company_id'] = hashids_decode($data['company_id']);
+            $data["company_id"] = hashids_decode($data["company_id"]);
 
             $config = CheckoutConfig::find($id);
 
             $userId = hashids_encode(auth()->user()->account_owner_id);
 
-            $logo = $request->file('checkout_logo');
-            if (!empty($logo)){
+            $logo = $request->file("checkout_logo");
+            if (!empty($logo)) {
                 $amazonFileService->deleteFile($config->checkout_logo);
-                $amazonPathLogo = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/logo', $logo);
-                $data['checkout_logo'] = $amazonPathLogo;
+                $amazonPathLogo = $amazonFileService->uploadFile(
+                    "uploads/user/" . $userId . "/public/projects/" . hashids_encode($id) . "/logo",
+                    $logo
+                );
+                $data["checkout_logo"] = $amazonPathLogo;
             }
 
-            if(intval($data['checkout_favicon_type']) === CheckoutConfig::CHECKOUT_FAVICON_TYPE_LOGO) {
-                $data['checkout_favicon'] = !empty($data['checkout_logo']) ? $data['checkout_logo'] : $config->checkout_logo;
+            if (intval($data["checkout_favicon_type"]) === CheckoutConfig::CHECKOUT_FAVICON_TYPE_LOGO) {
+                $data["checkout_favicon"] = !empty($data["checkout_logo"])
+                    ? $data["checkout_logo"]
+                    : $config->checkout_logo;
             } else {
-                $favicon = $request->file('checkout_favicon');
-                if(!empty($favicon)) {
-                    if($config->checkout_favicon_type === CheckoutConfig::CHECKOUT_FAVICON_TYPE_FILE) {
+                $favicon = $request->file("checkout_favicon");
+                if (!empty($favicon)) {
+                    if ($config->checkout_favicon_type === CheckoutConfig::CHECKOUT_FAVICON_TYPE_FILE) {
                         $amazonFileService->deleteFile($config->checkout_favicon);
                     }
-                    $amazonPathFavicon = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/favicon', $favicon);
-                    $data['checkout_favicon'] = $amazonPathFavicon;
+                    $amazonPathFavicon = $amazonFileService->uploadFile(
+                        "uploads/user/" . $userId . "/public/projects/" . hashids_encode($id) . "/favicon",
+                        $favicon
+                    );
+                    $data["checkout_favicon"] = $amazonPathFavicon;
                 }
             }
 
-            $banner = $request->file('checkout_banner');
+            $banner = $request->file("checkout_banner");
             if (!empty($banner)) {
                 $amazonFileService->deleteFile($config->checkout_banner);
-                $amazonPathBanner = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/banner', $banner);
-                $data['checkout_banner'] = $amazonPathBanner;
+                $amazonPathBanner = $amazonFileService->uploadFile(
+                    "uploads/user/" . $userId . "/public/projects/" . hashids_encode($id) . "/banner",
+                    $banner
+                );
+                $data["checkout_banner"] = $amazonPathBanner;
             }
 
-            if ($data['company_id'] !== $config->company_id) {
-                $bankAccount = Company::find($data['company_id'])->getDefaultBankAccount();
-                $data['pix_enabled'] = !empty($bankAccount) && $bankAccount->transfer_type=='PIX' && $data['pix_enabled'];
+            if ($data["company_id"] !== $config->company_id) {
+                $bankAccount = Company::find($data["company_id"])->getDefaultBankAccount();
+                $data["pix_enabled"] =
+                    !empty($bankAccount) && $bankAccount->transfer_type == "PIX" && $data["pix_enabled"];
                 // update company_id at users_projects table
                 UserProject::where('project_id', $config->project_id)
                     ->update(['company_id' => $data['company_id']]);
@@ -93,8 +104,8 @@ class CheckoutEditorApiController extends Controller
                 $user->save();
             }
 
-            if(empty($data['support_phone'])){
-                $data['support_phone_verified'] = 0;
+            if (empty($data["support_phone"])) {
+                $data["support_phone_verified"] = 0;
             }
 
             $config->update($data);
@@ -105,8 +116,8 @@ class CheckoutEditorApiController extends Controller
         } catch (\Exception $e) {
             report($e);
             return foxutils()->isProduction()
-                ? response()->json(['message' => 'Erro ao atualizar as configurações do checkout'])
-                : response()->json(['message' => $e->getMessage()]);
+                ? response()->json(["message" => "Erro ao atualizar as configurações do checkout"])
+                : response()->json(["message" => $e->getMessage()]);
         }
     }
 
@@ -115,15 +126,18 @@ class CheckoutEditorApiController extends Controller
         try {
             $data = $request->all();
 
-            $configId = hashids_decode($data['id']);
-            $supportPhone = $data['support_phone'];
+            $configId = hashids_decode($data["id"]);
+            $supportPhone = $data["support_phone"];
 
             $config = CheckoutConfig::find($configId);
 
-            activity()->on($config)->tap(function (Activity $activity) use ($config) {
-                $activity->log_name = 'visualization';
-                $activity->subject_id = $config->id;
-            })->log('Enviou o código de verificação do telefone de suporte');
+            activity()
+                ->on($config)
+                ->tap(function (Activity $activity) use ($config) {
+                    $activity->log_name = "visualization";
+                    $activity->subject_id = $config->id;
+                })
+                ->log("Enviou o código de verificação do telefone de suporte");
 
             $config->support_phone = $supportPhone;
             $config->save();
@@ -133,16 +147,20 @@ class CheckoutEditorApiController extends Controller
             $smsService = new SmsService();
             $smsService->sendSms($supportPhone, $message);
 
-            $cookieName = "supportphoneverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
+            $cookieName =
+                "supportphoneverificationcode_" .
+                hashids_encode(auth()->id()) .
+                "_" .
+                hashids_encode($config->project_id);
 
-            return response()->json(["message" => "Mensagem enviada com sucesso!"])
+            return response()
+                ->json(["message" => "Mensagem enviada com sucesso!"])
                 ->withCookie($cookieName, $verificationCode, 15);
-
         } catch (\Exception $e) {
             report($e);
             return foxutils()->isProduction()
-                ? response()->json(['message' => 'Ocorreu um erro ao enviar sms para o telefone informado!'])
-                : response()->json(['message' => $e->getMessage()]);
+                ? response()->json(["message" => "Ocorreu um erro ao enviar sms para o telefone informado!"])
+                : response()->json(["message" => $e->getMessage()]);
         }
     }
 
@@ -151,30 +169,38 @@ class CheckoutEditorApiController extends Controller
         try {
             $data = $request->all();
 
-            $configId = hashids_decode($data['id']);
+            $configId = hashids_decode($data["id"]);
             $config = CheckoutConfig::find($configId);
 
-            activity()->on($config)->tap(function (Activity $activity) use ($config) {
-                $activity->log_name = 'updated';
-                $activity->subject_id = $config->id;
-            })->log('Verificação do código do telefone de suporte');
+            activity()
+                ->on($config)
+                ->tap(function (Activity $activity) use ($config) {
+                    $activity->log_name = "updated";
+                    $activity->subject_id = $config->id;
+                })
+                ->log("Verificação do código do telefone de suporte");
 
-            $cookieName = "supportphoneverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
+            $cookieName =
+                "supportphoneverificationcode_" .
+                hashids_encode(auth()->id()) .
+                "_" .
+                hashids_encode($config->project_id);
             $cookie = Cookie::get($cookieName);
 
-            if ($data['verification_code'] !== $cookie) {
-                return response()->json(['message' => 'Código de verificação inválido!'], 400);
+            if ($data["verification_code"] !== $cookie) {
+                return response()->json(["message" => "Código de verificação inválido!"], 400);
             }
 
             $config->update(["support_phone_verified" => true]);
 
-            return response()->json(["message" => "Telefone verificado com sucesso!"])
+            return response()
+                ->json(["message" => "Telefone verificado com sucesso!"])
                 ->withCookie(Cookie::forget($cookieName));
         } catch (\Exception $e) {
             report($e);
             return foxutils()->isProduction()
-                ? response()->json(['message' => 'Ocorreu um erro ao verificar código!'])
-                : response()->json(['message' => $e->getMessage()]);
+                ? response()->json(["message" => "Ocorreu um erro ao verificar código!"])
+                : response()->json(["message" => $e->getMessage()]);
         }
     }
 
@@ -183,15 +209,18 @@ class CheckoutEditorApiController extends Controller
         try {
             $data = $request->all();
 
-            $configId = hashids_decode($data['id']);
-            $supportEmail = $data['support_email'];
+            $configId = hashids_decode($data["id"]);
+            $supportEmail = $data["support_email"];
 
             $config = CheckoutConfig::find($configId);
 
-            activity()->on($config)->tap(function (Activity $activity) use ($config) {
-                $activity->log_name = 'visualization';
-                $activity->subject_id = $config->id;
-            })->log('Enviou o código de verificação do e-mail de suporte');
+            activity()
+                ->on($config)
+                ->tap(function (Activity $activity) use ($config) {
+                    $activity->log_name = "visualization";
+                    $activity->subject_id = $config->id;
+                })
+                ->log("Enviou o código de verificação do e-mail de suporte");
 
             $config->support_email = $supportEmail;
             $config->save();
@@ -200,24 +229,28 @@ class CheckoutEditorApiController extends Controller
 
             $sendgridService = app(SendgridService::class);
             $sendgridService->sendEmail(
-                'help@cloudfox.net',
-                'cloudfox',
+                "help@cloudfox.net",
+                "cloudfox",
                 $supportEmail,
                 auth()->user()->name,
                 "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
-                ['verify_code' => $verificationCode]
+                ["verify_code" => $verificationCode]
             );
 
-            $cookieName = "supportemailverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
+            $cookieName =
+                "supportemailverificationcode_" .
+                hashids_encode(auth()->id()) .
+                "_" .
+                hashids_encode($config->project_id);
 
-            return response()->json(["message" => "E-mail enviado com sucesso!"])
+            return response()
+                ->json(["message" => "E-mail enviado com sucesso!"])
                 ->withCookie($cookieName, $verificationCode, 15);
-
         } catch (\Exception $e) {
             report($e);
             return foxutils()->isProduction()
-                ? response()->json(['message' => 'Erro ao enviar o e-mail com o código de verificação!'])
-                : response()->json(['message' => $e->getMessage()]);
+                ? response()->json(["message" => "Erro ao enviar o e-mail com o código de verificação!"])
+                : response()->json(["message" => $e->getMessage()]);
         }
     }
 
@@ -226,30 +259,38 @@ class CheckoutEditorApiController extends Controller
         try {
             $data = $request->all();
 
-            $configId = hashids_decode($data['id']);
+            $configId = hashids_decode($data["id"]);
             $config = CheckoutConfig::find($configId);
 
-            activity()->on($config)->tap(function (Activity $activity) use ($config) {
-                $activity->log_name = 'updated';
-                $activity->subject_id = $config->id;
-            })->log('Verificação do código do e-mail de suporte');
+            activity()
+                ->on($config)
+                ->tap(function (Activity $activity) use ($config) {
+                    $activity->log_name = "updated";
+                    $activity->subject_id = $config->id;
+                })
+                ->log("Verificação do código do e-mail de suporte");
 
-            $cookieName = "supportemailverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
+            $cookieName =
+                "supportemailverificationcode_" .
+                hashids_encode(auth()->id()) .
+                "_" .
+                hashids_encode($config->project_id);
             $cookie = Cookie::get($cookieName);
 
-            if ($data['verification_code'] !== $cookie) {
-                return response()->json(['message' => 'Código de verificação inválido!'], 400);
+            if ($data["verification_code"] !== $cookie) {
+                return response()->json(["message" => "Código de verificação inválido!"], 400);
             }
 
             $config->update(["support_email_verified" => true]);
 
-            return response()->json(["message" => "E-mail verificado com sucesso!"])
+            return response()
+                ->json(["message" => "E-mail verificado com sucesso!"])
                 ->withCookie(Cookie::forget($cookieName));
         } catch (\Exception $e) {
             report($e);
             return foxutils()->isProduction()
-                ? response()->json(['message' => 'Ocorreu um erro ao verificar código!'])
-                : response()->json(['message' => $e->getMessage()]);
+                ? response()->json(["message" => "Ocorreu um erro ao verificar código!"])
+                : response()->json(["message" => $e->getMessage()]);
         }
     }
 }

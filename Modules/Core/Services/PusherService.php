@@ -24,9 +24,9 @@ class PusherService
     {
         try {
             $this->pusher = new Pusher(
-                getenv('PUSHER_APP_KEY'),
-                getenv('PUSHER_APP_SECRET'),
-                getenv('PUSHER_APP_ID'),
+                getenv("PUSHER_APP_KEY"),
+                getenv("PUSHER_APP_SECRET"),
+                getenv("PUSHER_APP_ID"),
                 $this->getOptions()
             );
         } catch (Exception $e) {
@@ -40,8 +40,8 @@ class PusherService
     public function getOptions()
     {
         return [
-            'cluster' => getenv('PUSHER_APP_CLUSTER'),
-            'useTLS' => true,
+            "cluster" => getenv("PUSHER_APP_CLUSTER"),
+            "useTLS" => true,
         ];
     }
 
@@ -52,9 +52,8 @@ class PusherService
     {
         try {
             $this->pusher->trigger(
-                'channel-' . Hashids::connection('pusher_connection')
-                    ->encode($data['user']),
-                'new-notification',
+                "channel-" . Hashids::connection("pusher_connection")->encode($data["user"]),
+                "new-notification",
                 $data
             );
         } catch (Exception $e) {

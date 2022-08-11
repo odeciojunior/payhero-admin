@@ -13,10 +13,21 @@ class AlterTablePixChargesAddColumnExpirationDate extends Migration
      */
     public function up()
     {
-        Schema::table('pix_charges',function(Blueprint $table){
-            $table->timestamp('expiration_date')->nullable()->after('status');
-            $table->integer('automatic_discount')->nullable()->default(null)->after('expiration_date');
-            $table->integer('total_pix_value')->nullable()->default(null)->after('qrcode_image');
+        Schema::table("pix_charges", function (Blueprint $table) {
+            $table
+                ->timestamp("expiration_date")
+                ->nullable()
+                ->after("status");
+            $table
+                ->integer("automatic_discount")
+                ->nullable()
+                ->default(null)
+                ->after("expiration_date");
+            $table
+                ->integer("total_pix_value")
+                ->nullable()
+                ->default(null)
+                ->after("qrcode_image");
         });
     }
 

@@ -3,13 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
     <title>Ops! Não encontramos essa página! | CloudFox App </title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap"
+          rel="stylesheet">
 
 </head>
 
@@ -18,7 +21,8 @@
     <div class="page-holder">
 
         <div class="content-error d-flex text-center">
-            <img class="svgorange" src="{!! mix('build/global/img/404.svg') !!}">
+            <img class="svgorange"
+                 src="{!! mix('build/global/img/404.svg') !!}">
             <h1 class="big"> Ops! Nada por aqui</h1>
             <p>Erro | 404</p>
             <p style="font-size:12px">Parece que essa página que você procura não existe. </p>
@@ -43,10 +47,8 @@
     }
 
     .logo {
-
         margin-bottom: 20px;
         width: 60px;
-
     }
 
     .content-error {
@@ -57,7 +59,7 @@
         justify-content: center;
         flex-direction: column;
         text-align: center;
-        {{--  padding: 20px;  --}}
+        {{-- padding: 20px; --}}
     }
 
     .big {
@@ -87,4 +89,3 @@
 </style>
 
 </html>
-

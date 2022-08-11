@@ -40,12 +40,12 @@ function atualizar(link = null) {
     currentPage = link;
     let updateResume = true;
 
-    loadOnTable('#body-table-pending', '.table-pending');
+    loadOnTable("#body-table-pending", ".table-pending");
 
     if (link == null) {
-        link = '/api/reports/pending-balance?' + getFilters(true).substr(1);
+        link = "/api/reports/pending-balance?" + getFilters(true).substr(1);
     } else {
-        link = '/api/reports/pending-balance' + link + getFilters(true);
+        link = "/api/reports/pending-balance" + link + getFilters(true);
         updateResume = false;
     }
 
@@ -54,36 +54,38 @@ function atualizar(link = null) {
         url: link,
         dataType: "json",
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: function error(response) {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            $('#body-table-pending').html('');
-            $('.table-pending').addClass('table-striped');
+            $("#body-table-pending").html("");
+            $(".table-pending").addClass("table-striped");
 
             if (!isEmpty(response.data)) {
                 $.each(response.data, function (index, value) {
-                    let start_date='';
+                    let start_date = "";
                     if (value.start_date) {
-                        start_date=value.start_date.split(/\s/g);//data inicial
-                        start_date= "<strong class='bold-mobile'>"+
-                                    start_date[0]
-                                +" </strong> <br> <small class='gray font-size-12'>"+
-                                    start_date[1]
-                                +" </small>";
+                        start_date = value.start_date.split(/\s/g); //data inicial
+                        start_date =
+                            "<strong class='bold-mobile'>" +
+                            start_date[0] +
+                            " </strong> <br> <small class='gray font-size-12'>" +
+                            start_date[1] +
+                            " </small>";
                     }
 
-                    let end_date='';
+                    let end_date = "";
                     if (value.end_date) {
-                        end_date=value.end_date.split(/\s/g);//data final
-                        end_date= "<strong class='bold-mobile'>"+
-                                    end_date[0]
-                                +" </strong> <br> <small class='gray font-size-12'>"+
-                                    end_date[1]
-                                +" </small>";
+                        end_date = value.end_date.split(/\s/g); //data final
+                        end_date =
+                            "<strong class='bold-mobile'>" +
+                            end_date[0] +
+                            " </strong> <br> <small class='gray font-size-12'>" +
+                            end_date[1] +
+                            " </small>";
                     }
                     let is_security_reserve = "";
                     if (value.is_security_reserve) {
@@ -114,14 +116,16 @@ function atualizar(link = null) {
                 });
 
                 $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
+                $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
             } else {
-                $('#body-table-pending').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                    $("#body-table-pending").attr("img-empty") +
-                    "'> Nenhuma venda encontrada </td></tr>");
+                $("#body-table-pending").html(
+                    "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#body-table-pending").attr("img-empty") +
+                        "'> Nenhuma venda encontrada </td></tr>"
+                );
             }
-            pagination(response, 'pending', atualizar);
-        }
+            pagination(response, "pending", atualizar);
+        },
     });
 
     if (updateResume) {
@@ -147,7 +151,7 @@ function getFilters(urlParams = false) {
     if (urlParams) {
         let params = "";
         for (let param in data) {
-            params += '&' + param + '=' + data[param];
+            params += "&" + param + "=" + data[param];
         }
         return encodeURI(params);
     }
@@ -156,7 +160,6 @@ function getFilters(urlParams = false) {
 }
 
 function resumePending() {
-
     $("#total_sales").html(skeLoadMini);
 
     // loadOnAny('.number', false, {
@@ -175,16 +178,16 @@ function resumePending() {
 
     $.ajax({
         method: "GET",
-        url: '/api/reports/resume-pending-balance',
+        url: "/api/reports/resume-pending-balance",
         data: getFilters(),
         dataType: "json",
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: function error(response) {
             //loadOnAny('.number', true);
-            $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+            $("#total-pending, #total").html('R$ <strong class="font-size-30">0,00</strong>');
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -192,19 +195,18 @@ function resumePending() {
             //$('#total_sales').text('0');
 
             if (response.total_sales) {
-                $('#total_sales, #total-pending, #total').text('');
-                $('#total_sales').text(response.total_sales);
-                var comission=response.commission.split(/\s/g);
-                $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+                $("#total_sales, #total-pending, #total").text("");
+                $("#total_sales").text(response.total_sales);
+                var comission = response.commission.split(/\s/g);
+                $("#total-pending").html(comission[0] + ' <span class="font-size-30 bold">' + comission[1] + "</span>");
             } else {
-                $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+                $("#total-pending, #total").html('R$ <strong class="font-size-30">0,00</strong>');
             }
-        }
+        },
     });
 }
 
 $(document).ready(function () {
-
     $("#filtros").on("click", function () {
         if ($("#div_filtros").is(":visible")) {
             $("#div_filtros").slideUp();
@@ -218,17 +220,17 @@ $(document).ready(function () {
         atualizar();
     });
 
-    $('.btn-light-1').click(function () {
-        var collapse = $('#icon-filtro')
-        var text = $('#text-filtro')
+    $(".btn-light-1").click(function () {
+        var collapse = $("#icon-filtro");
+        var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css('transform') == 'matrix(1, 0, 0, 1, 0, 0)' || collapse.css('transform') == 'none') {
-            collapse.css('transform', 'rotate(180deg)')
-            text.text('Minimizar filtros').fadeIn();
+        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+            collapse.css("transform", "rotate(180deg)");
+            text.text("Minimizar filtros").fadeIn();
         } else {
-            collapse.css('transform', 'rotate(0deg)')
-            text.text('Filtros avançados').fadeIn()
+            collapse.css("transform", "rotate(0deg)");
+            text.text("Filtros avançados").fadeIn();
         }
     });
 
@@ -267,8 +269,8 @@ $(document).ready(function () {
             method: "GET",
             url: '/api/core/companies?select=true',
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 loadingOnScreenRemove();
@@ -291,7 +293,7 @@ $(document).ready(function () {
 
                 getProjects(data.companies);
                 getAcquirer();
-            }
+            },
         });
     }
 
@@ -336,8 +338,8 @@ $(document).ready(function () {
             url: '/api/finances/acquirers/'+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 loadingOnScreenRemove();
@@ -345,16 +347,18 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 $.each(response.data, function (i, acquirer) {
-                    $("#acquirer").append($('<option>', {
-                        value: acquirer,
-                        text: acquirer
-                    }));
+                    $("#acquirer").append(
+                        $("<option>", {
+                            value: acquirer,
+                            text: acquirer,
+                        })
+                    );
                 });
 
                 atualizar();
 
                 loadingOnScreenRemove();
-            }
+            },
         });
     }
 
@@ -395,7 +399,7 @@ $(document).ready(function () {
 
 
     function resumePending() {
-        $("#total-pending, #total_sales").html(skeLoadMini).width('100%');
+        $("#total-pending, #total_sales").html(skeLoadMini).width("100%");
         // loadOnAny('.number', false, {
         //     styles: {
         //         container: {
@@ -412,12 +416,12 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: '/api/reports/resume-pending-balance',
+            url: "/api/reports/resume-pending-balance",
             data: getFilters(),
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 //loadOnAny('.number', true);
@@ -427,32 +431,37 @@ $(document).ready(function () {
                 loadOnAny('.number', true);
                 //$('#total_sales').text('0');
                 if (response.total_sales) {
-                    $('#total_sales, #commission_blocked, #total').text('');
-                    $('#total_sales').text(response.total_sales);
-                    var comission=response.commission.split(/\s/g);
-                    $('#total-pending').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange bold">'+comission[1]+'</strong>');
+                    $("#total_sales, #commission_blocked, #total").text("");
+                    $("#total_sales").text(response.total_sales);
+                    var comission = response.commission.split(/\s/g);
+                    $("#total-pending").html(
+                        '<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange bold">' +
+                            comission[1] +
+                            "</strong>"
+                    );
                     //var total=response.total.split(/\s/g);
                     //$('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
                 } else {
-                    $('#total-pending, #total').html('<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>');
-                    $('#total_sales').html('<strong class="font-size-24 orange">0</strong>');
+                    $("#total-pending, #total").html(
+                        '<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>'
+                    );
+                    $("#total_sales").html('<strong class="font-size-24 orange">0</strong>');
                 }
-            }
+            },
         });
     }
 
     atualizar = function (link = null) {
-
         currentPage = link;
         let updateResume = true;
 
-        loadOnTable('#body-table-pending', '.table-pending');
+        loadOnTable("#body-table-pending", ".table-pending");
         //$('#body-table-pending').html(skeLoad);
 
         if (link == null) {
-            link = '/api/reports/pending-balance?' + getFilters(true).substr(1);
+            link = "/api/reports/pending-balance?" + getFilters(true).substr(1);
         } else {
-            link = '/api/reports/pending-balance' + link + getFilters(true);
+            link = "/api/reports/pending-balance" + link + getFilters(true);
             updateResume = false;
         }
 
@@ -461,36 +470,38 @@ $(document).ready(function () {
             url: link,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#body-table-pending').html('');
-                $('.table-pending').addClass('table-striped');
+                $("#body-table-pending").html("");
+                $(".table-pending").addClass("table-striped");
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
-                        let start_date='';
+                        let start_date = "";
                         if (value.start_date) {
-                            start_date=value.start_date.split(/\s/g);//data inicial
-                            start_date= "<strong class='bold-mobile'>"+
-                                        start_date[0]
-                                    +" </strong> <br> <small class='gray font-size-12'>"+
-                                        start_date[1]
-                                    +" </small>";
+                            start_date = value.start_date.split(/\s/g); //data inicial
+                            start_date =
+                                "<strong class='bold-mobile'>" +
+                                start_date[0] +
+                                " </strong> <br> <small class='gray font-size-12'>" +
+                                start_date[1] +
+                                " </small>";
                         }
 
-                        let end_date='';
+                        let end_date = "";
                         if (value.end_date) {
-                            end_date=value.end_date.split(/\s/g);//data final
-                            end_date= "<strong class='bold-mobile'>"+
-                                        end_date[0]
-                                    +" </strong> <br> <small class='gray font-size-12'>"+
-                                        end_date[1]
-                                    +" </small>";
+                            end_date = value.end_date.split(/\s/g); //data final
+                            end_date =
+                                "<strong class='bold-mobile'>" +
+                                end_date[0] +
+                                " </strong> <br> <small class='gray font-size-12'>" +
+                                end_date[1] +
+                                " </small>";
                         }
                         let is_security_reserve = "";
                         if (value.is_security_reserve) {
@@ -521,22 +532,24 @@ $(document).ready(function () {
                     });
 
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                    $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
+                    $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
                 } else {
-                    $('#body-table-pending').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
-                        $("#body-table-pending").attr("img-empty") +
-                        "'> Nenhuma venda encontrada </td></tr>");
+                    $("#body-table-pending").html(
+                        "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
+                            $("#body-table-pending").attr("img-empty") +
+                            "'> Nenhuma venda encontrada </td></tr>"
+                    );
                 }
-                pagination(response, 'pending', atualizar);
-            }
+                pagination(response, "pending", atualizar);
+            },
         });
 
         if (updateResume) {
             resumePending();
         }
-    }
+    };
 
-    $(document).on('keypress', function (e) {
+    $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
             atualizar();
         }
@@ -551,32 +564,31 @@ function changeCalendar() {
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
-    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-    $('input[name="daterange"]').dateRangePicker({
-        setValue: function (s) {
-            if (s) {
-                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
-                $(this).html(s).data('value', normalize);
-                $('input[name="daterange"]').attr('value', normalize);
-                $('input[name="daterange"]').val(normalize);
-            } else {
-                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+    $('input[name="daterange"]')
+        .dateRangePicker({
+            setValue: function (s) {
+                if (s) {
+                    let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                    $(this).html(s).data("value", normalize);
+                    $('input[name="daterange"]').attr("value", normalize);
+                    $('input[name="daterange"]').val(normalize);
+                } else {
+                    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+                    $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+                }
+            },
+        })
+        .on("datepicker-change", function () {})
+        .on("datepicker-open", function () {
+            $(".filter-badge-input").removeClass("show");
+        })
+        .on("datepicker-close", function () {
+            $(this).removeClass("focused");
+            if ($(this).data("value")) {
+                $(this).addClass("active");
             }
-        }
-    })
-    .on('datepicker-change', function () {
-
-    })
-    .on('datepicker-open', function () {
-        $('.filter-badge-input').removeClass('show');
-    })
-    .on('datepicker-close', function () {
-        $(this).removeClass('focused');
-        if ($(this).data('value')) {
-            $(this).addClass('active');
-        }
-    });
+        });
 }
 
 function changeCompany() {
@@ -585,13 +597,13 @@ function changeCompany() {
     });
 }
 
-function updateStorage(v){
-    var existing = sessionStorage.getItem('info');
+function updateStorage(v) {
+    var existing = sessionStorage.getItem("info");
     existing = existing ? JSON.parse(existing) : {};
-    Object.keys(v).forEach(function(val, key){
+    Object.keys(v).forEach(function (val, key) {
         existing[val] = v[val];
-   })
-    sessionStorage.setItem('info', JSON.stringify(existing));
+    });
+    sessionStorage.setItem("info", JSON.stringify(existing));
 }
 
 let skeLoad = `

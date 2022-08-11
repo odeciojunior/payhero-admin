@@ -38,25 +38,25 @@ class DiscountCoupon extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'name',
-        'type',
-        'value',
-        'code',
-        'status',
-        'progressive_rules',
-        'plans',
-        'discount',
-        'expires',
-        'rule_value',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "name",
+        "type",
+        "value",
+        "code",
+        "status",
+        "progressive_rules",
+        "plans",
+        "discount",
+        "expires",
+        "rule_value",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -83,12 +83,12 @@ class DiscountCoupon extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Cupom ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Cupom ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Cupom ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Cupom " . $this->name . " foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Cupom " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Cupom " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -99,6 +99,6 @@ class DiscountCoupon extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo("Modules\Core\Entities\Project");
     }
 }

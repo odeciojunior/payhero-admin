@@ -55,15 +55,11 @@ class Product extends Model
     /**
      * @var array
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["created_at", "updated_at", "deleted_at"];
     /**
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = ["id_code"];
     /**
      * @var string
      */
@@ -71,34 +67,34 @@ class Product extends Model
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'category_id',
-        'user_id',
-        'name',
-        'description',
-        'guarantee',
-        'format',
-        'photo',
-        'height',
-        'width',
-        'length',
-        'weight',
-        'shopify',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'digital_product_url',
-        'url_expiration_time',
-        'price',
-        'shopify_id',
-        'shopify_variant_id',
-        'project_id',
-        'type_enum',
-        'status_enum',
+        "category_id",
+        "user_id",
+        "name",
+        "description",
+        "guarantee",
+        "format",
+        "photo",
+        "height",
+        "width",
+        "length",
+        "weight",
+        "shopify",
+        "created_at",
+        "updated_at",
+        "deleted_at",
+        "digital_product_url",
+        "url_expiration_time",
+        "price",
+        "shopify_id",
+        "shopify_variant_id",
+        "project_id",
+        "type_enum",
+        "status_enum",
     ];
     /**
      * @var bool
@@ -125,12 +121,12 @@ class Product extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Produto ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Produto ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Produto ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Produto " . $this->name . " foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Produto " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Produto " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -181,11 +177,11 @@ class Product extends Model
      */
     public function variants()
     {
-        return $this->hasMany(Product::class, 'shopify_id', 'shopify_id')
-            ->where(function ($query) {
-                $query->where('type_enum', Product::TYPE_PHYSICAL)
-                    ->orWhere('type_enum', Product::TYPE_DIGITAL)
-                    ->where('status_enum', Product::STATUS_ENUM_APPROVED);
-            });
+        return $this->hasMany(Product::class, "shopify_id", "shopify_id")->where(function ($query) {
+            $query
+                ->where("type_enum", Product::TYPE_PHYSICAL)
+                ->orWhere("type_enum", Product::TYPE_DIGITAL)
+                ->where("status_enum", Product::STATUS_ENUM_APPROVED);
+        });
     }
 }

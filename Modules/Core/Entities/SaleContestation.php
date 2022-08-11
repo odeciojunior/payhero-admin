@@ -64,26 +64,26 @@ class SaleContestation extends Model
     public const STATUS_LOST = 2;
     public const STATUS_WIN = 3;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     protected $fillable = [
-        'sale_id',
-        'gateway_id',
-        'data',
-        'nsu',
-        'gateway_case_number',
-        'file_date',
-        'transaction_date',
-        'request_date',
-        'reason',
-        'observation',
-        'is_contested',
-        'file_user_completed',
-        'expiration_date',
-        'status',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "sale_id",
+        "gateway_id",
+        "data",
+        "nsu",
+        "gateway_case_number",
+        "file_date",
+        "transaction_date",
+        "request_date",
+        "reason",
+        "observation",
+        "is_contested",
+        "file_user_completed",
+        "expiration_date",
+        "status",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     public function sale(): BelongsTo
@@ -93,6 +93,6 @@ class SaleContestation extends Model
 
     public function files(): HasMany
     {
-        return $this->hasMany(SaleContestationFile::class, 'contestation_sale_id');
+        return $this->hasMany(SaleContestationFile::class, "contestation_sale_id");
     }
 }

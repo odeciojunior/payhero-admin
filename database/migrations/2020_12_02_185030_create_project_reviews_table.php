@@ -13,21 +13,24 @@ class CreateProjectReviewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_reviews', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('project_id')->index();
-            $table->json('apply_on_plans')->nullable();
-            $table->string('photo')->nullable();
-            $table->string('name')->nullable();
-            $table->float('stars')->default(5);
-            $table->string('description', 255)->nullable();
-            $table->boolean('active_flag')->default(0);
+        Schema::create("project_reviews", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("project_id")->index();
+            $table->json("apply_on_plans")->nullable();
+            $table->string("photo")->nullable();
+            $table->string("name")->nullable();
+            $table->float("stars")->default(5);
+            $table->string("description", 255)->nullable();
+            $table->boolean("active_flag")->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('project_reviews', function (Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
+        Schema::table("project_reviews", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
     }
 
@@ -38,6 +41,6 @@ class CreateProjectReviewsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_reviews');
+        Schema::dropIfExists("project_reviews");
     }
 }

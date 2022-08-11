@@ -12,8 +12,8 @@ class AddColumnPriceTableProduct extends Migration
      */
     public function up()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->string('price', 191)->nullable();
+        Schema::table("products", function (Blueprint $table) {
+            $table->string("price", 191)->nullable();
         });
     }
 
@@ -23,8 +23,8 @@ class AddColumnPriceTableProduct extends Migration
      */
     public function down()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->dropColumn('price');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropColumn("price");
         });
     }
 }

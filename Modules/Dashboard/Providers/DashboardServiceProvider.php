@@ -25,7 +25,7 @@ class DashboardServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -45,12 +45,13 @@ class DashboardServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('dashboard.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'dashboard'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("dashboard.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "dashboard");
     }
 
     /**
@@ -60,17 +61,26 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/dashboard');
+        $viewPath = resource_path("views/modules/dashboard");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/dashboard';
-        }, \Config::get('view.paths')), [$sourcePath]), 'dashboard');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/dashboard";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "dashboard"
+        );
     }
 
     /**
@@ -80,12 +90,12 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/dashboard');
+        $langPath = resource_path("lang/modules/dashboard");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'dashboard');
+            $this->loadTranslationsFrom($langPath, "dashboard");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'dashboard');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "dashboard");
         }
     }
 
@@ -95,8 +105,8 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

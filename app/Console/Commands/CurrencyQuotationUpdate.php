@@ -12,12 +12,12 @@ class CurrencyQuotationUpdate extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'update:currencyquotation';
+    protected $signature = "update:currencyquotation";
     /**
      * The console command description.
      * @var string
      */
-    protected $description = 'Atualiza as cotações das moedas';
+    protected $description = "Atualiza as cotações das moedas";
 
     /**
      * Create a new command instance.
@@ -30,7 +30,6 @@ class CurrencyQuotationUpdate extends Command
 
     public function handle()
     {
-
         try {
             $currencyQuotationService = new CurrencyQuotationService();
 
@@ -38,6 +37,5 @@ class CurrencyQuotationUpdate extends Command
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

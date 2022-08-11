@@ -13,13 +13,16 @@ class AlterProductsTableAddColumnSku extends Migration
      */
     public function up()
     {
-        if (Schema::hasColumn('products', 'sku')) {
-            Schema::table('products', function ($table) {
-                $table->string('sku')->change();
+        if (Schema::hasColumn("products", "sku")) {
+            Schema::table("products", function ($table) {
+                $table->string("sku")->change();
             });
         } else {
-            Schema::table('products', function (Blueprint $table) {
-                $table->string('sku')->nullable()->after('shopify_variant_id');
+            Schema::table("products", function (Blueprint $table) {
+                $table
+                    ->string("sku")
+                    ->nullable()
+                    ->after("shopify_variant_id");
             });
         }
     }
@@ -31,8 +34,8 @@ class AlterProductsTableAddColumnSku extends Migration
      */
     public function down()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->dropColumn('sku');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropColumn("sku");
         });
     }
 }

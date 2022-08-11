@@ -18,7 +18,7 @@ class ConvertaXServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class ConvertaXServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('convertax.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'convertax'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("convertax.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "convertax");
     }
 
     /**
@@ -53,17 +54,26 @@ class ConvertaXServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/convertax');
+        $viewPath = resource_path("views/modules/convertax");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/convertax';
-        }, \Config::get('view.paths')), [$sourcePath]), 'convertax');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/convertax";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "convertax"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class ConvertaXServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/convertax');
+        $langPath = resource_path("lang/modules/convertax");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'convertax');
+            $this->loadTranslationsFrom($langPath, "convertax");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'convertax');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "convertax");
         }
     }
 
@@ -89,8 +99,8 @@ class ConvertaXServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

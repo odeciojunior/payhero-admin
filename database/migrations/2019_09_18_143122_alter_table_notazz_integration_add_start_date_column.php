@@ -12,9 +12,15 @@ class AlterTableNotazzIntegrationAddStartDateColumn extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->dateTime('start_date')->after('token_logistics')->nullable();
-            $table->tinyInteger('invoice_type')->after('token_logistics')->default(1);
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table
+                ->dateTime("start_date")
+                ->after("token_logistics")
+                ->nullable();
+            $table
+                ->tinyInteger("invoice_type")
+                ->after("token_logistics")
+                ->default(1);
         });
     }
 
@@ -24,9 +30,9 @@ class AlterTableNotazzIntegrationAddStartDateColumn extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->dropColumn('invoice_type');
-            $table->dropColumn('start_date');
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table->dropColumn("invoice_type");
+            $table->dropColumn("start_date");
         });
     }
 }

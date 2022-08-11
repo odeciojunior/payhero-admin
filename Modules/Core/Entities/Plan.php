@@ -43,7 +43,7 @@ class Plan extends Model
     /**
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = ["id_code"];
     /**
      * @var string
      */
@@ -52,22 +52,22 @@ class Plan extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'name',
-        'description',
-        'code',
-        'price',
-        'status',
-        'shopify_id',
-        'shopify_variant_id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "name",
+        "description",
+        "code",
+        "price",
+        "status",
+        "shopify_id",
+        "shopify_variant_id",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**
@@ -95,12 +95,12 @@ class Plan extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Plano ' . $this->name . ' foi deletado.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Plano ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Plano ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Plano " . $this->name . " foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Plano " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Plano " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -159,7 +159,7 @@ class Plan extends Model
      */
     public function smsMessages()
     {
-        return $this->hasMany('Modules\Core\Entities\SmsMessage', 'plan');
+        return $this->hasMany("Modules\Core\Entities\SmsMessage", "plan");
     }
 
     /**
@@ -167,7 +167,7 @@ class Plan extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('Modules\Core\Entities\ZenviaSms');
+        return $this->hasMany("Modules\Core\Entities\ZenviaSms");
     }
 
     /**
@@ -175,7 +175,7 @@ class Plan extends Model
      */
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'products_plans', 'plan_id', 'product_id');
+        return $this->belongsToMany(Product::class, "products_plans", "plan_id", "product_id");
     }
 
     public function variants()
