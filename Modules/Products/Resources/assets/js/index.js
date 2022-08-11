@@ -301,7 +301,33 @@ jQuery(function () {
                     loadOnAny(".page-content", true);
                 }, 2000);
             },
+            complete: response => {
+                unlockSearch($('#btn-filtro'));
+            }
         });
+    }
+
+    function searchIsLocked(elementButton) {
+        return elementButton.attr('block_search');
+    }
+
+    function lockSearch(elementButton) {
+        elementButton.attr('block_search', 'true');
+        //set layout do button block
+    }
+
+    function unlockSearch(elementButton) {
+        elementButton.attr('block_search', 'false');
+        //layout do button block
+    }
+
+    function loadData() {
+        elementButton = $('#btn-filtro');
+        if (searchIsLocked(elementButton) != 'true') {
+            lockSearch(elementButton);
+            console.log(elementButton.attr('block_search'));
+            updateProducts();
+        }
     }
 
     function handleLocalStorage() {
@@ -396,7 +422,7 @@ jQuery(function () {
             getName: $("#name").val(),
         };
         localStorage.setItem("filtersApplied", JSON.stringify(filtersApplied));
-        updateProducts();
+        loadData();
     });
 
     getProjects();

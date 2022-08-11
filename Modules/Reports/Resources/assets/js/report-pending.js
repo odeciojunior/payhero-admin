@@ -7,6 +7,29 @@ $(function () {
     changeCompany();
 });
 
+function searchIsLocked(elementButton) {
+    return elementButton.attr('block_search');
+}
+
+function lockSearch(elementButton) {
+    elementButton.attr('block_search', 'true');
+    //set layout do button block
+}
+
+function unlockSearch(elementButton) {
+    elementButton.attr('block_search', 'false');
+    //layout do button block
+}
+
+function loadData() {
+    elementButton = $('#bt_filtro');
+    if (searchIsLocked(elementButton) != 'true') {
+        lockSearch(elementButton);
+        console.log(elementButton.attr('block_search'));
+        atualizar();
+    }
+}
+
 function atualizar(link = null) {
     currentPage = link;
     let updateResume = true;
@@ -97,6 +120,9 @@ function atualizar(link = null) {
             }
             pagination(response, "pending", atualizar);
         },
+        complete: response => {
+            unlockSearch($('#bt_filtro'));
+        }
     });
 
     if (updateResume) {
@@ -188,7 +214,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
+        loadData();
     });
 
     $(".btn-light-1").click(function () {
@@ -505,6 +531,9 @@ $(document).ready(function () {
                 }
                 pagination(response, "pending", atualizar);
             },
+            complete: response => {
+                unlockSearch($('#bt_filtro'));
+            }
         });
 
         if (updateResume) {
