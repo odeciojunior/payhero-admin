@@ -128,9 +128,8 @@ $(document).ready(function () {
             },
             error: (response) => {},
             success: (response) => {
-                countCompanies = response.data.length;
-
-                $(response.data).each(function (index, company) {
+                countCompanies = response.companies.length;
+                $(response.companies).each(function (index, company) {
                     if (companyIsApproved(company)) {
                         countCompanyApproved++;
                         $("#companies").append(`
