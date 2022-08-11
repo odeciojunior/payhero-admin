@@ -17,8 +17,8 @@ $(document).ready(function(){
 
     $(document).on("change","#transfers_company_select", function () {
         resetSkeleton();
-        updateStatements();
         updateWithdrawals();
+        updateStatements();
     });
 
     $('.company-navbar').change(function () {
@@ -37,8 +37,8 @@ $(document).ready(function(){
                 if(!isEmpty(data2.company_default_projects)){
 
                     getSettings($('.company-navbar').val());
-                    window.updateStatements();
                     window.updateWithdrawals();
+                    window.updateStatements();
                 }
                 else{
                     $("#project-empty").show();
@@ -77,8 +77,8 @@ $(document).ready(function(){
                     //getCompanies();
                     resetSkeleton();
                     getSettings($('.company-navbar').val());
-                    window.updateStatements();
                     window.updateWithdrawals();
+                    window.updateStatements();
 
                 } else {
                     $("#project-empty").show();
@@ -521,25 +521,16 @@ $(document).ready(function(){
                     if (response.data.length > 3) {
                         setTimeout(() => {
                             $('#container-withdraw').asScrollable();
-                        }, 400);
+                            asScrollableTop();
+                        }, 500);
+                    }else{
+                        asScrollableTop();
                     }
 
-                    $(".asScrollable-container").scroll(() => {
-                        if ($(".list-linear-gradient-top").css("display") === "none") {
-                            if ($(".asScrollable-container").scrollTop() > 90) {
-                                $(".list-linear-gradient-top").fadeIn();
-                            }
-                        }
-
-                        if ($(".list-linear-gradient-top").css("display") === "block") {
-                            if ($(".asScrollable-container").scrollTop() < 90) {
-                                $(".list-linear-gradient-top").fadeOut();
-                            }
-                        }
-                    });
                 } else {
                     $(".skeleton-withdrawal").hide();
                     $("#empty-history")
+
                         .css({
                             display: "flex",
                             "justify-content": "center",
@@ -583,6 +574,26 @@ $(document).ready(function(){
             hiddenConfig()
         }
     });
+
+    function asScrollableTop()
+    {
+        if($('.asScrollable-container').hasClass)
+        {
+            $('.asScrollable-container').scroll(() => {
+                if ($('.list-linear-gradient-top').css('display') === 'none') {
+                    if ($('.asScrollable-container').scrollTop() > 90) {
+                        $('.list-linear-gradient-top').fadeIn()
+                    }
+                }
+
+                if ($('.list-linear-gradient-top').css('display') === 'block') {
+                    if ($('.asScrollable-container').scrollTop() < 90) {
+                        $('.list-linear-gradient-top').fadeOut()
+                    }
+                }
+            })
+        }
+    }
 
     function hiddenConfig(){
         $('#btn-config-all').removeClass('active-outline');
