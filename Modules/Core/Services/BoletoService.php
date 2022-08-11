@@ -15,7 +15,6 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\SendEmailEvent;
-use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Events\BilletExpiredEvent;
 use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Entities\SaleLog;
@@ -792,65 +791,6 @@ class BoletoService
                         }
                     }
                 });
-        } catch (Exception $e) {
-            report($e);
-        }
-    }
-
-    /**
-     *  Boletos Compensados
-     * @return void
-     */
-    public function verifyBoletoPaid()
-    {
-        try {
-            $userModel = new User();
-            $sql = 'SELECT u.id owner_id
-                            , u.email
-                            , COUNT(DISTINCT s.id) as boleto_count
-                            , COUNT(DISTINCT t.id) as transactions_boleto_count
-                            , SUM(t.value) as transactions_amount
-                            FROM users u
-                            INNER JOIN companies c
-                            ON u.id = c.user_id
-                            INNER JOIN sales s
-                            ON u.id = s.owner_id
-                            INNER JOIN transactions t
-                            ON t.sale_id = s.id
-                            AND t.company_id = c.id
-                            WHERE 1 = 1
-                            AND s.payment_method = 2
-                            AND s.status = 1
-                            AND s.api_flag = 0
-                            AND date(s.end_date) = CURRENT_DATE
-                            AND t.deleted_at IS NULL
-                            GROUP BY u.id
-                            , u.email';
-            $boletosPaid = DB::select($sql);
-            foreach ($boletosPaid as $boleto) {
-                try {
-                    $user = $userModel->find($boleto->owner_id);
-                    if ($boleto->boleto_count == 1) {
-                        $message = "boleto foi compensado";
-                        $messageHeader = "Boleto Compensado!";
-                    } else {
-                        $message = "boletos foram compensados";
-                        $messageHeader = "Boletos Compensados!";
-                    }
-                    $data = [
-                        "user" => $user,
-                        "name" => $user->name,
-                        "boleto_count" => strval($boleto->boleto_count),
-                        "message" => $message,
-                        "messageHeader" => $messageHeader,
-                        "transaction_value" =>
-                            "R$ " . number_format(intval($boleto->transactions_amount) / 100, 2, ",", "."),
-                    ];
-                    event(new BoletoPaidEvent($data));
-                } catch (Exception $e) {
-                    report($e);
-                }
-            }
         } catch (Exception $e) {
             report($e);
         }

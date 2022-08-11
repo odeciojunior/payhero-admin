@@ -176,6 +176,9 @@ window.atualizar = function (link = null) {
             }
             pagination(response, "sales", atualizar);
         },
+        complete: response => {
+            unlockSearch($('#bt_filtro'));
+        }
     });
 
     if (updateResume) {

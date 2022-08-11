@@ -126,6 +126,9 @@ function atualizar(link = null) {
             }
             pagination(response, "pending", atualizar);
         },
+        complete: response => {
+            unlockSearch($('#bt_filtro'));
+        }
     });
 
     if (updateResume) {
@@ -217,7 +220,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
+        loadData();
     });
 
     $(".btn-light-1").click(function () {
@@ -542,6 +545,9 @@ $(document).ready(function () {
                 }
                 pagination(response, "pending", atualizar);
             },
+            complete: response => {
+                unlockSearch($('#bt_filtro'));
+            }
         });
 
         if (updateResume) {

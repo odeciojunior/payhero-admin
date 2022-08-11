@@ -215,6 +215,9 @@ function atualizar(link = null) {
             pagination(response, "sales", atualizar);
             loadingOnScreenRemove();
         },
+        complete: response => {
+            unlockSearch($('#bt_filtro'));
+        }
     });
 
     if (updateResume) {
@@ -474,7 +477,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
+        loadData();
     });
 
     let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");

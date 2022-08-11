@@ -30,13 +30,43 @@ $(document).ready(function () {
         2: "danger",
     };
 
+    function searchIsLocked(elementButton) {
+        return elementButton.attr('block_search');
+    }
+
+    function lockSearch(elementButton) {
+        elementButton.attr('block_search', 'true');
+        //set layout do button block
+    }
+
+    function unlockSearch(elementButton) {
+        elementButton.attr('block_search', 'false');
+        //layout do button block
+    }
+
     $("#btn-filter-affiliates").on("click", function () {
-        getAffiliates();
+        loadData($("#btn-filter-affiliates"), 1);
     });
 
     $("#btn-filter-affiliates-request").on("click", function () {
-        getAffiliatesRequest();
+        loadData($("#btn-filter-affiliates-request"), 2);
     });
+
+    function loadData(elementButton, elementFunction) {
+        if (searchIsLocked(elementButton) != 'true') {
+            lockSearch(elementButton);
+            console.log(elementButton.attr('block_search'));
+
+            switch (elementFunction) {
+                case 1:
+                    getAffiliates();
+                    break;
+                case 2:
+                    getAffiliatesRequest();
+                    break;
+            }
+        }
+    }
 
     function getProjects(loading='y') {
         if(loading=='y')
@@ -325,6 +355,9 @@ $(document).ready(function () {
                     });
                 });
             },
+            complete: response => {
+                unlockSearch($('#btn-filter-affiliates'));
+            }
         });
     }
     function getAffiliatesRequest() {
@@ -422,6 +455,9 @@ $(document).ready(function () {
                     });
                 });
             },
+            complete: response => {
+                unlockSearch($('#btn-filter-affiliates-request'));
+            }
         });
     }
 });

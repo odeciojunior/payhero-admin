@@ -46,7 +46,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
         $schedule->command('demo:create-fake-sale')->withoutOverlapping()->everyFiveMinutes();
 
-        $schedule->command('check:systems')->everyTenMinutes();
+        $schedule->command("check:systems")->everyTenMinutes();
+        $schedule->command("ethoca:proccess-postback")->everyTenMinutes();
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
         $schedule->command('withdrawals:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
@@ -94,7 +95,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('user:benefits:update')->dailyAt('06:30');
         $schedule->command('achievements:update')->dailyAt('06:40');
         $schedule->command('account-health:update')->dailyAt('06:50');
-        
+
         $schedule->command('command:update-user-level')->dailyAt('07:00');
         $schedule->command('updateTransactionsReleaseDate')->dailyAt('07:15');
         $schedule->command('update:currencyquotation')->dailyAt('07:20');
@@ -113,7 +114,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('demo:create-fake-ticket')->dailyAt('16:50');
         $schedule->command('demo:create-fake-contestation')->dailyAt('17:00');
 
-        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');        
+        $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');
 
         $schedule->command('safe2pay:update-reason-sale-contestations')->dailyAt('19:30');
 
@@ -125,9 +126,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
         $schedule->command('verify:promotional-tax')->dailyAt('23:45');
-        
+
         $schedule->command('demo:create-fake-invite')->weekly();
-        
+
         // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
     }
 

@@ -45,7 +45,6 @@ class BoletoPaidPusherNotifyUser implements ShouldQueue
 
             $pusherService->sendPusher($dataPusher);
         } catch (Exception $e) {
-            Log::warning("Erro ao tentar enviar notificação de boleto compensado");
             report($e);
         }
     }
