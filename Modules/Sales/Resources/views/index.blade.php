@@ -147,11 +147,14 @@
                                     </select>
                                 </div>
 
-                            </div>
-
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
+                                    <label for="cupom">Cupom</label>
+                                    <input name="coupon" id="cupom" class="input-pad" placeholder="Código do cupom">
                                 </div>
 
-                                <div class="row mb-md-15">
+                            </div>
+
+                            <div class="row mb-md-15">
 
                                 <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                     <label for="valor">Comissão</label>

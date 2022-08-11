@@ -322,12 +322,10 @@ $(() => {
 
         //             if (response.data != "api sales") {
         //                 $.each(response.data, function (i, project) {
-        //                     $("#project-select").append(
-                                $("<option>", {
+        //                     $("#project-select").append($("<option>", {
             //                         value: project.id,
             //                         text: project.name,
-        //                         })
-                            );
+        //                         }));
         //                 });
         //             }
 

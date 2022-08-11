@@ -90,14 +90,6 @@ class ReportService
             report($e);
             return ['message' => 'Não foi possível verificar todos os valores totais de venda'];
         }
-
-    public static function getProjectsWithPendingBalance(){
-        return Sale::select('sales.project_id')
-            ->distinct()
-            ->leftjoin('transactions','transactions.sale_id','sales.id')
-            ->where('transactions.user_id',auth()->user()->getAccountOwnerId())
-            ->where('transactions.STATUS','pending')
-            ->get();
     }
 
     public static function getProjectsWithCheckouts(){

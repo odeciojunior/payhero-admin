@@ -83,7 +83,7 @@ function changeSaleStatus() {
             });
         }
 	});
-});
+}
 
 function getProjects(companies) {
 

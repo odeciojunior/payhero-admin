@@ -78,7 +78,8 @@ class CompaniesSelectResource extends JsonResource
             'company_type' => $this->present()->getCompanyType($this->company_type),
             'user_address_document_status' => $userAddressDocumentStatus,
             'user_personal_document_status' => $userPersonalDocumentStatus,
-            'company_is_approved' => $companyIsApproved
+            'company_is_approved' => $companyIsApproved,
+            'projects' => $projects3
         ];
     }
 }

@@ -95,8 +95,8 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadingOnScreenRemove();//loadOnAny('#page-integrates',true);
                 errorAjaxResponse(response);
-                loadOnAny('#page-integrates',true);
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
@@ -119,44 +119,7 @@ $(document).ready(function () {
                 getIntegration();
                 refreshToken();
                 deleteIntegration();
-                loadOnAny('#page-integrates',true);
-            }
-        });
-    }
-
-    let integrationTypeEnum = {
-        external: "Integração externa",
-        checkout_api: "Checkout API",
-    };
-    let integrationTypeEnumBadge = {
-        admin: "default",
-        personal: "default",
-        external: "success",
-        checkout_api: "primary",
-    };
-    let status = {
-        active: "Ativo",
-        inactive: "Inativo",
-    };
-    let statusBadge = {
-        active: "success",
-        inactive: "danger",
-        // 3: 'warning',
-    };
-
-    function refreshIntegrations(page = 1) {
-        loadingOnScreen();
-
-        $.ajax({
-            method: "GET",
-            url: "/api/integrations?resume=true&page=" + page + "&company_id=" + $('.company-navbar').val(),
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                loadingOnScreenRemove();
+                loadingOnScreenRemove();//loadOnAny('#page-integrates',true);
             }
         });
     }

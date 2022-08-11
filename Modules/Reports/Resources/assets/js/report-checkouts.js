@@ -119,7 +119,7 @@ $(function () {
         //         loadingOnScreenRemove();
         //     }
         // });
-    },
+    }
 
     $("#select_projects").on('change', function () {
         window.updateReports();
