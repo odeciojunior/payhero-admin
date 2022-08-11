@@ -284,9 +284,16 @@ function getFilters(urlParams = false) {
         plan: $("#plan").val(),
         coupon: $("#cupom").val(),
         company: $("#empresa").val(),
-        value: $("#valor")
-            .val()
-            .replace(/[^\d]+/g, ""),
+        value:
+            parseInt(
+                $("#valor")
+                    .val()
+                    .replace(/[^\d]+/g, "")
+            ) > 0
+                ? $("#valor")
+                      .val()
+                      .replace(/[^\d]+/g, "")
+                : "",
         email_client: $("#email_cliente").val(),
         upsell: $("#upsell").val(),
         order_bump: $("#order-bump").val(),
@@ -423,6 +430,13 @@ $(document).ready(function () {
         } else {
             $(this).val(0);
         }
+    });
+
+    $("#valor").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
     });
 
     $(".transaction-value")
