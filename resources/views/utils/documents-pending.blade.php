@@ -4,8 +4,8 @@
         <div class="new-register-overlay-container pb-4">
             <div class="new-register-overlay-header">
                 <div class="new-register-overlay-title-container">
-                    <div class="d-flex">
-                        <div style="position: absolute">
+                    <div class="d-flex align-items-center">
+                        <div style="position: absolute;">
                             <div class="new-register-btn close-modal modal-top-btn">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      width="24"
@@ -22,43 +22,17 @@
                         </div>
                     </div>
                     <div class="new-register-overlay-subtitle">
-                        Você acabou de chegar na Cloudfox e queremos te proporcionar uma experiência única
+                        Clique nos botões abaixo e siga o passo a passo para começar sua operação na Cloudfox
                     </div>
                 </div>
             </div>
             <div class="new-register-overlay-body">
-                <div id="new-register-firt-page">
-                    <div class="card extra-informations-user">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <div class="icon d-flex align-items-center">
-                                        <span class="bg-color-blue account-health-note-circle"></span>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h1 class="title">Queremos conhecer você!</h1>
-                                    <p class="description">Temos algumas perguntas para conhecer melhor você e seu
-                                        negócio.</p>
-                                </div>
-                            </div>
-                            <div>
-                                <button id="open-steps-btn"
-                                        type="button"
-                                        class="btn new-register-btn">
-                                    <img src="{{ asset('build/global/img/icon-chevron-right.svg') }}"
-                                         alt="">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div id="new-register-first-page">
                     <div class="init-operation-container">
-                        <div class="header">
-                            <h1 class="title">Para <b>começar a sua operação</b> na Cloudfox</h1>
-                            <p class="description">Criamos um passo a passo para você finalizar o seu cadastro</p>
-                        </div>
-
                         <div class="body">
+                            <div class="user-informations-status">
+                                <!-- JS load -->
+                            </div>
                             <div class="company-status">
                                 <!-- JS load -->
                             </div>
