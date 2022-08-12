@@ -268,9 +268,16 @@ $(document).ready(function () {
             $(".logo-preview-container").addClass("has-banner");
             $(".menu-bar-mobile").hide("slow");
             $(".purchase-menu-mobile").fadeIn("slow");
+
+            if ($("input[name=checkout_banner_type]").val() == "1") {
+                $(".logo-div").removeClass("has-retangle-banner");
+            } else {
+                $(".logo-div").addClass("has-retangle-banner");
+            }
         } else {
             $("#banner_type").fadeOut("slow", "swing");
             $(".logo-div").removeClass("has-banner");
+            $(".logo-div").removeClass("has-retangle-banner");
             $(".logo-preview-container").removeClass("has-banner");
             $(".menu-bar-mobile").show("slow");
             $(".purchase-menu-mobile").fadeOut("slow");

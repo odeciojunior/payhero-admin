@@ -161,7 +161,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    margin-top: 5px;
+    margin-top: 10px;
     /* height: 50px; */
     padding: 10px 70px 0 70px;
     -webkit-transition: all 0.1s;
@@ -179,7 +179,7 @@
 
 .logo-desktop-div .logo-desktop {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
 }
 
@@ -192,12 +192,10 @@
     max-height: 41px;
     max-width: 90px;
     object-fit: contain;
-    background-color: #fff;
 }
 
 .logo-desktop-div.has-retangle-banner {
     height: 50px;
-    margin-top: -20px;
     padding: 0px 70px 0 80px !important;
 }
 
@@ -237,6 +235,11 @@
 
 .logo-menu-bar.has-banner {
     margin-top: -8px;
+}
+
+.logo-desktop.has-banner
+.preview-logo.desktop {
+    background-color: #ffff;
 }
 
 .purchase-menu-mobile {
@@ -836,7 +839,12 @@
     }
 
     .logo-desktop-div.desktop {
-        padding: 0px 0 0 110px !important;
+        padding: 0px 0 0 117px !important;
+    }
+
+    .logo-desktop-div.has-retangle-banner {
+        height: 50px;
+        padding: 0px 70px 0 130px !important
     }
 
     .logo-desktop-div .logo-desktop {
@@ -845,8 +853,8 @@
     }
 
     .preview-logo.desktop {
-        max-width: 30px;
-        max-height: 30px;
+
+        max-height: 25px;
     }
 
     #preview-desktop-visual {
