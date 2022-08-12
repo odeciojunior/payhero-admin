@@ -16,9 +16,11 @@ class VerifyFrozenAccountApi
      */
     public function handle($request, Closure $next)
     {
-        if ((auth()->user()->status ?? null) == User::STATUS_ACCOUNT_FROZEN &&
-            $this->inExceptArray($request) == false) {
-            return response()->json(['message' => 'Conta congelada!'], 400);
+        if (
+            (auth()->user()->status ?? null) == User::STATUS_ACCOUNT_FROZEN &&
+            $this->inExceptArray($request) == false
+        ) {
+            return response()->json(["message" => "Conta congelada!"], 400);
         }
 
         return $next($request);
@@ -27,39 +29,39 @@ class VerifyFrozenAccountApi
     protected function inExceptArray($request)
     {
         $excepts = [
-            '/api/dashboard/getvalues',
-            '/api/recovery/details',
-            '/api/recovery/export',
-            '/api/tracking/export',
-            '/api/tracking',
-            '/api/tickets/sendmessage',
-            '/api/old_finances/export',
-            '/api/transfers/account-statement-data/export',
-            '/api/logout',
-            '/api/projects/updateorder',
-            '/api/tracking/import',
-            '/api/sales/export',
+            "/api/dashboard/getvalues",
+            "/api/recovery/details",
+            "/api/recovery/export",
+            "/api/tracking/export",
+            "/api/tracking",
+            "/api/tickets/sendmessage",
+            "/api/old_finances/export",
+            "/api/transfers/account-statement-data/export",
+            "/api/logout",
+            "/api/projects/updateorder",
+            "/api/tracking/import",
+            "/api/sales/export",
         ];
-        
-        if ($request->route('transaction_id')) {
-            array_push($excepts,'/api/sales/newordershopify/'.$request->route('transaction_id'));
+
+        if ($request->route("transaction_id")) {
+            array_push($excepts, "/api/sales/newordershopify/" . $request->route("transaction_id"));
         }
-        if ($request->route('achievement')) {
-            array_push($excepts,'/api/dashboard/update-achievements/'.$request->route('achievement'));
+        if ($request->route("achievement")) {
+            array_push($excepts, "/api/dashboard/update-achievements/" . $request->route("achievement"));
         }
 
-        if(strtoupper($request->method()) == 'GET') {
+        if (strtoupper($request->method()) == "GET") {
             return true;
         }
 
-        $url = substr($request->getRequestUri(), 0, strripos($request->getRequestUri(), '/'));
-        if(in_array($url, ['/api/tracking/notify', '/api/withdrawals/get-transactions'])) {
+        $url = substr($request->getRequestUri(), 0, strripos($request->getRequestUri(), "/"));
+        if (in_array($url, ["/api/tracking/notify", "/api/withdrawals/get-transactions"])) {
             return true;
         }
 
         foreach ($excepts as $except) {
-            if ($except !== '/') {
-                $except = trim($except, '/');
+            if ($except !== "/") {
+                $except = trim($except, "/");
             }
 
             if ($request->fullUrlIs($except) || $request->is($except)) {
@@ -69,5 +71,4 @@ class VerifyFrozenAccountApi
 
         return false;
     }
-
 }

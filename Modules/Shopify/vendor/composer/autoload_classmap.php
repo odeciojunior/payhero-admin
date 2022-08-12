@@ -5,10 +5,13 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return array(
-    'Modules\\Shopify\\Database\\Seeders\\ShopifyDatabaseSeeder' => $baseDir . '/Database/Seeders/ShopifyDatabaseSeeder.php',
-    'Modules\\Shopify\\Http\\Controllers\\ShopifyApiController' => $baseDir . '/Http/Controllers/ShopifyApiController.php',
-    'Modules\\Shopify\\Http\\Controllers\\ShopifyController' => $baseDir . '/Http/Controllers/ShopifyController.php',
-    'Modules\\Shopify\\Providers\\ShopifyServiceProvider' => $baseDir . '/Providers/ShopifyServiceProvider.php',
-    'Modules\\Shopify\\Transformers\\ShopifyIntegrationsResource' => $baseDir . '/Transformers/IntegracoesShopifyResource.php',
-);
+return [
+    "Modules\\Shopify\\Database\\Seeders\\ShopifyDatabaseSeeder" =>
+        $baseDir . "/Database/Seeders/ShopifyDatabaseSeeder.php",
+    "Modules\\Shopify\\Http\\Controllers\\ShopifyApiController" =>
+        $baseDir . "/Http/Controllers/ShopifyApiController.php",
+    "Modules\\Shopify\\Http\\Controllers\\ShopifyController" => $baseDir . "/Http/Controllers/ShopifyController.php",
+    "Modules\\Shopify\\Providers\\ShopifyServiceProvider" => $baseDir . "/Providers/ShopifyServiceProvider.php",
+    "Modules\\Shopify\\Transformers\\ShopifyIntegrationsResource" =>
+        $baseDir . "/Transformers/IntegracoesShopifyResource.php",
+];

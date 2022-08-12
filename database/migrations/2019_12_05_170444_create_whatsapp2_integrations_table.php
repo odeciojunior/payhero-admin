@@ -13,28 +13,34 @@ class CreateWhatsapp2IntegrationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('whatsapp2_integrations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('user_id')->index();
-            $table->unsignedInteger('project_id')->index();
-            $table->string('api_token', 50);
-            $table->string('url_checkout');
-            $table->string('url_order');
-            $table->boolean('billet_generated')->default(true);
-            $table->boolean('billet_paid')->default(true);
-            $table->boolean('credit_card_refused')->default(true);
-            $table->boolean('credit_card_paid')->default(true);
-            $table->boolean('abandoned_cart')->default(true);
+        Schema::create("whatsapp2_integrations", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("user_id")->index();
+            $table->unsignedInteger("project_id")->index();
+            $table->string("api_token", 50);
+            $table->string("url_checkout");
+            $table->string("url_order");
+            $table->boolean("billet_generated")->default(true);
+            $table->boolean("billet_paid")->default(true);
+            $table->boolean("credit_card_refused")->default(true);
+            $table->boolean("credit_card_paid")->default(true);
+            $table->boolean("abandoned_cart")->default(true);
             $table->softDeletes();
             $table->timestamps();
         });
 
-        Schema::table('whatsapp2_integrations', function(Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
+        Schema::table("whatsapp2_integrations", function (Blueprint $table) {
+            $table
+                ->foreign("project_id")
+                ->references("id")
+                ->on("projects");
         });
 
-        Schema::table('whatsapp2_integrations', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("whatsapp2_integrations", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -45,6 +51,6 @@ class CreateWhatsapp2IntegrationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('whatsapp2_integrations');
+        Schema::dropIfExists("whatsapp2_integrations");
     }
 }

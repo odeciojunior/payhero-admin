@@ -14,14 +14,14 @@ class DeleteTemporaryFiles extends Command
      *
      * @var string
      */
-    protected $signature = 'command:deleteTemporaryFiles';
+    protected $signature = "command:deleteTemporaryFiles";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Remove Arquivos/Diretorios temporarios no registro';
+    protected $description = "Remove Arquivos/Diretorios temporarios no registro";
 
     /**
      * Create a new command instance.
@@ -35,26 +35,22 @@ class DeleteTemporaryFiles extends Command
 
     public function handle()
     {
-
         try {
-            $sDrive = Storage::disk('s3_documents');
-            $files = $sDrive->allFiles('uploads/register/user');
+            $sDrive = Storage::disk("s3_documents");
+            $files = $sDrive->allFiles("uploads/register/user");
 
             $totalDeleteFiles = 0;
 
             foreach ($files as $file) {
-
                 if ($sDrive->lastModified($file) < Carbon::yesterday()->unix()) {
                     $sDrive->delete($file);
                     $totalDeleteFiles++;
                 }
-
             }
-            print('DeleteTemporaryFiles - Success !' . PHP_EOL);
-            print('Deleted temp files: ' . $totalDeleteFiles . PHP_EOL);
+            print "DeleteTemporaryFiles - Success !" . PHP_EOL;
+            print "Deleted temp files: " . $totalDeleteFiles . PHP_EOL;
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

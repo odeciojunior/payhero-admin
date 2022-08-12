@@ -187,124 +187,124 @@ class Sale extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'owner_id',
-        'affiliate_id',
-        'customer_id',
-        'delivery_id',
-        'shipping_id',
-        'project_id',
-        'checkout_id',
-        'payment_form',
-        'payment_method',
-        'total_paid_value',
-        'sub_total',
-        'shipment_value',
-        'start_date',
-        'date_refunded',
-        'end_date',
-        'gateway_transaction_id',
-        'gateway_order_id',
-        'gateway_billet_identificator',
-        'gateway_id',
-        'status',
-        'gateway_status',
-        'upsell_id',
-        'installments_amount',
-        'installments_value',
-        'flag',
-        'boleto_link',
-        'boleto_digitable_line',
-        'boleto_due_date',
-        'cupom_code',
-        'shopify_order',
-        'woocommerce_order',
-        'shopify_discount',
-        'dolar_quotation',
-        'first_confirmation',
-        'api_flag',
-        'installment_tax_value',
-        'attempts',
-        'created_at',
-        'deleted_at',
-        'updated_at',
-        'gateway_card_flag',
-        'gateway_tax_percent',
-        'gateway_tax_value',
-        'automatic_discount',
-        'interest_total_value',
-        'refund_value',
-        'is_chargeback',
-        'is_chargeback_recovered',
-        'has_valid_tracking',
-        'has_order_bump',
-        'observation',
-        'original_total_paid_value',
-        'antifraud_warning_level'
+        "owner_id",
+        "affiliate_id",
+        "customer_id",
+        "delivery_id",
+        "shipping_id",
+        "project_id",
+        "checkout_id",
+        "payment_form",
+        "payment_method",
+        "total_paid_value",
+        "sub_total",
+        "shipment_value",
+        "start_date",
+        "date_refunded",
+        "end_date",
+        "gateway_transaction_id",
+        "gateway_order_id",
+        "gateway_billet_identificator",
+        "gateway_id",
+        "status",
+        "gateway_status",
+        "upsell_id",
+        "installments_amount",
+        "installments_value",
+        "flag",
+        "boleto_link",
+        "boleto_digitable_line",
+        "boleto_due_date",
+        "cupom_code",
+        "shopify_order",
+        "woocommerce_order",
+        "shopify_discount",
+        "dolar_quotation",
+        "first_confirmation",
+        "api_flag",
+        "installment_tax_value",
+        "attempts",
+        "created_at",
+        "deleted_at",
+        "updated_at",
+        "gateway_card_flag",
+        "gateway_tax_percent",
+        "gateway_tax_value",
+        "automatic_discount",
+        "interest_total_value",
+        "refund_value",
+        "is_chargeback",
+        "is_chargeback_recovered",
+        "has_valid_tracking",
+        "has_order_bump",
+        "observation",
+        "original_total_paid_value",
+        "antifraud_warning_level",
     ];
 
     public function checkout(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Checkout');
+        return $this->belongsTo("Modules\Core\Entities\Checkout");
     }
 
     public function project(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Project', 'project_id');
+        return $this->belongsTo("Modules\Core\Entities\Project", "project_id");
     }
 
     public function shipping(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Shipping');
+        return $this->belongsTo("Modules\Core\Entities\Shipping");
     }
 
     public function affiliate(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Affiliate');
+        return $this->belongsTo("Modules\Core\Entities\Affiliate");
     }
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Customer');
+        return $this->belongsTo("Modules\Core\Entities\Customer");
     }
 
     public function delivery(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Delivery');
+        return $this->belongsTo("Modules\Core\Entities\Delivery");
     }
 
     public function saleRefundHistory(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\SaleRefundHistory');
+        return $this->hasMany("Modules\Core\Entities\SaleRefundHistory");
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\User', 'owner_id');
+        return $this->belongsTo("Modules\Core\Entities\User", "owner_id");
     }
 
     public function plansSales(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\PlanSale');
+        return $this->hasMany("Modules\Core\Entities\PlanSale");
     }
 
     public function transactions(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\Transaction');
+        return $this->hasMany("Modules\Core\Entities\Transaction");
     }
 
     public function notazzInvoices(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\NotazzInvoice');
+        return $this->hasMany("Modules\Core\Entities\NotazzInvoice");
     }
 
     public function productsPlansSale(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\ProductPlanSale');
+        return $this->hasMany("Modules\Core\Entities\ProductPlanSale");
     }
 
     public function productsSaleApi(): HasMany
@@ -314,7 +314,7 @@ class Sale extends Model
 
     public function gateway(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Gateway');
+        return $this->belongsTo("Modules\Core\Entities\Gateway");
     }
 
     public function tracking(): HasMany
@@ -324,7 +324,7 @@ class Sale extends Model
 
     public function saleWhiteBlackListResult(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\SaleWhiteBlackListResult');
+        return $this->hasMany("Modules\Core\Entities\SaleWhiteBlackListResult");
     }
 
     public function saleLogs(): HasMany
@@ -339,7 +339,7 @@ class Sale extends Model
 
     public function upsells(): HasMany
     {
-        return $this->hasMany(Sale::class, 'upsell_id');
+        return $this->hasMany(Sale::class, "upsell_id");
     }
 
     public function saleGatewayRequests(): HasMany
@@ -369,7 +369,7 @@ class Sale extends Model
 
     public function additionalCustomerInformation(): HasMany
     {
-        return $this->hasMany('Modules\Core\Entities\SaleAdditionalCustomerInformation');
+        return $this->hasMany("Modules\Core\Entities\SaleAdditionalCustomerInformation");
     }
 
     public function cashback(): HasOne
@@ -384,7 +384,7 @@ class Sale extends Model
 
     public function pixCharges(): HasMany
     {
-        return $this->hasMany(PixCharge::class, 'sale_id');
+        return $this->hasMany(PixCharge::class, "sale_id");
     }
 
     /**
@@ -405,12 +405,12 @@ class Sale extends Model
 
     public function products(): HasManyThrough
     {
-        return $this->hasManyThrough(Product::class, ProductPlanSale::class, 'sale_id', 'id', 'id', 'product_id');
+        return $this->hasManyThrough(Product::class, ProductPlanSale::class, "sale_id", "id", "id", "product_id");
     }
 
     public function getHashIdAttribute()
     {
-        return Hashids::connection('sale_id')->encode($this->id);
+        return Hashids::connection("sale_id")->encode($this->id);
     }
 
     public function getValidTrackingForRedis(): int
@@ -418,10 +418,10 @@ class Sale extends Model
         $saleIsChargeback = $this->status == 4;
         $saleIsDigitalProduct = empty($this->delivery_id);
         $trackingNotRequired = !!$this->transactions
-            ->where('tracking_required', false)
-            ->where('type', Transaction::TYPE_PRODUCER)
+            ->where("tracking_required", false)
+            ->where("type", Transaction::TYPE_PRODUCER)
             ->count();
 
-        return $trackingNotRequired || $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
+        return $trackingNotRequired || $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int) $this->has_valid_tracking;
     }
 }

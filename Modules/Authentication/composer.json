@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Authentication\\Providers\\AuthenticationServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

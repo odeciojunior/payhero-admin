@@ -13,8 +13,11 @@ class AddColumnSubTotalTableSales extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->decimal('sub_total', 8, 2)->nullable()->after('total_paid_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->decimal("sub_total", 8, 2)
+                ->nullable()
+                ->after("total_paid_value");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnSubTotalTableSales extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dropColumn('total_paid_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("total_paid_value");
         });
     }
 }

@@ -13,12 +13,12 @@ class AddColumnCheckoutNotificationsConfigsToProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'projects',
-            function (Blueprint $table) {
-                $table->json('checkout_notification_configs')->nullable()->after('finalizing_purchase_configs');
-            }
-        );
+        Schema::table("projects", function (Blueprint $table) {
+            $table
+                ->json("checkout_notification_configs")
+                ->nullable()
+                ->after("finalizing_purchase_configs");
+        });
     }
 
     /**
@@ -28,11 +28,8 @@ class AddColumnCheckoutNotificationsConfigsToProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'projects',
-            function (Blueprint $table) {
-                $table->dropColumn(['checkout_notification_configs']);
-            }
-        );
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn(["checkout_notification_configs"]);
+        });
     }
 }

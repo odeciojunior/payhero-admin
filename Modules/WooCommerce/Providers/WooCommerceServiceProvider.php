@@ -18,7 +18,7 @@ class WooCommerceServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class WooCommerceServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('woocommerce.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'woocommerce'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("woocommerce.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "woocommerce");
     }
 
     /**
@@ -53,17 +54,26 @@ class WooCommerceServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/woocommerce');
+        $viewPath = resource_path("views/modules/woocommerce");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/woocommerce';
-        }, \Config::get('view.paths')), [$sourcePath]), 'woocommerce');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/woocommerce";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "woocommerce"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class WooCommerceServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/woocommerce');
+        $langPath = resource_path("lang/modules/woocommerce");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'woocommerce');
+            $this->loadTranslationsFrom($langPath, "woocommerce");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'woocommerce');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "woocommerce");
         }
     }
 
@@ -89,8 +99,8 @@ class WooCommerceServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

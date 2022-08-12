@@ -13,13 +13,16 @@ class CreateTableAsaasBackofficeRequests extends Migration
      */
     public function up()
     {
-        Schema::create('asaas_backoffice_requests', function (Blueprint $table) {
+        Schema::create("asaas_backoffice_requests", function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('company_id');
-            $table->json('sent_data')->nullable();
-            $table->json('response')->nullable();
+            $table->unsignedInteger("company_id");
+            $table->json("sent_data")->nullable();
+            $table->json("response")->nullable();
             $table->timestamps();
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
         });
     }
 
@@ -30,6 +33,6 @@ class CreateTableAsaasBackofficeRequests extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asaas_backoffice_requests');
+        Schema::dropIfExists("asaas_backoffice_requests");
     }
 }

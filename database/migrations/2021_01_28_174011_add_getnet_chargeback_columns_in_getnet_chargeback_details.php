@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class AddGetnetChargebackColumnsInGetnetChargebackDetails extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,11 +13,15 @@ class AddGetnetChargebackColumnsInGetnetChargebackDetails extends Migration
      */
     public function up()
     {
-        Schema::table('getnet_chargeback_details', function (Blueprint $table) {
-            $table->unsignedBigInteger('getnet_chargeback_id')->nullable()->index();
-            $table->foreign('getnet_chargeback_id')
-                ->references('id')
-                ->on('getnet_chargebacks');
+        Schema::table("getnet_chargeback_details", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("getnet_chargeback_id")
+                ->nullable()
+                ->index();
+            $table
+                ->foreign("getnet_chargeback_id")
+                ->references("id")
+                ->on("getnet_chargebacks");
         });
     }
 
@@ -29,8 +32,8 @@ class AddGetnetChargebackColumnsInGetnetChargebackDetails extends Migration
      */
     public function down()
     {
-        Schema::table('getnet_chargeback_details', function (Blueprint $table) {
-            $table->dropColumn('getnet_chargeback_id');
+        Schema::table("getnet_chargeback_details", function (Blueprint $table) {
+            $table->dropColumn("getnet_chargeback_id");
         });
     }
 }

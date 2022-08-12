@@ -13,15 +13,30 @@ class CreateTableGatewaysCompaniesCredentials extends Migration
      */
     public function up()
     {
-        Schema::create('gateways_companies_credentials', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('company_id');
-            $table->foreign('company_id')->references('id')->on('companies');
-            $table->unsignedBigInteger('gateway_id');
-            $table->foreign('gateway_id')->references('id')->on('gateways');
-            $table->tinyInteger('gateway_status')->nullable()->default(null);
-            $table->string('gateway_subseller_id',100)->nullable()->default(null);
-            $table->string('gateway_api_key',100)->nullable()->default(null);
+        Schema::create("gateways_companies_credentials", function (Blueprint $table) {
+            $table->increments("id");
+            $table->unsignedInteger("company_id");
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
+            $table->unsignedBigInteger("gateway_id");
+            $table
+                ->foreign("gateway_id")
+                ->references("id")
+                ->on("gateways");
+            $table
+                ->tinyInteger("gateway_status")
+                ->nullable()
+                ->default(null);
+            $table
+                ->string("gateway_subseller_id", 100)
+                ->nullable()
+                ->default(null);
+            $table
+                ->string("gateway_api_key", 100)
+                ->nullable()
+                ->default(null);
             $table->timestamps();
         });
     }
@@ -33,6 +48,6 @@ class CreateTableGatewaysCompaniesCredentials extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gateways_companies_credentials');
+        Schema::dropIfExists("gateways_companies_credentials");
     }
 }

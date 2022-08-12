@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\Products\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -14,9 +13,9 @@ class IndexProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'nullable|max:100|string',
-            'shopify' => 'nullable|in:2,1,0',
-            'project' => 'nullable|string'
+            "name" => "nullable|max:100|string",
+            "shopify" => "nullable|in:2,1,0",
+            "project" => "nullable|string",
         ];
     }
 
@@ -36,7 +35,7 @@ class IndexProductRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.max' => 'O campo Nome permite apenas 100 caracteres',
+            "name.max" => "O campo Nome permite apenas 100 caracteres",
         ];
     }
 }

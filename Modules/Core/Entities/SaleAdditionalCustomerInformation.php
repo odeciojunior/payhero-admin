@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SaleAdditionalCustomerInformation extends Model
 {
-    protected $table = 'sale_additional_customer_informations';
+    protected $table = "sale_additional_customer_informations";
     /**
      * @return BelongsTo
      */

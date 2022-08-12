@@ -13,15 +13,16 @@ class SkySeller extends Achievement implements AchievementCheck
 
     public function userAchieved(User $user): bool
     {
-        $totalSales = Sale::whereIn('status', [
+        $totalSales = Sale::whereIn("status", [
             Sale::STATUS_APPROVED,
             Sale::STATUS_CHARGEBACK,
             Sale::STATUS_REFUNDED,
-            Sale::STATUS_IN_DISPUTE
-        ])->where(function ($query) use ($user) {
-            $query->where('owner_id', $user->id)
-                ->orWhere('affiliate_id', $user->id);
-        })->count();
+            Sale::STATUS_IN_DISPUTE,
+        ])
+            ->where(function ($query) use ($user) {
+                $query->where("owner_id", $user->id)->orWhere("affiliate_id", $user->id);
+            })
+            ->count();
 
         return $totalSales >= 1000;
     }

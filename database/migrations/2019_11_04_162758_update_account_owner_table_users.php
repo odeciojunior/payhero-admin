@@ -14,9 +14,9 @@ class UpdateAccountOwnerTableUsers extends Migration
     public function up()
     {
         $userModel = new User();
-        $users     = $userModel->all();
+        $users = $userModel->all();
         foreach ($users as $user) {
-            $user->update(['account_owner_id' => $user->id]);
+            $user->update(["account_owner_id" => $user->id]);
         }
     }
 
@@ -27,9 +27,9 @@ class UpdateAccountOwnerTableUsers extends Migration
     public function down()
     {
         $userModel = new User();
-        $users     = $userModel->all();
+        $users = $userModel->all();
         foreach ($users as $user) {
-            $user->update(['account_owner_id' => null]);
+            $user->update(["account_owner_id" => null]);
         }
     }
 }

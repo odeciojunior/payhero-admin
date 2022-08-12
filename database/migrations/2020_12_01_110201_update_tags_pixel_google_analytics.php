@@ -12,14 +12,12 @@ class UpdateTagsPixelGoogleAnalytics extends Migration
      */
     public function up()
     {
-        $pixels = Pixel::where('platform', 'google_analytics')->get();
+        $pixels = Pixel::where("platform", "google_analytics")->get();
 
         foreach ($pixels as $pixel) {
-            $pixel->update(
-                [
-                    'code' => 'UA-' . $pixel->code
-                ]
-            );
+            $pixel->update([
+                "code" => "UA-" . $pixel->code,
+            ]);
         }
     }
 

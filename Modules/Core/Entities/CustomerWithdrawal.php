@@ -33,12 +33,12 @@ class CustomerWithdrawal extends Model
      *
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
-    protected $fillable = ['customer_id', 'value', 'status', 'bank_account', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ["customer_id", "value", "status", "bank_account", "created_at", "updated_at", "deleted_at"];
 
     /**
      * @return BelongsTo

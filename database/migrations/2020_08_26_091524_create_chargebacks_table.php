@@ -13,20 +13,23 @@ class CreateChargebacksTable extends Migration
      */
     public function up()
     {
-        Schema::create('chargebacks', function (Blueprint $table) {
+        Schema::create("chargebacks", function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('sale_id')->unsigned();
-            $table->string('case_number',100);
-            $table->tinyInteger('status_enum');
+            $table->bigInteger("sale_id")->unsigned();
+            $table->string("case_number", 100);
+            $table->tinyInteger("status_enum");
             $table->timestamps();
         });
 
-        Schema::table('chargebacks', function(Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales');
+        Schema::table("chargebacks", function (Blueprint $table) {
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
 
-        Schema::table('chargebacks', function (Blueprint $table) {
-            $table->index('case_number');
+        Schema::table("chargebacks", function (Blueprint $table) {
+            $table->index("case_number");
         });
     }
 
@@ -37,6 +40,6 @@ class CreateChargebacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chargebacks');
+        Schema::dropIfExists("chargebacks");
     }
 }

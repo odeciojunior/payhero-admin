@@ -18,12 +18,12 @@ class DashboardNotification extends Model
      */
 
     protected $fillable = [
-        'user_id',
-        'subject_id',
-        'subject_type',
-        'read_at',
-        'created_at',
-        'updated_at',
-        'deleted_at'
+        "user_id",
+        "subject_id",
+        "subject_type",
+        "read_at",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 }

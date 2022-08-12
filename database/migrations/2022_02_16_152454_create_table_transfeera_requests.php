@@ -13,12 +13,15 @@ class CreateTableTransfeeraRequests extends Migration
      */
     public function up()
     {
-        Schema::create('transfeera_requests', function (Blueprint $table) {
+        Schema::create("transfeera_requests", function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('withdrawal_id');
-            $table->foreign('withdrawal_id')->references('id')->on('withdrawals');
-            $table->json('sent_data')->nullable();
-            $table->json('response')->nullable();
+            $table->unsignedBigInteger("withdrawal_id");
+            $table
+                ->foreign("withdrawal_id")
+                ->references("id")
+                ->on("withdrawals");
+            $table->json("sent_data")->nullable();
+            $table->json("response")->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +33,6 @@ class CreateTableTransfeeraRequests extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transfeera_requests');
+        Schema::dropIfExists("transfeera_requests");
     }
 }

@@ -25,25 +25,25 @@ class Cashback extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id', 
-        'company_id', 
-        'transaction_id', 
-        'sale_id', 
-        'value', 
-        'type_enum', 
-        'status', 
-        'percentage', 
-        'created_at', 
-        'updated_at'
+        "user_id",
+        "company_id",
+        "transaction_id",
+        "sale_id",
+        "value",
+        "type_enum",
+        "status",
+        "percentage",
+        "created_at",
+        "updated_at",
     ];
 
     /**

@@ -22,16 +22,16 @@ class SaleUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'sale'         => 'required|string',
-            'delivery'     => 'required|string',
-            'trackingCode' => 'required|string',
+            "sale" => "required|string",
+            "delivery" => "required|string",
+            "trackingCode" => "required|string",
         ];
     }
 
     public function messages()
     {
         return [
-            'required' => 'Preencha o campo Código Rastreio corretamente',
+            "required" => "Preencha o campo Código Rastreio corretamente",
         ];
     }
 }

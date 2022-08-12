@@ -33,30 +33,30 @@ class ProductPlan extends Model
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'products_plans';
+    protected $table = "products_plans";
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'product_id',
-        'plan_id',
-        'amount',
-        'cost',
-        'is_custom',
-        'custom_config',
-        'currency_type_enum',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "product_id",
+        "plan_id",
+        "amount",
+        "cost",
+        "is_custom",
+        "custom_config",
+        "currency_type_enum",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     protected $casts = [
-        'custom_config'=>'array'
+        "custom_config" => "array",
     ];
     /**
      * @var bool
@@ -83,12 +83,12 @@ class ProductPlan extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'ProductPlan foi deletado.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'ProductPlan foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'ProductPlan foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "ProductPlan foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "ProductPlan foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "ProductPlan foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -99,7 +99,7 @@ class ProductPlan extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('Modules\Core\Entities\Plan');
+        return $this->belongsTo("Modules\Core\Entities\Plan");
     }
 
     /**
@@ -107,6 +107,6 @@ class ProductPlan extends Model
      */
     public function product()
     {
-        return $this->belongsTo('Modules\Core\Entities\Product');
+        return $this->belongsTo("Modules\Core\Entities\Product");
     }
 }

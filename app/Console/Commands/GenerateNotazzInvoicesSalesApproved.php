@@ -12,12 +12,12 @@ class GenerateNotazzInvoicesSalesApproved extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'generate:notazzinvoicessalesapproved';
+    protected $signature = "generate:notazzinvoicessalesapproved";
     /**
      * The console command description.
      * @var string
      */
-    protected $description = 'Gera as invoices de todas as vendas aprovadas de todos os projetos';
+    protected $description = "Gera as invoices de todas as vendas aprovadas de todos os projetos";
 
     /**
      * Create a new command instance.
@@ -30,7 +30,6 @@ class GenerateNotazzInvoicesSalesApproved extends Command
 
     public function handle()
     {
-
         try {
             $notazzService = new NotazzService();
 
@@ -42,6 +41,5 @@ class GenerateNotazzInvoicesSalesApproved extends Command
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

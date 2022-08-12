@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([ 'middleware' => ['auth:api', 'scopes:admin'] ], function () {
-    Route::get('/check-account/{user_id}', 'UsersApiController@checkAccount');
+Route::group(["middleware" => ["auth:api", "scopes:admin"]], function () {
+    Route::get("/check-account/{user_id}", "UsersApiController@checkAccount");
 });

@@ -18,7 +18,7 @@ class InvitesController extends Controller
      */
     public function index()
     {
-        return view('invites::index');
+        return view("invites::index");
     }
 
     /**
@@ -28,11 +28,11 @@ class InvitesController extends Controller
     public function getInvitation(Request $request)
     {
         $siteInvitationRequestModel = new SiteInvitationRequest();
-        $requestData                = $request->all();
+        $requestData = $request->all();
 
         $siteInvitationRequestModel->create($requestData);
 
-        return 'success';
+        return "success";
     }
 
     /**
@@ -41,12 +41,11 @@ class InvitesController extends Controller
      */
     public function getHubsmartInvitation(Request $request)
     {
-
-        $hubsmartInvitationRequestModel = new  HubsmartInvitationRequest();
-        $requestData                    = $request->all();
+        $hubsmartInvitationRequestModel = new HubsmartInvitationRequest();
+        $requestData = $request->all();
 
         $hubsmartInvitationRequestModel->create($requestData);
 
-        return 'success';
+        return "success";
     }
 }

@@ -13,8 +13,8 @@ class AddIdwallResultInUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->json('id_wall_result')->nullable();
+        Schema::table("users", function (Blueprint $table) {
+            $table->json("id_wall_result")->nullable();
         });
     }
 
@@ -25,6 +25,6 @@ class AddIdwallResultInUsers extends Migration
      */
     public function down()
     {
-       //
+        //
     }
 }

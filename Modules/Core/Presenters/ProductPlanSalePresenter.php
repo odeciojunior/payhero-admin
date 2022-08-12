@@ -11,33 +11,33 @@ class ProductPlanSalePresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'posted';
+                    return "posted";
                 case 2:
-                    return 'dispatched';
+                    return "dispatched";
                 case 3:
-                    return 'delivered';
+                    return "delivered";
                 case 4:
-                    return 'out_for_delivery';
+                    return "out_for_delivery";
                 case 5:
-                    return 'exception';
+                    return "exception";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'posted':
+                case "posted":
                     return 1;
-                case 'dispatched':
+                case "dispatched":
                     return 2;
-                case 'delivered':
+                case "delivered":
                     return 3;
-                case 'out_for_delivery':
+                case "out_for_delivery":
                     return 4;
-                case 'exception':
+                case "exception":
                     return 5;
             }
 
-            return '';
+            return "";
         }
     }
 }

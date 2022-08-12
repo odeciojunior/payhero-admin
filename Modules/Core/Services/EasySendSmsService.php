@@ -58,15 +58,15 @@ class EasySendSmsService
      * @param string $sender
      * @param string $msgType
      */
-    public function __construct(string $numberMobile, string $message, string $sender = '', string $msgType = '1')
+    public function __construct(string $numberMobile, string $message, string $sender = "", string $msgType = "1")
     {
-        $this->host         = 'https://www.easysendsms.com/sms/bulksms-api/bulksms-api';
-        $this->username     = getenv('USERNAME_EASY_SMS');
-        $this->password     = getenv('PASSWORD_EASY_SMS');
-        $this->sender       = $sender;
-        $this->message      = $message; //URL Encode The Message..
+        $this->host = "https://www.easysendsms.com/sms/bulksms-api/bulksms-api";
+        $this->username = getenv("USERNAME_EASY_SMS");
+        $this->password = getenv("PASSWORD_EASY_SMS");
+        $this->sender = $sender;
+        $this->message = $message; //URL Encode The Message..
         $this->numberMobile = $numberMobile;
-        $this->messageType  = $msgType;
+        $this->messageType = $msgType;
     }
 
     /**
@@ -76,17 +76,17 @@ class EasySendSmsService
      */
     private function smsUnicode($message)
     {
-        $hex1 = '';
-        if (function_exists('Iconv')) {
-            $latin = @\iconv('UTF-8', 'ISO-8859-1', $message);
+        $hex1 = "";
+        if (function_exists("Iconv")) {
+            $latin = @\iconv("UTF-8", "ISO-8859-1", $message);
             if (strcmp($latin, $message)) {
-                $arr  = unpack('H*Hex', @iconv('UTF-8', 'UCS-2BE', $message));
-                $hex1 = strtoupper($arr['Hex']);
+                $arr = unpack("H*Hex", @iconv("UTF-8", "UCS-2BE", $message));
+                $hex1 = strtoupper($arr["Hex"]);
             }
 
-            if ($hex1 == '') {
-                $hex2 = '';
-                $hex  = '';
+            if ($hex1 == "") {
+                $hex2 = "";
+                $hex = "";
                 for ($i = 0; $i < strlen($message); $i++) {
                     $hex = dechex(ord($message[$i]));
                     $len = strlen($hex);
@@ -113,8 +113,7 @@ class EasySendSmsService
      */
     public function submit()
     {
-
-        if ($this->messageType == '1' || $this->messageType == '3') {
+        if ($this->messageType == "1" || $this->messageType == "3") {
             //call the function of string to HEX
             $this->message = $this->smsUnicode($this->message);
         } else {
@@ -122,7 +121,20 @@ class EasySendSmsService
         }
 
         try {
-            $url = $this->host . "?username=" . $this->username . "&password=" . $this->password . "&from=" . $this->sender . "&to=" . $this->numberMobile . "&text=" . $this->message . "&type=" . $this->messageType;
+            $url =
+                $this->host .
+                "?username=" .
+                $this->username .
+                "&password=" .
+                $this->password .
+                "&from=" .
+                $this->sender .
+                "&to=" .
+                $this->numberMobile .
+                "&text=" .
+                $this->message .
+                "&type=" .
+                $this->messageType;
             $url = file($url);
         } catch (Exception $e) {
             report($e);

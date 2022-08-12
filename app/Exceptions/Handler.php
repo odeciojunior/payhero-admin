@@ -14,10 +14,7 @@ class Handler extends ExceptionHandler
         //
     ];
 
-    protected $dontFlash = [
-        'password',
-        'password_confirmation',
-    ];
+    protected $dontFlash = ["password", "password_confirmation"];
 
     public function report(Throwable $e)
     {
@@ -25,8 +22,8 @@ class Handler extends ExceptionHandler
             return;
         }
 
-        if (app()->bound('sentry') && $this->shouldReport($e)) {
-            app('sentry')->captureException($e);
+        if (app()->bound("sentry") && $this->shouldReport($e)) {
+            app("sentry")->captureException($e);
         }
 
         parent::report($e);
@@ -35,11 +32,11 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($e instanceof HttpException && $e->getStatusCode() === 503) {
-            return response()->view('errors.maintenance');
+            return response()->view("errors.maintenance");
         }
 
         if ($e instanceof MissingScopeException) {
-            return response()->json(['message' => 'Acesso não autorizado'], 403);
+            return response()->json(["message" => "Acesso não autorizado"], 403);
         }
 
         return parent::render($request, $e);

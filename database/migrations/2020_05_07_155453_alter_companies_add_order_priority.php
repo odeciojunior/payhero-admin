@@ -13,8 +13,12 @@ class AlterCompaniesAddOrderPriority extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->integer('order_priority')->unsigned()->default(0)->after('company_type');
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->integer("order_priority")
+                ->unsigned()
+                ->default(0)
+                ->after("company_type");
         });
     }
 
@@ -25,8 +29,8 @@ class AlterCompaniesAddOrderPriority extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('order_priority');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("order_priority");
         });
     }
 }

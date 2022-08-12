@@ -12,8 +12,8 @@ class AlterTableShopifyIntegrationAddStatusColumn extends Migration
      */
     public function up()
     {
-        Schema::table('shopify_integrations', function(Blueprint $table) {
-            $table->tinyInteger('status')->default(3);
+        Schema::table("shopify_integrations", function (Blueprint $table) {
+            $table->tinyInteger("status")->default(3);
         });
     }
 
@@ -23,8 +23,8 @@ class AlterTableShopifyIntegrationAddStatusColumn extends Migration
      */
     public function down()
     {
-        Schema::table('shopify_integrations', function(Blueprint $table) {
-            $table->dropColumn('status');
+        Schema::table("shopify_integrations", function (Blueprint $table) {
+            $table->dropColumn("status");
         });
     }
 }

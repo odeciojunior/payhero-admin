@@ -14,14 +14,14 @@ class UpdateAttendanceAverageTicket extends Command
      *
      * @var string
      */
-    protected $signature = 'account-health:tickets:update-average-response-time';
+    protected $signature = "account-health:tickets:update-average-response-time";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -40,17 +40,15 @@ class UpdateAttendanceAverageTicket extends Command
      */
     public function handle()
     {
-
         try {
             $attendanceService = new AttendanceService();
-            Ticket::with('messages')
-                ->chunk(500, function ($tickets) use ($attendanceService) {
-                    foreach ($tickets as $ticket) {
-                        $averageResponseTime = $attendanceService->getTicketAverageResponseTime($ticket);
-                        $this->line($ticket->id . ' -- ' . $averageResponseTime . "h");
-                        $ticket->update(['average_response_time' => $averageResponseTime]);
-                    }
-                });
+            Ticket::with("messages")->chunk(500, function ($tickets) use ($attendanceService) {
+                foreach ($tickets as $ticket) {
+                    $averageResponseTime = $attendanceService->getTicketAverageResponseTime($ticket);
+                    $this->line($ticket->id . " -- " . $averageResponseTime . "h");
+                    $ticket->update(["average_response_time" => $averageResponseTime]);
+                }
+            });
         } catch (Exception $e) {
             report($e);
         }

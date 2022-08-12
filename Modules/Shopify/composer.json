@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Shopify\\Providers\\ShopifyServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

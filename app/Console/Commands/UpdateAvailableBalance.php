@@ -16,21 +16,21 @@ class UpdateAvailableBalance extends Command
      *
      * @var string
      */
-    protected $signature = 'available-balance:update';
+    protected $signature = "available-balance:update";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     private $defaultGateways = [
         AsaasService::class,
         //CieloService::class,
         GetnetService::class,
         GerencianetService::class,
-        Safe2PayService::class
+        Safe2PayService::class,
     ];
 
     /**
@@ -51,19 +51,20 @@ class UpdateAvailableBalance extends Command
     public function handle()
     {
         try {
+            settings()
+                ->group("withdrawal_request")
+                ->set("withdrawal_request", false);
 
-            settings()->group('withdrawal_request')->set('withdrawal_request', false);
-
-            foreach($this->defaultGateways as $gatewayClass) {
+            foreach ($this->defaultGateways as $gatewayClass) {
                 $gatewayService = app()->make($gatewayClass);
                 $gatewayService->updateAvailableBalance();
             }
 
-            settings()->group('withdrawal_request')->set('withdrawal_request', true);
-
+            settings()
+                ->group("withdrawal_request")
+                ->set("withdrawal_request", true);
         } catch (Exception $e) {
             report($e);
         }
     }
-
 }

@@ -12,7 +12,6 @@ class ShopifyController extends Controller
 {
     public function index()
     {
-        return view('shopify::index');
+        return view("shopify::index");
     }
 }
-

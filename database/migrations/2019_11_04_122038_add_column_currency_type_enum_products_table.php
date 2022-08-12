@@ -12,8 +12,8 @@ class AddColumnCurrencyTypeEnumProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->unsignedInteger('currency_type_enum')->default(1); //1- BRL, 2- USD
+        Schema::table("products", function (Blueprint $table) {
+            $table->unsignedInteger("currency_type_enum")->default(1); //1- BRL, 2- USD
         });
     }
 
@@ -23,8 +23,8 @@ class AddColumnCurrencyTypeEnumProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->dropColumn('currency_type_enum');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropColumn("currency_type_enum");
         });
     }
 }

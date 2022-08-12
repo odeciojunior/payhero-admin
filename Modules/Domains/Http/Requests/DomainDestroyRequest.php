@@ -13,15 +13,14 @@ class DomainDestroyRequest extends FormRequest
     public function rules()
     {
         switch ($this->method()) {
-            case 'DELETE':
+            case "DELETE":
                 return [
-                    'project' => 'required|string|max:255',
-                    'domain'  => 'required|string|max:255',
+                    "project" => "required|string|max:255",
+                    "domain" => "required|string|max:255",
                 ];
 
                 break;
             default:
-
                 break;
         }
     }

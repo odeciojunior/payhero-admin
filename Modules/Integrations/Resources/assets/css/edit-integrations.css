@@ -1,15 +1,15 @@
-#description:focus{
-    border-color: #88BFFF;
+#description:focus {
+    border-color: #88bfff;
 }
 
 /* #enum-list:focus-within{
     border-color: #88BFFF !important;
 } */
 
-.border-default:focus{
-    border-color: #88BFFF !important;
+.border-default:focus {
+    border-color: #88bfff !important;
 }
 
-#postback:focus{
-    border-color: #88BFFF;
+#postback:focus {
+    border-color: #88bfff;
 }

@@ -14,7 +14,7 @@ class ProjectNotificationController extends Controller
      */
     public function index()
     {
-        return view('projectnotification::index');
+        return view("projectnotification::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class ProjectNotificationController extends Controller
      */
     public function create()
     {
-        return view('projectnotification::create');
+        return view("projectnotification::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class ProjectNotificationController extends Controller
      */
     public function show($id)
     {
-        return view('projectnotification::show');
+        return view("projectnotification::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class ProjectNotificationController extends Controller
      */
     public function edit($id)
     {
-        return view('projectnotification::edit');
+        return view("projectnotification::edit");
     }
 
     /**

@@ -40,25 +40,25 @@ class ApiToken extends Model
 {
     use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes, LogsActivity;
 
-    const TOKEN_SCOPE_ADMIN   = "admin";
-    const TOKEN_SCOPE_USER    = "user";
-    const TOKEN_SCOPE_SALE    = "sale";
+    const TOKEN_SCOPE_ADMIN = "admin";
+    const TOKEN_SCOPE_USER = "user";
+    const TOKEN_SCOPE_SALE = "sale";
     const TOKEN_SCOPE_PRODUCT = "product";
-    const TOKEN_SCOPE_CLIENT  = "client";
+    const TOKEN_SCOPE_CLIENT = "client";
 
-    const INTEGRATION_TYPE_ADMIN        = 1;
-    const INTEGRATION_TYPE_PERSONAL     = 2;
-    const INTEGRATION_TYPE_EXTERNAL     = 3;
+    const INTEGRATION_TYPE_ADMIN = 1;
+    const INTEGRATION_TYPE_PERSONAL = 2;
+    const INTEGRATION_TYPE_EXTERNAL = 3;
     const INTEGRATION_TYPE_CHECKOUT_API = 4;
     /**
      * @var array
      */
     public static $tokenScopes = [
-        self::TOKEN_SCOPE_ADMIN   => 'Admin Full Access',
-        self::TOKEN_SCOPE_USER    => 'Data User Access',
-        self::TOKEN_SCOPE_SALE    => 'Data Sale Access',
-        self::TOKEN_SCOPE_PRODUCT => 'Data Product Access',
-        self::TOKEN_SCOPE_CLIENT  => 'Data Client Access',
+        self::TOKEN_SCOPE_ADMIN => "Admin Full Access",
+        self::TOKEN_SCOPE_USER => "Data User Access",
+        self::TOKEN_SCOPE_SALE => "Data Sale Access",
+        self::TOKEN_SCOPE_PRODUCT => "Data Product Access",
+        self::TOKEN_SCOPE_CLIENT => "Data Client Access",
     ];
     /**
      * @var string
@@ -68,31 +68,28 @@ class ApiToken extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'company_id',
-        'token_id',
-        'access_token',
-        'scopes',
-        'integration_type_enum',
-        'description',
-        'postback',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "user_id",
+        "company_id",
+        "token_id",
+        "access_token",
+        "scopes",
+        "integration_type_enum",
+        "description",
+        "postback",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * The attributes that should be hidden for serialization.
      * @var array
      */
-    protected $hidden = [
-        'user_id',
-        'token_id',
-    ];
+    protected $hidden = ["user_id", "token_id"];
     /**
      * @var bool
      */
@@ -149,7 +146,7 @@ class ApiToken extends Model
         }
         /** @var Token $token */
         $token = $this->token;
-        if (empty($token) | ($token->revoked ?? false) || ($token->expires_at < now())) {
+        if (empty($token) | ($token->revoked ?? false) || $token->expires_at < now()) {
             return self::generateTokenIntegration($this->description, $this->present()->getTokenScope());
         }
 

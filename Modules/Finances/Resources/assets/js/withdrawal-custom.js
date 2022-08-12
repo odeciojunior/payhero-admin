@@ -1,5 +1,4 @@
 $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
-
     const availableBalanceText = $(".available-balance").html().replace(/,/g, "").replace(/\./g, "");
     const toTransferText = $("#custom-input-addon").val().replace(/,/g, "").replace(/\./g, "");
     const availableBalance = parseInt(availableBalanceText);
@@ -32,7 +31,7 @@ $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
         },
         complete: () => {
             $("#bt-withdrawal, #bt-withdrawal_m").removeAttr("disabled");
-        }
+        },
     });
 });
 function verifyWithdrawalIsValid(toTransfer, availableBalance) {
@@ -63,34 +62,29 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance) {
         return false;
     }
 
-    if(toTransfer < 5000){
-        alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
+    if (toTransfer < 5000) {
+        alertCustom("error", "Valor mínimo de saque  R$ 50,00");
         return;
     }
 
     return true;
 }
 
-function modalDebitPending (currentBalance, debitValue) {
+function modalDebitPending(currentBalance, debitValue) {
+    const $modal = $("#debit-pending-informations");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modal = $("#debit-pending-informations")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modalCustomBody = $("#modal-body-withdrawal-custom");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    const $modalCustomBody = $("#modal-body-withdrawal-custom")
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
-
-    $modalCustomBody
-        .html('')
-        .addClass('d-none')
-    $modalCustomTitle
-        .text("Não é possivel realizar este saque")
-        .parent()
-        .addClass('debit-pending');
+    $modalCustomBody.html("").addClass("d-none");
+    $modalCustomTitle.text("Não é possivel realizar este saque").parent().addClass("debit-pending");
 
     let result = currentBalance - removeFormatNumbers(debitValue);
     $modal
-        .removeClass('d-none')
-        .html(`
+        .removeClass("d-none")
+        .html(
+            `
                 <h3 class="text-center mt-10" id="text-title-debit-pending">
                     Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.
                 </h3>
@@ -131,11 +125,11 @@ function modalDebitPending (currentBalance, debitValue) {
                         </div>
                     </div>
                 </div>
-            `)
+            `
+        )
         .show();
 
-    $footer
-        .html(`
+    $footer.html(`
             <hr>
             <div class="row justify-content-center w-p100">
                 <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
@@ -146,27 +140,23 @@ function modalDebitPending (currentBalance, debitValue) {
         `);
 }
 function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
-    const $modal = $("#debit-pending-informations")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modal = $("#debit-pending-informations");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modalCustomBody = $("#modal-body-withdrawal-custom")
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+    const $modalCustomBody = $("#modal-body-withdrawal-custom");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    $modalCustomBody
-        .html('')
-        .addClass('d-none')
-    $modalCustomTitle
-        .text("Não é possivel realizar este saque")
-        .parent()
-        .addClass('debit-pending');
+    $modalCustomBody.html("").addClass("d-none");
+    $modalCustomTitle.text("Não é possivel realizar este saque").parent().addClass("debit-pending");
 
-    const $amountWithdrawal = $("#requested-amount-withdrawal")
+    const $amountWithdrawal = $("#requested-amount-withdrawal");
     $amountWithdrawal.text(formatMoney(withdrawal));
 
     let result = removeFormatNumbers(withdrawal) - removeFormatNumbers(debitValue);
     $modal
-        .removeClass('d-none')
-        .html(`
+        .removeClass("d-none")
+        .html(
+            `
                 <h3 class="text-center mt-10" id="text-title-debit-pending">
                     Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.
                 </h3>
@@ -207,11 +197,11 @@ function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
                         </div>
                     </div>
                 </div>
-            `)
+            `
+        )
         .show();
 
-    $footer
-        .html(`
+    $footer.html(`
             <hr>
             <div class="row justify-content-center w-p100">
                 <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
@@ -222,34 +212,30 @@ function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
         `);
 }
 function modalEmptyWithdrawal(withdrawal) {
-    const $modal = $("#debit-pending-informations")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modal = $("#debit-pending-informations");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modalCustomBody = $("#modal-body-withdrawal-custom")
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+    const $modalCustomBody = $("#modal-body-withdrawal-custom");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    $modalCustomBody
-        .html('')
-        .addClass('d-none')
-    $modalCustomTitle
-        .text("Não é possivel realizar este saque")
-        .parent()
-        .addClass('debit-pending');
+    $modalCustomBody.html("").addClass("d-none");
+    $modalCustomTitle.text("Não é possivel realizar este saque").parent().addClass("debit-pending");
 
-    const $amountWithdrawal = $("#requested-amount-withdrawal")
+    const $amountWithdrawal = $("#requested-amount-withdrawal");
     $amountWithdrawal.text(formatMoney(withdrawal));
 
     $modal
-        .removeClass('d-none')
-        .html(`
+        .removeClass("d-none")
+        .html(
+            `
                 <h3 class="text-center mt-10" id="text-title-debit-pending">
                     Você não possui nenhuma venda com o valor inferior ao saldo disponível para efetuar o saque.
                 </h3>
-            `)
+            `
+        )
         .show();
 
-    $footer
-        .html(`
+    $footer.html(`
             <hr>
             <div class="row justify-content-center w-p100">
                 <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
@@ -262,24 +248,17 @@ function modalEmptyWithdrawal(withdrawal) {
 function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
     const $options = optionsValuesWithdrawal(singleValue, dataWithdrawal);
 
-    const $modal = $("#modal-body-withdrawal-custom")
-    const $footer = $("#modal-withdrawal-custom-footer")
+    const $modal = $("#modal-body-withdrawal-custom");
+    const $footer = $("#modal-withdrawal-custom-footer");
 
-    const $modalDebitPending = $('#debit-pending-informations')
-    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+    const $modalDebitPending = $("#debit-pending-informations");
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom");
 
-    $modalDebitPending
-        .html('')
-        .addClass('d-none')
+    $modalDebitPending.html("").addClass("d-none");
 
-    $modalCustomTitle
-        .text("Confirmar saque")
-        .parent()
-        .removeClass('debit-pending')
+    $modalCustomTitle.text("Confirmar saque").parent().removeClass("debit-pending");
 
-    $modal
-        .removeClass('d-none')
-        .html(`
+    $modal.removeClass("d-none").html(`
                 <h3 id="text-title-withdrawal-custom" class="text-center mb-1">
                     ${singleValue ? "Valor a ser sacado" : "Valores disponíveis:"}
                 </h3>
@@ -294,13 +273,14 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
             `);
 
     if (!isEmptyValue(debitValue)) {
-        const $newValueSelected = $modal.find(".value-select")
+        const $newValueSelected = $modal.find(".value-select");
         const $value = $newValueSelected.text().trim();
 
-        let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue)
+        let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue);
         $modalDebitPending
-            .removeClass('d-none')
-            .html(`
+            .removeClass("d-none")
+            .html(
+                `
                     <h3 class="text-center mt-10 mb-0" id="text-title-debit-pending"> Débitos pendentes </h3>
                     <p class="mt-5" id="text-description-debit-pending">
                         Você tem alguns valores em aberto
@@ -338,12 +318,12 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
                             </div>
                         </div>
                     </div>
-                `)
+                `
+            )
             .show();
     }
 
-    $footer
-        .html(`
+    $footer.html(`
                 <div class="row justify-content-center w-p100">
                     <button id="bt-cancel-withdrawal" data-dismiss="modal" aria-label="Close"
                     class="btn col-auto s-btn-border mr-10"
@@ -359,7 +339,7 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
                 </div>
             `);
 
-    const $event = $("#bigger-value, #lower-value")
+    const $event = $("#bigger-value, #lower-value");
     $event.off("click");
     $event.on("click", function () {
         const $value = $(this);
@@ -370,24 +350,24 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
         $amountWithdrawal.text($value.text().trim());
 
         if (debitValue != undefined) {
-            const $valueWithdrawal = $("#value-withdrawal-received")
+            const $valueWithdrawal = $("#value-withdrawal-received");
 
             let result = $value.data("value") - removeFormatNumbers(debitValue);
             $valueWithdrawal.text(formatMoney(result));
         }
     });
 
-    $(document).on('click', '#bt-confirm-withdrawal-modal-custom', function (e) {
+    $(document).on("click", "#bt-confirm-withdrawal-modal-custom", function (e) {
         var click = $(this);
-        if (click.data('clicked')) {
+        if (click.data("clicked")) {
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
-        click.data('clicked', true);
+        click.data("clicked", true);
 
-        window.setTimeout(function(){
-            click.removeData('clicked');
+        window.setTimeout(function () {
+            click.removeData("clicked");
         }, 2000);
 
         loadOnModal("#modal-body-withdrawal-custom");
@@ -457,14 +437,14 @@ function manipulateModalWithdrawal(dataWithdrawal) {
         } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1 && debitValue > 1) {
             withdrawRequestValid = true;
             modalDebitWithdrawal(dataWithdrawal.bigger_value, debitValue, withdrawal);
-        } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1 ) {
+        } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) {
             withdrawRequestValid = true;
             modalEmptyWithdrawal(withdrawal);
         }
     }
 
     if (withdrawRequestValid === false && totalBalanceNegative === false) {
-        modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue)
+        modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue);
     }
 
     $("#modal-withdrawal-custom").modal("show");
@@ -492,7 +472,6 @@ function manipulateModalSuccessWithdrawal() {
 }
 
 function modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue) {
-
     let valueLowerIsNegative = 2;
 
     if (debitValue != undefined) {
@@ -536,15 +515,15 @@ function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
         `;
 }
 function removeFormatNumbers(number) {
-    number += '';
+    number += "";
     return number.replace(/,/g, "").replace(/\./g, "");
 }
 function formatMoney(value) {
-    return (value / 100).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    })
-        .replace(/\s+/g, '')
-        .replace('-', '- ')
+    return (value / 100)
+        .toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        })
+        .replace(/\s+/g, "")
+        .replace("-", "- ");
 }
-

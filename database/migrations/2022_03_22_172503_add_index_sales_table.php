@@ -13,9 +13,9 @@ class AddIndexSalesTable extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->index('shopify_order');
-            $table->index('woocommerce_order');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->index("shopify_order");
+            $table->index("woocommerce_order");
         });
     }
 
@@ -26,9 +26,9 @@ class AddIndexSalesTable extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropIndex(['shopify_order']);
-            $table->dropIndex(['woocommerce_order']);
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropIndex(["shopify_order"]);
+            $table->dropIndex(["woocommerce_order"]);
         });
     }
 }

@@ -5,8 +5,11 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return array(
-    'Modules\\CuponsDesconto\\Database\\Seeders\\CuponsDescontoDatabaseSeeder' => $baseDir . '/Database/Seeders/CuponsDescontoDatabaseSeeder.php',
-    'Modules\\CuponsDesconto\\Http\\Controllers\\CuponsDescontoController' => $baseDir . '/Http/Controllers/CuponsDescontoController.php',
-    'Modules\\CuponsDesconto\\Providers\\CuponsDescontoServiceProvider' => $baseDir . '/Providers/CuponsDescontoServiceProvider.php',
-);
+return [
+    "Modules\\CuponsDesconto\\Database\\Seeders\\CuponsDescontoDatabaseSeeder" =>
+        $baseDir . "/Database/Seeders/CuponsDescontoDatabaseSeeder.php",
+    "Modules\\CuponsDesconto\\Http\\Controllers\\CuponsDescontoController" =>
+        $baseDir . "/Http/Controllers/CuponsDescontoController.php",
+    "Modules\\CuponsDesconto\\Providers\\CuponsDescontoServiceProvider" =>
+        $baseDir . "/Providers/CuponsDescontoServiceProvider.php",
+];

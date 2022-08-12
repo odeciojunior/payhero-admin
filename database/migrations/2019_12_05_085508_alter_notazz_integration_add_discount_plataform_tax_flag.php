@@ -13,9 +13,11 @@ class AlterNotazzIntegrationAddDiscountPlataformTaxFlag extends Migration
      */
     public function up()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->unsignedTinyInteger('discount_plataform_tax_flag')->after('pending_days')->default(0); // 0 - false, 1 - true
-
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table
+                ->unsignedTinyInteger("discount_plataform_tax_flag")
+                ->after("pending_days")
+                ->default(0); // 0 - false, 1 - true
         });
     }
 
@@ -26,8 +28,8 @@ class AlterNotazzIntegrationAddDiscountPlataformTaxFlag extends Migration
      */
     public function down()
     {
-        Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->dropColumn('discount_plataform_tax_flag');
+        Schema::table("notazz_integrations", function (Blueprint $table) {
+            $table->dropColumn("discount_plataform_tax_flag");
         });
     }
 }

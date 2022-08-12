@@ -13,8 +13,11 @@ class AddTypeEnumToTicketMessages extends Migration
      */
     public function up()
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->integer('type_enum')->default(1)->after('message');
+        Schema::table("ticket_messages", function (Blueprint $table) {
+            $table
+                ->integer("type_enum")
+                ->default(1)
+                ->after("message");
         });
     }
 
@@ -25,8 +28,8 @@ class AddTypeEnumToTicketMessages extends Migration
      */
     public function down()
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->dropColumn('type_enum');
+        Schema::table("ticket_messages", function (Blueprint $table) {
+            $table->dropColumn("type_enum");
         });
     }
 }

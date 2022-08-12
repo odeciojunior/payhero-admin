@@ -31,18 +31,13 @@ $(document).ready(function () {
         $(companies).each(function (index, company) {
             if (companyIsApproved(company)) {
                 hasCompanyApproved = true;
-                $("#select_companies").append(
-                    `<option value=${company.id}> ${company.name}</option>`
-                );
+                $("#select_companies").append(`<option value=${company.id}> ${company.name}</option>`);
             }
         });
 
         if (hasCompanyApproved) {
             $("#btn-integration-model").show();
-            $("#button-information")
-                .show()
-                .addClass("d-flex")
-                .css("display", "flex");
+            $("#button-information").show().addClass("d-flex").css("display", "flex");
 
             getShopifyIntegrations();
         } else {
@@ -73,24 +68,15 @@ $(document).ready(function () {
                 }
 
                 htmlHasIntegrationShopify();
-                $(shopifyIntegrations).each(function (
-                    index,
-                    shopifyIntegration
-                ) {
+                $(shopifyIntegrations).each(function (index, shopifyIntegration) {
                     var data = shopifyIntegration;
                     $("#content").append(`
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                            <div class="card shadow card-edit" project="${
-                                shopifyIntegration.id
-                            }">
+                            <div class="card shadow card-edit" project="${shopifyIntegration.id}">
 
                             <svg
                             class="open-cfg" app="${data.id}"
-                            data-img="${
-                                !data.project_photo
-                                    ? "/build/global/img/produto.png"
-                                    : data.project_photo
-                            }"
+                            data-img="${!data.project_photo ? "/build/global/img/produto.png" : data.project_photo}"
                             data-name="${data.project_name}"
                             data-token="${data.token}"
                             data-skip="${shopifyIntegration.skip_to_cart}"
@@ -116,12 +102,8 @@ $(document).ready(function () {
                                 <div class="card-body">
                                     <div class='row'>
                                         <div class='col-md-12'>
-                                            <h4 class="card-title">${
-                                                shopifyIntegration.project_name
-                                            }</h4>
-                                            <p class="card-text sm">Criado em ${
-                                                shopifyIntegration.created_at
-                                            }</p>
+                                            <h4 class="card-title">${shopifyIntegration.project_name}</h4>
+                                            <p class="card-text sm">Criado em ${shopifyIntegration.created_at}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -130,35 +112,25 @@ $(document).ready(function () {
                     `);
 
                     $(".open-cfg").on("click", openCfg);
-
                 });
             },
         });
     }
 
     function htmlCompanyNotFound() {
-        $(
-            "#btn-integration-model, #button-information, #no-integration-found"
-        ).hide();
+        $("#btn-integration-model, #button-information, #no-integration-found").hide();
         $("#empty-companies-error").show();
     }
 
     function htmlAllCompanyNotApproved() {
-        $(
-            "#btn-integration-model, #button-information, #no-integration-found"
-        ).hide();
+        $("#btn-integration-model, #button-information, #no-integration-found").hide();
         $("#companies-not-approved-getnet").show();
     }
 
     function htmlIntegrationShopifyNotFound() {
         $("#empty-companies-error, #companies-not-approved-getnet").hide();
-        $(
-            "#btn-integration-model, #button-information, #no-integration-found, #integration-actions"
-        ).show();
-        $("#button-information")
-            .show()
-            .addClass("d-flex")
-            .css("display", "flex");
+        $("#btn-integration-model, #button-information, #no-integration-found, #integration-actions").show();
+        $("#button-information").show().addClass("d-flex").css("display", "flex");
         $(".modal-title").html("Adicionar nova integração com Shopify");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
@@ -169,10 +141,7 @@ $(document).ready(function () {
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
         $("#integration-actions").show();
-        $("#button-information")
-            .show()
-            .addClass("d-flex")
-            .css("display", "flex");
+        $("#button-information").show().addClass("d-flex").css("display", "flex");
     }
 
     $("#btn-integration-model").on("click", function () {
@@ -181,11 +150,7 @@ $(document).ready(function () {
     });
 
     $("#bt_integration").on("click", function () {
-        if (
-            $("#token").val() == "" ||
-            $("#url_store").val() == "" ||
-            $("#company").val() == ""
-        ) {
+        if ($("#token").val() == "" || $("#url_store").val() == "" || $("#company").val() == "") {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
@@ -194,9 +159,7 @@ $(document).ready(function () {
     });
 
     function saveIntegration() {
-        let form_data = new FormData(
-            document.getElementById("form_add_integration")
-        );
+        let form_data = new FormData(document.getElementById("form_add_integration"));
 
         loadingOnScreen();
 
@@ -225,7 +188,7 @@ $(document).ready(function () {
     }
 
     let projectId;
-    let token
+    let token;
     function openCfg() {
         projectId = $(this).attr("app");
         var img = $(this).attr("data-img");
@@ -235,71 +198,64 @@ $(document).ready(function () {
 
         $("#modal_edit").modal("show");
 
-        function imageFound() {
-
-        }
+        function imageFound() {}
 
         function imageNotFound() {
-
-            img = '/build/global/img/produto.png';
+            img = "/build/global/img/produto.png";
             $("#project-img").attr("src", img);
-
         }
 
-        var tester=new Image();
-        tester.onload=imageFound;
-        tester.onerror=imageNotFound;
-        tester.src=img;
+        var tester = new Image();
+        tester.onload = imageFound;
+        tester.onerror = imageNotFound;
+        tester.src = img;
 
         $("#project-img").attr("src", img);
-        img = null
+        img = null;
         $("#project-name").html(name);
         $("#project-token").val(token);
 
-        $('#skiptocart-input').prop('checked', skip==1?true:false).val(skip);
-
+        $("#skiptocart-input")
+            .prop("checked", skip == 1 ? true : false)
+            .val(skip);
     }
-
 
     let syncAction = "";
 
     $("#token-change").click(function () {
-        if($(this).html() == 'Cancelar'){
+        if ($(this).html() == "Cancelar") {
             $("#project-token").val(token);
-            $('#project-token').attr('disabled',true)
-            $(this).html('Alterar')
-            $('#bt-update-keys').hide()
-            $('#bt-close').show()
-            return
+            $("#project-token").attr("disabled", true);
+            $(this).html("Alterar");
+            $("#bt-update-keys").hide();
+            $("#bt-close").show();
+            return;
         }
-        $('#project-token').attr('disabled',false)
-        $('#project-token').val('')
-        $('#project-token').focus()
-        $(this).html('Cancelar')
+        $("#project-token").attr("disabled", false);
+        $("#project-token").val("");
+        $("#project-token").focus();
+        $(this).html("Cancelar");
 
-        $('#bt-close').hide()
-        $('#bt-update-keys').show()
-    })
+        $("#bt-close").hide();
+        $("#bt-update-keys").show();
+    });
 
-
-    $('#skiptocart-input').on('change', function () {
-
-        if($('#skiptocart-input').prop('checked')==true){
-            $(this).val(1)
-        }else{
-            $(this).val(0)
-
+    $("#skiptocart-input").on("change", function () {
+        if ($("#skiptocart-input").prop("checked") == true) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
         }
 
-        var input = $(this)
+        var input = $(this);
 
         $.ajax({
-            method: 'POST',
-            url: '/api/apps/shopify/skiptocart',
+            method: "POST",
+            url: "/api/apps/shopify/skiptocart",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: {
                 project_id: projectId,
@@ -308,63 +264,56 @@ $(document).ready(function () {
             error: function (response) {
                 errorAjaxResponse(response);
                 changeSwitchSkipToCart(input);
-                switchSkipToCartOpacity(input, '1', false);
+                switchSkipToCartOpacity(input, "1", false);
             },
             success: function (response) {
-                alertCustom('success', response.message);
-                switchSkipToCartOpacity(input, '1', false);
-            }
+                alertCustom("success", response.message);
+                switchSkipToCartOpacity(input, "1", false);
+            },
         });
-    })
+    });
 
-    $('#bt-update-keys').on('click', function () {
+    $("#bt-update-keys").on("click", function () {
+        if (!$("#project-token").val()) {
+            alertCustom("error", "Insira um token válido!");
 
-        if(!$('#project-token').val()){
-
-            alertCustom('error', 'Insira um token válido!');
-
-            return
+            return;
         }
 
-
         $.ajax({
-            method: 'POST',
-            url: '/api/apps/shopify/updatetoken',
+            method: "POST",
+            url: "/api/apps/shopify/updatetoken",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: {
                 project_id: projectId,
-                token: $('#project-token').val(),
+                token: $("#project-token").val(),
             },
             error: function (response) {
-
                 errorAjaxResponse(response);
             },
             success: function (response) {
-
                 btnTokenClick = "enable click";
-                $('#shopify-token').prop("disabled", true);
-                $('.btn-edit-token').text('Alterar').removeClass('bg-grey-700');
-                alertCustom('success', response.message);
-            }
+                $("#shopify-token").prop("disabled", true);
+                $(".btn-edit-token").text("Alterar").removeClass("bg-grey-700");
+                alertCustom("success", response.message);
+            },
         });
 
         $("#bt-close").trigger("click");
-
-
-    })
+    });
 
     $(".sync-tracking").click(function () {
         syncAction = "tracking";
-        toggle_confirm("Rastreios", 'A sincronização pode demorar algumas horas.');
+        toggle_confirm("Rastreios", "A sincronização pode demorar algumas horas.");
     });
 
     $(".sync-products").click(function () {
         syncAction = "products";
-        toggle_confirm("Produtos", 'A sincronização pode demorar algumas horas.');
+        toggle_confirm("Produtos", "A sincronização pode demorar algumas horas.");
     });
 
     $(".sync-template").click(function () {
@@ -375,22 +324,17 @@ $(document).ready(function () {
         );
     });
 
-    $('#bt-close-confirm').on('click', function () {
-        $("#modal_edit").modal('show');
-
-    })
+    $("#bt-close-confirm").on("click", function () {
+        $("#modal_edit").modal("show");
+    });
     function toggle_confirm(name, desc) {
-
-        $("#modal_edit").modal('hide');
-        $("#modal-confirm").modal('show');
+        $("#modal_edit").modal("hide");
+        $("#modal-confirm").modal("show");
 
         function fill() {
-
             $("#sync-name").html(name);
             if (desc) {
-                $("#sync-desc").html(
-                    '<div style="padding:2px 0">' + desc + "</div>"
-                );
+                $("#sync-desc").html('<div style="padding:2px 0">' + desc + "</div>");
             } else {
                 $("#sync-desc").html("");
             }
@@ -400,10 +344,9 @@ $(document).ready(function () {
             //     fill()
             //     $("#bts-confirm").slideDown();
             // });
-            fill()
-
+            fill();
         } else {
-            fill()
+            fill();
             //$("#bts-confirm").show()
             //$("#bts-confirm").slideDown();
         }
@@ -421,9 +364,7 @@ $(document).ready(function () {
                     url: "/api/apps/shopify/synchronize/products",
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr(
-                            "content"
-                        ),
+                        Authorization: $('meta[name="access-token"]').attr("content"),
                         Accept: "application/json",
                     },
                     data: {
@@ -439,71 +380,65 @@ $(document).ready(function () {
                 break;
             case "template":
                 $.ajax({
-                    method: 'POST',
-                    url: '/api/apps/shopify/synchronize/templates',
+                    method: "POST",
+                    url: "/api/apps/shopify/synchronize/templates",
                     dataType: "json",
                     headers: {
-                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                        'Accept': 'application/json',
-                    },
-                    data: {
-                        project_id: projectId
-                    },
-                    error: function (response) {
-
-                        errorAjaxResponse(response);
-
-
-                    },
-                    success: function (response) {
-
-                        alertCustom('success', response.message);
-                    }
-                });
-                break;
-            case 'tracking':
-                
-                $.ajax({
-                    method: 'POST',
-                    url: '/api/apps/shopify/synchronize/trackings',
-                    dataType: "json",
-                    headers: {
-                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                        'Accept': 'application/json',
+                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Accept: "application/json",
                     },
                     data: {
                         project_id: projectId,
                     },
                     error: function (response) {
                         errorAjaxResponse(response);
-                        
                     },
                     success: function (response) {
-                        alertCustom('success', response.message);
-                    }
+                        alertCustom("success", response.message);
+                    },
+                });
+                break;
+            case "tracking":
+                $.ajax({
+                    method: "POST",
+                    url: "/api/apps/shopify/synchronize/trackings",
+                    dataType: "json",
+                    headers: {
+                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Accept: "application/json",
+                    },
+                    data: {
+                        project_id: projectId,
+                    },
+                    error: function (response) {
+                        errorAjaxResponse(response);
+                    },
+                    success: function (response) {
+                        alertCustom("success", response.message);
+                    },
                 });
                 break;
             default:
                 break;
         }
-        $("#modal-confirm").modal('hide');
+        $("#modal-confirm").modal("hide");
 
         $("#bt-cancel").trigger("click");
         $("#bt-close").trigger("click");
     });
 
-    $('#bt-shopify-verify-permissions').on('click', function (event) {
+    $("#bt-shopify-verify-permissions").on("click", function (event) {
         event.preventDefault();
-        $('#bt-close').trigger('click')
+        $("#bt-close").trigger("click");
         loadingOnScreen();
 
         $.ajax({
-            method: 'POST',
-            url: '/api/apps/shopify/verifypermissions',
+            method: "POST",
+            url: "/api/apps/shopify/verifypermissions",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: {
                 project_id: projectId,
@@ -514,8 +449,8 @@ $(document).ready(function () {
             },
             success: function (response) {
                 loadingOnScreenRemove();
-                alertCustom('success', response.message);
-            }
+                alertCustom("success", response.message);
+            },
         });
     });
 });

@@ -4,9 +4,9 @@ $(document).ready(function () {
     getProjects();
 
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
-    $('.applySelect2').select2({
-        width:'100%',
-        multiple:true,
+    $(".applySelect2").select2({
+        width: "100%",
+        multiple: true,
         language: {
             noResults: function () {
                 return "Nenhum resultado encontrado";
@@ -14,12 +14,12 @@ $(document).ready(function () {
             searching: function () {
                 return "Procurando...";
             },
-        }
+        },
     });
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        updateSalesRecovery();
+        loadData();
     });
 
     $("#bt_get_csv").on("click", function () {
@@ -33,9 +33,7 @@ $(document).ready(function () {
     });
 
     $(".btn-confirm-export-sale").on("click", function () {
-        var regexEmail = new RegExp(
-            /^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/
-        );
+        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
         var email = $("#email_export").val();
 
         if (email == "" || !regexEmail.test(email)) {
@@ -86,16 +84,10 @@ $(document).ready(function () {
             },
             ranges: {
                 Hoje: [moment(), moment()],
-                Ontem: [
-                    moment().subtract(1, "days"),
-                    moment().subtract(1, "days"),
-                ],
+                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
                 "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
                 "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [
-                    moment().startOf("month"),
-                    moment().endOf("month"),
-                ],
+                "Este mês": [moment().startOf("month"), moment().endOf("month")],
                 "Mês passado": [
                     moment().subtract(1, "month").startOf("month"),
                     moment().subtract(1, "month").endOf("month"),
@@ -162,16 +154,11 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = "";
         if (link == null) {
-            url = `?project=${$("#project").val()}&recovery_type=${$("#recovery_type option:selected")
-
-            .val()}&date_range=${$("#date-range-sales-recovery")
-
-            .val()}&client=${$("#client-name")
-
-            .val()}&date_type=created_at&client_document=${$("#client-cpf")
-
-            .val()}&plan=${$("#plan").val()}`;
-
+            url = `?project=${$("#project").val()}&recovery_type=${$(
+                "#recovery_type option:selected"
+            ).val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$(
+                "#client-name"
+            ).val()}&date_type=created_at&client_document=${$("#client-cpf").val()}&plan=${$("#plan").val()}`;
         } else {
             url = `${link}&project=${$("#project").val()}
 
@@ -222,12 +209,12 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                const BOLETO_TYPE = '5'
+                const BOLETO_TYPE = "5";
 
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                let recoveryType = $('#recovery_type').children("option:selected").text().toLowerCase();
+                let recoveryType = $("#recovery_type").children("option:selected").text().toLowerCase();
                 let image = $("#table_data").attr("img-empty");
                 if (response.data == "" && recoveryType) {
                     $("#pagination-salesRecovery").hide();
@@ -239,7 +226,6 @@ $(document).ready(function () {
                             </td>
                         </tr>`
                     );
-
                 } else {
                     createHTMLTable(response);
                     $("#pagination-salesRecovery").show();
@@ -254,13 +240,11 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if ($('#recovery_type option:selected').val() == '5') {
+                    if ($("#recovery_type option:selected").val() == "5") {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
-                                    $(this)
-                                        .css("cursor", "pointer")
-                                        .text("Regerar");
+                                    $(this).css("cursor", "pointer").text("Regerar");
                                     $(this).css("background", "#545B62");
                                 },
                                 function () {
@@ -271,15 +255,8 @@ $(document).ready(function () {
                             );
                         }
 
-                        $("#date").val(
-                            moment(new Date())
-                                .add(3, "days")
-                                .format("YYYY-MM-DD")
-                        );
-                        $("#date").attr(
-                            "min",
-                            moment(new Date()).format("YYYY-MM-DD")
-                        );
+                        $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                        $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
 
                         $(".sale_status").on("click", function () {
                             if (verifyAccountFrozen() == false) {
@@ -306,14 +283,38 @@ $(document).ready(function () {
                     $(".estornar_venda").on("click", function () {
                         id_venda = $(this).attr("venda");
 
-                        $("#modal_estornar_titulo").html(
-                            "Estornar venda #" + id_venda + " ?"
-                        );
+                        $("#modal_estornar_titulo").html("Estornar venda #" + id_venda + " ?");
                         $("#modal_estornar_body").html("");
                     });
                 }
             },
+            complete: response => {
+                unlockSearch($('#bt_filtro'));
+            }
         });
+    }
+
+    function searchIsLocked(elementButton) {
+        return elementButton.attr('block_search');
+    }
+
+    function lockSearch(elementButton) {
+        elementButton.attr('block_search', 'true');
+        //set layout do button block
+    }
+
+    function unlockSearch(elementButton) {
+        elementButton.attr('block_search', 'false');
+        //layout do button block
+    }
+
+    function loadData() {
+        elementButton = $('#bt_filtro');
+        if (searchIsLocked(elementButton) != 'true') {
+            lockSearch(elementButton);
+            console.log(elementButton.attr('block_search'));
+            updateSalesRecovery();
+        }
     }
 
     /**
@@ -374,27 +375,11 @@ $(document).ready(function () {
     function createHtmlCartAbandoned(value) {
         let data = "";
         data += "<tr>";
-        data +=
-            "<td class='display-sm-none display-m-none display-lg-none'>" +
-            value.date +
-            "</td>";
+        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
         data += "<td>" + value.project + "</td>";
-        data +=
-            "<td class='display-sm-none display-m-none'>" +
-            value.client +
-            "</td>";
-        data +=
-            "<td>" +
-            value.email_status +
-            " " +
-            setSend(value.email_status) +
-            "</td>";
-        data +=
-            "<td>" +
-            value.sms_status +
-            " " +
-            setSend(value.sms_status) +
-            "</td>";
+        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
+        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
+        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
         data +=
             "<td><span class='sale_status badge badge-" +
             statusRecovery[value.status_translate] +
@@ -431,27 +416,11 @@ $(document).ready(function () {
     function createHtmlOthers(value) {
         let data = "";
         data += "<tr>";
-        data +=
-            "<td class='display-sm-none display-m-none display-lg-none'>" +
-            value.start_date +
-            "</td>";
+        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.start_date + "</td>";
         data += "<td>" + value.project + "</td>";
-        data +=
-            "<td class='display-sm-none display-m-none'>" +
-            value.client +
-            "</td>";
-        data +=
-            "<td>" +
-            value.email_status +
-            " " +
-            setSend(value.email_status) +
-            "</td>";
-        data +=
-            "<td>" +
-            value.sms_status +
-            " " +
-            setSend(value.sms_status) +
-            "</td>";
+        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
+        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
+        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
         data +=
             "<td><span class='sale_status badge badge-" +
             statusRecovery[value.recovery_status] +
@@ -511,9 +480,7 @@ $(document).ready(function () {
         clearFields();
 
         $("#modal-title").html("Detalhes " + "<br><hr>");
-        $("#date-as-hours").html(
-            `${data.checkout.date} às ${data.checkout.hours}`
-        );
+        $("#date-as-hours").html(`${data.checkout.date} às ${data.checkout.hours}`);
         $("#status-checkout")
             .addClass("badge-" + statusRecovery[data.status])
             .html(data.status);
@@ -564,9 +531,7 @@ $(document).ready(function () {
         $("#client-document").html("CPF: " + data.client.document);
         $("#client-street").html("Endereço: " + data.delivery.street);
         $("#client-zip-code").html("CEP: " + data.delivery.zip_code);
-        $("#client-city-state").html(
-            "Cidade: " + data.delivery.city + "/" + data.delivery.state
-        );
+        $("#client-city-state").html("Cidade: " + data.delivery.city + "/" + data.delivery.state);
         $("#sale-motive").html("Motivo: " + data.client.error);
 
         if (
@@ -600,24 +565,14 @@ $(document).ready(function () {
         /**
          * Dados do checkout - UTM
          */
-        $("#checkout-operational-system").html(
-            "Sistema: " + data.checkout.operational_system
-        );
+        $("#checkout-operational-system").html("Sistema: " + data.checkout.operational_system);
         $("#checkout-browser").html("Navegador: " + data.checkout.browser);
         $("#checkout-src").html("SRC: " + data.checkout.src);
-        $("#checkout-utm-source").html(
-            "UTM Source: " + data.checkout.utm_source
-        );
-        $("#checkout-utm-medium").html(
-            "UTM Medium: " + data.checkout.utm_medium
-        );
-        $("#checkout-utm-campaign").html(
-            "UTM Campaign: " + data.checkout.utm_campaign
-        );
+        $("#checkout-utm-source").html("UTM Source: " + data.checkout.utm_source);
+        $("#checkout-utm-medium").html("UTM Medium: " + data.checkout.utm_medium);
+        $("#checkout-utm-campaign").html("UTM Campaign: " + data.checkout.utm_campaign);
         $("#checkout-utm-term").html("UTM Term: " + data.checkout.utm_term);
-        $("#checkout-utm-content").html(
-            "UTM Content: " + data.checkout.utm_content
-        );
+        $("#checkout-utm-content").html("UTM Content: " + data.checkout.utm_content);
         /**
          * Fim dados do checkout
          */
@@ -645,9 +600,7 @@ $(document).ready(function () {
 
             $("#discount_type").on("change", function () {
                 if ($("#discount_type").val() == "value") {
-                    $("#discount_value")
-                        .mask("#.###,#0", { reverse: true })
-                        .removeAttr("maxlength");
+                    $("#discount_value").mask("#.###,#0", { reverse: true }).removeAttr("maxlength");
                     $("#label_discount_value").html("Valor (ex: 20,00)");
                 } else {
                     $("#discount_value").mask("00%", { reverse: true });
@@ -696,11 +649,11 @@ $(document).ready(function () {
             date_type: "created_at",
         };
 
-        Object.keys(data).forEach((value)=>{
-            if(Array.isArray(data[value])){
-                data[value] = data[value].filter((value) => value).join(',');
+        Object.keys(data).forEach((value) => {
+            if (Array.isArray(data[value])) {
+                data[value] = data[value].filter((value) => value).join(",");
             }
-        })
+        });
 
         if (urlParams) {
             let params = "";
@@ -735,12 +688,12 @@ $(document).ready(function () {
         });
     }
     //COMPORTAMENTO DO FILTRO MULTIPLO
-    function behaviorMultipleFilter(data, selectId){
+    function behaviorMultipleFilter(data, selectId) {
         var $select = $(`#${selectId}`);
-        var valueToRemove = 'all';
+        var valueToRemove = "all";
         var values = $select.val();
 
-        if (data.id != 'all' && data.id != '') {
+        if (data.id != "all" && data.id != "") {
             if (values) {
                 var i = values.indexOf(valueToRemove);
 
@@ -749,51 +702,50 @@ $(document).ready(function () {
                     $select.val(values).change();
                 }
             }
-         } else {
+        } else {
             if (values) {
-              values.splice(0, values.lenght);
-              $select.val(null).change();
+                values.splice(0, values.lenght);
+                $select.val(null).change();
 
-              values.push('all');
-              $select.val('all').change();
+                values.push("all");
+                $select.val("all").change();
             }
         }
     }
 
     //NAO PERMITI QUE O FILTRO FIQUE VAZIO
-    function deniedEmptyFilter(selectId){
+    function deniedEmptyFilter(selectId) {
         let arrayValues = $(`#${selectId}`).val();
         let valueAmount = $(`#${selectId}`).val().length;
 
-        if(valueAmount === 0){
-            arrayValues.push('all');
-            arrayValues = $(`#${selectId}`).val('all').trigger("change");
+        if (valueAmount === 0) {
+            arrayValues.push("all");
+            arrayValues = $(`#${selectId}`).val("all").trigger("change");
         }
     }
 
     $(".applySelect2").on("select2:select", function (evt) {
         var data = evt.params.data;
-        var selectId = $(this).attr('id');
+        var selectId = $(this).attr("id");
         behaviorMultipleFilter(data, selectId);
 
         $(`#${selectId}`).focus().scrollTop(0);
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
 
     $(".applySelect2").on("change", function () {
-        let idTarget = $(this).attr('id');
+        let idTarget = $(this).attr("id");
         deniedEmptyFilter(idTarget);
     });
 
-    $(document).on('focusout', '.select2-selection__rendered', function () {
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    $(document).on("focusout", ".select2-selection__rendered", function () {
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
 
-    $(document).on('focusin', '.select2-selection__rendered', function () {
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    $(document).on("focusin", ".select2-selection__rendered", function () {
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
-
 
     //Search plan
     $("#plan").select2({
@@ -829,15 +781,15 @@ $(document).ready(function () {
                     };
                 });
 
-                if(res.data.length > 0){
+                if (res.data.length > 0) {
                     result.splice(0, 0, {
                         id: "",
-                        text: "Todos os Planos"
+                        text: "Todos os Planos",
                     });
                 }
 
                 return {
-                    results: result
+                    results: result,
                 };
             },
         },
@@ -854,10 +806,7 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (
-            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
-            collapse.css("transform") == "none"
-        ) {
+        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {

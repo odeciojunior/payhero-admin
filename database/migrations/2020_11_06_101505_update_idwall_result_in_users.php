@@ -14,44 +14,36 @@ class UpdateIdwallResultInUsers extends Migration
      */
     public function up()
     {
-        if (env('APP_ENV') == 'production') {
-
+        if (env("APP_ENV") == "production") {
             $userService = new UserService();
             $companyService = new CompanyService();
 
-            $users = User::whereRaw('account_owner_id = id')->whereRaw('created_at > DATE_SUB(now(), INTERVAL 2 MONTH)')->get();
+            $users = User::whereRaw("account_owner_id = id")
+                ->whereRaw("created_at > DATE_SUB(now(), INTERVAL 2 MONTH)")
+                ->get();
 
             foreach ($users as $user) {
-
-                if (empty($user->id_wall_result)){
-
+                if (empty($user->id_wall_result)) {
                     $userIdwall = $userService->getUserByIdwallCPF($user->document);
 
-                    if ($userIdwall){
+                    if ($userIdwall) {
                         $userJson = json_encode($userIdwall);
-                        $user->update(['id_wall_result' => $userJson]);
+                        $user->update(["id_wall_result" => $userJson]);
                     }
-
                 }
 
                 foreach ($user->companies as $company) {
-
                     if ($company->company_type == 2 && empty($company->id_wall_result)) {
-
                         $companyIdwall = $companyService->getCompanyByIdwallCNPJ($company->company_document);
 
-                        if ($companyIdwall){
+                        if ($companyIdwall) {
                             $companyJson = json_encode($companyIdwall);
-                            $company->update(['id_wall_result' => $companyJson]);
+                            $company->update(["id_wall_result" => $companyJson]);
                         }
-
                     }
-
                 }
             }
-
         }
-
     }
 
     /**

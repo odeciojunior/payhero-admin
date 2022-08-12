@@ -28,27 +28,23 @@ class WithdrawalTransactionsResource extends JsonResource
     public function toArray($request)
     {
         $isLiquidated = false;
-        $date = '';
-        $saleIdEncoded =Hashids::connection('sale_id')->encode($this->sale->id);
+        $date = "";
+        $saleIdEncoded = Hashids::connection("sale_id")->encode($this->sale->id);
 
         if (!empty($this->gateway_transferred_at)) {
             $isLiquidated = true;
-            $date = with(new Carbon($this->gateway_transferred_at))->format('d/m/Y');
+            $date = with(new Carbon($this->gateway_transferred_at))->format("d/m/Y");
         }
-        if(empty($this->sale->flag)){
+        if (empty($this->sale->flag)) {
             $this->sale->flag = $this->sale->present()->getPaymentFlag();
         }
 
         return [
-            'transaction_code' => $saleIdEncoded,
-            'liquidated'       => $isLiquidated,
-            'brand'            => $this->sale->flag,
-            'date'             => $date,
-            'value'            => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
+            "transaction_code" => $saleIdEncoded,
+            "liquidated" => $isLiquidated,
+            "brand" => $this->sale->flag,
+            "date" => $date,
+            "value" => 'R$ ' . number_format(intval($this->value) / 100, 2, ",", "."),
         ];
     }
-
-
-
-
 }

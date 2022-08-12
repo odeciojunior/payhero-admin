@@ -13,8 +13,12 @@ class AlterTableSaleContestationAddColumnGatewatyCaseNumber extends Migration
      */
     public function up()
     {
-        Schema::table('sale_contestations',function(Blueprint $table){
-            $table->string('gateway_case_number',120)->nullable()->default(null)->after('nsu');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table
+                ->string("gateway_case_number", 120)
+                ->nullable()
+                ->default(null)
+                ->after("nsu");
         });
     }
 

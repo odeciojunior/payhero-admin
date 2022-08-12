@@ -51,7 +51,7 @@
     top: auto;
 }
 
-#checkout_editor  .dropify-wrapper .dropify-preview .dropify-render img {
+#checkout_editor .dropify-wrapper .dropify-preview .dropify-render img {
     border-radius: 8px;
     width: 100%;
 }
@@ -77,12 +77,7 @@
     color: #3b8ced;
 }
 
-#checkout_editor
-    .dropify-wrapper
-    .dropify-preview
-    .dropify-infos
-    .dropify-infos-inner
-    p {
+#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
     white-space: normal;
 }
 
@@ -115,23 +110,13 @@
     opacity: 0.9;
 }
 
-#checkout_editor
-    .dropify-wrapper
-    .dropify-preview
-    .dropify-infos
-    .dropify-infos-inner
-    p {
+#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
     line-height: 14px;
     color: #3b8ced;
     text-align: center;
 }
 
-#checkout_editor
-    .dropify-wrapper
-    .dropify-preview
-    .dropify-infos
-    .dropify-infos-inner
-    p.dropify-infos-message {
+#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
     margin-top: 0;
     padding-top: 5px;
 }
@@ -187,8 +172,7 @@
     color: #ccc;
 }
 
-
-@media (max-width: 1600px){
+@media (max-width: 1600px) {
     #upload-banner > .dropify-wrapper {
         height: 100px !important;
     }

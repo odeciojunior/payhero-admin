@@ -13,13 +13,13 @@ class AddBraspagColumnCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->unsignedInteger('braspag_status')->nullable()->after('document_number');
-                $table->char('braspag_merchant_id')->nullable();
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("braspag_status")
+                ->nullable()
+                ->after("document_number");
+            $table->char("braspag_merchant_id")->nullable();
+        });
     }
 
     /**
@@ -29,16 +29,8 @@ class AddBraspagColumnCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->dropColumn(
-                    [
-                        'braspag_status',
-                        'braspag_merchant_id',
-                    ]
-                );
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn(["braspag_status", "braspag_merchant_id"]);
+        });
     }
 }

@@ -13,8 +13,11 @@ class AddSafe2payBalanceOnCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->integer('safe2pay_balance')->default(0)->after('asaas_balance');
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->integer("safe2pay_balance")
+                ->default(0)
+                ->after("asaas_balance");
         });
     }
 
@@ -25,8 +28,8 @@ class AddSafe2payBalanceOnCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('safe2pay_balance');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("safe2pay_balance");
         });
     }
 }

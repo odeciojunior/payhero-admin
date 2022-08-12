@@ -13,26 +13,18 @@ class SaleContestationFile extends Model
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'user_id',
-        'contestation_sale_id',
-        'type',
-        'file',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ["user_id", "contestation_sale_id", "type", "file", "created_at", "updated_at", "deleted_at"];
 
     /**
      * @return BelongsTo
      */
     public function contestation()
     {
-        return $this->belongsTo(SaleContestation::class, 'contestation_sale_id', 'id');
+        return $this->belongsTo(SaleContestation::class, "contestation_sale_id", "id");
     }
 
     public function user()

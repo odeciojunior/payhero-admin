@@ -13,7 +13,7 @@ class RenameTableProductSales extends Migration
      */
     public function up()
     {
-        Schema::rename('products_sales', 'products_sales_api');
+        Schema::rename("products_sales", "products_sales_api");
     }
 
     /**

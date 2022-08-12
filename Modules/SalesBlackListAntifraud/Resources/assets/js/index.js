@@ -2,90 +2,107 @@ let currentPage = null;
 let updateList = null;
 
 let statusArray = {
-    1: 'success',
-    2: 'pendente',
-    3: 'danger',
-    4: 'danger',
-    6: 'primary',
-    7: 'danger',
-    10: 'dark',
-    20: 'primary',
-    21: 'primary'
-
+    1: "success",
+    2: "pendente",
+    3: "danger",
+    4: "danger",
+    6: "primary",
+    7: "danger",
+    10: "dark",
+    20: "primary",
+    21: "primary",
 };
 
 let statusTranslated = {
-    10: 'BlackList',
-    21: 'Cancelado Antifraude'
+    10: "BlackList",
+    21: "Cancelado Antifraude",
 };
 
 $(document).ready(function () {
-
-    $("#filtros").on('click', function () {
-        if ($("#div_filtros").is(':visible')) {
+    $("#filtros").on("click", function () {
+        if ($("#div_filtros").is(":visible")) {
             $("#div").slideUp();
         } else {
             $("#div").slideDown();
         }
     });
 
-    $("#bt_filtro").on('click', function (event) {
+    $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
         updateList();
     });
 
-    let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-    let endDate = moment().format('YYYY-MM-DD');
-    $('#date_range').daterangepicker({
-        startDate: moment().subtract(30, 'days'),
-        endDate: moment(),
-        opens: 'center',
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
+    let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    $("#date_range").daterangepicker(
+        {
+            startDate: moment().subtract(30, "days"),
+            endDate: moment(),
+            opens: "center",
+            maxDate: moment().endOf("day"),
+            alwaysShowCalendar: true,
+            showCustomRangeLabel: "Customizado",
+            autoUpdateInput: true,
+            locale: {
+                locale: "pt-br",
+                format: "DD/MM/YYYY",
+                applyLabel: "Aplicar",
+                cancelLabel: "Limpar",
+                fromLabel: "De",
+                toLabel: "Até",
+                customRangeLabel: "Customizado",
+                weekLabel: "W",
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro",
+                ],
+                firstDay: 0,
+            },
+            ranges: {
+                Hoje: [moment(), moment()],
+                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
+                "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
+                "Este mês": [moment().startOf("month"), moment().endOf("month")],
+                "Mês passado": [
+                    moment().subtract(1, "month").startOf("month"),
+                    moment().subtract(1, "month").endOf("month"),
+                ],
+                Vitalício: [moment("2018-01-01 00:00:00"), moment()],
+            },
         },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+        function (start, end) {
+            startDate = start.format("YYYY-MM-DD");
+            endDate = end.format("YYYY-MM-DD");
         }
-    }, function (start, end) {
-        startDate = start.format('YYYY-MM-DD');
-        endDate = end.format('YYYY-MM-DD');
-    });
+    );
 
     function getFilters(urlParams = false) {
         let data = {
-            'project': $('#projeto').val(),
-            'payment_method': $('#forma').val(),
-            'date_range': $("#date_range").val(),
-            'status': $('#status').val(),
+            project: $("#projeto").val(),
+            payment_method: $("#forma").val(),
+            date_range: $("#date_range").val(),
+            status: $("#status").val(),
             // 'client': $('#comprador').val(),
-            'transaction': $('#transaction').val().replace('#', ''),
-            'customer': $('#customer_name').val(),
+            transaction: $("#transaction").val().replace("#", ""),
+            customer: $("#customer_name").val(),
         };
 
         if (urlParams) {
-            let params = '';
+            let params = "";
             for (let param in data) {
-                params += '&' + param + '=' + data[param];
+                params += "&" + param + "=" + data[param];
             }
             return encodeURI(params);
         } else {
@@ -98,38 +115,41 @@ $(document).ready(function () {
     function getProjects() {
         loadingOnScreen();
         $.ajax({
-            method: 'GET',
-            url: 'api/projects?select=true',
-            dataType: 'json',
+            method: "GET",
+            url: "api/projects?select=true",
+            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
-            }, success: function success(response) {
+            },
+            success: function success(response) {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    $("#text-info").show()
+                    $("#text-info").show();
 
                     $.each(response.data, function (i, project) {
-                        $("#projeto").append($('<option>', {
-                            value: project.id,
-                            text: project.name
-                        }));
+                        $("#projeto").append(
+                            $("<option>", {
+                                value: project.id,
+                                text: project.name,
+                            })
+                        );
                     });
 
                     updateList();
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
-                    $("#text-info").hide()
+                    $("#text-info").hide();
                 }
 
-                    loadingOnScreenRemove();
-            }
+                loadingOnScreenRemove();
+            },
         });
     }
 
@@ -137,45 +157,47 @@ $(document).ready(function () {
     updateList = function (link = null) {
         currentPage = link;
 
-        loadOnTable('#dados_tabela', '#tabela_vendas');
+        loadOnTable("#dados_tabela", "#tabela_vendas");
 
         if (link == null) {
-            link = '/api/antifraud?' + getFilters(true).substr(1);
+            link = "/api/antifraud?" + getFilters(true).substr(1);
         } else {
-            link = '/api/antifraud' + link + getFilters(true);
+            link = "/api/antifraud" + link + getFilters(true);
         }
-        $('#pagination-sales-atifraud-blacklist').hide();
+        $("#pagination-sales-atifraud-blacklist").hide();
 
         $.ajax({
-            method: 'GET',
+            method: "GET",
             url: link,
-            dataType: 'json',
+            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-            }, success: function success(response) {
-                $('#dados_tabela').html('');
-                $('#tabela_vendas').addClass('table-striped');
-                let showHideBlacklist = 'none';
+            },
+            success: function success(response) {
+                $("#dados_tabela").html("");
+                $("#tabela_vendas").addClass("table-striped");
+                let showHideBlacklist = "none";
 
-                if (statusTranslated[$('#status').val()] == 'BlackList') {
+                if (statusTranslated[$("#status").val()] == "BlackList") {
                     $(".blacklist").show();
-                    showHideBlacklist = 'block';
+                    showHideBlacklist = "block";
                 } else {
                     $(".blacklist").hide();
-                    showHideBlacklist = 'none';
+                    showHideBlacklist = "none";
                 }
 
                 if (isEmpty(response.data)) {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    $("#dados_tabela").html(
+                        "<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>"
+                    );
                 } else {
-
-                    let data = '';
+                    let data = "";
                     $.each(response.data, function (index, value) {
-                        let tableClass = '';
+                        let tableClass = "";
 
                         /*  const objectArray = Object.entries(value.black_list);
                           let valuesObject = ``;
@@ -206,19 +228,18 @@ $(document).ready(function () {
                         `;
                     });
 
-                    $('#dados_tabela').append(data);
+                    $("#dados_tabela").append(data);
 
-                    pagination(response, 'sales-atifraud-blacklist', updateList);
-                    $('#pagination-sales-atifraud-blacklist').show();
+                    pagination(response, "sales-atifraud-blacklist", updateList);
+                    $("#pagination-sales-atifraud-blacklist").show();
 
-                    $('#date').val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                    $('#date').attr('min', moment(new Date()).format("YYYY-MM-DD"));
+                    $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                    $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
                 }
-
-            }
+            },
         });
-    }
-    $(document).on('keypress', function (e) {
+    };
+    $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
             updateList();
         }

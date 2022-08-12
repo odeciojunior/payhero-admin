@@ -34,7 +34,7 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
         $this->filters = $filters;
         $this->user = $user;
         $this->filename = $filename;
-        $this->email = !empty($filters['email']) ? $filters['email'] : $user->email;
+        $this->email = !empty($filters["email"]) ? $filters["email"] : $user->email;
     }
 
     public function query()
@@ -43,65 +43,70 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
         $data = $this->filters;
 
         //parâmetros obrigatórios
-        $companyId = current(Hashids::decode($data['company']));
+        $companyId = current(Hashids::decode($data["company"]));
         $dateRange = FoxUtils::validateDateRange($data["date_range"]);
-        if ($data['date_type'] == 'transaction_date') {
-            $dateType = 'transaction.created_at';
-        } else if ($data['date_type'] == 'transfer_date') {
-            $dateType = 'transfers.created_at';
+        if ($data["date_type"] == "transaction_date") {
+            $dateType = "transaction.created_at";
+        } elseif ($data["date_type"] == "transfer_date") {
+            $dateType = "transfers.created_at";
         } else {
-            $dateType = 'sales.start_date';
+            $dateType = "sales.start_date";
         }
 
-        $transfers = $transfersModel->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction_id')
-            ->leftJoin('sales', 'sales.id', '=', 'transaction.sale_id')
+        $transfers = $transfersModel
+            ->leftJoin("transactions as transaction", "transaction.id", "transfers.transaction_id")
+            ->leftJoin("sales", "sales.id", "=", "transaction.sale_id")
             ->where(function ($query) use ($companyId) {
-                $query->where('transfers.company_id', $companyId)
-                    ->orWhere('transaction.company_id', $companyId);
+                $query->where("transfers.company_id", $companyId)->orWhere("transaction.company_id", $companyId);
             })
-            ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+            ->whereBetween($dateType, [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"]);
 
-        $saleId = str_replace('#', '', $data['transaction']);
-        $saleId = current(Hashids::connection('sale_id')->decode($saleId));
+        $saleId = str_replace("#", "", $data["transaction"]);
+        $saleId = current(Hashids::connection("sale_id")->decode($saleId));
         if ($saleId) {
-            $transfers->where('transaction.sale_id', $saleId);
+            $transfers->where("transaction.sale_id", $saleId);
         }
 
-        if(!empty($data['type'])){
-            $transfers->where('transfers.type_enum', $transfersModel->present()->getTypeEnum($data['type']));
+        if (!empty($data["type"])) {
+            $transfers->where("transfers.type_enum", $transfersModel->present()->getTypeEnum($data["type"]));
         }
 
-        if(!empty($data['reason'])){
-            $transfers->where('transfers.reason', 'like', '%' . $data['reason'] . '%');
+        if (!empty($data["reason"])) {
+            $transfers->where("transfers.reason", "like", "%" . $data["reason"] . "%");
         }
 
-        if(!empty($data['value'])){
-            $value = intval(preg_replace('/[^0-9]/', '', $data['value']));
-            $transfers->where('transfers.value', $value);
+        if (!empty($data["value"])) {
+            $value = intval(preg_replace("/[^0-9]/", "", $data["value"]));
+            $transfers->where("transfers.value", $value);
         }
 
-        if(!empty($data['gateway_id'])){
-            $gatewayId = hashids_decode($data['gateway_id']);
-            if(!empty($gatewayId)){
-                $transfers->where('transfers.gateway_id', $gatewayId);
+        if (!empty($data["gateway_id"])) {
+            $gatewayId = hashids_decode($data["gateway_id"]);
+            if (!empty($gatewayId)) {
+                $transfers->where("transfers.gateway_id", $gatewayId);
             }
         }
 
-        $balanceInPeriod = $transfers->selectRaw("sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod")
+        $balanceInPeriod = $transfers
+            ->selectRaw(
+                "sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod"
+            )
             ->first();
 
-        if(!empty($balanceInPeriod)){
+        if (!empty($balanceInPeriod)) {
             $balanceInPeriod = $balanceInPeriod->balanceInPeriod / 100;
-            $balanceInPeriod = number_format($balanceInPeriod, 2, ',', '.');
+            $balanceInPeriod = number_format($balanceInPeriod, 2, ",", ".");
         }
 
-        $transfers = $transfers->select(
-            'transfers.*',
-            'transaction.sale_id',
-            'transaction.company_id',
-            'transaction.status',
-            'transaction.type as transaction_type'
-        )->orderBy('id', 'DESC');
+        $transfers = $transfers
+            ->select(
+                "transfers.*",
+                "transaction.sale_id",
+                "transaction.company_id",
+                "transaction.status",
+                "transaction.type as transaction_type"
+            )
+            ->orderBy("id", "DESC");
 
         return $transfers;
     }
@@ -115,25 +120,25 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
         $transactionPresenter = (new Transaction())->present();
 
         if (!empty($transfer->transaction) && empty($transfer->reason)) {
-            $reason = 'Transação';
-        } else if (!empty($transfer->transaction) && $transfer->reason == 'chargedback') {
-            $reason = 'Chargeback';
-        } else if (empty($transfer->transaction) && ($transfer->reason ?? '') == 'chargedback') {
-            $reason = 'Chargeback';
-        } else if (!empty($transfer->transaction) && ($transfer->reason ?? '') == 'refunded') {
-            $reason = 'Estorno da transação';
+            $reason = "Transação";
+        } elseif (!empty($transfer->transaction) && $transfer->reason == "chargedback") {
+            $reason = "Chargeback";
+        } elseif (empty($transfer->transaction) && ($transfer->reason ?? "") == "chargedback") {
+            $reason = "Chargeback";
+        } elseif (!empty($transfer->transaction) && ($transfer->reason ?? "") == "refunded") {
+            $reason = "Estorno da transação";
         } else {
-            $reason = $transfer->reason ?? '';
+            $reason = $transfer->reason ?? "";
         }
 
-        $type     = $transfer->type_enum == 2 ? '-' : '';
-        $value    = number_format(intval($type . $transfer->value) / 100, 2, ',', '.');
+        $type = $transfer->type_enum == 2 ? "-" : "";
+        $value = number_format(intval($type . $transfer->value) / 100, 2, ",", ".");
 
         $transferData = [
-            'reason' => $reason . '#'. Hashids::connection('sale_id')->encode($transfer->sale_id),
-            'date'   => $transfer->created_at->format('d/m/Y'),
-            'type'   => ($transfer->type_enum == 1) ? 'Entrada' : (($transfer->type_enum == 2) ? 'Saída' : ''),
-            'value'  => $value,
+            "reason" => $reason . "#" . Hashids::connection("sale_id")->encode($transfer->sale_id),
+            "date" => $transfer->created_at->format("d/m/Y"),
+            "type" => $transfer->type_enum == 1 ? "Entrada" : ($transfer->type_enum == 2 ? "Saída" : ""),
+            "value" => $value,
         ];
 
         return $transferData;
@@ -141,44 +146,49 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
 
     public function headings(): array
     {
-        return [
-            'Razão',
-            'Data da transferência',
-            'Tipo',
-            'Valor',
-        ];
+        return ["Razão", "Data da transferência", "Tipo", "Valor"];
     }
 
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:D1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)
+            AfterSheet::class => function (AfterSheet $event) {
+                $cellRange = "A1:D1"; // All headers
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
                     ->getFill()
-                    ->setFillType('solid')
+                    ->setFillType("solid")
                     ->getStartColor()
-                    ->setRGB('E16A0A');
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
-                    'color' => ['rgb' => 'ffffff'],
-                    'size' => 16
-                ]);
+                    ->setRGB("E16A0A");
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle($cellRange)
+                    ->getFont()
+                    ->applyFromArray([
+                        "color" => ["rgb" => "ffffff"],
+                        "size" => 16,
+                    ]);
 
                 $lastRow = $event->sheet->getDelegate()->getHighestRow();
                 $setGray = false;
                 $lastSale = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
-                    $currentSale = $event->sheet->getDelegate()->getCellByColumnAndRow(1, $row)->getValue();
+                    $currentSale = $event->sheet
+                        ->getDelegate()
+                        ->getCellByColumnAndRow(1, $row)
+                        ->getValue();
                     if ($currentSale != $lastSale && isset($lastSale)) {
                         $setGray = !$setGray;
                     }
-                    if($setGray){
-                        $event->sheet->getDelegate()
-                            ->getStyle('A' . $row . ':AS' . $row)
+                    if ($setGray) {
+                        $event->sheet
+                            ->getDelegate()
+                            ->getStyle("A" . $row . ":AS" . $row)
                             ->getFill()
-                            ->setFillType('solid')
+                            ->setFillType("solid")
                             ->getStartColor()
-                            ->setRGB('e5e5e5');
+                            ->setRGB("e5e5e5");
                     }
                     $lastSale = $currentSale;
                 }

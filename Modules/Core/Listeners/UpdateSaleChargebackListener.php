@@ -29,9 +29,9 @@ class UpdateSaleChargebackListener implements ShouldQueue
             $sale->status = Sale::STATUS_CHARGEBACK;
             $sale->save();
 
-            Redis::connection('redis-statement')->set("sale:has:tracking:{$sale->id}", true);
+            Redis::connection("redis-statement")->set("sale:has:tracking:{$sale->id}", true);
 
-            SaleService::createSaleLog($sale->id, 'charge_back');
+            SaleService::createSaleLog($sale->id, "charge_back");
 
             $getnetService = new GetnetBackOfficeService();
 
@@ -39,7 +39,8 @@ class UpdateSaleChargebackListener implements ShouldQueue
                 if (!$transaction->is_waiting_withdrawal && !empty($transaction->company_id)) {
                     $orderId = $sale->gateway_order_id;
 
-                    $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                    $response = $getnetService
+                        ->setStatementSaleHashId(hashids_encode($sale->id, "sale_id"))
                         ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
                         ->getStatement($orderId);
 
@@ -55,7 +56,7 @@ class UpdateSaleChargebackListener implements ShouldQueue
                     }
                 }
 
-                $transaction->status = 'chargeback';
+                $transaction->status = "chargeback";
                 $transaction->status_enum = Transaction::STATUS_CHARGEBACK;
                 $transaction->save();
             }
@@ -64,16 +65,18 @@ class UpdateSaleChargebackListener implements ShouldQueue
 
             if (!empty($sale_contestation)) {
                 $sale_contestation->update([
-                    'status' => SaleContestation::STATUS_LOST
+                    "status" => SaleContestation::STATUS_LOST,
                 ]);
             }
 
-            $blockSales = BlockReasonSale::where('status',BlockReasonSale::STATUS_BLOCKED)->where('sale_id',$sale->id)->first();
-            if(!empty($blockSales)){
+            $blockSales = BlockReasonSale::where("status", BlockReasonSale::STATUS_BLOCKED)
+                ->where("sale_id", $sale->id)
+                ->first();
+            if (!empty($blockSales)) {
                 $blockSales->update([
-                    'status' => BlockReasonSale::STATUS_UNLOCKED
+                    "status" => BlockReasonSale::STATUS_UNLOCKED,
                 ]);
-            }            
+            }
 
             DB::commit();
         } catch (Exception $e) {

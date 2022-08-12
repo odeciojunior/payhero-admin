@@ -13,10 +13,11 @@ class AddLengthToProducts extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('length')
+        Schema::table("products", function (Blueprint $table) {
+            $table
+                ->string("length")
                 ->nullable()
-                ->after('width');
+                ->after("width");
         });
     }
 
@@ -27,8 +28,8 @@ class AddLengthToProducts extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('length');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropColumn("length");
         });
     }
 }

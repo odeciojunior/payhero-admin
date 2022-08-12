@@ -13,8 +13,8 @@ class ChangeTypeToIntegerOnTransactions extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->integer('type')->change();
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->integer("type")->change();
         });
     }
 
@@ -25,8 +25,8 @@ class ChangeTypeToIntegerOnTransactions extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->string('type')->change();
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->string("type")->change();
         });
     }
 }

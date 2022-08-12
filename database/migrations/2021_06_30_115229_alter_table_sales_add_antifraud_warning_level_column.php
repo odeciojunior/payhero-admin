@@ -13,15 +13,13 @@ class AlterTableSalesAddAntifraudWarningLevelColumn extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'sales',
-            function (Blueprint $table) {
-                $table->string('antifraud_warning_level', '20')
-                    ->after('observation')
-                    ->nullable()
-                    ->index();
-            }
-        );
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->string("antifraud_warning_level", "20")
+                ->after("observation")
+                ->nullable()
+                ->index();
+        });
     }
 
     /**
@@ -31,11 +29,8 @@ class AlterTableSalesAddAntifraudWarningLevelColumn extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'sales',
-            function (Blueprint $table) {
-                $table->dropColumn('antifraud_warning_level');
-            }
-        );
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("antifraud_warning_level");
+        });
     }
 }

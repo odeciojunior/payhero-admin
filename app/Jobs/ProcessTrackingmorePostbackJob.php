@@ -23,24 +23,29 @@ class ProcessTrackingmorePostbackJob implements ShouldQueue
         $this->trackingCode = $trackingCode;
         $this->trackingService = new TrackingService();
 
-        $this->allOnQueue('postback');
+        $this->allOnQueue("postback");
     }
 
     public function tags()
     {
-        return ['process-trackingmore-postback'];
+        return ["process-trackingmore-postback"];
     }
 
     public function handle()
     {
         $trackingCode = $this->trackingCode;
 
-        $trackings =  Tracking::select('product_plan_sale_id')
-            ->where('tracking_code', $trackingCode)
+        $trackings = Tracking::select("product_plan_sale_id")
+            ->where("tracking_code", $trackingCode)
             ->get();
 
         foreach ($trackings as $tracking) {
-            $this->trackingService->createOrUpdateTracking($trackingCode, $tracking->product_plan_sale_id, false, false);
+            $this->trackingService->createOrUpdateTracking(
+                $trackingCode,
+                $tracking->product_plan_sale_id,
+                false,
+                false
+            );
         }
     }
 }

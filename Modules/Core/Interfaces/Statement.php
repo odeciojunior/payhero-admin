@@ -10,13 +10,13 @@ interface Statement
 {
     public function setCompany(Company $company);
 
-    public function getAvailableBalance() : int;
+    public function getAvailableBalance(): int;
 
-    public function getPendingBalance() : int;
+    public function getPendingBalance(): int;
 
-    public function getBlockedBalance() : int;
+    public function getBlockedBalance(): int;
 
-    public function getPendingDebtBalance() : int;
+    public function getPendingDebtBalance(): int;
 
     public function hasEnoughBalanceToRefund(Sale $sale): bool;
 

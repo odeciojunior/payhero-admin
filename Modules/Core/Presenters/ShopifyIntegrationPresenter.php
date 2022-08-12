@@ -8,53 +8,51 @@ class ShopifyIntegrationPresenter extends Presenter
 {
     public function getThemeType($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'basic_theme';
+                    return "basic_theme";
                 case 2:
-                    return 'ajax_theme';
+                    return "ajax_theme";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'basic_theme':
+                case "basic_theme":
                     return 1;
-                case 'ajax_theme':
+                case "ajax_theme":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 
     public function getStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'approved';
+                    return "approved";
                 case 3:
-                    return 'disabled';
+                    return "disabled";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'pending':
+                case "pending":
                     return 1;
-                case 'approved':
+                case "approved":
                     return 2;
-                case 'disabled':
+                case "disabled":
                     return 3;
             }
 
-            return '';
+            return "";
         }
     }
 }

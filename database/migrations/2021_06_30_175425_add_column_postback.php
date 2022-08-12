@@ -13,8 +13,11 @@ class AddColumnPostback extends Migration
      */
     public function up()
     {
-        Schema::table('api_tokens', function (Blueprint $table) {
-            $table->string('postback')->after('description')->nullable();
+        Schema::table("api_tokens", function (Blueprint $table) {
+            $table
+                ->string("postback")
+                ->after("description")
+                ->nullable();
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnPostback extends Migration
      */
     public function down()
     {
-        Schema::table('api_tokens', function (Blueprint $table) {
-            $table->dropColumn('postback');
+        Schema::table("api_tokens", function (Blueprint $table) {
+            $table->dropColumn("postback");
         });
     }
 }

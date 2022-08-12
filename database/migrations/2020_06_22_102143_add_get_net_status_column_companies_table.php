@@ -13,12 +13,12 @@ class AddGetNetStatusColumnCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->unsignedInteger('get_net_status')->nullable()->after('federal_registration_status');
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->unsignedInteger("get_net_status")
+                ->nullable()
+                ->after("federal_registration_status");
+        });
     }
 
     /**
@@ -28,15 +28,8 @@ class AddGetNetStatusColumnCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->dropColumn(
-                    [
-                        'get_net_status',
-                    ]
-                );
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn(["get_net_status"]);
+        });
     }
 }

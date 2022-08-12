@@ -16,7 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
  */
 class HotBilletPixExpiredListener implements ShouldQueue
 {
-    public $queue = 'default';
+    public $queue = "default";
 
     /**
      * HotBilletPixExpiredListener constructor.
@@ -36,22 +36,17 @@ class HotBilletPixExpiredListener implements ShouldQueue
 
             $hotbilletIntegrationModel = new HotbilletIntegration();
 
-            $hotbilletIntegration = $hotbilletIntegrationModel->where('project_id', $sale->project_id)
-                ->where('pix_expired', true)->first();
+            $hotbilletIntegration = $hotbilletIntegrationModel
+                ->where("project_id", $sale->project_id)
+                ->where("pix_expired", true)
+                ->first();
 
             if (!empty($hotbilletIntegration)) {
                 $hotbilletService = new HotBilletService($hotbilletIntegration->link);
                 $hotbilletService->pixExpired($sale);
             }
-            
         } catch (Exception $e) {
-            
             report($e);
         }
-        
-
-        
     }
 }
-
-

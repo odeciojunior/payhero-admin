@@ -20,17 +20,9 @@ class UserBenefit extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'user_id',
-        'benefit_id',
-        'enabled',
-        'created_at',
-        'updated_at'
-    ];
+    protected $fillable = ["user_id", "benefit_id", "enabled", "created_at", "updated_at"];
 
-    protected $hidden = [
-        'laravel_through_key'
-    ];
+    protected $hidden = ["laravel_through_key"];
 
     /**
      * @return BelongsTo

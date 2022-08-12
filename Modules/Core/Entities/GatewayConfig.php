@@ -10,7 +10,7 @@ use App\Traits\LogsActivity;
 /**
  * @property integer $id
  * @property integer $gateway_id
- * @property string $name 
+ * @property string $name
  * @property string $created_at
  * @property string $updated_at
  * @property Gateway $gateway
@@ -22,19 +22,12 @@ class GatewayConfig extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',        
-        'gateway_id',
-        'type',
-        'type_enum',
-        'created_at',
-        'updated_at',
-    ];
-   /**
+    protected $fillable = ["name", "gateway_id", "type", "type_enum", "created_at", "updated_at"];
+    /**
      * @var bool
      */
     protected static $logFillable = true;
@@ -52,12 +45,12 @@ class GatewayConfig extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
-    
+
     /**
      * @return BelongsTo
      */
     public function gateway()
     {
-        return $this->belongsTo('Modules\Core\Entities\Gateway');
+        return $this->belongsTo("Modules\Core\Entities\Gateway");
     }
 }

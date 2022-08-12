@@ -13,15 +13,30 @@ class CreateTableAsaasTransfers extends Migration
      */
     public function up()
     {
-        Schema::create('asaas_transfers', function (Blueprint $table) {
+        Schema::create("asaas_transfers", function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("withdrawal_id")->nullable();
-            $table->foreign('withdrawal_id')->references('id')->on('withdrawals');
-            $table->string('transaction_id',50)->nullable()->default(null);
-            $table->integer('value');
-            $table->string('status',15)->nullable()->default(null);
-            $table->json('sent_data')->nullable()->default(null);
-            $table->json('response')->nullable()->default(null);
+            $table
+                ->foreign("withdrawal_id")
+                ->references("id")
+                ->on("withdrawals");
+            $table
+                ->string("transaction_id", 50)
+                ->nullable()
+                ->default(null);
+            $table->integer("value");
+            $table
+                ->string("status", 15)
+                ->nullable()
+                ->default(null);
+            $table
+                ->json("sent_data")
+                ->nullable()
+                ->default(null);
+            $table
+                ->json("response")
+                ->nullable()
+                ->default(null);
             $table->timestamps();
         });
     }
@@ -33,6 +48,6 @@ class CreateTableAsaasTransfers extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asaas_transfers');
+        Schema::dropIfExists("asaas_transfers");
     }
 }

@@ -13,10 +13,19 @@ class AddFaviconColumnsToCheckoutConfigs extends Migration
      */
     public function up()
     {
-        Schema::table('checkout_configs', function (Blueprint $table) {
-            $table->boolean('checkout_favicon_enabled')->after('checkout_logo')->default(false);
-            $table->integer('checkout_favicon_type')->after('checkout_favicon_enabled')->default(1);
-            $table->string('checkout_favicon')->after('checkout_favicon_type')->nullable();
+        Schema::table("checkout_configs", function (Blueprint $table) {
+            $table
+                ->boolean("checkout_favicon_enabled")
+                ->after("checkout_logo")
+                ->default(false);
+            $table
+                ->integer("checkout_favicon_type")
+                ->after("checkout_favicon_enabled")
+                ->default(1);
+            $table
+                ->string("checkout_favicon")
+                ->after("checkout_favicon_type")
+                ->nullable();
         });
     }
 
@@ -27,10 +36,10 @@ class AddFaviconColumnsToCheckoutConfigs extends Migration
      */
     public function down()
     {
-        Schema::table('checkout_configs', function (Blueprint $table) {
-            $table->dropColumn('checkout_favicon_enabled');
-            $table->dropColumn('checkout_favicon_type');
-            $table->dropColumn('checkout_favicon');
+        Schema::table("checkout_configs", function (Blueprint $table) {
+            $table->dropColumn("checkout_favicon_enabled");
+            $table->dropColumn("checkout_favicon_type");
+            $table->dropColumn("checkout_favicon");
         });
     }
 }

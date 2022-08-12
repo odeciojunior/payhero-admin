@@ -12,10 +12,19 @@ class AddColumnTrackingCodeProductPlansSales extends Migration
      */
     public function up()
     {
-        Schema::table('products_plans_sales', function(Blueprint $table) {
-            $table->string('tracking_code')->after('shopify_variant_id')->nullable();
-            $table->tinyInteger('tracking_type_enum')->after('shopify_variant_id')->nullable();
-            $table->tinyInteger('tracking_status_enum')->after('shopify_variant_id')->nullable();
+        Schema::table("products_plans_sales", function (Blueprint $table) {
+            $table
+                ->string("tracking_code")
+                ->after("shopify_variant_id")
+                ->nullable();
+            $table
+                ->tinyInteger("tracking_type_enum")
+                ->after("shopify_variant_id")
+                ->nullable();
+            $table
+                ->tinyInteger("tracking_status_enum")
+                ->after("shopify_variant_id")
+                ->nullable();
         });
     }
 
@@ -25,10 +34,10 @@ class AddColumnTrackingCodeProductPlansSales extends Migration
      */
     public function down()
     {
-        Schema::table('products_plans_sales', function(Blueprint $table) {
-            $table->dropColumn('tracking_code');
-            $table->dropColumn('tracking_type_enum');
-            $table->dropColumn('tracking_status_enum');
+        Schema::table("products_plans_sales", function (Blueprint $table) {
+            $table->dropColumn("tracking_code");
+            $table->dropColumn("tracking_type_enum");
+            $table->dropColumn("tracking_status_enum");
         });
     }
 }

@@ -13,15 +13,15 @@
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        "middleware" => ["auth:api", "scopes:admin"],
     ],
     function () {
-        Route::get('/projectreviews', 'ProjectReviewsApiController@index');
-        Route::get('/projectreviews/{id}', 'ProjectReviewsApiController@show');
-        Route::get('/projectreviews/{id}/edit', 'ProjectReviewsApiController@edit');
-        
-        Route::apiResource('/projectreviews', 'ProjectReviewsApiController')
-        ->only('store', 'destroy', 'update')
-        ->middleware('permission:projects_manage');
+        Route::get("/projectreviews", "ProjectReviewsApiController@index");
+        Route::get("/projectreviews/{id}", "ProjectReviewsApiController@show");
+        Route::get("/projectreviews/{id}/edit", "ProjectReviewsApiController@edit");
+
+        Route::apiResource("/projectreviews", "ProjectReviewsApiController")
+            ->only("store", "destroy", "update")
+            ->middleware("permission:projects_manage");
     }
 );

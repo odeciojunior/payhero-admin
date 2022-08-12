@@ -13,8 +13,8 @@ class AddColumnRequiredEmailCheckoutProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->boolean('required_email_checkout')->default(false);
+        Schema::table("projects", function (Blueprint $table) {
+            $table->boolean("required_email_checkout")->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnRequiredEmailCheckoutProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('required_email_checkout');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("required_email_checkout");
         });
     }
 }

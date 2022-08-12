@@ -9,15 +9,15 @@ class CreateProductResource extends JsonResource
     public function toArray($request)
     {
         $categories = [];
-        foreach ($this->resource['categories'] as $category) {
+        foreach ($this->resource["categories"] as $category) {
             $categories[] = [
-                'id'   => $category->id_code,
-                'name' => $category->name,
+                "id" => $category->id_code,
+                "name" => $category->name,
             ];
         }
 
         return [
-            'categories' => $categories,
+            "categories" => $categories,
         ];
     }
 }

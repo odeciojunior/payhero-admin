@@ -13,8 +13,11 @@ class ChangeBirthdayColumnInCustomers extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->date('birthday')->nullable()->change();
+        Schema::table("customers", function (Blueprint $table) {
+            $table
+                ->date("birthday")
+                ->nullable()
+                ->change();
         });
     }
 
@@ -25,7 +28,7 @@ class ChangeBirthdayColumnInCustomers extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table("customers", function (Blueprint $table) {
             //
         });
     }

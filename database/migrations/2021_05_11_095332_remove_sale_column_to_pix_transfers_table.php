@@ -13,9 +13,9 @@ class RemoveSaleColumnToPixTransfersTable extends Migration
      */
     public function up()
     {
-        Schema::table('pix_transfers', function (Blueprint $table) {
-            $table->dropForeign('pix_transfers_sale_id_foreign');
-            $table->dropColumn('sale_id');
+        Schema::table("pix_transfers", function (Blueprint $table) {
+            $table->dropForeign("pix_transfers_sale_id_foreign");
+            $table->dropColumn("sale_id");
         });
     }
 
@@ -26,9 +26,12 @@ class RemoveSaleColumnToPixTransfersTable extends Migration
      */
     public function down()
     {
-        Schema::table('pix_transfers', function (Blueprint $table) {
+        Schema::table("pix_transfers", function (Blueprint $table) {
             $table->unsignedBigInteger("sale_id")->nullable();
-            $table->foreign('sale_id')->references('id')->on('sales');
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 }

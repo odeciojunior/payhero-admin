@@ -13,8 +13,11 @@ class AddColumnObservationToSaleContestationTable extends Migration
      */
     public function up()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->text('observation')->nullable()->after('is_contested');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table
+                ->text("observation")
+                ->nullable()
+                ->after("is_contested");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnObservationToSaleContestationTable extends Migration
      */
     public function down()
     {
-        Schema::table('sale_contestations', function (Blueprint $table) {
-            $table->dropColumn('observation');
+        Schema::table("sale_contestations", function (Blueprint $table) {
+            $table->dropColumn("observation");
         });
     }
 }

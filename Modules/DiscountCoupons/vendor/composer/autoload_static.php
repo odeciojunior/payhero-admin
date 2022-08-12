@@ -6,33 +6,37 @@ namespace Composer\Autoload;
 
 class ComposerStaticInite74b03259a6d27e2ac5b2432887b3d90
 {
-    public static $prefixLengthsPsr4 = array (
-        'M' => 
-        array (
-            'Modules\\CuponsDesconto\\' => 23,
-        ),
-    );
+    public static $prefixLengthsPsr4 = [
+        "M" => [
+            "Modules\\CuponsDesconto\\" => 23,
+        ],
+    ];
 
-    public static $prefixDirsPsr4 = array (
-        'Modules\\CuponsDesconto\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/',
-        ),
-    );
+    public static $prefixDirsPsr4 = [
+        "Modules\\CuponsDesconto\\" => [
+            0 => __DIR__ . "/../.." . "/",
+        ],
+    ];
 
-    public static $classMap = array (
-        'Modules\\CuponsDesconto\\Database\\Seeders\\CuponsDescontoDatabaseSeeder' => __DIR__ . '/../..' . '/Database/Seeders/CuponsDescontoDatabaseSeeder.php',
-        'Modules\\CuponsDesconto\\Http\\Controllers\\CuponsDescontoController' => __DIR__ . '/../..' . '/Http/Controllers/CuponsDescontoController.php',
-        'Modules\\CuponsDesconto\\Providers\\CuponsDescontoServiceProvider' => __DIR__ . '/../..' . '/Providers/CuponsDescontoServiceProvider.php',
-    );
+    public static $classMap = [
+        "Modules\\CuponsDesconto\\Database\\Seeders\\CuponsDescontoDatabaseSeeder" =>
+            __DIR__ . "/../.." . "/Database/Seeders/CuponsDescontoDatabaseSeeder.php",
+        "Modules\\CuponsDesconto\\Http\\Controllers\\CuponsDescontoController" =>
+            __DIR__ . "/../.." . "/Http/Controllers/CuponsDescontoController.php",
+        "Modules\\CuponsDesconto\\Providers\\CuponsDescontoServiceProvider" =>
+            __DIR__ . "/../.." . "/Providers/CuponsDescontoServiceProvider.php",
+    ];
 
     public static function getInitializer(ClassLoader $loader)
     {
-        return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite74b03259a6d27e2ac5b2432887b3d90::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite74b03259a6d27e2ac5b2432887b3d90::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite74b03259a6d27e2ac5b2432887b3d90::$classMap;
-
-        }, null, ClassLoader::class);
+        return \Closure::bind(
+            function () use ($loader) {
+                $loader->prefixLengthsPsr4 = ComposerStaticInite74b03259a6d27e2ac5b2432887b3d90::$prefixLengthsPsr4;
+                $loader->prefixDirsPsr4 = ComposerStaticInite74b03259a6d27e2ac5b2432887b3d90::$prefixDirsPsr4;
+                $loader->classMap = ComposerStaticInite74b03259a6d27e2ac5b2432887b3d90::$classMap;
+            },
+            null,
+            ClassLoader::class
+        );
     }
 }

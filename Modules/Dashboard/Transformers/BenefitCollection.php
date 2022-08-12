@@ -16,7 +16,7 @@ class BenefitCollection extends ResourceCollection
      *
      * @var string
      */
-    public $collects = 'Modules\Dashboard\Transformers\BenefitResource';
+    public $collects = "Modules\Dashboard\Transformers\BenefitResource";
 
     /**
      * Transform the resource collection into an array.

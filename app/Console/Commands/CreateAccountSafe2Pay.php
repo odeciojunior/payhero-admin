@@ -18,14 +18,14 @@ class CreateAccountSafe2Pay extends Command
      *
      * @var string
      */
-    protected $signature = 'createAccountSafe2Pay';
+    protected $signature = "createAccountSafe2Pay";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     private $api = null;
     private int $gatewayId;
@@ -50,11 +50,9 @@ class CreateAccountSafe2Pay extends Command
      */
     public function handle()
     {
-
         try {
-
-            $companies = Company::where('contract_document_status', Company::STATUS_APPROVED)
-                ->where('address_document_status', Company::STATUS_APPROVED)
+            $companies = Company::where("contract_document_status", Company::STATUS_APPROVED)
+                ->where("address_document_status", Company::STATUS_APPROVED)
                 ->get();
 
             $total = count($companies);
@@ -62,25 +60,23 @@ class CreateAccountSafe2Pay extends Command
             $bar->start();
 
             foreach ($companies as $company) {
-                $this->line('  Company: ' . $company->id . ' CompanyName: ' . $company->fantasy_name);
+                $this->line("  Company: " . $company->id . " CompanyName: " . $company->fantasy_name);
 
                 $this->createAccount($company);
                 $bar->advance();
             }
 
             $bar->finish();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 
-    public function createAccount(Company $company){
-        try{
-
-            $company->load('user');
-            $companyPhoneNumber = foxutils()->formatCellPhoneGetNet($company->user->cellphone ?? '5511988517040');
+    public function createAccount(Company $company)
+    {
+        try {
+            $company->load("user");
+            $companyPhoneNumber = foxutils()->formatCellPhoneGetNet($company->user->cellphone ?? "5511988517040");
 
             $data = [
                 "Name" => $company->fantasy_name,
@@ -88,13 +84,13 @@ class CreateAccountSafe2Pay extends Command
                 "Identity" => foxutils()->onlyNumbers($company->document),
                 "ResponsibleName" => $company->user->name,
                 "ResponsibleIdentity" => foxutils()->onlyNumbers($company->user->document),
-                "ResponsiblePhone" => $companyPhoneNumber['dd'] . ' ' . $companyPhoneNumber['number'] ,
+                "ResponsiblePhone" => $companyPhoneNumber["dd"] . " " . $companyPhoneNumber["number"],
                 "Email" => $company->user->email,
                 "TechName" => "CloudFox",
                 "TechIdentity" => "02901053076",
                 "TechEmail" => "julioleichtweis@cloudfox.net",
                 "TechPhone" => "55996931098",
-                'IsPanelRestricted' => true,
+                "IsPanelRestricted" => true,
                 "Address" => [
                     "ZipCode" => $company->zip_code,
                     "Street" => $company->street,
@@ -108,8 +104,8 @@ class CreateAccountSafe2Pay extends Command
             ];
 
             $bankAccounts = $company->getDefaultBankAccount();
-            if(!empty($bankAccounts) && $bankAccounts->transfer_type=='TED'){
-                $data['BankData'] = [
+            if (!empty($bankAccounts) && $bankAccounts->transfer_type == "TED") {
+                $data["BankData"] = [
                     "Bank" => [
                         "Code" => $bankAccounts->bank,
                     ],
@@ -119,74 +115,73 @@ class CreateAccountSafe2Pay extends Command
                     "BankAgency" => $bankAccounts->agency,
                     "BankAgencyDigit" => $bankAccounts->agency_digit,
                     "BankAccount" => $bankAccounts->account,
-                    "BankAccountDigit" => $bankAccounts->account_digit
+                    "BankAccountDigit" => $bankAccounts->account_digit,
                 ];
             }
 
-            $data['variables']['company_id'] = Hashids::encode($company->id);
+            $data["variables"]["company_id"] = Hashids::encode($company->id);
 
             $createRowCredentialProd = $this->createRowCredential($company->id, Gateway::SAFE2PAY_PRODUCTION_ID);
             $createRowCredentialSendbox = $this->createRowCredential($company->id, Gateway::SAFE2PAY_SANDBOX_ID);
 
-            if ($createRowCredentialProd || !$this->company->getGatewaySubsellerId($this->gatewayId)){
+            if ($createRowCredentialProd || !$this->company->getGatewaySubsellerId($this->gatewayId)) {
                 $result = $this->api->createAccount($data);
             } else {
-                $data['variables']['gateway_subseller_id'] = Hashids::encode($this->company->getGatewaySubsellerId($this->gatewayId));
+                $data["variables"]["gateway_subseller_id"] = Hashids::encode(
+                    $this->company->getGatewaySubsellerId($this->gatewayId)
+                );
                 $result = $this->api->updateAccount($data);
             }
 
-            return $this->updateToReviewStatus($result,$company);
-
-        }
-        catch(Exception $ex) {
+            return $this->updateToReviewStatus($result, $company);
+        } catch (Exception $ex) {
             Log::info($ex->getMessage());
         }
     }
 
-
-    private function updateToReviewStatus($result,$company): array
+    private function updateToReviewStatus($result, $company): array
     {
-
         try {
+            $gatewayCompanyCredentialProd = GatewaysCompaniesCredential::where("company_id", $company->id)
+                ->where("gateway_id", Gateway::SAFE2PAY_PRODUCTION_ID)
+                ->first();
+            $gatewayCompanyCredentialSend = GatewaysCompaniesCredential::where("company_id", $company->id)
+                ->where("gateway_id", Gateway::SAFE2PAY_SANDBOX_ID)
+                ->first();
 
-            $gatewayCompanyCredentialProd = GatewaysCompaniesCredential::where('company_id', $company->id)->where('gateway_id', Gateway::SAFE2PAY_PRODUCTION_ID)->first();
-            $gatewayCompanyCredentialSend = GatewaysCompaniesCredential::where('company_id', $company->id)->where('gateway_id', Gateway::SAFE2PAY_SANDBOX_ID)->first();
-
-            if($result->status == 'error') {
-
+            if ($result->status == "error") {
                 $gatewayCompanyCredentialProd->update([
-                    'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_ERROR
+                    "gateway_status" => GatewaysCompaniesCredential::GATEWAY_STATUS_ERROR,
                 ]);
                 $gatewayCompanyCredentialSend->update([
-                    'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_ERROR
+                    "gateway_status" => GatewaysCompaniesCredential::GATEWAY_STATUS_ERROR,
                 ]);
 
                 throw new Exception("Empresa {$company->id} - {$company->fantasy_name}, erro: " . json_encode($result));
             }
 
-
             $gatewayCompanyCredentialProd->update([
-                'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED,
-                'gateway_subseller_id' => $result->gateway_subseller_id,
-                'gateway_api_key' => $result->gateway_api_key
+                "gateway_status" => GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED,
+                "gateway_subseller_id" => $result->gateway_subseller_id,
+                "gateway_api_key" => $result->gateway_api_key,
             ]);
 
             $gatewayCompanyCredentialSend->update([
-                'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED,
-                'gateway_subseller_id' => $result->gateway_subseller_id,
-                'gateway_api_key' => $result->gateway_api_key_sandbox
+                "gateway_status" => GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED,
+                "gateway_subseller_id" => $result->gateway_subseller_id,
+                "gateway_api_key" => $result->gateway_api_key_sandbox,
             ]);
 
             return [
-                'message' => 'Cadastro realizado com sucesso',
-                'success' => true
+                "message" => "Cadastro realizado com sucesso",
+                "success" => true,
             ];
         } catch (Exception $e) {
             report($e);
 
             return [
-                'message' => 'Ocorreu um erro ao tentar realizar cadastro no assas',
-                'success' => false
+                "message" => "Ocorreu um erro ao tentar realizar cadastro no assas",
+                "success" => false,
             ];
         }
     }
@@ -195,14 +190,16 @@ class CreateAccountSafe2Pay extends Command
     {
         $gatewaysCompaniesCredential = new GatewaysCompaniesCredential();
 
-        if(!($gatewaysCompaniesCredential::where('company_id', $companyId)
-            ->where('gateway_id', $gatewayId)
-            ->exists())
+        if (
+            !$gatewaysCompaniesCredential
+                ::where("company_id", $companyId)
+                ->where("gateway_id", $gatewayId)
+                ->exists()
         ) {
             GatewaysCompaniesCredential::create([
-                'company_id'=>$companyId,
-                'gateway_id'=>$gatewayId,
-                'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING,
+                "company_id" => $companyId,
+                "gateway_id" => $gatewayId,
+                "gateway_status" => GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING,
             ]);
             return true;
         }

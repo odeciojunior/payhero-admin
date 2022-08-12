@@ -12,22 +12,14 @@ use Illuminate\View\View;
  */
 class WithdrawalsController extends Controller
 {
-
     public function download($filename)
     {
-
-        $file_path = storage_path('app/' . $filename);
+        $file_path = storage_path("app/" . $filename);
         if (file_exists($file_path)) {
-            return response()->download($file_path, $filename, [
-                'Content-Length: ' . filesize($file_path)
-            ]);
+            return response()->download($file_path, $filename, ["Content-Length: " . filesize($file_path)]);
             //->deleteFileAfterSend(true);
         } else {
             abort(404);
         }
     }
-
-
 }
-
-

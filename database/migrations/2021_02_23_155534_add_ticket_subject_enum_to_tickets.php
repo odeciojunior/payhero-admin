@@ -13,10 +13,11 @@ class AddTicketSubjectEnumToTickets extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->integer('subject_enum')
+        Schema::table("tickets", function (Blueprint $table) {
+            $table
+                ->integer("subject_enum")
                 ->nullable()
-                ->after('subject');
+                ->after("subject");
         });
     }
 
@@ -27,8 +28,8 @@ class AddTicketSubjectEnumToTickets extends Migration
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('subject_enum');
+        Schema::table("tickets", function (Blueprint $table) {
+            $table->dropColumn("subject_enum");
         });
     }
 }

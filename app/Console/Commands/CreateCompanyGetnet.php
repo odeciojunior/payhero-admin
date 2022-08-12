@@ -15,14 +15,14 @@ class CreateCompanyGetnet extends Command
      *
      * @var string
      */
-    protected $signature = 'createCompanyGetnet';
+    protected $signature = "createCompanyGetnet";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -36,28 +36,26 @@ class CreateCompanyGetnet extends Command
 
     public function handle()
     {
-
         try {
-            $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q){
-                $q->where('gateway_id',Gateway::GETNET_PRODUCTION_ID);
+            $companies = Company::whereDoesntHave("gatewayCompanyCredential", function ($q) {
+                $q->where("gateway_id", Gateway::GETNET_PRODUCTION_ID);
             })
-            ->where('address_document_status', Company::STATUS_APPROVED)
-            ->where('contract_document_status', Company::STATUS_APPROVED)
-            ->get();
+                ->where("address_document_status", Company::STATUS_APPROVED)
+                ->where("contract_document_status", Company::STATUS_APPROVED)
+                ->get();
 
             $companyService = new CompanyService();
             foreach ($companies as $company) {
                 if ($companyService->verifyFieldsEmpty($company)) {
                     $companyService->createRowCredential($company->id);
-                } elseif ($company->present()->getCompanyType($company->company_type) == 'physical person') {
+                } elseif ($company->present()->getCompanyType($company->company_type) == "physical person") {
                     $companyService->createCompanyPfGetnet($company);
-                } elseif ($company->present()->getCompanyType($company->company_type) == 'juridical person') {
+                } elseif ($company->present()->getCompanyType($company->company_type) == "juridical person") {
                     $companyService->createCompanyPjGetnet($company);
                 }
             }
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

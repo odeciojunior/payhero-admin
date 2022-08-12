@@ -13,14 +13,14 @@ class VerifyPendingNotazzInvoices extends Command
      *
      * @var string
      */
-    protected $signature = 'verify:pendingnotazzinvoices';
+    protected $signature = "verify:pendingnotazzinvoices";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Faz o envio de todas as invoices pendentes e depois marca como completa as enviadas';
+    protected $description = "Faz o envio de todas as invoices pendentes e depois marca como completa as enviadas";
 
     public function __construct()
     {
@@ -29,7 +29,6 @@ class VerifyPendingNotazzInvoices extends Command
 
     public function handle()
     {
-
         try {
             $notazzService = new NotazzService();
 
@@ -37,6 +36,5 @@ class VerifyPendingNotazzInvoices extends Command
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

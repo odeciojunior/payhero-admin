@@ -18,21 +18,11 @@ class UserTerms extends Model
     /**
      * @var array
      */
-    protected $dates = [
-        'accepted_at',
-        'created_at',
-        'update_at',
-        'deleted_at',
-    ];
+    protected $dates = ["accepted_at", "created_at", "update_at", "deleted_at"];
     /**
      * @var array
      */
-    protected $fillable = [
-        'user_id',
-        'term_version',
-        'device_data',
-        'accepted_at',
-    ];
+    protected $fillable = ["user_id", "term_version", "device_data", "accepted_at"];
     /**
      * @var bool
      */
@@ -57,6 +47,6 @@ class UserTerms extends Model
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 }

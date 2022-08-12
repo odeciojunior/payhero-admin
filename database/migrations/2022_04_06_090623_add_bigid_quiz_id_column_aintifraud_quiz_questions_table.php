@@ -13,8 +13,8 @@ class AddBigidQuizIdColumnAintifraudQuizQuestionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('antifraud_quiz_questions', function(Blueprint $table) {
-            $table->string('bigid_quiz_id')->after('sale_id');
+        Schema::table("antifraud_quiz_questions", function (Blueprint $table) {
+            $table->string("bigid_quiz_id")->after("sale_id");
         });
     }
 
@@ -25,8 +25,8 @@ class AddBigidQuizIdColumnAintifraudQuizQuestionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('antifraud_quiz_questions', function(Blueprint $table) {
-            $table->dropColumn('bigid_quiz_id');
+        Schema::table("antifraud_quiz_questions", function (Blueprint $table) {
+            $table->dropColumn("bigid_quiz_id");
         });
     }
 }

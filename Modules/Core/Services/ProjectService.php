@@ -171,14 +171,14 @@ class ProjectService
     {
         try {
             return $this->getProjectModel()
-                ->has('sales')
-                ->where('id', $projectId)
+                ->has("sales")
+                ->where("id", $projectId)
                 ->count();
         } catch (Exception $e) {
-            Log::warning('ProjectService - Erro ao remover projeto');
+            Log::warning("ProjectService - Erro ao remover projeto");
             report($e);
 
-            throw new ServiceException('ProjectService - hasSales - ' . $e->getMessage(), $e->getCode(), $e);
+            throw new ServiceException("ProjectService - hasSales - " . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -190,28 +190,26 @@ class ProjectService
     public function delete($projectId)
     {
         try {
-
             $project = $this->getProjectModel()
-                ->with(
-                    [
-                        'domains',
-                        'shopifyIntegrations',
-                        'plans',
-                        'plans.productsPlans',
-                        'plans.productsPlans.product',
-                        'pixels',
-                        'discountCoupons',
-                        'shippings',
-                        'usersProjects',
-                        'notifications',
-                        'affiliateRequests',
-                        'affiliates',
-                        'affiliates.affiliateLinks',
-                        'upsellConfig',
-                        'checkoutConfig'
-                    ]
-                )
-                ->where('id', $projectId)->first();
+                ->with([
+                    "domains",
+                    "shopifyIntegrations",
+                    "plans",
+                    "plans.productsPlans",
+                    "plans.productsPlans.product",
+                    "pixels",
+                    "discountCoupons",
+                    "shippings",
+                    "usersProjects",
+                    "notifications",
+                    "affiliateRequests",
+                    "affiliates",
+                    "affiliates.affiliateLinks",
+                    "upsellConfig",
+                    "checkoutConfig",
+                ])
+                ->where("id", $projectId)
+                ->first();
 
             if ($project) {
                 if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
@@ -237,59 +235,58 @@ class ProjectService
                         $domainService = new DomainService();
                         $deleteDomain = $domainService->deleteDomain($domain);
 
-                        if(!$deleteDomain['success']) {
-                            report(['Erro ao excluir dominio do projetoId: ' . $project->id] . ', domain: ' . $domain->name);
+                        if (!$deleteDomain["success"]) {
+                            report(
+                                ["Erro ao excluir dominio do projetoId: " . $project->id] . ", domain: " . $domain->name
+                            );
                         }
                     } catch (Exception $e) {
-                       report(['Erro ao excluir dominio do projetoId: ' . $project->id, $e]);
+                        report(["Erro ao excluir dominio do projetoId: " . $project->id, $e]);
                     }
                 }
 
                 //remover integração do woocommerce
                 $wooCommerceIntegration = $this->getWooCommerceIntegration()
-                                           ->where('project_id', $project->id)->first();
+                    ->where("project_id", $project->id)
+                    ->first();
 
                 if (!empty($wooCommerceIntegration)) {
                     $wooCommerceIntegration->delete();
                     $wooCommerceService = $this->getWooCommerceService(
                         $wooCommerceIntegration->url_store,
                         $wooCommerceIntegration->token_user,
-                        $wooCommerceIntegration->token_pass,
+                        $wooCommerceIntegration->token_pass
                     );
 
                     $wooCommerceService->deleteHooks($project->id);
-
                 }
                 //end woo
 
                 //remover integração do shopify
                 $shopifyIntegration = $this->getShopifyIntegration()
-                    ->where('project_id', $project->id)->first();
+                    ->where("project_id", $project->id)
+                    ->first();
 
                 if (!empty($shopifyIntegration)) {
                     $shopifyIntegration->delete();
                 }
 
-                $products = Product::where('project_id', $project->id)->get();
+                $products = Product::where("project_id", $project->id)->get();
 
                 foreach ($products as $product) {
-                    $product->update(
-                        [
-                            'shopify_variant_id' => '',
-                            'shopify_id' => '',
-                        ]
-                    );
+                    $product->update([
+                        "shopify_variant_id" => "",
+                        "shopify_id" => "",
+                    ]);
                 }
 
-                $plans = Plan::where('project_id', $project->id)->get();
+                $plans = Plan::where("project_id", $project->id)->get();
 
                 foreach ($plans as $plan) {
-                    $plan->update(
-                        [
-                            'shopify_variant_id' => '',
-                            'shopify_id' => '',
-                        ]
-                    );
+                    $plan->update([
+                        "shopify_variant_id" => "",
+                        "shopify_id" => "",
+                    ]);
                 }
                 //end shopify
 
@@ -321,17 +318,15 @@ class ProjectService
                     $upsellConfig->delete();
                 }
 
-                $projectUpdated = $project->update(
-                    [
-                        'name' => $project->name . ' (Excluído)',
-                        'status' => (new Project())->present()->getStatus('disabled'),
-                    ]
-                );
+                $projectUpdated = $project->update([
+                    "name" => $project->name . " (Excluído)",
+                    "status" => (new Project())->present()->getStatus("disabled"),
+                ]);
 
                 if ($projectUpdated) {
                     return true;
                 } else {
-                    report('Erro ao atualizar nome e status do projeto: id-> (' . $project->id . ')');
+                    report("Erro ao atualizar nome e status do projeto: id-> (" . $project->id . ")");
 
                     return false;
                 }
@@ -341,7 +336,7 @@ class ProjectService
             }
         } catch (Exception $e) {
             throw new ServiceException(
-                'ProjectService - Erro ao remover projeto - ' . $e->getMessage(),
+                "ProjectService - Erro ao remover projeto - " . $e->getMessage(),
                 $e->getCode(),
                 $e
             );
@@ -359,60 +354,56 @@ class ProjectService
         $userId = auth()->user()->account_owner_id;
 
         if ($affiliate) {
-            $projects = Project::leftJoin(
-                'users_projects',
-                function ($join) use ($userId) {
-                    $join->on('projects.id', '=', 'users_projects.project_id')
-                        ->where('users_projects.user_id', $userId)
-                        ->whereNull('users_projects.deleted_at');
-                }
-            )
-                ->leftJoin(
-                    'affiliates',
-                    function ($join) use ($userId) {
-                        $join->on('projects.id', '=', 'affiliates.project_id')
-                            ->where('affiliates.user_id', $userId)
-                            ->whereNull('affiliates.deleted_at');
-                    }
-                )
+            $projects = Project::leftJoin("users_projects", function ($join) use ($userId) {
+                $join
+                    ->on("projects.id", "=", "users_projects.project_id")
+                    ->where("users_projects.user_id", $userId)
+                    ->whereNull("users_projects.deleted_at");
+            })
+                ->leftJoin("affiliates", function ($join) use ($userId) {
+                    $join
+                        ->on("projects.id", "=", "affiliates.project_id")
+                        ->where("affiliates.user_id", $userId)
+                        ->whereNull("affiliates.deleted_at");
+                })
                 ->select(
-                    'projects.*',
-                    'affiliates.created_at as affiliate_created_at',
-                    'affiliates.percentage as affiliate_percentage',
-                    'affiliates.status_enum as affiliate_status',
-                    DB::raw('CASE WHEN affiliates.id IS NOT NULL THEN affiliates.id ELSE 0 END AS affiliate_id'),
+                    "projects.*",
+                    "affiliates.created_at as affiliate_created_at",
+                    "affiliates.percentage as affiliate_percentage",
+                    "affiliates.status_enum as affiliate_status",
+                    DB::raw("CASE WHEN affiliates.id IS NOT NULL THEN affiliates.id ELSE 0 END AS affiliate_id"),
                     DB::raw(
-                        'CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p'
+                        "CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p"
                     )
                 )
-                ->whereIn('projects.status', $status)
-                ->where('users_projects.user_id', $userId)
-                ->orWhere('affiliates.user_id', $userId)
-                ->orderBy('projects.status')
-                ->orderBy('order_p')
-                ->orderBy('projects.id', 'DESC');
+                ->whereIn("projects.status", $status)
+                ->where("users_projects.user_id", $userId)
+                ->orWhere("affiliates.user_id", $userId)
+                ->orderBy("projects.status")
+                ->orderBy("order_p")
+                ->orderBy("projects.id", "DESC");
         } else {
-            $projects = Project::leftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
-                ->select('projects.*', 'users_projects.order_priority as order_p')
-                ->whereIn('projects.status', $status)
-                ->where('users_projects.user_id', $userId)
-                ->whereNull('users_projects.deleted_at')
-                ->orderBy('projects.status')
-                ->orderBy('order_p')
-                ->orderBy('projects.id', 'DESC');
+            $projects = Project::leftJoin("users_projects", "projects.id", "=", "users_projects.project_id")
+                ->select("projects.*", "users_projects.order_priority as order_p")
+                ->whereIn("projects.status", $status)
+                ->where("users_projects.user_id", $userId)
+                ->whereNull("users_projects.deleted_at")
+                ->orderBy("projects.status")
+                ->orderBy("order_p")
+                ->orderBy("projects.id", "DESC");
         }
 
         if ($pagination) {
             $projects = $projects->get();
-            if(count($projects) == 0) {
-                $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();
-                if(!empty($apiSale)) {
-                    return response()->json(['data' => 'api sales']);
+            if (count($projects) == 0) {
+                $apiSale = Sale::where("owner_id", auth()->user()->account_owner_id)->exists();
+                if (!empty($apiSale)) {
+                    return response()->json(["data" => "api sales"]);
                 }
             }
             return ProjectsSelectResource::collection($projects);
         } else {
-            return ProjectsResource::collection($projects->with('domains')->get());
+            return ProjectsResource::collection($projects->with("domains")->get());
         }
     }
 
@@ -421,16 +412,15 @@ class ProjectService
         try {
             $projectUpsellConfigModel = new ProjectUpsellConfig();
 
-            $projectUpsellConfigModel->create(
-                [
-                    'project_id' => $projectId,
-                    'header' => '(Mensagem do cabeçalho) Ex: Você não pode perder essa promoção...',
-                    'title' => '(Título principal) Ex: Ganhe 30% de desconto...',
-                    'description' => '(Descrição) Ex: Como você comprou esse produto, nós achamos que você poderia se interessar por...',
-                    'countdown_time' => null,
-                    'countdown_flag' => 0,
-                ]
-            );
+            $projectUpsellConfigModel->create([
+                "project_id" => $projectId,
+                "header" => "(Mensagem do cabeçalho) Ex: Você não pode perder essa promoção...",
+                "title" => "(Título principal) Ex: Ganhe 30% de desconto...",
+                "description" =>
+                    "(Descrição) Ex: Como você comprou esse produto, nós achamos que você poderia se interessar por...",
+                "countdown_time" => null,
+                "countdown_flag" => 0,
+            ]);
         } catch (Exception $e) {
             return $e->getMessage();
         }

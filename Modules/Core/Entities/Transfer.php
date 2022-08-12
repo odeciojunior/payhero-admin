@@ -42,7 +42,7 @@ class Transfer extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var string
      */
@@ -50,28 +50,25 @@ class Transfer extends Model
     /**
      * @var array
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
+    protected $dates = ["created_at", "updated_at"];
     /**
      * @var array
      */
     protected $fillable = [
-        'transaction_id',
-        'user_id',
-        'company_id',
-        'gateway_id',
-        'customer_id',
-        'anticipation_id',
-        'value',
-        'type',
-        'type_enum',
-        'reason',
-        'is_refund_tax',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "transaction_id",
+        "user_id",
+        "company_id",
+        "gateway_id",
+        "customer_id",
+        "anticipation_id",
+        "value",
+        "type",
+        "type_enum",
+        "reason",
+        "is_refund_tax",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -98,12 +95,12 @@ class Transfer extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Extrato foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Extrato foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Extrato foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Extrato foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Extrato foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Extrato foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -114,7 +111,7 @@ class Transfer extends Model
      */
     public function anticipation()
     {
-        return $this->belongsTo('Modules\Core\Entities\Anticipation');
+        return $this->belongsTo("Modules\Core\Entities\Anticipation");
     }
 
     /**
@@ -122,7 +119,7 @@ class Transfer extends Model
      */
     public function transaction()
     {
-        return $this->belongsTo('Modules\Core\Entities\Transaction');
+        return $this->belongsTo("Modules\Core\Entities\Transaction");
     }
 
     /**
@@ -130,7 +127,7 @@ class Transfer extends Model
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 
     /**
@@ -138,7 +135,7 @@ class Transfer extends Model
      */
     public function company()
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 
     /**
@@ -146,7 +143,7 @@ class Transfer extends Model
      */
     public function gateway()
     {
-        return $this->belongsTo('Modules\Core\Entities\Gateway');
+        return $this->belongsTo("Modules\Core\Entities\Gateway");
     }
 
     /**
@@ -154,7 +151,7 @@ class Transfer extends Model
      */
     public function customer()
     {
-        return $this->belongsTo('Modules\Core\Entities\Customer');
+        return $this->belongsTo("Modules\Core\Entities\Customer");
     }
 
     public function asaasTransfer()

@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Notifications\\Providers\\NotificationsServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

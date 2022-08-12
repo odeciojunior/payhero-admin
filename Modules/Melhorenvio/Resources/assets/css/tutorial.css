@@ -1,4 +1,6 @@
-*, ::after, ::before {
+*,
+::after,
+::before {
     box-sizing: border-box;
 }
 
@@ -14,13 +16,13 @@ body {
 }
 
 main {
-    display:flex;
+    display: flex;
     padding-left: 230px;
 }
 
 .sidebar {
     position: fixed;
-    left:0;
+    left: 0;
     height: 101vh;
     width: 230px;
     background: #0e0230;
@@ -36,7 +38,7 @@ main {
     margin: 40px 20px 20px 20px;
 }
 
-.sidebar ol li{
+.sidebar ol li {
     margin: 2rem 0;
     font-size: 14px;
     font-weight: bold;
@@ -99,16 +101,16 @@ ol li::marker {
 .btn {
     padding: 2px 5px;
     border-radius: 5px;
-    font-weight:bold;
+    font-weight: bold;
     white-space: nowrap;
 }
 
-.btn.blue{
+.btn.blue {
     background: #05519d;
     color: #fff;
 }
 
-.btn.green{
+.btn.green {
     background: #44db94;
     color: #fff;
 }
@@ -137,7 +139,7 @@ ol li::marker {
     }
 
     .sidebar {
-        display:none;
+        display: none;
     }
 
     .url-container {

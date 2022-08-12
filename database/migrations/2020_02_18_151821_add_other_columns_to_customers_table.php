@@ -13,13 +13,15 @@ class AddOtherColumnsToCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->bigInteger('balance')
+        Schema::table("customers", function (Blueprint $table) {
+            $table
+                ->bigInteger("balance")
                 ->default(0)
-                ->after('remember_token');
-            $table->timestamp('birthday')
+                ->after("remember_token");
+            $table
+                ->timestamp("birthday")
                 ->nullable()
-                ->after('balance');
+                ->after("balance");
         });
     }
 
@@ -30,9 +32,9 @@ class AddOtherColumnsToCustomersTable extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn('balance');
-            $table->dropColumn('birthday');
+        Schema::table("customers", function (Blueprint $table) {
+            $table->dropColumn("balance");
+            $table->dropColumn("birthday");
         });
     }
 }

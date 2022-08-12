@@ -1,10 +1,14 @@
-<form id='form_add_integration' method="post" action="#">
+<form id='form_add_integration'
+      method="post"
+      action="#">
     <div style="width:100%">
         <div class="row mt-20">
             <div class="col-12">
                 <div class='form-group'>
                     <label for="company">Selecione sua loja</label>
-                    <select class="sirius-select" id="project_id" name="project_id">
+                    <select class="sirius-select"
+                            id="project_id"
+                            name="project_id">
                     </select>
                 </div>
             </div>
@@ -13,12 +17,15 @@
             <div class='form-group col-12'>
                 <label for="url_store">Link</label>
                 <div class="d-flex input-group">
-                    <input type="text" class="input-pad " name="link" id="link" placeholder="Digite o link">
+                    <input type="text"
+                           class="input-pad "
+                           name="link"
+                           id="link"
+                           placeholder="Digite o link">
                 </div>
             </div>
         </div>
-{{-- 
-        <div class="row mt-20">
+        {{-- <div class="row mt-20">
             <div class="col-6">
                 <div class="switch-holder">
                     <label for="token" class='mb-10'>Pix gerado:</label>
@@ -120,12 +127,7 @@
             </div> 
 
             
-        </div>
-
-        --}}
-
-        
-
+        </div> --}}
 
     </div>
 </form>

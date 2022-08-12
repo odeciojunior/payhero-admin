@@ -15,8 +15,8 @@ class AddShopifyIdIndexToPlans extends Migration
     public function up()
     {
         DB::statement("ALTER TABLE plans ROW_FORMAT=DYNAMIC;");
-        Schema::table('plans', function (Blueprint $table) {
-            $table->index('shopify_id');
+        Schema::table("plans", function (Blueprint $table) {
+            $table->index("shopify_id");
         });
     }
 
@@ -27,8 +27,8 @@ class AddShopifyIdIndexToPlans extends Migration
      */
     public function down()
     {
-        Schema::table('plans', function (Blueprint $table) {
-            $table->dropIndex(['shopify_id']);
+        Schema::table("plans", function (Blueprint $table) {
+            $table->dropIndex(["shopify_id"]);
         });
     }
 }

@@ -8,6 +8,6 @@ class CheckoutEditorController extends Controller
 {
     public function index()
     {
-        return view('checkouteditor::index');
+        return view("checkouteditor::index");
     }
 }

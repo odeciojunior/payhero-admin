@@ -36,21 +36,15 @@ use Spatie\Activitylog\Models\Activity;
 class SaleLog extends Model
 {
     use SoftDeletes;
-    
-    protected $table = 'sale_logs';
 
-    protected $keyType = 'integer';
+    protected $table = "sale_logs";
 
-    protected $fillable = [
-        'sale_id',
-        'status_enum',
-        'status',
-        'created_at',
-        'updated_at',
-    ];
+    protected $keyType = "integer";
+
+    protected $fillable = ["sale_id", "status_enum", "status", "created_at", "updated_at"];
 
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class);
-    } 
+    }
 }

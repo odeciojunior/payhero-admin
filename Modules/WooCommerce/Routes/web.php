@@ -11,17 +11,18 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
-    Route::Resource('apps/woocommerce', 'WooCommerceController')
-         ->only('index')->names('woocommerce.web')->middleware('permission:apps'); //@TODO renomear a rota para um nome melhor
+Route::group(["middleware" => ["web", "auth"]], function () {
+    Route::Resource("apps/woocommerce", "WooCommerceController")
+        ->only("index")
+        ->names("woocommerce.web")
+        ->middleware("permission:apps"); //@TODO renomear a rota para um nome melhor
 
-    Route::get('apps/woocommerce/login/callback/', [
-        'uses' => 'WooCommerceApiController@callbackWooCommerceIntegration',
-        'as'   => 'WooCommerce.login.callback',
+    Route::get("apps/woocommerce/login/callback/", [
+        "uses" => "WooCommerceApiController@callbackWooCommerceIntegration",
+        "as" => "WooCommerce.login.callback",
     ]);
-
 });
 
-Route::get('apps/woocommerce/app/index', function(){
-    return view('woocommerce.woocommerceapp');
+Route::get("apps/woocommerce/app/index", function () {
+    return view("woocommerce.woocommerceapp");
 });

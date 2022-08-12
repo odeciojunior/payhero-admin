@@ -1,5 +1,9 @@
-<input type='hidden' id='integration_id' value=''/>
-<form id='form_update_integration' method="post" action="#">
+<input type='hidden'
+       id='integration_id'
+       value='' />
+<form id='form_update_integration'
+      method="post"
+      action="#">
     @csrf
     @method('PUT')
     <div style="width:100%">
@@ -7,7 +11,10 @@
             <div class="col-12">
                 <div class='form-group'>
                     <label for="company">Lojas</label>
-                    <select class="select-pad" id="select_projects_edit" name="project_id" disabled>
+                    <select class="select-pad"
+                            id="select_projects_edit"
+                            name="project_id"
+                            disabled>
                     </select>
                 </div>
             </div>
@@ -17,7 +24,13 @@
             <div class='form-group col-12'>
                 <label for="url_store">Token</label>
                 <div class="d-flex input-group">
-                    <input type="text" class="input-pad " name="link" id="token_edit" placeholder="" value='' disabled>
+                    <input type="text"
+                           class="input-pad "
+                           name="link"
+                           id="token_edit"
+                           placeholder=""
+                           value=''
+                           disabled>
                 </div>
             </div>
         </div>
@@ -26,13 +39,17 @@
             <div class='form-group col-12'>
                 <label for="url_store">Link</label>
                 <div class="d-flex input-group">
-                    <input type="text" class="input-pad " name="link" id="link_edit" placeholder="Digite o link" value=''>
+                    <input type="text"
+                           class="input-pad "
+                           name="link"
+                           id="link_edit"
+                           placeholder="Digite o link"
+                           value=''>
                 </div>
             </div>
         </div>
 
-{{-- 
-        <div class="row mt-20">
+        {{-- <div class="row mt-20">
             <div class="col-6">
                 <div class="switch-holder">
                     <label for="token" class='mb-10'>Pix gerado:</label>
@@ -138,6 +155,6 @@
                 </div>
             </div>
         </div> --}}
-        
+
     </div>
 </form>

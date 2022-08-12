@@ -15,14 +15,14 @@ class WithdrawalResource extends JsonResource
         $bankName = Str::title((new BankService())->getBankName($this->bank));
         $accountInformation = $this->accountInformation();
 
-        $realeaseDate = '';
-        $realeaseTime = '';
+        $realeaseDate = "";
+        $realeaseTime = "";
         if (!empty($this->release_date)) {
-            $realeaseDate = $this->release_date->format('d/m/Y');
-            $realeaseTime = $this->release_date->format('H:i');
+            $realeaseDate = $this->release_date->format("d/m/Y");
+            $realeaseTime = $this->release_date->format("H:i");
         }
 
-        return [
+        $data = [
             'id' => Hashids::encode($this->id),
             'account_information_bank' => $bankName,
             'account_information' => $accountInformation,
@@ -36,33 +36,40 @@ class WithdrawalResource extends JsonResource
                 'definitions.enum.withdrawals.status.' . $this->present()
                     ->getStatus($this->status)
             ),
-            'tax_value' => $this->tax,
-            'debt_pending_value' => 'R$' . number_format(intval($this->debt_pending_value) / 100, 2, ',', '.')
+            "tax_value" => $this->tax,
+            "debt_pending_value" => 'R$' . number_format(intval($this->debt_pending_value) / 100, 2, ",", "."),
         ];
+
+        if (request('is_mobile')) {
+            $data['request_datetime'] = ($this->created_at) ? $this->created_at->format('Y-m-d H:i:s') : null;
+            $data['release_datetime'] = ($this->release_date) ? $this->release_date->format('Y-m-d H:i:s') : null;
+        }
+
+        return $data;
     }
 
     private function accountInformation(): string
     {
+
         $bankAccount =  $this->company->getDefaultBankAccount();
-        if(!empty($bankAccount)){
-            switch($bankAccount->transfer_type){
+        if (!empty($bankAccount)) {
+            switch ($bankAccount->transfer_type) {
                 case 'PIX':
-                    return $bankAccount->transfer_type.': '.$bankAccount->key_pix;                    
+                    return $bankAccount->transfer_type . ': ' . $bankAccount->key_pix;
                 case 'TED':
                     $agency = "Ag: $bankAccount->agency";
                     if ($bankAccount->agency_digit) {
                         $agency .= "-$bankAccount->agency_digit";
                     }
-            
+
                     $account = "Conta: $bankAccount->account";
                     if ($bankAccount->account_digit) {
                         $account .= "-$bankAccount->account_digit";
                     }
-            
+
                     return "$agency - $account";
-            }            
+            }
         }
-        return '';
+        return "";
     }
 }
-

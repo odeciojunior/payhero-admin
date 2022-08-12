@@ -13,8 +13,11 @@ class AddPixKeyColumnToCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('pix_key')->after('gateway_tax')->nullable();
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->string("pix_key")
+                ->after("gateway_tax")
+                ->nullable();
         });
     }
 
@@ -25,8 +28,8 @@ class AddPixKeyColumnToCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('pix_key');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("pix_key");
         });
     }
 }

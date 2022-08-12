@@ -27,22 +27,17 @@ class BlockReason extends Model
      * @var string
      */
     public const IN_DISPUTE = 1;
-    
+
     protected $presenter = BlockReasonPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'reason',
-        'reason_enum',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ["reason", "reason_enum", "created_at", "updated_at"];
     /**
      * @var bool
      */
@@ -75,6 +70,6 @@ class BlockReason extends Model
      */
     public function sales()
     {
-        return $this->hasManyThrough(BlockReasonSale::class,Sale::class);
+        return $this->hasManyThrough(BlockReasonSale::class, Sale::class);
     }
 }

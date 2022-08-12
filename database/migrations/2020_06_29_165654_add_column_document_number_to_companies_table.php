@@ -13,12 +13,12 @@ class AddColumnDocumentNumberToCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->string('document_number')->nullable()->after('document_issuer_state');
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->string("document_number")
+                ->nullable()
+                ->after("document_issuer_state");
+        });
     }
 
     /**
@@ -28,11 +28,8 @@ class AddColumnDocumentNumberToCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'companies',
-            function (Blueprint $table) {
-                $table->dropColumn(['document_number']);
-            }
-        );
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn(["document_number"]);
+        });
     }
 }

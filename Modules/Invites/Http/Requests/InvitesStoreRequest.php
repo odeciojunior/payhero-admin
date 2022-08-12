@@ -22,16 +22,16 @@ class InvitesStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'email_invited' => 'required|email',
-            'company'       => 'required',
+            "email_invited" => "required|email",
+            "company" => "required",
         ];
     }
 
     public function messages()
     {
         return [
-            'email_invited.required' => 'O campo Email do Convidado é obrigatório',
-            'company.required'       => 'O campo Empresa para receber é obirgatório',
+            "email_invited.required" => "O campo Email do Convidado é obrigatório",
+            "company.required" => "O campo Empresa para receber é obirgatório",
         ];
     }
 }

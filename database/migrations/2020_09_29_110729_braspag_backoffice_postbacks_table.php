@@ -13,14 +13,11 @@ class BraspagBackofficePostbacksTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'braspag_backoffice_postbacks',
-            function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->json('data');
-                $table->timestamps();
-            }
-        );
+        Schema::create("braspag_backoffice_postbacks", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->json("data");
+            $table->timestamps();
+        });
     }
 
     /**
@@ -30,6 +27,6 @@ class BraspagBackofficePostbacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('braspag_backoffice_postbacks');
+        Schema::dropIfExists("braspag_backoffice_postbacks");
     }
 }

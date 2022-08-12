@@ -12,10 +12,10 @@ class AddColumnLogoTableProjects extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->string('logo')->nullable();
-            $table->string('url_redirect')->nullable();
-            $table->boolean('boleto')->default(1);
+        Schema::table("projects", function (Blueprint $table) {
+            $table->string("logo")->nullable();
+            $table->string("url_redirect")->nullable();
+            $table->boolean("boleto")->default(1);
         });
     }
 
@@ -25,10 +25,10 @@ class AddColumnLogoTableProjects extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('logo');
-            $table->dropColumn('url_redirect');
-            $table->dropColumn('boleto');
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn("logo");
+            $table->dropColumn("url_redirect");
+            $table->dropColumn("boleto");
         });
     }
 }

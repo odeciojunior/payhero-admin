@@ -29,7 +29,7 @@ class ApprovedAffiliation extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ["database"];
     }
 
     /**
@@ -39,7 +39,7 @@ class ApprovedAffiliation extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'qtd' => '1'
+            "qtd" => "1",
         ];
     }
 
@@ -52,7 +52,7 @@ class ApprovedAffiliation extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
-        ];
+                //
+            ];
     }
 }

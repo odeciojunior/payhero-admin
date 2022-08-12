@@ -13,14 +13,11 @@ class CreateBraspagPostbacksTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'braspag_postbacks',
-            function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->json('data');
-                $table->timestamps();
-            }
-        );
+        Schema::create("braspag_postbacks", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->json("data");
+            $table->timestamps();
+        });
     }
 
     /**
@@ -30,6 +27,6 @@ class CreateBraspagPostbacksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('braspag_postbacks');
+        Schema::dropIfExists("braspag_postbacks");
     }
 }
