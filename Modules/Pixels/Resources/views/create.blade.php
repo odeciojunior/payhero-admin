@@ -282,6 +282,15 @@
                                                placeholder="100"
                                                maxlength='3'>
                                     </div>
+                                    {{-- INPUT PERCENTAGE PIX VALUE --}}
+                                    <div class="form-group col-3">
+                                        <label for="percentage-pix-value" class="font-text">% PIX</label>
+                                        <input name="value_percentage_purchase_pix"
+                                               id="percentage-pix-pixel"
+                                               type="text"
+                                               class="form-control"
+                                               placeholder="100" maxlength='3'>
+                                    </div>
 
                                     {{-- INPUT SELECT PLANS --}}
                                     <div class='form-group col-12'>

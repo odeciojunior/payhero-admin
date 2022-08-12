@@ -31,6 +31,7 @@ class PixelStoreRequest extends FormRequest
             "campaign" => "nullable",
             "affiliate_id" => "nullable",
             "value_percentage_purchase_boleto" => "nullable|integer|max:100|min:10",
+            "value_percentage_purchase_pix" => "nullable|integer|max:100|min:10",
             "url_facebook_domain" => "nullable|string|max:255",
             "event_select" => "required_if:platform,google_adwords",
             "send_value_checkout" => "nullable",
@@ -49,6 +50,9 @@ class PixelStoreRequest extends FormRequest
             "value_percentage_purchase_boleto.integer" => "O campo % Valor Boleto deve ser um número",
             "value_percentage_purchase_boleto.min" => "O valor do campo % Valor Boleto deve ser no mínimo 10",
             "value_percentage_purchase_boleto.max" => "O valor do campo % Valor Boleto deve ser no máximo 100",
+            "value_percentage_purchase_pix.integer" => "O campo % Valor PIX deve ser um número",
+            "value_percentage_purchase_pix.min" => "O valor do campo % Valor PIX deve ser no mínimo 10",
+            "value_percentage_purchase_pix.max" => "O valor do campo % Valor PIX deve ser no máximo 100",
         ];
     }
 
