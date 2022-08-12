@@ -12,6 +12,7 @@ use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\CheckoutPlan;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Log as CheckoutLog;
 
 class CreateFakeCheckout extends Command
 {
@@ -28,9 +29,10 @@ class CreateFakeCheckout extends Command
      * @var string
      */
     protected $description = 'Command description';
-    
+
     protected $project = null;
     protected $checkout = null;
+    protected $total = 0;
 
     /**
      * Create a new command instance.
@@ -54,40 +56,42 @@ class CreateFakeCheckout extends Command
         */
 
         Config::set('database.default', 'demo');
-        
+
         try{
             $isRandomData = true;
             $attemps = 500;
             $counter = 1;
-        
+
             do{
                 $this->createCheckout($isRandomData)
-                ->createCheckoutPlan();
+                ->createCheckoutPlan()
+                ->createCheckoutLog();
+
                 $this->line($counter.'/'.$attemps);
                 $counter++;
 
             }while($counter <= $attemps);
-            
+
         }catch (Exception $e) {
-            report($e);            
+            report($e);
         }
     }
 
     public function createCheckout($isRandomData=false){
-        
+
         $this->project = DB::table('projects')->select('id')->inRandomOrder()->first();
         $checkoutConfig = DB::table('checkout_configs')->select('checkout_type_enum')->where('project_id',$this->project->id)->first();
         $data = $isRandomData?Carbon::now()->subDays(rand(1,60)):now();
 
         $this->checkout = Checkout::factory()
         ->count(1)
-        ->create([                
+        ->create([
             'project_id'=>$this->project->id,
             'template_type'=>(int)$checkoutConfig->checkout_type_enum,
             'created_at'=>$data,
             'updated_at'=>$data
         ])->first();
-        
+
         return $this;
     }
 
@@ -97,15 +101,28 @@ class CreateFakeCheckout extends Command
         ->where('project_id',$this->project->id)
         ->inRandomOrder()->limit(Rand(1,3))->get();
 
-        foreach($plans as $plan){            
+        $this->total = 0;
+        foreach($plans as $plan){
             CheckoutPlan::factory(1)->for($this->checkout)->create([
                 'plan_id'=>$plan->id,
                 'amount'=>1,
                 'created_at'=>$this->checkout->created_at,
                 'updated_at'=>$this->checkout->created_at
-            ]);            
+            ]);
+
+            $this->total+= $plan->price;
         }
 
+        return $this;
+    }
+
+    public function createCheckoutLog()
+    {
+        CheckoutLog::create([
+            "checkout_id"=>$this->checkout->id,
+            "event"=>"first access",
+            "total_value"=>'R$'.number_format($this->total,2,',','.'),
+        ]);
         return $this;
     }
 }
