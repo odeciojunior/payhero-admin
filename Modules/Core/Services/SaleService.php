@@ -114,7 +114,7 @@ class SaleService
                 });
             }
 
-            if (!empty($filters["client"]) && empty($filters["email_client"])) {
+            if (!empty($filters["client"])) {// && empty($filters["email_client"])
                 $customers = $customerModel->where("name", "LIKE", "%" . $filters["client"] . "%")->pluck("id");
                 $transactions->whereHas("sale", function ($querySale) use ($customers) {
                     $querySale->whereIn("customer_id", $customers);
@@ -151,24 +151,24 @@ class SaleService
                 $transactions->where("value", $value);
             }
 
-            // novo filtro
-            if (!empty($filters["email_client"]) && empty($filters["client"])) {
-                $customers = $customerModel->where("email", "LIKE", "%" . $filters["email_client"] . "%")->pluck("id");
-                $transactions->whereHas("sale", function ($querySale) use ($customers) {
-                    $querySale->whereIn("customer_id", $customers);
-                });
-            }
+            // // novo filtro
+            // if (!empty($filters["email_client"]) && empty($filters["client"])) {
+            //     $customers = $customerModel->where("email", "LIKE", "%" . $filters["email_client"] . "%")->pluck("id");
+            //     $transactions->whereHas("sale", function ($querySale) use ($customers) {
+            //         $querySale->whereIn("customer_id", $customers);
+            //     });
+            // }
 
-            // novo filtro
-            if (!empty($filters["email_client"]) && !empty($filters["client"])) {
-                $customers = $customerModel
-                    ->where("name", "LIKE", "%" . $filters["client"] . "%")
-                    ->where("email", "LIKE", "%" . $filters["email_client"] . "%")
-                    ->pluck("id");
-                $transactions->whereHas("sale", function ($querySale) use ($customers) {
-                    $querySale->whereIn("customer_id", $customers);
-                });
-            }
+            // // novo filtro
+            // if (!empty($filters["email_client"]) && !empty($filters["client"])) {
+            //     $customers = $customerModel
+            //         ->where("name", "LIKE", "%" . $filters["client"] . "%")
+            //         ->where("email", "LIKE", "%" . $filters["email_client"] . "%")
+            //         ->pluck("id");
+            //     $transactions->whereHas("sale", function ($querySale) use ($customers) {
+            //         $querySale->whereIn("customer_id", $customers);
+            //     });
+            // }
 
             if (!empty($filters["shopify_error"]) && $filters["shopify_error"] == true) {
                 $transactions->whereHas("sale.project.shopifyIntegrations", function ($queryShopifyIntegration) {
