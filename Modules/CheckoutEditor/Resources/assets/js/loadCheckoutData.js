@@ -633,7 +633,7 @@ $(() => {
                 $(".logo-div").addClass("has-banner");
                 $(".logo-preview-container").addClass("has-banner");
                 $(".menu-bar-mobile").hide("slow");
-                $(".purchase-menu-mobile").fadeIn("slow");
+                // $(".purchase-menu-mobile").fadeIn("slow");
             } else {
                 $("#checkout_editor #checkout_banner_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 0);
@@ -643,7 +643,7 @@ $(() => {
                 $(".logo-div").removeClass("has-banner");
                 $(".logo-preview-container").removeClass("has-banner");
                 $(".menu-bar-mobile").show("slow");
-                $(".purchase-menu-mobile").fadeOut("slow");
+                // $(".purchase-menu-mobile").fadeOut("slow");
             }
 
             if (checkout.checkout_banner_type === 1) {
