@@ -2365,15 +2365,7 @@ tbody td{
     min-height: 0;
     cursor: pointer;
 }
-.new-register-overlay-body .card.extra-informations-user {
-    border: 1px solid #2E85EC;
-    margin-bottom: 48px;
-}
 
-.new-register-overlay-body .card.extra-informations-user .icon {
-    border-radius: 0;
-    background: transparent;
-}
 .new-register-overlay-body .card .icon {
     width: 36px;
     height: 36px;
@@ -2391,6 +2383,48 @@ tbody td{
     padding: 12px 18px;
     margin-top: 12px;
 }
+
+.new-register-btn.close-modal.modal-top-btn {
+    width: 32px;
+    height: 32px;
+    background: #fff;
+}
+.new-register-btn.close-modal.modal-top-btn svg {
+    margin: auto;
+}
+.new-register-open-modal-btn .count {
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.init-operation-container .card.status-check {
+    cursor: unset;
+}
+
+.init-operation-container .card,
+.init-operation-container .card * {
+    transition: background 300ms ease-in-out, border 300ms ease-in-out, fill 300ms ease-in-out, color 300ms ease-in-out;
+}
+.init-operation-container .card .icon svg {
+    margin: 0 auto;
+}
+.init-operation-container .card:not(.status-check):hover {
+    background: #E4F1FF;
+    border: 1px solid #2E85EC;
+}
+.init-operation-container .card:not(.status-check):hover .icon {
+    background: #2E85EC;
+}
+.init-operation-container .card:not(.status-check):hover .icon {
+    background: #2E85EC;
+}
+.init-operation-container .card:not(.status-check):hover svg path {
+    fill: #fff;
+}
+.init-operation-container .card:not(.status-check):hover .description {
+    color: #2E85EC;
+}
+
 @media (max-width: 475px) {
     .new-register-overlay-body .card button {
         width: 100%;

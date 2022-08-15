@@ -74,7 +74,7 @@
             <div class="new-register-navbar-open-modal-container"
              style="display: none;">
                 <div class="row new-register-open-modal no-gutters">
-                    Você está em uma conta demonstrativa. <span class="new-register-open-modal-btn">Clique aqui para começar</span>
+                    Você está em uma conta demonstrativa. <span class="new-register-open-modal-btn">Clique para começar<span class="count"></span></span>
                 </div>
             </div>
         @endif
