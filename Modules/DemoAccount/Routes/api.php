@@ -116,7 +116,9 @@ Route::group([
     });
 
     //Chargebacks
-    Route::group([],function(){
+    Route::group([],function()
+    {
+        Route::get('/contestations/projects-with-contestations', 'ContestationsApiDemoController@getProjectsWithContestations');
         Route::get('/contestations/getcontestations', 'ContestationsApiDemoController@getContestations')->name('contestations.getchargebacks');
         Route::get('/contestations/gettotalvalues', 'ContestationsApiDemoController@getTotalValues')->name('contestations.gettotalvalues');
         Route::get('/contestations/get-contestation-files/{salecontestation}', 'ContestationsApiDemoController@getContestationFiles')
