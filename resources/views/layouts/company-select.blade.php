@@ -1,7 +1,7 @@
 <!-- EMPRESAS  -->
 <div class="<?php
 
-echo (!empty($version) && $version=='mobile') ? 'p-10 pb-0' : 'pr-20';
+echo (!empty($version) && $version=='mobile') ? 'p-10 pb-0' : 'pr-30';
 
 ?>" id="company-select<?php
 

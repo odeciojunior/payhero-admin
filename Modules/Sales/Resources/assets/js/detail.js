@@ -678,7 +678,7 @@ $(() => {
             $("#resendeShopifyOrderButton").attr("sale", "");
         }
         //Detalhes da venda
-        $("#nav-profile #card-copany").text("Empresa: Nome da Empresa"); // + sale.company_name);
+        $("#nav-profile #card-company").text("Empresa: Nome da Empresa"); // + sale.company_name);
         if (sale.payment_method === 1) {
             $("#details-card #card-flag").text("Bandeira: " + sale.flag);
             $("#details-card #card-installments").text("Quantidade de parcelas: " + sale.installments_amount);
