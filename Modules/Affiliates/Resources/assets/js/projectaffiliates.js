@@ -2,6 +2,7 @@ $(document).ready(function () {
 
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
+        loadOnAny('.page-content');
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
                 companiesAndProjects = data2
@@ -144,9 +145,9 @@ $(document).ready(function () {
         name = name ? name : null;
 
         if (link == null) {
-            link = "/api/affiliates/getaffiliates?project=" + project + "&name=" + name;
+            link = "/api/affiliates/getaffiliates?project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         } else {
-            link = "/api/affiliates/getaffiliates" + link + "&project=" + project + "&name=" + name;
+            link = "/api/affiliates/getaffiliates" + link + "&project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         }
 
         loadOnTable("#body-table-affiliates", ".table-affiliate");
@@ -370,9 +371,9 @@ $(document).ready(function () {
         name = name ? name : null;
 
         if (link == null) {
-            link = "/api/affiliates/getaffiliaterequests?project=" + project + "&name=" + name;
+            link = "/api/affiliates/getaffiliaterequests?project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         } else {
-            link = "/api/affiliates/getaffiliaterequests" + link + "&project=" + project + "&name=" + name;
+            link = "/api/affiliates/getaffiliaterequests" + link + "&project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         }
 
         loadOnTable("#body-table-affiliate-requests", ".table-affiliate-request");
