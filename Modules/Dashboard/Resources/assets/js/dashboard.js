@@ -2,6 +2,7 @@ $('.company-navbar').change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
     $('.sirius-performance > .card').html('');
     $('.sirius-account > .card').html('');
+    $('.sirius-cashback > .card').html('');
     $('#cashback-container #cashback-container-money').text("")
     loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
         styles: {
@@ -21,6 +22,7 @@ $('.company-navbar').change(function () {
     });
     loadingOnAccountsHealth('.sirius-performance > .card','150px');
     loadingOnAccountsHealth('.sirius-account > .card');
+    loadingOnAccountsHealth('.sirius-cashback > .card');
     loadingOnChart('#chart-loading');
     $('#scoreLineToMonth').html('')
     updateCompanyDefault().done(function(data1){

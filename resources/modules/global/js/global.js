@@ -410,14 +410,9 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    $('#loadingOnScreen').append(
-        `<div class="sirius-loading">
-            <img style="height: 125px; width: 125px" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
-                 class="img-responsive"/>
-        </div>`
-    ).fadeIn()
-
-    $('body').css('overflow-y', 'hidden')
+    loadOnAnyPage('.page');
+    $('body').css('overflow-y', 'hidden');
+    $('.new-register-page-open-modal-container').hide();
 }
 
 function loadingOnChart(target) {
