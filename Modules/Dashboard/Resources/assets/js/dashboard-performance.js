@@ -112,6 +112,8 @@ $(document).ready(function () {
                 updatePerformanceCard1(data);
                 if (data.money_cashback !== "0,00") {
                     updateCashback(data.money_cashback);
+                }else{
+                    $('#cashback-container-money').value('0,00');
                 }
             },
         });

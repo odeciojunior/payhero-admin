@@ -1,9 +1,13 @@
 $('.company-navbar').change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
+
     loadingOnScreen();
+
 	$("#select_projects").val($("#select_projects option:first").val());
-    $(
-        "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
+    $(`#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute,
+        #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,
+        #credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert,
+        #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio`
     ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
 
     $("#select_projects").html('');
@@ -11,7 +15,16 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            getProjects(data2.companies);
+            if(!isEmpty(data2.company_default_projects)){
+                showFiltersReports(true);
+                getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+                showFiltersReports(false);
+            }
         });
 	});
 });
@@ -58,8 +71,16 @@ $(function () {
 
     $("#select_projects").html('');
 
-    getCompaniesAndProjects().done( function (data2){console.log(data2.companies)
-        getProjects(data2.companies);
+    getCompaniesAndProjects().done( function (data2){
+        if(!isEmpty(data2.company_default_projects)){
+            showFiltersReports(true);
+            getProjects(data2.companies);
+        }else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            showFiltersReports(false);
+        }
     });
 
 });
@@ -71,7 +92,6 @@ let dateRange = '';
 let origin = 'src';
 
 function changeCompany() {
-    console.log('changeCompany');
     $("#select_projects").on("change", function () {
         console.log('ops change propject');
         $.ajaxQ.abortAll();
@@ -86,7 +106,6 @@ function changeCompany() {
 }
 
 function changeCalendar() {
-    console.log('changeCalendar');
     $('.onPreLoad *, .onPreLoadBig *').remove();
 
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
@@ -1787,3 +1806,13 @@ let noWithdrawal = `
 </defs>
 </svg>
 `;
+
+function showFiltersReports(show){
+    if(show){
+        $('#box-projects').show();
+        $('.date-report').show();
+        return;
+    }
+    $('#box-projects').hide();
+    $('.date-report').hide();
+}
