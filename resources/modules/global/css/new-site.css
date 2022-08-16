@@ -778,7 +778,7 @@ input[type=radio] {
     vertical-align: middle !important;
     font-family: 'Muli', sans-serif;
     color: #707070;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 @media screen and (max-width: 767px) {

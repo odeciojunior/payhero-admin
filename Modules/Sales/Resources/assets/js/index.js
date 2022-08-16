@@ -73,30 +73,42 @@ function atualizar(link = null) {
 
             if (!isEmpty(response.data)) {
                 $("#export-excel").show();
+
                 $.each(response.data, function (index, value) {
                     let start_date = "";
+
                     if (value.start_date) {
                         start_date = value.start_date.split(/\s/g); //data inicial
-                        start_date =
-                            "<strong class='bold-mobile'>" +
-                            start_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            start_date[1] +
-                            " </small>";
+
+                        start_date =`
+                            <span>
+                                ${start_date[0]}
+                            </span>
+                            <br>
+                            <small>
+                                ${start_date[1]}
+                            </small>`
+                        ;
                     }
 
                     let end_date = "";
+
                     if (value.end_date) {
                         end_date = value.end_date.split(/\s/g); //data final
-                        end_date =
-                            "<strong class='bold-mobile'>" +
-                            end_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            end_date[1] +
-                            " </small>";
+
+                        end_date =`
+                            <span>
+                                ${end_date[0]}
+                            </span>
+                            <br>
+                            <small>
+                                ${end_date[1]}
+                            </small>`
+                        ;
                     }
 
                     let tableClass = "";
+
                     if (
                         value.has_shopify_integration != null &&
                         value.shopify_order == null &&
@@ -104,118 +116,155 @@ function atualizar(link = null) {
                         value.date_before_five_minutes_ago
                     ) {
                         tableClass = "table-warning-roll";
+
                     } else {
                         tableClass = "";
                     }
 
                     if (value.woocommerce_retry_order != null) {
                         tableClass = "table-warning-roll";
+
                     } else {
                         tableClass = "";
                     }
 
                     let observation = "";
+
                     if (
                         !isEmpty(value.observation) ||
                         (value.observation === null && false) ||
                         (value.observation === "" && false)
                     ) {
-                        observation = `<a data-toggle="tooltip" title="${value.observation}"
-                                            role="button" class="sale_observation" venda="${value.id}">
-                                                <span style="color: #44a44b" class="o-info-help-1"></span>
-                                        </a>`;
+                        observation = `
+                            <a data-toggle="tooltip" title="${value.observation}" role="button" class="sale_observation" venda="${value.id}">
+                                <span style="color: #44a44b" class="o-info-help-1"></span>
+                            </a>`
+                        ;
                     }
 
                     let cupomCode = "";
+
                     if (
                         !isEmpty(value.cupom_code) ||
                         (value.cupom_code === null && false) ||
                         (value.cupom_code === "" && false)
                     ) {
                         cupomCode = `
-                                <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}"
-                                    role="button" style='margin-left: 5px;' >
-                                        <img width="20px" src="/build/global/img/coupon.svg">
-                                </a>`;
+                            <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}" role="button" style='margin-left: 5px;'>
+                                <img width="20px" src="/build/global/img/coupon.svg">
+                            </a>`
+                        ;
                     }
 
                     let upsell = "";
+
                     if (value.upsell) {
                         upsell = `
-                                <a data-toggle="tooltip" title="Upsell"
-                                    role="button" style='margin-left: 5px;' >
-                                        <img width="20px" src="/build/global/img/upsell.svg">
-                                </a>`;
+                            <a data-toggle="tooltip" title="Upsell" role="button" style='margin-left: 5px;'>
+                                <img width="20px" src="/build/global/img/upsell.svg">
+                            </a>`
+                        ;
                     }
 
                     let has_order_bump = "";
                     if (value.has_order_bump) {
                         has_order_bump = `
-                                        <a data-toggle="tooltip" title="Order Bump"
-                                            role="button" style='margin-left: 5px;' >
-                                                <img width="20px" src="/build/global/img/order-bump.svg">
-                                        </a>`;
+                            <a data-toggle="tooltip" title="Order Bump" role="button" style='margin-left: 5px;'>
+                                    <img width="20px" src="/build/global/img/order-bump.svg">
+                            </a>`
+                        ;
                     }
 
                     let cashback = "";
                     let cashbackIcon = "";
                     if (value.cashback_value != "0.00") {
-                        cashbackIcon = `<a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
-                                            <span style="color: #5EE2A1; font-size: 26px; -webkit-text-stroke: 2px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
-                                        </a>`;
+                        cashbackIcon = `
+                            <a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
+                                <span style="color: #5EE2A1; font-size: 26px; -webkit-text-stroke: 2px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
+                            </a>`
+                        ;
 
                         cashback = `<b style="color: #5EE2A1;">${value.total_paid}</b>`;
                     }
 
-                    dados =
-                        `  <tr class='` +
-                        tableClass +
-                        `'>
-                                <td class='text-center'>
-                                    <br class="d-sm-none"/>
-                                    ${value.sale_code} <br>
-                                    <div class="d-flex flex-row align-items-center justify-content-center">
-                                        ${cashbackIcon}
-                                        ${upsell}
-                                        ${has_order_bump}
-                                        ${cupomCode}
-                                    </div>
-                                </td>
-                                <td>
-                                <strong class="bold-mobile">${value.product}</strong>
-                                ${
-                                    value.affiliate != null && value.user_sale_type == "producer"
-                                        ? `<br><small class="gray font-size-12">(Afiliado: ${value.affiliate})</small>`
-                                        : ""
+                    dados = `
+                        <tr class='${tableClass}'>
+                            <td class='text-center'>
+                            
+                                <br class="d-sm-none"/>
+                                ${value.sale_code}
+                                <br>
+                                
+                                <div class="d-flex flex-row align-items-center justify-content-center">
+                                    ${cashbackIcon}
+                                    ${upsell}
+                                    ${has_order_bump}
+                                    ${cupomCode}
+                                </div>
+                            </td>
+                            
+                            <td>
+                                <span>${value.product}</span>
+                                
+                                ${value.affiliate != null && value.user_sale_type == "producer"
+                                    ?`
+                                        <br>
+
+                                        <small class="gray font-size-12">
+                                            (Afiliado: ${value.affiliate})
+                                        </small>`
+
+                                    : ""
                                 }
-                                <br> <small class="gray font-size-12">${value.project}</small></td>
+                                <br>
 
-                                <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
-                                <td>
-                                    <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
-                                </td>
-                                <td class='text-center'>
-                                        <span class="status-sale badge badge-${statusArray[value.status]} ${
-                            value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""
-                        }" ${
-                            value.status_translate === "Pendente"
-                                ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"'
-                                : ""
-                        }>${value.status_translate}</span>
+                                <small class="gray font-size-12">
+                                    ${value.project}
+                                </small>
+                            </td>
 
-                                </td>
-                                <td class='display-sm-none display-m-none text-left font-size-14'>${start_date}</td>
-                                <td class='display-sm-none text-left font-size-14'>${end_date}</td>
-                                <td style='white-space: nowrap;' class="text-center text-md-right">
-                                    ${cashback ? cashback : `<b>${value.total_paid}</b> <br>`}
-                                </td>
-                                <td style="text-align: center">
-                                    ${observation}
-                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
-                                        <span class="o-eye-1"></span>
-                                    </a>
-                                </td>
-                            </tr>`;
+                            <td class='display-sm-none display-m-none display-lg-none'>
+                                ${value.client}
+                            </td>
+
+                            <td>
+                                <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 55px; height: 36px;'>
+                            </td>
+
+                            <td class='text-center'>
+                                <span class="status-sale badge badge-${statusArray[value.status]}
+                                ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""}"
+                                ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
+
+                                    ${value.status_translate}
+                                        
+                                </span>
+
+                            </td>
+
+                            <td class='display-sm-none display-m-none text-left font-size-14'>
+                                ${start_date}
+                            </td>
+
+                            <td class='display-sm-none text-left font-size-14'>
+                                ${end_date}
+                            </td>
+
+                            <td class="text-center text-md-right text-nowrap commission-fweight">
+                                ${cashback ? cashback : `${value.total_paid}<br>`}
+                            </td>
+                            
+                            <td style="text-align: center">
+                                ${observation}
+                                <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
+                                    <span>
+                                        <img src="/build/global/img/icon-eye.svg">
+                                    </span>
+                                </a>
+                            </td>
+
+                        </tr>`
+                    ;
 
                     $(function () {
                         $('[data-toggle="tooltip"]').tooltip({

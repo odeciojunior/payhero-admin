@@ -560,7 +560,6 @@ a.label {
 }
 
 .table thead > tr > td, .table thead > tr > th {
-    background-color: #FFF  !important;
     border-top: 1px solid #F7F7F7 !important;
     border-bottom: 1px solid #F7F7F7  !important;
     /* padding: 20px 0 20px 20px !important; */

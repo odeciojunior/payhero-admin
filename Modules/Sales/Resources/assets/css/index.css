@@ -22,10 +22,13 @@
     border-color: transparent transparent #8f9ca2 transparent !important;
 }
 .badge {
-    color: white;
-    padding: 5px 15px;
-    border-radius: 16px;
+    font-family: 'Inter';
+    font-style: normal;
     font-weight: 700;
+    font-size: 14px;
+    border-radius: 16px;
+    padding: 8px 20px;
+    color: white;
 }
 .badge.badge-success {
     background-color: #5ee2a1;
@@ -35,7 +38,12 @@
 }
 /* and */
 
-/* ========= CONFIGURATIONS MULTIPLE SELECT 2 BOX ========= */
+/* especific font-weight to commission */
+.commission-fweight{
+    font-weight: 600 !important;
+}
+
+/* CONFIGURATIONS MULTIPLE SELECT 2 BOX  */
 .select2-dropdown--below {
     border: 1px solid #b3d4fc !important;
     border-top: none !important;
@@ -73,7 +81,6 @@ span.select2-selection.select2-selection--multiple {
 .select2-container {
     border: 1px solid #e0e7ee;
     border-radius: 8px;
-    /* focus #88BFFF */
 }
 
 .select2-container--open {
@@ -112,9 +119,6 @@ li.select2-selection__choice {
 .default-border {
     border: 1px solid #e0e7ee;
 }
-/* .default-border :focus{
-    border: 1px solid #88BFFF !important;
-} */
 
 .table-warning-roll {
     color: #eb6707 !important;

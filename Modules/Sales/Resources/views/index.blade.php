@@ -2,8 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet"
-              href="{{ mix('build/layouts/sales/index.min.css') }}">
+        <link rel="stylesheet"href="{{ mix('build/layouts/sales/index.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -19,19 +18,12 @@
                 <!-- hasanyrole('account_owner|admin|finantial') -->
                 @can('sales_manage')
                     <div class="col-6 text-right">
-                        <div class="justify-content-end align-items-center"
-                             id="export-excel"
-                             style="display:none">
+                        <div class="justify-content-end align-items-center"id="export-excel"style="display:none">
                             <div class="p-2 d-flex justify-content-end align-items-center">
                                 <span class="o-download-cloud-1 mr-2"></span>
-                                <div class="btn-group"
-                                     role="group">
-                                    <button id="bt_get_xls"
-                                            type="button"
-                                            class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                    <button id="bt_get_csv"
-                                            type="button"
-                                            class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                                <div class="btn-group"role="group">
+                                    <button id="bt_get_xls"type="button"class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                                    <button id="bt_get_csv"type="button"class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
                                 </div>
                             </div>
                         </div>
@@ -358,36 +350,42 @@
                 @endcan
                 <!-- Tabela -->
                 <div class="fixhalf"></div>
+
                 <div class="col-lg-12 p-0 pb-10">
-                    <div class="card shadow"
-                         style="min-height: 300px">
+
+                    <div class="card shadow"style="min-height: 300px">
+
                         <div class="page-invoice-table table-responsive">
-                            <table id="tabela_vendas"
-                                   class="table-vendas table table-striped unify"
-                                   style="">
+
+                            <table id="tabela_vendas" class="table">
+
                                 <thead>
+
                                     <tr>
-                                        <td class="table-title display-sm-none display-m-none  display-lg-none">Transação
-                                        </td>
-                                        <td class="table-title">Descrição</td>
-                                        <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                        <td class="table-title">Forma</td>
-                                        <td class="table-title text-center">Status</td>
-                                        <td class="table-title display-sm-none display-m-none">Iniciada em</td>
-                                        <td class="table-title display-sm-none">Pagamento</td>
-                                        <td class="table-title">Comissão</td>
-                                        <td class="table-title"
-                                            width="80px;"> &nbsp;</td>
+                                        <td>Transação</td>
+                                        <td>Descrição</td>
+                                        <td>Cliente</td>
+                                        <td class="text-center">Forma</td>
+                                        <td class="text-center">Status</td>
+                                        <td class="text-nowrap">Iniciada em</td>
+                                        <td>Pagamento</td>
+                                        <td class="text-center">Comissão</td>
+                                        <td width="80px;"> &nbsp;</td>
 
                                     </tr>
+
                                 </thead>
-                                <tbody id="dados_tabela"
-                                       img-empty="{!! mix('build/global/img/vendas.svg') !!}">
+                                
+                                <tbody id="dados_tabela" img-empty="{!! mix('build/global/img/vendas.svg') !!}">
                                     {{-- js carrega... --}}
                                 </tbody>
+
                             </table>
+
                         </div>
+
                     </div>
+                    
                 </div>
                 <div class="row justify-content-center justify-content-md-end pr-md-15 pb-50">
                     <ul id="pagination-sales"
