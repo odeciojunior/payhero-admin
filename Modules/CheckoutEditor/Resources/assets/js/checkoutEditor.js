@@ -267,7 +267,7 @@ $(document).ready(function () {
             $(".logo-div").addClass("has-banner");
             $(".logo-preview-container").addClass("has-banner");
             $(".menu-bar-mobile").hide("slow");
-            $(".purchase-menu-mobile").fadeIn("slow");
+            // $(".purchase-menu-mobile").fadeIn("slow");
 
             if ($("input[name=checkout_banner_type]").val() == "1") {
                 $(".logo-div").removeClass("has-retangle-banner");
@@ -280,7 +280,7 @@ $(document).ready(function () {
             $(".logo-div").removeClass("has-retangle-banner");
             $(".logo-preview-container").removeClass("has-banner");
             $(".menu-bar-mobile").show("slow");
-            $(".purchase-menu-mobile").fadeOut("slow");
+            // $(".purchase-menu-mobile").fadeOut("slow");
         }
     });
 
