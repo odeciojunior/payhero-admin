@@ -22,7 +22,7 @@ Route::group(
         Route::post('/withdrawals/get-transactions/{withdrawal_id}', 'WithdrawalsApiController@getTransactions');
 
         Route::get('/withdrawals/settings', 'WithdrawalsSettingsApiController@index');
-        Route::get('/withdrawals/settings/{settingsId}', 'WithdrawalsSettingsApiController@show');
+        Route::get('/withdrawals/settings/{companyId}', 'WithdrawalsSettingsApiController@show');
 
         Route::apiResource('/withdrawals/settings', 'WithdrawalsSettingsApiController')
                 ->only('store', 'update', 'destroy')
