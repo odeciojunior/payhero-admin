@@ -156,7 +156,7 @@
 
                             <div class="row mb-md-15">
 
-                                <div class="col-sm-12 col-md mb-15 mb-sm-0">
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="valor">Comissão</label>
                                     <input name="value"
                                            id="valor"
@@ -164,7 +164,7 @@
                                            placeholder="Valor da comissão">
                                 </div>
 
-                                <div class="col-sm-12 col-md mb-15 mb-sm-0">
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="comprador">Nome do cliente</label>
                                     <input name='client'
                                            id="comprador"
@@ -172,7 +172,7 @@
                                            placeholder="Cliente">
                                 </div>
 
-                                <div class="col-sm-12 col-md mb-15 mb-sm-0">
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="customer_document">CPF do cliente</label>
                                     <input name='customer_document'
                                            id="customer_document"
@@ -186,11 +186,6 @@
                             <div class="row mb-md-15 d-flex justify-content-between">
 
                                 <div class="col-sm-12 col-md-3">
-                                    {{-- <label for="email_cliente">Email do cliente</label>
-                                    <input name="email_client"
-                                           id="email_cliente"
-                                           class="input-pad"
-                                           placeholder="Email"> --}}
                                 </div>
 
                                 <div class="col-sm-12 col-md-8 mt-20 pr-0 pl-20"

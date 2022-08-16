@@ -106,12 +106,12 @@
 
                 @include('layouts.company-select')
 
-                <div id="top-vertical-bar" style="background-color: #f4f4f4; width:2px; margin:15px 15px 15px 0"></div>
+                <div id="top-vertical-bar" style="background-color: #f4f4f4; width:2px; margin:15px 7px 15px 0"></div>
 
                 <div class="bonus-balance-menu d-flex justify-content-center align-items-center">
                     <button id="bonus-balance"
                             class="bonus-balance-button desktop justify-content-center align-items-center"
-                            style="display: none">
+                            style="display: none; margin-right: 0px; margin-left: 17px">
                         <svg width="11"
                              height="12"
                              viewBox="0 0 11 12"
@@ -149,7 +149,7 @@
                            href="#"
                            aria-expanded="false"
                            data-animation="scale-up"
-                           role="button" style="margin-left: -6px;">
+                           role="button" style="margin-left: -2px;">
                             <span class="avatar avatar-online">
                                 <img class='img-user-menu-principal'
                                      src="{!! \Auth::user()->photo
