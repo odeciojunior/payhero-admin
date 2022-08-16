@@ -44,7 +44,8 @@ $(function () {
             },
             success: function success(response) {
                 gateway_tax = parseFloat(response.data.gateway_tax);
-                gateway_release_money_days = response.data.gateway_release_money_days;
+                gateway_release_money_days =
+                    response.data.gateway_release_money_days;
                 currency_quotations = response.data.currency_quotation;
             },
         });
@@ -108,11 +109,25 @@ $(function () {
         var find_stage = type == "create" ? "#stage1" : "#stage2";
 
         $(modal).find(".modal-body").css("height", "auto");
-        $(modal).find(find_stage).find(".box-review").html("").css("margin-bottom", "0px");
+        $(modal)
+            .find(find_stage)
+            .find(".box-review")
+            .html("")
+            .css("margin-bottom", "0px");
 
-        $(modal).find(find_stage).find(".box-products").html("").css({ height: "auto", "padding-right": "0px" });
-        $(modal).find(find_stage).find(".box-products").mCustomScrollbar("destroy");
-        $(modal).find(find_stage).find(".box-products").mCustomScrollbar("update");
+        $(modal)
+            .find(find_stage)
+            .find(".box-products")
+            .html("")
+            .css({ height: "auto", "padding-right": "0px" });
+        $(modal)
+            .find(find_stage)
+            .find(".box-products")
+            .mCustomScrollbar("destroy");
+        $(modal)
+            .find(find_stage)
+            .find(".box-products")
+            .mCustomScrollbar("update");
 
         $(modal)
             .find(find_stage)
@@ -130,7 +145,9 @@ $(function () {
                     },
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Authorization: $('meta[name="access-token"]').attr(
+                            "content"
+                        ),
                         Accept: "application/json",
                     },
                     error: function error(response) {
@@ -149,23 +166,33 @@ $(function () {
                                 append +=
                                     "<div " +
                                     (product.name_short_flag
-                                        ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"'
+                                        ? 'data-toggle="tooltip" data-placement="top" title="' +
+                                          product.name +
+                                          '"'
                                         : "") +
                                     ' data-code="' +
                                     product.id +
                                     '" class="box-product ' +
                                     (index_product != -1 ? "selected" : "") +
                                     " " +
-                                    (product.status_enum == 1 || product.status_enum == 3 ? "review" : "") +
+                                    (product.status_enum == 1 ||
+                                    product.status_enum == 3
+                                        ? "review"
+                                        : "") +
                                     ' d-flex justify-content-between align-items-center">';
-                                append += '<div class="d-flex align-items-center">';
+                                append +=
+                                    '<div class="d-flex align-items-center">';
                                 append += '<div class="background-photo">';
-                                append += '<img class="product-photo" src="' + product.photo + '">';
+                                append +=
+                                    '<img class="product-photo" src="' +
+                                    product.photo +
+                                    '">';
                                 append += "</div>";
                                 append += "<div>";
                                 append +=
                                     '<h1 class="title" ' +
-                                    (product.status_enum == 1 || product.status_enum == 3
+                                    (product.status_enum == 1 ||
+                                    product.status_enum == 3
                                         ? 'style="color: #C5C5C5"'
                                         : "") +
                                     ">" +
@@ -173,7 +200,8 @@ $(function () {
                                     "</h1>";
                                 append +=
                                     '<p class="description" ' +
-                                    (product.status_enum == 1 || product.status_enum == 3
+                                    (product.status_enum == 1 ||
+                                    product.status_enum == 3
                                         ? 'style="color: #C7C7C7"'
                                         : "") +
                                     ">" +
@@ -181,7 +209,10 @@ $(function () {
                                     "</p>";
                                 append += "</div>";
                                 append += "</div>";
-                                if (product.status_enum != 1 && product.status_enum != 3) {
+                                if (
+                                    product.status_enum != 1 &&
+                                    product.status_enum != 3
+                                ) {
                                     append += '<div class="check">';
                                     if (index_product != -1) {
                                         append +=
@@ -220,13 +251,19 @@ $(function () {
                                 });
 
                                 if (response.data.length > 6) {
-                                    $(modal).find(find_stage).find(".box-products").mCustomScrollbar();
+                                    $(modal)
+                                        .find(find_stage)
+                                        .find(".box-products")
+                                        .mCustomScrollbar();
                                 }
 
                                 $(modal)
                                     .find(".product-photo")
                                     .on("error", function () {
-                                        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                                        $(this).attr(
+                                            "src",
+                                            "https://cloudfox-files.s3.amazonaws.com/produto.svg"
+                                        );
                                     });
 
                                 $(modal)
@@ -247,22 +284,47 @@ $(function () {
                                                     .css("display", "flex")
                                                     .promise()
                                                     .done(function () {
-                                                        if (response.data.length > 6) {
+                                                        if (
+                                                            response.data
+                                                                .length > 6
+                                                        ) {
                                                             $(modal)
-                                                                .find(find_stage)
-                                                                .find(".box-products")
-                                                                .css({ height: "316px" });
+                                                                .find(
+                                                                    find_stage
+                                                                )
+                                                                .find(
+                                                                    ".box-products"
+                                                                )
+                                                                .css({
+                                                                    height: "316px",
+                                                                });
                                                         }
 
-                                                        var autoHeight = $(modal).find(".height-auto").height() + 18;
+                                                        var autoHeight =
+                                                            $(modal)
+                                                                .find(
+                                                                    ".height-auto"
+                                                                )
+                                                                .height() + 18;
                                                         $(modal)
                                                             .find(".modal-body")
                                                             .stop(true, true)
                                                             .height(curHeight)
-                                                            .animate({ height: autoHeight }, 300)
+                                                            .animate(
+                                                                {
+                                                                    height: autoHeight,
+                                                                },
+                                                                300
+                                                            )
                                                             .promise()
                                                             .done(function () {
-                                                                $(modal).find(".product-photo").unbind("load");
+                                                                $(modal)
+                                                                    .find(
+                                                                        ".product-photo"
+                                                                    )
+                                                                    .unbind(
+                                                                        "load"
+                                                                    );
                                                             });
                                                     });
                                             });
@@ -278,9 +340,15 @@ $(function () {
         $(modal).find(".product-photo").unbind("load");
 
         $(modal).find(".box-description").find(".selecteds span").html("");
-        $(modal).find(".box-description").find(".selecteds").css("display", "none");
+        $(modal)
+            .find(".box-description")
+            .find(".selecteds")
+            .css("display", "none");
 
-        $(modal).find(".modal-body").css("height", "auto").attr("style", "padding-bottom: 0px !important");
+        $(modal)
+            .find(".modal-body")
+            .css("height", "auto")
+            .attr("style", "padding-bottom: 0px !important");
 
         $(modal).find(".modal-body").find(".height-auto").css("margin-top", "");
 
@@ -307,10 +375,20 @@ $(function () {
         }
 
         $(modal).find(".tab-pane").removeClass("show active");
-        $(modal).find(find_stage).find(".box-products").html("").css({ height: "316px", "padding-right": "0px" });
+        $(modal)
+            .find(find_stage)
+            .find(".box-products")
+            .html("")
+            .css({ height: "316px", "padding-right": "0px" });
 
-        $(modal).find(find_stage).find(".box-products").mCustomScrollbar("destroy");
-        $(modal).find(find_stage).find(".box-products").mCustomScrollbar("update");
+        $(modal)
+            .find(find_stage)
+            .find(".box-products")
+            .mCustomScrollbar("destroy");
+        $(modal)
+            .find(find_stage)
+            .find(".box-products")
+            .mCustomScrollbar("update");
         $(modal).find(".modal-body").mCustomScrollbar("destroy");
         $(modal).find(".modal-body").mCustomScrollbar("update");
 
@@ -334,7 +412,9 @@ $(function () {
                     data: { project: projectId },
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Authorization: $('meta[name="access-token"]').attr(
+                            "content"
+                        ),
                         Accept: "application/json",
                     },
                     error: function error(response) {
@@ -353,24 +433,33 @@ $(function () {
                                 append +=
                                     "<div " +
                                     (product.name_short_flag
-                                        ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"'
+                                        ? 'data-toggle="tooltip" data-placement="top" title="' +
+                                          product.name +
+                                          '"'
                                         : "") +
                                     ' data-code="' +
                                     product.id +
                                     '" class="box-product ' +
                                     (index_product != -1 ? "selected" : "") +
                                     " " +
-                                    (product.status_enum == 1 || product.status_enum == 3 ? "review" : "") +
+                                    (product.status_enum == 1 ||
+                                    product.status_enum == 3
+                                        ? "review"
+                                        : "") +
                                     ' d-flex justify-content-between align-items-center">';
-                                append += '<div class="d-flex align-items-center">';
+                                append +=
+                                    '<div class="d-flex align-items-center">';
                                 append += '<div class="background-photo">';
                                 append +=
-                                    '<img class="product-photo" src="' + product.photo + '" style="display: none;">';
+                                    '<img class="product-photo" src="' +
+                                    product.photo +
+                                    '" style="display: none;">';
                                 append += "</div>";
                                 append += "<div>";
                                 append +=
                                     '<h1 class="title" ' +
-                                    (product.status_enum == 1 || product.status_enum == 3
+                                    (product.status_enum == 1 ||
+                                    product.status_enum == 3
                                         ? 'style="color: #C5C5C5"'
                                         : "") +
                                     ">" +
@@ -378,7 +467,8 @@ $(function () {
                                     "</h1>";
                                 append +=
                                     '<p class="description" ' +
-                                    (product.status_enum == 1 || product.status_enum == 3
+                                    (product.status_enum == 1 ||
+                                    product.status_enum == 3
                                         ? 'style="color: #C7C7C7"'
                                         : "") +
                                     ">" +
@@ -386,7 +476,10 @@ $(function () {
                                     "</p>";
                                 append += "</div>";
                                 append += "</div>";
-                                if (product.status_enum != 1 && product.status_enum != 3) {
+                                if (
+                                    product.status_enum != 1 &&
+                                    product.status_enum != 3
+                                ) {
                                     append += '<div class="check">';
                                     if (index_product != -1) {
                                         append +=
@@ -423,7 +516,10 @@ $(function () {
                                 });
 
                                 if (response.data.length > 6) {
-                                    $(modal).find(find_stage).find(".box-products").mCustomScrollbar();
+                                    $(modal)
+                                        .find(find_stage)
+                                        .find(".box-products")
+                                        .mCustomScrollbar();
                                 }
 
                                 if (type == "edit") {
@@ -434,13 +530,18 @@ $(function () {
                                             })
                                             .indexOf(p.product_id);
                                         if (index > -1) {
-                                            selected_products[index]["name"] = p.product_name;
-                                            selected_products[index]["photo"] = p.photo;
+                                            selected_products[index]["name"] =
+                                                p.product_name;
+                                            selected_products[index]["photo"] =
+                                                p.photo;
                                         }
                                     });
 
-                                    var appendProductsPlan = '<div class="d-flex">';
-                                    selected_products.forEach(function (product) {
+                                    var appendProductsPlan =
+                                        '<div class="d-flex">';
+                                    selected_products.forEach(function (
+                                        product
+                                    ) {
                                         var index = selected_products
                                             .map(function (p) {
                                                 return p.id;
@@ -454,7 +555,9 @@ $(function () {
                                                 product.name +
                                                 '">';
                                             appendProductsPlan +=
-                                                '<img class="product-photo" src="' + product.photo + '">';
+                                                '<img class="product-photo" src="' +
+                                                product.photo +
+                                                '">';
                                             appendProductsPlan += "</div>";
                                         }
                                     });
@@ -467,19 +570,32 @@ $(function () {
                                         .done(function () {
                                             var widthBoxPhotosProducts = "auto";
                                             if (selected_products.length > 8) {
-                                                widthBoxPhotosProducts = "" + selected_products.length * 68 + "px";
+                                                widthBoxPhotosProducts =
+                                                    "" +
+                                                    selected_products.length *
+                                                        68 +
+                                                    "px";
 
-                                                $(modal).find(".box-photos-products").mCustomScrollbar({
-                                                    axis: "x",
-                                                });
+                                                $(modal)
+                                                    .find(
+                                                        ".box-photos-products"
+                                                    )
+                                                    .mCustomScrollbar({
+                                                        axis: "x",
+                                                    });
                                             }
 
                                             $(modal)
                                                 .find(".box-photos-products")
                                                 .find(".d-flex")
-                                                .css("width", widthBoxPhotosProducts);
+                                                .css(
+                                                    "width",
+                                                    widthBoxPhotosProducts
+                                                );
 
-                                            $('[data-toggle="tooltip"]').tooltip({
+                                            $(
+                                                '[data-toggle="tooltip"]'
+                                            ).tooltip({
                                                 container: ".page",
                                                 template:
                                                     '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>',
@@ -491,7 +607,10 @@ $(function () {
                                     .find(".product-photo")
                                     .on("error", function () {
                                         $(this)
-                                            .attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg")
+                                            .attr(
+                                                "src",
+                                                "https://cloudfox-files.s3.amazonaws.com/produto.svg"
+                                            )
                                             .fadeIn(300);
                                     });
 
@@ -519,14 +638,31 @@ $(function () {
                                                     .promise()
                                                     .done(function () {
                                                         var autoHeight =
-                                                            $(modal).find(".height-auto").stop(true, true).height() +
-                                                            (type == "edit" && selected_products.length > 8 ? 88 : 18);
+                                                            $(modal)
+                                                                .find(
+                                                                    ".height-auto"
+                                                                )
+                                                                .stop(
+                                                                    true,
+                                                                    true
+                                                                )
+                                                                .height() +
+                                                            (type == "edit" &&
+                                                            selected_products.length >
+                                                                8
+                                                                ? 88
+                                                                : 18);
 
                                                         $(modal)
                                                             .find(".modal-body")
                                                             .stop(true, true)
                                                             .height(curHeight)
-                                                            .animate({ height: autoHeight }, 300);
+                                                            .animate(
+                                                                {
+                                                                    height: autoHeight,
+                                                                },
+                                                                300
+                                                            );
                                                     });
                                             });
                                     });
@@ -542,13 +678,21 @@ $(function () {
         var find_stage = type == "create" ? "#stage2" : "#stage3";
 
         $(modal).find(".modal-body").css("height", "auto");
+        $(modal).find(find_stage).find(".box-products").html("").css({
+            overflow: "unset",
+            height: "unset",
+            "padding-right": "0px",
+        });
         $(modal)
             .find(find_stage)
             .find(".box-products")
-            .html("")
-            .css({ overflow: "unset", height: "unset", "padding-right": "0px" });
-        $(modal).find(find_stage).find(".box-products").find(".body").mCustomScrollbar("destroy");
-        $(modal).find(find_stage).find(".box-products").find(".body").mCustomScrollbar("update");
+            .find(".body")
+            .mCustomScrollbar("destroy");
+        $(modal)
+            .find(find_stage)
+            .find(".box-products")
+            .find(".body")
+            .mCustomScrollbar("update");
         $(modal).find(find_stage).find(".box-review").html("");
         $(modal).find("#btn-modal-plan-return").html("Voltar");
         if (type == "create") {
@@ -564,7 +708,9 @@ $(function () {
             .done(function () {
                 $(modal)
                     .find(".modal-body")
-                    .append(type == "create" ? loadingEditStage3 : loadingEditStage3)
+                    .append(
+                        type == "create" ? loadingEditStage3 : loadingEditStage3
+                    )
                     .promise()
                     .done(function () {
                         var numOfGetsReturned = 0;
@@ -577,7 +723,11 @@ $(function () {
                                 })
                                 .indexOf(product.id);
                             var plan = 0;
-                            if (type == "edit" && selected_products[index_product].currency_type_enum) {
+                            if (
+                                type == "edit" &&
+                                selected_products[index_product]
+                                    .currency_type_enum
+                            ) {
                                 plan = plan_id;
                             }
 
@@ -590,11 +740,16 @@ $(function () {
                                 },
                                 dataType: "json",
                                 headers: {
-                                    Authorization: $('meta[name="access-token"]').attr("content"),
+                                    Authorization: $(
+                                        'meta[name="access-token"]'
+                                    ).attr("content"),
                                     Accept: "application/json",
                                 },
                                 error: function error(response) {
-                                    alertCustom("error", "Ocorreu um erro, por favor, refaça a operação");
+                                    alertCustom(
+                                        "error",
+                                        "Ocorreu um erro, por favor, refaça a operação"
+                                    );
                                 },
                                 success: function success(response) {
                                     let amount = 1;
@@ -603,12 +758,23 @@ $(function () {
                                         .replace("$ ", "")
                                         .replace(",", "")
                                         .replace(".", ",");
-                                    let currency_type_enum = response.data.currency_type_enum;
+                                    let currency_type_enum =
+                                        response.data.currency_type_enum;
 
-                                    if (selected_products[index_product].currency_type_enum) {
-                                        amount = selected_products[index_product].amount;
-                                        cost = selected_products[index_product].value;
-                                        if (selected_products[index_product].currency_type_enum == "USD") {
+                                    if (
+                                        selected_products[index_product]
+                                            .currency_type_enum
+                                    ) {
+                                        amount =
+                                            selected_products[index_product]
+                                                .amount;
+                                        cost =
+                                            selected_products[index_product]
+                                                .value;
+                                        if (
+                                            selected_products[index_product]
+                                                .currency_type_enum == "USD"
+                                        ) {
                                             currency_type_enum = 2;
                                         } else {
                                             currency_type_enum = 1;
@@ -633,20 +799,26 @@ $(function () {
                                         '"><img class="product-photo" src="' +
                                         response.data.photo +
                                         '" style="display: none;"></div>';
-                                    append += '<h1 class="title">' + response.data.name_short + "</h1>";
+                                    append +=
+                                        '<h1 class="title">' +
+                                        response.data.name_short +
+                                        "</h1>";
                                     append += "</div>";
                                     append += '<div class="div-amount">';
-                                    append += '<div class="d-flex align-items-center justify-content-center ">';
+                                    append +=
+                                        '<div class="d-flex align-items-center justify-content-center ">';
                                     append += '<div class="input-number">';
                                     append += '<button class="btn-sub">';
-                                    append += '<img src="/build/global/img/minus.svg">';
+                                    append +=
+                                        '<img src="/build/global/img/minus.svg">';
                                     append += "</button>";
                                     append +=
                                         '<input type="number" class="form-control" name="amount" value="' +
                                         amount +
                                         '" min="1" max="99" step="1">';
                                     append += '<button class="btn-add">';
-                                    append += '<img src="/build/global/img/plus.svg">';
+                                    append +=
+                                        '<img src="/build/global/img/plus.svg">';
                                     append += "</button>";
                                     append += "</div>";
                                     append += "</div>";
@@ -654,23 +826,33 @@ $(function () {
                                     append +=
                                         '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' +
                                         cost +
-                                        '" type="text" name="value" placeholder="Valor un."></div>';
+                                        '" type="text" id="plan-value" name="value" placeholder="Valor un."></div>';
                                     append += '<div class="div-currency">';
-                                    append += '<select class="sirius-select" type="text" name="currency_type_enum">';
+                                    append +=
+                                        '<select class="sirius-select" type="text" name="currency_type_enum">';
                                     append +=
                                         '<option value="BRL" ' +
-                                        (currency_type_enum == 1 ? "selected" : "") +
+                                        (currency_type_enum == 1
+                                            ? "selected"
+                                            : "") +
                                         ">BRL (R$)</option>";
                                     append +=
                                         '<option value="USD" ' +
-                                        (currency_type_enum == 2 ? "selected" : "") +
+                                        (currency_type_enum == 2
+                                            ? "selected"
+                                            : "") +
                                         ">USD ($)</option>";
                                     append += "</select>";
                                     append += "</div>";
                                     append += "</div>";
 
-                                    if (selected_products.length == ++numOfGetsReturned) {
-                                        var curHeight = $(modal).find(".modal-body").height();
+                                    if (
+                                        selected_products.length ==
+                                        ++numOfGetsReturned
+                                    ) {
+                                        var curHeight = $(modal)
+                                            .find(".modal-body")
+                                            .height();
                                         $(modal)
                                             .find(find_stage)
                                             .find(".box-products")
@@ -693,7 +875,9 @@ $(function () {
                                             )
                                             .promise()
                                             .done(function () {
-                                                $('[data-toggle="tooltip"]').tooltip({
+                                                $(
+                                                    '[data-toggle="tooltip"]'
+                                                ).tooltip({
                                                     container: ".page",
                                                     template:
                                                         '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>',
@@ -724,25 +908,53 @@ $(function () {
                                                         $(this).fadeIn(300);
                                                     });
 
-                                                $('input[name="value"]').mask("#.##0,00", {
-                                                    reverse: true,
-                                                    onKeyPress: function (val, e, field, options) {
-                                                        if (val.replace(/\./g, "").replace(",", ".") > 10000000.0) {
-                                                            field.val("10.000.000,00");
-                                                            alertCustom(
-                                                                "error",
-                                                                "Valor máximo de 10.000.000,00 por produto"
-                                                            );
-                                                        }
-                                                    },
-                                                });
+                                                $('input[name="value"]').mask(
+                                                    "#.##0,00",
+                                                    {
+                                                        reverse: true,
+                                                        onKeyPress: function (
+                                                            val,
+                                                            e,
+                                                            field,
+                                                            options
+                                                        ) {
+                                                            if (
+                                                                val
+                                                                    .replace(
+                                                                        /\./g,
+                                                                        ""
+                                                                    )
+                                                                    .replace(
+                                                                        ",",
+                                                                        "."
+                                                                    ) >
+                                                                10000000.0
+                                                            ) {
+                                                                field.val(
+                                                                    "10.000.000,00"
+                                                                );
+                                                                alertCustom(
+                                                                    "error",
+                                                                    "Valor máximo de 10.000.000,00 por produto"
+                                                                );
+                                                            }
+                                                        },
+                                                    }
+                                                );
 
-                                                if (selected_products.length > 4) {
-                                                    $(modal).find(find_stage).find(".box-products").find(".body").css({
-                                                        height: "278px",
-                                                        position: "relative",
-                                                        overflow: "hidden",
-                                                    });
+                                                if (
+                                                    selected_products.length > 4
+                                                ) {
+                                                    $(modal)
+                                                        .find(find_stage)
+                                                        .find(".box-products")
+                                                        .find(".body")
+                                                        .css({
+                                                            height: "278px",
+                                                            position:
+                                                                "relative",
+                                                            overflow: "hidden",
+                                                        });
 
                                                     $(modal)
                                                         .find(find_stage)
@@ -751,7 +963,9 @@ $(function () {
                                                         .mCustomScrollbar();
                                                 }
 
-                                                if (selected_products.length > 1) {
+                                                if (
+                                                    selected_products.length > 1
+                                                ) {
                                                     $(modal)
                                                         .find(find_stage)
                                                         .find(".box-review")
@@ -764,15 +978,23 @@ $(function () {
                                                 <label for="product_amount_selector" style="margin: 0;">Todos os produtos têm a mesma qtd, custo e moeda</label>
                                             </div>`
                                                         )
-                                                        .css({ "margin-top": "25px" });
+                                                        .css({
+                                                            "margin-top":
+                                                                "25px",
+                                                        });
                                                 } else {
-                                                    $(modal).find(find_stage).find(".box-review").html("");
+                                                    $(modal)
+                                                        .find(find_stage)
+                                                        .find(".box-review")
+                                                        .html("");
                                                 }
 
                                                 if (type == "edit") {
                                                     $(modal)
                                                         .find(".modal-footer")
-                                                        .find("#btn-modal-plan-next")
+                                                        .find(
+                                                            "#btn-modal-plan-next"
+                                                        )
                                                         .html("Finalizar");
                                                 }
 
@@ -784,27 +1006,64 @@ $(function () {
                                                     .promise()
                                                     .done(function () {
                                                         $(modal)
-                                                            .find("#tab-general-data_panel")
-                                                            .addClass("show active")
+                                                            .find(
+                                                                "#tab-general-data_panel"
+                                                            )
+                                                            .addClass(
+                                                                "show active"
+                                                            )
                                                             .promise()
                                                             .done(function () {
                                                                 $(modal)
-                                                                    .find(find_stage)
-                                                                    .addClass("show active")
+                                                                    .find(
+                                                                        find_stage
+                                                                    )
+                                                                    .addClass(
+                                                                        "show active"
+                                                                    )
                                                                     .promise()
-                                                                    .done(function () {
-                                                                        var autoHeight =
-                                                                            $(modal).find(".height-auto").height() + 40;
-                                                                        $(modal)
-                                                                            .find(".modal-body")
-                                                                            .stop(true, true)
-                                                                            .height(curHeight)
-                                                                            .animate({ height: autoHeight }, 300);
-                                                                    });
+                                                                    .done(
+                                                                        function () {
+                                                                            var autoHeight =
+                                                                                $(
+                                                                                    modal
+                                                                                )
+                                                                                    .find(
+                                                                                        ".height-auto"
+                                                                                    )
+                                                                                    .height() +
+                                                                                40;
+                                                                            $(
+                                                                                modal
+                                                                            )
+                                                                                .find(
+                                                                                    ".modal-body"
+                                                                                )
+                                                                                .stop(
+                                                                                    true,
+                                                                                    true
+                                                                                )
+                                                                                .height(
+                                                                                    curHeight
+                                                                                )
+                                                                                .animate(
+                                                                                    {
+                                                                                        height: autoHeight,
+                                                                                    },
+                                                                                    300
+                                                                                );
+                                                                        }
+                                                                    );
                                                             });
                                                     });
                                             });
                                     }
+                                    $("#plan-value, #price").maskMoney({
+                                        thousands: ".",
+                                        decimal: ",",
+                                        allowZero: true,
+                                        prefix: "",
+                                    });
                                 },
                             });
                         });
@@ -826,14 +1085,18 @@ $(function () {
                 $(modal).find(".modal-body").append(loadingCreateStage3);
 
                 $(".box-products .form-control").each(function () {
-                    var product_ID = $(this).parents(".product").attr("data-code");
+                    var product_ID = $(this)
+                        .parents(".product")
+                        .attr("data-code");
                     var name_input = $(this).attr("name");
                     var value_input = $(this).val();
 
                     selected_products.map(function (p) {
                         if (product_ID == p.id) {
                             if (name_input == "amount") {
-                                return Object.assign(p, { amount: value_input });
+                                return Object.assign(p, {
+                                    amount: value_input,
+                                });
                             }
 
                             if (name_input == "value") {
@@ -844,14 +1107,18 @@ $(function () {
                 });
 
                 $(".box-products .sirius-select").each(function () {
-                    var product_ID = $(this).parents(".product").attr("data-code");
+                    var product_ID = $(this)
+                        .parents(".product")
+                        .attr("data-code");
                     var name_input = $(this).attr("name");
                     var value_input = $(this).val();
 
                     selected_products.map(function (p) {
                         if (product_ID == p.id) {
                             if (name_input == "currency_type_enum") {
-                                return Object.assign(p, { currency_type_enum: value_input });
+                                return Object.assign(p, {
+                                    currency_type_enum: value_input,
+                                });
                             }
                         }
                     });
@@ -865,25 +1132,38 @@ $(function () {
                     })
                     .promise()
                     .done(function () {
-                        $('input[name="price"]').mask("#.##0,00", { reverse: true });
+                        $('input[name="price"]').maskMoney({
+                            thousands: ".",
+                            decimal: ",",
+                            allowZero: true,
+                            prefix: "",
+                        });
 
                         $(modal)
                             .find(".costs-plan")
                             .find("p")
                             .html(
-                                new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-                                    calculateCostsPlan()
-                                )
+                                new Intl.NumberFormat("pt-BR", {
+                                    style: "currency",
+                                    currency: "BRL",
+                                }).format(calculateCostsPlan())
                             );
-                        $(modal).find(".box-review").find(".tax").html(gateway_tax.toString().replace(".", ","));
-                        $(modal).find(".box-review").find(".release_money_days").html(gateway_release_money_days);
+                        $(modal)
+                            .find(".box-review")
+                            .find(".tax")
+                            .html(gateway_tax.toString().replace(".", ","));
+                        $(modal)
+                            .find(".box-review")
+                            .find(".release_money_days")
+                            .html(gateway_release_money_days);
 
                         $(modal)
                             .find("#stage3")
                             .addClass("show active")
                             .promise()
                             .done(function () {
-                                var autoHeight = $(modal).find(".height-auto").height() + 40;
+                                var autoHeight =
+                                    $(modal).find(".height-auto").height() + 40;
                                 $(modal)
                                     .find(".modal-body")
                                     .stop(true, true)
@@ -891,7 +1171,9 @@ $(function () {
                                     .animate({ height: autoHeight }, 300)
                                     .promise()
                                     .done(function () {
-                                        $(modal).find(".product-photo").unbind("load");
+                                        $(modal)
+                                            .find(".product-photo")
+                                            .unbind("load");
                                     });
                             });
                     });
@@ -903,11 +1185,22 @@ $(function () {
 
         $(modal).find(".product-photo").unbind("load");
 
-        $(modal).find(".modal-body").css({ height: "auto" }).attr("style", "padding-top: 0 !important");
-        $(modal).find(".informations-data").attr("style", "height: auto !important");
+        $(modal)
+            .find(".modal-body")
+            .css({ height: "auto" })
+            .attr("style", "padding-top: 0 !important");
+        $(modal)
+            .find(".informations-data")
+            .attr("style", "height: auto !important");
 
-        $(modal).find("#tab-customizations").removeClass("clicked show active").addClass("disabled");
-        $(modal).find("#tab-general-data").removeClass("clicked").addClass("show active");
+        $(modal)
+            .find("#tab-customizations")
+            .removeClass("clicked show active")
+            .addClass("disabled");
+        $(modal)
+            .find("#tab-general-data")
+            .removeClass("clicked")
+            .addClass("show active");
 
         $(modal).find(".nav-tabs-horizontal").css("display", "block");
         $(modal).find("#tab-general-data_panel").removeClass("show active");
@@ -916,8 +1209,14 @@ $(function () {
             $(modal).find(".modal-body").mCustomScrollbar("destroy");
             $(modal).find(".modal-body").mCustomScrollbar("update");
 
-            $(modal).find("#stage1").find(".box-products").mCustomScrollbar("destroy");
-            $(modal).find("#stage1").find(".box-products").mCustomScrollbar("update");
+            $(modal)
+                .find("#stage1")
+                .find(".box-products")
+                .mCustomScrollbar("destroy");
+            $(modal)
+                .find("#stage1")
+                .find(".box-products")
+                .mCustomScrollbar("update");
         }
 
         $(modal).find(".products-data").css("height", "148px");
@@ -953,7 +1252,9 @@ $(function () {
                     url: "/api/project/" + projectId + "/plans/" + plan_id,
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Authorization: $('meta[name="access-token"]').attr(
+                            "content"
+                        ),
                         Accept: "application/json",
                     },
                     error: function (response) {
@@ -977,10 +1278,16 @@ $(function () {
                         });
 
                         var price = parseFloat(
-                            response.data.price.replace("R$", "").replace("$ ", "").replace(/\./g, "").replace(",", ".")
+                            response.data.price
+                                .replace("R$", "")
+                                .replace("$ ", "")
+                                .replace(/\./g, "")
+                                .replace(",", ".")
                         ).toFixed(2);
 
-                        var tax = ((price * (gateway_tax + 1)) / 100).toFixed(2);
+                        var tax = ((price * (gateway_tax + 1)) / 100).toFixed(
+                            2
+                        );
                         var costs = calculateCostsPlan();
                         var comission = (price - tax).toFixed(2);
                         var return_value = (comission - costs).toFixed(2);
@@ -998,7 +1305,9 @@ $(function () {
                             heightDivProducts = "63px";
                         }
 
-                        $(modal).find(".products-data").css("height", heightDivProducts);
+                        $(modal)
+                            .find(".products-data")
+                            .css("height", heightDivProducts);
 
                         var append = '<div class="row">';
                         if (products.length <= 10) {
@@ -1012,21 +1321,29 @@ $(function () {
                                           '"'
                                         : "") +
                                     ' class="box-product d-flex justify-content-between align-items-center" style="cursor: inherit;">';
-                                append += '<div class="d-flex align-items-center">';
+                                append +=
+                                    '<div class="d-flex align-items-center">';
                                 append +=
                                     '<div class="background-photo"><img class="product-photo" src="' +
                                     product.photo +
                                     '" style="display: none;"></div>';
                                 append += "<div>";
-                                append += '<h1 class="title">' + product.product_name_short + "</h1>";
-                                append += '<p class="description">Qtd: ' + product.amount + "</p>";
+                                append +=
+                                    '<h1 class="title">' +
+                                    product.product_name_short +
+                                    "</h1>";
+                                append +=
+                                    '<p class="description">Qtd: ' +
+                                    product.amount +
+                                    "</p>";
                                 append += "</div>";
                                 append += "</div>";
                                 append += "</div>";
                                 append += "</div>";
                             });
                         } else {
-                            append += '<div class="col-sm-12 d-flex align-items-center">';
+                            append +=
+                                '<div class="col-sm-12 d-flex align-items-center">';
                             let count = 0;
                             products.forEach(function (product) {
                                 count++;
@@ -1059,25 +1376,46 @@ $(function () {
                             .html(append)
                             .promise()
                             .done(function () {
-                                if (products.length > 4 && products.length <= 10) {
-                                    $(modal).find("#stage1").find(".box-products").mCustomScrollbar();
+                                if (
+                                    products.length > 4 &&
+                                    products.length <= 10
+                                ) {
+                                    $(modal)
+                                        .find("#stage1")
+                                        .find(".box-products")
+                                        .mCustomScrollbar();
                                 }
 
-                                $(modal).find("#tab-customizations").removeClass("disabled");
+                                $(modal)
+                                    .find("#tab-customizations")
+                                    .removeClass("disabled");
 
                                 $(modal)
                                     .find(".modal-title")
-                                    .html("Detalhes de " + response.data.name_short);
+                                    .html(
+                                        "Detalhes de " +
+                                            response.data.name_short
+                                    );
                                 $(modal)
                                     .find(".modal-title")
-                                    .attr("data-title", "Detalhes de " + response.data.name);
+                                    .attr(
+                                        "data-title",
+                                        "Detalhes de " + response.data.name
+                                    );
 
-                                $(modal).find("#btn-edit-informations-plan").attr("data-code", response.data.id);
+                                $(modal)
+                                    .find("#btn-edit-informations-plan")
+                                    .attr("data-code", response.data.id);
 
-                                $(modal).find("#name").val(response.data.name_short);
                                 $(modal)
                                     .find("#name")
-                                    .attr("data-short", response.data.name_short)
+                                    .val(response.data.name_short);
+                                $(modal)
+                                    .find("#name")
+                                    .attr(
+                                        "data-short",
+                                        response.data.name_short
+                                    )
                                     .attr("data", response.data.name);
                                 if (response.data.name_short_flag) {
                                     $(modal)
@@ -1085,79 +1423,117 @@ $(function () {
                                         .attr("data-toggle", "tooltip")
                                         .attr("title", response.data.name);
                                 } else {
-                                    $(modal).find("#name").removeAttr("data-toggle").removeAttr("title");
+                                    $(modal)
+                                        .find("#name")
+                                        .removeAttr("data-toggle")
+                                        .removeAttr("title");
                                     $(modal).find("#name").tooltip("dispose");
                                 }
 
-                                $(modal).find("#price").val(response.data.price);
-                                $(modal).find("#price").attr("data", response.data.price);
+                                $(modal)
+                                    .find("#price")
+                                    .val(response.data.price);
+                                $(modal)
+                                    .find("#price")
+                                    .attr("data", response.data.price);
 
-                                $(modal).find("#description").val(response.data.description_short);
                                 $(modal)
                                     .find("#description")
-                                    .attr("data-short", response.data.description_short)
+                                    .val(response.data.description_short);
+                                $(modal)
+                                    .find("#description")
+                                    .attr(
+                                        "data-short",
+                                        response.data.description_short
+                                    )
                                     .attr("data", response.data.description);
                                 if (response.data.description_short_flag) {
                                     $(modal)
                                         .find("#description")
                                         .attr("data-toggle", "tooltip")
-                                        .attr("title", response.data.description);
+                                        .attr(
+                                            "title",
+                                            response.data.description
+                                        );
                                 } else {
-                                    $(modal).find("#description").removeAttr("data-toggle").removeAttr("title");
-                                    $(modal).find("#description").tooltip("dispose");
+                                    $(modal)
+                                        .find("#description")
+                                        .removeAttr("data-toggle")
+                                        .removeAttr("title");
+                                    $(modal)
+                                        .find("#description")
+                                        .tooltip("dispose");
                                 }
 
                                 $(modal)
                                     .find("#stage1")
                                     .find(".price-plan p")
                                     .html(
-                                        new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-                                            price
-                                        )
+                                        new Intl.NumberFormat("pt-BR", {
+                                            style: "currency",
+                                            currency: "BRL",
+                                        }).format(price)
                                     );
                                 $(modal)
                                     .find("#stage1")
                                     .find(".costs-plan p")
                                     .html(
-                                        new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-                                            costs
-                                        )
+                                        new Intl.NumberFormat("pt-BR", {
+                                            style: "currency",
+                                            currency: "BRL",
+                                        }).format(costs)
                                     );
                                 $(modal)
                                     .find("#stage1")
                                     .find(".tax-plan p")
                                     .html(
-                                        new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-                                            tax
-                                        )
+                                        new Intl.NumberFormat("pt-BR", {
+                                            style: "currency",
+                                            currency: "BRL",
+                                        }).format(tax)
                                     );
                                 $(modal)
                                     .find("#stage1")
                                     .find(".comission-plan p")
                                     .html(
-                                        new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-                                            comission
-                                        )
+                                        new Intl.NumberFormat("pt-BR", {
+                                            style: "currency",
+                                            currency: "BRL",
+                                        }).format(comission)
                                     );
                                 if (return_value < 0) {
-                                    $(modal).find("#stage1").find(".profit-plan").find("p").css("color", "#F10800");
+                                    $(modal)
+                                        .find("#stage1")
+                                        .find(".profit-plan")
+                                        .find("p")
+                                        .css("color", "#F10800");
                                 } else {
-                                    $(modal).find("#stage1").find(".profit-plan").find("p").css("color", "#41DC8F");
+                                    $(modal)
+                                        .find("#stage1")
+                                        .find(".profit-plan")
+                                        .find("p")
+                                        .css("color", "#41DC8F");
                                 }
                                 $(modal)
                                     .find("#stage1")
                                     .find(".profit-plan p")
                                     .html(
-                                        new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-                                            return_value
-                                        )
+                                        new Intl.NumberFormat("pt-BR", {
+                                            style: "currency",
+                                            currency: "BRL",
+                                        }).format(return_value)
                                     );
 
                                 $(modal)
                                     .find("#stage1")
                                     .find(".description-tax p span")
-                                    .html(gateway_tax.toString().replace(".", ","));
-                                $(modal).find("#stage1").find(".release_money_days").html(gateway_release_money_days);
+                                    .html(
+                                        gateway_tax.toString().replace(".", ",")
+                                    );
+                                $(modal)
+                                    .find("#stage1")
+                                    .find(".release_money_days")
+                                    .html(gateway_release_money_days);
 
                                 $(modal)
                                     .find("#stage1")
@@ -1167,7 +1543,9 @@ $(function () {
                                     .html(
                                         " " +
                                             response.data.products.length +
-                                            (response.data.products.length > 1 ? " produtos" : " produto")
+                                            (response.data.products.length > 1
+                                                ? " produtos"
+                                                : " produto")
                                     );
 
                                 $(modal)
@@ -1175,7 +1553,10 @@ $(function () {
                                     .find(".product-photo")
                                     .on("error", function () {
                                         $(this)
-                                            .attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg")
+                                            .attr(
+                                                "src",
+                                                "https://cloudfox-files.s3.amazonaws.com/produto.svg"
+                                            )
                                             .fadeIn(300);
                                     });
 
@@ -1196,14 +1577,20 @@ $(function () {
                                         })
                                         .promise()
                                         .done(function () {
-                                            $('[data-toggle="tooltip"]').tooltip({
+                                            $(
+                                                '[data-toggle="tooltip"]'
+                                            ).tooltip({
                                                 container: ".page",
                                                 template:
                                                     '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>',
                                             });
 
-                                            $("#modal_edit_plan .modal-body").css("overflow", "hidden");
-                                            $(modal).find(".modal-body").mCustomScrollbar();
+                                            $(
+                                                "#modal_edit_plan .modal-body"
+                                            ).css("overflow", "hidden");
+                                            $(modal)
+                                                .find(".modal-body")
+                                                .mCustomScrollbar();
 
                                             $(modal)
                                                 .find("#tab-general-data_panel")
@@ -1216,10 +1603,22 @@ $(function () {
                                                         .promise()
                                                         .done(function () {
                                                             $(modal)
-                                                                .find(".modal-body")
-                                                                .stop(true, true)
-                                                                .height(curHeight)
-                                                                .animate({ height: "485px" }, 300);
+                                                                .find(
+                                                                    ".modal-body"
+                                                                )
+                                                                .stop(
+                                                                    true,
+                                                                    true
+                                                                )
+                                                                .height(
+                                                                    curHeight
+                                                                )
+                                                                .animate(
+                                                                    {
+                                                                        height: "485px",
+                                                                    },
+                                                                    300
+                                                                );
                                                         });
                                                 });
                                         });
@@ -1237,15 +1636,24 @@ $(function () {
             $(modal).find("#modal_add_body").mCustomScrollbar("destroy");
             $(modal).find("#modal_add_body").mCustomScrollbar("update");
 
-            $(modal).find("#stage1-customization").find(".body-products").mCustomScrollbar("destroy");
-            $(modal).find("#stage1-customization").find(".body-products").mCustomScrollbar("update");
+            $(modal)
+                .find("#stage1-customization")
+                .find(".body-products")
+                .mCustomScrollbar("destroy");
+            $(modal)
+                .find("#stage1-customization")
+                .find(".body-products")
+                .mCustomScrollbar("update");
 
             $(modal)
                 .find(".modal-body")
                 .css("height", "auto")
                 .attr("style", "padding-bottom: 0px !important")
                 .attr("style", "padding-top: 0 !important");
-            $(modal).find("#stage1-customization").find(".box-products").css({ height: "auto" });
+            $(modal)
+                .find("#stage1-customization")
+                .find(".box-products")
+                .css({ height: "auto" });
         }
 
         $(modal)
@@ -1287,27 +1695,41 @@ $(function () {
                 append += '<div class="row body-products" style="padding: 0;">';
                 append += '<div class="col-sm-12">';
                 products_plan.forEach(function (product) {
-                    append += '<div class="row box-product body align-items-center" style="cursor: inherit;">';
+                    append +=
+                        '<div class="row box-product body align-items-center" style="cursor: inherit;">';
                     append +=
                         '<div class="col-sm-6" ' +
                         (product.product_name_short_flag
-                            ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"'
+                            ? 'data-toggle="tooltip" data-placement="top" title="' +
+                              product.product_name +
+                              '"'
                             : "") +
                         ">";
                     append += '<div class="product d-flex align-items-center">';
                     append += '<div class="background-photo">';
-                    append += '<img class="product-photo" src="' + product.photo + '" style="display: none;">';
+                    append +=
+                        '<img class="product-photo" src="' +
+                        product.photo +
+                        '" style="display: none;">';
                     append += "</div>";
                     append += "<div>";
-                    append += '<h1 class="title">' + product.product_name_short + "</h1>";
-                    append += '<p class="description m-0">Qtd: ' + product.amount + "</p>";
+                    append +=
+                        '<h1 class="title">' +
+                        product.product_name_short +
+                        "</h1>";
+                    append +=
+                        '<p class="description m-0">Qtd: ' +
+                        product.amount +
+                        "</p>";
                     append += "</div>";
                     append += "</div>";
                     append += "</div>";
                     append += '<div class="col-sm-6">';
                     append +=
                         '<div class="d-flex ' +
-                        (product.custom_configs.length > 0 ? "justify-content-between" : "justify-content-end") +
+                        (product.custom_configs.length > 0
+                            ? "justify-content-between"
+                            : "justify-content-end") +
                         ' align-items-center">';
                     if (product.custom_configs.length > 0) {
                         append += '<div class="d-flex customs">';
@@ -1320,7 +1742,8 @@ $(function () {
                         ) {
                             append += '<div class="d-flex align-items-center">';
                             append += '<div class="custom-type">';
-                            append += '<img src="/build/global/img/icon-custom-product-text.svg">';
+                            append +=
+                                '<img src="/build/global/img/icon-custom-product-text.svg">';
                             append += "</div>";
                             append += "</div>";
                         }
@@ -1334,7 +1757,8 @@ $(function () {
                         ) {
                             append += '<div class="d-flex align-items-center">';
                             append += '<div class="custom-type">';
-                            append += '<img src="/build/global/img/icon-custom-product-image.svg">';
+                            append +=
+                                '<img src="/build/global/img/icon-custom-product-image.svg">';
                             append += "</div>";
                             append += "</div>";
                         }
@@ -1348,7 +1772,8 @@ $(function () {
                         ) {
                             append += '<div class="d-flex align-items-center">';
                             append += '<div class="custom-type">';
-                            append += '<img src="/build/global/img/icon-custom-product-file.svg">';
+                            append +=
+                                '<img src="/build/global/img/icon-custom-product-file.svg">';
                             append += "</div>";
                             append += "</div>";
                         }
@@ -1360,12 +1785,17 @@ $(function () {
                         '<a class="btn-customizations" data-product="' +
                         product.product_id +
                         '" type="button" style="cursor: pointer; ' +
-                        (product.custom_configs.length > 0 ? "margin-right: 14px;" : "") +
+                        (product.custom_configs.length > 0
+                            ? "margin-right: 14px;"
+                            : "") +
                         '">' +
-                        (product.custom_configs.length > 0 ? "Editar" : "Adicionar") +
+                        (product.custom_configs.length > 0
+                            ? "Editar"
+                            : "Adicionar") +
                         "</a>";
                     if (product.custom_configs.length > 0) {
-                        append += '<div class="switch-holder active_custom d-flex align-items-center">';
+                        append +=
+                            '<div class="switch-holder active_custom d-flex align-items-center">';
                         append += '<label class="switch m-0">';
                         append +=
                             '<input type="checkbox" data-product="' +
@@ -1401,19 +1831,34 @@ $(function () {
                             $(modal)
                                 .find("#stage1-customization")
                                 .find(".body-products")
-                                .css({ height: "214px", position: "relative", overflow: "hidden" });
+                                .css({
+                                    height: "214px",
+                                    position: "relative",
+                                    overflow: "hidden",
+                                });
 
-                            $(modal).find("#stage1-customization").find(".body-products").mCustomScrollbar();
+                            $(modal)
+                                .find("#stage1-customization")
+                                .find(".body-products")
+                                .mCustomScrollbar();
                         }
 
                         $(modal)
                             .find(".customizations")
                             .find(".product-photo")
                             .on("error", function () {
-                                $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg").fadeIn(300);
+                                $(this)
+                                    .attr(
+                                        "src",
+                                        "https://cloudfox-files.s3.amazonaws.com/produto.svg"
+                                    )
+                                    .fadeIn(300);
                             });
 
-                        $(modal).find(".customizations").find(".product-photo").fadeIn(300);
+                        $(modal)
+                            .find(".customizations")
+                            .find(".product-photo")
+                            .fadeIn(300);
 
                         $(modal)
                             .find(".ph-item")
@@ -1440,12 +1885,17 @@ $(function () {
                                             .addClass("show active")
                                             .promise()
                                             .done(function () {
-                                                var autoHeight = $(modal).find(".height-auto").height();
+                                                var autoHeight = $(modal)
+                                                    .find(".height-auto")
+                                                    .height();
                                                 $(modal)
                                                     .find(".modal-body")
                                                     .stop(true, true)
                                                     .height(curHeight)
-                                                    .animate({ height: autoHeight }, 300);
+                                                    .animate(
+                                                        { height: autoHeight },
+                                                        300
+                                                    );
                                             });
                                     });
                             });
@@ -1454,7 +1904,12 @@ $(function () {
     }
 
     function getProductCustom(modal, product_ID) {
-        $(modal).find("#stage2-customization").find(".active_custom").prop("checked", true).val(true).trigger("change");
+        $(modal)
+            .find("#stage2-customization")
+            .find(".active_custom")
+            .prop("checked", true)
+            .val(true)
+            .trigger("change");
 
         $(modal).find(".modal-body").css("height", "auto");
 
@@ -1496,13 +1951,22 @@ $(function () {
                     .find("#stage2-customization")
                     .find(".box-breadcrumbs")
                     .find(".title")
-                    .html("Personalização de " + products_plan[index_product_custom].product_name_short);
-                if (products_plan[index_product_custom].product_name_short_flag) {
+                    .html(
+                        "Personalização de " +
+                            products_plan[index_product_custom]
+                                .product_name_short
+                    );
+                if (
+                    products_plan[index_product_custom].product_name_short_flag
+                ) {
                     $(modal)
                         .find("#stage2-customization")
                         .find(".product-custom")
                         .attr("data-toggle", "tooltip")
-                        .attr("title", products_plan[index_product_custom].product_name);
+                        .attr(
+                            "title",
+                            products_plan[index_product_custom].product_name
+                        );
 
                     $('[data-toggle="tooltip"]').tooltip({
                         container: ".page",
@@ -1512,11 +1976,17 @@ $(function () {
                 $(modal)
                     .find("#stage2-customization")
                     .find(".background-photo")
-                    .html('<img src="' + products_plan[index_product_custom].photo + '" class="product-photo">');
+                    .html(
+                        '<img src="' +
+                            products_plan[index_product_custom].photo +
+                            '" class="product-photo">'
+                    );
                 $(modal)
                     .find("#stage2-customization")
                     .find(".name-product")
-                    .html(products_plan[index_product_custom].product_name_short);
+                    .html(
+                        products_plan[index_product_custom].product_name_short
+                    );
                 $(modal)
                     .find("#stage2-customization")
                     .find(".qtd-product")
@@ -1526,52 +1996,69 @@ $(function () {
                     .find(".active_custom")
                     .attr("name", "is_custom[" + product_ID + "]");
                 //$(modal).find('#stage2-customization').find('.active_custom').prop('checked', products_plan[index_product_custom].is_custom ? true : false).val(products_plan[index_product_custom].is_custom).change();
-                $(modal).find("#add-list-custom-product").attr("product", product_ID);
+                $(modal)
+                    .find("#add-list-custom-product")
+                    .attr("product", product_ID);
 
                 if (products_plan[index_product_custom].shopify_id > 0) {
                     allow_change_in_block = true;
                 }
 
                 var append = "";
-                if (products_plan[index_product_custom].custom_configs.length > 0) {
-                    products_plan[index_product_custom].custom_configs.forEach(function (custom) {
-                        append += '<div class="row custom" style="margin-bottom: 20px;">';
-                        append += '<input type="hidden" name="productsPlan[]" value="' + product_ID + '">';
-                        append += '<div class="col-sm-12">';
-                        append += '<div class="d-flex">';
-                        append += '<div class="d-flex">';
-                        append += '<div style="margin-right: 8px;">';
-                        append += '<input type="hidden" name="type[' + product_ID + '][]" value="' + custom.type + '">';
-                        append +=
-                            '<button style="width: 45px; height: 45px;" type="button" class="btn btn-outline-secondary btn-type-custom border-light-gray">';
-                        append += getIconTypeCustomProduct(custom.type);
-                        append += "</button>";
-                        append += "</div>";
-                        append += "</div>";
+                if (
+                    products_plan[index_product_custom].custom_configs.length >
+                    0
+                ) {
+                    products_plan[index_product_custom].custom_configs.forEach(
+                        function (custom) {
+                            append +=
+                                '<div class="row custom" style="margin-bottom: 20px;">';
+                            append +=
+                                '<input type="hidden" name="productsPlan[]" value="' +
+                                product_ID +
+                                '">';
+                            append += '<div class="col-sm-12">';
+                            append += '<div class="d-flex">';
+                            append += '<div class="d-flex">';
+                            append += '<div style="margin-right: 8px;">';
+                            append +=
+                                '<input type="hidden" name="type[' +
+                                product_ID +
+                                '][]" value="' +
+                                custom.type +
+                                '">';
+                            append +=
+                                '<button style="width: 45px; height: 45px;" type="button" class="btn btn-outline-secondary btn-type-custom border-light-gray">';
+                            append += getIconTypeCustomProduct(custom.type);
+                            append += "</button>";
+                            append += "</div>";
+                            append += "</div>";
 
-                        append += '<div style="width: 100%; margin-right: 16px;">';
-                        append +=
-                            '<input readonly type="text" name="label[' +
-                            product_ID +
-                            '][]" class="form-control input-pad edit-input added-custom-title" data-index="' +
-                            product_ID +
-                            '" placeholder="Nome para personalização" value="' +
-                            custom.label +
-                            '">';
-                        append += "</div>";
+                            append +=
+                                '<div style="width: 100%; margin-right: 16px;">';
+                            append +=
+                                '<input readonly type="text" name="label[' +
+                                product_ID +
+                                '][]" class="form-control input-pad edit-input added-custom-title" data-index="' +
+                                product_ID +
+                                '" placeholder="Nome para personalização" value="' +
+                                custom.label +
+                                '">';
+                            append += "</div>";
 
-                        append += "<div>";
-                        append +=
-                            '<button style="width: 45px; height: 45px;" type="button" data-index="' +
-                            product_ID +
-                            '" class="btn btn-outline btn-delete btn-trash-custom d-flex justify-content-around align-items-center align-self-center flex-row">';
-                        append += '<span class="o-bin-1"></span>';
-                        append += "</button>";
-                        append += "</div>";
-                        append += "</div>";
-                        append += "</div>";
-                        append += "</div>";
-                    });
+                            append += "<div>";
+                            append +=
+                                '<button style="width: 45px; height: 45px;" type="button" data-index="' +
+                                product_ID +
+                                '" class="btn btn-outline btn-delete btn-trash-custom d-flex justify-content-around align-items-center align-self-center flex-row">';
+                            append += '<span class="o-bin-1"></span>';
+                            append += "</button>";
+                            append += "</div>";
+                            append += "</div>";
+                            append += "</div>";
+                            append += "</div>";
+                        }
+                    );
                 } else {
                     append +=
                         '<div class="row custom-empty"><div class="col-sm-12">Nenhuma personalização adicionada</div></div>';
@@ -1620,22 +2107,44 @@ $(function () {
                                             .promise()
                                             .done(function () {
                                                 $(modal)
-                                                    .find("#stage2-customization")
+                                                    .find(
+                                                        "#stage2-customization"
+                                                    )
                                                     .addClass("show active")
                                                     .promise()
                                                     .done(function () {
                                                         var autoHeight =
                                                             $(modal)
-                                                                .find(".modal-body")
-                                                                .css("height", "auto")
-                                                                .height() + (products_plan.length > 2 ? 45 : 35);
+                                                                .find(
+                                                                    ".modal-body"
+                                                                )
+                                                                .css(
+                                                                    "height",
+                                                                    "auto"
+                                                                )
+                                                                .height() +
+                                                            (products_plan.length >
+                                                            2
+                                                                ? 45
+                                                                : 35);
                                                         $(modal)
                                                             .find(".modal-body")
                                                             .height(curHeight)
-                                                            .animate({ height: autoHeight }, 300)
+                                                            .animate(
+                                                                {
+                                                                    height: autoHeight,
+                                                                },
+                                                                300
+                                                            )
                                                             .promise()
                                                             .done(function () {
-                                                                $(modal).find(".product-photo").unbind("load");
+                                                                $(modal)
+                                                                    .find(
+                                                                        ".product-photo"
+                                                                    )
+                                                                    .unbind(
+                                                                        "load"
+                                                                    );
                                                             });
                                                     });
                                             });
@@ -1652,7 +2161,9 @@ $(function () {
                 url: "/api/project/" + projectId + "/plans",
                 dataType: "JSON",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                 },
                 data: {
                     project_id: projectId,
@@ -1704,7 +2215,9 @@ $(function () {
                 selected_products.map(function (p) {
                     if (product_ID == p.id) {
                         if (name_input == "currency_type_enum") {
-                            return Object.assign(p, { currency_type_enum: value_input });
+                            return Object.assign(p, {
+                                currency_type_enum: value_input,
+                            });
                         }
                     }
                 });
@@ -1715,7 +2228,9 @@ $(function () {
                 url: "/api/plans/" + plan_id + "/products",
                 dataType: "JSON",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                 },
                 data: {
                     products: selected_products,
@@ -1747,7 +2262,9 @@ $(function () {
             .done(function () {
                 $(modal).find(".modal-body").append(loadingCustomStage2);
 
-                var formDataCP = new FormData(document.getElementById("form-update-custom-config"));
+                var formDataCP = new FormData(
+                    document.getElementById("form-update-custom-config")
+                );
                 formDataCP.append("plan", plan_id);
 
                 $.ajax({
@@ -1755,7 +2272,9 @@ $(function () {
                     url: "/api/plans/config-custom-product",
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Authorization: $('meta[name="access-token"]').attr(
+                            "content"
+                        ),
                         Accept: "application/json",
                     },
                     data: formDataCP,
@@ -1763,22 +2282,34 @@ $(function () {
                     contentType: false,
                     cache: false,
                     error: function (_error4) {
-                        $(modal).find(".modal-footer").find(".btn").prop("disabled", false);
+                        $(modal)
+                            .find(".modal-footer")
+                            .find(".btn")
+                            .prop("disabled", false);
 
                         getProductsPlan();
 
                         getCustom(modal, false);
 
-                        alertCustom("error", "Erro ao atualizar configurações do plano");
+                        alertCustom(
+                            "error",
+                            "Erro ao atualizar configurações do plano"
+                        );
                     },
                     success: function success(data) {
-                        $(modal).find(".modal-footer").find(".btn").prop("disabled", false);
+                        $(modal)
+                            .find(".modal-footer")
+                            .find(".btn")
+                            .prop("disabled", false);
 
                         getProductsPlan();
 
                         getCustom(modal, false);
 
-                        alertCustom("success", "Configurações do plano atualizadas com sucesso");
+                        alertCustom(
+                            "success",
+                            "Configurações do plano atualizadas com sucesso"
+                        );
                     },
                 });
             });
@@ -1808,7 +2339,9 @@ $(function () {
 
         for (var i = 0; i < selected_products.length; i++) {
             if (selected_products[i]["value"]) {
-                var value = selected_products[i]["value"].replace(/\./g, "").replace(",", ".");
+                var value = selected_products[i]["value"]
+                    .replace(/\./g, "")
+                    .replace(",", ".");
                 if (selected_products[i]["currency_type_enum"] == "USD") {
                     value = value * (currency_quotations / 100);
                 }
@@ -1831,9 +2364,16 @@ $(function () {
         }
 
         var searchProduct = e.target.value;
-        var searchProductDescription = $(modal).find("#search-product-description").val();
+        var searchProductDescription = $(modal)
+            .find("#search-product-description")
+            .val();
         timeoutID = setTimeout(function () {
-            searchProducts(searchProduct, searchProductDescription, modal, type);
+            searchProducts(
+                searchProduct,
+                searchProductDescription,
+                modal,
+                type
+            );
         }, 800);
     });
 
@@ -1851,7 +2391,12 @@ $(function () {
         var searchProductDescription = e.target.value;
         var searchProduct = $(modal).find("#search-product").val();
         timeoutID_ = setTimeout(function () {
-            searchProducts(searchProduct, searchProductDescription, modal, type);
+            searchProducts(
+                searchProduct,
+                searchProductDescription,
+                modal,
+                type
+            );
         }, 800);
     });
 
@@ -1866,13 +2411,28 @@ $(function () {
 
             $(".price-plan")
                 .find("p")
-                .html(new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(price));
+                .html(
+                    new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                    }).format(price)
+                );
             $(".tax-plan")
                 .find("p")
-                .html(new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(tax));
+                .html(
+                    new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                    }).format(tax)
+                );
             $(".comission-plan")
                 .find("p")
-                .html(new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(comission));
+                .html(
+                    new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                    }).format(comission)
+                );
             if (return_value < 0) {
                 $(".profit-plan").find("p").css("color", "#F10800");
             } else {
@@ -1880,7 +2440,12 @@ $(function () {
             }
             $(".profit-plan")
                 .find("p")
-                .html(new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(return_value));
+                .html(
+                    new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                    }).format(return_value)
+                );
         } else {
             var costs = calculateCostsPlan();
             var return_value = costs.toFixed(2);
@@ -1891,7 +2456,10 @@ $(function () {
             $(".profit-plan")
                 .find("p")
                 .html(
-                    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format("-" + return_value)
+                    new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                    }).format("-" + return_value)
                 );
         }
     });
@@ -1918,10 +2486,15 @@ $(function () {
                     $(this).addClass("selected");
                     $(this)
                         .find(".check")
-                        .append('<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">');
+                        .append(
+                            '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">'
+                        );
                     selected_products.push({ id: product_id });
 
-                    if (tabID == "tabs-modal-edit-plans" && stageID == "stage2") {
+                    if (
+                        tabID == "tabs-modal-edit-plans" &&
+                        stageID == "stage2"
+                    ) {
                         var title = $(box_product).attr("data-original-title");
                         var image = $(box_product).find("img").attr("src");
                         $(modal)
@@ -1939,12 +2512,18 @@ $(function () {
                                     "</div>"
                             );
 
-                        $('[data-toggle="tooltip"]').tooltip({ container: ".page" });
+                        $('[data-toggle="tooltip"]').tooltip({
+                            container: ".page",
+                        });
 
                         if (selected_products.length > 8) {
-                            widthBoxPhotosProducts = "" + selected_products.length * 68 + "px";
+                            widthBoxPhotosProducts =
+                                "" + selected_products.length * 68 + "px";
 
-                            $(modal).find(".box-photos-products").find(".d-flex").css("width", widthBoxPhotosProducts);
+                            $(modal)
+                                .find(".box-photos-products")
+                                .find(".d-flex")
+                                .css("width", widthBoxPhotosProducts);
 
                             $(modal)
                                 .find(".box-photos-products")
@@ -1955,17 +2534,30 @@ $(function () {
                                     },
                                 });
                         } else {
-                            $(modal).find(".box-photos-products").children(":first").css("margin-left", "");
-                            $(modal).find(".box-photos-products").find(".d-flex").css("width", "586px");
+                            $(modal)
+                                .find(".box-photos-products")
+                                .children(":first")
+                                .css("margin-left", "");
+                            $(modal)
+                                .find(".box-photos-products")
+                                .find(".d-flex")
+                                .css("width", "586px");
 
-                            $(modal).find(".box-photos-products").mCustomScrollbar("destroy");
-                            $(modal).find(".box-photos-products").mCustomScrollbar("update");
+                            $(modal)
+                                .find(".box-photos-products")
+                                .mCustomScrollbar("destroy");
+                            $(modal)
+                                .find(".box-photos-products")
+                                .mCustomScrollbar("update");
                         }
                     }
 
                     removeProductArraySelecteds(modal, product_id);
                 } else {
-                    if (tabID == "tabs-modal-create-plans" && stageID == "stage1") {
+                    if (
+                        tabID == "tabs-modal-create-plans" &&
+                        stageID == "stage1"
+                    ) {
                         $(box_product).removeClass("selected");
                         $(box_product).find(".check img").remove();
                         var index_selected_products = selected_products
@@ -1986,7 +2578,9 @@ $(function () {
                                 plan_id: plan_id,
                             },
                             headers: {
-                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Authorization: $(
+                                    'meta[name="access-token"]'
+                                ).attr("content"),
                                 Accept: "application/json",
                             },
                             error: function (response) {
@@ -1996,12 +2590,16 @@ $(function () {
                                 if (!response.product_in_plan_sale) {
                                     $(box_product).removeClass("selected");
                                     $(box_product).find(".check img").remove();
-                                    var index_selected_products = selected_products
-                                        .map(function (e) {
-                                            return e.id;
-                                        })
-                                        .indexOf(product_id);
-                                    selected_products.splice(index_selected_products, 1);
+                                    var index_selected_products =
+                                        selected_products
+                                            .map(function (e) {
+                                                return e.id;
+                                            })
+                                            .indexOf(product_id);
+                                    selected_products.splice(
+                                        index_selected_products,
+                                        1
+                                    );
 
                                     $(modal)
                                         .find(".box-photos-products")
@@ -2010,12 +2608,18 @@ $(function () {
                                         .remove();
 
                                     if (selected_products.length > 8) {
-                                        widthBoxPhotosProducts = "" + selected_products.length * 68 + "px";
+                                        widthBoxPhotosProducts =
+                                            "" +
+                                            selected_products.length * 68 +
+                                            "px";
 
                                         $(modal)
                                             .find(".box-photos-products")
                                             .find(".d-flex")
-                                            .css("width", widthBoxPhotosProducts);
+                                            .css(
+                                                "width",
+                                                widthBoxPhotosProducts
+                                            );
 
                                         $(modal)
                                             .find(".box-photos-products")
@@ -2026,14 +2630,27 @@ $(function () {
                                                 },
                                             });
                                     } else {
-                                        $(modal).find(".box-photos-products").children(":first").css("margin-left", "");
-                                        $(modal).find(".box-photos-products").find(".d-flex").css("width", "586px");
+                                        $(modal)
+                                            .find(".box-photos-products")
+                                            .children(":first")
+                                            .css("margin-left", "");
+                                        $(modal)
+                                            .find(".box-photos-products")
+                                            .find(".d-flex")
+                                            .css("width", "586px");
 
-                                        $(modal).find(".box-photos-products").mCustomScrollbar("destroy");
-                                        $(modal).find(".box-photos-products").mCustomScrollbar("update");
+                                        $(modal)
+                                            .find(".box-photos-products")
+                                            .mCustomScrollbar("destroy");
+                                        $(modal)
+                                            .find(".box-photos-products")
+                                            .mCustomScrollbar("update");
                                     }
 
-                                    removeProductArraySelecteds(modal, product_id);
+                                    removeProductArraySelecteds(
+                                        modal,
+                                        product_id
+                                    );
                                 } else {
                                     alertCustom(
                                         "error",
@@ -2051,21 +2668,43 @@ $(function () {
     function removeProductArraySelecteds(modal) {
         if (selected_products.length > 0) {
             if (modal == "#modal_add_plan") {
-                $(modal).find(".box-description").find(".selecteds span").html(selected_products.length);
-                $(modal).find(".box-description").find(".selecteds").css("display", "block");
+                $(modal)
+                    .find(".box-description")
+                    .find(".selecteds span")
+                    .html(selected_products.length);
+                $(modal)
+                    .find(".box-description")
+                    .find(".selecteds")
+                    .css("display", "block");
             } else {
                 $(modal)
                     .find("#stage2")
                     .find(".box-breadcrumbs")
                     .find(".title span")
-                    .html(" " + selected_products.length + (selected_products.length > 1 ? " produtos" : " produto"));
+                    .html(
+                        " " +
+                            selected_products.length +
+                            (selected_products.length > 1
+                                ? " produtos"
+                                : " produto")
+                    );
             }
         } else {
             if (modal == "#modal_add_plan") {
-                $(modal).find(".box-description").find(".selecteds span").html("");
-                $(modal).find(".box-description").find(".selecteds").css("display", "none");
+                $(modal)
+                    .find(".box-description")
+                    .find(".selecteds span")
+                    .html("");
+                $(modal)
+                    .find(".box-description")
+                    .find(".selecteds")
+                    .css("display", "none");
             } else {
-                $(modal).find("#stage2").find(".box-breadcrumbs").find(".title span").html(" 0 produtos");
+                $(modal)
+                    .find("#stage2")
+                    .find(".box-breadcrumbs")
+                    .find(".title span")
+                    .html(" 0 produtos");
             }
         }
     }
@@ -2091,7 +2730,9 @@ $(function () {
                     plan_id: plan_id,
                 },
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                     Accept: "application/json",
                 },
                 error: function (response) {
@@ -2134,8 +2775,16 @@ $(function () {
         if (checkbox_value == 0) {
             $(this).val(1);
 
-            var first_qtd = $(".box-products").find(".product").first().find('.form-control[name="amount"]').val();
-            var first_cost = $(".box-products").find(".product").first().find('.form-control[name="value"]').val();
+            var first_qtd = $(".box-products")
+                .find(".product")
+                .first()
+                .find('.form-control[name="amount"]')
+                .val();
+            var first_cost = $(".box-products")
+                .find(".product")
+                .first()
+                .find('.form-control[name="value"]')
+                .val();
             var first_currency = $(".box-products")
                 .find(".product")
                 .first()
@@ -2144,7 +2793,9 @@ $(function () {
 
             $('.box-products .form-control[name="amount"]').val(first_qtd);
             $('.box-products .form-control[name="value"]').val(first_cost);
-            $('.box-products select[name="currency_type_enum"]').val(first_currency);
+            $('.box-products select[name="currency_type_enum"]').val(
+                first_currency
+            );
             $('.box-products select[name="currency_type_enum"]').change();
         } else if (checkbox_value == 1) {
             $(this).val(0);
@@ -2155,15 +2806,21 @@ $(function () {
     $("body").on("keyup", '.form-control[name="value"]', function () {
         var same_cost = $("#check-values").val();
         if (same_cost == 1) {
-            $(".box-products").find('.form-control[name="value"]').val($(this).val());
+            $(".box-products")
+                .find('.form-control[name="value"]')
+                .val($(this).val());
         }
     });
 
     $("body").on("click", ".sirius-select-options div", function () {
         var same_cost = $("#check-values").val();
         if (same_cost == 1) {
-            $('.box-products select[name="currency_type_enum"]').val($(this).data("value"));
-            $('.box-products select[name="currency_type_enum"]').trigger("change");
+            $('.box-products select[name="currency_type_enum"]').val(
+                $(this).data("value")
+            );
+            $('.box-products select[name="currency_type_enum"]').trigger(
+                "change"
+            );
         }
     });
 
@@ -2171,7 +2828,10 @@ $(function () {
     $("body").on("click", "#btn-modal-plan-next", function () {
         var modal = "#" + $(this).parents(".modal").attr("id");
         var type = $(this).attr("data-type");
-        var tag = type == "create" ? "#tabs-modal-create-plans" : "#tabs-modal-edit-plans";
+        var tag =
+            type == "create"
+                ? "#tabs-modal-create-plans"
+                : "#tabs-modal-edit-plans";
         var stage = $(modal).find(tag).find(".tab-pane.active").attr("id");
 
         if (type == "custom") {
@@ -2205,7 +2865,10 @@ $(function () {
     $("body").on("click", "#btn-modal-plan-return", function () {
         var modal = "#" + $(this).parents(".modal").attr("id");
         var type = $(this).attr("data-type");
-        var tag = type == "create" ? "#tabs-modal-create-plans" : "#tabs-modal-edit-plans";
+        var tag =
+            type == "create"
+                ? "#tabs-modal-create-plans"
+                : "#tabs-modal-edit-plans";
         var stage = $(modal).find(tag).find(".tab-pane.active").attr("id");
 
         if (type == "create") {
@@ -2272,8 +2935,14 @@ $(function () {
             .trigger("click")
             .promise()
             .done(function () {
-                $(modal).find(".informations-data").stop(true, true).css("height", "");
-                $(modal).find(".height-auto").stop(true, true).css("margin-top", "");
+                $(modal)
+                    .find(".informations-data")
+                    .stop(true, true)
+                    .css("height", "");
+                $(modal)
+                    .find(".height-auto")
+                    .stop(true, true)
+                    .css("margin-top", "");
             });
 
         $(modal).attr("data-backdrop", "static");
@@ -2299,7 +2968,10 @@ $(function () {
     // Edit informations plan
     $("body").on("click", "#btn-edit-informations-plan", function () {
         var parent = $(this).parent().parent().parent();
-        var curHeight = parent.find(".informations-data").css("height", "auto").height();
+        var curHeight = parent
+            .find(".informations-data")
+            .css("height", "auto")
+            .height();
 
         if (!parent.find(".informations-data").hasClass("edit")) {
             setTimeout(function () {
@@ -2310,7 +2982,9 @@ $(function () {
 
                 $("#modal_edit_plan #stage1 .box-products").off("wheel");
                 $("#modal_edit_plan #stage1 .box-products .scrollbox").remove();
-                $("#modal_edit_plan #stage1 .box-products .scrollbox-bar").remove();
+                $(
+                    "#modal_edit_plan #stage1 .box-products .scrollbox-bar"
+                ).remove();
 
                 $("#modal_edit_plan #stage1 .informations-edit .icon").attr(
                     "style",
@@ -2318,11 +2992,19 @@ $(function () {
                 );
 
                 parent.find(".informations-data").addClass("edit");
-                parent.find(".informations-data").find(".form-control").attr("readonly", false);
+                parent
+                    .find(".informations-data")
+                    .find(".form-control")
+                    .attr("readonly", false);
                 parent.find("#price").val(function (index, value) {
                     return value.replace("R$ ", "");
                 });
-                parent.find("#price").mask("#.##0,00", { reverse: true });
+                parent.find("#price").maskMoney({
+                    thousands: ".",
+                    decimal: ",",
+                    allowZero: true,
+                    prefix: "",
+                });
                 parent
                     .find(".informations-data")
                     .append(
@@ -2335,8 +3017,13 @@ $(function () {
                     )
                     .promise()
                     .done(function () {
-                        var autoHeight = parent.find(".informations-data").height();
-                        parent.find(".informations-data").height(curHeight).animate({ height: autoHeight }, 300);
+                        var autoHeight = parent
+                            .find(".informations-data")
+                            .height();
+                        parent
+                            .find(".informations-data")
+                            .height(curHeight)
+                            .animate({ height: autoHeight }, 300);
                     });
 
                 var name = parent.find("#name").attr("data");
@@ -2378,10 +3065,19 @@ $(function () {
             .remove()
             .promise()
             .done(function () {
-                var autoHeight = parents.find(".informations-data").css("height", "auto").height();
-                parents.find(".informations-data").height(curHeight).animate({ height: autoHeight }, 300);
+                var autoHeight = parents
+                    .find(".informations-data")
+                    .css("height", "auto")
+                    .height();
+                parents
+                    .find(".informations-data")
+                    .height(curHeight)
+                    .animate({ height: autoHeight }, 300);
 
-                $("#modal_edit_plan").find(".height-auto").stop(true, true).animate({ "margin-top": 0 }, 300);
+                $("#modal_edit_plan")
+                    .find(".height-auto")
+                    .stop(true, true)
+                    .animate({ "margin-top": 0 }, 300);
             });
     });
 
@@ -2450,12 +3146,20 @@ $(function () {
 
             var append = "";
             append += '<div class="row custom" style="margin-bottom: 20px;">';
-            append += '<input type="hidden" name="productsPlan[]" value="' + product_ID + '">';
+            append +=
+                '<input type="hidden" name="productsPlan[]" value="' +
+                product_ID +
+                '">';
             append += '<div class="col-sm-12">';
             append += '<div class="d-flex">';
             append += '<div class="d-flex">';
             append += '<div style="margin-right: 8px;">';
-            append += '<input type="hidden" name="type[' + product_ID + '][]" value="' + custom_type + '">';
+            append +=
+                '<input type="hidden" name="type[' +
+                product_ID +
+                '][]" value="' +
+                custom_type +
+                '">';
             append +=
                 '<button style="width: 45px; height: 45px;" type="button" class="btn btn-outline-secondary btn-type-custom border-light-gray">';
             append += input_type;
@@ -2496,7 +3200,10 @@ $(function () {
 
         var parent = $(this).parent().parent().parent().parent();
         parent.find(".btn-type-custom").addClass("btn-edit");
-        parent.find(".btn-trash-custom").removeClass("btn-delete").addClass("btn-edit-row").html(`
+        parent
+            .find(".btn-trash-custom")
+            .removeClass("btn-delete")
+            .addClass("btn-edit-row").html(`
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 2L8.92308 14L2 7.33333" stroke="white" stroke-width="2.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -2545,7 +3252,9 @@ $(function () {
                 url: "/api/project/" + projectId + "/plans/" + plan,
                 dataType: "json",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                     Accept: "application/json",
                 },
                 error: (function (_error5) {
@@ -2587,7 +3296,9 @@ $(function () {
                 url: "/api/project/" + projectId + "/plans/" + plan,
                 dataType: "json",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                     Accept: "application/json",
                 },
                 error: (function (_error5) {
@@ -2620,8 +3331,14 @@ $(function () {
 
         $(modal).find(".nav-tabs-horizontal").css("display", "block");
 
-        $(modal).find("#stage4").find(".body-products").mCustomScrollbar("destroy");
-        $(modal).find("#stage4").find(".body-products").mCustomScrollbar("update");
+        $(modal)
+            .find("#stage4")
+            .find(".body-products")
+            .mCustomScrollbar("destroy");
+        $(modal)
+            .find("#stage4")
+            .find(".body-products")
+            .mCustomScrollbar("update");
 
         $(modal)
             .find(".box-breadcrumbs")
@@ -2652,16 +3369,27 @@ $(function () {
                     append +=
                         "<div " +
                         (product.product_name_short_flag
-                            ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"'
+                            ? 'data-toggle="tooltip" data-placement="top" title="' +
+                              product.product_name +
+                              '"'
                             : "") +
                         ">";
                     append += '<div class="product d-flex align-items-center">';
                     append += '<div class="background-photo">';
-                    append += '<img class="product-photo" src="' + product.photo + '" style="display: none;">';
+                    append +=
+                        '<img class="product-photo" src="' +
+                        product.photo +
+                        '" style="display: none;">';
                     append += "</div>";
                     append += "<div>";
-                    append += '<h1 class="title">' + product.product_name_short + "</h1>";
-                    append += '<p class="description m-0">Qtd: ' + product.amount + "</p>";
+                    append +=
+                        '<h1 class="title">' +
+                        product.product_name_short +
+                        "</h1>";
+                    append +=
+                        '<p class="description m-0">Qtd: ' +
+                        product.amount +
+                        "</p>";
                     append += "</div>";
                     append += "</div>";
                     append += "</div>";
@@ -2677,21 +3405,33 @@ $(function () {
                     .html(append)
                     .promise()
                     .done(function () {
+                        $(modal).find("#stage4").find(".box-products").css({
+                            "max-height": "314px",
+                            position: "relative",
+                            overflow: "hidden",
+                        });
+
                         $(modal)
                             .find("#stage4")
                             .find(".box-products")
-                            .css({ "max-height": "314px", position: "relative", overflow: "hidden" });
-
-                        $(modal).find("#stage4").find(".box-products").mCustomScrollbar();
+                            .mCustomScrollbar();
 
                         $(modal)
                             .find("#stage4")
                             .find(".product-photo")
                             .on("error", function () {
-                                $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg").fadeIn(300);
+                                $(this)
+                                    .attr(
+                                        "src",
+                                        "https://cloudfox-files.s3.amazonaws.com/produto.svg"
+                                    )
+                                    .fadeIn(300);
                             });
 
-                        $(modal).find("#stage4").find(".product-photo").fadeIn(300);
+                        $(modal)
+                            .find("#stage4")
+                            .find(".product-photo")
+                            .fadeIn(300);
 
                         $(modal)
                             .find(".ph-item")
@@ -2718,12 +3458,17 @@ $(function () {
                                             .addClass("show active")
                                             .promise()
                                             .done(function () {
-                                                var autoHeight = $(modal).find(".height-auto").height();
+                                                var autoHeight = $(modal)
+                                                    .find(".height-auto")
+                                                    .height();
                                                 $(modal)
                                                     .find(".modal-body")
                                                     .stop(true, true)
                                                     .height(curHeight)
-                                                    .animate({ height: autoHeight }, 300);
+                                                    .animate(
+                                                        { height: autoHeight },
+                                                        300
+                                                    );
                                             });
                                     });
                             });
@@ -2777,18 +3522,26 @@ $(function () {
                     .html("Detalhes de " + response.plan.name_short);
 
                 $(modal).find("#name").val(response.plan.name_short);
-                $(modal).find("#name").attr("data", response.plan.name).attr("data-short", response.plan.name_short);
+                $(modal)
+                    .find("#name")
+                    .attr("data", response.plan.name)
+                    .attr("data-short", response.plan.name_short);
 
                 $(modal).find("#price").val(response.plan.price);
                 $(modal).find("#price").attr("data", response.plan.price);
 
-                $(modal).find("#description").val(response.plan.description_short);
+                $(modal)
+                    .find("#description")
+                    .val(response.plan.description_short);
                 $(modal)
                     .find("#description")
                     .attr("data", response.plan.description)
                     .attr("data-short", response.plan.description_short);
 
-                var price = response.plan.price.replace("R$", "").replace(/\./g, "").replace(",", ".");
+                var price = response.plan.price
+                    .replace("R$", "")
+                    .replace(/\./g, "")
+                    .replace(",", ".");
 
                 var tax = ((price * (gateway_tax + 1)) / 100).toFixed(2);
                 var costs = calculateCostsPlan();
@@ -2798,37 +3551,78 @@ $(function () {
                 $(modal)
                     .find(".price-plan")
                     .find("p")
-                    .html(new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(price));
+                    .html(
+                        new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                        }).format(price)
+                    );
                 $(modal)
                     .find(".tax-plan")
                     .find("p")
-                    .html(new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(tax));
+                    .html(
+                        new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                        }).format(tax)
+                    );
                 $(modal)
                     .find(".comission-plan")
                     .find("p")
-                    .html(new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(comission));
+                    .html(
+                        new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                        }).format(comission)
+                    );
                 if (return_value < 0) {
-                    $(modal).find(".profit-plan").find("p").css("color", "#F10800");
+                    $(modal)
+                        .find(".profit-plan")
+                        .find("p")
+                        .css("color", "#F10800");
                 } else {
-                    $(modal).find(".profit-plan").find("p").css("color", "#41DC8F");
+                    $(modal)
+                        .find(".profit-plan")
+                        .find("p")
+                        .css("color", "#41DC8F");
                 }
                 $(modal)
                     .find(".profit-plan")
                     .find("p")
-                    .html(new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(return_value));
+                    .html(
+                        new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                        }).format(return_value)
+                    );
 
                 $(modal).find(".informations-data").removeClass("edit");
-                $(modal).find(".informations-edit").find(".form-control").attr("readonly", true);
+                $(modal)
+                    .find(".informations-edit")
+                    .find(".form-control")
+                    .attr("readonly", true);
                 $(modal)
                     .find(".buttons-update")
                     .remove()
                     .promise()
                     .done(function () {
-                        var autoHeight = parents.find(".informations-data").css("height", "auto").height();
-                        parents.find(".informations-data").height(curHeight).animate({ height: autoHeight }, 300);
+                        var autoHeight = parents
+                            .find(".informations-data")
+                            .css("height", "auto")
+                            .height();
+                        parents
+                            .find(".informations-data")
+                            .height(curHeight)
+                            .animate({ height: autoHeight }, 300);
 
-                        if (response.plan.products.length > 4 && response.plan.products.length <= 10) {
-                            $(modal).find("#stage1").find(".body-products").mCustomScrollbar();
+                        if (
+                            response.plan.products.length > 4 &&
+                            response.plan.products.length <= 10
+                        ) {
+                            $(modal)
+                                .find("#stage1")
+                                .find(".body-products")
+                                .mCustomScrollbar();
                         }
                     });
 
@@ -2855,7 +3649,10 @@ $(function () {
 
     // Update Table Plan
     function index(page = 0) {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        var link =
+            arguments.length > 0 && arguments[0] !== undefined
+                ? arguments[0]
+                : null;
         pageCurrent = link;
 
         loadOnTable("#data-table-plan", "#table-plans");
@@ -2863,7 +3660,12 @@ $(function () {
             link = "/api/project/" + projectId + "/plans";
         } else {
             if (page > 0) {
-                link = "/api/project/" + projectId + "/plans?page=" + page + "&plan=";
+                link =
+                    "/api/project/" +
+                    projectId +
+                    "/plans?page=" +
+                    page +
+                    "&plan=";
             } else {
                 link = "/api/project/" + projectId + "/plans" + link;
             }
@@ -2927,7 +3729,9 @@ $(function () {
                     $("#table-plans").addClass("table-striped");
                     $("#pagination-plans").html("");
                 } else {
-                    $("#tab_plans-panel").find(".no-gutters").css("display", "flex");
+                    $("#tab_plans-panel")
+                        .find(".no-gutters")
+                        .css("display", "flex");
                     $("#table-plans").find("thead").css("display", "contents");
                     $("#data-table-plan").html("");
 
@@ -2939,7 +3743,11 @@ $(function () {
                             data += "<tr>";
                             data +=
                                 '<td id="" class="" style="vertical-align: middle; line-height: 1;"><span ' +
-                                (value.name_short_flag ? 'data-toggle="tooltip" title="' + value.name + '"' : "") +
+                                (value.name_short_flag
+                                    ? 'data-toggle="tooltip" title="' +
+                                      value.name +
+                                      '"'
+                                    : "") +
                                 ">" +
                                 value.name_short +
                                 '</span><div style="color: #8B8B8B; line-height: 1;"><small>com ' +
@@ -2950,12 +3758,17 @@ $(function () {
                             data +=
                                 "<td id='' class='' style='vertical-align: middle;'><span " +
                                 (value.description_short_flag
-                                    ? "data-toggle='tooltip' title='" + value.description + "'"
+                                    ? "data-toggle='tooltip' title='" +
+                                      value.description +
+                                      "'"
                                     : "") +
                                 ">" +
                                 value.description_short +
                                 "</span></td>";
-                            data += '<td id="" class="" style="vertical-align: middle;">' + value.price + "</td>";
+                            data +=
+                                '<td id="" class="" style="vertical-align: middle;">' +
+                                value.price +
+                                "</td>";
                             data +=
                                 '<td id="link" data-status="' +
                                 value.status +
@@ -2966,7 +3779,9 @@ $(function () {
                                 '">';
                             data +=
                                 "<span " +
-                                (value.status == 0 ? 'data-toggle="tooltip" title="Domínio não confirugado"' : "") +
+                                (value.status == 0
+                                    ? 'data-toggle="tooltip" title="Domínio não confirugado"'
+                                    : "") +
                                 ">";
                             data +=
                                 '<span class="display-sm-none display-m-none">Copiar </span><img src="/build/global/img/icon-copy-c.svg">';
@@ -2978,8 +3793,10 @@ $(function () {
                                 '">' +
                                 value.status_translated +
                                 "</span></td>";
-                            data += "<td class='mg-responsive text-center' style='line-height: 1;'>";
-                            data += "<div class='d-flex justify-content-end align-items-center'>";
+                            data +=
+                                "<td class='mg-responsive text-center' style='line-height: 1;'>";
+                            data +=
+                                "<div class='d-flex justify-content-end align-items-center'>";
                             data +=
                                 "<a title='Visualizar' class='mg-responsive pointer details-plan' plan='" +
                                 value.id +
@@ -2995,7 +3812,9 @@ $(function () {
 
                             $("#data-table-plan").append(data);
                             $("#table-plans").addClass("table-striped");
-                            $("#currency_type_project").val(value.currency_project);
+                            $("#currency_type_project").val(
+                                value.currency_project
+                            );
                         });
 
                         pagination(response, "plans", index);
@@ -3030,13 +3849,17 @@ $(function () {
             .removeClass("active show")
             .promise()
             .done(function () {
-                $("#modal_config_cost_plan").find("#tab_update_cost_block-panel").css("display", "none");
+                $("#modal_config_cost_plan")
+                    .find("#tab_update_cost_block-panel")
+                    .css("display", "none");
                 $("#modal_config_cost_plan")
                     .find(".tab-pane")
                     .addClass("active show")
                     .promise()
                     .done(function () {
-                        $("#modal_config_cost_plan").find(".modal-body").css("height", "auto");
+                        $("#modal_config_cost_plan")
+                            .find(".modal-body")
+                            .css("height", "auto");
                     });
             });
     });
@@ -3056,7 +3879,9 @@ $(function () {
 
         var modal = "#modal_config_cost_plan";
         var search_plan = e.target.value;
-        var description = $(modal).find("#search-product-description_config").val();
+        var description = $(modal)
+            .find("#search-product-description_config")
+            .val();
 
         timeoutID_product = setTimeout(function () {
             searchPlans(search_plan, description, modal);
@@ -3081,7 +3906,9 @@ $(function () {
         $(modal).find(".product-photo").unbind("load");
         $(modal).find(".modal-body").css("height", "auto");
 
-        $(modal).find(".box-plans").css({ height: "auto", "padding-right": "0px" });
+        $(modal)
+            .find(".box-plans")
+            .css({ height: "auto", "padding-right": "0px" });
 
         $(modal).find(".box-plans").mCustomScrollbar("destroy");
         $(modal).find(".box-plans").mCustomScrollbar("update");
@@ -3102,7 +3929,9 @@ $(function () {
                     },
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Authorization: $('meta[name="access-token"]').attr(
+                            "content"
+                        ),
                         Accept: "application/json",
                     },
                     error: function error(response) {
@@ -3119,41 +3948,60 @@ $(function () {
                                         return e.id;
                                     })
                                     .indexOf(plan.id);
-                                let select_all = $("#select-all").attr("data-selected");
+                                let select_all =
+                                    $("#select-all").attr("data-selected");
 
                                 append += '<div class="col-sm-6">';
                                 append +=
                                     "<div " +
                                     (plan.name_short_flag
-                                        ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"'
+                                        ? 'data-toggle="tooltip" data-placement="top" title="' +
+                                          plan.name +
+                                          '"'
                                         : "") +
                                     ' data-code="' +
                                     plan.id +
                                     '" class="box-plan d-flex justify-content-between align-items-center ' +
-                                    (plan.status_enum == 1 || plan.status_enum == 3 ? "review" : "") +
+                                    (plan.status_enum == 1 ||
+                                    plan.status_enum == 3
+                                        ? "review"
+                                        : "") +
                                     " " +
                                     (select_all == "true" ? "selected" : "") +
                                     '">';
-                                append += '<div class="d-flex align-items-center">';
+                                append +=
+                                    '<div class="d-flex align-items-center">';
                                 append += '<div class="background-photo">';
-                                append += '<img class="product-photo" src="' + plan.photo + '" style="display: none;">';
+                                append +=
+                                    '<img class="product-photo" src="' +
+                                    plan.photo +
+                                    '" style="display: none;">';
                                 append += "</div>";
                                 append += "<div>";
                                 append +=
                                     '<h1 class="title" ' +
-                                    (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C5C5C5"' : "") +
+                                    (plan.status_enum == 1 ||
+                                    plan.status_enum == 3
+                                        ? 'style="color: #C5C5C5"'
+                                        : "") +
                                     ">" +
                                     plan.name_short +
                                     "</h1>";
                                 append +=
                                     '<p class="description" ' +
-                                    (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C7C7C7"' : "") +
+                                    (plan.status_enum == 1 ||
+                                    plan.status_enum == 3
+                                        ? 'style="color: #C7C7C7"'
+                                        : "") +
                                     ">" +
                                     plan.description +
                                     "</p>";
                                 append += "</div>";
                                 append += "</div>";
-                                if (plan.status_enum != 1 && plan.status_enum != 3) {
+                                if (
+                                    plan.status_enum != 1 &&
+                                    plan.status_enum != 3
+                                ) {
                                     append += '<div class="check">';
                                     if (index_plan != -1) {
                                         append +=
@@ -3167,7 +4015,10 @@ $(function () {
                         } else {
                             $(".tooltip").remove();
 
-                            $(modal).find(".modal-body").find(".box-plans").css("height", "274px");
+                            $(modal)
+                                .find(".modal-body")
+                                .find(".box-plans")
+                                .css("height", "274px");
 
                             append += '<div class="col-sm-12">';
                             append +=
@@ -3192,14 +4043,19 @@ $(function () {
                                 });
 
                                 if (response.data.length > 4) {
-                                    $(modal).find(".box-plans").mCustomScrollbar();
+                                    $(modal)
+                                        .find(".box-plans")
+                                        .mCustomScrollbar();
                                 }
 
                                 $(modal)
                                     .find(".product-photo")
                                     .on("error", function () {
                                         $(this)
-                                            .attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg")
+                                            .attr(
+                                                "src",
+                                                "https://cloudfox-files.s3.amazonaws.com/produto.svg"
+                                            )
                                             .fadeIn(300);
                                     });
 
@@ -3223,17 +4079,27 @@ $(function () {
                                             .done(function () {
                                                 if (response.data.length > 4) {
                                                     $(modal)
-                                                        .find("#tab_update_cost_block-panel")
+                                                        .find(
+                                                            "#tab_update_cost_block-panel"
+                                                        )
                                                         .find(".box-plans")
-                                                        .css({ height: "232px" });
+                                                        .css({
+                                                            height: "232px",
+                                                        });
                                                 }
 
-                                                var autoHeight = $(modal).find(".height-auto").height() + 20;
+                                                var autoHeight =
+                                                    $(modal)
+                                                        .find(".height-auto")
+                                                        .height() + 20;
                                                 $(modal)
                                                     .find(".modal-body")
                                                     .stop(true, true)
                                                     .height(curHeight)
-                                                    .animate({ height: autoHeight }, 300);
+                                                    .animate(
+                                                        { height: autoHeight },
+                                                        300
+                                                    );
                                             });
                                     });
                             });
@@ -3247,20 +4113,31 @@ $(function () {
         if (!$(this).hasClass("selected")) {
             $(this).attr("data-selected", true);
             $(this).addClass("selected");
-            $(this).find(".check").html('<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">');
+            $(this)
+                .find(".check")
+                .html(
+                    '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">'
+                );
 
             $("#modal_config_cost_plan").find(".box-plan").addClass("selected");
             $("#modal_config_cost_plan")
                 .find(".box-plan")
                 .find(".check")
-                .html('<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">');
+                .html(
+                    '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">'
+                );
         } else {
             $(this).attr("data-selected", false);
             $(this).removeClass("selected");
             $(this).find(".check").html("");
 
-            $("#modal_config_cost_plan").find(".box-plan").removeClass("selected");
-            $("#modal_config_cost_plan").find(".box-plan").find(".check").html("");
+            $("#modal_config_cost_plan")
+                .find(".box-plan")
+                .removeClass("selected");
+            $("#modal_config_cost_plan")
+                .find(".box-plan")
+                .find(".check")
+                .html("");
         }
     });
 
@@ -3273,7 +4150,11 @@ $(function () {
         } else {
             if (!$(this).hasClass("selected")) {
                 $(this).addClass("selected");
-                $(this).find(".check").html('<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">');
+                $(this)
+                    .find(".check")
+                    .html(
+                        '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">'
+                    );
 
                 selected_plans.push({ id: plan_id });
             } else {
@@ -3297,7 +4178,10 @@ $(function () {
     // Get Products Config Cost
     function getPlansConfig(modal) {
         $(modal).find(".product-photo").unbind("load");
-        $(modal).find(".modal-body").css("height", "auto").attr("style", "padding-bottom: 0px !important");
+        $(modal)
+            .find(".modal-body")
+            .css("height", "auto")
+            .attr("style", "padding-bottom: 0px !important");
 
         $(modal).find("#search-product_config").val("");
         $(modal).find("#search-product-description_config").val("");
@@ -3328,14 +4212,17 @@ $(function () {
                                     },
                                     dataType: "json",
                                     headers: {
-                                        Authorization: $('meta[name="access-token"]').attr("content"),
+                                        Authorization: $(
+                                            'meta[name="access-token"]'
+                                        ).attr("content"),
                                         Accept: "application/json",
                                     },
                                     error: function error(response) {
                                         errorAjaxResponse(response);
                                     },
                                     success: function success(response) {
-                                        let project_type = $("#project_type").val();
+                                        let project_type =
+                                            $("#project_type").val();
                                         if (project_type == "my_products") {
                                             $(modal)
                                                 .find(".search-type")
@@ -3369,13 +4256,16 @@ $(function () {
 
                                         var append = '<div class="row">';
                                         if (response.data.length > 0) {
-                                            response.data.forEach(function (plan) {
+                                            response.data.forEach(function (
+                                                plan
+                                            ) {
                                                 var index_plan = selected_plans
                                                     .map(function (e) {
                                                         return e.id;
                                                     })
                                                     .indexOf(plan.id);
-                                                append += '<div class="col-sm-6">';
+                                                append +=
+                                                    '<div class="col-sm-6">';
                                                 append +=
                                                     "<div " +
                                                     (plan.name_short_flag
@@ -3386,10 +4276,15 @@ $(function () {
                                                     ' data-code="' +
                                                     plan.id +
                                                     '" class="box-plan d-flex justify-content-between align-items-center ' +
-                                                    (plan.status_enum == 1 || plan.status_enum == 3 ? "review" : "") +
+                                                    (plan.status_enum == 1 ||
+                                                    plan.status_enum == 3
+                                                        ? "review"
+                                                        : "") +
                                                     '">';
-                                                append += '<div class="d-flex align-items-center">';
-                                                append += '<div class="background-photo">';
+                                                append +=
+                                                    '<div class="d-flex align-items-center">';
+                                                append +=
+                                                    '<div class="background-photo">';
                                                 append +=
                                                     '<img class="product-photo" src="' +
                                                     plan.photo +
@@ -3398,7 +4293,8 @@ $(function () {
                                                 append += "<div>";
                                                 append +=
                                                     '<h1 class="title" ' +
-                                                    (plan.status_enum == 1 || plan.status_enum == 3
+                                                    (plan.status_enum == 1 ||
+                                                    plan.status_enum == 3
                                                         ? 'style="color: #C5C5C5"'
                                                         : "") +
                                                     ">" +
@@ -3406,7 +4302,8 @@ $(function () {
                                                     "</h1>";
                                                 append +=
                                                     '<p class="description" ' +
-                                                    (plan.status_enum == 1 || plan.status_enum == 3
+                                                    (plan.status_enum == 1 ||
+                                                    plan.status_enum == 3
                                                         ? 'style="color: #C7C7C7"'
                                                         : "") +
                                                     ">" +
@@ -3414,8 +4311,12 @@ $(function () {
                                                     "</p>";
                                                 append += "</div>";
                                                 append += "</div>";
-                                                if (plan.status_enum != 1 && plan.status_enum != 3) {
-                                                    append += '<div class="check">';
+                                                if (
+                                                    plan.status_enum != 1 &&
+                                                    plan.status_enum != 3
+                                                ) {
+                                                    append +=
+                                                        '<div class="check">';
                                                     if (index_plan != -1) {
                                                         append +=
                                                             '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">';
@@ -3443,20 +4344,28 @@ $(function () {
                                         }
                                         append + "</div>";
 
-                                        var curHeight = $(modal).find(".modal-body").height();
+                                        var curHeight = $(modal)
+                                            .find(".modal-body")
+                                            .height();
                                         $(modal)
-                                            .find("#tab_update_cost_block-panel")
+                                            .find(
+                                                "#tab_update_cost_block-panel"
+                                            )
                                             .find(".box-plans")
                                             .html(append)
                                             .promise()
                                             .done(function () {
-                                                $('[data-toggle="tooltip"]').tooltip({
+                                                $(
+                                                    '[data-toggle="tooltip"]'
+                                                ).tooltip({
                                                     container: ".page",
                                                 });
 
                                                 if (response.data.length > 4) {
                                                     $(modal)
-                                                        .find("#tab_update_cost_block-panel")
+                                                        .find(
+                                                            "#tab_update_cost_block-panel"
+                                                        )
                                                         .find(".box-plans")
                                                         .mCustomScrollbar();
                                                 }
@@ -3483,30 +4392,69 @@ $(function () {
                                                     .on("load", function () {
                                                         $(modal)
                                                             .find(".ph-item")
-                                                            .fadeOut(100, function () {
-                                                                this.remove();
-                                                            })
+                                                            .fadeOut(
+                                                                100,
+                                                                function () {
+                                                                    this.remove();
+                                                                }
+                                                            )
                                                             .promise()
                                                             .done(function () {
                                                                 $(modal)
-                                                                    .find("#tab_update_cost_block-panel")
-                                                                    .css("display", "block")
+                                                                    .find(
+                                                                        "#tab_update_cost_block-panel"
+                                                                    )
+                                                                    .css(
+                                                                        "display",
+                                                                        "block"
+                                                                    )
                                                                     .promise()
-                                                                    .done(function () {
-                                                                        var autoHeight =
-                                                                            $(modal).find(".height-auto").height() + 20;
-                                                                        $(modal)
-                                                                            .find(".modal-body")
-                                                                            .stop(true, true)
-                                                                            .height(curHeight)
-                                                                            .animate({ height: autoHeight }, 300)
-                                                                            .promise()
-                                                                            .done(function () {
-                                                                                $(modal)
-                                                                                    .find(".product-photo")
-                                                                                    .unbind("load");
-                                                                            });
-                                                                    });
+                                                                    .done(
+                                                                        function () {
+                                                                            var autoHeight =
+                                                                                $(
+                                                                                    modal
+                                                                                )
+                                                                                    .find(
+                                                                                        ".height-auto"
+                                                                                    )
+                                                                                    .height() +
+                                                                                20;
+                                                                            $(
+                                                                                modal
+                                                                            )
+                                                                                .find(
+                                                                                    ".modal-body"
+                                                                                )
+                                                                                .stop(
+                                                                                    true,
+                                                                                    true
+                                                                                )
+                                                                                .height(
+                                                                                    curHeight
+                                                                                )
+                                                                                .animate(
+                                                                                    {
+                                                                                        height: autoHeight,
+                                                                                    },
+                                                                                    300
+                                                                                )
+                                                                                .promise()
+                                                                                .done(
+                                                                                    function () {
+                                                                                        $(
+                                                                                            modal
+                                                                                        )
+                                                                                            .find(
+                                                                                                ".product-photo"
+                                                                                            )
+                                                                                            .unbind(
+                                                                                                "load"
+                                                                                            );
+                                                                                    }
+                                                                                );
+                                                                        }
+                                                                    );
                                                             });
                                                     });
                                             });
@@ -3547,7 +4495,9 @@ $(function () {
         $(modal).find("#tab_update_cost_block").removeClass("show active");
 
         $(modal).find("#tab_configuration_cost-panel").addClass("show active");
-        $(modal).find("#tab_update_cost_block-panel").removeClass("show active");
+        $(modal)
+            .find("#tab_update_cost_block-panel")
+            .removeClass("show active");
 
         $.ajax({
             method: "GET",
@@ -3562,8 +4512,12 @@ $(function () {
             },
             success: function success(response) {
                 if (response.data.shopify_id == null) {
-                    $(".div-cost_currency").removeClass("col-sm-6").addClass("col-sm-12");
-                    $(".div-cost_currency").find(".sirius-select-container").css("width", "100%");
+                    $(".div-cost_currency")
+                        .removeClass("col-sm-6")
+                        .addClass("col-sm-12");
+                    $(".div-cost_currency")
+                        .find(".sirius-select-container")
+                        .css("width", "100%");
                     $(".div-cost_shopify").remove();
                 }
 
@@ -3591,14 +4545,25 @@ $(function () {
                     response.data.cost_currency_type == "BRL"
                         ? "R$ - Real Brasileiro (BRL)"
                         : "$ - Dólar Americano (USD)";
-                $("#tab_configuration_cost-panel").find(".sirius-select-text").text(textCurrency);
+                $("#tab_configuration_cost-panel")
+                    .find(".sirius-select-text")
+                    .text(textCurrency);
                 $("#cost_currency_type").val(response.data.cost_currency_type);
 
-                $("#update_cost_shopify").prop("selectedIndex", response.data.update_cost_shopify);
+                $("#update_cost_shopify").prop(
+                    "selectedIndex",
+                    response.data.update_cost_shopify
+                );
 
-                let prefixCurrency = response.data.cost_currency_type == "USD" ? "US$" : "R$";
+                let prefixCurrency =
+                    response.data.cost_currency_type == "USD" ? "US$" : "R$";
                 $("#cost_plan").attr("placeholder", prefixCurrency);
-                $("#cost_plan").maskMoney({ thousands: ".", decimal: ",", allowZero: true, prefix: prefixCurrency });
+                $("#cost_plan").maskMoney({
+                    thousands: ".",
+                    decimal: ",",
+                    allowZero: true,
+                    prefix: prefixCurrency,
+                });
 
                 $(modal)
                     .find("#cost_currency_type")
@@ -3702,50 +4667,59 @@ $(function () {
         changeProductAmount($(this));
     });
 
-    $("#tab-customizations_panel").on("change", ".active_custom_product", function (event) {
-        var productId = $(this).attr("data-product");
-        var button = this;
+    $("#tab-customizations_panel").on(
+        "change",
+        ".active_custom_product",
+        function (event) {
+            var productId = $(this).attr("data-product");
+            var button = this;
 
-        if (button.checked) {
-            $(button).attr("checked", true).val(1);
-        } else {
-            $(button).removeAttr("checked").val(0);
+            if (button.checked) {
+                $(button).attr("checked", true).val(1);
+            } else {
+                $(button).removeAttr("checked").val(0);
+            }
+
+            var productCustom = $(button).val();
+
+            $.ajax({
+                method: "PUT",
+                url: "/api/products/" + productId + "/update-custom",
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                data: {
+                    plan: plan_id,
+                    productCustom: productCustom,
+                },
+                error: (function (_error4) {
+                    function error(_x4) {
+                        return _error4.apply(this, arguments);
+                    }
+
+                    error.toString = function () {
+                        return _error4.toString();
+                    };
+
+                    return error;
+                })(function (response) {
+                    errorAjaxResponse(response);
+                }),
+                success: function success(data) {
+                    getPlanData("modal_edit_plan", true);
+
+                    alertCustom(
+                        "success",
+                        "Customização do produto atualizada"
+                    );
+                },
+            });
         }
-
-        var productCustom = $(button).val();
-
-        $.ajax({
-            method: "PUT",
-            url: "/api/products/" + productId + "/update-custom",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            data: {
-                plan: plan_id,
-                productCustom: productCustom,
-            },
-            error: (function (_error4) {
-                function error(_x4) {
-                    return _error4.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error4.toString();
-                };
-
-                return error;
-            })(function (response) {
-                errorAjaxResponse(response);
-            }),
-            success: function success(data) {
-                getPlanData("modal_edit_plan", true);
-
-                alertCustom("success", "Customização do produto atualizada");
-            },
-        });
-    });
+    );
 
     $(document).on("click", ".bt-update-cost-configs", function (event) {
         $.ajax({
@@ -3776,9 +4750,17 @@ $(function () {
                 errorAjaxResponse(response);
             }),
             success: function success(data) {
-                let prefixCurrency = $("#cost_currency_type").val() == "USD" ? "US$" : "R$";
-                $("#cost_plan").maskMoney({ thousands: ".", decimal: ",", allowZero: true, prefix: prefixCurrency });
-                $("#currency_type_project").val($("#cost_currency_type").val() == "USD" ? 2 : 1);
+                let prefixCurrency =
+                    $("#cost_currency_type").val() == "USD" ? "US$" : "R$";
+                $("#cost_plan").maskMoney({
+                    thousands: ".",
+                    decimal: ",",
+                    allowZero: true,
+                    prefix: prefixCurrency,
+                });
+                $("#currency_type_project").val(
+                    $("#cost_currency_type").val() == "USD" ? 2 : 1
+                );
                 alertCustom("success", "Configuração atualizada com sucesso");
                 $("#modal_config_cost_plan").modal("hide");
             },
@@ -3790,7 +4772,12 @@ $(function () {
 
         let prefixCurrency = $(this).val() == "USD" ? "US$" : "R$";
         $("#cost_plan")
-            .maskMoney({ thousands: ".", decimal: ",", allowZero: true, prefix: prefixCurrency })
+            .maskMoney({
+                thousands: ".",
+                decimal: ",",
+                allowZero: true,
+                prefix: prefixCurrency,
+            })
             .attr("placeholder", prefixCurrency);
     });
 
@@ -3812,7 +4799,9 @@ $(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var formData = new FormData(document.getElementById("form-update-plan-tab-1"));
+        var formData = new FormData(
+            document.getElementById("form-update-plan-tab-1")
+        );
         formData.append("project_id", projectId);
         $.ajax({
             method: "POST",
@@ -3856,7 +4845,9 @@ $(function () {
      */
     $(document).on("click", ".btn-update-config-custom", function () {
         $("#tab_plans-panel").loading({ message: "...", start: true });
-        var formDataCP = new FormData(document.getElementById("form-update-plan-tab-2"));
+        var formDataCP = new FormData(
+            document.getElementById("form-update-plan-tab-2")
+        );
         formDataCP.append("plan", $("#plan_id").val());
 
         $.ajax({
@@ -3887,7 +4878,10 @@ $(function () {
             }),
             success: function success(data) {
                 $("#tab_plans-panel").loading("stop");
-                alertCustom("success", "Configurações do Plano atualizado com sucesso");
+                alertCustom(
+                    "success",
+                    "Configurações do Plano atualizado com sucesso"
+                );
             },
         });
     });
