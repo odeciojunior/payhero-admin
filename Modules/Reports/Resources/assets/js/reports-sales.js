@@ -12,7 +12,16 @@ $(function () {
     }
 
     getCompaniesAndProjects().done( function (data2){
-        getProjects(data2.companies);
+        if(!isEmpty(data2.company_default_projects)){
+            showFiltersInReports(true);
+            getProjects(data2.companies);
+        }
+        else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            showFiltersInReports(false);
+        }
     });
 });
 
@@ -38,7 +47,16 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            getProjects(data2.companies);
+            if(!isEmpty(data2.company_default_projects)){
+                showFiltersInReports(true);
+                getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+                showFiltersInReports(false);
+            }
         });
 	});
 });
@@ -46,7 +64,7 @@ $('.company-navbar').change(function () {
 window.fillProjectsSelect = function(){
     return $.ajax({
         method: "GET",
-        url: "/api/sales/projects-with-sales",
+        url: "/api/projects?select=true",
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -99,9 +117,11 @@ function getProjects(companies) {
         $(".div-filters").show();
         $.each(companies, function (c, company) {
             $.each(company.projects, function (i, project) {
-                if( dataSales.includes(project.id) ){
-                    $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-                }
+                $.each(dataSales.data, function (idx, project2) {
+                    if( project2.id == project.id ){
+                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
+                    }
+                });
             });
         });
 

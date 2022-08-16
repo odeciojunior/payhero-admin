@@ -25,7 +25,16 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            window.getProjects(data2,'n');
+            if(!isEmpty(data2.company_default_projects)){
+                showFiltersInReports(true);
+                getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+                showFiltersInReports(false);
+            }
         });
 	});
 });
@@ -34,108 +43,30 @@ $(function() {
     changeCalendar();
     changeCompany();
 });
-/*
-function atualizar(link = null) {
 
-    currentPage = link;
-    let updateResume = true;
+function searchIsLocked(elementButton) {
+    return elementButton.attr('block_search');
+}
 
-    loadOnTable("#body-table-pending", ".table-pending");
+function lockSearch(elementButton) {
+    elementButton.attr('block_search', 'true');
+    //set layout do button block
+}
 
-    if (link == null) {
-        link = "/api/reports/pending-balance?" + getFilters(true).substr(1);
-    } else {
-        link = "/api/reports/pending-balance" + link + getFilters(true);
-        updateResume = false;
-    }
+function unlockSearch(elementButton) {
+    elementButton.attr('block_search', 'false');
+    //layout do button block
+}
 
-    $.ajax({
-        method: "GET",
-        url: link,
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            $("#body-table-pending").html("");
-            $(".table-pending").addClass("table-striped");
-
-            if (!isEmpty(response.data)) {
-                $.each(response.data, function (index, value) {
-                    let start_date = "";
-                    if (value.start_date) {
-                        start_date = value.start_date.split(/\s/g); //data inicial
-                        start_date =
-                            "<strong class='bold-mobile'>" +
-                            start_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            start_date[1] +
-                            " </small>";
-                    }
-
-                    let end_date = "";
-                    if (value.end_date) {
-                        end_date = value.end_date.split(/\s/g); //data final
-                        end_date =
-                            "<strong class='bold-mobile'>" +
-                            end_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            end_date[1] +
-                            " </small>";
-                    }
-                    let is_security_reserve = "";
-                    if (value.is_security_reserve) {
-                        is_security_reserve = `<br><label data-toggle="tooltip" title="Reserva de Segurança">
-                                                   <img width="12px" src="/build/global/img/money_lock.svg" alt="Reserva de Segurança">
-                                               </label>`;
-                    }
-
-                    dados = `  <tr>
-                                <td class="text-center">
-                                    ${value.sale_code}
-                                    ${is_security_reserve}
-                                </td>
-                                <td class="text-left font-size-14">${value.project}</td>
-                                <td class="text-left font-size-14">${value.client}</td>
-                                <td class="display-sm-none display-m-none display-lg-none">
-                                    <img src='/build/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
-                                </td>
-                                <td class="display-sm-none display-m-none display-lg-none text-left font-size-14">${start_date}</td>
-                                <td class="text-left font-size-14">${end_date}</td>
-                                <td><b class="font-md-size-20">${value.total_paid}</b></td>
-                                <td>
-                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span class="o-eye-1"></span></button></a>
-                                </td>
-                            </tr>`;
-
-                    $("#body-table-pending").append(dados);
-                });
-
-                $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
-            } else {
-                $("#body-table-pending").html(
-                    "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#body-table-pending").attr("img-empty") +
-                        "'> Nenhuma venda encontrada </td></tr>"
-                );
-            }
-            pagination(response, "pending", atualizar);
-        },
-        complete: response => {
-            unlockSearch($('#bt_filtro'));
-        }
-    });
-
-    if (updateResume) {
-        resumePending();
+function loadData() {
+    elementButton = $('#bt_filtro');
+    if (searchIsLocked(elementButton) != 'true') {
+        lockSearch(elementButton);
+        console.log(elementButton.attr('block_search'));
+        atualizar();
     }
 }
-*/
+
 function getFilters(urlParams = false) {
     let data = {
         'company': $('.company-navbar').val(),
@@ -240,14 +171,23 @@ $(document).ready(function () {
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
 
-    getCompaniesAndProjects().done( function (data){
-        window.getProjects(data.companies);
+    getCompaniesAndProjects().done( function (data2){
+        if(!isEmpty(data2.company_default_projects)){
+            showFiltersInReports(true);
+            getProjects(data2.companies);
+        }
+        else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            showFiltersInReports(false);
+        }
     });
 
     window.fillProjectsSelect = function(){
         return $.ajax({
             method: "GET",
-            url: "/api/reports/projects-with-pending-balance",
+            url: "/api/projects?select=true",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -314,9 +254,11 @@ $(document).ready(function () {
             $(".div-filters").show();
             $.each(companies, function (c, company) {
                 $.each(company.projects, function (i, project) {
-                    if( dataSales.includes(project.id) ){
-                        $("#project").append($("<option>", {value: project.id,text: project.name,}));
-                    }
+                    $.each(dataSales.data, function (idx, project2) {
+                        if( project2.id == project.id ){
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                        }
+                    });
                 });
             });
             $("#project option:first").attr('selected','selected');

@@ -26,11 +26,6 @@ Route::middleware(["web", "auth"])
         Route::get("/marketing", "ReportsController@marketing")
             ->name("reports.marketing")
             ->middleware("permission:report_sales");
-
-        Route::get("/checkouts", "ReportsController@checkouts")
-            ->name("reports.checkouts")
-            ->middleware("permission:report_checkouts");
-
         Route::get("/getValues/{project_id}", "ReportsController@getValues")
             ->name("reports.values")
             ->middleware("role:account_owner|admin");

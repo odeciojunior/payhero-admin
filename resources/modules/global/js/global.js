@@ -2145,3 +2145,12 @@ function fillSelectProject(companiesAndProjects,selectorName,value=''){
         $(selectorName).val(value)
     }
 }
+function showFiltersInReports(show){
+    if(show){
+        $('#box-projects').show();
+        $('.date-report').show();
+        return;
+    }
+    $('#box-projects').hide();
+    $('.date-report').hide();
+}

@@ -20,9 +20,8 @@ class DemoAccount
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {        
+    {
         Config::set('database.default', 'mysql');
-        
         if(str_contains($request->path(),'api/') && !str_contains($request->path(),'api/core/company-default'))
         {
             $user = Auth::user();
@@ -30,18 +29,18 @@ class DemoAccount
             if($user->company_default == Company::DEMO_ID)
             {
                 Config::set('database.default', 'demo');
-                
-                $routeAction = $request->route()->getAction()['controller'];                
+
+                $routeAction = $request->route()->getAction()['controller'];
                 $routeAction = str_replace(
                     ['Controller@',explode("\\",$routeAction)['1'].'\\'],
                     ['DemoController@','DemoAccount\\'],
                     $routeAction
                 );
-                
-                return Route::toDemoAccount($request, $routeAction);                
+
+                return Route::toDemoAccount($request, $routeAction);
             }
         }
-        
+
         return $next($request);
     }
 }

@@ -5,7 +5,14 @@ $('.company-navbar').change(function () {
     $("#select_projects").html('');
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            window.getProjects(data2.companies);
+            if(!isEmpty(data2.company_default_projects)){
+                getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+            }
         });
 	});
 });
@@ -61,13 +68,20 @@ $(document).ready(function () {
     }
 
     getCompaniesAndProjects().done( function (data2){
-        window.getProjects(data2.companies);
+        if(!isEmpty(data2.company_default_projects)){
+            getProjects(data2.companies);
+        }
+        else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+        }
     });
 
     window.fillProjectsSelect = function(){
         return $.ajax({
             method: "GET",
-            url: "/api/reports/projects-with-coupons",
+            url: "/api/projects?select=true",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -141,12 +155,15 @@ $(document).ready(function () {
         $("#export-excel").show()
         window.fillProjectsSelect()
         .done(function(dataSales)
-        {
+        {console.log(dataSales);
             $(".div-filters").show();
             $.each(companies, function (c, company) {
                 $.each(company.projects, function (i, project) {
-                    if( dataSales.includes(project.id) )
-                        $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
+                    $.each(dataSales.data, function (idx, project2) {
+                        if( project2.id == project.id ){
+                            $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
+                        }
+                    });
                 });
             });
             $("#projeto option:first").attr('selected','selected');
