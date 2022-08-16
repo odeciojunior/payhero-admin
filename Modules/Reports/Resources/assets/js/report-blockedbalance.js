@@ -6,25 +6,11 @@ $(function () {
     changeCompany();
 });
 
-function searchIsLocked(elementButton) {
-    return elementButton.attr('block_search');
-}
-
-function lockSearch(elementButton) {
-    elementButton.attr('block_search', 'true');
-    //set layout do button block
-}
-
-function unlockSearch(elementButton) {
-    elementButton.attr('block_search', 'false');
-    //layout do button block
-}
-
 function loadData() {
-    elementButton = $('#bt_filtro');
-    if (searchIsLocked(elementButton) != 'true') {
+    elementButton = $("#bt_filtro");
+    if (searchIsLocked(elementButton) != "true") {
         lockSearch(elementButton);
-        console.log(elementButton.attr('block_search'));
+        console.log(elementButton.attr("block_search"));
         atualizar();
     }
 }
@@ -105,11 +91,20 @@ function atualizar(link = null) {
                     dados = `  <tr>
                                 <td class='display-sm-none display-m-none display-lg-none text-center text-left font-size-14'>
                                     ${value.sale_code}
-                                    ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ""}
+                                    ${
+                                        value.upsell
+                                            ? '<span class="text-muted font-size-10">(Upsell)</span>'
+                                            : ""
+                                    }
                                 </td>
-                                <td class="text-left font-size-14">${value.project}</td>
-                                <td class="text-left font-size-14">${value.product}${
-                        value.affiliate != null && value.user_sale_type == "producer"
+                                <td class="text-left font-size-14">${
+                                    value.project
+                                }</td>
+                                <td class="text-left font-size-14">${
+                                    value.product
+                                }${
+                        value.affiliate != null &&
+                        value.user_sale_type == "producer"
                             ? `<br><small>(Afiliado: ${value.affiliate})</small>`
                             : ""
                     }</td>
@@ -117,19 +112,31 @@ function atualizar(link = null) {
                                     value.client
                                 }</td>
                                 <td>
-                                    <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
+                                    <img src='/build/global/img/cartoes/${
+                                        value.brand
+                                    }.png'  style='width: 45px'>
                                 </td>
                                 <td>
                                    <div class="d-flex align-items-center">
-                                        <span class="badge badge-${statusArray[value.status]} ${
-                        value.status_translate === "Pendente" ? "boleto-pending" : ""
+                                        <span class="badge badge-${
+                                            statusArray[value.status]
+                                        } ${
+                        value.status_translate === "Pendente"
+                            ? "boleto-pending"
+                            : ""
                     }" ${
                         value.status_translate === "Pendente"
-                            ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"'
+                            ? 'status="' +
+                              value.status_translate +
+                              '" sale="' +
+                              value.id_default +
+                              '"'
                             : ""
                     }>${value.status_translate}</span>
                                            ${
-                                               value.is_chargeback_recovered && value.status_translate === "Aprovado"
+                                               value.is_chargeback_recovered &&
+                                               value.status_translate ===
+                                                   "Aprovado"
                                                    ? `
                                             <img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
                                                    : ""
@@ -149,7 +156,9 @@ function atualizar(link = null) {
                     $("#dados_tabela").append(dados);
                 });
 
-                $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                $("#date").val(
+                    moment(new Date()).add(3, "days").format("YYYY-MM-DD")
+                );
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
             } else {
                 $("#dados_tabela").html(
@@ -160,9 +169,9 @@ function atualizar(link = null) {
             }
             pagination(response, "sales", atualizar);
         },
-        complete: response => {
-            unlockSearch($('#bt_filtro'));
-        }
+        complete: (response) => {
+            unlockSearch($("#bt_filtro"));
+        },
     });
 
     if (updateResume) {
@@ -236,17 +245,29 @@ function blockedResume() {
                     `<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 bold">${response.commission}</strong>`
                 );
                 $(".blocked-balance-icon")
-                    .attr("title", "Saldo retido de convites: R$ " + response.commission_invite)
+                    .attr(
+                        "title",
+                        "Saldo retido de convites: R$ " +
+                            response.commission_invite
+                    )
                     .tooltip({ placement: "bottom" });
                 $(".blocked-balance-icon")
-                    .attr("data-original-title", "Saldo retido de convites: R$ " + response.commission_invite)
+                    .attr(
+                        "data-original-title",
+                        "Saldo retido de convites: R$ " +
+                            response.commission_invite
+                    )
                     .tooltip({ placement: "bottom" });
-                $("#total").html(`R$ <span class="font-size-24 bold">${response.total}</span>`);
+                $("#total").html(
+                    `R$ <span class="font-size-24 bold">${response.total}</span>`
+                );
             } else {
                 $("#commission_blocked, #total").html(
                     '<small class="font-size-16 small gray-1">R$</small> <span class="font-size-24 bold">0,00</span>'
                 );
-                $("#total_sales").html('<strong class="font-size-24 orange">0</strong>');
+                $("#total_sales").html(
+                    '<strong class="font-size-24 orange">0</strong>'
+                );
             }
         },
     });
@@ -281,7 +302,10 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {
@@ -373,7 +397,9 @@ $(document).ready(function () {
                             hasSale = true;
                         }
                         const document =
-                            (company.document.replace(/\D/g, "").length > 11 ? "CNPJ: " : "CPF: ") + company.document;
+                            (company.document.replace(/\D/g, "").length > 11
+                                ? "CNPJ: "
+                                : "CPF: ") + company.document;
                         $("#company").append(
                             `<option value="${company.id}" data-toggle="tooltip" title="${document}">${company.name}</option>`
                         );
@@ -428,10 +454,15 @@ $(document).ready(function () {
                         );
                     });
                     if (sessionStorage.info) {
-                        $("#select_projects").val(JSON.parse(sessionStorage.getItem("info")).company);
+                        $("#select_projects").val(
+                            JSON.parse(sessionStorage.getItem("info")).company
+                        );
                         $("#select_projects")
                             .find("option:selected")
-                            .text(JSON.parse(sessionStorage.getItem("info")).companyName);
+                            .text(
+                                JSON.parse(sessionStorage.getItem("info"))
+                                    .companyName
+                            );
                     }
 
                     atualizar();
@@ -483,7 +514,14 @@ $(document).ready(function () {
             processResults: function (res) {
                 return {
                     results: $.map(res.data, function (obj) {
-                        return { id: obj.id, text: obj.name + (obj.description ? " - " + obj.description : "") };
+                        return {
+                            id: obj.id,
+                            text:
+                                obj.name +
+                                (obj.description
+                                    ? " - " + obj.description
+                                    : ""),
+                        };
                     }),
                 };
             },
@@ -527,18 +565,32 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny(".number", true);
                 $("#total_sales").text("0");
-                $("#commission_blocked, #total").html('R$ <span class="font-size-30 bold">0,00</span>');
+                $("#commission_blocked, #total").html(
+                    'R$ <span class="font-size-30 bold">0,00</span>'
+                );
                 if (response.total_sales) {
                     $("#total_sales, #commission_blocked, #total").text("");
                     $("#total_sales").html(response.total_sales);
-                    $("#commission_blocked").html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
+                    $("#commission_blocked").html(
+                        `R$ <span class="font-size-30 bold">${response.commission}</span>`
+                    );
                     $(".blocked-balance-icon")
-                        .attr("title", "Saldo bloqueado de convites: R$ " + response.commission_invite)
+                        .attr(
+                            "title",
+                            "Saldo bloqueado de convites: R$ " +
+                                response.commission_invite
+                        )
                         .tooltip({ placement: "bottom" });
                     $(".blocked-balance-icon")
-                        .attr("data-original-title", "Saldo bloqueado de convites: R$ " + response.commission_invite)
+                        .attr(
+                            "data-original-title",
+                            "Saldo bloqueado de convites: R$ " +
+                                response.commission_invite
+                        )
                         .tooltip({ placement: "bottom" });
-                    $("#total").html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
+                    $("#total").html(
+                        `R$ <span class="font-size-30 bold">${response.total}</span>`
+                    );
                 }
             },
         });
@@ -554,12 +606,18 @@ function changeCalendar() {
         .dateRangePicker({
             setValue: function (s) {
                 if (s) {
-                    let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                    let normalize = s.replace(
+                        /(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/,
+                        "$120$2-$320$4"
+                    );
                     $(this).html(s).data("value", normalize);
                     $('input[name="daterange"]').attr("value", normalize);
                     $('input[name="daterange"]').val(normalize);
                 } else {
-                    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+                    $('input[name="daterange"]').attr(
+                        "value",
+                        `${startDate}-${endDate}`
+                    );
                     $('input[name="daterange"]').val(`${startDate}-${endDate}`);
                 }
             },
@@ -577,7 +635,10 @@ function changeCalendar() {
 }
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        updateStorage({ company: $(this).val(), companyName: $(this).find("option:selected").text() });
+        updateStorage({
+            company: $(this).val(),
+            companyName: $(this).find("option:selected").text(),
+        });
     });
 }
 

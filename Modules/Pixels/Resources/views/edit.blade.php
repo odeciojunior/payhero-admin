@@ -180,6 +180,17 @@
                                                placeholder="100"
                                                maxlength='3'>
                                     </div>
+                                    {{-- INPUT PERCENTAGE PIX VALUE --}}
+                                    <div class="form-group col-3">
+                                        <label for="percentage-pix-value-edit"
+                                               class="font-text">% PIX</label>
+                                        <input name="value_percentage_purchase_pix"
+                                               id="percentage-pix-value-edit"
+                                               type="text"
+                                               class="form-control percentage-pix-value-edit"
+                                               placeholder="100"
+                                               maxlength='3'>
+                                    </div>
                                     <div class='form-group col-12'>
                                         <label for="edit-plans"
                                                class="form-control-label">

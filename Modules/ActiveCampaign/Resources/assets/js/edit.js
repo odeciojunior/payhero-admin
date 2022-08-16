@@ -32,7 +32,9 @@ $(() => {
                 $(".page-title, .title-pad").text(project.project_name);
                 $("#show-photo").attr(
                     "src",
-                    project.project_photo ? project.project_photo : "/build/global/img/projeto.svg"
+                    project.project_photo
+                        ? project.project_photo
+                        : "/build/global/img/projeto.svg"
                 );
                 $("#created_at").text("Criado em " + project.created_at);
 
@@ -42,8 +44,10 @@ $(() => {
                 $("#integration_id").val(project.id);
 
                 loadOnAny("#tab_configuration .card", true);
+                loadingOnScreenRemove();
             },
             error: (response) => {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
                 loadOnAny("#tab_configuration .card", true);
             },
@@ -57,7 +61,9 @@ $(() => {
             return false;
         }
         var integrationId = $("#integration_id").val();
-        var form_data = new FormData(document.getElementById("form_update_integration"));
+        var form_data = new FormData(
+            document.getElementById("form_update_integration")
+        );
 
         $.ajax({
             method: "POST",
