@@ -1038,8 +1038,6 @@ class PlansApiController extends Controller
             //atualizando personalização existente
             $idsProductPlans = [];
             foreach ($itens as $productPlanId => $config) {
-                dd(current(Hashids::decode($productPlanId)));
-
                 $productPlanModel = new ProductPlan();
                 $productPlan = $productPlanModel
                     ->where("product_id", current(Hashids::decode($productPlanId)))
