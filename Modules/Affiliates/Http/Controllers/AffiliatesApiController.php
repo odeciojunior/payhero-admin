@@ -272,12 +272,12 @@ class AffiliatesApiController extends Controller
     public function getAffiliates(Request $request)
     {
         try {
-            $userProjectModel = new UserProject();
-            $affiliateModel   = new Affiliate();
-            $userId           = auth()->user()->getAccountOwnerId();
-            $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
+            $userId = auth()->user()->getAccountOwnerId();
+            $companyId = Hashids::decode($request->input("company"));
 
-            $affiliates = $affiliateModel->with("user", "company", "project.checkoutConfig");
+            $userProjects     = UserProject::where('user_id', $userId)->where("company_id",$companyId)->pluck('project_id');
+
+            $affiliates = Affiliate::with("user", "company", "project.checkoutConfig");
 
             if ($request->input("project") != "null" && $request->input("project") != "0") {
                 $affiliates->where("project_id", Hashids::decode($request->input("project")));
@@ -303,12 +303,12 @@ class AffiliatesApiController extends Controller
     public function getAffiliateRequests(Request $request)
     {
         try {
-            $userProjectModel = new UserProject();
-            $affiliateRequest = new AffiliateRequest();
             $userId = auth()->user()->account_owner_id;
-            $userProjects = $userProjectModel->where("user_id", $userId)->pluck("project_id");
+            $companyId = Hashids::decode($request->input("company"));
 
-            $affiliatesRequest = $affiliateRequest->with("user", "company", "project");
+            $userProjects = UserProject::where("user_id", $userId)->where("company_id",$companyId)->pluck("project_id");
+
+            $affiliatesRequest = AffiliateRequest::with("user", "company", "project");
 
             if ($request->input("project") != "null" && $request->input("project") != "0") {
                 $affiliatesRequest->where("project_id", Hashids::decode($request->input("project")));

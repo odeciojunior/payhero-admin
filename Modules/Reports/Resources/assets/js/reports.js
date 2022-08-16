@@ -16,14 +16,14 @@ $('.company-navbar').change(function () {
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
             if(!isEmpty(data2.company_default_projects)){
-                showFiltersReports(true);
+                showFiltersInReports(true);
                 getProjects(data2.companies);
             }
             else{
                 loadingOnScreenRemove();
                 $("#project-empty").show();
                 $("#project-not-empty").hide();
-                showFiltersReports(false);
+                showFiltersInReports(false);
             }
         });
 	});
@@ -32,7 +32,7 @@ $('.company-navbar').change(function () {
 window.fillProjectsSelect = function(){
     return $.ajax({
         method: "GET",
-        url: "/api/sales/projects-with-sales",
+        url: "/api/projects?select=true",
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -73,13 +73,13 @@ $(function () {
 
     getCompaniesAndProjects().done( function (data2){
         if(!isEmpty(data2.company_default_projects)){
-            showFiltersReports(true);
+            showFiltersInReports(true);
             getProjects(data2.companies);
         }else{
             loadingOnScreenRemove();
             $("#project-empty").show();
             $("#project-not-empty").hide();
-            showFiltersReports(false);
+            showFiltersInReports(false);
         }
     });
 
@@ -164,8 +164,11 @@ function getProjects(companies)
         $(".div-filters").show();
         $.each(companies, function (c, company) {
             $.each(company.projects, function (i, project) {
-                if( dataSales.includes(project.id) )
-                    $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
+                $.each(dataSales.data, function (idx, project2) {
+                    if( project2.id == project.id ){
+                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
+                    }
+                });
             });
         });
         $("#select_projects option:first").attr('selected','selected');
@@ -1806,13 +1809,3 @@ let noWithdrawal = `
 </defs>
 </svg>
 `;
-
-function showFiltersReports(show){
-    if(show){
-        $('#box-projects').show();
-        $('.date-report').show();
-        return;
-    }
-    $('#box-projects').hide();
-    $('.date-report').hide();
-}

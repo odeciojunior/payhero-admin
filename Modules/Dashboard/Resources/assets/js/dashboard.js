@@ -22,7 +22,7 @@ $('.company-navbar').change(function () {
     });
     loadingOnAccountsHealth('.sirius-performance > .card','150px');
     loadingOnAccountsHealth('.sirius-account > .card');
-    loadingOnAccountsHealth('.sirius-cashback > .card');
+    $(".sirius-cashback > .card").addClass("d-none");
     loadingOnChart('#chart-loading');
     $('#scoreLineToMonth').html('')
     updateCompanyDefault().done(function(data1){

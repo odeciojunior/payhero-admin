@@ -281,9 +281,9 @@ Route::group([
     //Report
     Route::group([],function(){
         Route::get('reports', 'ReportsApiDemoController@index');
+
         Route::get('reports/getsalesbyorigin', 'ReportsApiDemoController@getSalesByOrigin');
 
-        Route::get('/reports/checkouts', 'ReportsApiDemoController@checkouts');
         Route::get('reports/getcheckoutsbyorigin', 'ReportsApiDemoController@getCheckoutsByOrigin');
 
         Route::get('/reports/projections', 'ReportsApiDemoController@projections');

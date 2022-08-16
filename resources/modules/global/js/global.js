@@ -938,7 +938,11 @@ $('.top-alert-close').on('click', function () {
 
 sessionStorage.removeItem('documentsPending');
 
-function verifyDocumentPending() {
+function verifyDocumentPending()
+{
+    changeNewRegisterLayoutOnWindowResize();
+    var count = 0;
+
     $.ajax({
         method: 'GET',
         url: '/api/core/verify-account/' + $('meta[name="user-id"]').attr('content'),
@@ -2140,4 +2144,13 @@ function fillSelectProject(companiesAndProjects,selectorName,value=''){
     if(!isEmpty(value)){
         $(selectorName).val(value)
     }
+}
+function showFiltersInReports(show){
+    if(show){
+        $('#box-projects').show();
+        $('.date-report').show();
+        return;
+    }
+    $('#box-projects').hide();
+    $('.date-report').hide();
 }

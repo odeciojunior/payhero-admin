@@ -91,7 +91,6 @@ $(document).ready(function () {
     window.updatePerformance = function () {
 
         loadingOnAccountsHealth('.sirius-performance > .card','150px');
-        loadingOnAccountsHealth('.sirius-cashback .card','20px');
 
         $.ajax({
             method: "GET",
@@ -106,7 +105,6 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 loadingOnAccountsHealthRemove('.sirius-performance > .card');
-                loadingOnAccountsHealthRemove('.sirius-cashback > .card');
                 errorAjaxResponse(response);
             },
             success: function success(data) {
