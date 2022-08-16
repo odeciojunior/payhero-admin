@@ -1268,6 +1268,10 @@ $(() => {
                 $("#refund-observation-transaction").val("");
                 atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop("disabled", false);
+
+                if(window.location.pathname.includes('finances')){
+                    $('#bt_filtro').trigger('click');
+                }
             },
         });
     }
