@@ -46,10 +46,10 @@ class SalesUnicodropExternalResource extends JsonResource
             "/download-boleto";
 
         $customer = [
-            "name" => $this->customer->name,
-            "document" => $this->customer->document,
-            "email" => $this->customer->email,
-            "telephone" => $this->customer->telephone,
+            "name" => $this->customer->name ?? "",
+            "document" => $this->customer->document ?? "",
+            "email" => $this->customer->email ?? "",
+            "telephone" => $this->customer->telephone ?? "",
         ];
 
         return [
