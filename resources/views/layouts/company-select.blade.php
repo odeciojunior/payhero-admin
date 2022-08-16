@@ -1,3 +1,9 @@
+
+
+@if (!auth()->user()->account_is_approved && (!empty($version) && $version=='mobile'))
+    @include('utils.new-register-link')
+@endif
+
 <!-- EMPRESAS  -->
 <div class="<?php
 

@@ -71,8 +71,7 @@
         @endphp
 
         @if (!auth()->user()->account_is_approved && $account_type === 'admin')
-            <div class="new-register-navbar-open-modal-container"
-             style="display: none;">
+            <div class="new-register-navbar-open-modal-container">
                 <div class="row new-register-open-modal no-gutters">
                     Você está em uma conta demonstrativa. <span class="new-register-open-modal-btn">Clique para começar<span class="count"></span></span>
                 </div>
