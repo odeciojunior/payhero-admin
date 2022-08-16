@@ -386,6 +386,7 @@ $('.company-navbar').change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
     $("#projeto").find('option').not(':first').remove();
     $("#plan").find('option').not(':first').remove();
+    $('#plan').data('select2').results.clear();
     $("#projeto").val($("#projeto option:first").val());
     $("#plan").val($("#plan option:first").val());
     loadOnAny(".number", false, {
@@ -869,6 +870,7 @@ $(document).ready(function () {
     $("#projeto").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
+        $('#plan').data('select2').results.clear();
     });
 
     $("#plan").select2({
