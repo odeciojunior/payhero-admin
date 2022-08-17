@@ -649,8 +649,8 @@ function loadOnAny(target, remove = false, options = {}) {
 
     if (!remove) {
         //create elements
-        let container = $('<div class="loader-any-container-page"></div>');
-        let loader = $('<span class="loader-any-page"></span>');
+        let container = $('<div class="loader-any-container"></div>');
+        let loader = $('<span class="loader-any"></span>');
 
         //apply styles or use default
         options.styles = options.styles ? options.styles : {};
