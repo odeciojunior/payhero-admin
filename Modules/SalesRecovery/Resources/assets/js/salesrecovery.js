@@ -8,6 +8,7 @@ $(document).ready(function () {
         $("#plan").find('option').not(':first').remove();
         $("#project").val($("#project option:first").val());
         $("#plan").val($("#plan option:first").val());
+        $('#plan').data('select2').results.clear();
         loadOnTable("#table_data", "#carrinhoAbandonado");
         updateCompanyDefault().done(function(data){
             getCompaniesAndProjects().done(function(data2){
@@ -843,6 +844,13 @@ $(document).ready(function () {
         $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
+
+    //LISTA PLANOS DE ACORDO COM O PROJETO(S)
+    $("#project").on("change", function () {
+        let value = $(this).val();
+        $("#plan").val(null).trigger("change");
+        $('#plan').data('select2').results.clear();
+    });
 
     //Search plan
     $("#plan").select2({
