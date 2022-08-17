@@ -76,6 +76,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $total_commission_value
  * @property int $attendance_average_response_time
  * @property string $mkt_information
+ * @property int|null $company_default
  * @property boolean $block_attendance_balance
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
@@ -184,6 +185,7 @@ class User extends Authenticable
         "total_commission_value",
         "show_old_finances",
         "mkt_information",
+        "company_default",
         "block_attendance_balance",
         "created_at",
         "updated_at",
