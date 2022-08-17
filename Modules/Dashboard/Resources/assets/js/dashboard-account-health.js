@@ -60,12 +60,8 @@ $(document).ready(function () {
     function indexColor(value) {
         if (value <= 1.5) {
             return "color: #1BCE68;";
-            console.log("green");
-        } else {
-            return "color: #FF3006;";
-            console.log("red");
         }
-        return "";
+        return "color: #FF3006;";
     }
 
     function nextCard() {
@@ -187,7 +183,9 @@ $(document).ready(function () {
                     $(".sirius-account > .card").append(item);
 
                     nextCard();
-                    updateGauge(data.account_score);
+                    setTimeout(() => {
+                        updateGauge(data.account_score);
+                    }, 200);
                 }
 
                 $(".page.dashboard .sirius-account .sirius-account-health").css({ height: " 225px" });
