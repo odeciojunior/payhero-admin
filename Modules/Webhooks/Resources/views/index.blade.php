@@ -40,43 +40,13 @@
                 </div>
             </div>
 
-            <div class="mb-30" id="content-script" style="display:none">
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-8">
-                        <div class="input-group input-group-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-primary">
-                                    <span class="icon-antifraud-1 mr-5"></span> Script do Antifraude para Checkout API
-                                </span>
-                            </div>
-                            <input type="text" class="form-control" id="input-url-antifraud" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-primary bg-white btnCopiarLinkAntifraud" type="button"
-                                    data-toggle="tooltip" title="Copiar URL antifraud"
-                                    style="width:46px;border-left:1px solid #F4F4F4">
-                                    <img src="/build/global/img/icon-copy-b.svg">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-4 text-right">
-                        <a href="https://docs.cloudfox.net/" target="_blank"
-                            class="font-weight-bold d-flex justify-content-end align-items-center" style="line-height:46px">
-                            <span>Acesse a documentação da API</span>
-                            <span class="o-arrow-right-1 ml-15" style="color:#2E85EC" aria-hidden="true"></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
             <div class="card shadow" id="card-table-webhook" data-plugin="matchHeight" style="display:none;">
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
                         <thead>
                             <tr>
                                 <td class="table-title">Descrição</td>
-                                <td class="table-title text-center">Tipo</td>
-                                <td class="table-title">Token</td>
+                                <td class="table-title">URL</td>
                                 <td class="table-title"></td>
                             </tr>
                         </thead>
@@ -97,7 +67,7 @@
                     <div id="modal-create-webhook" class="modal-content">
                         <div class="modal-header simple-border-bottom">
                             <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span
-                                    class="ml-15">Novo Webhook</span></h4>
+                                    class="ml-15">Cadastrar Webhook</span></h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <i class="material-icons md-22">close</i>
                             </button>
@@ -105,42 +75,30 @@
                         <div id="modal-reverse-body" class="modal-body">
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <label for="description">Nome do Webhook</label>
+                                    <label for="description">Nome</label>
                                     <input name="description" type="text" class="form-control form-control-lg"
-                                        id="description" placeholder="Dê um nome para seu webhook">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-12">
-                                    <label for="token_type_enum">Tipo de Webhook</label>
-                                    <div id="enum-list">
-                                        <select name="token_type_enum" id="select-enum-list" class="sirius-select">
-                                            <option value="3">Webhook Externo</option>
-                                            <option value="4" selected>Checkout API</option>
-                                        </select>
-                                    </div>
+                                        id="description" placeholder="Digite um nome para seu webhook">
                                 </div>
                             </div>
                             <div class="row companies-container">
                                 <div class="form-group col-sm-12 col-md">
-                                    <label for="empresa">Empresa</label>
+                                    <label for="company_id">Empresa</label>
                                     <select name="company_id" id="companies" class="sirius-select">
-                                        <option value="">Selecione a empresa</option>
+                                        <option value="">Selecione uma empresa</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="row postback-container">
+                            <div class="row url-container">
                                 <div class="form-group col-sm-12 col-md">
-                                    <label for="postback">Postback</label>
-                                    <input name="postback" type="text" class="form-control form-control-lg"
-                                        id="postback" placeholder="Insira a URL de postback">
-                                    <small class="text-muted">Insira uma URL válida</small>
+                                    <label for="url">URL</label>
+                                    <input name="url" type="text" class="form-control form-control-lg" id="url"
+                                        placeholder="Digite uma URL válida">
+                                    <small class="text-muted">Digite uma URL válida</small>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="btn-save-webhook" type="button" class="btn btn-lg btn-primary">Gerar
-                                Token</button>
+                            <button id="btn-save-webhook" type="button" class="btn btn-lg btn-primary">Cadastrar</button>
                         </div>
                     </div>
                 </div>
@@ -162,22 +120,29 @@
                 <div id="modal-reverse-body" class="modal-body">
                     <div class="row">
                         <div class="form-group col-12">
-                            <label for="description">Nome do webhook</label>
+                            <label for="description">Nome</label>
                             <input name="description" type="text" class="form-control form-control-lg"
-                                id="description" placeholder="Dê um nome para seu webhook">
+                                id="description_edit" placeholder="Digite um nome para seu webhook">
                         </div>
                     </div>
-                    <div class="row postback-container" style="display: none;">
+                    <div class="row companies-container">
                         <div class="form-group col-sm-12 col-md">
-                            <label for="postback">Postback</label>
-                            <input name="postback" type="text" class="form-control form-control-lg" id="postback"
-                                placeholder="Insira a URL de postback">
-                            <small class="text-muted">Insira uma URL válida</small>
+                            <label for="company_id">Empresa</label>
+                            <select name="company_id" id="companies_edit" class="sirius-select">
+                                <option value="">Selecione uma empresa</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row url-container">
+                        <div class="form-group col-sm-12 col-md">
+                            <label for="url">URL</label>
+                            <input name="url" type="text" class="form-control form-control-lg" id="url_edit"
+                                placeholder="Digite uma URL válida">
+                            <small class="text-muted">Digite uma URL válida</small>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" name="token_type_enum">
                     <button id="btn-edit-webhook" type="button" class="btn btn-lg btn-primary">Atualizar</button>
                 </div>
             </div>
@@ -193,15 +158,13 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-
                 <div id="modal_excluir_body" class="modal-body text-center p-20">
                     <div class="d-flex justify-content-center">
-                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;">highlight_off</i>
                     </div>
                     <h3 class="black"> Você tem certeza? </h3>
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
-
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button id="btn-cancel-webhook" type="button"
                         class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"

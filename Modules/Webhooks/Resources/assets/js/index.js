@@ -49,7 +49,6 @@ $(document).ready(function () {
                         .find(".store-webhook")
                         .css("display", "block");
                     $("#content-error").css("display", "block");
-                    $("#content-script").css("display", "none");
                     $("#card-table-webhook").css("display", "none");
                     $("#card-webhook-data").css("display", "none");
                 } else {
@@ -65,34 +64,19 @@ $(document).ready(function () {
                 }
 
                 getWebhook();
-                refreshToken();
                 deleteWebhook();
+
                 loadingOnScreenRemove();
             },
         });
     }
 
     function updateWebhookTableData(response) {
-        $("#content-script").css("display", "block");
         $("#card-table-webhook").css("display", "block");
         $("#card-webhook-data").css("display", "block");
-        $("#card-table-webhook").css("display", "block");
         $("#table-body-webhook").html("");
 
-        if (
-            response.data.length > 0 &&
-            response.data.findIndex((e) => e.webhook_type == "checkout_api") !=
-                -1
-        ) {
-            $("#content-script").show();
-            $("#input-url-antifraud").val(response.data[0].antifraud_url);
-        } else {
-            $("#content-script").hide();
-            $("#input-url-antifraud").val("");
-        }
-
         $.each(response.data, function (index, value) {
-            let disabled = "active" !== value.status ? " disabled" : "";
             dados = "";
             dados += "<tr>";
 
@@ -107,67 +91,34 @@ $(document).ready(function () {
                 "</small>";
             dados += "</td>";
 
-            dados += '<td class="text-center">';
+            dados += '<td class="" style="vertical-align: middle;">';
+            dados += '<p class="description mb-0 mr-1">' + value.url + "</p>";
             dados +=
-                '<span class="badge badge-' +
-                webhookTypeEnumBadge[value.webhook_type] +
-                ' text-center">' +
-                webhookTypeEnum[value.webhook_type] +
-                "</span>";
-            dados += "</td>";
-
-            dados += '<td style="vertical-align: middle;">';
-            dados += '<div class="input-group input-group-lg">';
-            dados +=
-                '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' +
-                value.id_code +
-                '" value="' +
-                value.access_token +
-                '" disabled="disabled" style="background: #F1F1F1;">';
-            dados += '<div class="input-group-append">';
-            dados +=
-                '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' +
-                value.id_code +
-                '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token" style="width: 48px; height: 48px;">';
-            dados += '<img src="/build/global/img/icon-copy-b.svg">';
-            dados += "</button>";
-            dados += "</div>";
-            dados += "</div>";
+                '<small class="text-muted">' + value.company_name + "</small>";
             dados += "</td>";
 
             dados += '<td class="text-center">';
             dados +=
                 '<button class="btn pointer edit-webhook" style="background-color:transparent;" webhook="' +
-                value.id_code +
+                value.id +
                 '"' +
-                disabled +
                 ' title="Editar webhook"><span class="o-edit-1"></span></button>';
-
             dados +=
                 '<button class="btn pointer delete-webhook" style="background-color:transparent;" webhook="' +
-                value.id_code +
+                value.id +
                 '"' +
-                disabled +
                 ' title="Deletar token"><span class="o-bin-1"></span></button>';
             dados += "</td>";
 
             dados += "</tr>";
             $("#table-body-webhook").append(dados);
         });
-
-        $("#webhooks_stored").html("" + response.resume.total + "");
-        $("#webhooks_active").html("" + response.resume.active + "");
-        $("#posts_received").html("" + response.resume.received + "");
-        $("#posts_sent").html("" + response.resume.sent + "");
     }
 
     function getWebhook() {
         $(".edit-webhook").unbind("click");
         $(".edit-webhook").on("click", function () {
-            $("#modal-edit-webhook").find('input[name="description"]').val("");
-            $("#modal-edit-webhook").find('input[name="postback"]').val("");
             let webhook_id = $(this).attr("webhook");
-            $("#modal-edit-webhook").modal("show");
             $.ajax({
                 method: "GET",
                 url: "/api/webhooks/" + webhook_id,
@@ -182,69 +133,31 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    if (!isEmpty(response)) {
-                        if (response.token_type_enum == 4) {
-                            $("#modal-edit-webhook")
-                                .find('input[name="postback"]')
-                                .val(response.postback);
-                            $("#modal-edit-webhook")
-                                .find(".postback-container")
-                                .show();
-                        } else {
-                            $("#modal-edit-webhook")
-                                .find(".postback-container")
-                                .hide();
-                            $("#modal-edit-webhook")
-                                .find('input[name="postback"]')
-                                .val("");
-                        }
+                    if (!isEmpty(response.data)) {
+                        let webhook = response.data;
 
                         $("#modal-edit-webhook")
                             .find('input[name="description"]')
-                            .val(response.description);
+                            .val(webhook.description);
+
                         $("#modal-edit-webhook")
-                            .find('input[name="token_type_enum"]')
-                            .val(response.token_type_enum);
+                            .find('input[name="url"]')
+                            .val(webhook.url);
+
+                        $("#modal-edit-webhook .sirius-select")
+                            .prop("selectedIndex", webhook.company_id)
+                            .change();
+                        $("#modal-edit-webhook .sirius-select-text").text(
+                            webhook.company_name
+                        );
+
+                        $("#modal-edit-webhook").modal("show");
 
                         editWebhook(webhook_id);
                     } else {
                         alertCustom("error", "Erro ao obter dados do webhook");
                     }
                 },
-            });
-        });
-    }
-
-    function refreshToken() {
-        $(".refresh-webhook").unbind("click");
-        $(".refresh-webhook").on("click", function () {
-            let webhookId = $(this).attr("webhook");
-            let url = "api/webhooks/" + webhookId + "/refreshtoken";
-            $("#modal-refresh-webhook").modal("show");
-            $("#btn-refresh-webhook").unbind("click");
-            $("#btn-refresh-webhook").on("click", function () {
-                loadingOnScreen();
-                $.ajax({
-                    method: "POST",
-                    url: url,
-                    data: { webhookId: webhookId },
-                    dataType: "json",
-                    headers: {
-                        Authorization: $('meta[name="access-token"]').attr(
-                            "content"
-                        ),
-                        Accept: "application/json",
-                    },
-                    error: (response) => {
-                        loadingOnScreenRemove();
-                        errorAjaxResponse(response);
-                    },
-                    success: (response) => {
-                        loadingOnScreenRemove();
-                        refreshWebhooks();
-                        alertCustom("success", response.message);
-                    },
-                });
             });
         });
     }
@@ -258,40 +171,31 @@ $(document).ready(function () {
                 let description = $("#modal-webhook")
                     .find("input[name='description']")
                     .val();
-                let tokenTypeEnum = $("#select-enum-list").val();
-                let postback = $("#modal-webhook")
-                    .find("input[name='postback']")
-                    .val();
+                let url = $("#modal-webhook").find("input[name='url']").val();
                 let companyHash = $("#companies").val();
 
                 if (description == "") {
-                    alertCustom("error", "O campo descrição é obrigatório");
-                } else if (tokenTypeEnum == 4 && !companyHash) {
-                    alertCustom("error", "O campo empresa é obrigatório");
-                } else if (tokenTypeEnum == 4 && postback == "") {
-                    alertCustom("error", "O campo postback é obrigatório");
+                    alertCustom("error", "Digite um nome para seu webhook");
+                } else if (!companyHash) {
+                    alertCustom("error", "Selecione uma empresa");
+                } else if (url == "") {
+                    alertCustom("error", "Digite uma URL válida");
                 } else {
                     loadingOnScreen();
-                    storeWebhook(
-                        description,
-                        tokenTypeEnum,
-                        postback,
-                        companyHash
-                    );
+                    storeWebhook(description, url, companyHash);
                 }
             });
             $("#modal-webhook").modal("show");
         });
     }
 
-    function storeWebhook(description, tokenTypeEnum, postback, companyHash) {
+    function storeWebhook(description, url, companyHash) {
         $.ajax({
             method: "POST",
             url: "/api/webhooks",
             data: {
                 description: description,
-                token_type_enum: tokenTypeEnum,
-                postback: postback,
+                url: url,
                 company_id: companyHash,
             },
             dataType: "json",
@@ -305,6 +209,9 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $(".close").click();
+                $("#modal-webhook").find("input[name='description']").val("");
+                $("#modal-webhook").find("input[name='url']").val("");
+                $("#companies").prop("selectedIndex", 0).change();
                 alertCustom("success", "Webhook criado com sucesso!");
                 loadingOnScreenRemove();
                 refreshWebhooks();
@@ -318,21 +225,17 @@ $(document).ready(function () {
             let description = $("#modal-edit-webhook")
                 .find('input[name="description"]')
                 .val();
-            let token_type_enum = $("#modal-edit-webhook")
-                .find('input[name="token_type_enum"]')
-                .val();
-            let postback = $("#modal-edit-webhook")
-                .find('input[name="postback"]')
-                .val();
+
+            let url = $("#modal-edit-webhook").find('input[name="url"]').val();
 
             loadingOnScreen();
+
             $.ajax({
                 method: "PUT",
                 url: "api/webhooks/" + webhook_id,
                 data: {
                     description: description,
-                    postback: postback,
-                    token_type_enum: token_type_enum,
+                    url: url,
                 },
                 dataType: "json",
                 headers: {
@@ -407,7 +310,7 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (i, company) {
                         if (companyIsApproved(company)) {
-                            $("#companies").append(
+                            $("#companies, #companies_edit").append(
                                 $("<option>", {
                                     value: company.id,
                                     text: company.name,
@@ -421,27 +324,6 @@ $(document).ready(function () {
             },
         });
     }
-
-    $(document).on("click", ".btnCopiarLink", function () {
-        var tmpInput = $("<input>");
-        $("body").append(tmpInput);
-        var btn_code = $(this).data("code");
-        var copyText = $("#inputToken-" + btn_code).val();
-        tmpInput.val(copyText).select();
-        document.execCommand("copy");
-        tmpInput.remove();
-        alertCustom("success", "Token copiado!");
-    });
-
-    $(document).on("click", ".btnCopiarLinkAntifraud", function () {
-        var tmpInput = $("<input>");
-        $("body").append(tmpInput);
-        var copyText = $("#input-url-antifraud").val();
-        tmpInput.val(copyText).select();
-        document.execCommand("copy");
-        tmpInput.remove();
-        alertCustom("success", "Antifraud URL copiada!");
-    });
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
@@ -544,29 +426,5 @@ $(document).ready(function () {
                 });
             }
         }
-    }
-
-    function handleWebhookTypeChange(e) {
-        let type = e.target.value;
-        let companiesContainer = $(".companies-container");
-        let postbackContainer = $(".postback-container");
-        let descriptionInput = $("#description");
-
-        descriptionInput.val("");
-
-        if (type == 4) {
-            companiesContainer.addClass("d-flex").removeClass("d-none");
-            postbackContainer.addClass("d-flex").removeClass("d-none");
-        } else {
-            companiesContainer.addClass("d-none").removeClass("d-flex");
-            postbackContainer.addClass("d-none").removeClass("d-flex");
-        }
-    }
-
-    $("#select-enum-list").on("change", handleWebhookTypeChange);
-
-    if (window.location.href.includes("#add_checkout_api")) {
-        $('select[name="token_type_enum"]').val(4).change();
-        $("#modal-webhook").modal("show");
     }
 });

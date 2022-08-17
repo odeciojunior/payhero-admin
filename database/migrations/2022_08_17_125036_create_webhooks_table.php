@@ -23,8 +23,8 @@ class CreateWebhooksTable extends Migration
                 ->integer("company_id")
                 ->unsigned()
                 ->index();
-            $table->string("url")->nullable();
             $table->string("description")->nullable();
+            $table->string("url")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

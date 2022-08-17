@@ -22,11 +22,5 @@ Route::group(
             ->only("store", "destroy", "update")
             ->names("api.webhooks")
             ->middleware("permission:apps_manage");
-        Route::post(
-            "/webhooks/{webhook}/refreshtoken",
-            "WebhooksApiController@refreshToken"
-        )
-            ->name("api.webhooks.refreshtoken")
-            ->middleware("permission:apps_manage");
     }
 );
