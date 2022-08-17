@@ -18,6 +18,7 @@ use Modules\Core\Entities\Log as CheckoutLog;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\UserProject;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SalesRecoveryService
 {
