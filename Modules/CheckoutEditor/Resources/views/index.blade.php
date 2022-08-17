@@ -97,6 +97,8 @@
                                            id="checkout_logo"
                                            name="checkout_logo"
                                            data-max-file-size="10M"
+                                           data-min-height="63"
+                                           data-min-width="63"
                                            data-allowed-file-extensions="jpg jpeg png">
                                     <input type="hidden"
                                            id="has_checkout_logo"
@@ -638,30 +640,6 @@
                                 </div>
 
                                 <div class="input-container">
-                                    <label for="countdown-time"
-                                           class="checkout-label">Descrição <span
-                                              class="observation-span">Opcional</span></label>
-                                    <textarea class="checkout-textarea"
-                                              id="countdown_description"
-                                              name="countdown_description"
-                                              rows="4"
-                                              maxlength="150"
-                                              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
-
-                                    <div id="countdown_description_error"
-                                         class="checkout-error"
-                                         style="display: none;">
-                                        <p>Preencha o campo de descrição.</p>
-                                    </div>
-
-                                    <div class="textarea-observation">
-                                        <img class="dot"
-                                             src="{{ mix('build/layouts/checkouteditor/img/svg/info-icon.svg') }}"><span
-                                              class="observation-span">Visível somente em desktop.</span>
-                                    </div>
-                                </div>
-
-                                <div class="input-container">
                                     <label for="timeout-message"
                                            class="checkout-label">Mensagem ao encerrar o
                                         tempo</label>
@@ -669,7 +647,7 @@
                                               id="countdown_finish_message"
                                               name="countdown_finish_message"
                                               rows="3"
-                                              maxlength="150"
+                                              maxlength="55"
                                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 
                                     <div id="countdown_finish_message_error"
@@ -1649,7 +1627,7 @@
                                 </div>
 
                                 <div id="logo_preview_desktop_div"
-                                     class="logo-div logo-desktop-div desktop">
+                                     class="logo-div logo-desktop-div  desktop">
                                     <div class="logo-desktop logo-preview-container"
                                          style="display: none">
                                         <img id="logo_preview_desktop"
@@ -1733,20 +1711,23 @@
 
                                     <div class="logo-div logo-menu-bar has-banner"
                                          style="overflow-y:hidden">
-                                        <div>
-                                            <div class="logo-mobile-div logo-preview-container"
-                                                 style="display: none">
-                                                <img id="logo_preview_mobile"
-                                                     class="preview-logo mobile" />
-                                            </div>
-                                        </div>
-
                                         <div class="purchase-menu-mobile">
-                                            <img class="arrow-icon-mobile"
-                                                 src="{{ mix('build/layouts/checkouteditor/img/svg/purchase-icon.svg') }}">
-                                            <div class="menu-circle-mobile primary-color"></div>
-                                            <img class="arrow-icon-mobile"
-                                                 src="{{ mix('build/layouts/checkouteditor/img/svg/menu-arrow.svg') }}">
+
+                                            <div>
+                                                <div class="logo-mobile-div logo-preview-container"
+                                                     style="display: none">
+                                                    <img id="logo_preview_mobile"
+                                                         class="preview-logo mobile" />
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-between align-center">
+                                                <img class="arrow-icon-mobile"
+                                                     src="{{ mix('build/layouts/checkouteditor/img/svg/purchase-icon.svg') }}">
+                                                <div class="menu-circle-mobile primary-color"></div>
+                                                <img class="arrow-icon-mobile"
+                                                     src="{{ mix('build/layouts/checkouteditor/img/svg/menu-arrow.svg') }}">
+                                            </div>
                                         </div>
                                     </div>
 

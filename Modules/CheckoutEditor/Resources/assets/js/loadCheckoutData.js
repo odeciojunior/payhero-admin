@@ -253,6 +253,8 @@ $(() => {
                     error: {
                         fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
                         fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                        minWidth: "Largura mínima: 64px.",
+                        minHeight: "Altura mínima: 64px.",
                     },
                     tpl: {
                         message:
@@ -360,6 +362,8 @@ $(() => {
                 error: {
                     fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
                     fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                    minWidth: "Largura mínima: 64px.",
+                    minHeight: "Altura mínima: 64px.",
                 },
                 tpl: {
                     message:
@@ -633,7 +637,7 @@ $(() => {
                 $(".logo-div").addClass("has-banner");
                 $(".logo-preview-container").addClass("has-banner");
                 $(".menu-bar-mobile").hide("slow");
-                $(".purchase-menu-mobile").fadeIn("slow");
+                // $(".purchase-menu-mobile").fadeIn("slow");
             } else {
                 $("#checkout_editor #checkout_banner_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 0);
@@ -643,19 +647,19 @@ $(() => {
                 $(".logo-div").removeClass("has-banner");
                 $(".logo-preview-container").removeClass("has-banner");
                 $(".menu-bar-mobile").show("slow");
-                $(".purchase-menu-mobile").fadeOut("slow");
+                // $(".purchase-menu-mobile").fadeOut("slow");
             }
 
             if (checkout.checkout_banner_type === 1) {
                 $("#checkout_editor #banner_type_wide").prop("checked", true);
                 $(".preview-banner").removeClass("retangle-banner");
-                $(".logo-div.logo-menu-bar").removeClass("retangle-banner");
                 $(".preview-banner").addClass("wide-banner");
+                $(".logo-div").removeClass("has-retangle-banner");
             } else {
                 $("#checkout_editor #banner_type_square").prop("checked", true);
                 $(".preview-banner").addClass("retangle-banner");
-                $(".logo-div.logo-menu-bar").addClass("retangle-banner");
                 $(".preview-banner").removeClass("wide-banner");
+                $(".logo-div").addClass("has-retangle-banner");
             }
 
             if (checkout.countdown_enabled) {
@@ -671,11 +675,6 @@ $(() => {
             }
 
             $("#checkout_editor #countdown_time").val(checkout.countdown_time || 15);
-
-            $("#checkout_editor #countdown_description").val(
-                checkout.countdown_description ||
-                    "Aproveite o desconto extra ao comprar no Cartão ou pelo PIX! É por tempo limitado."
-            );
 
             $("#checkout_editor #countdown_finish_message").val(
                 checkout.countdown_finish_message ||

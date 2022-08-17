@@ -31,20 +31,6 @@ $(document).ready(function () {
         2: "danger",
     };
 
-    function searchIsLocked(elementButton) {
-        return elementButton.attr('block_search');
-    }
-
-    function lockSearch(elementButton) {
-        elementButton.attr('block_search', 'true');
-        //set layout do button block
-    }
-
-    function unlockSearch(elementButton) {
-        elementButton.attr('block_search', 'false');
-        //layout do button block
-    }
-
     $("#btn-filter-affiliates").on("click", function () {
         loadData($("#btn-filter-affiliates"), 1);
     });
@@ -54,9 +40,9 @@ $(document).ready(function () {
     });
 
     function loadData(elementButton, elementFunction) {
-        if (searchIsLocked(elementButton) != 'true') {
+        if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr('block_search'));
+            console.log(elementButton.attr("block_search"));
 
             switch (elementFunction) {
                 case 1:
@@ -136,7 +122,10 @@ $(document).ready(function () {
     }
 
     function getAffiliates() {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        var link =
+            arguments.length > 0 && arguments[0] !== undefined
+                ? arguments[0]
+                : null;
 
         var project = $("#project-affiliate").val();
         var name = $("#name-affiliate").val();
@@ -173,14 +162,27 @@ $(document).ready(function () {
                     );
                 } else {
                     $.each(response.data, function (index, value) {
-                        if (value.percentage == "" || value.percentage == "0") value.percentage = "0%";
+                        if (value.percentage == "" || value.percentage == "0")
+                            value.percentage = "0%";
                         data = "";
                         data += "<tr>";
-                        data += '<td class="" style="vertical-align: middle;">' + value.name + "</td>";
+                        data +=
+                            '<td class="" style="vertical-align: middle;">' +
+                            value.name +
+                            "</td>";
                         // data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
-                        data += '<td class="" style="vertical-align: middle;">' + value.project_name + "</td>";
-                        data += '<td class="" style="vertical-align: middle;">' + value.date + "</td>";
-                        data += '<td class="text-center" style="vertical-align: middle;">' + value.percentage + "</td>";
+                        data +=
+                            '<td class="" style="vertical-align: middle;">' +
+                            value.project_name +
+                            "</td>";
+                        data +=
+                            '<td class="" style="vertical-align: middle;">' +
+                            value.date +
+                            "</td>";
+                        data +=
+                            '<td class="text-center" style="vertical-align: middle;">' +
+                            value.percentage +
+                            "</td>";
                         data +=
                             '<td class="text-center" ><span class="badge badge-' +
                             badgeAffiliates[value.status] +
@@ -218,37 +220,42 @@ $(document).ready(function () {
                     $("#modal-delete-affiliate").modal("show");
 
                     $("#modal-delete-affiliate .btn-delete").unbind("click");
-                    $("#modal-delete-affiliate .btn-delete").on("click", function () {
-                        $("#modal-delete").modal("hide");
-                        loadingOnScreen();
-                        $.ajax({
-                            method: "DELETE",
-                            url: "/api/affiliates/" + affiliate,
-                            dataType: "json",
-                            headers: {
-                                Authorization: $('meta[name="access-token"]').attr("content"),
-                                Accept: "application/json",
-                            },
-                            error: (function (_error3) {
-                                function error() {
-                                    return _error3.apply(this, arguments);
-                                }
+                    $("#modal-delete-affiliate .btn-delete").on(
+                        "click",
+                        function () {
+                            $("#modal-delete").modal("hide");
+                            loadingOnScreen();
+                            $.ajax({
+                                method: "DELETE",
+                                url: "/api/affiliates/" + affiliate,
+                                dataType: "json",
+                                headers: {
+                                    Authorization: $(
+                                        'meta[name="access-token"]'
+                                    ).attr("content"),
+                                    Accept: "application/json",
+                                },
+                                error: (function (_error3) {
+                                    function error() {
+                                        return _error3.apply(this, arguments);
+                                    }
 
-                                error.toString = function () {
-                                    return _error3.toString();
-                                };
+                                    error.toString = function () {
+                                        return _error3.toString();
+                                    };
 
-                                return error;
-                            })(function (response) {
-                                loadingOnScreenRemove();
-                                errorAjaxResponse(response);
-                            }),
-                            success: function (data) {
-                                loadingOnScreenRemove();
-                                getAffiliates();
-                            },
-                        });
-                    });
+                                    return error;
+                                })(function (response) {
+                                    loadingOnScreenRemove();
+                                    errorAjaxResponse(response);
+                                }),
+                                success: function (data) {
+                                    loadingOnScreenRemove();
+                                    getAffiliates();
+                                },
+                            });
+                        }
+                    );
                 });
 
                 $(document).on("click", ".edit-affiliate", function () {
@@ -261,24 +268,39 @@ $(document).ready(function () {
                         url: "/api/affiliates/" + affiliate + "/edit",
                         dataType: "json",
                         headers: {
-                            Authorization: $('meta[name="access-token"]').attr("content"),
+                            Authorization: $('meta[name="access-token"]').attr(
+                                "content"
+                            ),
                             Accept: "application/json",
                         },
                         error: function error(response) {
                             errorAjaxResponse(response);
                         },
                         success: function success(response) {
-                            if (response.data.percentage == "" || response.data.percentage == "0")
+                            if (
+                                response.data.percentage == "" ||
+                                response.data.percentage == "0"
+                            )
                                 response.data.percentage = "0%";
-                            $("#modal-edit-affiliate .affiliate-id").val(affiliate);
-                            $("#modal-edit-affiliate .affiliate-name").val(response.data.name);
+                            $("#modal-edit-affiliate .affiliate-id").val(
+                                affiliate
+                            );
+                            $("#modal-edit-affiliate .affiliate-name").val(
+                                response.data.name
+                            );
                             // $('#modal-edit-affiliate .affiliate-email').val(response.data.email);
                             // $('#modal-edit-affiliate .affiliate-company').val(response.data.company);
-                            $("#modal-edit-affiliate .affiliate-percentage").val(response.data.percentage);
+                            $(
+                                "#modal-edit-affiliate .affiliate-percentage"
+                            ).val(response.data.percentage);
                             if (response.data.status == 1) {
-                                $("#modal-edit-affiliate .affiliate-status").prop("selectedIndex", 0).change();
+                                $("#modal-edit-affiliate .affiliate-status")
+                                    .prop("selectedIndex", 0)
+                                    .change();
                             } else if (response.data.status == 2) {
-                                $("#modal-edit-affiliate .affiliate-status").prop("selectedIndex", 1).change();
+                                $("#modal-edit-affiliate .affiliate-status")
+                                    .prop("selectedIndex", 1)
+                                    .change();
                             }
                             $("#modal-edit-affiliate").modal("show");
                         },
@@ -292,22 +314,41 @@ $(document).ready(function () {
                         url: "/api/affiliates/" + affiliate + "/edit",
                         dataType: "json",
                         headers: {
-                            Authorization: $('meta[name="access-token"]').attr("content"),
+                            Authorization: $('meta[name="access-token"]').attr(
+                                "content"
+                            ),
                             Accept: "application/json",
                         },
                         error: function error(response) {
                             errorAjaxResponse(response);
                         },
                         success: function success(response) {
-                            if (response.data.percentage == "" || response.data.percentage == "0")
+                            if (
+                                response.data.percentage == "" ||
+                                response.data.percentage == "0"
+                            )
                                 response.data.percentage = "0%";
-                            $("#modal-show-affiliate .affiliate-name").text(response.data.name);
-                            $("#modal-show-affiliate .affiliate-email").text(response.data.email);
-                            $("#modal-show-affiliate .affiliate-company").text(response.data.company);
-                            $("#modal-show-affiliate .affiliate-project").text(response.data.project_name);
-                            $("#modal-show-affiliate .affiliate-phone").text(response.data.cellphone);
-                            $("#modal-show-affiliate .affiliate-percent").text(response.data.percentage);
-                            $("#modal-show-affiliate .affiliate-date").text(response.data.date);
+                            $("#modal-show-affiliate .affiliate-name").text(
+                                response.data.name
+                            );
+                            $("#modal-show-affiliate .affiliate-email").text(
+                                response.data.email
+                            );
+                            $("#modal-show-affiliate .affiliate-company").text(
+                                response.data.company
+                            );
+                            $("#modal-show-affiliate .affiliate-project").text(
+                                response.data.project_name
+                            );
+                            $("#modal-show-affiliate .affiliate-phone").text(
+                                response.data.cellphone
+                            );
+                            $("#modal-show-affiliate .affiliate-percent").text(
+                                response.data.percentage
+                            );
+                            $("#modal-show-affiliate .affiliate-date").text(
+                                response.data.date
+                            );
                             $("#modal-show-affiliate .affiliate-status").html(
                                 '<span class="badge badge-' +
                                     badgeAffiliates[response.data.status] +
@@ -316,8 +357,12 @@ $(document).ready(function () {
                                     "</span>"
                             );
 
-                            $("#modal-show-affiliate .affiliate-percentage").text(response.data.percentage);
-                            $("#modal-show-affiliate .affiliate-percentage").text(response.data.percentage);
+                            $(
+                                "#modal-show-affiliate .affiliate-percentage"
+                            ).text(response.data.percentage);
+                            $(
+                                "#modal-show-affiliate .affiliate-percentage"
+                            ).text(response.data.percentage);
 
                             $("#modal-show-affiliate").modal("show");
                         },
@@ -330,14 +375,18 @@ $(document).ready(function () {
                     //console.log(formData);
                     // formData.append("integration_id", integrationId);
 
-                    let affiliate = $("#modal-edit-affiliate .affiliate-id").val();
+                    let affiliate = $(
+                        "#modal-edit-affiliate .affiliate-id"
+                    ).val();
                     loadingOnScreen();
                     $.ajax({
                         method: "POST",
                         url: "/api/affiliates/" + affiliate,
                         dataType: "json",
                         headers: {
-                            Authorization: $('meta[name="access-token"]').attr("content"),
+                            Authorization: $('meta[name="access-token"]').attr(
+                                "content"
+                            ),
                             Accept: "application/json",
                         },
                         data: formData,
@@ -350,19 +399,25 @@ $(document).ready(function () {
                         },
                         success: function success(data) {
                             loadingOnScreenRemove();
-                            alertCustom("success", "Afiliado atualizado com sucesso");
+                            alertCustom(
+                                "success",
+                                "Afiliado atualizado com sucesso"
+                            );
                             getAffiliates();
                         },
                     });
                 });
             },
-            complete: response => {
-                unlockSearch($('#btn-filter-affiliates'));
-            }
+            complete: (response) => {
+                unlockSearch($("#btn-filter-affiliates"));
+            },
         });
     }
     function getAffiliatesRequest() {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        var link =
+            arguments.length > 0 && arguments[0] !== undefined
+                ? arguments[0]
+                : null;
 
         var project = $("#project-affiliate-request").val();
         var name = $("#name-affiliate-request").val();
@@ -376,7 +431,10 @@ $(document).ready(function () {
             link = "/api/affiliates/getaffiliaterequests" + link + "&project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         }
 
-        loadOnTable("#body-table-affiliate-requests", ".table-affiliate-request");
+        loadOnTable(
+            "#body-table-affiliate-requests",
+            ".table-affiliate-request"
+        );
 
         $.ajax({
             method: "GET",
@@ -394,20 +452,37 @@ $(document).ready(function () {
                 if (response.data == "") {
                     $("#body-table-affiliate-requests").html(
                         "<tr class='text-center'><td colspan='8' style='height: 257px; vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
-                            $("#body-table-affiliate-requests").attr("img-empty") +
+                            $("#body-table-affiliate-requests").attr(
+                                "img-empty"
+                            ) +
                             "'>Nenhuma solicitação de afiliação encontrada</td></tr>"
                     );
                 } else {
                     $.each(response.data, function (index, value) {
                         data = "";
                         data += "<tr>";
-                        data += '<td class="" style="vertical-align: middle;">' + value.name + "</td>";
-                        data += '<td class="" style="vertical-align: middle;">' + value.email + "</td>";
-                        data += '<td class="" style="vertical-align: middle;">' + value.project_name + "</td>";
-                        data += '<td class="" style="vertical-align: middle;">' + value.date + "</td>";
+                        data +=
+                            '<td class="" style="vertical-align: middle;">' +
+                            value.name +
+                            "</td>";
+                        data +=
+                            '<td class="" style="vertical-align: middle;">' +
+                            value.email +
+                            "</td>";
+                        data +=
+                            '<td class="" style="vertical-align: middle;">' +
+                            value.project_name +
+                            "</td>";
+                        data +=
+                            '<td class="" style="vertical-align: middle;">' +
+                            value.date +
+                            "</td>";
                         // data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td class='text-center text-nowrap'>";
-                        if (value.status != 3 && verifyAccountFrozen() == false) {
+                        if (
+                            value.status != 3 &&
+                            verifyAccountFrozen() == false
+                        ) {
                             data +=
                                 "<a title='Aprovar' class='text-white ml-2 mb-1 mt-1 badge badge-success pointer evaluate-affiliate' affiliate='" +
                                 value.id +
@@ -427,7 +502,11 @@ $(document).ready(function () {
                 }
                 $(".table-affiliate-request").addClass("table-striped");
                 $(".table-affiliate-request").addClass("mb-0");
-                pagination(response, "affiliates-request", getAffiliatesRequest);
+                pagination(
+                    response,
+                    "affiliates-request",
+                    getAffiliatesRequest
+                );
 
                 $(".evaluate-affiliate").on("click", function () {
                     let affiliate = $(this).attr("affiliate");
@@ -439,7 +518,9 @@ $(document).ready(function () {
                         url: "/api/affiliates/evaluateaffiliaterequest",
                         dataType: "json",
                         headers: {
-                            Authorization: $('meta[name="access-token"]').attr("content"),
+                            Authorization: $('meta[name="access-token"]').attr(
+                                "content"
+                            ),
                             Accept: "application/json",
                         },
                         data: { status: status, affiliate: affiliate },
@@ -449,16 +530,19 @@ $(document).ready(function () {
                         },
                         success: function success(data) {
                             loadingOnScreenRemove();
-                            alertCustom("success", "Solicitação de afiliação atualizada com sucesso");
+                            alertCustom(
+                                "success",
+                                "Solicitação de afiliação atualizada com sucesso"
+                            );
                             getAffiliates();
                             getAffiliatesRequest();
                         },
                     });
                 });
             },
-            complete: response => {
-                unlockSearch($('#btn-filter-affiliates-request'));
-            }
+            complete: (response) => {
+                unlockSearch($("#btn-filter-affiliates-request"));
+            },
         });
     }
 });

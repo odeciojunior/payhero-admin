@@ -59,27 +59,132 @@ function unlockSearch(elementButton) {
 }
 
 function loadData() {
-    elementButton = $('#bt_filtro');
-    if (searchIsLocked(elementButton) != 'true') {
+    elementButton = $("#bt_filtro");
+    if (searchIsLocked(elementButton) != "true") {
         lockSearch(elementButton);
-        console.log(elementButton.attr('block_search'));
+        console.log(elementButton.attr("block_search"));
         atualizar();
+    }
+}
+
+function atualizar(link = null) {
+    currentPage = link;
+    let updateResume = true;
+
+    loadOnTable("#body-table-pending", ".table-pending");
+
+    if (link == null) {
+        link = "/api/reports/pending-balance?" + getFilters(true).substr(1);
+    } else {
+        link = "/api/reports/pending-balance" + link + getFilters(true);
+        updateResume = false;
+    }
+
+    $.ajax({
+        method: "GET",
+        url: link,
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            $("#body-table-pending").html("");
+            $(".table-pending").addClass("table-striped");
+
+            if (!isEmpty(response.data)) {
+                $.each(response.data, function (index, value) {
+                    let start_date = "";
+                    if (value.start_date) {
+                        start_date = value.start_date.split(/\s/g); //data inicial
+                        start_date =
+                            "<strong class='bold-mobile'>" +
+                            start_date[0] +
+                            " </strong> <br> <small class='gray font-size-12'>" +
+                            start_date[1] +
+                            " </small>";
+                    }
+
+                    let end_date = "";
+                    if (value.end_date) {
+                        end_date = value.end_date.split(/\s/g); //data final
+                        end_date =
+                            "<strong class='bold-mobile'>" +
+                            end_date[0] +
+                            " </strong> <br> <small class='gray font-size-12'>" +
+                            end_date[1] +
+                            " </small>";
+                    }
+                    let is_security_reserve = "";
+                    if (value.is_security_reserve) {
+                        is_security_reserve = `<br><label data-toggle="tooltip" title="Reserva de Segurança">
+                                                   <img width="12px" src="/build/global/img/money_lock.svg" alt="Reserva de Segurança">
+                                               </label>`;
+                    }
+
+                    dados = `  <tr>
+                                <td class="text-center">
+                                    ${value.sale_code}
+                                    ${is_security_reserve}
+                                </td>
+                                <td class="text-left font-size-14">${value.project}</td>
+                                <td class="text-left font-size-14">${value.client}</td>
+                                <td class="display-sm-none display-m-none display-lg-none">
+                                    <img src='/build/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
+                                </td>
+                                <td class="display-sm-none display-m-none display-lg-none text-left font-size-14">${start_date}</td>
+                                <td class="text-left font-size-14">${end_date}</td>
+                                <td><b class="font-md-size-20">${value.total_paid}</b></td>
+                                <td>
+                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span class="o-eye-1"></span></button></a>
+                                </td>
+                            </tr>`;
+
+                    $("#body-table-pending").append(dados);
+                });
+
+                $("#date").val(
+                    moment(new Date()).add(3, "days").format("YYYY-MM-DD")
+                );
+                $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
+            } else {
+                $("#body-table-pending").html(
+                    "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#body-table-pending").attr("img-empty") +
+                        "'> Nenhuma venda encontrada </td></tr>"
+                );
+            }
+            pagination(response, "pending", atualizar);
+        },
+        complete: (response) => {
+            unlockSearch($("#bt_filtro"));
+        },
+    });
+
+    if (updateResume) {
+        resumePending();
     }
 }
 
 function getFilters(urlParams = false) {
     let data = {
-        'company': $('.company-navbar').val(),
-        'project': $("#project").val(),
-        'client': $("#client").val(),
-        'customer_document': $("#customer_document").val(),
-        'payment_method': $("#payment_method").val(),
-        'sale_code': $("#sale_code").val().replace('#', ''),
-        'date_type': $("#date_type").val(),
-        'date_range': $("#date-filter").val(),
-        'statement': hasSale == false ? 'automatic_liquidation' : $("#type_statement").val(),
-        'acquirer':$("#acquirer").val(),
-        'is_security_reserve': $('#is-security-reserve').is(':checked') ? 1: 0,
+        company: $("#company").val(),
+        project: $("#project").val(),
+        client: $("#client").val(),
+        customer_document: $("#customer_document").val(),
+        payment_method: $("#payment_method").val(),
+        sale_code: $("#sale_code").val().replace("#", ""),
+        date_type: $("#date_type").val(),
+        date_range: $("#date-filter").val(),
+        statement:
+            hasSale == false
+                ? "automatic_liquidation"
+                : $("#type_statement").val(),
+        acquirer: $("#acquirer").val(),
+        is_security_reserve: $("#is-security-reserve").is(":checked") ? 1 : 0,
     };
 
     if (urlParams) {
@@ -121,7 +226,9 @@ function resumePending() {
         },
         error: function error(response) {
             //loadOnAny('.number', true);
-            $("#total-pending, #total").html('R$ <strong class="font-size-30">0,00</strong>');
+            $("#total-pending, #total").html(
+                'R$ <strong class="font-size-30">0,00</strong>'
+            );
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -132,9 +239,16 @@ function resumePending() {
                 $("#total_sales, #total-pending, #total").text("");
                 $("#total_sales").text(response.total_sales);
                 var comission = response.commission.split(/\s/g);
-                $("#total-pending").html(comission[0] + ' <span class="font-size-30 bold">' + comission[1] + "</span>");
+                $("#total-pending").html(
+                    comission[0] +
+                        ' <span class="font-size-30 bold">' +
+                        comission[1] +
+                        "</span>"
+                );
             } else {
-                $("#total-pending, #total").html('R$ <strong class="font-size-30">0,00</strong>');
+                $("#total-pending, #total").html(
+                    'R$ <strong class="font-size-30">0,00</strong>'
+                );
             }
         },
     });
@@ -159,7 +273,10 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {
@@ -225,8 +342,13 @@ $(document).ready(function () {
                         if (company.company_has_sale_before_getnet) {
                             hasSale = true;
                         }
-                        //const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
-                        //$('#company').append(`<option value="${company.id}" data-toggle="tooltip" title="${document}">${company.name}</option>`)
+                        $("#company").append(
+                            '<option value="' +
+                                company.id +
+                                '">' +
+                                company.name +
+                                "</option>"
+                        );
                     });
 
                     if (hasSale) {
@@ -390,7 +512,9 @@ $(document).ready(function () {
                     $("#total-pending, #total").html(
                         '<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>'
                     );
-                    $("#total_sales").html('<strong class="font-size-24 orange">0</strong>');
+                    $("#total_sales").html(
+                        '<strong class="font-size-24 orange">0</strong>'
+                    );
                 }
             },
         });
@@ -476,8 +600,13 @@ $(document).ready(function () {
                         $("#body-table-pending").append(dados);
                     });
 
-                    $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                    $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
+                    $("#date").val(
+                        moment(new Date()).add(3, "days").format("YYYY-MM-DD")
+                    );
+                    $("#date").attr(
+                        "min",
+                        moment(new Date()).format("YYYY-MM-DD")
+                    );
                 } else {
                     $("#body-table-pending").html(
                         "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
@@ -487,9 +616,9 @@ $(document).ready(function () {
                 }
                 pagination(response, "pending", atualizar);
             },
-            complete: response => {
-                unlockSearch($('#bt_filtro'));
-            }
+            complete: (response) => {
+                unlockSearch($("#bt_filtro"));
+            },
         });
 
         if (updateResume) {
@@ -517,12 +646,18 @@ function changeCalendar() {
         .dateRangePicker({
             setValue: function (s) {
                 if (s) {
-                    let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                    let normalize = s.replace(
+                        /(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/,
+                        "$120$2-$320$4"
+                    );
                     $(this).html(s).data("value", normalize);
                     $('input[name="daterange"]').attr("value", normalize);
                     $('input[name="daterange"]').val(normalize);
                 } else {
-                    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+                    $('input[name="daterange"]').attr(
+                        "value",
+                        `${startDate}-${endDate}`
+                    );
                     $('input[name="daterange"]').val(`${startDate}-${endDate}`);
                 }
             },
@@ -541,7 +676,10 @@ function changeCalendar() {
 
 function changeCompany() {
     $("#project").on("change", function () {
-        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+        updateStorage({
+           company: $(this).val(),
+            companyName: $(this).find('option:selected').text(),
+       });
     });
 }
 

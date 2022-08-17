@@ -28,6 +28,7 @@ class CheckoutConfigResource extends JsonResource
             ->map(function ($company) {
                 if ($company->type === Company::PHYSICAL_PERSON) {
                     $status = "approved";
+                    $status = "approved";
                 } else {
                     $status =
                         $company->address_document_status === 3 && $company->contract_document_status === 3
