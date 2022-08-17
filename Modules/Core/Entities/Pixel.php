@@ -42,6 +42,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $is_api
  * @property string|null $facebook_token
  * @property int $value_percentage_purchase_boleto
+ * @property int $value_percentage_purchase_pix
  * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read Affiliate|null $affiliate
@@ -130,6 +131,7 @@ class Pixel extends Model
         "facebook_token",
         "url_facebook_domain",
         "value_percentage_purchase_boleto",
+        "value_percentage_purchase_pix",
         "created_at",
         "updated_at",
         "deleted_at",
