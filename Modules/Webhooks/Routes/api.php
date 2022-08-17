@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/webhooks', function (Request $request) {
-    return $request->user();
-});
+Route::group(
+    ["middleware" => ["auth:api", "scopes:admin", "permission:apps"]],
+    function () {
+        Route::get("webhooks", "WebhooksApiController@index");
+        Route::get("webhooks/{id}", "WebhooksApiController@show");
+        Route::apiResource("webhooks", "WebhooksApiController")
+            ->only("store", "destroy", "update")
+            ->names("api.webhooks")
+            ->middleware("permission:apps_manage");
+        Route::post(
+            "/webhooks/{webhook}/refreshtoken",
+            "WebhooksApiController@refreshToken"
+        )
+            ->name("api.webhooks.refreshtoken")
+            ->middleware("permission:apps_manage");
+    }
+);
