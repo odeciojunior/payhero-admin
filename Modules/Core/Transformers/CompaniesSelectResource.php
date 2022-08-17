@@ -44,6 +44,14 @@ class CompaniesSelectResource extends JsonResource
             $companyIsApproved = true;
         }
 
+        $activeFlag = false;
+        if (
+            $this->active_flag &&
+            $this->user->account_is_approved
+        ) {
+            $activeFlag = true;
+        }
+
         // SEARCH AFFILIATED PROJECTS
         $affiliates = Affiliate::select('affiliates.project_id as id', 'projects.name', 'users_projects.order_priority as order_p', 'projects.status')
             ->join('projects','projects.id','=','affiliates.project_id')
@@ -91,12 +99,13 @@ class CompaniesSelectResource extends JsonResource
             'document' => foxutils()->getDocument($this->document),
             'company_document_status' => $companyDocumentStatus,
             'company_has_sale_before_getnet' => auth()->user()->has_sale_before_getnet,
-            'active_flag' => $this->active_flag,
+            'active_flag' => $activeFlag,
             'has_pix_key' => !empty($bankAccount) && $bankAccount->transfer_type=='PIX',
             'company_type' => $this->present()->getCompanyType($this->company_type),
             'user_address_document_status' => $userAddressDocumentStatus,
             'user_personal_document_status' => $userPersonalDocumentStatus,
             'company_is_approved' => $companyIsApproved,
+            'order_priority' => $this->order_priority,
             'projects' => $projects
         ];
     }

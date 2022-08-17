@@ -85,3 +85,5 @@ logs/
 result
 result_migrations
 *ngrok
+
+.vscode

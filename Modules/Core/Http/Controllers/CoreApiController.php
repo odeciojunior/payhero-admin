@@ -270,12 +270,10 @@ class CoreApiController extends Controller
     public function getCompanies()
     {
         try {
-
             $user = auth()->user();
             $companyModel = new Company();
             $companies = $companyModel->newQuery()
-                ->where('user_id', $user->account_owner_id)
-                ->orderBy('order_priority');
+                ->where('user_id', $user->account_owner_id);
 
             # se empresa default for null, torna default a primeira empresa válida ou, em ultimo caso, a empresa demo
             if($user->company_default == null){
@@ -299,7 +297,6 @@ class CoreApiController extends Controller
                 $request = new Request(['company_id' => $id_code]);
                 $this->updateCompanyDefault($request);
                 $return = array(
-                    'companies'=>CompaniesSelectResource::collection($companies->get()),
                     'company_default'=>$id_code,
                     'company_default_name'=>$fantasy_name,
                     'company_default_fullname'=>$fantasy_name
@@ -308,7 +305,6 @@ class CoreApiController extends Controller
             # se company default for empresa demo
             else if($user->company_default == Company::DEMO_ID){
                 $return = array(
-                    'companies'=>CompaniesSelectResource::collection($companies->get()),
                     'company_default'=>Hashids::encode(1),
                     'company_default_name'=>'Empresa Demo',
                     'company_default_fullname'=>'Empresa Demo'
@@ -324,13 +320,17 @@ class CoreApiController extends Controller
                         20
                     ) ?? '';
                 $return = array(
-                    'companies'=>CompaniesSelectResource::collection($companies->get()),
                     'company_default'=>Hashids::encode($user->company_default),
                     'company_default_name'=>$company_default_name,
                     'company_default_fullname'=>$companyDefault->fantasy_name
                 );
             }
 
+            $return['companies'] = collect(CompaniesSelectResource::collection($companies->get()))
+             ->sortBy('order_priority')
+             ->sortByDesc('active_flag')
+             ->sortByDesc('company_is_approved')
+             ->values()->all();
 
             return $return;
         } catch (Exception $e) {

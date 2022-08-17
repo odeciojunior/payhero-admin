@@ -170,7 +170,7 @@ class Company extends Model
         "annual_income",
         "created_at",
         "updated_at",
-        "deleted_at",
+        "deleted_at"
     ];
 
     /**
@@ -303,5 +303,78 @@ class Company extends Model
             ->where("transfer_type", "TED")
             ->where("status", "VERIFIED")
             ->first() ?? null;
+    }
+
+    public function statusCompany()
+    {
+        //PF
+        if ($this->company_type == self::PHYSICAL_PERSON) {
+            return 'Aprovado';
+        }
+
+        //PJ
+        if ($this->statusCompanyJuridicalPerson() == 'refused') {
+            return 'Recusado';
+        } elseif ($this->statusCompanyJuridicalPerson() == 'approved') {
+            return 'Aprovado';
+        } else {
+            return 'Em análise';
+        }
+    }
+
+    public function statusCompanyJuridicalPerson()
+    {
+        if (
+            $this->contract_document_status === self::DOCUMENT_STATUS_APPROVED &&
+            $this->address_document_status === self::DOCUMENT_STATUS_APPROVED
+        ) {
+            return 'approved';
+        } elseif (
+            $this->contract_document_status === self::DOCUMENT_STATUS_PENDING ||
+            $this->address_document_status === self::DOCUMENT_STATUS_PENDING
+        ) {
+            return 'pending';
+        } elseif (
+            $this->contract_document_status === self::DOCUMENT_STATUS_REFUSED ||
+            $this->address_document_status === self::DOCUMENT_STATUS_REFUSED
+        ) {
+            return 'refused';
+        } elseif (
+            $this->contract_document_status === self::DOCUMENT_STATUS_ANALYZING ||
+            $this->address_document_status === self::DOCUMENT_STATUS_ANALYZING
+        ) {
+            return 'analyzing';
+        }
+    }
+
+    public function getDocumentStatusAttribute()
+    {
+        if ($this->company_type == self::PHYSICAL_PERSON) {
+            return self::DOCUMENT_STATUS_APPROVED;
+        }
+
+        if (
+            $this->contract_document_status === self::DOCUMENT_STATUS_APPROVED &&
+            $this->address_document_status === self::DOCUMENT_STATUS_APPROVED
+        ) {
+            return self::DOCUMENT_STATUS_APPROVED;
+        } elseif (
+            $this->contract_document_status === self::DOCUMENT_STATUS_PENDING ||
+            $this->address_document_status === self::DOCUMENT_STATUS_PENDING
+        ) {
+            return self::DOCUMENT_STATUS_PENDING;
+        } elseif (
+            $this->contract_document_status === self::DOCUMENT_STATUS_REFUSED ||
+            $this->address_document_status === self::DOCUMENT_STATUS_REFUSED
+        ) {
+            return self::DOCUMENT_STATUS_REFUSED;
+        } elseif (
+            $this->contract_document_status === self::DOCUMENT_STATUS_ANALYZING ||
+            $this->address_document_status === self::DOCUMENT_STATUS_ANALYZING
+        ) {
+            return self::DOCUMENT_STATUS_ANALYZING;
+        }
+
+        return null;
     }
 }
