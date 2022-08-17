@@ -90,7 +90,7 @@ $(document).ready(function () {
     }
 
     window.updateAccountHealth = function (margin='150px') {
-        loadingOnAccountsHealth('.sirius-account > .card',margin);
+        //loadingOnAccountsHealth('.sirius-account > .card',margin);
 
         $.ajax({
             method: "GET",
@@ -182,10 +182,10 @@ $(document).ready(function () {
 
                     $(".sirius-account > .card").append(item);
 
+                    updateGauge(data.account_score);
+
                     nextCard();
-                    setTimeout(() => {
-                        updateGauge(data.account_score);
-                    }, 200);
+
                 }
 
                 $(".page.dashboard .sirius-account .sirius-account-health").css({ height: " 225px" });

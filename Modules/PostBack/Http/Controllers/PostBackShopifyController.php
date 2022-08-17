@@ -7,6 +7,7 @@ use App\Jobs\ProcessShopifyTrackingPostbackJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Project;
@@ -25,31 +26,29 @@ class PostBackShopifyController extends Controller
     public function postBackTracking(Request $request)
     {
         try {
-            $postBackLogModel = new PostbackLog();
-            $projectModel = new Project();
-
             $requestData = $request->all();
 
-            $postBackLogModel->create([
+            PostbackLog::create([
                 "origin" => 5,
                 "data" => json_encode($requestData),
                 "description" => "shopify-tracking",
             ]);
 
             $projectId = current(Hashids::decode($request->project_id));
-            $project = $projectModel->find($projectId);
+            $project = DB::table('projects')->select('id')->where('id',$projectId)->exists();
 
-            if (!empty($project)) {
-                ProcessShopifyTrackingPostbackJob::dispatch($projectId, $requestData)->onQueue(
-                    "postback-shopify-tracking"
-                );
-
-                return response()->json(["message" => "success"]);
-            } else {
+            if (empty($project)) {
                 Log::warning("Shopify atualizar código de rastreio - projeto não encontrado");
                 //projeto nao existe
                 return response()->json(["message" => "project not found"]);
             }
+
+            ProcessShopifyTrackingPostbackJob::dispatch($projectId, $requestData)->onQueue(
+                "postback-shopify-tracking"
+            );
+
+            return response()->json(["message" => "success"]);
+
         } catch (\Exception $e) {
             return response()->json(["message" => "error processing postback"]);
         }
