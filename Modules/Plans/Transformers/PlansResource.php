@@ -28,7 +28,6 @@ class PlansResource extends JsonResource
         } else {
             $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/' . $this->code;
         }
-        }
 
         $user = auth()->user();
         if($user->company_default==Company::DEMO_ID){
