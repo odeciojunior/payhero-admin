@@ -2893,8 +2893,16 @@ tbody td{
     display: none;
     background-color: #fff;
 }
-
+.new-register-navbar-open-modal-container{
+    display:block
+}
 @media (max-width: 768px) {
+    .new-register-navbar-open-modal-container{
+        display:none !important
+    }
+    .new-register-page-open-modal-container{
+        display:block !important
+    }
     #company-select{
         display:none !important
     }
