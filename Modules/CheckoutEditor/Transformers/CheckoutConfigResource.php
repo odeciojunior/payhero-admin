@@ -32,6 +32,7 @@ class CheckoutConfigResource extends JsonResource
                 } else {
                     $status =
                         $company->address_document_status === 3 && $company->contract_document_status === 3
+                        && auth()->user()->account_is_approved
                             ? "approved"
                             : "pending";
                 }
@@ -40,7 +41,7 @@ class CheckoutConfigResource extends JsonResource
                     "id" => hashids_encode($company->id),
                     "name" => $company->type == Company::PHYSICAL_PERSON ? "Pessoa física" : $company->name,
                     "document" => foxutils()->getDocument($company->document),
-                    "active_flag" => $company->active_flag,
+                    "active_flag" => $company->active_flag && auth()->user()->account_is_approved,
                     "capture_transaction_enabled" => $company->capture_transaction_enabled,
                     "status" => $status,
                 ];

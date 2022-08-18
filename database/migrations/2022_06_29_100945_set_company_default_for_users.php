@@ -25,7 +25,7 @@ class SetCompanyDefaultForUsers extends Migration
         ->whereNull('deleted_at')->get();
 
         $output = new ConsoleOutput();
-        $bar = new ProgressBar($output, count($companies));        
+        $bar = new ProgressBar($output, count($companies));
         $bar->start();
 
         $companyDefault = 1;
@@ -33,12 +33,15 @@ class SetCompanyDefaultForUsers extends Migration
         foreach ($companies as $company) {
             $bar->advance();
             $companyDefault = 1;
-            if($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED && $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED)
+            $user = User::find($company->user_id);
+
+            if($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED && $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED
+            && $user->account_is_approved)
             {
                 $companyDefault = $company->id;
             }
-            
-            User::find($company->user_id)->update([
+
+            $user->update([
                 'company_default'=>$companyDefault
             ]);
         }
