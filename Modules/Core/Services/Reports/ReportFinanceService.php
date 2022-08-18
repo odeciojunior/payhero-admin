@@ -9,7 +9,9 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\Gateways\AsaasService;
+use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\Gateways\Safe2PayService;
@@ -1496,34 +1498,27 @@ class ReportFinanceService
     {
         $cacheName = "pending-data-";
         return cache()->remember($cacheName, 300, function () {
-            $defaultGateways = [
-                Safe2PayService::class,
-                AsaasService::class,
-                GetnetService::class,
-                GerencianetService::class,
-                // CieloService::class,
-            ];
-
-            $balancesPendingValue = [];
-            $balancesPendingCount = [];
+            // $availableBalance = null;
+            $pendingBalance = null;
+            $pendingBalanceCount = null;
+            // $blockedBalance = null;
+            // $totalBalance = null;
 
             $companies = Company::where("user_id", auth()->user()->account_owner_id)->get();
             foreach ($companies as $company) {
-                foreach ($defaultGateways as $gatewayClass) {
-                    $gateway = app()->make($gatewayClass);
-                    $gateway->setCompany($company);
+                $companyService = new CompanyBalanceService($company);
+                $balancesResume = $companyService->getResumes();
 
-                    $balancesPendingValue[] = $gateway->getPendingBalance();
-                    $balancesPendingCount[] = $gateway->getPendingBalanceCount();
-                }
+                // $availableBalance += array_sum(array_column($balancesResume, "available_balance"));
+                $pendingBalance += array_sum(array_column($balancesResume, "pending_balance"));
+                $pendingBalanceCount += array_sum(array_column($balancesResume, "pending_balance_count"));
+                // $blockedBalance += array_sum(array_column($balancesResume, "blocked_balance"));
+                // $totalBalance += array_sum(array_column($balancesResume, "total_balance"));
             }
 
-            $totalPendingValue = array_sum($balancesPendingValue);
-            $totalPendingCount = array_sum($balancesPendingCount);
-
             return [
-                "value" => foxutils()->formatMoney($totalPendingValue / 100),
-                "amount" => $totalPendingCount,
+                "value" => foxutils()->formatMoney($pendingBalance / 100),
+                "amount" => $pendingBalanceCount,
             ];
         });
     }
@@ -1532,44 +1527,33 @@ class ReportFinanceService
     {
         $cacheName = "blocked-data-";
         return cache()->remember($cacheName, 300, function () {
-            $defaultGateways = [
-                Safe2PayService::class,
-                AsaasService::class,
-                GetnetService::class,
-                GerencianetService::class,
-                // CieloService::class,
-            ];
-
-            $balancesBlockedValue = [];
-            $balancesBlockedCount = [];
-
-            $balancesBlockedPendingValue = [];
-            $balancesBlockedPendinCount = [];
+            // $availableBalance = null;
+            // $pendingBalance = null;
+            // $pendingBalanceCount = null;
+            $blockedBalance = null;
+            $blockedBalanceCount = null;
+            // $totalBalance = null;
 
             $companies = Company::where("user_id", auth()->user()->account_owner_id)->get();
             foreach ($companies as $company) {
-                foreach ($defaultGateways as $gatewayClass) {
-                    $gateway = app()->make($gatewayClass);
-                    $gateway->setCompany($company);
+                $companyService = new CompanyBalanceService($company);
+                $balancesResume = $companyService->getResumes();
 
-                    $balancesBlockedValue[] = $gateway->getBlockedBalance();
-                    $balancesBlockedCount[] = $gateway->getBlockedBalanceCount();
-
-                    $balancesBlockedPendingValue[] = $gateway->getBlockedBalancePending();
-                    $balancesBlockedPendinCount[] = $gateway->getBlockedBalancePendingCount();
-                }
+                // $availableBalance += array_sum(array_column($balancesResume, "available_balance"));
+                // $pendingBalance += array_sum(array_column($balancesResume, "pending_balance"));
+                // $pendingBalanceCount += array_sum(array_column($balancesResume, "pending_balance_count"));
+                $blockedBalance += array_sum(array_column($balancesResume, "blocked_balance"));
+                $blockedBalanceCount += array_sum(array_column($balancesResume, "blocked_balance_count"));
+                // $totalBalance += array_sum(array_column($balancesResume, "total_balance"));
             }
 
-            if (count($balancesBlockedCount) == 0 && count($balancesBlockedPendinCount) == 0) {
+            if ($blockedBalance == 0 && $blockedBalanceCount == 0) {
                 return null;
             }
 
-            $totalBlockedValue = array_sum($balancesBlockedValue) + array_sum($balancesBlockedPendingValue);
-            $totalBlockedCount = array_sum($balancesBlockedCount) + array_sum($balancesBlockedPendinCount);
-
             return [
-                "value" => foxutils()->formatMoney($totalBlockedValue / 100),
-                "amount" => $totalBlockedCount,
+                "value" => foxutils()->formatMoney($blockedBalance / 100),
+                "amount" => $blockedBalanceCount,
             ];
         });
     }
@@ -1578,38 +1562,21 @@ class ReportFinanceService
     {
         $cacheName = "distribuitions-data-";
         return cache()->remember($cacheName, 300, function () {
-            $defaultGateways = [
-                Safe2PayService::class,
-                AsaasService::class,
-                GetnetService::class,
-                GerencianetService::class,
-                // CieloService::class,
-            ];
-
-            $balancesAvailable = [];
-            $balancesPending = [];
-            $balancesBlocked = [];
-            $balancesBlockedPending = [];
+            $availableBalance = null;
+            $pendingBalance = null;
+            $blockedBalance = null;
+            $totalBalance = null;
 
             $companies = Company::where("user_id", auth()->user()->account_owner_id)->get();
             foreach ($companies as $company) {
-                foreach ($defaultGateways as $gatewayClass) {
-                    $gateway = app()->make($gatewayClass);
-                    $gateway->setCompany($company);
+                $companyService = new CompanyBalanceService($company);
+                $balancesResume = $companyService->getResumes();
 
-                    $balancesAvailable[] = $gateway->getAvailableBalance();
-                    $balancesPending[] = $gateway->getPendingBalance();
-                    $balancesBlocked[] = $gateway->getBlockedBalance();
-                    $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
-                }
+                $availableBalance += array_sum(array_column($balancesResume, "available_balance"));
+                $pendingBalance += array_sum(array_column($balancesResume, "pending_balance"));
+                $blockedBalance += array_sum(array_column($balancesResume, "blocked_balance"));
+                $totalBalance += array_sum(array_column($balancesResume, "total_balance"));
             }
-
-            $availableBalance = array_sum($balancesAvailable);
-            $pendingBalance = array_sum($balancesPending);
-            $blockedBalance = array_sum($balancesBlocked);
-            $blockedBalancePending = array_sum($balancesBlockedPending);
-
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending;
 
             return [
                 "available" => [
@@ -1627,13 +1594,9 @@ class ReportFinanceService
                     "color" => "yellow",
                 ],
                 "blocked" => [
-                    "value" => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
+                    "value" => foxutils()->formatMoney(($blockedBalance) / 100),
                     "percentage" => !empty($totalBalance)
-                        ? round(
-                            (($blockedBalance + $blockedBalancePending) * 100) / $totalBalance,
-                            1,
-                            PHP_ROUND_HALF_UP
-                        )
+                        ? round(($blockedBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                         : 0,
                     "color" => "red",
                 ],

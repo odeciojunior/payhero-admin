@@ -117,35 +117,6 @@ class CieloService implements Statement
 
         return Transaction::where("company_id", $this->company->id)
             ->whereIn("gateway_id", $this->gatewayIds)
-            ->where("status_enum", Transaction::STATUS_TRANSFERRED)
-            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-            ->count();
-    }
-
-    public function getBlockedBalancePending(): int
-    {
-        if (!$this->company->user->show_old_finances) {
-            return 0;
-        }
-
-        return Transaction::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->where("status_enum", Transaction::STATUS_PAID)
-            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-            ->sum("value");
-    }
-
-    public function getBlockedBalancePendingCount(): int
-    {
-        if (!$this->company->user->show_old_finances) {
-            return 0;
-        }
-
-        return Transaction::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->where("status_enum", Transaction::STATUS_PAID)
             ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
             ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
             ->count();
@@ -322,8 +293,10 @@ class CieloService implements Statement
         }
         $lastTransactionDate = $lastTransaction->created_at->format("d/m/Y");
 
-        $blockedBalance = null;
+        $blockedBalance = $this->getBlockedBalance();;
+        $blockedBalanceCount = $this->getBlockedBalanceCount();;
         $pendingBalance = $this->getPendingBalance();
+        $pendingBalanceCount = $this->getPendingBalanceCount();
         $availableBalance = $this->getAvailableBalance();
         $totalBalance = $availableBalance + $pendingBalance;
 
@@ -333,7 +306,9 @@ class CieloService implements Statement
             "name" => "Cielo",
             "available_balance" => $availableBalance,
             "pending_balance" => $pendingBalance,
+            "pending_balance_count" => $pendingBalanceCount,
             "blocked_balance" => $blockedBalance,
+            "blocked_balance_count" => $blockedBalanceCount,
             "total_balance" => $totalBalance,
             "total_available" => $availableBalance,
             "pending_debt_balance" => 0,

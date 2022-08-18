@@ -11,7 +11,6 @@ function loadData() {
     elementButton = $("#bt_filtro");
     if (searchIsLocked(elementButton) != "true") {
         lockSearch(elementButton);
-        console.log(elementButton.attr("block_search"));
         atualizar();
     }
 }
