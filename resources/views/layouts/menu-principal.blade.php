@@ -361,7 +361,7 @@
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
         @if (auth()->user()->hasAnyPermission([
                 'report_sales',
-                'report_checkouts',
+
                 'report_coupons',
                 'report_pending',
                 'report_blockedbalance',
@@ -385,7 +385,7 @@
                                     </a>
                                 </li>
                             @endcan
-
+                            {{--
                             @can('report_checkouts')
                                 <li class="site-menu-item">
                                     <a href="{{ route('reports.checkouts') }}">
@@ -394,6 +394,7 @@
                                     </a>
                                 </li>
                             @endcan
+                            --}}
 
                             @can('report_coupons')
                                 <li class="site-menu-item">
