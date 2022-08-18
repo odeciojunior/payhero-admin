@@ -86,7 +86,7 @@ class ProjectsApiController extends Controller
                     }
                 }
 
-                $companyId='';
+                $companyId = $user->company_default;
                 if(!empty($request->input('company'))){
                     $companyId = hashids_decode($request->input('company'));
                 }
