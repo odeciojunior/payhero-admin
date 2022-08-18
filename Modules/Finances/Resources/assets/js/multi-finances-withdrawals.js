@@ -14,36 +14,36 @@ window.defaultWithdrawal = function (gatewayId) {
     }
 
     $.ajax({
-        url: "/api/withdrawals/getaccountinformation",
-        type: "POST",
-        dataType: "json",
-        data: {
-            company_id: $("#transfers_company_select").val(),
-            withdrawal_value: $("#withdrawal-value-" + gatewayId).val(),
-        },
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: (response) => {
-            errorAjaxResponse(response);
-        },
-        success: (response) => {
-            if (response.data.user_pending === true || response.data.company_pending === true) {
-                modalDocsPending(response.data);
-            } else {
-                dataWithdrawal = {
-                    bigger_value: toTransfer,
-                    lower_value: 0,
-                };
+            url: "/api/withdrawals/getaccountinformation",
+            type: "POST",
+            dataType: "json",
+            data: {
+                company_id: $('.company-navbar').val(),
+                withdrawal_value: $('#withdrawal-value-' + gatewayId).val()
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                if (response.data.user_pending === true || response.data.company_pending === true) {
+                    modalDocsPending(response.data)
+                } else {
+                    dataWithdrawal = {
+                        bigger_value: toTransfer,
+                        lower_value: 0,
+                    };
 
-                modalCustomWithdrawal(gatewayId, true, dataWithdrawal);
+                    modalCustomWithdrawal(gatewayId,true, dataWithdrawal)
+                }
+
+                $("#modal-withdrawal-custom").modal("show");
             }
-
-            $("#modal-withdrawal-custom").modal("show");
-        },
-    });
-};
+        });
+}
 
 window.customWithdrawal = function (gatewayId) {
     let availableBalanceText = onlyNumbers($("#available-balance-" + gatewayId).html());
@@ -63,7 +63,7 @@ window.customWithdrawal = function (gatewayId) {
         type: "POST",
         dataType: "json",
         data: {
-            company_id: $("#transfers_company_select").val(),
+            company_id: $('.company-navbar').val(),
             gateway_id: gatewayId,
             withdrawal_value: value,
         },
@@ -453,8 +453,8 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             url: "/api/withdrawals",
             type: "POST",
             data: {
-                company_id: $("#transfers_company_select").val(),
-                withdrawal_value: $(".value-select").data("value"), //
+                company_id: $('.company-navbar').val(),
+                withdrawal_value: $(".value-select").data("value"),//
                 gateway_id: gatewayId,
             },
             dataType: "json",
@@ -465,6 +465,7 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             error: (response) => {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
+                $("#modal-withdrawal-custom").modal("hide");
             },
             success: (response) => {
                 loadingOnScreenRemove();

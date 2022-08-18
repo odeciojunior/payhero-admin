@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 // role:account_owner|admin|attendance
 Route::group(
     [
-        "middleware" => ["auth:api", "scopes:admin", "permission:recovery|sales_manage"],
+        "middleware" => ["auth:api", "scopes:admin", "permission:recovery|sales_manage", "demo_account"],
     ],
     function () {
         Route::apiResource("recovery", "SalesRecoveryApiController")
@@ -22,5 +22,7 @@ Route::group(
         Route::post("recovery/details", "SalesRecoveryApiController@getDetails");
         Route::post("recovery/regenerateboleto", "SalesRecoveryApiController@regenerateBoleto");
         Route::post("recovery/export", "SalesRecoveryApiController@export");
+
+        Route::get('recovery/projects-with-recovery', 'SalesRecoveryApiController@getProjectsWithRecovery');
     }
 );

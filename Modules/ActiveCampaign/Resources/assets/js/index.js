@@ -1,49 +1,90 @@
 $(document).ready(function () {
-    index();
-    function index() {
-        loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "/api/apps/activecampaign",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                if (isEmpty(response.projects)) {
-                    $("#project-empty").show();
-                    $("#integration-actions").hide();
-                } else {
-                    $("#project_id, #select_projects_edit").html("");
-                    let projects = response.projects;
-                    for (let i = 0; i < projects.length; i++) {
-                        $("#project_id, #select_projects_edit").append(
-                            '<option value="' + projects[i].id + '">' + projects[i].name + "</option>"
-                        );
-                    }
-                    if (isEmpty(response.integrations)) {
-                        $("#no-integration-found").show();
-                        $("#content").html("");
-                    } else {
-                        $("#content").html("");
-                        let integrations = response.integrations;
-                        for (let i = 0; i < integrations.length; i++) {
-                            renderIntegration(integrations[i]);
-                        }
-                        $("#no-integration-found").hide();
-                    }
-                    $("#project-empty").hide();
-                    $("#integration-actions").show();
-                }
 
-                loadingOnScreenRemove();
-            },
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2;
+                index('n');
+            });
         });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
+
+    function index(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else{
+            $("#content").html("");
+            loadOnAny('#content');
+        }
+
+        $hasProjects=false;
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                if(project.status == 1)
+                    $hasProjects=true;
+            });
+        }
+
+        if(!$hasProjects){
+            $('#integration-actions').hide();
+            $("#no-integration-found").hide();
+            //$('#project-integrated').hide();
+            $('#project-empty').show();
+            loadingOnScreenRemove();
+            loadOnAny('#content',true);
+        }
+        else{
+
+            $.ajax({
+                method: "GET",
+                url: "/api/apps/activecampaign?company="+ $('.company-navbar').val(),
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    loadOnAny('#content',true);
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+
+                        $('#project_id, #select_projects_edit').html("");
+                        fillSelectProject(companiesAndProjects,'#project_id, #select_projects_edit')
+
+                        if (isEmpty(response.integrations)) {
+                            $("#no-integration-found").show();
+                        } else {
+                            $('#content').html("");
+                            let integrations = response.integrations;
+                            for (let i = 0; i < integrations.length; i++) {
+                                renderIntegration(integrations[i]);
+                            }
+                            $("#no-integration-found").hide();
+                        }
+                        $('#project-empty').hide();
+                        $('#integration-actions').show();
+                    // }
+                    if(loading=='y')
+                        loadingOnScreenRemove();
+                    loadOnAny('#content',true);
+                }
+            });
+
+        }
     }
 
     //checkbox
@@ -116,40 +157,6 @@ $(document).ready(function () {
         clearForm();
     });
 
-    //edit
-    // $(document).on('click', '.card-edit', function () {
-    // $('.activecampaign-link').click();
-    // $('.activecampaign-link-'+$(this).attr('project')).click();
-
-    // <a href="/projects/${project.id}" class="stretched-link"></a>
-
-    // $(".modal-title").html('Editar Integração com ActiveCampaign');
-    // $("#bt_integration_add").addClass('btn-update');
-    // $("#bt_integration_add").removeClass('btn-save');
-    // $("#bt_integration_add").text('Atualizar');
-    // $("#form_update_integration").show();
-    // $("#form_add_integration").hide();
-    // $("#modal_add_integracao").modal('show');
-
-    // $.ajax({
-    //     method: "GET",
-    //     url: "/api/apps/activecampaign/" + $(this).attr('project'),
-    //     dataType: "json",
-    //     headers: {
-    //         'Authorization': $('meta[name="access-token"]').attr('content'),
-    //         'Accept': 'application/json',
-    //     },
-    //     error: (response) => {
-    //         errorAjaxResponse(response);
-    //     },
-    //     success: (response) => {
-    //         $("#select_projects_edit").val(response.data.project_id);
-    //         $('#integration_id').val(response.data.id);
-    //         $("#link_edit").val(response.data.link);
-    //     }
-    // });
-    // });
-
     //store
     $(document).on("click", ".btn-save", function () {
         if ($("#link").val() == "") {
@@ -211,27 +218,40 @@ $(document).ready(function () {
         });
     });
 
-    //destroy
+    // load delete modal
     $(document).on("click", ".delete-integration", function (e) {
         e.stopPropagation();
-        var project = $(this).attr("project");
+        let project = $(this).attr("project");
         var card = $(this).parent().parent().parent().parent().parent();
-        card.find(".card-edit").unbind("click");
-        $.ajax({
-            method: "DELETE",
-            url: "/api/apps/activecampaign/" + project,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                index();
-                alertCustom("success", response.message);
-            },
-        });
+        card.find('.card-edit').unbind('click');
+        $("#modal-delete-integration .btn-delete").attr("project", project);
+        $("#modal-delete-integration").modal("show");
     });
+    //destroy
+    $(document).on(
+        "click",
+        "#modal-delete-integration .btn-delete",
+        function (e) {
+            e.stopPropagation();
+            var project = $(this).attr("project");
+
+
+            $.ajax({
+                method: "DELETE",
+                url: "/api/apps/activecampaign/" + project,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index();
+                    alertCustom("success", response.message);
+                }
+            });
+        }
+    );
 });

@@ -65,14 +65,10 @@ class Safe2PayService implements Statement
 
     public function getPendingBalanceCount(): int
     {
-        return Transaction::leftJoin("block_reason_sales as brs", function ($join) {
-            $join->on("brs.sale_id", "=", "transactions.sale_id")->where("brs.status", BlockReasonSale::STATUS_BLOCKED);
-        })
-            ->whereNull("brs.id")
-            ->where("transactions.company_id", $this->company->id)
-            ->where("transactions.status_enum", Transaction::STATUS_PAID)
-            ->whereIn("transactions.gateway_id", $this->gatewayIds)
-            ->count();
+        return Transaction::where("transactions.company_id", $this->company->id)
+        ->where("transactions.status_enum", Transaction::STATUS_PAID)
+        ->whereIn("transactions.gateway_id", $this->gatewayIds)
+        ->count();
     }
 
     public function getBlockedBalance(): int
@@ -89,27 +85,6 @@ class Safe2PayService implements Statement
     {
         return Transaction::where("company_id", $this->company->id)
             ->whereIn("gateway_id", $this->gatewayIds)
-            ->where("status_enum", Transaction::STATUS_TRANSFERRED)
-            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-            ->count();
-    }
-
-    public function getBlockedBalancePending(): int
-    {
-        return Transaction::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->where("status_enum", Transaction::STATUS_PAID)
-            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-            ->sum("value");
-    }
-
-    public function getBlockedBalancePendingCount(): int
-    {
-        return Transaction::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->where("status_enum", Transaction::STATUS_PAID)
             ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
             ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
             ->count();
@@ -373,8 +348,10 @@ class Safe2PayService implements Statement
             ->first();
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format("d/m/Y") : "";
 
-        $blockedBalance = null;
+        $blockedBalance = $this->getBlockedBalance();
+        $blockedBalanceCount = $this->getBlockedBalanceCount();
         $pendingBalance = $this->getPendingBalance();
+        $pendingBalanceCount = $this->getPendingBalanceCount();
         $availableBalance = $this->getAvailableBalance();
         $totalBalance = $availableBalance + $pendingBalance;
 
@@ -384,7 +361,9 @@ class Safe2PayService implements Statement
             "name" => "Vega",
             "available_balance" => $availableBalance,
             "pending_balance" => $pendingBalance,
+            "pending_balance_count" => $pendingBalanceCount,
             "blocked_balance" => $blockedBalance,
+            "blocked_balance_count" => $blockedBalanceCount,
             "total_balance" => $totalBalance,
             "total_available" => $availableBalance,
             "last_transaction" => $lastTransactionDate,

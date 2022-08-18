@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\TicketAttachment;
 use Modules\Core\Entities\TicketMessage;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\Sac\TicketMessageEvent;
 use Modules\Core\Services\AttendanceService;
 use Modules\Core\Services\FoxUtils;
@@ -26,27 +28,24 @@ class TicketsApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $data = (object) $request->all();
-            $userId = auth()->user()->account_owner_id;
+            $data = (object)$request->all();
+            $userId = auth()->user()->getAccountOwnerId();
 
             $ticketsQuery = Ticket::select([
-                "tickets.id",
-                "tickets.subject",
-                DB::raw(
-                    "ifnull((select m.message from ticket_messages as m where m.ticket_id = tickets.id order by id desc limit 1), tickets.description) as description"
-                ),
-                "tickets.ticket_status_enum",
-                "tickets.last_message_type_enum",
-                "customers.name as customer_name",
-                "sales.id as sale_id",
-            ])
-                ->withCount([
-                    "messages as admin_answers" => function ($query) {
-                        $query->where("type_enum", TicketMessage::TYPE_FROM_ADMIN);
-                    },
-                ])
-                ->join("sales", "tickets.sale_id", "=", "sales.id")
-                ->join("customers", "sales.customer_id", "=", "customers.id");
+                'tickets.id',
+                'tickets.subject',
+                DB::raw("ifnull((select m.message from ticket_messages as m where m.ticket_id = tickets.id order by id desc limit 1), tickets.description) as description"),
+                'tickets.ticket_status_enum',
+                'tickets.last_message_type_enum',
+                'customers.name as customer_name',
+                'sales.id as sale_id'
+            ])->withCount([
+                'messages as admin_answers' => function ($query) {
+                    $query->where('type_enum', TicketMessage::TYPE_FROM_ADMIN);
+                }
+            ])->join('sales', 'tickets.sale_id', '=', 'sales.id')
+                ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
+                ->join('customers', 'sales.customer_id', '=', 'customers.id');
 
             if ($data->project) {
                 $ticketsQuery->where("sales.project_id", hashids_decode($data->project));
@@ -112,10 +111,10 @@ class TicketsApiController extends Controller
             }
 
             $tickets = $ticketsQuery
-                ->where("sales.owner_id", $userId)
-                ->orderByDesc("id")
+                ->where('sales.owner_id', $userId)
+                ->where('checkout_configs.company_id', hashids_decode($data->company))
+                ->orderByDesc('tickets.id')
                 ->paginate(5);
-
             return TicketResource::collection($tickets);
         } catch (Exception $e) {
             report($e);
@@ -231,30 +230,21 @@ class TicketsApiController extends Controller
         try {
             $ticketsModel = new Ticket();
             $data = $request->all();
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
 
             $ticketPresenter = $ticketsModel->present();
-            $ticket = $ticketsModel
-                ->selectRaw(
-                    "count(case when ticket_status_enum = " .
-                        $ticketPresenter->getTicketStatusEnum("open") .
-                        ' then 1 end) as openCount,
-                                                     count(case when ticket_status_enum = ' .
-                        $ticketPresenter->getTicketStatusEnum("mediation") .
-                        ' then 1 end) as mediationCount,
-                                                     count(case when ticket_status_enum = ' .
-                        $ticketPresenter->getTicketStatusEnum("closed") .
-                        ' then 1 end) as closedCount
-                                            '
-                )
-                ->whereHas("sale", function ($query) use ($userId, $data) {
-                    $query->where("owner_id", $userId);
-                    if (!empty($data["project"])) {
-                        $projectId = hashids_decode($data["project"]);
-                        $query->where("project_id", $projectId);
-                    }
-                });
-
+            $ticket = $ticketsModel->selectRaw('count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('open') . ' then 1 end) as openCount,
+                                                     count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('mediation') . ' then 1 end) as mediationCount,
+                                                     count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('closed') . ' then 1 end) as closedCount
+                                            ')
+                ->join('sales', 'tickets.sale_id','=','sales.id')
+                ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
+                ->where('sales.owner_id', $userId)
+                ->where('checkout_configs.company_id', hashids_decode($data['company_id']));
+                if (!empty($data['project'])) {
+                    $projectId = hashids_decode($data['project']);
+                    $ticket->where('sales.project_id', $projectId);
+                }
             $ticket = $ticket->first();
             $totalCount = $ticket->openCount + $ticket->mediationCount + $ticket->closedCount;
 

@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Domain;
@@ -30,11 +31,11 @@ class CheckoutService
     {
         $projectIds = [];
 
-        if (request("project") == "all") {
-            $projectIds = UserProject::where("user_id", auth()->user()->account_owner_id)
-                ->where("type_enum", UserProject::TYPE_PRODUCER_ENUM)
-                ->pluck("project_id")
-                ->toArray();
+        $ownerId = auth()->user()->getAccountOwnerId();
+
+        if (request('project') == 'all') {
+            $projectIds = UserProject::where('user_id', $ownerId)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
+
         } else {
             $projects = explode(",", request("project"));
             foreach ($projects as $project) {
@@ -56,42 +57,59 @@ class CheckoutService
             }
         }
 
-        $abandonedCarts = Checkout::with([
-            "project.domains" => function ($query) {
-                $query->where("status", Domain::STATUS_APPROVED);
-            },
-            "checkoutPlans.plan",
-        ])
-            ->whereHas("checkoutPlans", function ($query) {
-                $query->whereHas("plan");
-            })
-            ->whereIn("status_enum", $abandonedCartsStatus)
-            ->whereIn("project_id", $projectIds)
-            ->whereBetween("created_at", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
-            ->when(!empty(request("client")), function ($query) {
-                $query->where("client_name", "like", "%" . request("client") . "%");
-            })
-            ->when(!empty(request("client_document")), function ($query) {
-                $query->whereHas("logs", function ($query) {
-                    $query->where("document", request("client_document"));
-                });
-            })
-            ->when(!empty($plansIds), function ($query) use ($plansIds) {
-                $query->whereHas("checkoutPlans", function ($query) use ($plansIds) {
-                    $query->whereIn("plan_id", $plansIds);
-                });
-            });
+        $abandonedCarts = Checkout::
+        join('checkout_configs','checkouts.project_id','=','checkout_configs.project_id')
+        ->select('checkouts.*')
+        ->with(
+            [
+                'project.domains' => function ($query) {
+                    $query->where('status', Domain::STATUS_APPROVED);
+                },
+                'checkoutPlans.plan',
+            ]
+        )->whereHas('checkoutPlans', function ($query) {
+            $query->whereHas('plan');
+        })->whereIn('status_enum', $abandonedCartsStatus)
+            ->whereIn('checkouts.project_id', $projectIds)
+            ->whereBetween('checkouts.created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+            ->where('checkout_configs.company_id',hashids_decode(request('company')))
+            ->when(
+                !empty(request('client')),
+                function ($query) {
+                    $query->where('client_name', 'like', '%' . request('client') . '%');
+                }
+            )
+            ->when(
+                !empty(request('client_document')),
+                function ($query) {
+                    $query->whereHas(
+                        'logs',
+                        function ($query) {
+                            $query->where('document', request('client_document'));
+                        }
+                    );
+                }
+            )
+            ->when(
+                !empty($plansIds),
+                function ($query) use ($plansIds) {
+                    $query->whereHas(
+                        'checkoutPlans',
+                        function ($query) use ($plansIds){
+                            $query->whereIn('plan_id', $plansIds);
+                        }
+                    );
+                }
+            );
 
-        $affiliateIds = Affiliate::where("user_id", auth()->user()->account_owner_id)
-            ->whereIn("project_id", $projectIds)
-            ->pluck("id")
-            ->toArray();
+        $affiliateIds = Affiliate::where('user_id', $ownerId)
+            ->whereIn('project_id', $projectIds)->pluck('id')->toArray();
 
         if (!empty($affiliateIds) && count($affiliateIds) > 0) {
             $abandonedCarts->whereIn("affiliate_id", $affiliateIds);
         }
 
-        return $abandonedCarts->orderBy("id", "DESC")->paginate(10);
+        return $abandonedCarts->orderBy('checkouts.id', 'DESC')->paginate(10);
     }
 
     /**
@@ -199,45 +217,21 @@ class CheckoutService
                 "total_paid_value" => $totalPaidValue,
             ];
 
-            $response = $this->runCurl($regenerateBilletUrl, "POST", $data);
-            if (
-                !empty($response->status) &&
-                !empty($response->response->status) &&
-                $response->status == "success" &&
-                $response->response->status == "success"
-            ) {
-                // $saleModel  = new Sale();
-                $dataUpdate = (array) $response->response;
-                // if (!empty($dataUpdate['gateway_received_date'])) {
-                //     unset($dataUpdate['gateway_received_date']);
-                // }
-                // $check = $saleModel->where('id', $saleIdDecode)
-                //                    ->update(array_merge($dataUpdate,
-                //                                         [
-                //                                             'start_date'       => Carbon::now(),
-                //                                             'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
-                //                                         ]));
-                // if ($check) {
-                RegeneratedBillet::create([
-                    "sale_id" => $saleIdDecode,
-                    "billet_link" => $dataUpdate["boleto_link"],
-                    "billet_digitable_line" => $dataUpdate["boleto_digitable_line"],
-                    "billet_due_date" => $dataUpdate["boleto_due_date"],
-                    "gateway_transaction_id" => $dataUpdate["gateway_transaction_id"],
-                    "gateway_billet_identificator" => $dataUpdate["gateway_billet_identificator"] ?? null,
-                    "gateway_id" => $sale->gateway_id,
-                    "owner_id" => $sale->owner_id,
-                ]);
-
-                // $transactionModel = new Transaction();
-                // $sale             = $saleModel::with('project.domains')
-                //                               ->where('id', $saleIdDecode)
-                //                               ->first();
-                // $transactionModel->where('sale_id', $saleIdDecode)->delete();
-
-                // $splitPaymentService = new SplitPaymentService();
-
-                // $splitPaymentService->splitPayment($totalPaidValue, $sale, $sale->project, $sale->user);
+            $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
+            if (!empty($response->status) && !empty($response->response->status) && $response->status == 'success' && $response->response->status == 'success') {
+                $dataUpdate = (array)$response->response;
+                RegeneratedBillet::create(
+                    [
+                        'sale_id' => $saleIdDecode,
+                        'billet_link' => $dataUpdate['boleto_link'],
+                        'billet_digitable_line' => $dataUpdate['boleto_digitable_line'],
+                        'billet_due_date' => $dataUpdate['boleto_due_date'],
+                        'gateway_transaction_id' => $dataUpdate['gateway_transaction_id'],
+                        'gateway_billet_identificator' => $dataUpdate['gateway_billet_identificator'] ?? null,
+                        'gateway_id' => $sale->gateway_id,
+                        'owner_id' => $sale->owner_id,
+                    ]
+                );
                 $result = [
                     "status" => "success",
                     "message" => print_r($response->message, true) ?? "",

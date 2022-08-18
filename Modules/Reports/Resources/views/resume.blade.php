@@ -9,8 +9,10 @@
     @endpush
 
     <div class="page mb-0">
-        <div style="display: none"
-             class="page-header container">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
+        <div style="display: none" class="page-header container">
             <div class="filter-container row justify-content-between">
 
                 <div class="col-sm-12 col-lg-3 col-xl-3">

@@ -21,39 +21,49 @@ class SmartfunnelApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $smartfunnelIntegration = new SmartfunnelIntegration();
-            $userProjectModel = new UserProject();
-            $projectModel = new Project();
+            $user = auth()->user();
 
-            activity()
-                ->on($smartfunnelIntegration)
-                ->tap(function (Activity $activity) {
-                    $activity->log_name = "visualization";
-                })
-                ->log("Visualizou tela todos as integrações Smart Funnel");
+            activity()->on((new SmartfunnelIntegration()))->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todos as integrações Smart Funnel');
 
-            $smartfunnelIntegrations = $smartfunnelIntegration
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->with("project")
-                ->get();
+            $smartfunnelIntegrations = SmartfunnelIntegration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             $projects = collect();
-            $userProjects = $userProjectModel->where("user_id", auth()->user()->account_owner_id)->get();
+            $userProjects = UserProject::where([[
+                'user_id', $user->getAccountOwnerId()],[
+                'company_id', $user->company_default
+            ]])->orderBy('id', 'desc')->get();
+
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->where("status", $projectModel->present()->getStatus("active"))
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
                         ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                 "integrations" => SmartfunnelResource::collection($smartfunnelIntegrations),
                 "projects" => ProjectsSelectResource::collection($projects),
@@ -120,9 +130,9 @@ class SmartfunnelApiController extends Controller
                 }
 
                 $integrationCreated = $smartfunnelIntegrationModel->create([
-                    "api_url" => $data["api_url"],
-                    "project_id" => $projectId,
-                    "user_id" => auth()->user()->account_owner_id,
+                    'api_url'             => $data['api_url'],
+                    'project_id'          => $projectId,
+                    'user_id'             => auth()->user()->getAccountOwnerId(),
                 ]);
 
                 if ($integrationCreated) {

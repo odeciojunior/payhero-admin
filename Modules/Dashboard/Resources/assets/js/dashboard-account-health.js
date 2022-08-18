@@ -60,12 +60,8 @@ $(document).ready(function () {
     function indexColor(value) {
         if (value <= 1.5) {
             return "color: #1BCE68;";
-            console.log("green");
-        } else {
-            return "color: #FF3006;";
-            console.log("red");
         }
-        return "";
+        return "color: #FF3006;";
     }
 
     function nextCard() {
@@ -77,7 +73,7 @@ $(document).ready(function () {
             let card = $(this).data("slide-to");
             switch (card) {
                 case 1:
-                    updateAccountHealth();
+                    window.updateAccountHealth();
                     break;
                 case 2:
                     updateChargeback();
@@ -93,15 +89,15 @@ $(document).ready(function () {
         });
     }
 
-    window.updateAccountHealth = function () {
-        loadingOnAccountsHealth(".sirius-account > .card");
+    window.updateAccountHealth = function (margin='150px') {
+        //loadingOnAccountsHealth('.sirius-account > .card',margin);
 
         $.ajax({
             method: "GET",
             url: `/api/dashboard/get-account-health`,
             dataType: "json",
             data: {
-                company: $("#company").val(),
+                company: $('.company-navbar').val(),
             },
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -113,7 +109,6 @@ $(document).ready(function () {
             },
             success: function success(data) {
                 if (!data.account_score) {
-                    //alert(data.account_score);
                     updateEmptyScore();
                 } else {
                     let item = `
@@ -187,8 +182,10 @@ $(document).ready(function () {
 
                     $(".sirius-account > .card").append(item);
 
-                    nextCard();
                     updateGauge(data.account_score);
+
+                    nextCard();
+
                 }
 
                 $(".page.dashboard .sirius-account .sirius-account-health").css({ height: " 225px" });
@@ -294,7 +291,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-chargeback`,
             dataType: "json",
             data: {
-                company: $("#company").val(),
+                company: $('.company-navbar').val(),
             },
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -430,7 +427,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-attendance`,
             dataType: "json",
             data: {
-                company: $("#company").val(),
+                company: $('.company-navbar').val(),
             },
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -512,7 +509,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-tracking`,
             dataType: "json",
             data: {
-                company: $("#company").val(),
+                company: $('.company-navbar').val(), //Storage.getItem('company_default'),
             },
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),

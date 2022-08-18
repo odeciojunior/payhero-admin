@@ -1978,7 +1978,7 @@ tbody td{
     font-size: 16px;
     overflow-y: auto;
     scrollbar-width: none;
-    z-index: 999;
+    z-index: 1101;
 }
 
 .sirius-select-container .sirius-select-options::-webkit-scrollbar {
@@ -2003,8 +2003,17 @@ tbody td{
 
 .sirius-select-container .sirius-select-options div.disabled {
     opacity: 0.5;
-    background: #F6F7F9;
+    background: white; /*#F6F7F9;*/
     cursor: none !important;
+    color:#ccc;
+}
+
+#company-select .sirius-select-container {
+    width: 260px;
+}
+
+#company-select-mobile .sirius-select-text{
+    background-color:#fff !important;
 }
 /* END sirius select */
 
@@ -2204,11 +2213,11 @@ tbody td{
 }
 
 .new-register-navbar-open-modal-container {
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: left;
     position: fixed;
     left: 65px;
-    right: 20px;
+    right: 20px; */
     font-size: 16px;
 }
 @media screen and (max-width: 920px) {
@@ -2233,6 +2242,7 @@ tbody td{
 }
 
 .new-register-page-open-modal-container {
+    display: none;
     margin-left: 65px;
     transition: all .25s;
 }
@@ -2854,6 +2864,75 @@ tbody td{
     }
 }
 
+#company-select, #company-select-mobile{
+    font-family: 'Inter' !important;
+}
+.company-navbar + .sirius-select-text{
+    border: 1px white solid;
+    background-position-x: 92.5%;
+    padding-right: 50px;
+    padding-top: 12px !important;
+    background-color: #f4f4f4;
+    color:#15034C;
+    font-weight: 600;
+    font-size: 16px;
+}
+.company-navbar + .active {
+    border: 1px solid #88BFFF;
+}
+/* .company-navbar + .sirius-select-text{
+    color:#15034C;
+    font-weight: 600;
+    font-size: 16px;
+} */
+
+.cloudfox-logo-desktop{
+    display: flex;
+}
+.cloudfox-logo-mobile{
+    display: none;
+    background-color: #fff;
+}
+.new-register-navbar-open-modal-container{
+    display:block
+}
+@media (max-width: 768px) {
+    .new-register-navbar-open-modal-container{
+        display:none !important
+    }
+    .new-register-page-open-modal-container{
+        display:block !important
+    }
+    #company-select{
+        display:none !important
+    }
+    #company-select-mobile{
+        display: block !important;
+    }
+    .cloudfox-logo-desktop{
+        display: none;
+    }
+    .cloudfox-logo-mobile{
+        display: flex;
+    }
+    .announcekit-widget{
+        display: flex !important;
+    }
+    .announcekit-widget-badge{
+        position: absolute;
+        top: -3px;
+        right: 3px;
+    }
+    #top-vertical-bar{
+        display: none;
+    }
+    .hamburger-desk{
+        display: none;
+    }
+    #loadingOnScreen .sirius-loading{
+        padding-left:0px !important;
+    }
+}
 
 @-webkit-keyframes fade-in {
     0% { opacity: 0; }

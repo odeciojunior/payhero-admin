@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 // role:attendance|account_owner|admin
 Route::group(
     [
-        "middleware" => ["auth:api", "permission:contestations"],
+        "middleware" => ["auth:api", "permission:contestations","demo_account"],
         "prefix" => "contestations",
     ],
     function () {
@@ -29,6 +29,8 @@ Route::group(
         Route::post("/update-is-file-completed", "ContestationsApiController@updateIsFileCompleted")
             ->name("users.updateIsFileCompleted")
             ->middleware("permission:contestations_manage");
+
+        Route::get('/projects-with-contestations', 'ContestationsApiController@getProjectsWithContestations');
 
         Route::get("/{contestation_id}/contestation", "ContestationsApiController@show")
             ->name("contestations.show")

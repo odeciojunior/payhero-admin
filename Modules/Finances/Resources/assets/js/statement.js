@@ -45,7 +45,7 @@ window.updateTransfersTable = function (link = null) {
     }
 
     let data = {
-        company_id: $("#extract_company_select option:selected").val(),
+        company_id: $('.company-navbar').val(),
         gateway_id: window.gatewayCode,
         date_type: $("#date_type").val(),
         date_range: $("#date_range").val(),
@@ -248,22 +248,14 @@ window.updateAccountStatementData = function () {
 
     let link =
         "/api/transfers?" +
-        "company_id=" +
-        $("#statement_company_select").val() +
-        "&gateway_id=" +
-        window.gatewayCode +
-        "&dateRange=" +
-        $("#date_range_statement").val() +
-        "&sale=" +
-        encodeURIComponent($("#statement_sale").val()) +
-        "&status=" +
-        $("#statement_status_select").val() +
-        "&statement_data_type=" +
-        $("#statement_data_type_select").val() +
-        "&payment_method=" +
-        $("#payment_method").val() +
-        "&withdrawal_id=" +
-        $("#withdrawal_id").val();
+        "company_id=" + $('.company-navbar').val() +
+        "&gateway_id=" + window.gatewayCode +
+        "&dateRange=" + $("#date_range_statement").val() +
+        "&sale=" + encodeURIComponent($("#statement_sale").val()) +
+        "&status=" + $("#statement_status_select").val() +
+        "&statement_data_type=" + $("#statement_data_type_select").val() +
+        "&payment_method=" + $("#payment_method").val() +
+        "&withdrawal_id=" + $("#withdrawal_id").val();
 
     $(".numbers").hide();
 
@@ -493,16 +485,16 @@ $(window).on("load", function () {
 
     function getFilters(urlParams = false) {
         let data = {
-            company: $("#extract_company_select").val(),
-            reason: $("#reason").val(),
-            transaction: $("#transaction").val().replace("#", ""),
-            type: $("#type").val(),
-            value: $("#transaction-value").val(),
-            date_range: $("#date_range").val(),
-            date_type: $("#date_type").val(),
-            email: $("#email_finance_export").val(),
-            format: exportFinanceFormat,
-            gateway_id: window.gatewayCode,
+            'company': $('.company-navbar').val(),
+            'reason': $("#reason").val(),
+            'transaction': $("#transaction").val().replace('#', ''),
+            'type': $("#type").val(),
+            'value': $("#transaction-value").val(),
+            'date_range': $("#date_range").val(),
+            'date_type': $("#date_type").val(),
+            'email': $('#email_finance_export').val(),
+            'format': exportFinanceFormat,
+            'gateway_id': window.gatewayCode,
         };
 
         if (urlParams) {

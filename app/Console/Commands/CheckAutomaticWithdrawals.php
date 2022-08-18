@@ -6,12 +6,13 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\WithdrawalSettings;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
-use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\GerencianetService;
+use Modules\Core\Services\Gateways\Safe2PayService;
 
 class CheckAutomaticWithdrawals extends Command
 {
@@ -33,7 +34,7 @@ class CheckAutomaticWithdrawals extends Command
         AsaasService::class,
         //GetnetService::class,
         GerencianetService::class,
-        //Safe2PayService::class
+        Safe2PayService::class
         //CieloService::class,
     ];
 
@@ -49,10 +50,8 @@ class CheckAutomaticWithdrawals extends Command
 
     public function handle()
     {
-        $service = new WithdrawalService();
-        $withdrawalSettingsModel = new WithdrawalSettings();
-        $withdrawalsSettings = $withdrawalSettingsModel
-            ->whereNull("deleted_at")
+        $withdrawalsSettings = WithdrawalSettings::
+            whereNull("deleted_at")
             ->orderBy("id", "DESC")
             ->get();
 
@@ -65,21 +64,25 @@ class CheckAutomaticWithdrawals extends Command
                 DB::beginTransaction();
                 $company = Company::find($settings->company->id);
 
-                foreach ($this->defaultGateways as $gatewayClass) {
-                    $gatewayService = new $gatewayClass();
-                    $gatewayService->setCompany($company);
+                //It only generates the automatic withdrawal if the account is active
+                if ($company->user->status == User::STATUS_ACTIVE) {
 
-                    $availableBalance = $gatewayService->getAvailableBalance();
-                    $pendingBalance = $gatewayService->getPendingBalance();
-                    (new CompanyService())->applyBlockedBalance($gatewayService, $availableBalance, $pendingBalance);
+                    foreach ($this->defaultGateways as $gatewayClass) {
+                        $gatewayService = new $gatewayClass();
+                        $gatewayService->setCompany($company);
 
-                    $withdrawalValue = $this->getAvailableBalance($settings, $availableBalance);
+                        $availableBalance = $gatewayService->getAvailableBalance();
+                        $pendingBalance = $gatewayService->getPendingBalance();
+                        (new CompanyService())->applyBlockedBalance($gatewayService, $availableBalance, $pendingBalance);
 
-                    if ($withdrawalValue >= 10000) {
-                        if ($gatewayService->existsBankAccountApproved()) {
-                            $withdrawal = $gatewayService->createWithdrawal($withdrawalValue);
-                            if ($withdrawal) {
-                                event(new WithdrawalRequestEvent($withdrawal));
+                        $withdrawalValue = $this->getAvailableBalance($settings, $availableBalance);
+
+                        if ($withdrawalValue >= 10000) {
+                            if ($gatewayService->existsBankAccountApproved()) {
+                                $withdrawal = $gatewayService->createWithdrawal($withdrawalValue);
+                                if ($withdrawal) {
+                                    event(new WithdrawalRequestEvent($withdrawal));
+                                }
                             }
                         }
                     }

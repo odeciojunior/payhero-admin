@@ -43,10 +43,8 @@
              class="modal-content p-20 "
              style="min-width: 300px;">
             <div class="header-modal">
-                <div class="row justify-content-between align-items-center"
-                     style="width: 100%;">
-                    <div class="col-lg-10 text-left">
-                        <h4 class="font-weight-bold">Arquivos para contestaçãoxxx</h4>
+                <div class="row justify-content-between align-items-center" style="width: 100%;">
+                    <div class="col-lg-10 text-left"><h4 class="font-weight-bold">Arquivos para contestação</h4>
                         <strong id="sale_hash"></strong>
                     </div>
 
@@ -104,7 +102,18 @@
                     {{-- <li>Nota fiscal</li> --}}
                     {{-- </ul> --}}
 
-                    {{-- <hr> --}}
+                        {{--                <p>--}}
+                        {{--                    Para evitar chargeback, sugerimos que você envie estes arquivos antes do prazo de expiração:--}}
+                        {{--                </p>--}}
+                        {{--                <ul>--}}
+                        {{--                    <li>Nota fiscal</li>--}}
+                        {{--                    <li>Comprovante de acordo com o titular do cartão</li>--}}
+                        {{--                    <li>Comprovação de ciência do portador sobre condições de pagamento e cancelamento</li>--}}
+                        {{--                    <li>Print das Políticas e Termos da sua loja virtual</li>--}}
+                        {{--                    <li>Nota fiscal</li>--}}
+                        {{--                </ul>--}}
+
+                        {{--                <hr>--}}
 
                     <form method="post"
                           id="sendfilesform"

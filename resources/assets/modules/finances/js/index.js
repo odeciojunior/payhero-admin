@@ -26,7 +26,7 @@ $(document).ready(function () {
         $(".price").append("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
 
         $.ajax({
-            url: "/finances/getbalances/" + $("#transfers_company_select").val(),
+            url: "/finances/getbalances/" + $('.company-navbar').val(),
             type: "GET",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -80,7 +80,7 @@ $(document).ready(function () {
             alertCustom("error", "Valor do saque inválido!");
         } else {
             $.ajax({
-                url: "/withdrawals/getaccountinformation/" + $("#transfers_company_select").val(),
+                url: "/withdrawals/getaccountinformation/" + $('.company-navbar').val(),
                 type: "GET",
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),

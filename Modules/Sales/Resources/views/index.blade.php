@@ -6,14 +6,17 @@
     @endpush
 
     <!-- Page -->
-    <div class="page pb-0" style="margin-bottom: 0px !important;">
-        <div style="display: none" class="page-header container">
-            <div class="row align-items-center justify-content-between" style="min-height:50px">
-                <div class="col-6">
-                    <h1 class="page-title">Vendas</h1>
-                </div>
-                <!-- hasanyrole('account_owner|admin|finantial') -->
-                @can('sales_manage')
+        <div class="page pb-0" style="margin-bottom: 0px !important;">
+
+            @include('layouts.company-select',['version'=>'mobile'])
+
+            <div style="display: none" class="page-header container">
+                <div class="row align-items-center justify-content-between" style="min-height:50px">
+                    <div class="col-6">
+                        <h1 class="page-title">Vendas</h1>
+                    </div>
+                    <!-- hasanyrole('account_owner|admin|finantial') -->
+                    @can('sales_manage')
                     <div class="col-6 text-right">
                         <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
                             <div class="p-2 d-flex justify-content-end align-items-center">
@@ -97,13 +100,13 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
-                                    <label for="empresa">Empresa</label>
-                                    <select name="select_company" id="empresa"
-                                        class="form-control select-pad select-company applySelect2">
-                                        <option value="">Todas empresas</option>
-                                    </select>
-                                </div>
+                                    {{-- <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
+                                        <label for="empresa">Empresa</label>
+                                        <input type="text" disabled="" class="company_name">
+                                        {{-- <select name="select_company" id="empresa" class="form-control select-pad select-company applySelect2">
+                                            <option value="">Todas empresas</option>
+                                        </select> - -}}
+                                    </div> --}}
 
                                 <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="projeto">Lojas</label>
@@ -121,27 +124,27 @@
                                     </select>
                                 </div>
 
-                            </div>
-
-                            <div class="row mb-md-15">
-
-                                <div class="col-sm-12 col-md mb-15 mb-sm-0">
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="cupom">Cupom</label>
                                     <input name="coupon" id="cupom" class="input-pad" placeholder="Código do cupom">
                                 </div>
 
-                                <div class="col-sm-12 col-md mb-15 mb-sm-0">
+                            </div>
+
+                            <div class="row mb-md-15">
+
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="valor">Comissão</label>
                                     <input name="value" id="valor" class="input-pad"
                                         placeholder="Valor da comissão">
                                 </div>
 
-                                <div class="col-sm-12 col-md mb-15 mb-sm-0">
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="comprador">Nome do cliente</label>
                                     <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
                                 </div>
 
-                                <div class="col-sm-12 col-md mb-15 mb-sm-0">
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="customer_document">CPF do cliente</label>
                                     <input name='customer_document' id="customer_document" class="input-pad"
                                         placeholder="CPF" data-mask="000.000.000-00">
@@ -152,8 +155,6 @@
                             <div class="row mb-md-15 d-flex justify-content-between">
 
                                 <div class="col-sm-12 col-md-3">
-                                    <label for="email_cliente">Email do cliente</label>
-                                    <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
                                 </div>
 
                                 <div class="col-sm-12 col-md-8 mt-20 pr-0 pl-20" style="flex-grow: 2.134 !important;">

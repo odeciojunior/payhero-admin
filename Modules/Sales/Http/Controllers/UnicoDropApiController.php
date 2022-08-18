@@ -52,11 +52,11 @@ class UnicoDropApiController extends Controller
                     foreach ($sale->productsPlansSale as $productPlanSale) {
                         $product = $productPlanSale->product;
                         $products[] = [
-                            "id" => $product->shopify_id,
-                            "plan_name" => $productPlanSale->plan->name,
-                            "name" => $product->name,
-                            "variant_id" => $product->shopify_variant_id,
-                            "quantity" => $productPlanSale->amount,
+                            "id" => $product->shopify_id ?? "",
+                            "plan_name" => $productPlanSale->plan->name ?? "",
+                            "name" => $product->name ?? "",
+                            "variant_id" => $product->shopify_variant_id ?? "",
+                            "quantity" => $productPlanSale->amount ?? "",
                         ];
                     }
                     $sale->products = $products;
@@ -112,11 +112,11 @@ class UnicoDropApiController extends Controller
                     foreach ($sale->productsPlansSale as $productPlanSale) {
                         $product = $productPlanSale->product;
                         $products[] = [
-                            "id" => $product->shopify_id,
-                            "plan_name" => $productPlanSale->plan->name,
-                            "name" => $product->name,
-                            "variant_id" => $product->shopify_variant_id,
-                            "quantity" => $productPlanSale->amount,
+                            "id" => $product->shopify_id ?? "",
+                            "plan_name" => $productPlanSale->plan->name ?? "",
+                            "name" => $product->name ?? "",
+                            "variant_id" => $product->shopify_variant_id ?? "",
+                            "quantity" => $productPlanSale->amount ?? "",
                         ];
                     }
                     $sale->products = $products;

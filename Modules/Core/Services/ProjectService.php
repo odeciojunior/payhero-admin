@@ -349,23 +349,35 @@ class ProjectService
      * @param bool $affiliate
      * @return AnonymousResourceCollection
      */
-    public function getUserProjects(string $pagination, array $status, $affiliate = false)
+    public function getUserProjects(string $pagination, array $status, $affiliate = false, $companyId = '')
     {
-        $userId = auth()->user()->account_owner_id;
+        $userId = auth()->user()->getAccountOwnerId();
 
         if ($affiliate) {
-            $projects = Project::leftJoin("users_projects", function ($join) use ($userId) {
-                $join
-                    ->on("projects.id", "=", "users_projects.project_id")
-                    ->where("users_projects.user_id", $userId)
-                    ->whereNull("users_projects.deleted_at");
-            })
-                ->leftJoin("affiliates", function ($join) use ($userId) {
-                    $join
-                        ->on("projects.id", "=", "affiliates.project_id")
-                        ->where("affiliates.user_id", $userId)
-                        ->whereNull("affiliates.deleted_at");
-                })
+            $projects = Project::leftJoin(
+                'users_projects',
+                function ($join) use ($userId, $companyId) {
+                    if(!empty($companyId)){
+                        $join->on('projects.id', '=', 'users_projects.project_id')
+                            ->where('users_projects.company_id', $companyId)
+                            ->where('users_projects.user_id', $userId)
+                            ->whereNull('users_projects.deleted_at');
+                    }
+                    else{
+                        $join->on('projects.id', '=', 'users_projects.project_id')
+                            ->where('users_projects.user_id', $userId)
+                            ->whereNull('users_projects.deleted_at');
+                    }
+                }
+            )
+                ->leftJoin(
+                    'affiliates',
+                    function ($join) use ($userId) {
+                        $join->on('projects.id', '=', 'affiliates.project_id')
+                            ->where('affiliates.user_id', $userId)
+                            ->whereNull('affiliates.deleted_at');
+                    }
+                )
                 ->select(
                     "projects.*",
                     "affiliates.created_at as affiliate_created_at",
@@ -376,34 +388,47 @@ class ProjectService
                         "CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p"
                     )
                 )
-                ->whereIn("projects.status", $status)
-                ->where("users_projects.user_id", $userId)
-                ->orWhere("affiliates.user_id", $userId)
-                ->orderBy("projects.status")
-                ->orderBy("order_p")
-                ->orderBy("projects.id", "DESC");
+                ->whereIn('projects.status', $status)
+                ->where('users_projects.user_id', $userId)
+                ->orWhere('affiliates.user_id', $userId);
         } else {
-            $projects = Project::leftJoin("users_projects", "projects.id", "=", "users_projects.project_id")
-                ->select("projects.*", "users_projects.order_priority as order_p")
-                ->whereIn("projects.status", $status)
-                ->where("users_projects.user_id", $userId)
-                ->whereNull("users_projects.deleted_at")
-                ->orderBy("projects.status")
-                ->orderBy("order_p")
-                ->orderBy("projects.id", "DESC");
+            $projects = Project::leftJoin('users_projects',
+                function ($join) use ($userId, $companyId) {
+                    if(!empty($companyId)){
+                        $join->on('projects.id', '=', 'users_projects.project_id')
+                            ->where('users_projects.company_id', $companyId)
+                            ->where('users_projects.user_id', $userId)
+                            ->whereNull('users_projects.deleted_at');
+                    }
+                    else{
+                        $join->on('projects.id', '=', 'users_projects.project_id')
+                            ->where('users_projects.user_id', $userId)
+                            ->whereNull('users_projects.deleted_at');
+                    }
+                }
+            )
+                ->select('projects.*', 'users_projects.order_priority as order_p')
+                ->whereIn('projects.status', $status)
+                ->where('users_projects.user_id', $userId)
+                ->whereNull('users_projects.deleted_at');
         }
+
+        $projects = $projects->orderBy('projects.status')
+            ->orderBy('order_p')
+            ->orderBy('projects.id', 'DESC');
 
         if ($pagination) {
             $projects = $projects->get();
-            if (count($projects) == 0) {
-                $apiSale = Sale::where("owner_id", auth()->user()->account_owner_id)->exists();
-                if (!empty($apiSale)) {
-                    return response()->json(["data" => "api sales"]);
+            if(count($projects) == 0) {
+                $apiSale = Sale::where('owner_id', $userId)->exists();
+                if(!empty($apiSale)) {
+                    return response()->json(['data' => 'api sales']);
                 }
             }
             return ProjectsSelectResource::collection($projects);
         } else {
-            return ProjectsResource::collection($projects->with("domains")->get());
+            $projects = $projects->with('domains')->get();
+            return ProjectsResource::collection($projects);
         }
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        "middleware" => ["auth:api", "scopes:admin"],
+        "middleware" => ["auth:api", "scopes:admin", "demo_account"],
     ],
     function () {
         // Reports - finances
@@ -53,5 +53,10 @@ Route::group(
         Route::get("/reports/blocked-balance", "ReportsApiController@blockedBalance");
         Route::get("/reports/resume-blocked-balance", "ReportsApiController@resumeblockedBalance");
         Route::get("/reports/block-reasons", "ReportsApiController@getBlockReasons");
+
+        Route::get('/reports/projects-with-blocked-balance', 'ReportsApiController@getProjectsWithBlockedBalance')->middleware('permission:report_blockedbalance');
+        Route::get('/reports/projects-with-checkouts', 'ReportsApiController@getProjectsWithCheckouts')->middleware('permission:report_checkouts');
+        Route::get('/reports/projects-with-coupons', 'ReportsApiController@getProjectsWithCoupons')->middleware('permission:report_coupons');
+        Route::get('/reports/projects-with-pending-balance', 'ReportsApiController@getProjectsWithPendingBalance')->middleware('permission:report_pending');
     }
 );

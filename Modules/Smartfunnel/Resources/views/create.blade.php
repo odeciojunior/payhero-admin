@@ -6,9 +6,7 @@
             <div class="col-12">
                 <div class='form-group'>
                     <label for="company">Selecione sua loja</label>
-                    <select class="select-pad"
-                            id="project_id"
-                            name="project_id">
+                    <select class="sirius-select" id="project_id" name="project_id">
                     </select>
                 </div>
             </div>

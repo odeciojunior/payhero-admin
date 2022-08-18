@@ -1,3 +1,22 @@
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
+    $("#projeto").find('option').not(':first').remove();
+    loadOnTable('#body-table-coupons', '.table-coupons');
+    $("#select_projects").html('');
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            if(!isEmpty(data2.company_default_projects)){
+                getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+            }
+        });
+	});
+});
+
 var currentPage = null;
 var atualizar = null;
 
@@ -22,14 +41,15 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
+        window.atualizar();
     });
 
     function getFilters(urlParams = false) {
         let data = {
-            project: $("#projeto").val(),
-            status: $("#status").val(),
-            date_range: $("#date-filter").val(),
+            'project': $("#projeto").val(),
+            'status': $("#status").val(),
+            'company': $('.company-navbar').val(),
+            'date_range': $("#date-filter").val(),
         };
         updateStorage({
             statusCompany: data["status"],
@@ -47,12 +67,19 @@ $(document).ready(function () {
         }
     }
 
-    getProjects();
+    getCompaniesAndProjects().done( function (data2){
+        if(!isEmpty(data2.company_default_projects)){
+            getProjects(data2.companies);
+        }
+        else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+        }
+    });
 
-    function getProjects() {
-        loadingOnScreen();
-
-        $.ajax({
+    window.fillProjectsSelect = function(){
+        return $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
             dataType: "json",
@@ -61,44 +88,138 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
+                console.log('erro')
+                console.log(response)
             },
             success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel").show();
-
-                    $.each(response.data, function (i, project) {
-                        $("#projeto").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
-
-                    if (sessionStorage.info) {
-                        $("#projeto").val(JSON.parse(sessionStorage.getItem("info")).company);
-                        $("#projeto")
-                            .find("option:selected")
-                            .text(JSON.parse(sessionStorage.getItem("info")).companyName);
-                    }
-
-                    atualizar();
-                } else {
-                    $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-
-                loadingOnScreenRemove();
-            },
+                return response;
+            }
         });
     }
+    // window.fillProjectsSelect = function(data){
+    //     $.ajax({
+    //         method: "GET",
+    //         url: "/api/reports/projects-with-coupons",
+    //         dataType: "json",
+    //         headers: {
+    //             Authorization: $('meta[name="access-token"]').attr("content"),
+    //             Accept: "application/json",
+    //         },
+    //         error: function error(response) {
+    //             console.log('erro')
+    //             console.log(response)
+    //         },
+    //         success: function success(projectIds) {
+    //             console.log(response.data);
+    //             if (!isEmpty(projectIds)) {
+    //                 $("#project-empty").hide();
+    //                 $("#project-not-empty").show();
+    //                 $("#export-excel").show()
 
-    atualizar = function (link = null) {
+    //                 $.each(projectIds, function (i, project) {
+    //                     $("#projeto").append($('<option>', {
+    //                         value: project.id,
+    //                         text: project.name
+    //                     }));
+    //                 });
+
+    //                 if(sessionStorage.info) {
+    //                     $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
+    //                     $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+    //                 }
+
+    //                 atualizar();
+
+    //             } else {
+    //                 $("#export-excel").hide()
+    //                 $("#project-not-empty").hide();
+    //                 $("#project-empty").show();
+    //             }
+
+    //             loadingOnScreenRemove();
+    //         }
+    //     }).done(function(dataSales){
+    //         $.each(data, function (c, company) {
+    //             $.each(company.projects, function (i, project) {
+    //                 if( dataSales.includes(project.id) )
+    //                     $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
+    //             });
+    //         });
+    //     });
+    // }
+
+    window.getProjects = function(companies) {
+        loadingOnScreen();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel").show()
+        window.fillProjectsSelect()
+        .done(function(dataSales)
+        {console.log(dataSales);
+            $(".div-filters").show();
+            $.each(companies, function (c, company) {
+                $.each(company.projects, function (i, project) {
+                    $.each(dataSales.data, function (idx, project2) {
+                        if( project2.id == project.id ){
+                            $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
+                        }
+                    });
+                });
+            });
+            $("#projeto option:first").attr('selected','selected');
+
+            if(sessionStorage.info) {
+                $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
+                $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+            }
+
+            company = $("#projeto").val();
+
+            window.atualizar();
+        });
+
+        loadingOnScreenRemove();
+
+        // $.ajax({
+        //     method: "GET",
+        //     url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
+        //     dataType: "json",
+        //     headers: {
+        //         'Authorization': $('meta[name="access-token"]').attr('content'),
+        //         'Accept': 'application/json',
+        //     },
+        //     error: function error(response) {
+        //         loadingOnScreenRemove();
+        //         errorAjaxResponse(response);
+        //     },
+        //     success: function success(response) {
+        //         if (!isEmpty(response.data)) {
+        //             $("#project-empty").hide();
+        //             $("#project-not-empty").show();
+        //             $("#export-excel").show()
+        //             if (response.data != 'api sales') {
+        //                 $.each(response.data, function (i, project) {
+        //                     $("#projeto").append($('<option>', {
+        //                         value: project.id,
+        //                         text: project.name
+        //                     }));
+        //                 });
+        //             }
+        //             window.atualizar();
+
+        //         } else {
+        //             $("#export-excel").hide()
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
+
+        //         loadingOnScreenRemove();
+        //     }
+        // });
+    }
+
+    window.atualizar = function (link = null) {
+
         currentPage = link;
 
         let updateResume = true;
@@ -120,13 +241,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                $("#body-table-coupons").html("");
-                $(".table-coupons").addClass("table-striped");
-                $("#body-table-coupons").html(
-                    "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#body-table-coupons").attr("img-empty") +
-                        "'> Nenhum cupom encontrado</td></tr>"
-                );
+                $('#body-table-coupons').html('');
+                $('.table-coupons').addClass('table-striped');
+                $('#body-table-coupons').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                $("#body-table-coupons").attr("img-empty") +
+                "'> Nenhum cupom encontrado</td></tr>");
 
                 errorAjaxResponse(response);
             },
@@ -161,11 +280,12 @@ $(document).ready(function () {
         // if(updateResume) {
         //     resumePending();
         // }
-    };
+
+    }
 
     $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
-            atualizar();
+            window.atualizar();
         }
     });
 });
@@ -218,13 +338,14 @@ function changeCompany() {
         // $('.onPreLoad').html(skeLoad);
         // $('.onPreLoadBig').html(skeLoadBig);
         $.ajaxQ.abortAll();
-        updateStorage({ company: $(this).val(), companyName: $(this).find("option:selected").text() });
+        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
 
         atualizar();
     });
 }
 
 function resumePending() {
+
     $("#total_sales").html(skeLoadMini);
 
     $.ajax({
@@ -253,13 +374,12 @@ function resumePending() {
 }
 
 // abort all ajax
-$.ajaxQ = (function () {
-    var id = 0,
-        Q = {};
+$.ajaxQ = (function(){
+    var id = 0, Q = {};
 
-    $(document).ajaxSend(function (e, jqx) {
-        jqx._id = ++id;
-        Q[jqx._id] = jqx;
+    $(document).ajaxSend(function(e, jqx){
+      jqx._id = ++id;
+      Q[jqx._id] = jqx;
     });
     $(document).ajaxComplete(function (e, jqx) {
         delete Q[jqx._id];
@@ -275,7 +395,8 @@ $.ajaxQ = (function () {
             return r;
         },
     };
-})();
+
+  })();
 
 let skeLoad = `
     <div class="ske-load">
@@ -333,3 +454,4 @@ let skeLoadMini = `
         </div>
     </div>
 `;
+

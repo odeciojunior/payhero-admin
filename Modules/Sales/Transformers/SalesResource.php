@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
@@ -14,6 +15,7 @@ use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\WooCommerceService;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class SalesResource
@@ -35,8 +37,10 @@ class SalesResource extends JsonResource
             $userPermissionRefunded = true;
         }
 
-        $thankPageUrl = "";
-        $thankLabelText = "Link página de obrigado:";
+        $hashSaleId =  Hashids::connection('sale_id')->encode($this->id);
+
+        $thankPageUrl = '';
+        $thankLabelText = 'Link página de obrigado:';
 
         $domain = Domain::select("name")
             ->where("project_id", $this->project_id)
@@ -44,6 +48,7 @@ class SalesResource extends JsonResource
             ->first();
         $domainName = $domain->name ?? "cloudfox.net";
 
+        $urlCheckout ="https://checkout.{$domainName}/order/";
         if (!empty($domain->name)) {
             $thankPageUrl = "https://checkout.{$domain->name}/order/" . hashids_encode($this->id, "sale_id");
         }
@@ -52,8 +57,12 @@ class SalesResource extends JsonResource
                 env("CHECKOUT_URL", "http://dev.checkout.com") . "/order/" . hashids_encode($this->id, "sale_id");
         }
 
-        if ($this->payment_method == 4 && $this->status != Sale::STATUS_APPROVED) {
-            $thankLabelText = "Link página de Qrcode:";
+        if($user->company_default==Company::DEMO_ID){
+            $urlCheckout = "https://demo.cloudfox.net/order/";
+            if(env('APP_ENV') == 'local'){
+                $urlCheckout = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/order/';
+            }
+            $thankPageUrl = $urlCheckout . $hashSaleId;
         }
         // if($this->progressive_discount){
         //     $total = (foxutils()->formatMoney( (foxutils()->onlyNumbers($this->details->total) - $this->progressive_discount) / 100) );

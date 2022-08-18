@@ -54,7 +54,39 @@ const messageLoader = {
 const attachments2send = [];
 
 $(() => {
-    loadingOnScreen();
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        loadOnAny('.tickets-container', false, ticketLoader);
+        $("#project-select").find('option').not(':first').remove()
+        $('#ticket-open .detail').html('');
+        $('#ticket-mediation .detail').html('');
+        $('#ticket-closed .detail').html('');
+        loadOnAny('.number', false, resumeLoader);
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                if(!isEmpty(data2.company_default_projects)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    for (let project of data2.company_default_projects) {
+                        $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+                    }
+                    index()
+                    getResume()
+
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            })
+        })
+    })
+
+    var companiesAndProjects = ''
 
     //fill the filter if the parameter comes in the url
     const params = new URLSearchParams(window.location.search);
@@ -62,40 +94,73 @@ $(() => {
         $("#filter-transaction").data("value", params.get("sale_id")).addClass("active");
         $("#input-transaction input").val(params.get("sale_id"));
     }
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        getProjects();
+    });
 
-    getProjects();
+    function getProjects(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else{
+            $("#content").html("");
+        }
 
-    function getProjects() {
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (resp) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(resp);
-            },
-            success: (resp) => {
-                if (resp.data.length) {
-                    for (let project of resp.data) {
-                        $("#project-select").append(`<option value="${project.id}">${project.name}</option>`);
-                    }
-                    index();
-                    getResume();
-                    $(".page-header").show();
-                    $("#project-not-empty").show();
-                    $("#project-empty").hide();
-                } else {
-                    $(".page-header").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-                loadingOnScreenRemove();
-            },
-        });
+        let hasProjects=false;
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                hasProjects=true;
+            });
+        }
+
+        if(!hasProjects){
+            $('.page-header').hide();
+            $("#project-not-empty").hide();
+            $("#project-empty").show();
+            loadingOnScreenRemove();
+        }
+        else{
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+            });
+            index();
+            getResume();
+            $('.page-header').show();
+            $("#project-not-empty").show();
+            $("#project-empty").hide();
+            loadingOnScreenRemove();
+        }
+
+        // $.ajax({
+        //     method: "GET",
+        //     url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
+        //     dataType: "json",
+        //     headers: {
+        //         'Authorization': $('meta[name="access-token"]').attr('content'),
+        //         'Accept': 'application/json',
+        //     },
+        //     error: resp => {
+        //         loadingOnScreenRemove();
+        //         errorAjaxResponse(resp);
+        //     },
+        //     success: resp => {
+        //         if (resp.data.length) {
+        //             for (let project of resp.data) {
+        //                 $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+        //             }
+        //             index();
+        //             getResume();
+        //             $('.page-header').show();
+        //             $("#project-not-empty").show();
+        //             $("#project-empty").hide();
+        //         } else {
+        //             $('.page-header').hide();
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
+        //         loadingOnScreenRemove();
+        //     }
+        // });
     }
 
     window.getFilters = function (page = 1) {
@@ -138,7 +203,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: "/api/tickets?" + getFilters(page),
+            url: '/api/tickets?' + getFilters(page) + '&company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -305,7 +370,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: "/api/tickets/getvalues?project=" + $("#project-select").val(),
+            url: '/api/tickets/getvalues?project=' + $('#project-select').val() + "&company_id="+$('.company-navbar').val(),
             dataType: "json",
             data: {
                 date: $("#date_range").val(),

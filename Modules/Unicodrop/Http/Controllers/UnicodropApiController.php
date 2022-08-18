@@ -23,27 +23,46 @@ class UnicodropApiController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $unicodropIntegrations = UnicodropIntegration::where("user_id", auth()->user()->account_owner_id)
-                ->with("project")
-                ->get();
+            $user = auth()->user();
+            $ownerId = $user->getAccountOwnerId();
+
+            $unicodropIntegrations = UnicodropIntegration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             $projects = collect();
-            $userProjects = UserProject::where("user_id", auth()->user()->account_owner_id)->get();
+            $userProjects = UserProject::where([[
+                'user_id', $ownerId],[
+                'company_id', $user->company_default
+            ]])->orderBy('id', 'desc')->get();
+
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->where("status", Project::STATUS_ACTIVE)
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
                         ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                 "integrations" => UnicodropResource::collection($unicodropIntegrations),
                 "projects" => ProjectsSelectResource::collection($projects),

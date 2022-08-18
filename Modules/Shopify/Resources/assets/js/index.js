@@ -1,7 +1,37 @@
 $(document).ready(function () {
-    getCompanies();
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2;
+                $('.company_name').val( companiesAndProjects.company_default_fullname );
+                $("#company-navbar-value").val( $('.company-navbar').val() );
+                getCompanies('n');
+            });
+        });
+    });
 
-    function getCompanies() {
+    companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data;
+        $('.company_name').val( companiesAndProjects.company_default_fullname );
+        $("#company-navbar-value").val( $('.company-navbar').val() );
+        getCompanies();
+    });
+
+
+
+    function getCompanies(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
             url: "/api/core/companies?select=true",
@@ -12,13 +42,15 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
+                loadOnAny('#content',true);
+                loadingOnScreenRemove();
             },
             success: function success(response) {
                 verifyCompanies(response.data);
-                loadingOnScreenRemove();
             },
         });
     }
+
 
     function verifyCompanies(companies) {
         if (isEmpty(companies)) {
@@ -48,16 +80,19 @@ $(document).ready(function () {
     function getShopifyIntegrations() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/shopify",
+            url: "/api/apps/shopify?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
+                loadOnAny('#content',true);
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+
                 let shopifyIntegrations = response.data;
 
                 $("#content").html("");
@@ -134,14 +169,22 @@ $(document).ready(function () {
         $(".modal-title").html("Adicionar nova integração com Shopify");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
+        loadOnAny('#content',true);
+        loadingOnScreenRemove();
     }
 
     function htmlHasIntegrationShopify() {
+        $("#no-integration-found").hide();
         $(".modal-title").html("Adicionar nova integração com Shopify");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
         $("#integration-actions").show();
-        $("#button-information").show().addClass("d-flex").css("display", "flex");
+        $("#button-information")
+            .show()
+            .addClass("d-flex")
+            .css("display", "flex");
+        loadOnAny('#content',true);
+        loadingOnScreenRemove();
     }
 
     $("#btn-integration-model").on("click", function () {
@@ -176,10 +219,12 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function error(response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 alertCustom("success", response.message);
                 getCompanies();
@@ -231,20 +276,22 @@ $(document).ready(function () {
             $("#bt-close").show();
             return;
         }
-        $("#project-token").attr("disabled", false);
-        $("#project-token").val("");
-        $("#project-token").focus();
-        $(this).html("Cancelar");
+        $('#project-token').attr('disabled',false)
+        $('#project-token').val('')
+        $('#project-token').focus()
+        $(this).html('Cancelar')
 
-        $("#bt-close").hide();
-        $("#bt-update-keys").show();
-    });
+        $('#bt-close').hide()
+        $('#bt-update-keys').show()
+    })
 
-    $("#skiptocart-input").on("change", function () {
-        if ($("#skiptocart-input").prop("checked") == true) {
-            $(this).val(1);
-        } else {
-            $(this).val(0);
+    $('#skiptocart-input').on('change', function () {
+
+        if($('#skiptocart-input').prop('checked')==true){
+            $(this).val(1)
+        }else{
+            $(this).val(0)
+
         }
 
         var input = $(this);
@@ -324,9 +371,11 @@ $(document).ready(function () {
         );
     });
 
-    $("#bt-close-confirm").on("click", function () {
-        $("#modal_edit").modal("show");
-    });
+    $('#bt-close-confirm').on('click', function () {
+        $("#modal_edit").modal('show');
+
+    })
+
     function toggle_confirm(name, desc) {
         $("#modal_edit").modal("hide");
         $("#modal-confirm").modal("show");
@@ -398,7 +447,8 @@ $(document).ready(function () {
                     },
                 });
                 break;
-            case "tracking":
+            case 'tracking':
+
                 $.ajax({
                     method: "POST",
                     url: "/api/apps/shopify/synchronize/trackings",
@@ -412,6 +462,7 @@ $(document).ready(function () {
                     },
                     error: function (response) {
                         errorAjaxResponse(response);
+
                     },
                     success: function (response) {
                         alertCustom("success", response.message);
@@ -444,13 +495,16 @@ $(document).ready(function () {
                 project_id: projectId,
             },
             error: function (response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function (response) {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 alertCustom("success", response.message);
             },
         });
     });
+
 });

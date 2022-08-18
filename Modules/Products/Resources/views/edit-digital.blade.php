@@ -8,10 +8,11 @@
 
     <!-- Page -->
     <div class="page">
-        <div style="display: none;"
-             class="page-header container">
-            <h1 class="page-title my-10"
-                style="min-height: 28px">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
+        <div style="display: none;" class="page-header container">
+            <h1 class="page-title my-10" style="min-height: 28px">
                 <a href="/products">
                     <span class="o-arrow-right-1 font-size-30 ml-2"
                           aria-hidden="true"></span>

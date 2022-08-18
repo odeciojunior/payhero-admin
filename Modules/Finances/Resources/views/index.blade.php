@@ -8,6 +8,8 @@
 @section('content')
     <div class="page">
 
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div class="page-header container">
             <div class="row">
                 <div class="col-lg-6 mb-30">
@@ -67,6 +69,9 @@
         @include('finances::components.details')
 
         @include('sales::details')
+
+        @include('sales::modal_refund_transaction')
+
 
         @push('scripts')
             <script src="{{ mix('build/layouts/finances/index.min.js') }}"></script>

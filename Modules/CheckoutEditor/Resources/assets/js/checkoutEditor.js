@@ -1,4 +1,7 @@
-$(document).ready(function () {
+$(document).ready( function () {
+    $('#checkout_editor #companies').on("change", function () {
+        $('.company-navbar').val( $('#checkout_editor #companies').val() ).change();
+    });
     // ----------------------- Funções de Botão ----------------------------
     $("#default_finish_color").on("change", function () {
         if ($(this).is(":checked")) {
@@ -78,11 +81,11 @@ $(document).ready(function () {
 
         if (bannerType === "0") {
             $(".preview-banner").addClass("retangle-banner");
-            $(".logo-div.logo-menu-bar").addClass("retangle-banner");
             $(".preview-banner").removeClass("wide-banner");
+            $(".logo-div").addClass("has-retangle-banner");
         } else {
+            $(".logo-div").removeClass("has-retangle-banner");
             $(".preview-banner").removeClass("retangle-banner");
-            $(".logo-div.logo-menu-bar").removeClass("retangle-banner");
             $(".preview-banner").addClass("wide-banner");
         }
     });
@@ -267,17 +270,24 @@ $(document).ready(function () {
             $(".logo-div").addClass("has-banner");
             $(".logo-preview-container").addClass("has-banner");
             $(".menu-bar-mobile").hide("slow");
-            $(".purchase-menu-mobile").fadeIn("slow");
+            // $(".purchase-menu-mobile").fadeIn("slow");
+
+            if ($("input[name=checkout_banner_type]").val() == "1") {
+                $(".logo-div").removeClass("has-retangle-banner");
+            } else {
+                $(".logo-div").addClass("has-retangle-banner");
+            }
         } else {
             $("#banner_type").fadeOut("slow", "swing");
             $(".logo-div").removeClass("has-banner");
+            $(".logo-div").removeClass("has-retangle-banner");
             $(".logo-preview-container").removeClass("has-banner");
             $(".menu-bar-mobile").show("slow");
-            $(".purchase-menu-mobile").fadeOut("slow");
+            // $(".purchase-menu-mobile").fadeOut("slow");
         }
     });
 
-    $("#installments_limit").on("change", function () {
+    $('#installments_limit').on('change', function() {
         var installmentsLimit = parseInt($("#installments_limit option:selected").val());
         var interestFreeInstallments = parseInt($("#interest_free_installments option:selected").val());
         var preselectedInstallment = parseInt($("#preselected_installment option:selected").val());
@@ -291,9 +301,9 @@ $(document).ready(function () {
 
         for (var installments = 1; installments < installmentsLimit + 1; installments++) {
             $("#interest_free_installments").append(
-                `<option 
+                `<option
                     value="${installments}" ${installments == interestFreeInstallments ? "selected" : ""}>
-                    ${installments}x 
+                    ${installments}x
                 </option>`
             );
         }
@@ -304,9 +314,9 @@ $(document).ready(function () {
 
         for (var installments = 1; installments < installmentsLimit + 1; installments++) {
             $("#preselected_installment").append(
-                `<option 
+                `<option
                     value="${installments}" ${installments == preselectedInstallment ? "selected" : ""}>
-                    ${installments}x 
+                    ${installments}x
                 </option>`
             );
         }
@@ -345,20 +355,21 @@ $(document).ready(function () {
             $("#selectable-all-notification").removeClass("dash-check");
         }
 
-        if (selectableCheckboxes.length == 4) {
-            $("#selectable-all-notification").removeClass("dash-check");
+        if (selectableCheckboxes.length == 4){
+            $('#selectable-all-notification').removeClass('dash-check');
         }
     });
 
-    $("#selectable-all-notification").on("click", function () {
-        if ($(this).is(":checked")) {
-            $(".selectable-notification").prop("checked", true);
-        } else {
-            $(".selectable-notification").prop("checked", false);
-            $("#selectable-all-notification").removeClass("dash-check");
+    $('#selectable-all-notification').on('click', function(){
+        if($(this).is(':checked')){
+            $('.selectable-notification').prop('checked', true);
+        }else{
+            $('.selectable-notification').prop('checked', false);
+            $('#selectable-all-notification').removeClass('dash-check');
         }
     });
     // ---------------- Functions Table - END ---------------------
+
 });
 
 function replacePreview(name, src, fname = "") {

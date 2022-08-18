@@ -805,11 +805,17 @@ class BoletoService
         $todayDate = Carbon::now()->toDateString();
 
         try {
-            $boletos = Sale::with(["customer"])->where([
-                ["payment_method", Sale::BILLET_PAYMENT],
-                ["status", Sale::STATUS_PENDING],
-                [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), "<", $compensationDate],
-            ]);
+            $boletos = Sale::where(
+                    [
+                        ['payment_method', Sale::BILLET_PAYMENT],
+                        ['status', Sale::STATUS_PENDING],
+                        [
+                            DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
+                            '<',
+                            $compensationDate,
+                        ],
+                    ]
+                );
 
             foreach ($boletos->cursor() as $boleto) {
                 //verificando se prazo de compensação foi final de semana
@@ -841,7 +847,7 @@ class BoletoService
                     ]);
                 }
 
-                if (!$boleto->api_flag) {
+                if (!$boleto->api_flag && $boleto->owner_id > User::DEMO_ID) {
                     event(new BilletExpiredEvent($boleto));
                 }
             }

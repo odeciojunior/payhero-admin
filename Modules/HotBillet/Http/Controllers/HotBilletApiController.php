@@ -24,35 +24,45 @@ class HotBilletApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $hotBilletIntegration = new HotbilletIntegration();
-            $userProjectModel = new UserProject();
-            $projectModel = new Project();
+            $user = auth()->user();
+            $ownerId = $user->getAccountOwnerId();
 
-            $hotBilletIntegrations = $hotBilletIntegration
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->with("project")
-                ->get();
+            $hotBilletIntegrations = HotbilletIntegration::with('project', 'project.usersProjects')
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) use($ownerId) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', $ownerId);
+                }
+            )->get();
 
             $projects = collect();
-            $userProjects = $userProjectModel
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->orderBy("id", "desc")
-                ->get();
+            $userProjects = UserProject::where([[
+                'user_id', $ownerId],[
+                'company_id', $user->company_default
+            ]])->orderBy('id', 'desc')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->where("status", $projectModel->present()->getStatus("active"))
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
                         ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                 "integrations" => HotBilletResource::collection($hotBilletIntegrations),
                 "projects" => ProjectsSelectResource::collection($projects),

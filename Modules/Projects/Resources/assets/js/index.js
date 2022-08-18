@@ -1,11 +1,37 @@
 $(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#subtitle_drag_drop").hide();
+        $("#data-table-projects").empty();
+        $("#project-empty").hide();
+        $("#new-store-button").hide();
+        loadOnAny('#data-table-projects');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
+
     // Funcao Responsavel por gerar cards de cada projeto
-    function index() {
-        loadingOnScreen();
+    index = function (loading='y') {
+        if(loading=='y'){
+            loadingOnScreen();
+        }
         $.ajax({
             url: "/api/projects",
             data: {
-                status: "active",
+                company: $('.company-navbar').val(),
+                status: 'active',
             },
             dataType: "json",
             headers: {
@@ -15,8 +41,10 @@ $(function () {
             error: (response) => {
                 loadOnAny("#data-table-projects", true);
                 errorAjaxResponse(response);
+                loadingOnScreenRemove();
             },
             success: (response) => {
+                loadOnAny("#data-table-projects", true);
                 let deleteProjectsShowOrHidde = $("#deleted_project_filter");
                 if (deleteProjectsShowOrHidde.val() === "1") {
                     $("#deleted_project_filter").prop("checked", true);
@@ -25,6 +53,7 @@ $(function () {
                 if (response.data.length) {
                     $("#project-empty").hide();
                     $("#company-empty").hide();
+                    $("#data-table-projects").css({visibility: "visible"});
 
                     $.each(response.data, (key, project) => {
                         if (verifyAccountFrozen()) {
@@ -37,55 +66,41 @@ $(function () {
 
                         let data = `
                             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 name_project" data-id="${project.id}">
-
                                 <div class="card">
-
-                                    ${
-                                        project.woocommerce_id != null
-                                            ? `<div class="ribbon ribbon-woo">
+                                    ${project.woocommerce_id != null ?
+                                        `<div class="ribbon ribbon-woo">
                                             <span>WooCommerce
                                                 <a class="ribbon-woocommerce-default"></a>
                                             </span>
                                         </div>`
                                             : ""
                                     }
-
-                                    ${
-                                        project.shopify_id != null && !project.affiliated
-                                            ? `<div class="ribbon">
+                                    ${project.shopify_id != null && !project.affiliated ?
+                                        `<div class="ribbon">
                                             <span>Shopify
                                                 <a class="ribbon-shopify-default"></a>
                                             </span>
                                         </div>`
                                             : ""
                                     }
-
-                                    ${
-                                        project.affiliated
-                                            ? `<div class="ribbon-left">
+                                    ${project.affiliated ?
+                                        `<div class="ribbon-left">
                                             <span>Afiliado</span>
                                         </div>`
                                             : ""
                                     }
-
-                                    <img class="card-img-top" onerror="this.src = 'build/global/img/produto.svg'" src="${
-                                        project.photo ? project.photo : "build/global/img/produto.svg"
-                                    }" alt="${project.name}">
-
+                                    <img class="card-img-top" onerror="this.src = 'build/global/img/produto.svg'" src="${project.photo ? project.photo : "build/global/img/produto.svg"}" alt="${project.name}">
                                     <div class="card-body">
                                         <h5 class="card-title text-truncate">${project.name}</h5>
-
                                         <div class="d-flex align-item-center justify-content-between">
                                             <p class="card-text sm mb-0">Criado em ${project.created_at}</p>
                                             <img src="build/layouts/projects/img/dragItem.svg" class="drag-drop-icon p-5"/>
                                         </div>
-
                                         ${linkProject}
                                     </div>
-
                                 </div>
-
                             </div>`;
+
                         $("#data-table-projects").append(data);
                         if (verifyAccountFrozen()) {
                             $("#new-store-button").hide();
@@ -96,11 +111,9 @@ $(function () {
                     verifyHasOnlyOne();
                 } else {
                     $("#subtitle_drag_drop").hide();
-                    $("#button_toggle").css({ visibility: "hidden" });
-                    $("#data-table-projects").css({ visibility: "hidden" });
-
-                    $("#btn-config").css({ visibility: "hidden" });
-
+                    //$("#button_toggle").css({visibility: "hidden"});
+                    $("#data-table-projects").css({visibility: "hidden"});
+                    $("#btn-config").css({visibility: "hidden"});
                     if (response.no_company) {
                         $("#company-empty").show();
                         $("#project-empty").hide();
@@ -109,7 +122,6 @@ $(function () {
                         $("#company-empty").hide();
                     }
                 }
-
                 loadingOnScreenRemove();
             },
         });
@@ -166,6 +178,9 @@ $(function () {
                 disabled: true,
             });
         }
+        else
+            $("#subtitle_drag_drop").show();
+
     }
 
     // Seta valor do filtro toggle(ALTERNANCIA) para exibir/esconder projetos
@@ -197,12 +212,10 @@ $(function () {
             },
             success: (response) => {
                 $("#modal_config").modal("hide");
-                location.reload(true);
-                index();
+                //location.reload(true);
+                //index();
                 alertCustom("success", response.message);
             },
         });
     });
-
-    index();
 });

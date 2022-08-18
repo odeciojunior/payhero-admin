@@ -199,19 +199,22 @@ $(() => {
                                     $("#save_success").fadeOut("slow", "linear");
                                 }, 4000);
                             },
-                            error: function (response) {
-                                console.log(response.responseText);
-                                $(".select-type").removeClass("low-opacity");
-                                $(".visual").removeClass("low-opacity");
-                                $(".payment").removeClass("low-opacity");
-                                $(".post-purchase-pages").removeClass("low-opacity");
-                                $(".preview").removeClass("low-opacity");
+                            error: function (response){
+                                $('.select-type').removeClass('low-opacity')
+                                $('.visual').removeClass('low-opacity')
+                                $('.payment').removeClass('low-opacity')
+                                $('.post-purchase-pages').removeClass('low-opacity')
+                                $('.preview').removeClass('low-opacity')
 
-                                $("#save_load").fadeOut("slow", "linear");
-                                $("#save_error").fadeIn("slow", "linear");
+                                $('#save_load').fadeOut('slow', 'linear');
+                                $('#save_error').fadeIn('slow', 'linear');
 
-                                setTimeout(function () {
-                                    $("#save_error").fadeOut("slow", "linear");
+                                if(response.responseJSON.message && response.responseJSON.message.search(/demo/) > 0){
+                                    $('#save_error p').html(response.responseJSON.message);
+                                }
+
+                                setTimeout(function() {
+                                    $('#save_error').fadeOut('slow', 'linear');
                                 }, 4000);
                             },
                         });
@@ -250,6 +253,8 @@ $(() => {
                     error: {
                         fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
                         fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                        minWidth: "Largura mínima: 64px.",
+                        minHeight: "Altura mínima: 64px.",
                     },
                     tpl: {
                         message:
@@ -299,6 +304,7 @@ $(() => {
 
         $("#cancel_button").on("click", function () {
             fillForm(checkout);
+            $('.company-navbar').val( $('#checkout_editor #companies').val() ).change();
             $("#save_changes").fadeOut("slow", "swing");
         });
 
@@ -356,6 +362,8 @@ $(() => {
                 error: {
                     fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
                     fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                    minWidth: "Largura mínima: 64px.",
+                    minHeight: "Altura mínima: 64px.",
                 },
                 tpl: {
                     message:
@@ -629,7 +637,7 @@ $(() => {
                 $(".logo-div").addClass("has-banner");
                 $(".logo-preview-container").addClass("has-banner");
                 $(".menu-bar-mobile").hide("slow");
-                $(".purchase-menu-mobile").fadeIn("slow");
+                // $(".purchase-menu-mobile").fadeIn("slow");
             } else {
                 $("#checkout_editor #checkout_banner_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 0);
@@ -639,19 +647,19 @@ $(() => {
                 $(".logo-div").removeClass("has-banner");
                 $(".logo-preview-container").removeClass("has-banner");
                 $(".menu-bar-mobile").show("slow");
-                $(".purchase-menu-mobile").fadeOut("slow");
+                // $(".purchase-menu-mobile").fadeOut("slow");
             }
 
             if (checkout.checkout_banner_type === 1) {
                 $("#checkout_editor #banner_type_wide").prop("checked", true);
                 $(".preview-banner").removeClass("retangle-banner");
-                $(".logo-div.logo-menu-bar").removeClass("retangle-banner");
                 $(".preview-banner").addClass("wide-banner");
+                $(".logo-div").removeClass("has-retangle-banner");
             } else {
                 $("#checkout_editor #banner_type_square").prop("checked", true);
                 $(".preview-banner").addClass("retangle-banner");
-                $(".logo-div.logo-menu-bar").addClass("retangle-banner");
                 $(".preview-banner").removeClass("wide-banner");
+                $(".logo-div").addClass("has-retangle-banner");
             }
 
             if (checkout.countdown_enabled) {
@@ -667,11 +675,6 @@ $(() => {
             }
 
             $("#checkout_editor #countdown_time").val(checkout.countdown_time || 15);
-
-            $("#checkout_editor #countdown_description").val(
-                checkout.countdown_description ||
-                    "Aproveite o desconto extra ao comprar no Cartão ou pelo PIX! É por tempo limitado."
-            );
 
             $("#checkout_editor #countdown_finish_message").val(
                 checkout.countdown_finish_message ||
@@ -808,13 +811,14 @@ $(() => {
             $("#checkout_editor #invoice_description").val(checkout.invoice_description || "");
 
             for (let company of checkout.companies) {
-                const document =
-                    (company.document.replace(/\D/g, "").length > 11 ? "CNPJ: " : "CPF: ") + company.document;
-                if (company.status != "pending") {
-                    $("#checkout_editor #companies").append(`<option value="${company.id}" ${
-                        company.id === checkout.company_id ? "selected" : ""
-                    } data-toggle="tooltip" title="${document}" >
-                                                                ${company.name}
+                const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
+                if ( company.status != "pending") {
+                    if(company.name.length>20)
+                        companyName = company.name.substring(0,20)+'...';
+                    else
+                        companyName = company.name;
+                    $("#checkout_editor #companies").append(`<option value="${company.id}" ${company.id === checkout.company_id ? "selected" : ""} data-toggle="tooltip" title="${document}" >
+                                                                ${companyName}
                                                              </option>`);
                 }
             }

@@ -1,6 +1,11 @@
 $(() => {
-    $(document).on("select2:select", function (e) {
-        const selection = $(e.target).parent().find(".select2-selection--multiple")[0];
+
+    getCompaniesAndProjects().done( function (data){
+        $('.site-navbar .sirius-select-container').addClass('disabled');
+    });
+
+    $(document).on('select2:select', function (e) {
+        const selection = $(e.target).parent().find('.select2-selection--multiple')[0];
         if (selection) selection.scrollTop = selection.scrollHeight;
     });
 
@@ -296,26 +301,27 @@ $(() => {
 
         // DURACAO DE COOKIE
         if (project.cookie_duration == 0) {
-            $(".sirius-select").prop("selectedIndex", 0).change();
-            $(".sirius-select-text").text("Eterno");
+            $('.cookie-duration').prop("selectedIndex", 0).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("Eterno");
+
         } else if (project.cookie_duration == 7) {
-            $(".sirius-select").prop("selectedIndex", 1).change();
-            $(".sirius-select-text").text("7 dias");
+            $(".cookie-duration").prop("selectedIndex", 1).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("7 dias");
         } else if (project.cookie_duration == 15) {
-            $(".sirius-select").prop("selectedIndex", 2).change();
-            $(".sirius-select-text").text("15 dias");
+            $(".cookie-duration").prop("selectedIndex", 2).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("15 dias");
         } else if (project.cookie_duration == 30) {
-            $(".sirius-select").prop("selectedIndex", 3).change();
-            $(".sirius-select-text").text("1 mês");
+            $(".cookie-duration").prop("selectedIndex", 3).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("1 mês");
         } else if (project.cookie_duration == 60) {
-            $(".sirius-select").prop("selectedIndex", 4).change();
-            $(".sirius-select-text").text("2 meses");
+            $(".cookie-duration").prop("selectedIndex", 4).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("2 meses");
         } else if (project.cookie_duration == 180) {
-            $(".sirius-select").prop("selectedIndex", 5).change();
-            $(".sirius-select-text").text("6 meses");
+            $(".cookie-duration").prop("selectedIndex", 5).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("6 meses");
         } else if (project.cookie_duration == 365) {
-            $(".sirius-select").prop("selectedIndex", 6).change();
-            $(".sirius-select-text").text("1 ano");
+            $('.cookie-duration').prop("selectedIndex", 6).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("1 ano");
         }
 
         // PORCENTAGEM
@@ -555,8 +561,9 @@ $(() => {
                 error: function (response) {
                     $(".page").removeClass("low-opacity");
                     errorAjaxResponse(response);
-                },
-                success: function (response) {
+                    $(".loader").hide();
+                    $(".final-card").hide();
+                }, success: function (response) {
                     localStorage.setItem("photo_remove", false);
                     updateConfiguracoes();
                     $("html, body").animate({

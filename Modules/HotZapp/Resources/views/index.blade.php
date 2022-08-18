@@ -10,8 +10,10 @@
 @endpush
 @section('content')
     <div class='page'>
-        <div style="display: none"
-             class="page-header container">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
+        <div style="display: none" class="page-header container">
             <div class="row jusitfy-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10"
@@ -36,8 +38,7 @@
             </div>
         </div>
         @include('projects::empty')
-        <div class='page-content container'
-             id='project-integrated'>
+        <div class='page-content container' id='project-integrated'>
             <div class='col-md-12'>
                 <div class="row"
                      id="content">
@@ -105,12 +106,9 @@
             </div>
         </div>
 
-        <div id="no-integration-found"
-             class='row justify-content-center'
-             style="display:none">
+        <div id="no-integration-found" class='row justify-content-center' style="display:none">
             <div class="content-error text-center">
-                <img src="{!! mix('build/global/img/aplicativos.svg') !!}"
-                     width="250px">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre sua loja com HotZapp de forma totalmente automatizada!</p>
             </div>

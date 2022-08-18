@@ -8,10 +8,11 @@
 @section('content')
     <!-- Page -->
     <div class="page">
-        <div class="page-header container"
-             style="display:none !important;">
-            <div class="row jusitfy-content-between"
-                 style="min-height:56px">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
+        <div class="page-header container" style="display:none !important;">
+            <div class="row jusitfy-content-between" style="min-height:56px">
                 <div class="col-lg-8  align-items-center">
                     <h1 class="page-title my-10"
                         style="min-height: 28px">

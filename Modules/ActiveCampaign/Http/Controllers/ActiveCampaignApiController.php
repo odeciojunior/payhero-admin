@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
 use Modules\Core\Entities\ActivecampaignIntegration;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Services\ProjectService;
@@ -23,40 +24,27 @@ class ActiveCampaignApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
-            $activecampaignIntegration = new ActivecampaignIntegration();
-            $userProjectModel = new UserProject();
 
-            activity()
-                ->on($activecampaignIntegration)
-                ->tap(function (Activity $activity) {
-                    $activity->log_name = "visualization";
-                })
-                ->log("Visualizou tela todas as integrações do ActiveCampaign");
+            activity()->on((new ActivecampaignIntegration()))->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todas as integrações do ActiveCampaign');
 
-            $activecampaignIntegrations = $activecampaignIntegration
-                ->where("user_id", $user->account_owner_id)
-                ->with("project")
-                ->get();
-
-            $projects = collect();
-            $userProjects = $userProjectModel
-                ->where("user_id", $user->account_owner_id)
-                ->with("project")
-                ->get();
-            if ($userProjects->count() > 0) {
-                foreach ($userProjects as $userProject) {
-                    if (!empty($userProject->project)) {
-                        $projects->add($userProject->project);
-                    }
+            $activecampaignIntegrations = ActivecampaignIntegration::with('project', 'project.usersProjects')
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
                 }
-            }
+            )->get();
+
             return response()->json([
-                "integrations" => ActivecampaignResource::collection($activecampaignIntegrations),
-                "projects" => ProjectsSelectResource::collection($projects),
+                'integrations' => ActivecampaignResource::collection($activecampaignIntegrations),
             ]);
         } catch (Exception $e) {
             report($e);

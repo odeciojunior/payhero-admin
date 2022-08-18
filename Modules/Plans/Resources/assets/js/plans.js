@@ -2291,16 +2291,10 @@ $(function () {
 
                         getCustom(modal, false);
 
-                        alertCustom(
-                            "error",
-                            "Erro ao atualizar configurações do plano"
-                        );
-                    },
-                    success: function success(data) {
-                        $(modal)
-                            .find(".modal-footer")
-                            .find(".btn")
-                            .prop("disabled", false);
+                    errorAjaxResponse(_error4);
+                },
+                success: function success(data) {
+                    $(modal).find('.modal-footer').find('.btn').prop('disabled', false);
 
                         getProductsPlan();
 

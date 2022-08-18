@@ -1,17 +1,37 @@
 $(document).ready(function () {
-    index();
 
-    function index() {
-        loadingOnScreen();
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+     function index(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/whatsapp2",
+            url: "/api/apps/whatsapp2?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: (response) => {
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -43,10 +63,16 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#integration-actions").show();
                 }
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
             },
         });
     }
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
 
     $("#btnCopyTokenWhats2").on("click", function () {
         var copyText = document.getElementById("inputTokenWhats2");

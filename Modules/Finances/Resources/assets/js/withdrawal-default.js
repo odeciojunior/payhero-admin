@@ -15,7 +15,7 @@ $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
         type: "POST",
         dataType: "json",
         data: {
-            company_id: $("#transfers_company_select").val(),
+            company_id: $('.company-navbar').val(),
             gateway_id: window.gatewayCode,
             withdrawal_value: $("#custom-input-addon").val(),
         },
@@ -241,7 +241,7 @@ $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
                 url: "/api/withdrawals",
                 type: "POST",
                 data: {
-                    company_id: $("#transfers_company_select").val(),
+                    company_id: $('.company-navbar').val(),
                     withdrawal_value: $(".value-select").data("value"),
                     gateway_id: window.gatewayCode,
                 },

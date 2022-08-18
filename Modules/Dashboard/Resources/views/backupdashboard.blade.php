@@ -7,253 +7,222 @@
 @endsection
 
 <div class="page">
-    <div class="page-content container-fluid">
-        <div class="row"
-             data-plugin="matchHeight"
-             data-by-row="true">
-            <div class="col-xxl-12 col-lg-12">
-                <!-- Widget Linearea Color -->
-                <div class="card card-shadow card-responsive"
-                     id="widgetLineareaColor">
-                    <div class="card-block p-0">
-                        <div class="pt-30 p-30"
-                             style="height:calc(100% - 250px);">
-                            <div class="row">
 
-                                <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-                                    <!-- Widget Sale Bar -->
-                                    <div class="card card-inverse card-shadow bg-purple-600 white"
-                                         id="widgetSaleBar">
-                                        <div class="card-block p-0">
-                                            <div class="pt-25 px-30">
-                                                <div class="row no-space">
-                                                    <div class="col-4">
-                                                        <p>Saldo disponível</p>
-                                                    </div>
-                                                    <div class="col-4 text-right">
-                                                        <p class="font-size-30 text-nowrap">R$ {!! $saldo_disponivel !!}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ct-chart h-120"></div>
-                                        </div>
-                                    </div>
-                                    <!-- End Widget Sale Bar -->
-                                </div>
+    @include('layouts.company-select',['version'=>'mobile'])
 
-                                <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-                                    <!-- Widget Sale Bar -->
-                                    <div class="card card-inverse card-shadow bg-purple-600 white"
-                                         id="widgetSaleBar">
-                                        <div class="card-block p-0">
-                                            <div class="pt-25 px-30">
-                                                <div class="row no-space">
-                                                    <div class="col-4">
-                                                        <p>Saldo a receber</p>
-                                                    </div>
-                                                    <div class="col-4 text-right">
-                                                        <p class="font-size-30 text-nowrap">R$ {!! $saldo_futuro !!}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ct-chart h-120"></div>
-                                        </div>
-                                    </div>
-                                    <!-- End Widget Sale Bar -->
-                                </div>
+  <div class="page-content container-fluid">
+    <div class="row" data-plugin="matchHeight" data-by-row="true">
+      <div class="col-xxl-12 col-lg-12">
+        <!-- Widget Linearea Color -->
+        <div class="card card-shadow card-responsive" id="widgetLineareaColor">
+          <div class="card-block p-0">
+            <div class="pt-30 p-30" style="height:calc(100% - 250px);">
+              <div class="row">
 
-                                <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-                                    <!-- Widget Sale Bar -->
-                                    <div class="card card-inverse card-shadow bg-purple-600 white"
-                                         id="widgetSaleBar">
-                                        <div class="card-block p-0">
-                                            <div class="pt-25 px-30">
-                                                <div class="row no-space">
-                                                    <div class="col-4">
-                                                        <p>Transferido</p>
-                                                    </div>
-                                                    <div class="col-4 text-right">
-                                                        <p class="font-size-30 text-nowrap">R$ {!! $saldo_transferido !!}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ct-chart h-120"></div>
-                                        </div>
-                                    </div>
-                                    <!-- End Widget Sale Bar -->
-                                </div>
-
+                  <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
+                    <!-- Widget Sale Bar -->
+                    <div class="card card-inverse card-shadow bg-purple-600 white" id="widgetSaleBar">
+                      <div class="card-block p-0">
+                        <div class="pt-25 px-30">
+                          <div class="row no-space">
+                            <div class="col-4">
+                              <p>Saldo disponível</p>
                             </div>
-                            <div class="row">
-                                <div class="col-7">
-                                    <p class="font-size-20 blue-grey-700">Eneergy Predictions</p>
-                                    <p>Quisque volutpat condimentum velit. Class aptent taciti</p>
-                                    <div class="counter counter-md text-left">
-                                        <div class="counter-number-group">
-                                            <span class="counter-icon red-600"><i class="icon wb-triangle-up"
-                                                   aria-hidden="true"></i></span>
-                                            <span class="counter-number red-600">2,250</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                    <div class="float-right clearfix">
-                                        <ul class="list-unstyled">
-                                            <li class="mb-5 text-truncate">
-                                                <i class="icon wb-medium-point red-600 mr-5"
-                                                   aria-hidden="true"></i> Diretary intake
-                                            </li>
-                                            <li class="mb-5 text-truncate">
-                                                <i class="icon wb-medium-point orange-600 mr-5"
-                                                   aria-hidden="true"></i> Motion
-                                            </li>
-                                            <li class="mb-5 text-truncate">
-                                                <i class="icon wb-medium-point green-600 mr-5"
-                                                   aria-hidden="true"></i> Other
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                            <div class="col-4 text-right">
+                              <p class="font-size-30 text-nowrap">R$ {!! $saldo_disponivel !!}</p>
                             </div>
+                          </div>
                         </div>
-                        <div class="ct-chart h-250"></div>
+                        <div class="ct-chart h-120"></div>
+                      </div>
                     </div>
-                </div>
-                <!-- End Widget Linearea Color -->
-            </div>
+                    <!-- End Widget Sale Bar -->
+                  </div>
 
-            <div class="col-xxl-5 col-lg-5">
-                <!-- Widget Stacked Bar -->
-                <div class="card card-shadow"
-                     id="widgetStackedBar">
-                    <div class="card-block p-0">
-                        <div class="p-30 h-150">
-                            <p>MARKET DOW</p>
-                            <div class="red-600">
-                                <i class="wb-triangle-up font-size-20 mr-5"></i>
-                                <span class="font-size-30">26,580.62</span>
+                  <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
+                    <!-- Widget Sale Bar -->
+                    <div class="card card-inverse card-shadow bg-purple-600 white" id="widgetSaleBar">
+                      <div class="card-block p-0">
+                        <div class="pt-25 px-30">
+                          <div class="row no-space">
+                            <div class="col-4">
+                              <p>Saldo a receber</p>
                             </div>
-                        </div>
-                        <div class="counters pb-20 px-30"
-                             style="height:calc(100% - 350px);">
-                            <div class="row no-space">
-                                <div class="col-4">
-                                    <div class="counter counter-sm">
-                                        <div class="counter-label text-uppercase">APPL</div>
-                                        <div class="counter-number-group text-truncate">
-                                            <span class="counter-number-related green-600">+</span>
-                                            <span class="counter-number green-600">82.24</span>
-                                            <span class="counter-number-related green-600">%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="counter counter-sm">
-                                        <div class="counter-label text-uppercase">FB</div>
-                                        <div class="counter-number-group text-truncate">
-                                            <span class="counter-number-related red-600">-</span>
-                                            <span class="counter-number red-600">12.06</span>
-                                            <span class="counter-number-related red-600">%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="counter counter-sm">
-                                        <div class="counter-label text-uppercase">GOOG</div>
-                                        <div class="counter-number-group text-truncate">
-                                            <span class="counter-number-related green-600">+</span>
-                                            <span class="counter-number green-600">24.86</span>
-                                            <span class="counter-number-related green-600">%</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-4 text-right">
+                              <p class="font-size-30 text-nowrap">R$ {!! $saldo_futuro !!}</p>
                             </div>
+                          </div>
                         </div>
-                        <div class="ct-chart h-200"></div>
+                        <div class="ct-chart h-120"></div>
+                      </div>
                     </div>
-                </div>
-                <!-- End Widget Stacked Bar -->
-            </div>
+                    <!-- End Widget Sale Bar -->
+                  </div>
 
-            <div class="col-xxl-8 col-lg-12">
-                <!-- Widget Statistic -->
-                <div class="card card-shadow"
-                     id="widgetStatistic">
-                    <div class="card-block p-0">
-                        <div class="row no-space h-full"
-                             data-plugin="matchHeight">
-                            <div class="col-md-8 col-sm-12">
-                                <div id="widgetJvmap"
-                                     class="h-full"></div>
+                  <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
+                    <!-- Widget Sale Bar -->
+                    <div class="card card-inverse card-shadow bg-purple-600 white" id="widgetSaleBar">
+                      <div class="card-block p-0">
+                        <div class="pt-25 px-30">
+                          <div class="row no-space">
+                            <div class="col-4">
+                              <p>Transferido</p>
                             </div>
-                            <div class="col-md-4 col-sm-12 p-30">
-                                <div class="form-group">
-                                    <div class="input-search input-search-dark">
-                                        <i class="input-search-icon wb-search"
-                                           aria-hidden="true"></i>
-                                        <input type="text"
-                                               class="form-control"
-                                               name=""
-                                               placeholder="Search...">
-                                    </div>
-                                </div>
-                                <p class="font-size-20 blue-grey-700">Statistic</p>
-                                <p class="blue-grey-400">Status: live</p>
-                                <p>
-                                    <i class="icon wb-map blue-grey-400 mr-10"
-                                       aria-hidden="true"></i>
-                                    <span>258 Countries, 4835 Cities</span>
-                                </p>
-                                <ul class="list-unstyled mt-20">
-                                    <li>
-                                        <p>VISITS</p>
-                                        <div class="progress progress-xs mb-25">
-                                            <div class="progress-bar progress-bar-info bg-blue-600"
-                                                 style="width: 70.3%"
-                                                 aria-valuemax="100"
-                                                 aria-valuemin="0"
-                                                 aria-valuenow="70.3"
-                                                 role="progressbar">
-                                                <span class="sr-only">70.3%</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <p>TODAY</p>
-                                        <div class="progress progress-xs mb-25">
-                                            <div class="progress-bar progress-bar-info bg-green-600"
-                                                 style="width: 70.3%"
-                                                 aria-valuemax="100"
-                                                 aria-valuemin="0"
-                                                 aria-valuenow="70.3"
-                                                 role="progressbar">
-                                                <span class="sr-only">70.3%</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <p>WEEK</p>
-                                        <div class="progress progress-xs mb-0">
-                                            <div class="progress-bar progress-bar-info bg-purple-600"
-                                                 style="width: 70.3%"
-                                                 aria-valuemax="100"
-                                                 aria-valuemin="0"
-                                                 aria-valuenow="70.3"
-                                                 role="progressbar">
-                                                <span class="sr-only">70.3%</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                            <div class="col-4 text-right">
+                              <p class="font-size-30 text-nowrap">R$ {!! $saldo_transferido !!}</p>
                             </div>
+                          </div>
                         </div>
+                        <div class="ct-chart h-120"></div>
+                      </div>
                     </div>
+                    <!-- End Widget Sale Bar -->
+                  </div>
+
+
+              </div>
+              <div class="row">
+                <div class="col-7">
+                  <p class="font-size-20 blue-grey-700">Eneergy Predictions</p>
+                  <p>Quisque volutpat condimentum velit. Class aptent taciti</p>
+                  <div class="counter counter-md text-left">
+                    <div class="counter-number-group">
+                      <span class="counter-icon red-600"><i class="icon wb-triangle-up" aria-hidden="true"></i></span>
+                      <span class="counter-number red-600">2,250</span>
+                    </div>
+                  </div>
                 </div>
-                <!-- End Widget Statistic -->
+                <div class="col-5">
+                  <div class="float-right clearfix">
+                    <ul class="list-unstyled">
+                      <li class="mb-5 text-truncate">
+                        <i class="icon wb-medium-point red-600 mr-5" aria-hidden="true"></i>                            Diretary intake
+                      </li>
+                      <li class="mb-5 text-truncate">
+                        <i class="icon wb-medium-point orange-600 mr-5" aria-hidden="true"></i>                            Motion
+                      </li>
+                      <li class="mb-5 text-truncate">
+                        <i class="icon wb-medium-point green-600 mr-5" aria-hidden="true"></i>                            Other
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
+            <div class="ct-chart h-250"></div>
+          </div>
+        </div>
+        <!-- End Widget Linearea Color -->
+      </div>
+
+      <div class="col-xxl-5 col-lg-5">
+        <!-- Widget Stacked Bar -->
+        <div class="card card-shadow" id="widgetStackedBar">
+          <div class="card-block p-0">
+            <div class="p-30 h-150">
+              <p>MARKET DOW</p>
+              <div class="red-600">
+                <i class="wb-triangle-up font-size-20 mr-5"></i>
+                <span class="font-size-30">26,580.62</span>
+              </div>
+            </div>
+            <div class="counters pb-20 px-30" style="height:calc(100% - 350px);">
+              <div class="row no-space">
+                <div class="col-4">
+                  <div class="counter counter-sm">
+                    <div class="counter-label text-uppercase">APPL</div>
+                    <div class="counter-number-group text-truncate">
+                      <span class="counter-number-related green-600">+</span>
+                      <span class="counter-number green-600">82.24</span>
+                      <span class="counter-number-related green-600">%</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="counter counter-sm">
+                    <div class="counter-label text-uppercase">FB</div>
+                    <div class="counter-number-group text-truncate">
+                      <span class="counter-number-related red-600">-</span>
+                      <span class="counter-number red-600">12.06</span>
+                      <span class="counter-number-related red-600">%</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="counter counter-sm">
+                    <div class="counter-label text-uppercase">GOOG</div>
+                    <div class="counter-number-group text-truncate">
+                      <span class="counter-number-related green-600">+</span>
+                      <span class="counter-number green-600">24.86</span>
+                      <span class="counter-number-related green-600">%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ct-chart h-200"></div>
+          </div>
+        </div>
+        <!-- End Widget Stacked Bar -->
+      </div>
+
+      <div class="col-xxl-8 col-lg-12">
+        <!-- Widget Statistic -->
+        <div class="card card-shadow" id="widgetStatistic">
+          <div class="card-block p-0">
+            <div class="row no-space h-full" data-plugin="matchHeight">
+              <div class="col-md-8 col-sm-12">
+                <div id="widgetJvmap" class="h-full"></div>
+              </div>
+              <div class="col-md-4 col-sm-12 p-30">
+                <div class="form-group">
+                  <div class="input-search input-search-dark">
+                    <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                    <input type="text" class="form-control" name="" placeholder="Search...">
+                  </div>
+                </div>
+                <p class="font-size-20 blue-grey-700">Statistic</p>
+                <p class="blue-grey-400">Status: live</p>
+                <p>
+                  <i class="icon wb-map blue-grey-400 mr-10" aria-hidden="true"></i>
+                  <span>258 Countries, 4835 Cities</span>
+                </p>
+                <ul class="list-unstyled mt-20">
+                  <li>
+                    <p>VISITS</p>
+                    <div class="progress progress-xs mb-25">
+                      <div class="progress-bar progress-bar-info bg-blue-600" style="width: 70.3%" aria-valuemax="100"
+                        aria-valuemin="0" aria-valuenow="70.3" role="progressbar">
+                        <span class="sr-only">70.3%</span>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <p>TODAY</p>
+                    <div class="progress progress-xs mb-25">
+                      <div class="progress-bar progress-bar-info bg-green-600" style="width: 70.3%" aria-valuemax="100"
+                        aria-valuemin="0" aria-valuenow="70.3" role="progressbar">
+                        <span class="sr-only">70.3%</span>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <p>WEEK</p>
+                    <div class="progress progress-xs mb-0">
+                      <div class="progress-bar progress-bar-info bg-purple-600" style="width: 70.3%"
+                        aria-valuemax="100" aria-valuemin="0" aria-valuenow="70.3"
+                        role="progressbar">
+                        <span class="sr-only">70.3%</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Widget Statistic -->
+      </div>
 
             <div class="col-xxl-4 col-lg-12">
                 <div class="row h-full">

@@ -25,4 +25,25 @@ class IpService
             return null;
         }
     }
+
+    public static function getFirstValidIp($ip)
+    {
+        try {
+            $explodeIp = explode(',', $ip);
+            if (count($explodeIp) == 1) {
+                $ip = current($explodeIp);
+            } else if (count($explodeIp) == 2) {
+                $ipv6 = $explodeIp[0] ?? null;
+                $ipv4 = $explodeIp[1] ?? null;
+                $ip   = $ipv4 ?? $ipv6;
+            }
+
+            return $ip;
+        } catch (Exception $ex) {
+            report($ex);
+
+            return $ip;
+        }
+    }
+
 }

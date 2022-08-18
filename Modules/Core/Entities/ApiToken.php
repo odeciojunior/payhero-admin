@@ -7,6 +7,7 @@ use App\Traits\LogsActivity;
 use App\Traits\PaginatableTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -38,7 +39,7 @@ use Modules\Core\Presenters\ApiTokenPresenter;
  */
 class ApiToken extends Model
 {
-    use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes, LogsActivity;
+    use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes, LogsActivity, HasFactory;
 
     const TOKEN_SCOPE_ADMIN = "admin";
     const TOKEN_SCOPE_USER = "user";

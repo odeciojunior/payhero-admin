@@ -31,20 +31,23 @@ class WooCommerceApiController extends Controller
     /**
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $projectModel = new Project();
             $woocommerceIntegrationModel = new WooCommerceIntegration();
-            activity()
-                ->on($woocommerceIntegrationModel)
-                ->tap(function (Activity $activity) {
-                    $activity->log_name = "visualization";
-                })
-                ->log("Visualizou tela todos as integrações com o woocommerce");
+            activity()->on($woocommerceIntegrationModel)->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'visualization';
+                }
+            )->log('Visualizou tela todos as integrações com o woocommerce');
+
             $woocommerceIntegrations = $woocommerceIntegrationModel
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->get();
+            ->join('checkout_configs as cc', 'cc.project_id', '=', 'woo_commerce_integrations.project_id')
+            ->where('cc.company_id',auth()->user()->company_default)
+            ->where('user_id',auth()->user()->getAccountOwnerId())
+            ->get();
+
             $projects = [];
             foreach ($woocommerceIntegrations as $woocommerceIntegration) {
                 $project = $projectModel

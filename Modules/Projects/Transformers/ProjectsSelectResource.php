@@ -20,10 +20,11 @@ class ProjectsSelectResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => Hashids::encode($this->id),
-            "name" => $this->name,
-            "shopify" => $this->shopify_id != null ? 1 : 0,
-            "woocommerce" => $this->woocommerce_id != null ? 1 : 0,
+            'id'      => Hashids::encode($this->id),
+            'name'    => $this->name,
+            'shopify' => ($this->shopify_id != null ? 1 : 0),
+            'status'  => $this->status,
+            'woocommerce' => ($this->woocommerce_id != null ? 1 : 0),
         ];
     }
 }

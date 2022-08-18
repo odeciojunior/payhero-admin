@@ -39,13 +39,10 @@ class WithdrawalsApiController
                 );
             }
 
-            if (!Gate::allows("edit", [$company])) {
-                return response()->json(
-                    [
-                        "message" => "Sem permissão para visualizar saques",
-                    ],
-                    403
-                );
+            if ($company->id <> Company::DEMO_ID && !Gate::allows('edit', [$company])) {
+                return response()->json([
+                        'message' => 'Sem permissão para visualizar saques',
+                    ],403);
             }
 
             return Gateway::getServiceById($gatewayId)

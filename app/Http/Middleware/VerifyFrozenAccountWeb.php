@@ -44,7 +44,6 @@ class VerifyFrozenAccountWeb
             "/finances",
             "/old-finances",
             "/reports/sales",
-            "/reports/checkouts",
             "/reports/coupons",
             "/reports/pending",
             "/reports/blockedbalance",
