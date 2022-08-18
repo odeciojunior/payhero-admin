@@ -67,7 +67,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".extra-informations-user").on("click", function () {
+    $(".init-operation-container").on("click", ".extra-informations-user", function () {
         $("#new-register-first-page").hide();
 
         $(".modal-top-btn").hide();
