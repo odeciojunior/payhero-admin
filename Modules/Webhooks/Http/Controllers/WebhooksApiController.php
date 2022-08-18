@@ -15,6 +15,7 @@ class WebhooksApiController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
      * @return WebhooksCollection
      */
     public function index()
@@ -37,6 +38,7 @@ class WebhooksApiController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
      * @param Request $request
      * @return WebhooksResource
      */
@@ -79,7 +81,7 @@ class WebhooksApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(
-                ["message" => "Ocorreu um erro ao salvar"],
+                ["message" => "Ocorreu um erro ao salvar registro"],
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -87,6 +89,7 @@ class WebhooksApiController extends Controller
 
     /**
      * Show the specified resource.
+     *
      * @param int $id
      * @return Response
      */
@@ -114,22 +117,102 @@ class WebhooksApiController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
      * @param Request $request
      * @param int $id
      * @return Response
      */
-    // public function update(Request $request, $id)
-    // {
-    //     //
-    // }
+    public function update(Request $request, $id)
+    {
+        try {
+            $data = $request->all();
+
+            $webhook = Webhook::find(hashids_decode($id));
+
+            if ($webhook->user_id !== auth()->user()->account_owner_id) {
+                return response()->json(
+                    ["message" => "Ocorreu um erro ao editar registro"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            if (empty($data["description"])) {
+                return response()->json(
+                    ["message" => "Digite um nome para seu webhook"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $company = Company::find(hashids_decode($data["company_id"]));
+
+            if (!$company) {
+                return response()->json(
+                    ["message" => "Selecione uma empresa"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            if (empty($data["url"])) {
+                return response()->json(
+                    ["message" => "Digite uma URL válida"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $webhook->update([
+                "company_id" => $company->id,
+                "description" => $data["description"],
+                "url" => $data["url"],
+            ]);
+
+            return response()->json(
+                ["message" => "Webhook atualizado com sucesso"],
+                Response::HTTP_OK
+            );
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(
+                ["message" => "Ocorreu um erro ao atualizar registro"],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
+     *
      * @param int $id
      * @return Response
      */
-    // public function destroy($id)
-    // {
-    //     //
-    // }
+    public function destroy($id)
+    {
+        try {
+            $webhook = Webhook::find(hashids_decode($id));
+
+            if ($webhook->user_id !== auth()->user()->account_owner_id) {
+                return response()->json(
+                    ["message" => "Ocorreu um erro ao excluir registro"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            if (!$webhook->delete()) {
+                return response()->json(
+                    ["message" => "Ocorreu um erro ao excluir registro"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            return response()->json(
+                ["message" => "Webhook excluído com sucesso"],
+                Response::HTTP_OK
+            );
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(
+                ["message" => "Ocorreu um erro ao excluir registro"],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
 }

@@ -107,7 +107,7 @@ $(document).ready(function () {
                 '<button class="btn pointer delete-webhook" style="background-color:transparent;" webhook="' +
                 value.id +
                 '"' +
-                ' title="Deletar token"><span class="o-bin-1"></span></button>';
+                ' title="Deletar webhook"><span class="o-bin-1"></span></button>';
             dados += "</td>";
 
             dados += "</tr>";
@@ -146,7 +146,8 @@ $(document).ready(function () {
 
                         $("#modal-edit-webhook .sirius-select")
                             .prop("selectedIndex", webhook.company_id)
-                            .change();
+                            .trigger("change");
+
                         $("#modal-edit-webhook .sirius-select-text").text(
                             webhook.company_name
                         );
@@ -194,9 +195,9 @@ $(document).ready(function () {
             method: "POST",
             url: "/api/webhooks",
             data: {
+                company_id: companyHash,
                 description: description,
                 url: url,
-                company_id: companyHash,
             },
             dataType: "json",
             headers: {
@@ -209,10 +210,8 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $(".close").click();
-                $("#modal-webhook").find("input[name='description']").val("");
-                $("#modal-webhook").find("input[name='url']").val("");
-                $("#companies").prop("selectedIndex", 0).change();
                 alertCustom("success", "Webhook criado com sucesso!");
+                clearForm();
                 loadingOnScreenRemove();
                 refreshWebhooks();
             },
@@ -228,12 +227,15 @@ $(document).ready(function () {
 
             let url = $("#modal-edit-webhook").find('input[name="url"]').val();
 
+            let companyHash = $("#companies_edit").val();
+
             loadingOnScreen();
 
             $.ajax({
                 method: "PUT",
                 url: "api/webhooks/" + webhook_id,
                 data: {
+                    company_id: companyHash,
                     description: description,
                     url: url,
                 },
@@ -426,5 +428,12 @@ $(document).ready(function () {
                 });
             }
         }
+    }
+
+    function clearForm() {
+        $(":text").val("");
+        $("#companies, #companies_edit")
+            .prop("selectedIndex", 0)
+            .trigger("change");
     }
 });
