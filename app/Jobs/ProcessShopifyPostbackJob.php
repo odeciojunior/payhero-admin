@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
@@ -27,6 +28,12 @@ class ProcessShopifyPostbackJob implements ShouldQueue
     public function handle()
     {
         try {
+            PostbackLog::create([
+                "origin" => 3,
+                "data" => json_encode($this->postback),
+                "description" => "shopify",
+            ]);
+
             $userProject = UserProject::with(["user", "project"])
                 ->where("project_id", $this->projectId)
                 ->where("type_enum", UserProject::TYPE_PRODUCER_ENUM)

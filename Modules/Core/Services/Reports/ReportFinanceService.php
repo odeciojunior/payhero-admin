@@ -10,7 +10,9 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\Gateways\AsaasService;
+use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\Gateways\Safe2PayService;
@@ -1558,8 +1560,8 @@ class ReportFinanceService
             $totalPendingCount = array_sum($balancesPendingCount);
 
             return [
-                "value" => foxutils()->formatMoney($totalPendingValue / 100),
-                "amount" => $totalPendingCount,
+                "value" => foxutils()->formatMoney($pendingBalance / 100),
+                "amount" => $pendingBalanceCount,
             ];
         });
     }
@@ -1597,16 +1599,13 @@ class ReportFinanceService
                 $balancesBlockedPendinCount[] = $gateway->getBlockedBalancePendingCount();
             }
 
-            if (count($balancesBlockedCount) == 0 && count($balancesBlockedPendinCount) == 0) {
+            if ($blockedBalance == 0 && $blockedBalanceCount == 0) {
                 return null;
             }
 
-            $totalBlockedValue = array_sum($balancesBlockedValue) + array_sum($balancesBlockedPendingValue);
-            $totalBlockedCount = array_sum($balancesBlockedCount) + array_sum($balancesBlockedPendinCount);
-
             return [
-                "value" => foxutils()->formatMoney($totalBlockedValue / 100),
-                "amount" => $totalBlockedCount,
+                "value" => foxutils()->formatMoney($blockedBalance / 100),
+                "amount" => $blockedBalanceCount,
             ];
         });
     }
@@ -1667,13 +1666,9 @@ class ReportFinanceService
                     "color" => "yellow",
                 ],
                 "blocked" => [
-                    "value" => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
+                    "value" => foxutils()->formatMoney(($blockedBalance) / 100),
                     "percentage" => !empty($totalBalance)
-                        ? round(
-                            (($blockedBalance + $blockedBalancePending) * 100) / $totalBalance,
-                            1,
-                            PHP_ROUND_HALF_UP
-                        )
+                        ? round(($blockedBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                         : 0,
                     "color" => "red",
                 ],

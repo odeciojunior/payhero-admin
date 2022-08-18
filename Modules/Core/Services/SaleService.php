@@ -922,6 +922,7 @@ class SaleService
                 ->where('user_id', auth()->user()->getAccountOwnerId())
                 ->where('company_id',auth()->user()->company_default)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
+                ->leftJoin("block_reason_sales", "block_reason_sales.sale_id", "transactions.sale_id")
                 ->where('transactions.status_enum', Transaction::STATUS_PAID)
                 ->whereNull('invitation_id');
 
@@ -967,33 +968,36 @@ class SaleService
                             "2021-09-20"
                         );
                     })
-                        ->orWhere(function ($qr2) {
-                            $qr2->whereIn("transactions.gateway_id", $this->getGatewayIdsByFilter("Vega"));
-                        })
-                        ->orWhere(function ($qr2) {
+                    ->orWhere(function ($qr2) {
+                        $qr2->whereIn("transactions.gateway_id", $this->getGatewayIdsByFilter("Vega"));
+                    })
+                    ->orWhere(function ($qr2) {
+                        $qr2->whereIn(
+                            "transactions.gateway_id",
+                            $this->getGatewayIdsByFilter("Gerencianet")
+                        )->where("is_waiting_withdrawal", 0);
+                    })
+                    ->orWhere(function ($qr3) {
+                        $qr3->where("is_waiting_withdrawal", 0)->whereIn(
+                            "transactions.gateway_id",
+                            $this->getGatewayIdsByFilter("Getnet")
+                        );
+                    })
+                    ->orWhere(function ($qr2) {
+                        if (auth()->user()->show_old_finances) {
                             $qr2->whereIn(
                                 "transactions.gateway_id",
-                                $this->getGatewayIdsByFilter("Gerencianet")
-                            )->where("is_waiting_withdrawal", 0);
-                        })
-                        ->orWhere(function ($qr3) {
-                            $qr3->where("is_waiting_withdrawal", 0)->whereIn(
-                                "transactions.gateway_id",
-                                $this->getGatewayIdsByFilter("Getnet")
-                            );
-                        })
-                        ->orWhere(function ($qr2) {
-                            if (auth()->user()->show_old_finances) {
-                                $qr2->whereIn(
-                                    "transactions.gateway_id",
-                                    $this->getGatewayIdsByFilter("Cielo")
-                                )->orWhere(function ($query) {
-                                    $query
-                                        ->where("transactions.gateway_id", Gateway::ASAAS_PRODUCTION_ID)
-                                        ->where("transactions.created_at", "<", "2021-09");
-                                });
-                            }
-                        });
+                                $this->getGatewayIdsByFilter("Cielo")
+                            )
+                            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+                            ->whereNull("block_reason_sales.id")
+                            ->orWhere(function ($query) {
+                                $query
+                                    ->where("transactions.gateway_id", Gateway::ASAAS_PRODUCTION_ID)
+                                    ->where("transactions.created_at", "<", "2021-09");
+                            });
+                        }
+                    });
                 });
             }
 

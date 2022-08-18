@@ -537,7 +537,7 @@ class CompanyService
             if ($blockedBalance <= $pendingBalance) {
                 $pendingBalance -= $blockedBalance;
             }
-            if ($blockedBalance > $pendingBalance) {
+            elseif ($blockedBalance > $pendingBalance) {
                 $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
                 $pendingBalance = 0;
             }
