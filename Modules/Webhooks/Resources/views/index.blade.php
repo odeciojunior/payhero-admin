@@ -143,6 +143,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" id="webhook_id" name="webhook_id">
                     <button id="btn-edit-webhook" type="button" class="btn btn-lg btn-primary">Atualizar</button>
                 </div>
             </div>
@@ -166,6 +167,7 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
+                    <input type="hidden" id="webhook_id" name="webhook_id">
                     <button id="btn-cancel-webhook" type="button"
                         class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"
                         data-dismiss="modal" style="width: 20%;">

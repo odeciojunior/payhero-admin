@@ -1,33 +1,8 @@
 $(document).ready(function () {
-    let webhookTypeEnum = {
-        external: "Webhook externo",
-        checkout_api: "Checkout API",
-    };
-
-    let webhookTypeEnumBadge = {
-        admin: "default",
-        personal: "default",
-        external: "success",
-        checkout_api: "primary",
-    };
-
-    let status = {
-        active: "Ativo",
-        inactive: "Inativo",
-    };
-
-    let statusBadge = {
-        active: "success",
-        inactive: "danger",
-    };
-
     refreshWebhooks();
-    createWebhook();
     getCompanies();
 
     function refreshWebhooks(page = 1) {
-        loadingOnScreen();
-
         $.ajax({
             method: "GET",
             url: "/api/webhooks?resume=true&page=" + page,
@@ -36,8 +11,10 @@ $(document).ready(function () {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
+            beforeSend: function () {
+                loadingOnScreen();
+            },
             error: (response) => {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -62,10 +39,8 @@ $(document).ready(function () {
                     updateWebhookTableData(response);
                     pagination(response, "webhooks");
                 }
-
-                getWebhook();
-                deleteWebhook();
-
+            },
+            complete: function () {
                 loadingOnScreenRemove();
             },
         });
@@ -79,7 +54,6 @@ $(document).ready(function () {
         $.each(response.data, function (index, value) {
             dados = "";
             dados += "<tr>";
-
             dados += '<td class="" style="vertical-align: middle;">';
             dados +=
                 '<p class="description mb-0 mr-1">' +
@@ -90,220 +64,30 @@ $(document).ready(function () {
                 value.register_date +
                 "</small>";
             dados += "</td>";
-
             dados += '<td class="" style="vertical-align: middle;">';
             dados += '<p class="description mb-0 mr-1">' + value.url + "</p>";
             dados +=
                 '<small class="text-muted">' + value.company_name + "</small>";
             dados += "</td>";
-
             dados += '<td class="text-center">';
             dados +=
-                '<button class="btn pointer edit-webhook" style="background-color:transparent;" webhook="' +
+                '<button type="button" class="btn pointer edit-webhook" style="background-color:transparent;" webhook="' +
                 value.id +
                 '"' +
                 ' title="Editar webhook"><span class="o-edit-1"></span></button>';
             dados +=
-                '<button class="btn pointer delete-webhook" style="background-color:transparent;" webhook="' +
+                '<button type="button" class="btn pointer delete-webhook" style="background-color:transparent;" webhook="' +
                 value.id +
                 '"' +
                 ' title="Deletar webhook"><span class="o-bin-1"></span></button>';
             dados += "</td>";
-
             dados += "</tr>";
+
             $("#table-body-webhook").append(dados);
         });
     }
 
-    function getWebhook() {
-        $(".edit-webhook").unbind("click");
-        $(".edit-webhook").on("click", function () {
-            let webhook_id = $(this).attr("webhook");
-            $.ajax({
-                method: "GET",
-                url: "/api/webhooks/" + webhook_id,
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                error: function error(response) {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    if (!isEmpty(response.data)) {
-                        let webhook = response.data;
-
-                        $("#modal-edit-webhook")
-                            .find('input[name="description"]')
-                            .val(webhook.description);
-
-                        $("#modal-edit-webhook")
-                            .find('input[name="url"]')
-                            .val(webhook.url);
-
-                        $("#modal-edit-webhook .sirius-select")
-                            .find("option")
-                            .each(function () {
-                                if ($(this).val() == webhook.company_id) {
-                                    $("#modal-edit-webhook .sirius-select")
-                                        .prop("selectedIndex", $(this).index())
-                                        .trigger("change");
-                                    return false;
-                                }
-                            });
-
-                        $("#modal-edit-webhook .sirius-select-text").text(
-                            webhook.company_name
-                        );
-
-                        $("#modal-edit-webhook").modal("show");
-
-                        editWebhook(webhook_id);
-                    } else {
-                        alertCustom("error", "Erro ao obter dados do webhook");
-                    }
-                },
-            });
-        });
-    }
-
-    function createWebhook() {
-        $(".store-webhook").unbind();
-        $(".store-webhook").on("click", function () {
-            loadingOnScreenRemove();
-            $("#btn-save-webhook").unbind();
-            $("#btn-save-webhook").on("click", function () {
-                let description = $("#modal-webhook")
-                    .find("input[name='description']")
-                    .val();
-                let url = $("#modal-webhook").find("input[name='url']").val();
-                let companyHash = $("#companies").val();
-
-                if (description == "") {
-                    alertCustom("error", "Digite um nome para seu webhook");
-                } else if (!companyHash) {
-                    alertCustom("error", "Selecione uma empresa");
-                } else if (url == "") {
-                    alertCustom("error", "Digite uma URL válida");
-                } else {
-                    loadingOnScreen();
-                    storeWebhook(description, url, companyHash);
-                }
-            });
-            $("#modal-webhook").modal("show");
-        });
-    }
-
-    function storeWebhook(description, url, companyHash) {
-        $.ajax({
-            method: "POST",
-            url: "/api/webhooks",
-            data: {
-                company_id: companyHash,
-                description: description,
-                url: url,
-            },
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                $(".close").click();
-                clearForm();
-                loadingOnScreenRemove();
-                refreshWebhooks();
-                alertCustom("success", "Webhook criado com sucesso!");
-            },
-        });
-    }
-
-    function editWebhook(webhook_id) {
-        $("#btn-edit-webhook").unbind("click");
-        $("#btn-edit-webhook").on("click", function () {
-            let description = $("#modal-edit-webhook")
-                .find('input[name="description"]')
-                .val();
-
-            let url = $("#modal-edit-webhook").find('input[name="url"]').val();
-
-            let companyHash = $("#companies_edit").val();
-
-            loadingOnScreen();
-
-            $.ajax({
-                method: "PUT",
-                url: "api/webhooks/" + webhook_id,
-                data: {
-                    company_id: companyHash,
-                    description: description,
-                    url: url,
-                },
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                error: (response) => {
-                    loadingOnScreenRemove();
-                    errorAjaxResponse(response);
-                },
-                success: (response) => {
-                    $(".close").click();
-                    loadingOnScreenRemove();
-                    refreshWebhooks();
-                    alertCustom("success", response.message);
-                },
-            });
-        });
-    }
-
-    function deleteWebhook() {
-        $(".delete-webhook").unbind("click");
-        $(".delete-webhook").on("click", function () {
-            let webhookId = $(this).attr("webhook");
-            let url = "api/webhooks/" + webhookId;
-            $("#modal-delete-webhook").modal("show");
-            $("#btn-delete-webhook").unbind("click");
-            $("#btn-delete-webhook").on("click", function () {
-                loadingOnScreen();
-                $.ajax({
-                    method: "DELETE",
-                    url: url,
-                    data: { webhookId: webhookId },
-                    dataType: "json",
-                    headers: {
-                        Authorization: $('meta[name="access-token"]').attr(
-                            "content"
-                        ),
-                        Accept: "application/json",
-                    },
-                    error: (response) => {
-                        loadingOnScreenRemove();
-                        errorAjaxResponse(response);
-                    },
-                    success: (response) => {
-                        loadingOnScreenRemove();
-                        refreshWebhooks();
-                        alertCustom("success", response.message);
-                    },
-                });
-            });
-        });
-    }
-
     function getCompanies() {
-        loadingOnScreen();
-
         $.ajax({
             method: "GET",
             url: "/api/core/companies?select=true",
@@ -328,11 +112,188 @@ $(document).ready(function () {
                         }
                     });
                 }
+            },
+        });
+    }
 
+    $(".store-webhook").on("click", function () {
+        $("#modal-webhook").modal("show");
+    });
+
+    $("#btn-save-webhook").on("click", function () {
+        let data = validate("store");
+        data ? storeWebhook(data) : errorAjaxResponse("");
+    });
+
+    function storeWebhook(data) {
+        $.ajax({
+            method: "POST",
+            url: "/api/webhooks",
+            data: {
+                description: data.description,
+                company_id: data.company_id,
+                url: data.url,
+            },
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                $("#modal-webhook").modal("hide");
+                alertCustom("success", "Webhook criado com sucesso");
+                clearForm();
+                refreshWebhooks();
+            },
+            complete: function () {
                 loadingOnScreenRemove();
             },
         });
     }
+
+    $("#table-body-webhook").on("click", ".edit-webhook", function () {
+        let webhookId = $(this).attr("webhook");
+        $.ajax({
+            method: "GET",
+            url: "/api/webhooks/" + webhookId,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                if (!isEmpty(response.data)) {
+                    let webhook = response.data;
+                    $("#modal-edit-webhook #description_edit").val(
+                        webhook.description
+                    );
+                    $("#modal-edit-webhook #url_edit").val(webhook.url);
+
+                    $("#modal-edit-webhook #companies_edit")
+                        .find("option")
+                        .each(function () {
+                            if ($(this).val() == webhook.company_id) {
+                                $("#modal-edit-webhook .sirius-select")
+                                    .prop("selectedIndex", $(this).index())
+                                    .trigger("change");
+                                $(
+                                    "#modal-edit-webhook .sirius-select-text"
+                                ).text(webhook.company_name);
+                                return false;
+                            }
+                        });
+
+                    $("#modal-edit-webhook #webhook_id").val(webhookId);
+
+                    $("#modal-edit-webhook").modal("show");
+                } else {
+                    alertCustom("error", "Erro ao obter dados do webhook");
+                }
+            },
+        });
+    });
+
+    $("#modal-edit-webhook").on("click", "#btn-edit-webhook", function () {
+        let data = validate("update");
+        data ? updateWebhook(data) : errorAjaxResponse("");
+    });
+
+    function updateWebhook(data) {
+        let webhookId = $("#modal-edit-webhook #webhook_id").val();
+        $.ajax({
+            method: "PUT",
+            url: "api/webhooks/" + webhookId,
+            data: {
+                description: data.description,
+                company_id: data.company_id,
+                url: data.url,
+            },
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                $("#modal-edit-webhook").modal("hide");
+                alertCustom("success", response.message);
+                clearForm();
+                refreshWebhooks();
+            },
+            complete: function () {
+                loadingOnScreenRemove();
+            },
+        });
+    }
+
+    function validate(event) {
+        let description, company_id, url;
+
+        if (event == "store") {
+            description = $("#modal-webhook #description").val();
+            company_id = $("#modal-webhook #companies").val();
+            url = $("#modal-webhook #url").val();
+        } else if (event == "update") {
+            description = $("#modal-edit-webhook #description_edit").val();
+            company_id = $("#modal-edit-webhook #companies_edit").val();
+            url = $("#modal-edit-webhook #url_edit").val();
+        }
+
+        if (isEmpty(description)) {
+            alertCustom("error", "Digite um nome para seu webhook");
+            return false;
+        }
+
+        if (isEmpty(company_id)) {
+            alertCustom("error", "Selecione uma empresa");
+            return false;
+        }
+
+        if (isEmpty(url)) {
+            alertCustom("error", "Digite uma URL");
+            return false;
+        }
+
+        return { description: description, company_id: company_id, url: url };
+    }
+
+    $("#table-body-webhook").on("click", ".delete-webhook", function () {
+        $("#modal-delete-webhook #webhook_id").val($(this).attr("webhook"));
+        $("#modal-delete-webhook").modal("show");
+    });
+
+    $("#modal-delete-webhook").on("click", "#btn-delete-webhook", function () {
+        let webhookId = $("#modal-delete-webhook #webhook_id").val();
+        $.ajax({
+            method: "DELETE",
+            url: "api/webhooks/" + webhookId,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                $("#modal-delete-webhook").modal("hide");
+                alertCustom("success", response.message);
+                clearForm();
+                refreshWebhooks();
+            },
+            complete: function () {
+                loadingOnScreenRemove();
+            },
+        });
+    });
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
