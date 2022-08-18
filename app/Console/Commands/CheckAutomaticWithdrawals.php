@@ -52,7 +52,6 @@ class CheckAutomaticWithdrawals extends Command
     {
         $withdrawalsSettings = WithdrawalSettings::
             whereNull("deleted_at")
-            ->where("id", 294)
             ->orderBy("id", "DESC")
             ->get();
 
