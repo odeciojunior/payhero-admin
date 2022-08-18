@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
-        $schedule->command('demo:create-fake-sale')->withoutOverlapping()->everyFiveMinutes();
+        //$schedule->command('demo:create-fake-sale')->withoutOverlapping()->everyFiveMinutes();
 
         $schedule->command("check:systems")->everyTenMinutes();
         $schedule->command("ethoca:proccess-postback")->everyTenMinutes();
