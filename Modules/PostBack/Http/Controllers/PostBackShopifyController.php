@@ -4,6 +4,7 @@ namespace Modules\PostBack\Http\Controllers;
 
 use App\Jobs\ProcessShopifyPostbackJob;
 use App\Jobs\ProcessShopifyTrackingPostbackJob;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -18,47 +19,24 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class PostBackShopifyController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
+
     public function postBackTracking(Request $request)
     {
         try {
-            $postBackLogModel = new PostbackLog();
-            $projectModel = new Project();
-
             $requestData = $request->all();
-
-            $postBackLogModel->create([
-                "origin" => 5,
-                "data" => json_encode($requestData),
-                "description" => "shopify-tracking",
-            ]);
-
             $projectId = current(Hashids::decode($request->project_id));
-            $project = $projectModel->find($projectId);
 
-            if (!empty($project)) {
-                ProcessShopifyTrackingPostbackJob::dispatch($projectId, $requestData)->onQueue(
-                    "postback-shopify-tracking"
-                );
+            ProcessShopifyTrackingPostbackJob::dispatch($projectId, $requestData)->onQueue(
+                "postback-shopify-tracking"
+            );
 
-                return response()->json(["message" => "success"]);
-            } else {
-                Log::warning("Shopify atualizar código de rastreio - projeto não encontrado");
-                //projeto nao existe
-                return response()->json(["message" => "project not found"]);
-            }
-        } catch (\Exception $e) {
+            return response()->json(["message" => "success"]);
+        } catch (Exception $e) {
+            report($e);
             return response()->json(["message" => "error processing postback"]);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function postBackListener(Request $request)
     {
         try {
