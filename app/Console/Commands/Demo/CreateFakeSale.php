@@ -44,7 +44,7 @@ class CreateFakeSale extends Command
         Config::set('database.default', 'demo');
 
         $this->company = Company::find(Company::DEMO_ID);
-        $isRandomData = true;
+        $isRandomData = false;
         $attemps = 1;
         $counter = 1;
 
