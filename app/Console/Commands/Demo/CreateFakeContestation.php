@@ -4,7 +4,7 @@ namespace App\Console\Commands\Demo;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
-use Modules\Core\Services\DemoAccount\DemoFakeDataService; 
+use Modules\Core\Services\DemoAccount\DemoFakeDataService;
 
 class CreateFakeContestation extends Command
 {
@@ -41,7 +41,7 @@ class CreateFakeContestation extends Command
     {
         Config::set('database.default', 'demo');
 
-        $demo =  new DemoFakeDataService();        
+        $demo =  new DemoFakeDataService();
         $demo->createFakeContestation();
         $demo->createChargeback();
     }

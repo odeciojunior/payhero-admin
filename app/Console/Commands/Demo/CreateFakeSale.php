@@ -9,7 +9,7 @@ use Modules\Core\Services\DemoAccount\DemoPaymentFlowTrait;
 
 class CreateFakeSale extends Command
 {
-    use DemoPaymentFlowTrait; 
+    use DemoPaymentFlowTrait;
     /**
      * The name and signature of the console command.
      *
@@ -45,34 +45,34 @@ class CreateFakeSale extends Command
 
         $this->company = Company::find(Company::DEMO_ID);
         $isRandomData = true;
-        $attemps = 500;
+        $attemps = 1;
         $counter = 1;
-                
+
         do{
             $this->nextIsUpsell = mt_rand(1,10)==7;
             do{
                 $this->resetVars()
-                    ->validateCheckoutLogs()                
-                    ->preparePlans()        
+                    ->validateCheckoutLogs()
+                    ->preparePlans()
                     ->prepareOrderBump()
                     ->prepareData()
                     ->checkAutomaticDiscount()
                     ->checkDiscountCoupon()
                     ->setCustomer()
-                    ->setShipping()    
-                    ->checkProgressiveDiscount()        
+                    ->setShipping()
+                    ->checkProgressiveDiscount()
                     ->calculateValues()
                     ->setSale($isRandomData)
                     ->executePayment()
                     ->setTransactions()
                     ->setTranking();
-                
+
                 $this->upsellPreviousSaleId = $this->sale->id;
 
                 if($this->isUpsell){
                     $this->isUpsell = false;
                 }else{
-                    $this->isUpsell = $this->nextIsUpsell;          
+                    $this->isUpsell = $this->nextIsUpsell;
                 }
 
                 $counter++;
@@ -81,6 +81,6 @@ class CreateFakeSale extends Command
             $this->line("$counter/$attemps");
         }while($counter <= $attemps);
 
-        
+
     }
 }

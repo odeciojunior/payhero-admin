@@ -59,7 +59,7 @@ class CreateFakeCheckout extends Command
 
         try{
             $isRandomData = true;
-            $attemps = 500;
+            $attemps = 1;
             $counter = 1;
 
             do{
