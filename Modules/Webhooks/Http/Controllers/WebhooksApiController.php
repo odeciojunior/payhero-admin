@@ -24,7 +24,7 @@ class WebhooksApiController extends Controller
             $webhooks = Webhook::where(
                 "user_id",
                 auth()->user()->account_owner_id
-            )->paginate();
+            )->paginate(5);
 
             return new WebhooksCollection($webhooks);
         } catch (Exception $e) {
@@ -50,6 +50,13 @@ class WebhooksApiController extends Controller
             if (empty($data["description"])) {
                 return response()->json(
                     ["message" => "Digite um nome para seu webhook"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            if (empty($data["company_id"])) {
+                return response()->json(
+                    ["message" => "Selecione uma empresa"],
                     Response::HTTP_BAD_REQUEST
                 );
             }
@@ -139,6 +146,13 @@ class WebhooksApiController extends Controller
             if (empty($data["description"])) {
                 return response()->json(
                     ["message" => "Digite um nome para seu webhook"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            if (empty($data["company_id"])) {
+                return response()->json(
+                    ["message" => "Selecione uma empresa"],
                     Response::HTTP_BAD_REQUEST
                 );
             }

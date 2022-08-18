@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <ul id="pagination-webhook" class="pagination-sm margin-chat-pagination"
+            <ul id="pagination-webhooks" class="pagination-sm margin-chat-pagination"
                 style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>

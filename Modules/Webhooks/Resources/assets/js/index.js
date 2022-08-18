@@ -145,8 +145,15 @@ $(document).ready(function () {
                             .val(webhook.url);
 
                         $("#modal-edit-webhook .sirius-select")
-                            .prop("selectedIndex", webhook.company_id)
-                            .trigger("change");
+                            .find("option")
+                            .each(function () {
+                                if ($(this).val() == webhook.company_id) {
+                                    $("#modal-edit-webhook .sirius-select")
+                                        .prop("selectedIndex", $(this).index())
+                                        .trigger("change");
+                                    return false;
+                                }
+                            });
 
                         $("#modal-edit-webhook .sirius-select-text").text(
                             webhook.company_name
@@ -210,10 +217,10 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $(".close").click();
-                alertCustom("success", "Webhook criado com sucesso!");
                 clearForm();
                 loadingOnScreenRemove();
                 refreshWebhooks();
+                alertCustom("success", "Webhook criado com sucesso!");
             },
         });
     }
