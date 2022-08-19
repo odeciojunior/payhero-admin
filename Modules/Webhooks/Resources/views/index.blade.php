@@ -6,6 +6,8 @@
     @endpush
     <div class="page new-layout">
 
+        @include('layouts.company-select', ['version' => 'mobile'])
+
         <div style="display:none" class="page-header container pb-0">
             <div class="d-flex justify-content-between align-items-center mb-45">
                 <div>
@@ -82,10 +84,8 @@
                             </div>
                             <div class="row companies-container">
                                 <div class="form-group col-sm-12 col-md">
-                                    <label for="company_id">Empresa</label>
-                                    <select name="company_id" id="companies" class="sirius-select">
-                                        <option value="">Selecione uma empresa</option>
-                                    </select>
+                                    <label for="empresa">Empresa</label>
+                                    <input type="text" disabled="" class="company_name">
                                 </div>
                             </div>
                             <div class="row url-container">
@@ -127,10 +127,8 @@
                     </div>
                     <div class="row companies-container">
                         <div class="form-group col-sm-12 col-md">
-                            <label for="company_id">Empresa</label>
-                            <select name="company_id" id="companies_edit" class="sirius-select">
-                                <option value="">Selecione uma empresa</option>
-                            </select>
+                            <label for="empresa">Empresa</label>
+                            <input type="text" disabled="" class="company_name">
                         </div>
                     </div>
                     <div class="row url-container">

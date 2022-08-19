@@ -18,13 +18,13 @@ class WebhooksApiController extends Controller
      *
      * @return WebhooksCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $webhooks = Webhook::where(
-                "user_id",
-                auth()->user()->account_owner_id
-            )->paginate(5);
+            $webhooks = Webhook::where([
+                "user_id" => auth()->user()->account_owner_id,
+                "company_id" => hashids_decode($request->company_id),
+            ])->paginate(5);
 
             return new WebhooksCollection($webhooks);
         } catch (Exception $e) {
@@ -63,7 +63,10 @@ class WebhooksApiController extends Controller
                 "url" => $data["url"],
             ]);
 
-            return new WebhooksResource($webhook);
+            return response()->json(
+                ["message" => "Webhook cadastrado com sucesso"],
+                Response::HTTP_OK
+            );
         } catch (Exception $e) {
             report($e);
             return response()->json(

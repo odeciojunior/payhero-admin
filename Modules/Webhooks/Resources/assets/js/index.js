@@ -1,11 +1,34 @@
 $(document).ready(function () {
-    refreshWebhooks();
-    getCompanies();
+    $(".company-navbar").change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        loadingOnScreen();
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                companiesAndProjects = data2;
+                $(".company_name").val(
+                    companiesAndProjects.company_default_fullname
+                );
+                refreshWebhooks(1);
+            });
+        });
+    });
+
+    var companiesAndProjects = "";
+
+    getCompaniesAndProjects().done(function (data) {
+        companiesAndProjects = data;
+        $(".company_name").val(companiesAndProjects.company_default_fullname);
+        refreshWebhooks();
+    });
 
     function refreshWebhooks(page = 1) {
         $.ajax({
             method: "GET",
-            url: "/api/webhooks?resume=true&page=" + page,
+            url:
+                "/api/webhooks?resume=true&page=" +
+                page +
+                "&company_id=" +
+                $(".company-navbar").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -87,35 +110,6 @@ $(document).ready(function () {
         });
     }
 
-    function getCompanies() {
-        $.ajax({
-            method: "GET",
-            url: "/api/core/companies?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $.each(response.data, function (i, company) {
-                        if (companyIsApproved(company)) {
-                            $("#companies, #companies_edit").append(
-                                $("<option>", {
-                                    value: company.id,
-                                    text: company.name,
-                                })
-                            );
-                        }
-                    });
-                }
-            },
-        });
-    }
-
     $(".store-webhook").on("click", function () {
         $("#modal-webhook").modal("show");
     });
@@ -144,7 +138,7 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $("#modal-webhook").modal("hide");
-                alertCustom("success", "Webhook criado com sucesso");
+                alertCustom("success", response.message);
                 clearForm();
                 refreshWebhooks();
             },
@@ -174,23 +168,7 @@ $(document).ready(function () {
                         webhook.description
                     );
                     $("#modal-edit-webhook #url_edit").val(webhook.url);
-
-                    $("#modal-edit-webhook #companies_edit")
-                        .find("option")
-                        .each(function () {
-                            if ($(this).val() == webhook.company_id) {
-                                $("#modal-edit-webhook .sirius-select")
-                                    .prop("selectedIndex", $(this).index())
-                                    .trigger("change");
-                                $(
-                                    "#modal-edit-webhook .sirius-select-text"
-                                ).text(webhook.company_name);
-                                return false;
-                            }
-                        });
-
                     $("#modal-edit-webhook #webhook_id").val(webhookId);
-
                     $("#modal-edit-webhook").modal("show");
                 } else {
                     alertCustom("error", "Erro ao obter dados do webhook");
@@ -239,11 +217,11 @@ $(document).ready(function () {
 
         if (event == "store") {
             description = $("#modal-webhook #description").val();
-            company_id = $("#modal-webhook #companies").val();
+            company_id = $(".company-navbar").val();
             url = $("#modal-webhook #url").val();
         } else if (event == "update") {
             description = $("#modal-edit-webhook #description_edit").val();
-            company_id = $("#modal-edit-webhook #companies_edit").val();
+            company_id = $(".company-navbar").val();
             url = $("#modal-edit-webhook #url_edit").val();
         }
 
@@ -399,9 +377,8 @@ $(document).ready(function () {
     }
 
     function clearForm() {
-        $(":text").val("");
-        $("#companies, #companies_edit")
-            .prop("selectedIndex", 0)
-            .trigger("change");
+        $(
+            "#modal-edit-webhook #webhook_id, #modal-delete-webhook #webhook_id, #description, #description_edit, #url, #url_edit"
+        ).val("");
     }
 });
