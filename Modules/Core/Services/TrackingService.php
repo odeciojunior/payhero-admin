@@ -264,8 +264,14 @@ class TrackingService
 
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
+        $user = auth()->user();
         if (!$userId) {
-            $userId = auth()->user()->getAccountOwnerId();
+            $userId = $user->getAccountOwnerId();
+        }
+
+        $companyId = $user->company_default;
+        if(!empty($filters['company'])){
+            $companyId = hashids_decode($filters['company']);
         }
 
         $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
@@ -306,7 +312,7 @@ class TrackingService
             }
         })
         ->join('checkout_configs','s.project_id','=','checkout_configs.project_id')
-        ->where('checkout_configs.company_id',hashids_decode($filters['company']));
+        ->where('checkout_configs.company_id',$companyId);
 
         //filtro transactions
         if (!empty($filters["transaction_status"])) {
