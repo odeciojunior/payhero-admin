@@ -175,7 +175,7 @@ return [
                 'connection' => 'redis-horizon',
                 'queue' => 'postback-shopify-tracking',
                 'balance' => 'false',
-                'processes' => 2,
+                'processes' => env("APP_NAME") == "Cloudfox-cron" ? 3 : 0,
                 'tries' => 3,
                 'timeout' => 3600,
                 'delay' => 1,

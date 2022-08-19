@@ -971,6 +971,11 @@ class ReportFinanceService
 
     public function getResumeCashbacks($filters)
     {
+        //o cache deve conter sempre o hash da empresa
+        if(empty($filters['company_id'])){
+            $filters['company_id'] = hashids_encode(auth()->user()->company_default);
+        }
+
         $cacheName = 'cashback-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $projectId = hashids_decode($filters['project_id']);
@@ -1535,29 +1540,13 @@ class ReportFinanceService
 
         $cacheName = 'pending-data-'.$user->company_default;
         return cache()->remember($cacheName, 300, function() use($user) {
-            $defaultGateways = [
-                Safe2PayService::class,
-                AsaasService::class,
-                GetnetService::class,
-                GerencianetService::class,
-                // CieloService::class,
-            ];
-
-            $balancesPendingValue = [];
-            $balancesPendingCount = [];
-
             $company = Company::find($user->company_default);
 
-            foreach($defaultGateways as $gatewayClass) {
-                $gateway = app()->make($gatewayClass);
-                $gateway->setCompany($company);
+            $companyService = new CompanyBalanceService($company);
+            $balancesResume = $companyService->getResumes();
 
-                $balancesPendingValue[] = $gateway->getPendingBalance();
-                $balancesPendingCount[] = $gateway->getPendingBalanceCount();
-            }
-
-            $totalPendingValue = array_sum($balancesPendingValue);
-            $totalPendingCount = array_sum($balancesPendingCount);
+            $pendingBalance = array_sum(array_column($balancesResume, "pending_balance"));
+            $pendingBalanceCount = array_sum(array_column($balancesResume, "pending_balance_count"));
 
             return [
                 "value" => foxutils()->formatMoney($pendingBalance / 100),
@@ -1572,32 +1561,14 @@ class ReportFinanceService
 
         $cacheName = 'blocked-data-'.$user->company_default;
         return cache()->remember($cacheName, 300, function() use($user) {
-            $defaultGateways = [
-                Safe2PayService::class,
-                AsaasService::class,
-                GetnetService::class,
-                GerencianetService::class,
-                // CieloService::class,
-            ];
-
-            $balancesBlockedValue = [];
-            $balancesBlockedCount = [];
-
-            $balancesBlockedPendingValue = [];
-            $balancesBlockedPendinCount = [];
 
             $company = Company::find($user->company_default);
 
-            foreach($defaultGateways as $gatewayClass) {
-                $gateway = app()->make($gatewayClass);
-                $gateway->setCompany($company);
+            $companyService = new CompanyBalanceService($company);
+            $balancesResume = $companyService->getResumes();
 
-                $balancesBlockedValue[] = $gateway->getBlockedBalance();
-                $balancesBlockedCount[] = $gateway->getBlockedBalanceCount();
-
-                $balancesBlockedPendingValue[] = $gateway->getBlockedBalancePending();
-                $balancesBlockedPendinCount[] = $gateway->getBlockedBalancePendingCount();
-            }
+            $blockedBalance = array_sum(array_column($balancesResume, "blocked_balance"));
+            $blockedBalanceCount = array_sum(array_column($balancesResume, "blocked_balance_count"));
 
             if ($blockedBalance == 0 && $blockedBalanceCount == 0) {
                 return null;
