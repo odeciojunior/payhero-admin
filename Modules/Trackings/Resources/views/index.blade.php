@@ -557,20 +557,17 @@
 
                 <!-- Tabela -->
                 <div class="fixhalf my-10"></div>
-                <div class="card shadow "
-                     style="min-height: 300px">
+                <div class="card shadow>
                     <div class="page-invoice-table table-responsive no-final-space">
-                        <table id="tabela_trackings"
-                               class="table-trackings table unify mb-0"
-                               style="">
+                        <table id="tabela_trackings" class="table mb-0 table-trackings unify">
                             <thead>
                                 <tr>
-                                    <td class="table-title">Venda</td>
-                                    <td class="table-title">Produto</td>
-                                    <td class="table-title">Aprovação</td>
-                                    <td class="table-title text-center">Status</td>
-                                    <td class="table-title text-center"></td>
-                                    <td class="table-title">Código de Rastreio</td>
+                                    <td >Venda</td>
+                                    <td >Produto</td>
+                                    <td >Aprovação</td>
+                                    <td class="text-center">Status</td>
+                                    <td class="text-center"></td>
+                                    <td >Código de Rastreio</td>
                                 </tr>
                             </thead>
                             <tbody id="dados_tabela"

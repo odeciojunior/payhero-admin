@@ -422,7 +422,7 @@ function hoverBilletPending() {
             {
                 mouseenter: function () {
                     $(this).css("cursor", "pointer").text("Regerar");
-                    $(this).css("background", "#545B62");
+                    $(this).css("background", "#3D4456");
                 },
                 mouseleave: function () {
                     var status = $(this).attr("status");

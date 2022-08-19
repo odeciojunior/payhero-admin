@@ -705,11 +705,11 @@ input[type=radio] {
 }
 
 .badge-pendente, .badge-pending {
-    background: rgb(255, 157, 0);
+    background: #FF9900;
 }
 
 .badge-antifraude {
-    background: rgb(22, 142, 209);
+    background: #2E85EC;
 }
 
 .badge-aprovado, .badge-completed {
@@ -764,7 +764,7 @@ input[type=radio] {
 }
 
 .table-striped > tbody > tr:nth-child(2n+2) > td, .table-striped > tbody > tr:nth-child(2n+2) > th {
-    background-color: #FBFBFB !important;
+    background-color: #FAFAFA !important;
 }
 
 .table-striped tbody tr:nth-of-type(2n+1) {

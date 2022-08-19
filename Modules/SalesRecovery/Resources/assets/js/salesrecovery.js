@@ -245,12 +245,12 @@ $(document).ready(function () {
                             $(".sale_status").hover(
                                 function () {
                                     $(this).css("cursor", "pointer").text("Regerar");
-                                    $(this).css("background", "#545B62");
+                                    $(this).css("background", "#3D4456");
                                 },
                                 function () {
                                     var status = $(this).attr("status");
                                     $(this).removeAttr("style");
-                                    $(this).text(status);
+                                    $(this).text("Expirado");
                                 }
                             );
                         }
@@ -402,7 +402,7 @@ $(document).ready(function () {
         data +=
             "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
             value.id +
-            "' ><span class='o-eye-1'></span></button></td>";
+            "' ><span> <img src='/build/global/img/icon-eye.svg'> </span></button></td>";
         data += "</tr>";
 
         return data;

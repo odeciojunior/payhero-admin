@@ -1,10 +1,10 @@
 // CORES DO GRAFICO
 const chartDefaultColorsLabel = [
-    "rgba(51, 99, 143, 1)", // POSTADO (DARK-BLUE)
-    "rgba(255, 205, 27, 1)", // EM TRÂNSITO (YELLOW)
-    "rgba(0, 177, 255, 1)", // SAIU PARA ENTREGA (LIGHT-BLUE)
+    "rgba(255, 205, 27, 1)", // POSTADO (DARK-BLUE)             ficara amarelo
+    "rgba(0, 177, 255, 1)", // EM TRÂNSITO (YELLOW)            azul claro
+    "rgba(46, 133, 236, 1)", // SAIU PARA ENTREGA (LIGHT-BLUE)   azul escuro
     "rgba(255, 47, 47, 1)", // PROBLEMA NA ENTREGA (RED)
-    "rgba(185, 185, 185, 1)", // NAO INFORMADO (GRAY)
+    "rgb(235, 235, 235, 1)", // NAO INFORMADO (GRAY)
     "rgba(27, 228, 168, 1)", // ENTREGUES (LIGHT GREEN)
 ];
 
@@ -22,10 +22,10 @@ const statusEnum = {
 //ICONES DO STATUS //
 const systemStatus = {
     1: "",
-    2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
-    3: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`,
-    4: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`,
-    5: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="Já existe uma venda com esse código de rastreio cadastrado">report_problem</i>`,
+    2: `<i data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias"><img src="build/global/img/alert-icon-code.svg"/></i>`,
+    3: `<i data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora"><img src="build/global/img/alert-icon-code.svg"/></i>`,
+    4: `<i data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda"><img src="build/global/img/alert-icon-code.svg"/></i>`,
+    5: `<i data-toggle="tooltip" data-container=".page" title="Já existe uma venda com esse código de rastreio cadastrado"><img src="build/global/img/alert-icon-code.svg"/></i>`,
     "": "",
 };
 
@@ -485,11 +485,15 @@ $(() => {
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
 
                             <a class='tracking-edit pointer default-buttons' title="Editar">
-                                <span class="text-right o-edit-1"></span>
+                                <span>
+                                    <img src="build/global/img/pencil-icon.svg"/>
+                                </span>
                             </a>
 
-                            <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
-                                <span class="o-eye-1"></span>
+                            <a class='tracking-detail pointer pt-2' title="Visualizar" tracking='${tracking.id}'>
+                                <span>
+                                    <img src="/build/global/img/icon-eye.svg"/>
+                                </span>
                             </a>
                         </div>`;
                     let dados = `
@@ -498,7 +502,7 @@ $(() => {
                             ${
                                 lastSale !== tracking.sale
                                     ? `
-                                <td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}">
+                                <td class="detalhes_venda pointer col-sm-1" venda="${tracking.sale}">
                                     #${tracking.sale}
                                 </td>`
                                     : `<td>
@@ -691,12 +695,16 @@ $(() => {
                     let buttons = `
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
 
-                            <a class='tracking-edit pointer' title="Editar">
-                                <span class="text-right o-edit-1"></span>
+                            <a class='tracking-edit pointer default-buttons' title="Editar">
+                                <span>
+                                    <img src="/build/global/img/pencil-icon.svg"/>
+                                </span>
                             </a>
 
-                            <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
-                                <span class="o-eye-1"></span>
+                            <a class='tracking-detail pointer pt-2' title="Visualizar" tracking='${tracking.id}'>
+                                <span>
+                                    <img src="/build/global/img/icon-eye.svg"/>
+                                </span>
                             </a>
                         </div>`;
                     $(buttons).insertBefore(saveClose);

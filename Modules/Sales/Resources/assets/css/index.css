@@ -29,10 +29,16 @@
     border-radius: 16px;
     padding: 8px 20px;
     color: white;
+    min-width: 190px !important;
 }
 .badge.badge-success {
-    background-color: #5ee2a1;
+    background-color: #41DC8F;
 }
+
+.badge.badge-danger {
+    background-color: #E81414;
+}
+
 .status-sale {
     min-width: 84px;
 }

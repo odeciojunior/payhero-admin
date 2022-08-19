@@ -33,17 +33,6 @@
                 border-color: transparent transparent #8f9ca2 transparent !important;
             }
 
-            .badge {
-                color: white;
-                padding: 5px 15px !important;
-                border-radius: 16px;
-                font-weight: 700;
-            }
-
-            .badge.badge-success {
-                background-color: #5EE2A1;
-            }
-
             #check-status-text-icon {
                 background-color: #5EE2A1;
                 color: white;
@@ -280,29 +269,24 @@
                 </div>
                 <div class="fixhalf"></div>
 
-                <div class="card shadow"
-                     style="min-height: 300px">
+                <div class="card shadow">
                     <div class="page-invoice-table table-responsive">
                         <table id="chargebacks-table"
                                class="table-vendas table table-striped unify"
                                style="width:100%;">
                             <thead>
                                 <tr class="">
-                                    <td class="table-title">Transação</td>
-                                    <td class="table-title"
-                                        style="min-width: 200px; text-align:left">Empresa</td>
-                                    <td class="table-title">Compra</td>
-                                    <td class="table-title text-center"
-                                        style="min-width: 100px;">Status</td>
-                                    <td class="table-title">Prazo</td>
-                                    <td class="table-title">Motivo</td>
-                                    {{-- <td class="table-title">Valor</td> --}}
-                                    <td class="table-title"
-                                        style="min-width: 100px;"></td>
+                                    <td class="">Transação</td>
+                                    <td class=""style="min-width: 200px; text-align:left">Empresa</td>
+                                    <td class="">Compra</td>
+                                    <td class=" text-center"style="min-width: 100px;">Status</td>
+                                    <td class="">Prazo</td>
+                                    <td class="">Motivo</td>
+                                    {{-- <td class="">Valor</td> --}}
+                                    <td class="" style="min-width: 100px;"></td>
                                 </tr>
                             </thead>
-                            <tbody id="chargebacks-table-data"
-                                   img-empty="{!! mix('build/global/img/contestacoes.svg') !!}">
+                            <tbody id="chargebacks-table-data" img-empty="{!! mix('build/global/img/contestacoes.svg') !!}">
                                 {{-- js carrega... --}}
                             </tbody>
                         </table>

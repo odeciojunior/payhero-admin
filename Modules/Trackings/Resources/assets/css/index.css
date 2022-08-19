@@ -276,48 +276,48 @@ input#date_updated {
 
 /* ======== CORES DA LEGENDA DO GRACIFO ======== */
 .posted {
-    color: #33638f;
+    color: #ffcd1b; /*postado em amarelo #ffcd1b*/
 }
 .onDelivery {
-    color: #00b1ff;
+    color: #2E85EC;  /*Saiu para entrega azul escuro #2E85EC*/
 }
 .delivered {
-    color: #1be4a8;
+    color: #41DC8F;
 }
 .inTransit {
-    color: #ffcd1b;
+    color: #00b1ff; /*em trasito azul claro #00b1ff*/
 }
 .withProblem {
-    color: #ff2f2f;
+    color: #E81414;
 }
 .withoutInfo {
-    color: #b9b9b9;
+    color: #EBEBEB;
 }
 
 /* ======== CORES DO STATUS NA TABELA ======== */
 .statusPosted {
-    background-color: #33638f;
+    background-color: #ffcd1b; /*postado em amarelo #ffcd1b*/
     color: white;
 }
 .statusOnDelivery {
-    background-color: #00b1ff;
+    background-color: #2E85EC;  /*Saiu para entrega azul escuro #2E85EC*/
     color: white;
 }
 .statusDelivered {
-    background-color: #1be4a8;
+    background-color: #41DC8F;
     color: white;
 }
 .statusInTransit {
-    background-color: #ffcd1b;
+    background-color: #00b1ff;  /*em trasito azul claro #00b1ff*/
     color: white;
 }
 .statusProblem {
-    background-color: #ff2f2f;
+    background-color: #E81414;
     color: white;
 }
 .statusWithoutInfo {
-    background-color: #b9b9b9;
-    color: white;
+    background-color: #EBEBEB;
+    color: #999999 !important;
 }
 
 /* ======== ARRENDONDA FINAL DA TABELA ======== */
@@ -388,10 +388,10 @@ div.tracking-close.pointer:hover {
 a.tracking-edit.pointer {
     color: #f1f1f1;
     border: 1px solid !important;
-    border-color: #cecece !important;
     border-radius: 5px !important;
-    padding-top: 3px;
+    padding: 7px 0px 0px 7px;
     min-width: 37px;
+    background: #EBEBEB;
 }
 span.text-right.o-edit-1 {
     border-radius: 5px !important;

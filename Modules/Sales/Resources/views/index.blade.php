@@ -353,11 +353,11 @@
 
                 <div class="col-lg-12 p-0 pb-10">
 
-                    <div class="card shadow"style="min-height: 300px">
+                    <div class="card shadow">
 
                         <div class="page-invoice-table table-responsive">
 
-                            <table id="tabela_vendas" class="table">
+                            <table id="tabela_vendas" class="table unify">
 
                                 <thead>
 

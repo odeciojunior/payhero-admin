@@ -163,28 +163,24 @@
                            data-dismiss="alert">close</i>
                     </div>
                 </div>
-                <div class="card shadow"
-                     style="min-height: 300px">
+                <div class="card shadow">
                     <div class="page-invoice-table table-responsive">
-                        <table id='carrinhoAbandonado'
-                               class="table table-striped unify">
+                        <table id='carrinhoAbandonado'class="table mb-0 unify">
                             <thead>
                                 <tr>
-                                    <td class="table-title display-sm-none display-m-none display-lg-none">Data</td>
-                                    <td class="table-title">Loja</td>
-                                    <td class="table-title display-sm-none display-m-none">Cliente</td>
-                                    <td class="table-title">Email</td>
-                                    <td class="table-title">Sms</td>
-                                    <td class="table-title">Status</td>
-                                    <td class="table-title">Valor</td>
-                                    <td class="table-title display-sm-none"></td>
-                                    <td class="table-title display-sm-none">Link</td>
-                                    <td class="table-title display-sm-none">Detalhes</td>
+                                    <td class="display-sm-none display-m-none display-lg-none">Data</td>
+                                    <td class="">Loja</td>
+                                    <td class="display-sm-none display-m-none">Cliente</td>
+                                    <td class="">Email</td>
+                                    <td class="">Sms</td>
+                                    <td class="text-center">Status</td>
+                                    <td class="">Valor</td>
+                                    <td class="display-sm-none"></td>
+                                    <td class="display-sm-none">Link</td>
+                                    <td class="display-sm-none">Detalhes</td>
                                 </tr>
                             </thead>
-                            <tbody id="table_data"
-                                   class='min-row-height'
-                                   img-empty="{!! mix('build/global/img/geral-1.svg') !!}">
+                            <tbody id="table_data" class='min-row-height' img-empty="{!! mix('build/global/img/geral-1.svg') !!}">
                             </tbody>
                         </table>
                     </div>

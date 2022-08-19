@@ -267,7 +267,7 @@ $(document).ready(function () {
                                 </small>
                             </td>`;
 
-                    /*
+                            /*
                             ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
                                 ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
                                 : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
@@ -278,7 +278,7 @@ $(document).ready(function () {
                                         <div class="d-flex justify-content-center align-items-center text-center" >
                                             <span class='badge ${badgeObject[value.status]} ${
                             value.sale_status === 10 ? "pointer" : "cursor-default"
-                        } font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${
+                        }' data-toggle="tooltip" data-html="true" data-placement="top" title="${
                             statusObject[value.status]
                         }">
                                                 ${statusObject[value.status]}
@@ -308,7 +308,7 @@ $(document).ready(function () {
                                 `;
 
                     dados += `
-                                <td class="font-size-12 bold line-overflow" style="white-space: normal;">
+                                <td class="line-overflow" style="white-space: normal;">
                                     ${value.reason}
                                 </td>
                                 <!-- <td style='white-space: nowrap'> <b>${value.amount}</b> </td>-->
@@ -337,15 +337,13 @@ $(document).ready(function () {
                                                   '"   style="margin-right:5px" contestation="' +
                                                   value.id +
                                                   '">' +
-                                                  '<span class="o-upload-to-cloud-1  ' +
-                                                  (value.has_files ? "text-success" : "") +
-                                                  '" id="upload-file_' +
-                                                  value.id +
-                                                  ' " ></span>' +
+                                                  '<span class="'+ (value.has_files ? "text-success" : "") + '" id="upload-file_' + value.id + ' " > <img src="/build/global/img/icon-cloud.svg"/> </span>' +
                                                   "</a>"
                                         }
                                         <a role='button' class='detalhes_venda pointer' venda='${value.sale_id}'>
-                                            <span class="o-eye-1"></span>
+                                            <span>
+                                                <img src="/build/global/img/icon-eye.svg"/>
+                                            </span>
                                         </a>
                                   </td>
                                 </tr>`;
