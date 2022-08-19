@@ -35,9 +35,9 @@ class DemoSplitPayment
     }
 
     private function handle(Sale $sale)
-    { 
+    {
         $this->sale = $sale;
-        
+
         $this->checkOldTransactions()
             ->setTransactionsStatus()
             ->checkCashback()
@@ -48,6 +48,7 @@ class DemoSplitPayment
             ->checkInstallmentsFreeTax()
             ->checkPartners()
             ->checkProducerInvitation()
+            ->checkCloudfoxProcessing()
             ->createProducerTransaction()
             ->createCloudfoxTransaction();
     }
@@ -68,7 +69,7 @@ class DemoSplitPayment
             $this->transactionStatus = Transaction::STATUS_PENDING_ANTIFRAUD;
             return $this;
         }
-        
+
         switch ($this->sale->payment_method) {
             case Sale::CREDIT_CARD_PAYMENT:
                 switch ($this->sale->status) {
@@ -82,7 +83,7 @@ class DemoSplitPayment
                         $this->transactionStatus = Transaction::STATUS_IN_PROCESS;
                     break;
                 }
-                break;            
+                break;
             case  Sale::DEBIT_PAYMENT:
                 $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_IN_PROCESS;
                 break;
@@ -92,23 +93,23 @@ class DemoSplitPayment
             case Sale::PIX_PAYMENT:
                 $this->transactionStatus = $this->sale->status == Sale::STATUS_APPROVED ? Transaction::STATUS_PAID : Transaction::STATUS_PENDING;
                 break;
-        }    
+        }
 
         return $this;
     }
 
     private function checkCashback()
-    { 
+    {
         $this->cashbackData = [
             'value' => $this->getCashbackValue(),
             'percentage' => $this->getPercentage(),
         ];
-        
+
         return $this;
     }
 
     public function getCashbackValue(): int
-    {   
+    {
         try {
             if ($this->sale->payment_method == Sale::BILLET_PAYMENT || $this->sale->installments_amount == 1) {
                 return 0;
@@ -128,13 +129,15 @@ class DemoSplitPayment
             $installmentsAmount = $this->sale->installments_amount - 1;
 
             $cashbackPercentage = $installmentsAmount * $user->installment_cashback;
-            
-            $saleValueWithoutTax = (FoxUtils::onlyNumbers($this->sale->total_paid_value) - FoxUtils::onlyNumbers($this->sale->interest_total_value));
+
+            $saleValueWithoutTax =
+                FoxUtils::onlyNumbers($this->sale->total_paid_value ?? 0) -
+                FoxUtils::onlyNumbers($this->sale->interest_total_value ?? 0);
 
             $cashbackValue = (int)($saleValueWithoutTax / 100 * $cashbackPercentage);
-                       
+
             return $cashbackValue;
-            
+
         } catch (Exception $e) {
             report($e);
             return 0;
@@ -152,57 +155,57 @@ class DemoSplitPayment
     }
 
     private function setCloudfoxValue()
-    { 
+    {
         if ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT)
         {
             $total = $this->sale->original_total_paid_value - $this->sale->interest_total_value + $this->cashbackData['value'];
-            
+
             $this->cloudfoxValue = (int)(($total/100) * $this->producerCompany->gateway_tax);
 
-            $this->cloudfoxValue += FoxUtils::onlyNumbers($this->producerCompany->transaction_rate);
-            
-            $this->cloudfoxValue += $this->sale->interest_total_value;            
+            $this->cloudfoxValue += FoxUtils::onlyNumbers($this->producerCompany->transaction_tax);
+
+            $this->cloudfoxValue += $this->sale->interest_total_value;
         } else {
             $this->cloudfoxValue = (int)(($this->sale->original_total_paid_value / 100) * $this->producerCompany->gateway_tax);
 
             if (FoxUtils::onlyNumbers($this->sale->total_paid_value) < 4000 && $this->sale->payment_method == Sale::BILLET_PAYMENT) {
                 $transactionRate = 300;
             } else {
-                $transactionRate = $this->producerCompany->transaction_rate;
+                $transactionRate = $this->producerCompany->transaction_tax;
             }
 
             $this->cloudfoxValue += FoxUtils::onlyNumbers($transactionRate);
         }
-        
+
         return $this;
     }
 
     private function setProducerValue()
-    { 
+    {
         $this->producerValue = (int)$this->sale->original_total_paid_value - $this->cloudfoxValue;
-        
+
         return $this;
     }
 
     private function checkAffiliate()
-    { 
+    {
         if (!empty($this->sale->affiliate_id) || $this->sale->api_flag) {
             $affiliate = $this->sale->affiliate;
 
-            if (!empty($affiliate) && $affiliate->status_enum == Affiliate::STATUS_ACTIVE ) 
+            if (!empty($affiliate) && $affiliate->status_enum == Affiliate::STATUS_ACTIVE )
             {
                 $affiliateValue = intval((($this->sale->original_total_paid_value - $this->cloudfoxValue) / 100) * $affiliate->percentage);
                 $this->producerValue -= $affiliateValue;
 
                 $transactionData = $this->getTransactionData($affiliate->company);
-                
+
                 Transaction::create([
                     'sale_id' => $this->sale->id,
                     'gateway_id' => $this->sale->gateway_id,
                     'company_id' => $affiliate->company->id,
                     'user_id' => $affiliate->company->user_id,
                     'value' => $affiliateValue,
-                    'transaction_rate' => $transactionData['transaction_rate'],
+                    'transaction_tax' => $transactionData['transaction_rate'],
                     'status_enum' =>  $this->transactionStatus,
                     'status' => (new Transaction())->present()->getStatusEnum($this->transactionStatus),
                     'type' => Transaction::TYPE_AFFILIATE,
@@ -217,17 +220,17 @@ class DemoSplitPayment
     }
 
     private function checkInstallmentsFreeTax()
-    {  
+    {
         if ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
             $this->producerValue -= $this->sale->installment_tax_value;
             $this->cloudfoxValue += $this->sale->installment_tax_value;
         }
-        
+
         return $this;
     }
 
     private function checkPartners()
-    { 
+    {
         return $this;
     }
 
@@ -264,14 +267,43 @@ class DemoSplitPayment
                 'updated_at'=>$this->sale->updated_at
             ]);
 
-            $this->cloudfoxValue -= $inviteValue;            
+            $this->cloudfoxValue -= $inviteValue;
+        }
+
+        return $this;
+    }
+
+    private function checkCloudfoxProcessing()
+    {
+        if (in_array($this->sale->owner_id, [7242, 29])) {
+            $plansProcessingCost = 0;
+
+            foreach ($this->sale->plansSales as $planSale) {
+                if ($planSale->plan->processing_cost > 0) {
+                    $plansProcessingCost += $planSale->plan->processing_cost;
+                }
+            }
+
+            if ($plansProcessingCost > 0) {
+                $plansProcessingCost += 1000;
+                Transaction::create([
+                    "sale_id" => $this->sale->id,
+                    "gateway_id" => $this->sale->gateway_id,
+                    "value" => $plansProcessingCost,
+                    "status_enum" => $this->transactionStatus,
+                    "status" => (new Transaction())->present()->getStatusEnum($this->transactionStatus),
+                    "type" => Transaction::TYPE_CLOUDFOX_PROCESSING,
+                ]);
+
+                $this->producerValue -= $plansProcessingCost;
+            }
         }
 
         return $this;
     }
 
     private function createProducerTransaction()
-    {         
+    {
         if ($this->cashbackData['value']) {
             $this->producerValue += $this->cashbackData['value'];
             $this->cloudfoxValue -= $this->cashbackData['value'];
@@ -287,8 +319,10 @@ class DemoSplitPayment
             'value' => $this->producerValue,
             'status_enum' => $this->transactionStatus,
             'status' => (new Transaction())->present()->getStatusEnum($this->transactionStatus),
-            'percentage_rate' => $transactionData['percentage_tax'],
-            'transaction_rate' => $transactionData['transaction_rate'],
+            "tax" => $transactionData["tax"],
+            "tax_type" => $transactionData["tax_type"],
+            "transaction_tax" => $transactionData["transaction_tax"],
+            "checkout_tax" => !empty($this->checkoutTax) ? $this->checkoutTax : 0,
             'type' => Transaction::TYPE_PRODUCER,
             'installment_tax' => $this->producerCompany->installment_tax,
             'release_date' => $this->getReleaseDate($this->producerCompany),
@@ -315,7 +349,7 @@ class DemoSplitPayment
     }
 
     private function createCloudfoxTransaction()
-    { 
+    {
         Transaction::create([
             'sale_id' => $this->sale->id,
             'gateway_id' => $this->sale->gateway_id,
@@ -331,7 +365,7 @@ class DemoSplitPayment
     }
 
     private function getTransactionData(Company $company)
-    { 
+    {
         if (FoxUtils::onlyNumbers($this->sale->total_paid_value) <= 4000 && $this->sale->payment_method == Sale::BILLET_PAYMENT) {
             $transactionRate = 300;
         } else {
@@ -345,7 +379,7 @@ class DemoSplitPayment
     }
 
     private function getProducerCompany()
-    { 
+    {
         if (!request()->api_flag) {
             $this->producerCompany = $this->sale->project->checkoutConfig->company;
         } else {

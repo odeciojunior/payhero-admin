@@ -1586,40 +1586,17 @@ class ReportFinanceService
         $user = Auth::user();
 
         $cacheName = 'distribuitions-data-'.$user->company_default;
-        return cache()->remember($cacheName, 300, function() use($user) {
-            $defaultGateways = [
-                Safe2PayService::class,
-                AsaasService::class,
-                GetnetService::class,
-                GerencianetService::class,
-                // CieloService::class,
-            ];
-
-            $balancesAvailable = [];
-            $balancesPending = [];
-            $balancesBlocked = [];
-            $balancesBlockedPending = [];
-
+        return cache()->remember($cacheName, 300, function() use($user)
+        {
             $company = Company::find($user->company_default);
 
-            foreach($defaultGateways as $gatewayClass) {
-                $gateway = app()->make($gatewayClass);
-                $gateway->setCompany($company);
+            $companyService = new CompanyBalanceService($company);
+            $balancesResume = $companyService->getResumes();
 
-                $balancesAvailable[] = $gateway->getAvailableBalance();
-                $balancesPending[] = $gateway->getPendingBalance();
-                $balancesBlocked[] = $gateway->getBlockedBalance();
-                $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
-            }
-
-
-
-            $availableBalance = array_sum($balancesAvailable);
-            $pendingBalance = array_sum($balancesPending);
-            $blockedBalance = array_sum($balancesBlocked);
-            $blockedBalancePending = array_sum($balancesBlockedPending);
-
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending;
+            $availableBalance = array_sum(array_column($balancesResume, "available_balance"));
+            $pendingBalance = array_sum(array_column($balancesResume, "pending_balance"));
+            $blockedBalance = array_sum(array_column($balancesResume, "blocked_balance"));
+            $totalBalance = array_sum(array_column($balancesResume, "total_balance"));
 
             return [
                 "available" => [
