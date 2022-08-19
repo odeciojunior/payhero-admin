@@ -36,6 +36,10 @@ class ProcessShopifyTrackingPostbackJob implements ShouldQueue
             "description" => "shopify-tracking",
         ]);
 
+        if(env("APP_NAME") != "Cloudfox-cron") {
+            sleep(1);
+        }
+
         $productService = new ProductService();
         $trackingService = new TrackingService();
 
