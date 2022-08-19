@@ -205,7 +205,9 @@ class DemoSplitPayment
                     'company_id' => $affiliate->company->id,
                     'user_id' => $affiliate->company->user_id,
                     'value' => $affiliateValue,
-                    'transaction_tax' => $transactionData['transaction_rate'],
+                    "tax" => $transactionData["tax"],
+                    "tax_type" => $transactionData["tax_type"],
+                    "transaction_tax" => $transactionData["transaction_tax"],
                     'status_enum' =>  $this->transactionStatus,
                     'status' => (new Transaction())->present()->getStatusEnum($this->transactionStatus),
                     'type' => Transaction::TYPE_AFFILIATE,
@@ -366,15 +368,44 @@ class DemoSplitPayment
 
     private function getTransactionData(Company $company)
     {
-        if (FoxUtils::onlyNumbers($this->sale->total_paid_value) <= 4000 && $this->sale->payment_method == Sale::BILLET_PAYMENT) {
-            $transactionRate = 300;
+        if (
+            foxutils()->onlyNumbers($this->sale->total_paid_value) <= 4000 &&
+            $this->sale->payment_method == Sale::BILLET_PAYMENT
+        ) {
+            $transactionTax = 300;
         } else {
-            $transactionRate = $company->transaction_rate;
+            $transactionTax = $company->transaction_tax;
+        }
+
+        if ($this->producerCompany->tax_default) {
+            $tax = $company->gateway_tax;
+            $taxType = Transaction::TYPE_PERCENTAGE_TAX;
+        } else {
+            if ($this->sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                $tax = $company->credit_card_tax;
+                $taxType =
+                    $this->producerCompany->credit_card_rule == "percent"
+                        ? Transaction::TYPE_PERCENTAGE_TAX
+                        : Transaction::TYPE_VALUE_TAX;
+            } elseif ($this->sale->payment_method == Sale::BILLET_PAYMENT) {
+                $tax = $company->boleto_tax;
+                $taxType =
+                    $this->producerCompany->boleto_rule == "percent"
+                        ? Transaction::TYPE_PERCENTAGE_TAX
+                        : Transaction::TYPE_VALUE_TAX;
+            } elseif ($this->sale->payment_method == Sale::PIX_PAYMENT) {
+                $tax = $company->pix_tax;
+                $taxType =
+                    $this->producerCompany->pix_rule == "percent"
+                        ? Transaction::TYPE_PERCENTAGE_TAX
+                        : Transaction::TYPE_VALUE_TAX;
+            }
         }
 
         return [
-            'percentage_tax' => $company->gateway_tax ?? null,
-            'transaction_rate' => $transactionRate ?? null
+            "tax" => $tax,
+            "tax_type" => $taxType,
+            "transaction_tax" => $transactionTax,
         ];
     }
 
@@ -401,7 +432,10 @@ class DemoSplitPayment
 
     private function getReleaseDate(Company $company)
     {
-        if(in_array($this->sale->payment_method,  [Sale::CREDIT_CARD_PAYMENT, Sale::PIX_PAYMENT]) && !in_array($this->sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])) {
+        if(
+            in_array($this->sale->payment_method,  [Sale::CREDIT_CARD_PAYMENT, Sale::PIX_PAYMENT]) &&
+            !in_array($this->sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])
+        ) {
 
             $today = Carbon::parse($this->sale->start_date);
 
