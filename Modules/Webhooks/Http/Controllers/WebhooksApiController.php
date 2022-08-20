@@ -3,11 +3,12 @@
 namespace Modules\Webhooks\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Webhook;
+use Modules\Webhooks\Http\Requests\WebhookIndexRequest;
+use Modules\Webhooks\Http\Requests\WebhookStoreRequest;
+use Modules\Webhooks\Http\Requests\WebhookUpdateRequest;
 use Modules\Webhooks\Transformers\WebhooksCollection;
 use Modules\Webhooks\Transformers\WebhooksResource;
 
@@ -16,14 +17,15 @@ class WebhooksApiController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param WebhookIndexRequest $request
      * @return WebhooksCollection
      */
-    public function index(Request $request)
+    public function index(WebhookIndexRequest $request)
     {
         try {
             $webhooks = Webhook::where([
-                "user_id" => auth()->user()->account_owner_id,
-                "company_id" => hashids_decode($request->company_id),
+                "user_id" => $request->user_id,
+                "company_id" => $request->company_id,
             ])->paginate(5);
 
             return new WebhooksCollection($webhooks);
@@ -39,28 +41,17 @@ class WebhooksApiController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return WebhooksResource
+     * @param WebhookStoreRequest $request
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(WebhookStoreRequest $request)
     {
         try {
-            $data = $request->all();
-
-            $data = $this->validate(null, $data, "store", null);
-
-            if (!empty($data["error"])) {
-                return response()->json(
-                    ["message" => $data["message"]],
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
-
-            $webhook = Webhook::create([
-                "user_id" => auth()->user()->account_owner_id,
-                "company_id" => $data["company_id"],
-                "description" => $data["description"],
-                "url" => $data["url"],
+            Webhook::create([
+                "user_id" => $request->user_id,
+                "company_id" => $request->company_id,
+                "description" => $request->description,
+                "url" => $request->url,
             ]);
 
             return response()->json(
@@ -87,14 +78,14 @@ class WebhooksApiController extends Controller
         try {
             $webhook = Webhook::find(hashids_decode($id));
 
-            if ($webhook) {
-                return new WebhooksResource($webhook);
+            if (!$webhook) {
+                return response()->json(
+                    ["message" => "Registro não encontrado"],
+                    Response::HTTP_BAD_REQUEST
+                );
             }
 
-            return response()->json(
-                ["message" => "Registro não encontrado"],
-                Response::HTTP_BAD_REQUEST
-            );
+            return new WebhooksResource($webhook);
         } catch (Exception $e) {
             report($e);
             return response()->json(
@@ -107,30 +98,30 @@ class WebhooksApiController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param WebhookUpdateRequest $request
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(WebhookUpdateRequest $request, $id)
     {
         try {
-            $data = $request->all();
-
             $webhook = Webhook::find(hashids_decode($id));
 
-            $data = $this->validate($webhook, $data, "update", $id);
-
-            if (!empty($data["error"])) {
+            if ($webhook->user_id !== auth()->user()->account_owner_id) {
                 return response()->json(
-                    ["message" => $data["message"]],
+                    [
+                        "message" =>
+                            "Você não tem permissão para atualizar este registro",
+                    ],
                     Response::HTTP_BAD_REQUEST
                 );
             }
 
             $webhook->update([
-                "company_id" => $data["company_id"],
-                "description" => $data["description"],
-                "url" => $data["url"],
+                "user_id" => $request->user_id,
+                "company_id" => $request->company_id,
+                "description" => $request->description,
+                "url" => $request->url,
             ]);
 
             return response()->json(
@@ -159,17 +150,15 @@ class WebhooksApiController extends Controller
 
             if ($webhook->user_id !== auth()->user()->account_owner_id) {
                 return response()->json(
-                    ["message" => "Ocorreu um erro ao excluir registro"],
+                    [
+                        "message" =>
+                            "Você não tem permissão para excluir este registro",
+                    ],
                     Response::HTTP_BAD_REQUEST
                 );
             }
 
-            if (!$webhook->delete()) {
-                return response()->json(
-                    ["message" => "Ocorreu um erro ao excluir registro"],
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
+            $webhook->delete();
 
             return response()->json(
                 ["message" => "Webhook excluído com sucesso"],
@@ -182,70 +171,5 @@ class WebhooksApiController extends Controller
                 Response::HTTP_BAD_REQUEST
             );
         }
-    }
-
-    /**
-     * Validate the request data.
-     *
-     * @param Webhook $webhook
-     * @param array $data
-     * @param string $event
-     * @param int $id
-     * @return array
-     */
-    public function validate($webhook = null, $data, $event, $id = null)
-    {
-        if ($event == "update") {
-            if (
-                !empty($webhook->user_id) &&
-                $webhook->user_id !== auth()->user()->account_owner_id
-            ) {
-                return [
-                    "error" => true,
-                    "message" => "Ocorreu um erro ao editar registro",
-                ];
-            }
-        }
-
-        if (empty($data["description"])) {
-            return [
-                "error" => true,
-                "message" => "Digite um nome para seu webhook",
-            ];
-        }
-
-        if (empty($data["company_id"])) {
-            return [
-                "error" => true,
-                "message" => "Selecione uma empresa",
-            ];
-        }
-
-        $company = Company::find(hashids_decode($data["company_id"]));
-
-        if (!$company) {
-            return [
-                "error" => true,
-                "message" => "Selecione uma empresa",
-            ];
-        }
-
-        $data["company_id"] = $company->id;
-
-        if (empty($data["url"])) {
-            return [
-                "error" => true,
-                "message" => "Digite uma URL",
-            ];
-        }
-
-        if (!filter_var($data["url"], FILTER_VALIDATE_URL)) {
-            return [
-                "error" => true,
-                "message" => "Digite uma URL válida",
-            ];
-        }
-
-        return $data;
     }
 }

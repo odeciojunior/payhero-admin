@@ -20,9 +20,17 @@ class CreateWebhooksTable extends Migration
                 ->unsigned()
                 ->index();
             $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
+            $table
                 ->integer("company_id")
                 ->unsigned()
                 ->index();
+            $table
+                ->foreign("company_id")
+                ->references("id")
+                ->on("companies");
             $table->string("description")->nullable();
             $table->string("url")->nullable();
             $table->timestamps();
