@@ -182,7 +182,13 @@ $(document).ready(function () {
 
                     $(".sirius-account > .card").append(item);
 
-                    updateGauge(data.account_score);
+                    if(document.getElementById("account-health-chart-gauge") !== null){
+                        updateGauge(data.account_score);
+                    }else{
+                        setTimeout(() => {
+                            updateGauge(data.account_score);
+                        }, 1000);
+                    }
 
                     nextCard();
 
