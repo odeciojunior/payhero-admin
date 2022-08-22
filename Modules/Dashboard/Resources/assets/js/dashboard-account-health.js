@@ -182,13 +182,7 @@ $(document).ready(function () {
 
                     $(".sirius-account > .card").append(item);
 
-                    if(document.getElementById("account-health-chart-gauge") !== null){
-                        updateGauge(data.account_score);
-                    }else{
-                        setTimeout(() => {
-                            updateGauge(data.account_score);
-                        }, 1000);
-                    }
+                    updateGauge(data.account_score);
 
                     nextCard();
 
@@ -245,7 +239,9 @@ $(document).ready(function () {
         $(".sirius-account > .card").append(item);
     }
 
-    function updateGauge(account_score) {
+    function updateGauge(account_score)
+    {
+        console.log('updateGauge');
         var opts = {
             angle: 0, // A extensão do arco do medidor
             lineWidth: 0.3, // A espessura da linha
@@ -282,6 +278,7 @@ $(document).ready(function () {
             ],
         };
         var target = document.getElementById("account-health-chart-gauge"); // your canvas element
+        console.log(target);
         var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
         gauge.maxValue = 10; // set max gauge value
         gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
