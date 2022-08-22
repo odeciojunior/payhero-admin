@@ -13,17 +13,20 @@ class CreateBonusBalancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('bonus_balances', function (Blueprint $table) {
+        Schema::create("bonus_balances", function (Blueprint $table) {
             $table->id();
-            
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');            
 
-            $table->integer('total_value')->default(0);
+            $table->integer("user_id")->unsigned();
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
 
-            $table->integer('current_value')->default(0);
+            $table->integer("total_value")->default(0);
 
-            $table->date('expires_at');
+            $table->integer("current_value")->default(0);
+
+            $table->date("expires_at");
 
             $table->timestamps();
             $table->softDeletes();
@@ -37,6 +40,6 @@ class CreateBonusBalancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bonus_balances');
+        Schema::dropIfExists("bonus_balances");
     }
 }

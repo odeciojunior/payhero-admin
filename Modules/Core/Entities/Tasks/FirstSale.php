@@ -11,9 +11,10 @@ class FirstSale extends Task implements TaskCheck
 {
     public function userCompletedTask(User $user): bool
     {
-        $transactions = Transaction::where('user_id', $user->id)
-            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
-            ->limit(1)->get();
+        $transactions = Transaction::where("user_id", $user->id)
+            ->whereIn("status_enum", [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
+            ->limit(1)
+            ->get();
 
         return $transactions->count() > 0;
     }

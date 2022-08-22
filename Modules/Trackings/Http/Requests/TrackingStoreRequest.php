@@ -22,18 +22,18 @@ class TrackingStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'tracking_code' => 'required|min:9|max:18|regex:/^[\w-]*$/',
-            'product_plan_sale_id' => 'required',
+            "tracking_code" => 'required|min:9|max:18|regex:/^[\w-]*$/',
+            "product_plan_sale_id" => "required",
         ];
     }
 
     public function messages()
     {
         return [
-            'required' => 'Erro ao salvar código de rastreio',
-            'tracking_code.max' => 'Código de rastreio inválido',
-            'tracking_code.min' => 'Código de rastreio inválido',
-            'tracking_code.regex' => 'Código de rastreio inválido'
+            "required" => "Erro ao salvar código de rastreio",
+            "tracking_code.max" => "Código de rastreio inválido",
+            "tracking_code.min" => "Código de rastreio inválido",
+            "tracking_code.regex" => "Código de rastreio inválido",
         ];
     }
 }

@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Reportana\\Providers\\ReportanaServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

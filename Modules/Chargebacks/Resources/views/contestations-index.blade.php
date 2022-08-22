@@ -1,9 +1,9 @@
-@extends("layouts.master")
+@extends('layouts.master')
 
 @section('content')
-
     @push('css')
-        <link rel="stylesheet" href="{{ mix('build/layouts/chargebacks/contestations-index.min.css') }}">
+        <link rel="stylesheet"
+              href="{{ mix('build/layouts/chargebacks/contestations-index.min.css') }}">
         <style>
             .select2-selection--single {
                 border: 1px solid #dddddd !important;
@@ -57,6 +57,9 @@
 
     <!-- Page -->
     <div class="page" style="margin-bottom: 0 !important;">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none" class="page-header container pt-35" id="page_header">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-md-6">
@@ -64,22 +67,32 @@
                 </div>
             </div>
         </div>
-        <div id="project-not-empty" style="display:none">
+        <div id="project-not-empty"
+             style="display:none">
             <div class="page-content container">
-                <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
+                <form id='filter_form'
+                      action='{{ route('contestations.getchargebacks') }}'
+                      method='GET'>
                     @csrf
-                    <div id="filter-contestations" class="card">
+                    <div id="filter-contestations"
+                         class="card">
                         <div class="row align-items-baseline">
                             <div class="col-sm-12 col-md-3 mt-10">
                                 <label for="transaction">Transação</label>
-                                <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
+                                <input name="transaction"
+                                       id="transaction"
+                                       class="input-pad"
+                                       placeholder="Transação">
                             </div>
 
                             <div class="col-sm-12 col-md-3 mt-10">
                                 <label for="is_expired">Expiração</label>
                                 <br>
-                                <select name='is_expired' id="is_expired" class="sirius-select">
-                                    <option value="0" selected>Ambos</option>
+                                <select name='is_expired'
+                                        id="is_expired"
+                                        class="sirius-select">
+                                    <option value="0"
+                                            selected>Ambos</option>
                                     <option value="1">Expirado</option>
                                     <option value="2">Não expirado</option>
                                 </select>
@@ -87,7 +100,9 @@
 
                             <div class="col-sm-12 col-md-3 mt-10">
                                 <label for="date_type">Data</label>
-                                <select name='date_type' id="date_type" class="sirius-select">
+                                <select name='date_type'
+                                        id="date_type"
+                                        class="sirius-select">
                                     <option value="expiration_date">Data da expiração</option>
                                     <option value="transaction_date">Data da compra</option>
                                     <option value="adjustment_date">Data da contestação</option>
@@ -97,21 +112,26 @@
                             <div class="col-sm-12 col-md-3 mt-10">
                                 <div class="form-group form-icons">
                                     <label for="date_type">&nbsp;</label>
-                                    <input name='date_range' id="date_range" class="input-pad pr-30" readonly>
+                                    <input name='date_range'
+                                           id="date_range"
+                                           class="input-pad pr-30"
+                                           readonly>
                                     <i style="right: 24px;top: 31px;"class="filter-badge daterange"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="collapse" id="bt_collapse">
+                        <div class="collapse"
+                             id="bt_collapse">
                             <div class="row">
                                 <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="project">Lojas</label><br>
-                                    <select name='project' id="project" class="sirius-select">
+                                    <select name='project'
+                                            id="project"
+                                            class="sirius-select">
                                         <option value="">Todas lojas</option>
                                     </select>
                                 </div>
-
-                                <div class="col-sm-12 col-md-3 mt-10">
+                                {{-- <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="is_contested">Concluído</label>
                                     <br>
                                     <select name='is_contested' id="is_contested" class="sirius-select">
@@ -119,11 +139,12 @@
                                         <option value="1">Concluído</option>
                                         <option value="2">Não concluído</option>
                                     </select>
-                                </div>
-
+                                </div> --}}
                                 <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="contestation_situation">Situação</label>
-                                    <select name='contestation_situation' id="contestation_situation" class="sirius-select">
+                                    <select name='contestation_situation'
+                                            id="contestation_situation"
+                                            class="sirius-select">
                                         <option value="">Todos status</option>
                                         <option value="1">Em Andamento</option>
                                         <option value="2">Perdida</option>
@@ -133,11 +154,13 @@
 
                                 <div class="col-sm-12 col-md-3 mt-10">
                                     <label for='customer'>Cliente</label>
-                                    <input id="customer" name="customer" class="input-pad" placeholder="Nome do cliente">
+                                    <input id="customer"
+                                           name="customer"
+                                           class="input-pad"
+                                           placeholder="Nome do cliente">
                                 </div>
                             </div>
-
-                            <div class="row no-gutters justify-content-between justify-content-sm-end mt-20">
+                            {{-- <div class="row no-gutters justify-content-between justify-content-sm-end mt-20">
                                 <div class="mr-10">
                                     <label for="sale_approve" class=''>
                                         Vendas aprovadas
@@ -150,25 +173,30 @@
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
-
-                            </div>
+                            </div> --}}
                         </div>
 
-                        <div class="row" style="height: 30px">
+                        <div class="row"
+                             style="height: 30px">
                             <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
-                                <div
-                                    class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
-                                    data-toggle="collapse"
-                                    data-target="#bt_collapse"
-                                    aria-expanded="false"
-                                    aria-controls="bt_collapse">
-                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
-                                    <span id="text-filtro" class="text-break">Filtros avançados</span>
+                                <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                     data-toggle="collapse"
+                                     data-target="#bt_collapse"
+                                     aria-expanded="false"
+                                     aria-controls="bt_collapse">
+                                    <img id="icon-filtro"
+                                         class="hidden-xs-down"
+                                         src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} " />
+                                    <span id="text-filtro"
+                                          class="text-break">Filtros avançados</span>
                                 </div>
                             </div>
                             <div class="col-6 col-xl-3 mt-20">
-                                <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
+                                <div id="bt_filtro"
+                                     class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                    <img style="height: 12px; margin-right: 4px"
+                                         class="hidden-xs-down"
+                                         src=" {{ mix('build/global/img/svg/check-all.svg') }} " />
                                     <span class="text-break">Aplicar filtros</span>
                                 </div>
                             </div>
@@ -181,36 +209,47 @@
                 <div class="row no-gutters mt-10">
 
                     <div class="col-md-3 pl-0 py-15 pr-15">
-                        <div class="card shadow" style='display:block;'>
+                        <div class="card shadow"
+                             style='display:block;'>
                             <div class="card-body">
                                 <h5 class="font-size-16 text-muted">N° de contestações</h5>
                                 <h4 class="total-number">
-                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation"></span>
-                                    <span id="total-contestation-tax" class="text-muted"></span>
+                                    <span class="font-size-30 bold"
+                                          style="color:#5A5A5A"
+                                          id="total-contestation"></span>
+                                    <span id="total-contestation-tax"
+                                          class="text-muted"></span>
                                 </h4>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-3 pl-0 py-15 pr-15">
-                        <div class="card shadow" style='display:block;'>
+                        <div class="card shadow"
+                             style='display:block;'>
                             <div class="card-body">
                                 <h5 class="font-size-16 text-muted">Resultou em chargeback</h5>
                                 <h4 class="total-number">
-                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-chargeback-tax-val"></span>
-                                    <span id="total-chargeback-tax" class="text-muted"></span>
+                                    <span class="font-size-30 bold"
+                                          style="color:#5A5A5A"
+                                          id="total-chargeback-tax-val"></span>
+                                    <span id="total-chargeback-tax"
+                                          class="text-muted"></span>
                                 </h4>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-3 pl-0 py-15 pr-15">
-                        <div class="card shadow" style='display:block;'>
+                        <div class="card shadow"
+                             style='display:block;'>
                             <div class="card-body">
                                 <h5 class="font-size-16 text-muted">Total</h5>
                                 <h4 class="total-number">
                                     <span class="text-muted">R$ </span>
-                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation-value"></span>
+                                    <span class="font-size-30 bold"
+                                          style="color:#5A5A5A"
+                                          id="total-contestation-value"></span>
                                 </h4>
                             </div>
                             <div class="s-border-right green"></div>
@@ -220,42 +259,57 @@
                     <div class="col-md-3"></div>
                 </div>
 
-                <div class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-contestation" role="alert" style="border-radius: 12px">
-                    <img src="{{ mix('build/layouts/chargebacks/svg/info-contestation.svg') }}" alt="Informação sobre contestação">
+                <div class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-contestation"
+                     role="alert"
+                     style="border-radius: 12px">
+                    <img src="{{ mix('build/layouts/chargebacks/svg/info-contestation.svg') }}"
+                         alt="Informação sobre contestação">
                     <span class="alert-text">
                         <span class="bold">Contestações</span>
-                        são ocorrências enviadas pelas operadoras de crédito após contestação de alguma compra pelo titular do cartão.
+                        são ocorrências enviadas pelas operadoras de crédito após contestação de alguma compra pelo titular
+                        do cartão.
                     </span>
-                    <button type="button" class="close text-primary" data-dismiss="alert" aria-label="Close" style="opacity: 1">
+                    <button type="button"
+                            class="close text-primary"
+                            data-dismiss="alert"
+                            aria-label="Close"
+                            style="opacity: 1">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="fixhalf"></div>
 
-                <div class="card shadow" style="min-height: 300px">
+                <div class="card shadow"
+                     style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
-                        <table id="chargebacks-table" class="table-vendas table table-striped unify"
+                        <table id="chargebacks-table"
+                               class="table-vendas table table-striped unify"
                                style="width:100%;">
                             <thead>
                                 <tr class="">
                                     <td class="table-title">Transação</td>
-                                    <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
+                                    <td class="table-title"
+                                        style="min-width: 200px; text-align:left">Empresa</td>
                                     <td class="table-title">Compra</td>
-                                    <td class="table-title text-center" style="min-width: 100px;">Status</td>
+                                    <td class="table-title text-center"
+                                        style="min-width: 100px;">Status</td>
                                     <td class="table-title">Prazo</td>
                                     <td class="table-title">Motivo</td>
-                                    {{--                            <td class="table-title">Valor</td>--}}
-                                    <td class="table-title" style="min-width: 100px;"></td>
+                                    {{-- <td class="table-title">Valor</td> --}}
+                                    <td class="table-title"
+                                        style="min-width: 100px;"></td>
                                 </tr>
                             </thead>
-                            <tbody id="chargebacks-table-data" img-empty="{!! mix('build/global/img/contestacoes.svg')!!}">
+                            <tbody id="chargebacks-table-data"
+                                   img-empty="{!! mix('build/global/img/contestacoes.svg') !!}">
                                 {{-- js carrega... --}}
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="row justify-content-center justify-content-md-end pb-60">
-                    <ul id="pagination" class="pl-5 pr-md-15 mb-10">
+                    <ul id="pagination"
+                        class="pl-5 pr-md-15 mb-10">
                         {{-- js carrega... --}}
                     </ul>
                 </div>
@@ -263,20 +317,18 @@
                 @include('sales::details')
 
             </div>
-        {{-- Quando não tem loja cadastrado  --}}
-        @include('projects::empty')
-        {{-- FIM loja nao existem lojas--}}
+            {{-- Quando não tem loja cadastrado --}}
+            @include('projects::empty')
+            {{-- FIM loja nao existem lojas --}}
         </div>
     </div>
 
     <!-- @push('scripts')
         <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
-        <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
+                        <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
     @endpush -->
 
     @push('scriptsView')
         <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
     @endpush
-
 @endsection
-

@@ -37,15 +37,16 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             $productService = new ProductService();
             $trackingModel = new Tracking();
 
-            $tracking = $trackingModel->with([
-                'sale.project.checkoutConfig',
-                'sale.customer',
-                'sale.productsPlansSale.tracking',
-                'sale.productsPlansSale.product',
-            ])->find($event->trackingId);
+            $tracking = $trackingModel
+                ->with([
+                    "sale.project.checkoutConfig",
+                    "sale.customer",
+                    "sale.productsPlansSale.tracking",
+                    "sale.productsPlansSale.product",
+                ])
+                ->find($event->trackingId);
 
             if ($tracking && $tracking->sale && $tracking->sale->project) {
-
                 $sale = $tracking->sale;
                 $project = $sale->project;
                 $checkoutConfig = $project->checkoutConfig;
@@ -57,48 +58,95 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                 $clientTelephone = $customer->telephone;
 
                 $projectName = $project->name;
-                $domain = $domainModel->where('project_id', $project->id)->first();
+                $domain = $domainModel->where("project_id", $project->id)->first();
 
                 //Traz a mensagem do sms formatado
                 $projectNotificationPresenter = $projectNotificationModel->present();
-                $projectNotificationSms = $projectNotificationModel->where('project_id', $project->id)
-                    ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('sms_tracking_immediate'))
-                    ->where('status', $projectNotificationPresenter->getStatus('active'))
+                $projectNotificationSms = $projectNotificationModel
+                    ->where("project_id", $project->id)
+                    ->where(
+                        "notification_enum",
+                        $projectNotificationPresenter->getNotificationEnum("sms_tracking_immediate")
+                    )
+                    ->where("status", $projectNotificationPresenter->getStatus("active"))
                     ->first();
                 //Traz o assunto, titulo e texto do email formatados
                 $projectNotificationPresenter = $projectNotificationModel->present();
-                $projectNotificationEmail = $projectNotificationModel->where('project_id', $project->id)
-                    ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_tracking_immediate'))
-                    ->where('status', $projectNotificationPresenter->getStatus('active'))
+                $projectNotificationEmail = $projectNotificationModel
+                    ->where("project_id", $project->id)
+                    ->where(
+                        "notification_enum",
+                        $projectNotificationPresenter->getNotificationEnum("email_tracking_immediate")
+                    )
+                    ->where("status", $projectNotificationPresenter->getStatus("active"))
                     ->first();
 
-                $linkBase = 'https://tracking.' . ($domain ? $domain->name : 'cloudfox.net') . '/';
+                $linkBase = "https://tracking." . ($domain ? $domain->name : "cloudfox.net") . "/";
                 if (!empty($projectNotificationSms)) {
                     $message = $projectNotificationSms->message;
-                    $smsMessage = $projectNotificationService->formatNotificationData($message, $sale, $project, 'sms', null, null, $tracking->tracking_code);
+                    $smsMessage = $projectNotificationService->formatNotificationData(
+                        $message,
+                        $sale,
+                        $project,
+                        "sms",
+                        null,
+                        null,
+                        $tracking->tracking_code
+                    );
                     if (!empty($smsMessage) && !empty($clientTelephone)) {
                         $smsService->sendSms($clientTelephone, $smsMessage);
                     }
                 }
                 if (!empty($projectNotificationEmail)) {
                     $message = json_decode($projectNotificationEmail->message);
-                    $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $sale, $project, null, null, null, $tracking->tracking_code);
-                    $titleMessage = $projectNotificationService->formatNotificationData($message->title, $sale, $project, null, null, null, $tracking->tracking_code);
-                    $contentMessage = $projectNotificationService->formatNotificationData($message->content, $sale, $project, null, null, null, $tracking->tracking_code);
+                    $subjectMessage = $projectNotificationService->formatNotificationData(
+                        $message->subject,
+                        $sale,
+                        $project,
+                        null,
+                        null,
+                        null,
+                        $tracking->tracking_code
+                    );
+                    $titleMessage = $projectNotificationService->formatNotificationData(
+                        $message->title,
+                        $sale,
+                        $project,
+                        null,
+                        null,
+                        null,
+                        $tracking->tracking_code
+                    );
+                    $contentMessage = $projectNotificationService->formatNotificationData(
+                        $message->content,
+                        $sale,
+                        $project,
+                        null,
+                        null,
+                        null,
+                        $tracking->tracking_code
+                    );
                     $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
                     $data = [
-                        'name' => $clientName,
-                        'project_logo' => $checkoutConfig->checkout_logo,
-                        'tracking_code' => $tracking->tracking_code,
+                        "name" => $clientName,
+                        "project_logo" => $checkoutConfig->checkout_logo,
+                        "tracking_code" => $tracking->tracking_code,
                         "subject" => $subjectMessage,
                         "title" => $titleMessage,
                         "content" => $contentMessage,
                         "products" => $products,
-                        "link" => $linkBase
+                        "link" => $linkBase,
                     ];
 
-                    $fromEmail = 'noreply@' . ($domain ? $domain->name : 'cloudfox.net');
-                    $sendGridService->sendEmail($fromEmail, $projectName, $clientEmail, $clientName, 'd-347cde26384449548df47e290ad50906', $data);
+                    $fromEmail = "noreply@" . ($domain ? $domain->name : "cloudfox.net");
+                    $sendGridService->sendEmail(
+                        $fromEmail,
+                        $projectName,
+                        $clientEmail,
+                        $clientName,
+                        "d-347cde26384449548df47e290ad50906",
+                        $data
+                    );
                 }
             }
         } catch (Exception $e) {
@@ -108,6 +156,6 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
 
     public function tags()
     {
-        return ['listener:' . static::class, 'tracking'];
+        return ["listener:" . static::class, "tracking"];
     }
 }

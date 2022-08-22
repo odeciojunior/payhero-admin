@@ -13,12 +13,9 @@ class DropValuePerncetagePurchasePixTablePixels extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->dropColumn(['value_percentage_purchase_pix']);
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table->dropColumn(["value_percentage_purchase_pix"]);
+        });
     }
 
     /**
@@ -28,13 +25,11 @@ class DropValuePerncetagePurchasePixTablePixels extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'pixels',
-            function (Blueprint $table) {
-                $table->integer('value_percentage_purchase_pix')
-                    ->default(100)
-                    ->after('value_percentage_purchase_boleto');
-            }
-        );
+        Schema::table("pixels", function (Blueprint $table) {
+            $table
+                ->integer("value_percentage_purchase_pix")
+                ->default(100)
+                ->after("value_percentage_purchase_boleto");
+        });
     }
 }

@@ -23,7 +23,7 @@ class InvitesServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -41,12 +41,13 @@ class InvitesServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-                             __DIR__ . '/../Config/config.php' => config_path('invites.php'),
-                         ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__ . '/../Config/config.php', 'invites'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("invites.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "invites");
     }
 
     /**
@@ -55,17 +56,26 @@ class InvitesServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/invites');
+        $viewPath = resource_path("views/modules/invites");
 
-        $sourcePath = __DIR__ . '/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-                             $sourcePath => $viewPath,
-                         ], 'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function($path) {
-            return $path . '/modules/invites';
-        }, \Config::get('view.paths')), [$sourcePath]), 'invites');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/invites";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "invites"
+        );
     }
 
     /**
@@ -74,12 +84,12 @@ class InvitesServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/invites');
+        $langPath = resource_path("lang/modules/invites");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'invites');
+            $this->loadTranslationsFrom($langPath, "invites");
         } else {
-            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'invites');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "invites");
         }
     }
 
@@ -89,8 +99,8 @@ class InvitesServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (!app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Core\Entities\Customer;
 
 /**
@@ -21,25 +22,25 @@ use Modules\Core\Entities\Customer;
  */
 class CustomerCard extends Model
 {
-    use LogsActivity;
+    use LogsActivity, HasFactory;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'browser_fingerprint',
-        'customer_id',
-        'first_four_digits',
-        'last_four_digits',
-        'card_token',
-        'association_code',
-        'deleted_by_user',
-        'created_at',
-        'updated_at',
+        "browser_fingerprint",
+        "customer_id",
+        "first_four_digits",
+        "last_four_digits",
+        "card_token",
+        "association_code",
+        "deleted_by_user",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -65,6 +66,6 @@ class CustomerCard extends Model
      */
     public function customer()
     {
-        return $this->belongsTo('Modules\Core\Entities\Customer');
+        return $this->belongsTo("Modules\Core\Entities\Customer");
     }
 }

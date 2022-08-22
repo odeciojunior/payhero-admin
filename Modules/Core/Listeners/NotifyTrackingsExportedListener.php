@@ -37,18 +37,24 @@ class NotifyTrackingsExportedListener implements ShouldQueue
             $sendGridService = new SendgridService();
             $userEmail = $user->email;
             $userName = $user->name;
-            $downloadLink = getenv('APP_URL') . "/trackings/download/" . $filename;
+            $downloadLink = getenv("APP_URL") . "/trackings/download/" . $filename;
 
             $data = [
-                'name' => $userName,
-                'report_name' => 'Relatório de Códigos de Rastreio',
-                'download_link' => $downloadLink,
+                "name" => $userName,
+                "report_name" => "Relatório de Códigos de Rastreio",
+                "download_link" => $downloadLink,
             ];
 
-            $sendGridService->sendEmail('help@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
-
+            $sendGridService->sendEmail(
+                "help@cloudfox.net",
+                "CloudFox",
+                $userEmail,
+                $userName,
+                "d-2279bf09c11a4bf59b951e063d274450",
+                $data
+            );
         } catch (Exception $e) {
-            Log::warning('Erro listener NotifyTrackingsExportedListener');
+            Log::warning("Erro listener NotifyTrackingsExportedListener");
             report($e);
         }
     }

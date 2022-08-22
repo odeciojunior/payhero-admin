@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
@@ -27,33 +28,36 @@ class ProcessShopifyPostbackJob implements ShouldQueue
     public function handle()
     {
         try {
-            $userProject = UserProject::with([
-                'user',
-                'project'
-            ])->where('project_id', $this->projectId)
-                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+            PostbackLog::create([
+                "origin" => 3,
+                "data" => json_encode($this->postback),
+                "description" => "shopify",
+            ]);
+
+            $userProject = UserProject::with(["user", "project"])
+                ->where("project_id", $this->projectId)
+                ->where("type_enum", UserProject::TYPE_PRODUCER_ENUM)
                 ->first();
 
             if (!empty($userProject)) {
-
                 $user = $userProject->user;
                 $project = $userProject->project;
                 $postback = $this->postback;
 
-                $integration = ShopifyIntegration::where('project_id', $project->id)->first();
+                $integration = ShopifyIntegration::where("project_id", $project->id)->first();
 
                 if (!empty($user) && !empty($project) && !empty($integration)) {
                     $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
 
-                    if (!empty($postback['variants']) && count($postback['variants']) > 0) {
-                        $variant = current($postback['variants']);
+                    if (!empty($postback["variants"]) && count($postback["variants"]) > 0) {
+                        $variant = current($postback["variants"]);
                     }
 
-                    if (empty($variant['product_id'])) {
-                        $variant['product_id'] = $postback['id'];
+                    if (empty($variant["product_id"])) {
+                        $variant["product_id"] = $postback["id"];
                     }
 
-                    $shopifyService->importShopifyProduct($project->id, $user->id, $variant['product_id']);
+                    $shopifyService->importShopifyProduct($project->id, $user->id, $variant["product_id"]);
                 }
             }
         } catch (\Exception $e) {
@@ -63,6 +67,6 @@ class ProcessShopifyPostbackJob implements ShouldQueue
 
     public function tags()
     {
-        return ['shopify:postback'];
+        return ["shopify:postback"];
     }
 }

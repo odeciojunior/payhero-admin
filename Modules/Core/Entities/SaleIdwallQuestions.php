@@ -21,19 +21,19 @@ class SaleIdwallQuestions extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'question',
-        'correct_answer',
-        'client_answer',
-        'correct_flag',
-        'expire_at',
-        'created_at',
-        'updated_at',
+        "sale_id",
+        "question",
+        "correct_answer",
+        "client_answer",
+        "correct_flag",
+        "expire_at",
+        "created_at",
+        "updated_at",
     ];
 
     /**
@@ -41,6 +41,6 @@ class SaleIdwallQuestions extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('Modules\Core\Entities\Sale');
+        return $this->belongsTo("Modules\Core\Entities\Sale");
     }
 }

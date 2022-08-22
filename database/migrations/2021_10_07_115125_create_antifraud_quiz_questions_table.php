@@ -13,15 +13,15 @@ class CreateAntifraudQuizQuestionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('antifraud_quiz_questions', function (Blueprint $table) {
+        Schema::create("antifraud_quiz_questions", function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sale_id')->constrained();
-            $table->string('question', 255);
-            $table->string('correct_answer', 255);
-            $table->string('answer', 255)->nullable();
-            $table->boolean('open_answer_flag')->nullable();
-            $table->dateTime('started_at')->nullable();
-            $table->dateTime('finished_at')->nullable();
+            $table->foreignId("sale_id")->constrained();
+            $table->string("question", 255);
+            $table->string("correct_answer", 255);
+            $table->string("answer", 255)->nullable();
+            $table->boolean("open_answer_flag")->nullable();
+            $table->dateTime("started_at")->nullable();
+            $table->dateTime("finished_at")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -34,6 +34,6 @@ class CreateAntifraudQuizQuestionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('antifraud_quiz_questions');
+        Schema::dropIfExists("antifraud_quiz_questions");
     }
 }

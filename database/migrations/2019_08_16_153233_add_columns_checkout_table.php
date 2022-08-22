@@ -13,9 +13,9 @@ class AddColumnsCheckoutTable extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->string('operational_system')->nullable();
-            $table->string('browser')->nullable();
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->string("operational_system")->nullable();
+            $table->string("browser")->nullable();
         });
     }
 
@@ -25,9 +25,9 @@ class AddColumnsCheckoutTable extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->dropColumn('operational_system');
-            $table->dropColumn('browser');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("operational_system");
+            $table->dropColumn("browser");
         });
     }
 }

@@ -13,10 +13,11 @@ class AddIsRefundTaxToTransfers extends Migration
      */
     public function up()
     {
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->boolean('is_refund_tax')
+        Schema::table("transfers", function (Blueprint $table) {
+            $table
+                ->boolean("is_refund_tax")
                 ->default(0)
-                ->after('reason');
+                ->after("reason");
         });
     }
 
@@ -27,8 +28,8 @@ class AddIsRefundTaxToTransfers extends Migration
      */
     public function down()
     {
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->dropColumn('is_refund_tax');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->dropColumn("is_refund_tax");
         });
     }
 }

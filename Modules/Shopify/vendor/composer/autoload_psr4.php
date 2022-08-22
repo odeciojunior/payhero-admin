@@ -5,6 +5,6 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return array(
-    'Modules\\Shopify\\' => array($baseDir . '/'),
-);
+return [
+    "Modules\\Shopify\\" => [$baseDir . "/"],
+];

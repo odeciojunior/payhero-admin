@@ -1606,7 +1606,7 @@ function set_item_click(){
 
     $('.item').on('click', function () {
         
-        var iqde = 100 //limite máximo de planos em um desconto.
+        var iqde = 190 //limite máximo de planos em um desconto.
         
         if(items_selected.length >= iqde && !$('.selected_check', this).is(':visible')){
             $('.next-btn, .coupon-next, .c-edit-plans-save').prop('disabled',false)

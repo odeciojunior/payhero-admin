@@ -13,10 +13,10 @@ class CreateSystemLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('postback_logs', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('origin');
-            $table->json('data');
+        Schema::create("postback_logs", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->integer("origin");
+            $table->json("data");
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateSystemLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('postback_logs');
+        Schema::dropIfExists("postback_logs");
     }
 }

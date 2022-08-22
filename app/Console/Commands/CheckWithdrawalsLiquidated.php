@@ -13,9 +13,9 @@ use Modules\Core\Services\GetnetBackOfficeService;
 
 class CheckWithdrawalsLiquidated extends Command
 {
-    protected $signature = 'getnet:check-withdrawals-liquidated';
+    protected $signature = "getnet:check-withdrawals-liquidated";
 
-    protected $description = 'Command para verificar se a transaction foi transferida';
+    protected $description = "Command para verificar se a transaction foi transferida";
 
     public function __construct()
     {
@@ -24,13 +24,12 @@ class CheckWithdrawalsLiquidated extends Command
 
     public function handle()
     {
-
         try {
-            $withdrawals = Withdrawal::with('transactions', 'transactions.sale', 'transactions.company')
-                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
-                ->where('automatic_liquidation', true)
-                ->whereIn('status', [Withdrawal::STATUS_LIQUIDATING, Withdrawal::STATUS_PARTIALLY_LIQUIDATED])
-                ->orderBy('id');
+            $withdrawals = Withdrawal::with("transactions", "transactions.sale", "transactions.company")
+                ->where("gateway_id", Gateway::GETNET_PRODUCTION_ID)
+                ->where("automatic_liquidation", true)
+                ->whereIn("status", [Withdrawal::STATUS_LIQUIDATING, Withdrawal::STATUS_PARTIALLY_LIQUIDATED])
+                ->orderBy("id");
 
             $withdrawals->chunk(500, function ($withdrawals) {
                 foreach ($withdrawals as $withdrawal) {
@@ -49,7 +48,8 @@ class CheckWithdrawalsLiquidated extends Command
 
                         $orderId = $sale->gateway_order_id;
 
-                        $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                        $response = $getnetService
+                            ->setStatementSaleHashId(hashids_encode($sale->id, "sale_id"))
                             ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
                             ->getStatement($orderId);
 
@@ -62,29 +62,30 @@ class CheckWithdrawalsLiquidated extends Command
                         ) {
                             $countTransactionsLiquidated++;
 
-                            $date = Carbon::parse($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
+                            $date = Carbon::parse(
+                                $gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date
+                            );
 
                             if (empty($transaction->gateway_transferred_at)) {
                                 $transaction->update([
-                                    'status' => 'transfered',
-                                    'status_enum' => Transaction::STATUS_TRANSFERRED,
-                                    'gateway_transferred' => true,
-                                    'gateway_transferred_at' => $date
+                                    "status" => "transfered",
+                                    "status_enum" => Transaction::STATUS_TRANSFERRED,
+                                    "gateway_transferred" => true,
+                                    "gateway_transferred_at" => $date,
                                 ]);
                             }
                         }
                     }
 
                     if ($countTransactionsLiquidated == $withdrawalTransactionsCount) {
-                        $withdrawal->update(['status' => Withdrawal::STATUS_TRANSFERRED]);
+                        $withdrawal->update(["status" => Withdrawal::STATUS_TRANSFERRED]);
                     } elseif ($countTransactionsLiquidated > 0) {
-                        $withdrawal->update(['status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED]);
+                        $withdrawal->update(["status" => Withdrawal::STATUS_PARTIALLY_LIQUIDATED]);
                     }
                 }
             });
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

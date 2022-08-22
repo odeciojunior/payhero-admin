@@ -13,14 +13,14 @@ class VerifyBoletoWaitingPayment extends Command
      *
      * @var string
      */
-    protected $signature = 'verify:boletowaitingpayment';
+    protected $signature = "verify:boletowaitingpayment";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -34,15 +34,11 @@ class VerifyBoletoWaitingPayment extends Command
 
     public function handle()
     {
-
         try {
-
             $boletoService = new BoletoService();
             $boletoService->verifyBoletoWaitingPayment();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

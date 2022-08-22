@@ -13,14 +13,14 @@ class ProjectStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'photo'       => 'nullable',
-            'name'        => 'required|string|max:255',
-            'company'     => 'required',
-            'description' => 'nullable|string|max:255',
-            'photo_w'     => 'nullable',
-            'photo_h'     => 'nullable',
-            'photo_x1'    => 'nullable',
-            'photo_y1'    => 'nullable',
+            "photo" => "nullable",
+            "name" => "required|string|max:255",
+            "company" => "required",
+            "description" => "nullable|string|max:255",
+            "photo_w" => "nullable",
+            "photo_h" => "nullable",
+            "photo_x1" => "nullable",
+            "photo_y1" => "nullable",
         ];
     }
 
@@ -30,8 +30,8 @@ class ProjectStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'    => 'O campo nome deve ser preenchido corretamente',
-            'company.required' => 'É obrigatório selecionar campo empresa',
+            "name.required" => "O campo nome deve ser preenchido corretamente",
+            "company.required" => "É obrigatório selecionar campo empresa",
         ];
     }
 

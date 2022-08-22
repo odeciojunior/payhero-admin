@@ -1,12 +1,78 @@
 var exportFormat = null;
 
 $(document).ready(function () {
-    getProjects();
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project").find('option').not(':first').remove();
+        $("#plan").find('option').not(':first').remove();
+        $("#project").val($("#project option:first").val());
+        $("#plan").val($("#plan option:first").val());
+        $('#plan').data('select2').results.clear();
+        loadOnTable("#table_data", "#carrinhoAbandonado");
+        updateCompanyDefault().done(function(data){
+            getCompaniesAndProjects().done(function(data2){
+                if(!isEmpty(data2.company_default_projects)){
+                    $('#export-excel').show();
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    fillProjectsSelect(data2.companies)
+                    updateSalesRecovery();
+                }
+                else{
+                    $('#export-excel').hide();
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            });
+        });
+    });
+
+    function fillProjectsSelect(data){
+        $.ajax({
+            method: "GET",
+            url: "/api/recovery/projects-with-recovery",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                //if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        if( dataSales.includes(project.id) )
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                    });
+                //}
+            });
+        });
+    }
+
+    getCompaniesAndProjects().done( function (data){console.log(data)
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
+
+    });
 
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
-    $('.applySelect2').select2({
-        width:'100%',
-        multiple:true,
+    $(".applySelect2").select2({
+        width: "100%",
+        multiple: true,
         language: {
             noResults: function () {
                 return "Nenhum resultado encontrado";
@@ -14,12 +80,12 @@ $(document).ready(function () {
             searching: function () {
                 return "Procurando...";
             },
-        }
+        },
     });
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        updateSalesRecovery();
+        loadData();
     });
 
     $("#bt_get_csv").on("click", function () {
@@ -112,47 +178,18 @@ $(document).ready(function () {
     /**
      * Busca os lojas para montar o select
      */
-    function getProjects() {
+    function getProjects(data) {
         loadingOnScreen();
 
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function (response) {
-                console.log("entrei erro");
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function (response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel").show();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel").show();
+        fillProjectsSelect(data.companies)
+        $("#project").val($("#project option:first").val());
+        $("#plan").val($("#plan option:first").val());
+        updateSalesRecovery();
 
-                    $.each(response.data, function (i, project) {
-                        $("#project").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
-
-                    updateSalesRecovery();
-                } else {
-                    $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-
-                loadingOnScreenRemove();
-            },
-        });
+        loadingOnScreenRemove();
     }
 
     /**
@@ -162,16 +199,15 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = "";
         if (link == null) {
-            url = `?project=${$("#project").val()}&recovery_type=${$("#recovery_type option:selected")
-
-            .val()}&date_range=${$("#date-range-sales-recovery")
-
-            .val()}&client=${$("#client-name")
-
-            .val()}&date_type=created_at&client_document=${$("#client-cpf")
-
-            .val()}&plan=${$("#plan").val()}`;
-
+            url = `?project=${$("#project").val()}&recovery_type=${$(
+                "#recovery_type option:selected"
+            ).val()}&date_range=${$(
+                "#date-range-sales-recovery"
+            ).val()}&client=${$(
+                "#client-name"
+            ).val()}&date_type=created_at&client_document=${$(
+                "#client-cpf"
+            ).val()}&plan=${$("#plan").val()}`;
         } else {
             url = `${link}&project=${$("#project").val()}
 
@@ -185,6 +221,7 @@ $(document).ready(function () {
 
             &plan=${$("#plan").val()}`;
         }
+        url += "&company="+ $('.company-navbar').val();
 
         let recoveryTypeSelected = $("#recovery_type option:selected").val();
         if (recoveryTypeSelected == 1) {
@@ -221,13 +258,16 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: function success(response) {console.log(response)
                 const BOLETO_TYPE = '5'
 
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                let recoveryType = $('#recovery_type').children("option:selected").text().toLowerCase();
+                let recoveryType = $("#recovery_type")
+                    .children("option:selected")
+                    .text()
+                    .toLowerCase();
                 let image = $("#table_data").attr("img-empty");
                 if (response.data == "" && recoveryType) {
                     $("#pagination-salesRecovery").hide();
@@ -239,7 +279,6 @@ $(document).ready(function () {
                             </td>
                         </tr>`
                     );
-
                 } else {
                     createHTMLTable(response);
                     $("#pagination-salesRecovery").show();
@@ -254,7 +293,7 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if ($('#recovery_type option:selected').val() == '5') {
+                    if ($("#recovery_type option:selected").val() == "5") {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
@@ -313,7 +352,19 @@ $(document).ready(function () {
                     });
                 }
             },
+            complete: (response) => {
+                unlockSearch($("#bt_filtro"));
+            },
         });
+    }
+
+    function loadData() {
+        elementButton = $("#bt_filtro");
+        if (searchIsLocked(elementButton) != "true") {
+            lockSearch(elementButton);
+            console.log(elementButton.attr("block_search"));
+            updateSalesRecovery();
+        }
     }
 
     /**
@@ -696,11 +747,11 @@ $(document).ready(function () {
             date_type: "created_at",
         };
 
-        Object.keys(data).forEach((value)=>{
-            if(Array.isArray(data[value])){
-                data[value] = data[value].filter((value) => value).join(',');
+        Object.keys(data).forEach((value) => {
+            if (Array.isArray(data[value])) {
+                data[value] = data[value].filter((value) => value).join(",");
             }
-        })
+        });
 
         if (urlParams) {
             let params = "";
@@ -735,12 +786,12 @@ $(document).ready(function () {
         });
     }
     //COMPORTAMENTO DO FILTRO MULTIPLO
-    function behaviorMultipleFilter(data, selectId){
+    function behaviorMultipleFilter(data, selectId) {
         var $select = $(`#${selectId}`);
-        var valueToRemove = 'all';
+        var valueToRemove = "all";
         var values = $select.val();
 
-        if (data.id != 'all' && data.id != '') {
+        if (data.id != "all" && data.id != "") {
             if (values) {
                 var i = values.indexOf(valueToRemove);
 
@@ -749,51 +800,57 @@ $(document).ready(function () {
                     $select.val(values).change();
                 }
             }
-         } else {
+        } else {
             if (values) {
-              values.splice(0, values.lenght);
-              $select.val(null).change();
+                values.splice(0, values.lenght);
+                $select.val(null).change();
 
-              values.push('all');
-              $select.val('all').change();
+                values.push("all");
+                $select.val("all").change();
             }
         }
     }
 
     //NAO PERMITI QUE O FILTRO FIQUE VAZIO
-    function deniedEmptyFilter(selectId){
+    function deniedEmptyFilter(selectId) {
         let arrayValues = $(`#${selectId}`).val();
         let valueAmount = $(`#${selectId}`).val().length;
 
-        if(valueAmount === 0){
-            arrayValues.push('all');
-            arrayValues = $(`#${selectId}`).val('all').trigger("change");
+        if (valueAmount === 0) {
+            arrayValues.push("all");
+            arrayValues = $(`#${selectId}`).val("all").trigger("change");
         }
     }
 
     $(".applySelect2").on("select2:select", function (evt) {
         var data = evt.params.data;
-        var selectId = $(this).attr('id');
+        var selectId = $(this).attr("id");
         behaviorMultipleFilter(data, selectId);
 
         $(`#${selectId}`).focus().scrollTop(0);
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
 
     $(".applySelect2").on("change", function () {
-        let idTarget = $(this).attr('id');
+        let idTarget = $(this).attr("id");
         deniedEmptyFilter(idTarget);
     });
 
-    $(document).on('focusout', '.select2-selection__rendered', function () {
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    $(document).on("focusout", ".select2-selection__rendered", function () {
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
 
-    $(document).on('focusin', '.select2-selection__rendered', function () {
-        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    $(document).on("focusin", ".select2-selection__rendered", function () {
+        $(".select2-selection.select2-selection--multiple").scrollTop(0);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
 
+    //LISTA PLANOS DE ACORDO COM O PROJETO(S)
+    $("#project").on("change", function () {
+        let value = $(this).val();
+        $("#plan").val(null).trigger("change");
+        $('#plan').data('select2').results.clear();
+    });
 
     //Search plan
     $("#plan").select2({
@@ -811,6 +868,7 @@ $(document).ready(function () {
                     list: "plan",
                     search: params.term,
                     project_id: $("#project").val(),
+                    company: $(".company-navbar").val()
                 };
             },
             method: "GET",
@@ -825,19 +883,21 @@ $(document).ready(function () {
                 result = $.map(res.data, function (obj) {
                     return {
                         id: obj.id,
-                        text: obj.name + (obj.description ? " - " + obj.description : ""),
+                        text:
+                            obj.name +
+                            (obj.description ? " - " + obj.description : ""),
                     };
                 });
 
-                if(res.data.length > 0){
+                if (res.data.length > 0) {
                     result.splice(0, 0, {
                         id: "",
-                        text: "Todos os Planos"
+                        text: "Todos os Planos",
                     });
                 }
 
                 return {
-                    results: result
+                    results: result,
                 };
             },
         },

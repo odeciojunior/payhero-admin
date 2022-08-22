@@ -13,6 +13,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('customers')->group(function () {
-    Route::get('/', 'CustomersController@index');
+Route::prefix("customers")->group(function () {
+    Route::get("/", "CustomersController@index");
 });

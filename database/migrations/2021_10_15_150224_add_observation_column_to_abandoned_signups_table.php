@@ -13,8 +13,11 @@ class AddObservationColumnToAbandonedSignupsTable extends Migration
      */
     public function up()
     {
-        Schema::table('abandoned_signups', function (Blueprint $table) {
-            $table->string('observation')->nullable()->after('monthly_income');
+        Schema::table("abandoned_signups", function (Blueprint $table) {
+            $table
+                ->string("observation")
+                ->nullable()
+                ->after("monthly_income");
         });
     }
 
@@ -25,8 +28,8 @@ class AddObservationColumnToAbandonedSignupsTable extends Migration
      */
     public function down()
     {
-        Schema::table('abandoned_signups', function (Blueprint $table) {
-            $table->dropColumn('observation');
+        Schema::table("abandoned_signups", function (Blueprint $table) {
+            $table->dropColumn("observation");
         });
     }
 }

@@ -13,12 +13,20 @@ class AlterProjectsAddOrderPriority extends Migration
      */
     public function up()
     {
-        Schema::table('users_projects', function (Blueprint $table) {
-            $table->integer('order_priority')->unsigned()->default(0)->after('status');
+        Schema::table("users_projects", function (Blueprint $table) {
+            $table
+                ->integer("order_priority")
+                ->unsigned()
+                ->default(0)
+                ->after("status");
         });
 
-        Schema::table('affiliates', function (Blueprint $table) {
-            $table->integer('order_priority')->unsigned()->default(0)->after('suport_phone_verified');
+        Schema::table("affiliates", function (Blueprint $table) {
+            $table
+                ->integer("order_priority")
+                ->unsigned()
+                ->default(0)
+                ->after("suport_phone_verified");
         });
     }
 
@@ -29,12 +37,12 @@ class AlterProjectsAddOrderPriority extends Migration
      */
     public function down()
     {
-        Schema::table('users_projects', function (Blueprint $table) {
-            $table->dropColumn('order_priority');
+        Schema::table("users_projects", function (Blueprint $table) {
+            $table->dropColumn("order_priority");
         });
 
-        Schema::table('affiliates', function (Blueprint $table) {
-            $table->dropColumn('order_priority');
+        Schema::table("affiliates", function (Blueprint $table) {
+            $table->dropColumn("order_priority");
         });
     }
 }

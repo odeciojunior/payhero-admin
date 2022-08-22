@@ -12,8 +12,11 @@ class AddColumnInstallmentTaxColumnTransactions extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function(Blueprint $table) {
-            $table->string('installment_tax')->nullable()->after('release_date');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->string("installment_tax")
+                ->nullable()
+                ->after("release_date");
         });
     }
 
@@ -23,9 +26,8 @@ class AddColumnInstallmentTaxColumnTransactions extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function(Blueprint $table) {
-            $table->dropColumn('installment_tax');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("installment_tax");
         });
     }
 }
-

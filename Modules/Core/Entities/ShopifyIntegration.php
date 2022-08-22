@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,6 +38,7 @@ class ShopifyIntegration extends Model
     use LogsActivity;
     use PresentableTrait;
     use SoftDeletes;
+    use HasFactory;
 
     public const SHOPIFY_BASIC_THEME = 1;
     public const SHOPIFY_AJAX_THEME = 2;
@@ -53,21 +55,21 @@ class ShopifyIntegration extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'project_id',
-        'token',
-        'shared_secret',
-        'url_store',
-        'theme_type',
-        'theme_name',
-        'theme_file',
-        'theme_html',
-        'layout_theme_html',
-        'status',
-        'skip_to_cart',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "user_id",
+        "project_id",
+        "token",
+        "shared_secret",
+        "url_store",
+        "theme_type",
+        "theme_name",
+        "theme_file",
+        "theme_html",
+        "layout_theme_html",
+        "status",
+        "skip_to_cart",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -95,14 +97,14 @@ class ShopifyIntegration extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
-                $activity->description = 'Integração com shopify foi deleteda.';
+            case "deleted":
+                $activity->description = "Integração com shopify foi deleteda.";
                 break;
-            case 'updated':
-                $activity->description = 'Integração com shopify foi atualizado.';
+            case "updated":
+                $activity->description = "Integração com shopify foi atualizado.";
                 break;
-            case 'created':
-                $activity->description = 'Integração com shopify foi criado.';
+            case "created":
+                $activity->description = "Integração com shopify foi criado.";
                 break;
             default:
                 $activity->description = $eventName;

@@ -12,18 +12,21 @@ class CreateTableUserTerms extends Migration
      */
     public function up()
     {
-        Schema::create('user_terms', function(Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedInteger('user_id');
-            $table->string('term_version')->nullable();
-            $table->json('device_data')->nullable();
-            $table->boolean('accepted_at')->nullable();
+        Schema::create("user_terms", function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->unsignedInteger("user_id");
+            $table->string("term_version")->nullable();
+            $table->json("device_data")->nullable();
+            $table->boolean("accepted_at")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('user_terms', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::table("user_terms", function (Blueprint $table) {
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
         });
     }
 
@@ -33,10 +36,10 @@ class CreateTableUserTerms extends Migration
      */
     public function down()
     {
-        Schema::table('table_user_terms', function(Blueprint $table) {
+        Schema::table("table_user_terms", function (Blueprint $table) {
             $table->dropForeign(["user_id"]);
         });
 
-        Schema::dropIfExists('table_user_terms');
+        Schema::dropIfExists("table_user_terms");
     }
 }

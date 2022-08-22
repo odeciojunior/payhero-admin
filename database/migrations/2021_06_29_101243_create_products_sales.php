@@ -13,17 +13,20 @@ class CreateProductsSales extends Migration
      */
     public function up()
     {
-        Schema::create('products_sales', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create("products_sales", function (Blueprint $table) {
+            $table->bigIncrements("id");
             $table->unsignedBigInteger("sale_id");
-            $table->string('item_id');
-            $table->string('name');
-            $table->float('price');
-            $table->integer('quantity');
-            $table->string('product_type');
+            $table->string("item_id");
+            $table->string("name");
+            $table->float("price");
+            $table->integer("quantity");
+            $table->string("product_type");
             $table->timestamps();
 
-            $table->foreign('sale_id')->references('id')->on('sales');
+            $table
+                ->foreign("sale_id")
+                ->references("id")
+                ->on("sales");
         });
     }
 
@@ -34,6 +37,6 @@ class CreateProductsSales extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products_sales');
+        Schema::dropIfExists("products_sales");
     }
 }

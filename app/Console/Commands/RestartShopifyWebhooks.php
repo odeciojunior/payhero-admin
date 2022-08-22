@@ -15,14 +15,14 @@ class RestartShopifyWebhooks extends Command
      *
      * @var string
      */
-    protected $signature = 'restartShopifyWebhooks';
+    protected $signature = "restartShopifyWebhooks";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'restart all webhooks from all shopify integrations in the database';
+    protected $description = "restart all webhooks from all shopify integrations in the database";
 
     /**
      * Create a new command instance.
@@ -41,40 +41,39 @@ class RestartShopifyWebhooks extends Command
      */
     public function handle()
     {
-
-        foreach(ShopifyIntegration::all() as $shopifyIntegration){
-
-            try{
-                $shopifyService = new ShopifyService($shopifyIntegration->url_store,$shopifyIntegration->token);
+        foreach (ShopifyIntegration::all() as $shopifyIntegration) {
+            try {
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                 $shopifyService->deleteShopWebhook();
 
                 $shopifyService->createShopWebhook([
-                    "topic"   => "products/create",
-                    "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
-                    "format"  => "json",
+                    "topic" => "products/create",
+                    "address" =>
+                        "https://sirius.cloudfox.net/postback/shopify/" .
+                        Hashids::encode($shopifyIntegration->project_id),
+                    "format" => "json",
                 ]);
 
                 $shopifyService->createShopWebhook([
-                    "topic"   => "products/update",
-                    "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
-                    "format"  => "json",
+                    "topic" => "products/update",
+                    "address" =>
+                        "https://sirius.cloudfox.net/postback/shopify/" .
+                        Hashids::encode($shopifyIntegration->project_id),
+                    "format" => "json",
                 ]);
 
                 $shopifyService->createShopWebhook([
-                    "topic"   => "orders/updated",
-                    "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
-                    "format"  => "json",
+                    "topic" => "orders/updated",
+                    "address" =>
+                        "https://sirius.cloudfox.net/postback/shopify/" .
+                        Hashids::encode($shopifyIntegration->project_id) .
+                        "/tracking",
+                    "format" => "json",
                 ]);
-
-            }
-            catch(Exception $e){
+            } catch (Exception $e) {
                 //
             }
-
         }
-
     }
-
 }
-

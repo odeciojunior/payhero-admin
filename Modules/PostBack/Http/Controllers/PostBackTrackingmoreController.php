@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\PostBack\Http\Controllers;
-
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessTrackingmorePostbackJob;
@@ -27,24 +25,23 @@ class PostBackTrackingmoreController extends Controller
             $postBackLogModel = new PostbackLog();
 
             $postBackLogModel->create([
-                'origin' => 7,
-                'data' => json_encode($data),
-                'description' => 'trackingmore',
+                "origin" => 7,
+                "data" => json_encode($data),
+                "description" => "trackingmore",
             ]);
 
-            $trackingCode = $data['data']['tracking_number'] ?? '';
+            $trackingCode = $data["data"]["tracking_number"] ?? "";
 
             if ($trackingCode) {
                 ProcessTrackingmorePostbackJob::dispatch($trackingCode);
             }
 
-            return response()->json(['message' => 'Postback received!']);
-
+            return response()->json(["message" => "Postback received!"]);
         } catch (\Exception $ex) {
             report($ex);
             Log:
             info($ex->getMessage());
-            return response()->json(['message' => 'Postback listerner error']);
+            return response()->json(["message" => "Postback listerner error"]);
         }
     }
 }

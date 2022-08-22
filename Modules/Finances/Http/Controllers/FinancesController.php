@@ -17,12 +17,12 @@ class FinancesController extends Controller
      */
     public function index()
     {
-         return view('finances::multi');
+        return view("finances::multi");
     }
 
     public function show()
     {
-        return view('finances::index');
+        return view("finances::index");
     }
 
     /**
@@ -30,24 +30,17 @@ class FinancesController extends Controller
      */
     public function oldIndex()
     {
-        return view('finances::old-index');
+        return view("finances::old-index");
     }
 
     public function download($filename)
     {
-     
-        $file_path = storage_path('app/' . $filename);
+        $file_path = storage_path("app/" . $filename);
         if (file_exists($file_path)) {
-            return response()->download($file_path, $filename, [
-                'Content-Length: ' . filesize($file_path)
-            ]);
+            return response()->download($file_path, $filename, ["Content-Length: " . filesize($file_path)]);
             //->deleteFileAfterSend(true);
         } else {
             abort(404);
         }
     }
-
-
 }
-
-

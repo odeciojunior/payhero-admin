@@ -1,4 +1,6 @@
-<table id="upsell-details-table" class='table table-striped' style='width: 100%'>
+<table id="upsell-details-table"
+       class='table table-striped'
+       style='width: 100%'>
     <tbody>
         <tr>
             <td class="table-title">Descrição</td>

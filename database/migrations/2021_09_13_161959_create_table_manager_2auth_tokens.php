@@ -13,12 +13,15 @@ class CreateTableManager2AuthTokens extends Migration
      */
     public function up()
     {
-        Schema::create('manager_2auth_tokens', function (Blueprint $table) {
+        Schema::create("manager_2auth_tokens", function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned();
-            $table->string('code');
-            $table->timestamp('expires_at');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer("user_id")->unsigned();
+            $table->string("code");
+            $table->timestamp("expires_at");
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +34,6 @@ class CreateTableManager2AuthTokens extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manager_authentication_tokens');
+        Schema::dropIfExists("manager_authentication_tokens");
     }
 }

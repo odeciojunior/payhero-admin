@@ -33,11 +33,11 @@ class AmazonFileService
     /**
      * @var array
      */
-    private $arrayExtensions = ['jpeg', 'jpg', 'pdf', 'png', 'gif', 'docx', 'jfif'];
+    private $arrayExtensions = ["jpeg", "jpg", "pdf", "png", "gif", "docx", "jfif"];
     /**
      * @var array
      */
-    private $availableDisks = ['s3','s3_digital_product','s3_chargeback', 's3_documents'];
+    private $availableDisks = ["s3", "s3_digital_product", "s3_chargeback", "s3_documents"];
 
     /**
      * AbstractUploadApi constructor.
@@ -63,7 +63,7 @@ class AmazonFileService
      */
     public function defaultDisk()
     {
-        return $this->selectedDiskName = 's3';
+        return $this->selectedDiskName = "s3";
     }
 
     /**
@@ -75,17 +75,18 @@ class AmazonFileService
      * @return bool|string
      * @throws ServiceException
      */
-    public function uploadFile($folder, $file, $name = null, $rename = false, $type = 'public')
+    public function uploadFile($folder, $file, $name = null, $rename = false, $type = "public")
     {
         try {
             $extension = $file->getClientOriginalExtension();
-            $url       = $this->disk->put($folder, $file, $type);
+            $url = $this->disk->put($folder, $file, $type);
 
             if ($rename) {
-                if ($this->disk->move($url, $folder . $name . '.' . $extension))
-                    $url = $folder . $name . '.' . $extension;
-                else
+                if ($this->disk->move($url, $folder . $name . "." . $extension)) {
+                    $url = $folder . $name . "." . $extension;
+                } else {
                     return false;
+                }
             }
 
             return $this->getUrlFile($url);
@@ -106,13 +107,14 @@ class AmazonFileService
         try {
             $path = $this->getPath($path);
             if ($extension) {
-                if ($this->disk->exists($path))
+                if ($this->disk->exists($path)) {
                     return true;
-                else
+                } else {
                     return false;
+                }
             } else {
                 foreach ($this->arrayExtensions as $extension) {
-                    if ($this->disk->exists($path . '.' . $extension)) {
+                    if ($this->disk->exists($path . "." . $extension)) {
                         $this->extension = $extension;
 
                         return true;
@@ -135,14 +137,14 @@ class AmazonFileService
     public function getUrlFile($path)
     {
         try {
-            $path  = $this->getPath($path);
+            $path = $this->getPath($path);
             $check = $this->check($path);
 
             if ($check == true) {
                 if ($this->extension == null) {
                     return $this->disk->url($path);
                 } else {
-                    return $this->disk->url($path . '.' . $this->extension);
+                    return $this->disk->url($path . "." . $this->extension);
                 }
             }
 
@@ -162,15 +164,17 @@ class AmazonFileService
     public function getTemporaryUrlFile($path, $seconds)
     {
         try {
-            $path  = $this->getPath($path);
+            $path = $this->getPath($path);
             $check = $this->check($path);
 
             if ($check == true) {
                 if ($this->extension == null) {
                     return $this->disk->temporaryUrl($path, Carbon::now()->addSeconds($seconds));
                 } else {
-                    return $this->disk->temporaryUrl($path . '.' . $this->extension, Carbon::now()
-                                                                                           ->addSeconds($seconds));
+                    return $this->disk->temporaryUrl(
+                        $path . "." . $this->extension,
+                        Carbon::now()->addSeconds($seconds)
+                    );
                 }
             }
 
@@ -193,12 +197,13 @@ class AmazonFileService
             $path = $this->getPath($path);
             if ($this->check($path)) {
                 if ($softDelete) {
-                    $date  = str_replace(".", "", microtime(true));
+                    $date = str_replace(".", "", microtime(true));
                     $array = explode("/", $path);
-                    $name  = $date . end($array);
-                    if ($this->disk->move($path, 'trash/' . $name))
+                    $name = $date . end($array);
+                    if ($this->disk->move($path, "trash/" . $name)) {
                         return true;
-                } else if ($this->disk->delete($path)) {
+                    }
+                } elseif ($this->disk->delete($path)) {
                     return true;
                 }
             }
@@ -216,10 +221,10 @@ class AmazonFileService
      */
     public function getPath($path)
     {
-        $result         = parse_url($path);
-        $result['path'] = ltrim($result['path'], '/');
+        $result = parse_url($path);
+        $result["path"] = ltrim($result["path"], "/");
 
-        return $result['path'];
+        return $result["path"];
     }
 
     /**
@@ -230,12 +235,13 @@ class AmazonFileService
     public function check($path)
     {
         try {
-            $path        = $this->getPath($path);
+            $path = $this->getPath($path);
             $pathExplode = explode(".", $path);
-            if (isset($pathExplode[1]))
+            if (isset($pathExplode[1])) {
                 return $this->checkIfFileExists($path, true);
-            else
+            } else {
                 return $this->checkIfFileExists($pathExplode[0], null);
+            }
         } catch (Exception $ex) {
             report($ex);
             throw new ServiceException($ex->getMessage(), $ex->getCode(), $ex);

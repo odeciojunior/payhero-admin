@@ -1,16 +1,37 @@
 $(document).ready(function () {
-    index();
-    function index() {
-        loadingOnScreen();
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    function index(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/astronmembers",
+            url: "/api/apps/astronmembers?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: (response) => {
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -21,15 +42,9 @@ $(document).ready(function () {
                     $("#integration-actions").hide();
                 } else {
                     $("#project_id").html("");
-                    let projects = response.projects;
-                    for (let i = 0; i < projects.length; i++) {
-                        $("#project_id").append(
-                            '<option value="' +
-                                projects[i].id +
-                                '">' +
-                                projects[i].name +
-                                "</option>"
-                        );
+
+                    for (let project of response.projects) {
+                        $("#project_id, #select_projects_edit").append(`<option value="${project.id}">${project.name}</option>`);
                     }
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
@@ -44,10 +59,16 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#integration-actions").show();
                 }
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
             },
         });
     }
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
 
     //checkbox
     $(".check").on("click", function () {
@@ -143,52 +164,26 @@ $(document).ready(function () {
                 $("#token_edit").val(response.data.token);
 
                 $("#boleto_generated_edit").val(response.data.boleto_generated);
-                $("#boleto_generated_edit").prop(
-                    "checked",
-                    $("#boleto_generated_edit").val() == "1"
-                );
+                $("#boleto_generated_edit").prop("checked", $("#boleto_generated_edit").val() == "1");
 
                 $("#boleto_paid_edit").val(response.data.boleto_paid);
-                $("#boleto_paid_edit").prop(
-                    "checked",
-                    $("#boleto_paid_edit").val() == "1"
-                );
+                $("#boleto_paid_edit").prop("checked", $("#boleto_paid_edit").val() == "1");
 
-                $("#credit_card_refused_edit").val(
-                    response.data.credit_card_refused
-                );
-                $("#credit_card_refused_edit").prop(
-                    "checked",
-                    $("#credit_card_refused_edit").val() == "1"
-                );
+                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
+                $("#credit_card_refused_edit").prop("checked", $("#credit_card_refused_edit").val() == "1");
 
                 $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                $("#credit_card_paid_edit").prop(
-                    "checked",
-                    $("#credit_card_paid_edit").val() == "1"
-                );
+                $("#credit_card_paid_edit").prop("checked", $("#credit_card_paid_edit").val() == "1");
 
                 $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                $("#abandoned_cart_edit").prop(
-                    "checked",
-                    $("#abandoned_cart_edit").val() == "1"
-                );
+                $("#abandoned_cart_edit").prop("checked", $("#abandoned_cart_edit").val() == "1");
 
                 $("#pix_generated_edit").val(response.data.pix_generated);
-                $("#pix_generated_edit").prop(
-                    "checked",
-                    $("#pix_generated_edit").val() == "1"
-                );
+                $("#pix_generated_edit").prop("checked", $("#pix_generated_edit").val() == "1");
                 $("#pix_paid_edit").val(response.data.pix_paid);
-                $("#pix_paid_edit").prop(
-                    "checked",
-                    $("#pix_paid_edit").val() == "1"
-                );
+                $("#pix_paid_edit").prop("checked", $("#pix_paid_edit").val() == "1");
                 $("#pix_expired_edit").val(response.data.pix_expired);
-                $("#pix_expired_edit").prop(
-                    "checked",
-                    $("#pix_expired_edit").val() == "1"
-                );
+                $("#pix_expired_edit").prop("checked", $("#pix_expired_edit").val() == "1");
             },
         });
     });
@@ -199,9 +194,7 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var form_data = new FormData(
-            document.getElementById("form_add_integration")
-        );
+        var form_data = new FormData(document.getElementById("form_add_integration"));
 
         $.ajax({
             method: "POST",
@@ -232,9 +225,7 @@ $(document).ready(function () {
             return false;
         }
         var integrationId = $("#integration_id").val();
-        var form_data = new FormData(
-            document.getElementById("form_update_integration")
-        );
+        var form_data = new FormData(document.getElementById("form_update_integration"));
 
         $.ajax({
             method: "POST",
@@ -265,30 +256,24 @@ $(document).ready(function () {
         $("#modal-delete-integration").modal("show");
     });
     //destroy
-    $(document).on(
-        "click",
-        "#modal-delete-integration .btn-delete",
-        function (e) {
-            e.stopPropagation();
-            var project = $(this).attr("project");
-            $.ajax({
-                method: "DELETE",
-                url: "/api/apps/astronmembers/" + project,
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                error: (response) => {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    index();
-                    alertCustom("success", response.message);
-                },
-            });
-        }
-    );
+    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
+        e.stopPropagation();
+        var project = $(this).attr("project");
+        $.ajax({
+            method: "DELETE",
+            url: "/api/apps/astronmembers/" + project,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                index();
+                alertCustom("success", response.message);
+            },
+        });
+    });
 });

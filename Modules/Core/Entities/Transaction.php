@@ -29,6 +29,8 @@ use Modules\Core\Presenters\TransactionPresenter;
  * @property string $installment_tax
  * @property string $checkout_tax
  * @property string $tax
+ * @property integer $tax_type
+ * @property string $transaction_rate
  * @property int $tax_type
  * @property string $transaction_tax
  * @property string $gateway_released_at
@@ -62,7 +64,8 @@ class Transaction extends Model
     const TYPE_PARTNER = 5;
     const TYPE_CONVERTAX = 6;
     const TYPE_REFUNDED = 7;
-    const TYPE_CASHBACK = 8;
+//    const TYPE_CASHBACK = 8;
+    const TYPE_CLOUDFOX_PROCESSING = 8;
 
     const TYPE_PERCENTAGE_TAX = 1;
     const TYPE_VALUE_TAX = 2;
@@ -76,46 +79,43 @@ class Transaction extends Model
     const STATUS_REFUSED = 7;
     const STATUS_PENDING_ANTIFRAUD = 8;
     const STATUS_CANCELED_ANTIFRAUD = 9;
-    const STATUS_WAITING_WITHDRAWAL = 10;
+    const STATUS_IN_PROCESS = 10;
+    //const STATUS_WAITING_WITHDRAWAL = 10;
     const STATUS_ANTICIPATED = 12;
     const STATUS_BILLET_REFUNDED = 13;
 
     protected $presenter = TransactionPresenter::class;
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["created_at", "updated_at", "deleted_at"];
 
     protected $fillable = [
-        'sale_id',
-        'gateway_id',
-        'company_id',
-        'user_id',
-        'withdrawal_id',
-        'invitation_id',
-        'value',
-        'type',
-        'status',
-        'status_enum',
-        'release_date',
-        'installment_tax',
-        'checkout_tax',
-        'tax',
-        'tax_type',
-        'transaction_tax',
-        'gateway_released_at',
-        'gateway_transferred',
-        'gateway_transferred_at',
-        'is_waiting_withdrawal',
-        'tracking_required',
-        'is_security_reserve',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "sale_id",
+        "gateway_id",
+        "company_id",
+        "user_id",
+        "withdrawal_id",
+        "invitation_id",
+        "value",
+        "type",
+        "status",
+        "status_enum",
+        "release_date",
+        "installment_tax",
+        "checkout_tax",
+        "tax",
+        "tax_type",
+        "transaction_tax",
+        "gateway_released_at",
+        "gateway_transferred",
+        "gateway_transferred_at",
+        "is_waiting_withdrawal",
+        "tracking_required",
+        "is_security_reserve",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     protected static $logFillable = true;
@@ -178,7 +178,7 @@ class Transaction extends Model
 
     public function productPlanSales(): HasMany
     {
-        return $this->hasMany(ProductPlanSale::class, 'sale_id', 'sale_id');
+        return $this->hasMany(ProductPlanSale::class, "sale_id", "sale_id");
     }
 
     public function gateway(): BelongsTo
@@ -193,6 +193,6 @@ class Transaction extends Model
 
     public function blockReasonSale(): HasMany
     {
-        return $this->hasMany(BlockReasonSale::class, 'sale_id', 'sale_id');
+        return $this->hasMany(BlockReasonSale::class, "sale_id", "sale_id");
     }
 }

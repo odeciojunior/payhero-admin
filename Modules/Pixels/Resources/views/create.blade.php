@@ -1,81 +1,96 @@
-<div style="display: block; width: 100%;" id="select-platform-pixel">
+<div style="display: block; width: 100%;"
+     id="select-platform-pixel">
     <div class="modal-content p-10 s-border-radius">
         <div class="modal-header simple-border-bottom mb-10">
-            <h4 class="col-12 modal-title text-center" id="modal-title"
+            <h4 class="col-12 modal-title text-center"
+                id="modal-title"
                 style="color:#787878; font: normal normal bold 22px Muli;">
                 Novo pixel
             </h4>
-            <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal"
+            <a id="modal-button-close"
+               class="pointer close"
+               role="button"
+               data-dismiss="modal"
                aria-label="Close">
                 <i class="material-icons md-16">close</i>
             </a>
         </div>
         <div class="modal-body">
             <div style='min-height: 100px'>
-                <h4 class="col-12 modal-title text-center mb-15" style="color:#787878">Selecione a plataforma</h4>
+                <h4 class="col-12 modal-title text-center mb-15"
+                    style="color:#787878">Selecione a plataforma</h4>
                 <div class="row text-center">
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
-                            data-value="google_analytics"
-                            alt="logo analytics">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Analytics</div>
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
+                             data-value="google_analytics"
+                             alt="logo analytics">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">Google Analytics</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
-                            data-value="google_analytics_four"
-                            alt="logo analytics four">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
+                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
+                             data-value="google_analytics_four"
+                             alt="logo analytics four">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
-                            data-value="google_adwords"
-                            alt="logo google adwords">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Ads</div>
+                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
+                             data-value="google_adwords"
+                             alt="logo google adwords">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">Google Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
-                            data-value="facebook"
-                            alt="logo facebook">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Facebook</div>
+                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
+                             data-value="facebook"
+                             alt="logo facebook">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">Facebook</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
-                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
-                            data-value="outbrain"
-                            alt="logo outbrain">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Outbrain</div>
+                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
+                             data-value="outbrain"
+                             alt="logo outbrain">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">Outbrain</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
-                            data-value="taboola"
-                            alt="logo taboola">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Taboola</div>
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
+                             data-value="taboola"
+                             alt="logo taboola">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">Taboola</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
-                            data-value="pinterest"
-                            alt="logo pinterest">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Pinterest</div>
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
+                             data-value="pinterest"
+                             alt="logo pinterest">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">Pinterest</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
-                            data-value="uol_ads"
-                            alt="logo uol ads">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">UOL Ads</div>
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
+                             data-value="uol_ads"
+                             alt="logo uol ads">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">UOL Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok"
-                            class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
-                            data-value="tiktok"
-                            alt="logo uol ads">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">TikTok</div>
+                             class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
+                             data-value="tiktok"
+                             alt="logo uol ads">
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">TikTok</div>
                     </div>
                 </div>
                 <div class="row text-center">
@@ -84,7 +99,8 @@
                              class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                              data-value="kwai"
                              alt="logo kwai ads">
-                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Kwai</div>
+                        <div class="mt-10"
+                             style="font: normal normal normal 11px Muli;">Kwai</div>
                     </div>
                 </div>
             </div>
@@ -93,15 +109,22 @@
     </div>
 </div>
 
-<div style="display: none;" id="configure-new-pixel">
+<div style="display: none;"
+     id="configure-new-pixel">
     <div class="modal-content p-10 s-border-radius">
         <div class="modal-header simple-border-bottom mb-10 align-items-center">
-            <div class="col-2" data-toggle="tooltip" data-placement="top" title="Clique para alterar o pixel">
-                <img src="" class="img-logo img-fluid img-selected pointer" alt="image selected">
+            <div class="col-2"
+                 data-toggle="tooltip"
+                 data-placement="top"
+                 title="Clique para alterar o pixel">
+                <img src=""
+                     class="img-logo img-fluid img-selected pointer"
+                     alt="image selected">
             </div>
             <div class="col-7"
                  style="border-left: 1px solid #70707040; border-right: 1px solid #70707040">
-                <h4 class="col-12 modal-title text-center" id="modal-title"
+                <h4 class="col-12 modal-title text-center"
+                    id="modal-title"
                     style="color:#787878; font: normal normal bold 22px Muli;">
                     Cadastrar pixel
                 </h4>
@@ -109,16 +132,24 @@
             <div class="col-3">
                 <div class="switch-holder d-flex align-items-center">
                     <label class='switch'>
-                        <input type="checkbox" value="true" name='status'
-                               class='check pixel-status' checked>
+                        <input type="checkbox"
+                               value="true"
+                               name='status'
+                               class='check pixel-status'
+                               checked>
                         <span class='slider round'></span>
                     </label>
-                    <label for="boleto" style="font: normal normal bold 16px Muli;color: #41DC8F;margin-bottom: 0;">Ativo</label>
+                    <label for="boleto"
+                           style="font: normal normal bold 16px Muli;color: #41DC8F;margin-bottom: 0;">Ativo</label>
                 </div>
             </div>
 
-            <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal"
-               aria-label="Close" style="position: absolute;right: 45px;top: 25px;">
+            <a id="modal-button-close"
+               class="pointer close"
+               role="button"
+               data-dismiss="modal"
+               aria-label="Close"
+               style="position: absolute;right: 45px;top: 25px;">
                 <i class="material-icons md-16">close</i>
             </a>
         </div>
@@ -126,41 +157,54 @@
             <div class="row">
                 <form id='form-register-pixel'>
                     @csrf
-                    <input type="hidden" name="platform" id="platform" value="">
+                    <input type="hidden"
+                           name="platform"
+                           id="platform"
+                           value="">
                     <div class="container-fluid">
-                        <div class="panel" data-plugin="matchHeight">
+                        <div class="panel"
+                             data-plugin="matchHeight">
                             <div style="width:100%">
                                 <div class="row">
                                     {{-- INPUT RADIO FACEBOOK-API --}}
-                                    <div class="form-group col-6" id="select-facebook-integration"
+                                    <div class="form-group col-6"
+                                         id="select-facebook-integration"
                                          style="display:none;">
                                         <label class="font-text">Tipo</label><br>
                                         <label class="col-md-5 form-check-label">
-                                            <input type="radio" name="api-facebook" value="default"
+                                            <input type="radio"
+                                                   name="api-facebook"
+                                                   value="default"
                                                    class="col-md-2 form-check-input select-default-facebook"
                                                    checked>
                                             Padrão
                                         </label>
                                         <label class="col-md-5 form-check-label">
-                                            <input type="radio" name="api-facebook" value="api"
+                                            <input type="radio"
+                                                   name="api-facebook"
+                                                   value="api"
                                                    class="col-md-2 form-check-input select-api-facebook">
                                             API
                                         </label>
                                     </div>
-                                    {{-- INPUT TOKEN FACEBOOK--}}
-                                    <div class="form-group col-6" id="div-facebook-token-api" style="display:none;">
+                                    {{-- INPUT TOKEN FACEBOOK --}}
+                                    <div class="form-group col-6"
+                                         id="div-facebook-token-api"
+                                         style="display:none;">
                                         <label class="font-text">Token Acesso API Conversões</label>
                                         <input name="facebook-token-api"
                                                type="text"
                                                id='facebook-token-api'
                                                class="form-control pixel-code"
-                                               placeholder="Token" maxlength='255'
-                                               readonly
-                                        >
+                                               placeholder="Token"
+                                               maxlength='255'
+                                               readonly>
                                     </div>
                                     {{-- INPUT NAME PURCHASE EVENT TABOOLA --}}
-                                    <div class="form-group col-6 purchase-event-name-div" style="display:none;">
-                                        <label for="purchase-event-name" class="form-control-label">
+                                    <div class="form-group col-6 purchase-event-name-div"
+                                         style="display:none;">
+                                        <label for="purchase-event-name"
+                                               class="form-control-label">
                                             Nome Evento Conversão
                                         </label>
                                         <input name="purchase-event-name"
@@ -171,15 +215,18 @@
                                                maxlength='255'>
                                     </div>
                                     {{-- INPUT URL FACEBOOK API --}}
-                                    <div class="form-group col-12 url_facebook_api_div" style="display:none;">
-                                        <label for="url_facebook_domain" class="font-text">Domínio URL:</label>
+                                    <div class="form-group col-12 url_facebook_api_div"
+                                         style="display:none;">
+                                        <label for="url_facebook_domain"
+                                               class="font-text">Domínio URL:</label>
                                         <input name="url_facebook_domain"
                                                type="text"
                                                class="form-control url_facebook_domain">
                                     </div>
-                                    {{-- INPUT DESCRIPTION--}}
+                                    {{-- INPUT DESCRIPTION --}}
                                     <div class="form-group col-12">
-                                        <label for="name" class="font-text">Descrição</label>
+                                        <label for="name"
+                                               class="font-text">Descrição</label>
                                         <input name="name"
                                                type="text"
                                                class="form-control description"
@@ -188,9 +235,12 @@
                                     </div>
                                     {{-- INPUT CODE PIXEL --}}
                                     <div class="form-group col-6">
-                                        <label id="" for="code-pixel" class="font-text">Código</label>
+                                        <label id=""
+                                               for="code-pixel"
+                                               class="font-text">Código</label>
                                         <div class="input-group">
-                                            <span class='input-group-text' id='input-code-pixel'
+                                            <span class='input-group-text'
+                                                  id='input-code-pixel'
                                                   style='background:#f3f3f3;display:none'>
                                             </span>
                                             <input type="text"
@@ -202,10 +252,15 @@
                                         </div>
                                     </div>
                                     {{-- INPUT CONVERSIONAL LABEL --}}
-                                    <div id="conversional-pixel" class="form-group col-6" style="display: none">
-                                        <label id="" for="conversional-pixel-code" class="font-text">Rótulo de conversão</label>
+                                    <div id="conversional-pixel"
+                                         class="form-group col-6"
+                                         style="display: none">
+                                        <label id=""
+                                               for="conversional-pixel-code"
+                                               class="font-text">Rótulo de conversão</label>
                                         <div class="input-group">
-                                            <span class='input-group-text' id='input-conversional-pixel'
+                                            <span class='input-group-text'
+                                                  id='input-conversional-pixel'
                                                   style='background:#f3f3f3;'>/
                                             </span>
                                             <input type="text"
@@ -218,9 +273,20 @@
                                     </div>
                                     {{-- INPUT PERCENTAGE BOLETO VALUE --}}
                                     <div class="form-group col-3">
-                                        <label for="percentage-boleto-value" class="font-text">% Boleto</label>
+                                        <label for="percentage-boleto-value"
+                                               class="font-text">% Boleto</label>
                                         <input name="value_percentage_purchase_boleto"
                                                id="percentage-boleto-value"
+                                               type="text"
+                                               class="form-control"
+                                               placeholder="100"
+                                               maxlength='3'>
+                                    </div>
+                                    {{-- INPUT PERCENTAGE PIX VALUE --}}
+                                    <div class="form-group col-3">
+                                        <label for="percentage-pix-value" class="font-text">% PIX</label>
+                                        <input name="value_percentage_purchase_pix"
+                                               id="percentage-pix-pixel"
                                                type="text"
                                                class="form-control"
                                                placeholder="100" maxlength='3'>
@@ -228,11 +294,11 @@
 
                                     {{-- INPUT SELECT PLANS --}}
                                     <div class='form-group col-12'>
-                                        <label for="add_pixel_plans" class="form-control-label">
+                                        <label for="add_pixel_plans"
+                                               class="form-control-label">
                                             Plano(s) que executarão o pixel
                                         </label>
-                                        <select
-                                                name="add_pixel_plans[]"
+                                        <select name="add_pixel_plans[]"
                                                 id="add_pixel_plans"
                                                 class="js-states form-control"
                                                 style='width:100%'
@@ -247,50 +313,81 @@
                                     </div>
 
                                     <div class="row single-event d-none mb-20">
-                                        <select name="single-event" id="single-event" class="sirius-select col-8">
-                                            <option value='purchase_all' name='purchase_pix' class='purchase-pix' selected>
+                                        <select name="single-event"
+                                                id="single-event"
+                                                class="sirius-select col-8">
+                                            <option value='purchase_all'
+                                                    name='purchase_pix'
+                                                    class='purchase-pix'
+                                                    selected>
                                                 Purchase - (Todos os métodos de pagamento)
                                             </option>
-                                            <option value='purchase_card' name='purchase_card' class='purchase-card'>
+                                            <option value='purchase_card'
+                                                    name='purchase_card'
+                                                    class='purchase-card'>
                                                 Purchase - (Cartão)
                                             </option>
-                                            <option value='purchase_boleto' name='purchase_boleto' class='purchase-boleto'>
+                                            <option value='purchase_boleto'
+                                                    name='purchase_boleto'
+                                                    class='purchase-boleto'>
                                                 Purchase - (Boleto)
                                             </option>
-                                            <option value='purchase_pix' name='purchase_pix' class='purchase-pix'>
+                                            <option value='purchase_pix'
+                                                    name='purchase_pix'
+                                                    class='purchase-pix'>
                                                 Purchase - (Pix)
                                             </option>
 
-                                            <option value='checkout' name='checkout' class='checkout'>
+                                            <option value='checkout'
+                                                    name='checkout'
+                                                    class='checkout'>
                                                 Entrou no Checkout - (InitiateCheckout)
                                             </option>
-                                            <option value='basic_data' name='basic_data' class='basic-data'>
+                                            <option value='basic_data'
+                                                    name='basic_data'
+                                                    class='basic-data'>
                                                 Informação do cliente - (BasicDataComplete)
                                             </option>
-                                            <option value='payment_info' name='checkout' class='checkout'>
+                                            <option value='payment_info'
+                                                    name='checkout'
+                                                    class='checkout'>
                                                 Informação de pagamento - (AddPaymentInfo)
                                             </option>
-                                            <option value='delivery' name='delivery' class='delivery'>
+                                            <option value='delivery'
+                                                    name='delivery'
+                                                    class='delivery'>
                                                 Informação de endereço - (DeliveryComplete)
                                             </option>
-                                            <option value='coupon' name='coupon' class='coupon'>
+                                            <option value='coupon'
+                                                    name='coupon'
+                                                    class='coupon'>
                                                 Cupom - (AddCouponDiscount)
                                             </option>
-                                            <option value='upsell' name='upsell' class='upsell'>
+                                            <option value='upsell'
+                                                    name='upsell'
+                                                    class='upsell'>
                                                 Entrou no Upsell - (InitiateUpsell)
                                             </option>
-                                            <option value='purchase-upsell' name='purchase-upsell' class='purchase-upsell'>
+                                            <option value='purchase-upsell'
+                                                    name='purchase-upsell'
+                                                    class='purchase-upsell'>
                                                 Purchase - (Upsell - UpsellPurchase)
                                             </option>
                                         </select>
                                         <div class="col-4">
                                             <div class="switch-holder flex-column align-items-start">
-                                                <label for="send_value" class='mb-10'>
+                                                <label for="send_value"
+                                                       class='mb-10'>
                                                     <span>Disparar valor com evento</span>
                                                 </label>
                                                 <label class="switch">
-                                                    <input id="send_value" type="checkbox" value="" name='send_value' class='send-value'>
-                                                    <span id="send_value_switch" class="slider round"></span>
+                                                    <input id="send_value"
+                                                           type="checkbox"
+                                                           value=""
+                                                           name='send_value'
+                                                           class='send-value'>
+                                                    <span id="send_value_switch"
+                                                          class="slider round"></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -299,11 +396,15 @@
                                     <div class="multiple-event row mx-0 mb-20">
                                         <div class="col-3">
                                             <div class="switch-holder">
-                                                <label for="checkout" class='mb-10'>Checkout<br>(venda)</label>
+                                                <label for="checkout"
+                                                       class='mb-10'>Checkout<br>(venda)</label>
                                                 <br>
                                                 <label class="switch">
-                                                    <input type="checkbox" value="" name='checkout'
-                                                           class='checkout' checked>
+                                                    <input type="checkbox"
+                                                           value=""
+                                                           name='checkout'
+                                                           class='checkout'
+                                                           checked>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -313,7 +414,9 @@
                                                 <label for="purchase_card">Purchase<br>(cartão)</label>
                                                 <br>
                                                 <label class='switch'>
-                                                    <input type="checkbox" value="" name='purchase_card'
+                                                    <input type="checkbox"
+                                                           value=""
+                                                           name='purchase_card'
                                                            class='purchase-card'
                                                            checked>
                                                     <span class='slider round'></span>
@@ -324,8 +427,11 @@
                                             <div class="switch-holder">
                                                 <label for="purchase_boleto">Purchase<br>(boleto)</label>
                                                 <label class='switch'>
-                                                    <input type="checkbox" value="" name='purchase_boleto'
-                                                           class='purchase-boleto' checked>
+                                                    <input type="checkbox"
+                                                           value=""
+                                                           name='purchase_boleto'
+                                                           class='purchase-boleto'
+                                                           checked>
                                                     <span class='slider round'></span>
                                                 </label>
                                             </div>
@@ -334,129 +440,132 @@
                                             <div class="switch-holder">
                                                 <label for="pix">Purchase<br>(pix)</label>
                                                 <label class='switch'>
-                                                    <input type="checkbox" value="" name='purchase_pix'
-                                                           class='purchase-pix' checked>
+                                                    <input type="checkbox"
+                                                           value=""
+                                                           name='purchase_pix'
+                                                           class='purchase-pix'
+                                                           checked>
                                                     <span class='slider round'></span>
                                                 </label>
                                             </div>
                                         </div>
 
-{{--                                        <div class="row mx-0 justify-content-between mb-20">--}}
-{{--                                            <div class="row col-6">--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="checkout" class='mb-10'>--}}
-{{--                                                            <span>Entrou no Checkout</span>--}}
-{{--                                                            <br>(InitiateCheckout)</label>--}}
-{{--                                                        <label class="switch">--}}
-{{--                                                            <input type="checkbox" value="" name='checkout' class='checkout' checked>--}}
-{{--                                                            <span class="slider round"></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="checkout" class='mb-10'>--}}
-{{--                                                            <span>Informação do cliente</span>--}}
-{{--                                                            <br>(BasicDataComplete)</label>--}}
-{{--                                                        <label class="switch">--}}
-{{--                                                            <input type="checkbox" value="" name='basic_data' class='basic-data' checked>--}}
-{{--                                                            <span class="slider round"></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="checkout" class='mb-10'>--}}
-{{--                                                            <span>Informação de pagamento</span>--}}
-{{--                                                            <br>(AddPaymentInfo)</label>--}}
-{{--                                                        <label class="switch">--}}
-{{--                                                            <input type="checkbox" value="" name='checkout' class='checkout' checked>--}}
-{{--                                                            <span class="slider round"></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="checkout" class='mb-10'>--}}
-{{--                                                            <span>Informação de endereço</span>--}}
-{{--                                                            <br>(DeliveryComplete)</label>--}}
-{{--                                                        <label class="switch">--}}
-{{--                                                            <input type="checkbox" value="" name='delivery' class='delivery' checked>--}}
-{{--                                                            <span class="slider round"></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="checkout" class='mb-10'>--}}
-{{--                                                            <span>Cupom</span>--}}
-{{--                                                            <br>(AddCouponDiscount)</label>--}}
-{{--                                                        <label class="switch">--}}
-{{--                                                            <input type="checkbox" value="" name='coupon' class='coupon' checked>--}}
-{{--                                                            <span class="slider round"></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="row col-6">--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="purchase_card">--}}
-{{--                                                            <span>Purchase</span>--}}
-{{--                                                            <br>(Cartão - Purchase)</label>--}}
-{{--                                                        <label class='switch'>--}}
-{{--                                                            <input type="checkbox" value="" name='purchase_card' class='purchase-card' checked>--}}
-{{--                                                            <span class='slider round'></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="purchase_boleto">--}}
-{{--                                                            <span>Purchase</span>--}}
-{{--                                                            <br>(Boleto - Purchase)</label>--}}
-{{--                                                        <label class='switch'>--}}
-{{--                                                            <input type="checkbox" value="" name='purchase_boleto' class='purchase-boleto' checked>--}}
-{{--                                                            <span class='slider round'></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="pix">--}}
-{{--                                                            <span>Purchase</span>--}}
-{{--                                                            <br>(Pix - Purchase)</label>--}}
-{{--                                                        <label class='switch'>--}}
-{{--                                                            <input type="checkbox" value="" name='purchase_pix' class='purchase-pix' checked>--}}
-{{--                                                            <span class='slider round'></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="checkout" class='mb-10'>--}}
-{{--                                                            <span>Entrou no Upsell</span>--}}
-{{--                                                            <br>(InitiateUpsell)</label>--}}
-{{--                                                        <label class="switch">--}}
-{{--                                                            <input type="checkbox" value="" name='upsell' class='upsell' checked>--}}
-{{--                                                            <span class="slider round"></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="col-12">--}}
-{{--                                                    <div class="switch-holder">--}}
-{{--                                                        <label for="pix">--}}
-{{--                                                            <span>Purchase</span>--}}
-{{--                                                            <br>(Upsell - UpsellPurchase)</label>--}}
-{{--                                                        <label class="switch">--}}
-{{--                                                            <input type="checkbox" value="" name='purchase-upsell' class='purchase-upsell' checked>--}}
-{{--                                                            <span class="slider round"></span>--}}
-{{--                                                        </label>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
+                                        {{-- <div class="row mx-0 justify-content-between mb-20"> --}}
+                                        {{-- <div class="row col-6"> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="checkout" class='mb-10'> --}}
+                                        {{-- <span>Entrou no Checkout</span> --}}
+                                        {{-- <br>(InitiateCheckout)</label> --}}
+                                        {{-- <label class="switch"> --}}
+                                        {{-- <input type="checkbox" value="" name='checkout' class='checkout' checked> --}}
+                                        {{-- <span class="slider round"></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="checkout" class='mb-10'> --}}
+                                        {{-- <span>Informação do cliente</span> --}}
+                                        {{-- <br>(BasicDataComplete)</label> --}}
+                                        {{-- <label class="switch"> --}}
+                                        {{-- <input type="checkbox" value="" name='basic_data' class='basic-data' checked> --}}
+                                        {{-- <span class="slider round"></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="checkout" class='mb-10'> --}}
+                                        {{-- <span>Informação de pagamento</span> --}}
+                                        {{-- <br>(AddPaymentInfo)</label> --}}
+                                        {{-- <label class="switch"> --}}
+                                        {{-- <input type="checkbox" value="" name='checkout' class='checkout' checked> --}}
+                                        {{-- <span class="slider round"></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="checkout" class='mb-10'> --}}
+                                        {{-- <span>Informação de endereço</span> --}}
+                                        {{-- <br>(DeliveryComplete)</label> --}}
+                                        {{-- <label class="switch"> --}}
+                                        {{-- <input type="checkbox" value="" name='delivery' class='delivery' checked> --}}
+                                        {{-- <span class="slider round"></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="checkout" class='mb-10'> --}}
+                                        {{-- <span>Cupom</span> --}}
+                                        {{-- <br>(AddCouponDiscount)</label> --}}
+                                        {{-- <label class="switch"> --}}
+                                        {{-- <input type="checkbox" value="" name='coupon' class='coupon' checked> --}}
+                                        {{-- <span class="slider round"></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="row col-6"> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="purchase_card"> --}}
+                                        {{-- <span>Purchase</span> --}}
+                                        {{-- <br>(Cartão - Purchase)</label> --}}
+                                        {{-- <label class='switch'> --}}
+                                        {{-- <input type="checkbox" value="" name='purchase_card' class='purchase-card' checked> --}}
+                                        {{-- <span class='slider round'></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="purchase_boleto"> --}}
+                                        {{-- <span>Purchase</span> --}}
+                                        {{-- <br>(Boleto - Purchase)</label> --}}
+                                        {{-- <label class='switch'> --}}
+                                        {{-- <input type="checkbox" value="" name='purchase_boleto' class='purchase-boleto' checked> --}}
+                                        {{-- <span class='slider round'></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="pix"> --}}
+                                        {{-- <span>Purchase</span> --}}
+                                        {{-- <br>(Pix - Purchase)</label> --}}
+                                        {{-- <label class='switch'> --}}
+                                        {{-- <input type="checkbox" value="" name='purchase_pix' class='purchase-pix' checked> --}}
+                                        {{-- <span class='slider round'></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="checkout" class='mb-10'> --}}
+                                        {{-- <span>Entrou no Upsell</span> --}}
+                                        {{-- <br>(InitiateUpsell)</label> --}}
+                                        {{-- <label class="switch"> --}}
+                                        {{-- <input type="checkbox" value="" name='upsell' class='upsell' checked> --}}
+                                        {{-- <span class="slider round"></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- <div class="col-12"> --}}
+                                        {{-- <div class="switch-holder"> --}}
+                                        {{-- <label for="pix"> --}}
+                                        {{-- <span>Purchase</span> --}}
+                                        {{-- <br>(Upsell - UpsellPurchase)</label> --}}
+                                        {{-- <label class="switch"> --}}
+                                        {{-- <input type="checkbox" value="" name='purchase-upsell' class='purchase-upsell' checked> --}}
+                                        {{-- <span class="slider round"></span> --}}
+                                        {{-- </label> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
+                                        {{-- </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -467,7 +576,9 @@
         </div>
 
         <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-success" id="btn-store-pixel"
+            <button type="button"
+                    class="btn btn-success"
+                    id="btn-store-pixel"
                     style="padding: 15px 50px;">Confirmar
             </button>
         </div>

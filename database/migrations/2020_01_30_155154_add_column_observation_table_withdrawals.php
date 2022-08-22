@@ -13,8 +13,8 @@ class AddColumnObservationTableWithdrawals extends Migration
      */
     public function up()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->text('observation')->nullable();
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->text("observation")->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnObservationTableWithdrawals extends Migration
      */
     public function down()
     {
-        Schema::table('withdrawals', function (Blueprint $table) {
-            $table->dropColumn(['observation']);
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->dropColumn(["observation"]);
         });
     }
 }

@@ -14,14 +14,17 @@ class AlterTableUsersAddColumnSecurityReserveRule extends Migration
      */
     public function up()
     {
-        Schema::table('users',function(Blueprint $table){
-            $table->integer('security_reserve_rule')->default(20)->after('has_security_reserve');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->integer("security_reserve_rule")
+                ->default(20)
+                ->after("has_security_reserve");
         });
 
-        $users = User::whereIn('id', [5598, 557, 3477])->get();
-        foreach($users as $user) {
+        $users = User::whereIn("id", [5598, 557, 3477])->get();
+        foreach ($users as $user) {
             $user->update([
-                'security_reserve_rule' => 10
+                "security_reserve_rule" => 10,
             ]);
         }
     }
@@ -33,8 +36,8 @@ class AlterTableUsersAddColumnSecurityReserveRule extends Migration
      */
     public function down()
     {
-        Schema::table('users',function(Blueprint $table){
-            $table->dropColumn(['security_reserve_rule']);
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn(["security_reserve_rule"]);
         });
     }
 }

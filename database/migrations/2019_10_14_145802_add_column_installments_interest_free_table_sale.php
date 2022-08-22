@@ -12,8 +12,11 @@ class AddColumnInstallmentsInterestFreeTableSale extends Migration
      */
     public function up()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->string('installment_tax')->nullable()->after('installments_value');
+        Schema::table("sales", function (Blueprint $table) {
+            $table
+                ->string("installment_tax")
+                ->nullable()
+                ->after("installments_value");
         });
     }
 
@@ -23,9 +26,8 @@ class AddColumnInstallmentsInterestFreeTableSale extends Migration
      */
     public function down()
     {
-        Schema::table('sales', function(Blueprint $table) {
-            $table->dropColumn('installment_tax');
+        Schema::table("sales", function (Blueprint $table) {
+            $table->dropColumn("installment_tax");
         });
     }
 }
-

@@ -11,19 +11,18 @@ use Modules\Core\Entities\Sale;
  */
 class PixExpiredEvent
 {
-  
     /**
      * @var Sale
      */
     public Sale $sale;
-  
+
     /**
      * Create a new event instance.
      * @param Sale $sale
      */
     public function __construct(Sale $sale)
-    {        
-        $this->sale     = $sale;        
+    {
+        $this->sale = $sale;
     }
 
     /**

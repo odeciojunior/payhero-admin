@@ -25,21 +25,21 @@ class UserPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 0:
-                    return 'demo';
+                    return "demo";
                 case 1:
-                    return 'approved';
+                    return "approved";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'demo':
+                case "demo":
                     return 0;
-                case 'approved':
+                case "approved":
                     return 1;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -52,29 +52,33 @@ class UserPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'active';
+                    return "active";
                 case 2:
-                    return 'withdrawal blocked';
+                    return "withdrawal blocked";
                 case 3:
-                    return 'account blocked';
+                    return "account blocked";
                 case 4:
-                    return 'account frozen';
+                    return "account frozen";
+                case 5:
+                    return "account excluded";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'active':
+                case "active":
                     return 1;
-                case 'withdrawal blocked':
+                case "withdrawal blocked":
                     return 2;
-                case 'account blocked':
+                case "account blocked":
                     return 3;
-                case 'account frozen':
+                case "account frozen":
                     return 4;
+                case "account excluded":
+                    return 5;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -87,29 +91,29 @@ class UserPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'analyzing';
+                    return "analyzing";
                 case 3:
-                    return 'approved';
+                    return "approved";
                 case 4:
-                    return 'refused';
+                    return "refused";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'pending':
+                case "pending":
                     return 1;
-                case 'analyzing':
+                case "analyzing":
                     return 2;
-                case 'approved':
+                case "approved":
                     return 3;
-                case 'refused':
+                case "refused":
                     return 4;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -122,29 +126,29 @@ class UserPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return "pending";
                 case 2:
-                    return 'analyzing';
+                    return "analyzing";
                 case 3:
-                    return 'approved';
+                    return "approved";
                 case 4:
-                    return 'refused';
+                    return "refused";
             }
 
-            return '';
+            return "";
         } else {
             switch ($status) {
-                case 'pending':
+                case "pending":
                     return 1;
-                case 'analyzing':
+                case "analyzing":
                     return 2;
-                case 'approved':
+                case "approved":
                     return 3;
-                case 'refused':
+                case "refused":
                     return 4;
             }
 
-            return '';
+            return "";
         }
     }
     /**
@@ -156,21 +160,21 @@ class UserPresenter extends Presenter
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:
-                    return 'personal_document';
+                    return "personal_document";
                 case 2:
-                    return 'address_document';
+                    return "address_document";
             }
 
-            return '';
+            return "";
         } else {
             switch ($type) {
-                case 'personal_document':
+                case "personal_document":
                     return 1;
-                case 'address_document':
+                case "address_document":
                     return 2;
             }
 
-            return '';
+            return "";
         }
     }
 
@@ -182,34 +186,34 @@ class UserPresenter extends Presenter
     {
         switch ($document_type) {
             // USUARIO
-            case 'USUARIO_DOCUMENTO':
+            case "USUARIO_DOCUMENTO":
                 return self::USUARIO_DOCUMENTO;
-            case 'USUARIO_RESIDENCIA':
+            case "USUARIO_RESIDENCIA":
                 return self::USUARIO_RESIDENCIA;
 
             // EMPRESA
-            case 'EMPRESA_EXTRATO':
+            case "EMPRESA_EXTRATO":
                 return self::EMPRESA_EXTRATO;
-            case 'EMPRESA_RESIDENCIA':
+            case "EMPRESA_RESIDENCIA":
                 return self::EMPRESA_RESINDENCIA;
-            case 'EMPRESA_CCMEI':
+            case "EMPRESA_CCMEI":
                 return self::EMPRESA_CCMEI;
         }
-            return '';
+        return "";
     }
 
     public function getAccountType($user_id, $account_owner_id)
     {
         if ($user_id !== $account_owner_id) {
-            return 'collaborator';
+            return "collaborator";
         }
 
-        return 'admin';
+        return "admin";
     }
 
     public function firstName()
     {
-        $name = explode(' ', $this->name);
+        $name = explode(" ", $this->name);
 
         return $name[0];
     }

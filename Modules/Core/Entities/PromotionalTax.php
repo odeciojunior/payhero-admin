@@ -43,21 +43,11 @@ class PromotionalTax extends Model
     use HasFactory;
     use SoftDeletes;
 
-    const PROMOTIONAL_TAX = '3.9';
+    const PROMOTIONAL_TAX = "3.9";
 
-    protected $dates = [
-        'expiration',
-        'created_at',
-        'updated_at',
-    ];
+    protected $dates = ["expiration", "created_at", "updated_at"];
 
-    protected $fillable = [
-        'user_id',
-        'expiration',
-        'tax',
-        'old_tax',
-        'active',
-    ];
+    protected $fillable = ["user_id", "expiration", "tax", "old_tax", "active"];
 
     public function user(): BelongsTo
     {

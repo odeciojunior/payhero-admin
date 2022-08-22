@@ -13,13 +13,15 @@ class AddColumnsToReportanaIntegrations extends Migration
      */
     public function up()
     {
-        Schema::table('reportana_integrations', function (Blueprint $table) {
-            $table->boolean('pix_generated')
+        Schema::table("reportana_integrations", function (Blueprint $table) {
+            $table
+                ->boolean("pix_generated")
                 ->default(true)
-                ->after('credit_card_paid');
-            $table->boolean('pix_paid')
+                ->after("credit_card_paid");
+            $table
+                ->boolean("pix_paid")
                 ->default(true)
-                ->after('pix_generated');
+                ->after("pix_generated");
         });
     }
 
@@ -30,8 +32,8 @@ class AddColumnsToReportanaIntegrations extends Migration
      */
     public function down()
     {
-        Schema::table('reportana_integrations', function (Blueprint $table) {
-            $table->dropColumn(['pix_generated', 'pix_paid']);
+        Schema::table("reportana_integrations", function (Blueprint $table) {
+            $table->dropColumn(["pix_generated", "pix_paid"]);
         });
     }
 }

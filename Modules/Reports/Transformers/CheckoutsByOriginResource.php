@@ -14,8 +14,8 @@ class CheckoutsByOriginResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'origin'       => $this->origin ?? 0,
-            'qtd_checkout' => $this->qtd_checkout ?? 0,
+            "origin" => $this->origin ?? 0,
+            "qtd_checkout" => $this->qtd_checkout ?? 0,
         ];
     }
 }

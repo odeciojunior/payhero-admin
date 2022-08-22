@@ -26,21 +26,21 @@ class RegeneratedBillet extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id',
-        'billet_link',
-        'billet_digitable_line',
-        'billet_due_date',
-        'gateway_transaction_id',
-        'gateway_billet_identificator',
-        'gateway_id',
-        'owner_id',
-        'created_at',
-        'updated_at',
+        "sale_id",
+        "billet_link",
+        "billet_digitable_line",
+        "billet_due_date",
+        "gateway_transaction_id",
+        "gateway_billet_identificator",
+        "gateway_id",
+        "owner_id",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool

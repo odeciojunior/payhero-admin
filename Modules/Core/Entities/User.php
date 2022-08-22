@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -75,6 +76,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $total_commission_value
  * @property int $attendance_average_response_time
  * @property string $mkt_information
+ * @property int|null $company_default
  * @property boolean $block_attendance_balance
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
@@ -103,11 +105,13 @@ class User extends Authenticable
     use Notifiable;
     use PresentableTrait;
     use SoftDeletes;
+    use HasFactory;
 
     public const STATUS_ACTIVE = 1;
     public const STATUS_WITHDRAWAL_BLOCKED = 2;
     public const STATUS_ACCOUNT_BLOCKED = 3;
     public const STATUS_ACCOUNT_FROZEN = 4;
+    public const STATUS_ACCOUNT_EXCLUDED = 5;
 
     public const DOCUMENT_STATUS_PENDING = 1;
     public const DOCUMENT_STATUS_ANALYZING = 2;
@@ -117,75 +121,80 @@ class User extends Authenticable
     public const CELLPHONE_VERIFIED = 1;
     public const EMAIL_VERIFIED = 1;
 
+    public const DEMO_ID = 1;
+
     protected $presenter = UserPresenter::class;
     /**
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = ["id_code"];
     /**
      * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
-        'email_verified',
-        'status',
-        'password',
-        'remember_token',
-        'cellphone',
-        'cellphone_verified',
-        'document',
-        'zip_code',
-        'country',
-        'state',
-        'city',
-        'neighborhood',
-        'street',
-        'number',
-        'complement',
-        'photo',
-        'date_birth',
-        'address_document_status',
-        'personal_document_status',
-        'date_last_document_notification',
-        'last_login',
-        'invites_amount',
-        'account_owner_id',
-        'deleted_project_filter',
-        'id_wall_result',
-        'bureau_result',
-        'sex',
-        'mother_name',
-        'has_sale_before_getnet',
-        'onboarding',
-        'observation',
-        'account_is_approved',
-        'chargeback_rate',
-        'contestation_rate',
-        'account_score',
-        'chargeback_score',
-        'attendance_score',
-        'tracking_score',
-        'attendance_average_response_time',
-        'installment_cashback',
-        'get_faster',
-        'release_count',
-        'has_security_reserve',
-        'security_reserve_rule',
-        'level',
-        'ignore_automatic_benefits_updates',
-        'total_commission_value',
-        'show_old_finances',
-        'mkt_information',
-        'block_attendance_balance',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "name",
+        "email",
+        "email_verified",
+        "status",
+        "password",
+        "remember_token",
+        "cellphone",
+        "cellphone_verified",
+        "document",
+        "zip_code",
+        "country",
+        "state",
+        "city",
+        "neighborhood",
+        "street",
+        "number",
+        "complement",
+        "photo",
+        "date_birth",
+        "address_document_status",
+        "personal_document_status",
+        "date_last_document_notification",
+        "last_login",
+        "invites_amount",
+        "account_owner_id",
+        "deleted_project_filter",
+        "id_wall_result",
+        "bureau_result",
+        "sex",
+        "mother_name",
+        "has_sale_before_getnet",
+        "onboarding",
+        "observation",
+        "account_is_approved",
+        "chargeback_rate",
+        "contestation_rate",
+        "account_score",
+        "chargeback_score",
+        "attendance_score",
+        "tracking_score",
+        "attendance_average_response_time",
+        "installment_cashback",
+        "get_faster",
+        "release_count",
+        "has_security_reserve",
+        "security_reserve_rule",
+        "contestation_penalty",
+        "contestation_penalties_taxes",
+        "level",
+        "ignore_automatic_benefits_updates",
+        "total_commission_value",
+        "show_old_finances",
+        "mkt_information",
+        "company_default",
+        "block_attendance_balance",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var array
      */
-    protected static $logAttributes = ['*'];
+    protected static $logAttributes = ["*"];
     /**
      * @var bool
      */
@@ -204,7 +213,7 @@ class User extends Authenticable
      * Ignora atributos
      * @var array
      */
-    protected static $logAttributesToIgnore = ['last_login', 'updated_at'];
+    protected static $logAttributesToIgnore = ["last_login", "updated_at"];
 
     /**
      * @param Activity $activity
@@ -212,12 +221,14 @@ class User extends Authenticable
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Usuário ' . $this->name . ' foi deletado.';
-        } elseif ($eventName == 'updated') {
-            $activity->description = 'Usuário ' . $this->name . ' foi atualizado.';
-        } elseif ($eventName == 'created') {
-            $activity->description = 'Usuário ' . $this->name . ' foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description =
+                "Usuário " . $this->name . " foi deletado.";
+        } elseif ($eventName == "updated") {
+            $activity->description =
+                "Usuário " . $this->name . " foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Usuário " . $this->name . " foi criado.";
         } else {
             $activity->description = $eventName;
         }
@@ -268,7 +279,7 @@ class User extends Authenticable
      */
     public function invitations()
     {
-        return $this->hasMany(Invitation::class, 'user_invited');
+        return $this->hasMany(Invitation::class, "user_invited");
     }
 
     /**
@@ -276,7 +287,7 @@ class User extends Authenticable
      */
     public function invites()
     {
-        return $this->hasMany(Invitation::class, 'invite');
+        return $this->hasMany(Invitation::class, "invite");
     }
 
     /**
@@ -300,7 +311,7 @@ class User extends Authenticable
      */
     public function sales()
     {
-        return $this->hasMany(Sale::class, 'owner_id');
+        return $this->hasMany(Sale::class, "owner_id");
     }
 
     /**
@@ -340,7 +351,7 @@ class User extends Authenticable
      */
     public function userShoppings()
     {
-        return $this->hasMany(UserShopping::class, 'client');
+        return $this->hasMany(UserShopping::class, "client");
     }
 
     /**
@@ -356,7 +367,12 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'users_projects', 'user_id', 'project_id');
+        return $this->belongsToMany(
+            Project::class,
+            "users_projects",
+            "user_id",
+            "project_id"
+        );
     }
 
     /**
@@ -380,7 +396,7 @@ class User extends Authenticable
      */
     public function userInformations()
     {
-        return $this->belongsTo(UserInformation::class, 'document', 'document');
+        return $this->belongsTo(UserInformation::class, "document", "document");
     }
 
     /**
@@ -414,9 +430,9 @@ class User extends Authenticable
     {
         return $this->belongsToMany(
             Task::class,
-            'tasks_users',
-            'user_id',
-            'task_id'
+            "tasks_users",
+            "user_id",
+            "task_id"
         );
     }
 
@@ -428,5 +444,15 @@ class User extends Authenticable
         return $this->hasMany(UserBenefit::class)
             ->join('benefits', 'benefits.id', '=', 'user_benefits.benefit_id')
             ->select('user_benefits.*', 'benefits.name', 'benefits.description', 'benefits.level');
+    }
+
+    public function getAccountOwnerId()
+    {
+        return $this->company_default == Company::DEMO_ID ? self::DEMO_ID : $this->account_owner_id;
+    }
+
+    public function getAccountIsApproved()
+    {
+        return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;
     }
 }

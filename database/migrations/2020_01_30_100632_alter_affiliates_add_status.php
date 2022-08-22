@@ -13,8 +13,11 @@ class AlterAffiliatesAddStatus extends Migration
      */
     public function up()
     {
-        Schema::table('affiliates', function (Blueprint $table) {
-            $table->tinyInteger('status_enum')->nullable()->after('percentage');
+        Schema::table("affiliates", function (Blueprint $table) {
+            $table
+                ->tinyInteger("status_enum")
+                ->nullable()
+                ->after("percentage");
         });
     }
 
@@ -25,8 +28,8 @@ class AlterAffiliatesAddStatus extends Migration
      */
     public function down()
     {
-        Schema::table('affiliates', function (Blueprint $table) {
-            $table->dropColumn('status_enum');
+        Schema::table("affiliates", function (Blueprint $table) {
+            $table->dropColumn("status_enum");
         });
     }
 }

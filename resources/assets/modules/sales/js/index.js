@@ -123,27 +123,19 @@ $(document).ready(function () {
                     dados += "<td>" + value.client + "</td>";
                     dados += `<td><img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 60px'></td>`;
                     if (value.status == "1") {
-                        dados +=
-                            "<td><span class='badge badge-success'>Aprovada</span></td>";
+                        dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
                     } else if (value.status == "2") {
-                        dados +=
-                            "<td><span class='badge badge-pendente'>Pendente</span></td>";
+                        dados += "<td><span class='badge badge-pendente'>Pendente</span></td>";
                     } else if (value.status == "4") {
-                        dados +=
-                            "<td><span class='badge badge-danger'>Estornada</span></td>";
+                        dados += "<td><span class='badge badge-danger'>Estornada</span></td>";
                     } else if (value.status == "5") {
-                        dados +=
-                            "<td><span class='badge badge-pendente'>Cancelada</span></td>";
+                        dados += "<td><span class='badge badge-pendente'>Cancelada</span></td>";
                     } else if (value.status == "20") {
-                        dados +=
-                            "<td><span class='badge badge-pendente'>Análise Antifraude</span></td>";
+                        dados += "<td><span class='badge badge-pendente'>Análise Antifraude</span></td>";
                     }
                     dados += "<td>" + value.start_date + "</td>";
                     dados += "<td>" + value.end_date + "</td>";
-                    dados +=
-                        "<td style='white-space: nowrap'><b>" +
-                        value.total_paid +
-                        "</b></td>";
+                    dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";
                     dados +=
                         "<td><a role='button' class='detalhes_venda pointer' venda='" +
                         value.id +
@@ -165,13 +157,9 @@ $(document).ready(function () {
                 $(".detalhes_venda").on("click", function () {
                     var venda = $(this).attr("venda");
 
-                    $("#modal_venda_titulo").html(
-                        "Detalhes da venda " + venda + "<br><hr>"
-                    );
+                    $("#modal_venda_titulo").html("Detalhes da venda " + venda + "<br><hr>");
 
-                    $("#modal_venda_body").html(
-                        "<h5 style='width:100%; text-align: center'>Carregando..</h5>"
-                    );
+                    $("#modal_venda_body").html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
                     var data = { sale_id: venda };
 
@@ -180,9 +168,7 @@ $(document).ready(function () {
                         url: "/sales/venda/detalhe",
                         data: data,
                         headers: {
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                                "content"
-                            ),
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                         },
                         error: function () {
                             //
@@ -203,9 +189,7 @@ $(document).ready(function () {
                             $(".copy_link").on("click", function () {
                                 var temp = $("<input>");
                                 $("#nav-tabContent").append(temp);
-                                temp.val(
-                                    $(this).attr("digitable-line")
-                                ).select();
+                                temp.val($(this).attr("digitable-line")).select();
                                 document.execCommand("copy");
                                 temp.remove();
                                 alertCustom("success", "Link copiado!");
@@ -219,9 +203,7 @@ $(document).ready(function () {
                 $(".estornar_venda").on("click", function () {
                     id_venda = $(this).attr("venda");
 
-                    $("#modal_estornar_titulo").html(
-                        "Estornar venda #" + id_venda + " ?"
-                    );
+                    $("#modal_estornar_titulo").html("Estornar venda #" + id_venda + " ?");
                     $("#modal_estornar_body").html("");
                 });
             },
@@ -278,8 +260,7 @@ $(document).ready(function () {
     function pagination(response) {
         $("#pagination").html("");
 
-        var primeira_pagina =
-            "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         $("#pagination").append(primeira_pagina);
 
@@ -306,22 +287,14 @@ $(document).ready(function () {
                     "</button>"
             );
 
-            $("#pagina_" + (response.meta.current_page - x)).on(
-                "click",
-                function () {
-                    atualizar("?page=" + $(this).html());
-                }
-            );
+            $("#pagina_" + (response.meta.current_page - x)).on("click", function () {
+                atualizar("?page=" + $(this).html());
+            });
         }
 
-        if (
-            response.meta.current_page != 1 &&
-            response.meta.current_page != response.meta.last_page
-        ) {
+        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
             var pagina_atual =
-                "<button id='pagina_atual' class='btn nav-btn active'>" +
-                response.meta.current_page +
-                "</button>";
+                "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
             $("#pagination").append(pagina_atual);
 
@@ -342,19 +315,14 @@ $(document).ready(function () {
                     "</button>"
             );
 
-            $("#pagina_" + (response.meta.current_page + x)).on(
-                "click",
-                function () {
-                    atualizar("?page=" + $(this).html());
-                }
-            );
+            $("#pagina_" + (response.meta.current_page + x)).on("click", function () {
+                atualizar("?page=" + $(this).html());
+            });
         }
 
         if (response.meta.last_page != "1") {
             var ultima_pagina =
-                "<button id='ultima_pagina' class='btn nav-btn'>" +
-                response.meta.last_page +
-                "</button>";
+                "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
 
             $("#pagination").append(ultima_pagina);
 

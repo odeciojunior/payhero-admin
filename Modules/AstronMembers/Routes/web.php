@@ -13,10 +13,10 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth','permission:apps'],
-        'as' => 'astronmembers'
+        "middleware" => ["web", "auth", "permission:apps"],
+        "as" => "astronmembers",
     ],
-    function() {
-        Route::resource('/apps/astronmembers', 'AstronMembersController')->only('index');
+    function () {
+        Route::resource("/apps/astronmembers", "AstronMembersController")->only("index");
     }
 );

@@ -32,7 +32,7 @@ class ProjectsResource extends JsonResource
     public function toArray($request): array
     {
         if (isset($this->affiliate_id)) {
-            $affiliate = '';
+            $affiliate = "";
             if ($this->affiliate_id > 0) {
                 $affiliate = new Affiliate();
                 $affiliate->id = $this->affiliate_id;
@@ -41,11 +41,12 @@ class ProjectsResource extends JsonResource
                 $affiliate->status_enum = $this->affiliate_status;
             }
         } else {
-            $affiliate = $this->affiliates[0] ?? '';
+            $affiliate = $this->affiliates[0] ?? "";
         }
         $affiliated = !empty($affiliate);
 
         $notazzConfig = json_decode($this->notazz_configs);
+        $billterReleaseDays = $this->usersProjects->first()->company->gateway_release_money_days;
 
         return [
             'id' => hashids_encode($this->id),
@@ -59,7 +60,7 @@ class ProjectsResource extends JsonResource
             'woocommerce_id' => $this->woocommerce_id,
             'url_page' => $this->url_page,
             'boleto_redirect' => $this->boleto_redirect,
-            'billet_release_days' => $this->usersProjects->first()->company->gateway_release_money_days ?? '',
+            'billet_release_days' => $billterReleaseDays ?? '',
             'card_redirect' => $this->card_redirect,
             'pix_redirect' => $this->pix_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,
@@ -69,32 +70,27 @@ class ProjectsResource extends JsonResource
             "terms_affiliates" => $this->terms_affiliates,
             "cookie_duration" => $this->cookie_duration,
             "automatic_affiliation" => $this->automatic_affiliation,
-            "url_affiliates" => route('affiliates.index', hashids_encode($this->id)),
+            "url_affiliates" => route("affiliates.index", hashids_encode($this->id)),
             "percentage_affiliates" => $this->percentage_affiliates,
-            'affiliated' => $affiliated,
-            'affiliate_id' => hashids_encode($affiliate->id ?? ''),
-            'affiliate_date' => (!empty($affiliate->created_at)) ? (new Carbon($affiliate->created_at))->format(
-                'd/m/Y'
-            ) : '',
+            "affiliated" => $affiliated,
+            "affiliate_id" => hashids_encode($affiliate->id ?? ""),
+            "affiliate_date" => !empty($affiliate->created_at)
+                ? (new Carbon($affiliate->created_at))->format("d/m/Y")
+                : "",
             "status_url_affiliates" => $this->status_url_affiliates,
             "commission_type_enum" => $this->commission_type_enum,
-            "commission_affiliate" => $affiliate->percentage ?? '',
-            "status_affiliate" => $affiliate->status_enum ?? '',
-            "producer" => $this->producer ?? '',
-            'reviews_config_icon_type' => $this->reviews_config_icon_type,
-            'reviews_config_icon_color' => $this->reviews_config_icon_color,
-            'chargeback_count' => $this->chargeback_count ?? 0,
-            'open_tickets' => $this->open_tickets ?? 0,
-            'without_tracking' => $this->without_tracking ?? 0,
-            'approved_sales' => $this->approved_sales ?? 0,
-            'approved_sales_value' => $this->approved_sales_value ? substr_replace(
-                @$this->approved_sales_value,
-                '.',
-                strlen(
-                    @$this->approved_sales_value
-                ) - 2,
-                0
-            ) : 0,
+            "commission_affiliate" => $affiliate->percentage ?? "",
+            "status_affiliate" => $affiliate->status_enum ?? "",
+            "producer" => $this->producer ?? "",
+            "reviews_config_icon_type" => $this->reviews_config_icon_type,
+            "reviews_config_icon_color" => $this->reviews_config_icon_color,
+            "chargeback_count" => $this->chargeback_count ?? 0,
+            "open_tickets" => $this->open_tickets ?? 0,
+            "without_tracking" => $this->without_tracking ?? 0,
+            "approved_sales" => $this->approved_sales ?? 0,
+            "approved_sales_value" => $this->approved_sales_value
+                ? substr_replace(@$this->approved_sales_value, ".", strlen(@$this->approved_sales_value) - 2, 0)
+                : 0,
         ];
     }
 }

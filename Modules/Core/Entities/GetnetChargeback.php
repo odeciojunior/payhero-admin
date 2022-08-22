@@ -56,19 +56,19 @@ use Illuminate\Support\Carbon;
 class GetnetChargeback extends Model
 {
     protected $fillable = [
-        'sale_id',
-        'company_id',
-        'project_id',
-        'user_id',
-        'transaction_date',
-        'installment_date',
-        'adjustment_date',
-        'amount',
-        'body',
-        'tax',
-        'created_at',
-        'updated_at',
-        'deleted_at'
+        "sale_id",
+        "company_id",
+        "project_id",
+        "user_id",
+        "transaction_date",
+        "installment_date",
+        "adjustment_date",
+        "amount",
+        "body",
+        "tax",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     public function company(): BelongsTo
@@ -93,6 +93,6 @@ class GetnetChargeback extends Model
 
     public function getnetChargebackDetails(): HasMany
     {
-        return $this->hasMany(GetnetChargebackDetail::class, 'getnet_chargeback_id');
+        return $this->hasMany(GetnetChargebackDetail::class, "getnet_chargeback_id");
     }
 }

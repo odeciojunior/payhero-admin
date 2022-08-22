@@ -48,23 +48,19 @@ class Domain extends Model
     /**
      * @var array]
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["created_at", "updated_at", "deleted_at"];
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'cloudflare_domain_id',
-        'name',
-        'status',
-        'sendgrid_id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "cloudflare_domain_id",
+        "name",
+        "status",
+        "sendgrid_id",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -92,13 +88,13 @@ class Domain extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
+            case "deleted":
                 $activity->description = "Domínio {$this->name} foi deletedo.";
                 break;
-            case 'updated':
+            case "updated":
                 $activity->description = "Domínio {$this->name} foi atualizado.";
                 break;
-            case 'created':
+            case "created":
                 $activity->description = "Domínio {$this->name} foi criado.";
                 break;
             default:

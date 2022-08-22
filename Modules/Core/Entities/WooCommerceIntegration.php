@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WooCommerceIntegrationPresenter;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -26,7 +27,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class WooCommerceIntegration extends Model
 {
-    use SoftDeletes, FoxModelTrait, PresentableTrait, LogsActivity;
+    use SoftDeletes, FoxModelTrait, PresentableTrait, LogsActivity, HasFactory;
     /**
      * @var string
      */
@@ -35,15 +36,15 @@ class WooCommerceIntegration extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'project_id',
-        'token_user',
-        'token_pass',
-        'url_store',
-        'status',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "user_id",
+        "project_id",
+        "token_user",
+        "token_pass",
+        "url_store",
+        "status",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -70,12 +71,12 @@ class WooCommerceIntegration extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Integração com woocommerce foi deleteda.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Integração com woocommerce foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Integração com woocommerce foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Integração com woocommerce foi deleteda.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Integração com woocommerce foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Integração com woocommerce foi criado.";
         } else {
             $activity->description = $eventName;
         }

@@ -23,32 +23,53 @@ class UnicodropApiController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
+            $user = auth()->user();
+            $ownerId = $user->getAccountOwnerId();
 
-            $unicodropIntegrations = UnicodropIntegration::where('user_id', auth()->user()->account_owner_id)
-                                                               ->with('project')
-                                                               ->get();
+            $unicodropIntegrations = UnicodropIntegration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             $projects = collect();
-            $userProjects = UserProject::where('user_id', auth()->user()->account_owner_id)->get();
+            $userProjects = UserProject::where([[
+                'user_id', $ownerId],[
+                'company_id', $user->company_default
+            ]])->orderBy('id', 'desc')->get();
+
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $project = $userProject->project()->where('status', Project::STATUS_ACTIVE)->first();
+                    $project = $userProject
+                        ->project()
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
-                                        'integrations' => UnicodropResource::collection($unicodropIntegrations),
-                                        'projects'     => ProjectsSelectResource::collection($projects),
-                                    ]);
+                "integrations" => UnicodropResource::collection($unicodropIntegrations),
+                "projects" => ProjectsSelectResource::collection($projects),
+            ]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu algum erro'], 400);
+            return response()->json(["message" => "Ocorreu algum erro"], 400);
         }
     }
 
@@ -58,7 +79,7 @@ class UnicodropApiController extends Controller
      */
     public function create()
     {
-        return view('unicodrop::create');
+        return view("unicodrop::create");
     }
 
     /**
@@ -69,54 +90,53 @@ class UnicodropApiController extends Controller
     public function store(Request $request)
     {
         try {
-            $data      = $request->all();
-            $projectId = hashids_decode($data['project_id']);
+            $data = $request->all();
+            $projectId = hashids_decode($data["project_id"]);
 
             if (empty($projectId)) {
-                return response()->json(['message' => 'Ocorreu um erro ao realizar a integração',], 400);
+                return response()->json(["message" => "Ocorreu um erro ao realizar a integração"], 400);
             }
 
-            $integration = UnicodropIntegration::where('project_id', $projectId)->first();
+            $integration = UnicodropIntegration::where("project_id", $projectId)->first();
             if (!empty($integration)) {
-                return response()->json(['message' => 'Projeto já integrado',], 400);
+                return response()->json(["message" => "Projeto já integrado"], 400);
             }
 
-            if (empty($data['boleto_generated'])) {
-                $data['boleto_generated'] = 0;
+            if (empty($data["boleto_generated"])) {
+                $data["boleto_generated"] = 0;
             }
-            if (empty($data['boleto_paid'])) {
-                $data['boleto_paid'] = 0;
+            if (empty($data["boleto_paid"])) {
+                $data["boleto_paid"] = 0;
             }
-            if (empty($data['credit_card_paid'])) {
-                $data['credit_card_paid'] = 0;
+            if (empty($data["credit_card_paid"])) {
+                $data["credit_card_paid"] = 0;
             }
-            if (empty($data['credit_card_refused'])) {
-                $data['credit_card_refused'] = 0;
+            if (empty($data["credit_card_refused"])) {
+                $data["credit_card_refused"] = 0;
             }
-            if (empty($data['abandoned_cart'])) {
-                $data['abandoned_cart'] = 0;
+            if (empty($data["abandoned_cart"])) {
+                $data["abandoned_cart"] = 0;
             }
-            if (empty($data['pix'])) {
-                $data['pix'] = 0;
+            if (empty($data["pix"])) {
+                $data["pix"] = 0;
             }
 
             UnicodropIntegration::create([
-                                            'token'               => $data['token'],
-                                            'billet_generated'    => $data['boleto_generated'],
-                                            'billet_paid'         => $data['boleto_paid'],
-                                            'credit_card_refused' => $data['credit_card_refused'],
-                                            'credit_card_paid'    => $data['credit_card_paid'],
-                                            'abandoned_cart'      => $data['abandoned_cart'],
-                                            'pix'                 => $data['pix'],
-                                            'project_id'          => $projectId,
-                                            'user_id'             => auth()->user()->account_owner_id,
-                                        ]);
+                "token" => $data["token"],
+                "billet_generated" => $data["boleto_generated"],
+                "billet_paid" => $data["boleto_paid"],
+                "credit_card_refused" => $data["credit_card_refused"],
+                "credit_card_paid" => $data["credit_card_paid"],
+                "abandoned_cart" => $data["abandoned_cart"],
+                "pix" => $data["pix"],
+                "project_id" => $projectId,
+                "user_id" => auth()->user()->account_owner_id,
+            ]);
 
-            return response()->json(['message' => 'Integração criada com sucesso!',], 200);
-
+            return response()->json(["message" => "Integração criada com sucesso!"], 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu algum erro'], 400);
+            return response()->json(["message" => "Ocorreu algum erro"], 400);
         }
     }
 
@@ -134,7 +154,7 @@ class UnicodropApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Ocorreu algum erro'], 400);
+            return response()->json(["message" => "Ocorreu algum erro"], 400);
         }
     }
 
@@ -151,42 +171,42 @@ class UnicodropApiController extends Controller
             $integrationId = hashids_decode($id);
             $integration = UnicodropIntegration::find($integrationId);
 
-            if (empty($data['boleto_generated'])) {
-                $data['boleto_generated'] = 0;
+            if (empty($data["boleto_generated"])) {
+                $data["boleto_generated"] = 0;
             }
-            if (empty($data['boleto_paid'])) {
-                $data['boleto_paid'] = 0;
+            if (empty($data["boleto_paid"])) {
+                $data["boleto_paid"] = 0;
             }
-            if (empty($data['credit_card_paid'])) {
-                $data['credit_card_paid'] = 0;
+            if (empty($data["credit_card_paid"])) {
+                $data["credit_card_paid"] = 0;
             }
-            if (empty($data['credit_card_refused'])) {
-                $data['credit_card_refused'] = 0;
+            if (empty($data["credit_card_refused"])) {
+                $data["credit_card_refused"] = 0;
             }
-            if (empty($data['abandoned_cart'])) {
-                $data['abandoned_cart'] = 0;
+            if (empty($data["abandoned_cart"])) {
+                $data["abandoned_cart"] = 0;
             }
-            if (empty($data['abandoned_cart'])) {
-                $data['abandoned_cart'] = 0;
+            if (empty($data["abandoned_cart"])) {
+                $data["abandoned_cart"] = 0;
             }
-            if (empty($data['pix'])) {
-                $data['pix'] = 0;
+            if (empty($data["pix"])) {
+                $data["pix"] = 0;
             }
 
             $integration->update([
-                                    'token'               => $data['token'],
-                                    'billet_generated'    => $data['boleto_generated'],
-                                    'billet_paid'         => $data['boleto_paid'],
-                                    'credit_card_refused' => $data['credit_card_refused'],
-                                    'credit_card_paid'    => $data['credit_card_paid'],
-                                    'abandoned_cart'      => $data['abandoned_cart'],
-                                    'pix'                 => $data['pix'],
-                                ]);
+                "token" => $data["token"],
+                "billet_generated" => $data["boleto_generated"],
+                "billet_paid" => $data["boleto_paid"],
+                "credit_card_refused" => $data["credit_card_refused"],
+                "credit_card_paid" => $data["credit_card_paid"],
+                "abandoned_cart" => $data["abandoned_cart"],
+                "pix" => $data["pix"],
+            ]);
 
-            return response()->json(['message' => 'Integração atualizada com sucesso',], 200);
+            return response()->json(["message" => "Integração atualizada com sucesso"], 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu um erro ao atualizar a integração',], 400);
+            return response()->json(["message" => "Ocorreu um erro ao atualizar a integração"], 400);
         }
     }
 
@@ -202,16 +222,18 @@ class UnicodropApiController extends Controller
             $integration = UnicodropIntegration::find($integrationId);
 
             if (empty($integration)) {
-                return response()->json(['message' => 'Erro ao tentar remover Integração',], 400);
+                return response()->json(["message" => "Erro ao tentar remover Integração"], 400);
             }
 
             $integration->delete();
 
-            return response()->json(['message' => 'Integração Removida com sucesso!',], 200);
-
+            return response()->json(["message" => "Integração Removida com sucesso!"], 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',], 400);
+            return response()->json(
+                ["message" => "Ocorreu um erro ao tentar remover, tente novamente mais tarde!"],
+                400
+            );
         }
     }
 }

@@ -13,12 +13,12 @@ class AlterTablesCompaniesAndTransactionsChangeTransactionRateCollumn extends Mi
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->renameColumn('transaction_rate', 'transaction_tax');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->renameColumn("transaction_rate", "transaction_tax");
         });
 
-        Schema::table('companies', function (Blueprint $table) {
-            $table->renameColumn('transaction_rate', 'transaction_tax');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->renameColumn("transaction_rate", "transaction_tax");
         });
     }
 
@@ -29,12 +29,12 @@ class AlterTablesCompaniesAndTransactionsChangeTransactionRateCollumn extends Mi
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->renameColumn('transaction_tax', 'transaction_rate');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->renameColumn("transaction_tax", "transaction_rate");
         });
 
-        Schema::table('companies', function (Blueprint $table) {
-            $table->renameColumn('transaction_tax', 'transaction_rate');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->renameColumn("transaction_tax", "transaction_rate");
         });
     }
 }

@@ -13,13 +13,19 @@ class CreateSaleContestationFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_contestation_files', function (Blueprint $table) {
+        Schema::create("sale_contestation_files", function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('contestation_sale_id')->unsigned();
-            $table->foreign('contestation_sale_id')->references('id')->on('sale_contestations');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->enum('type', ['NOTA_FISCAL', 'POLITICA_VENDA', 'ENTREGA', 'INFO_ACORDO', 'OUTROS']);
+            $table->bigInteger("contestation_sale_id")->unsigned();
+            $table
+                ->foreign("contestation_sale_id")
+                ->references("id")
+                ->on("sale_contestations");
+            $table->integer("user_id")->unsigned();
+            $table
+                ->foreign("user_id")
+                ->references("id")
+                ->on("users");
+            $table->enum("type", ["NOTA_FISCAL", "POLITICA_VENDA", "ENTREGA", "INFO_ACORDO", "OUTROS"]);
             $table->string("file")->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -33,6 +39,6 @@ class CreateSaleContestationFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_contestation_files');
+        Schema::dropIfExists("sale_contestation_files");
     }
 }

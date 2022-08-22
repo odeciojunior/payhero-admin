@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\ProductService;
@@ -24,32 +25,40 @@ class ProcessShopifyTrackingPostbackJob implements ShouldQueue
     {
         $this->projectId = $projectId;
         $this->postback = $postback;
-        $this->allOnQueue('postback-shopify-tracking');
+        $this->allOnQueue("postback-shopify-tracking");
     }
 
     public function handle()
     {
+        PostbackLog::create([
+            "origin" => 5,
+            "data" => json_encode($this->postback),
+            "description" => "shopify-tracking",
+        ]);
+
+        if(env("APP_NAME") != "Cloudfox-cron") {
+            sleep(1);
+        }
+
         $productService = new ProductService();
         $trackingService = new TrackingService();
 
-        if (!isset($this->postback['id'])) {
+        if (!isset($this->postback["id"])) {
             return;
         }
 
-        $shopifyOrder = $this->postback['id'];
+        $shopifyOrder = $this->postback["id"];
 
-        $sales = Sale::with([
-            'productsPlansSale.tracking',
-            'productsPlansSale.product'
-        ])->where('shopify_order', $shopifyOrder)
-            ->where('project_id', $this->projectId)
-            ->where('status', Sale::STATUS_APPROVED)
+        $sales = Sale::with(["productsPlansSale.tracking", "productsPlansSale.product"])
+            ->where("shopify_order", $shopifyOrder)
+            ->where("project_id", $this->projectId)
+            ->where("status", Sale::STATUS_APPROVED)
             ->get();
 
         foreach ($sales as $sale) {
             try {
                 $saleProducts = $productService->getProductsBySale($sale);
-                foreach ($this->postback['fulfillments'] as $fulfillment) {
+                foreach ($this->postback["fulfillments"] as $fulfillment) {
                     $trackingCodes = $fulfillment["tracking_numbers"];
                     if (!empty($trackingCodes)) {
                         $lineItems = $fulfillment["line_items"];
@@ -64,18 +73,22 @@ class ProcessShopifyTrackingPostbackJob implements ShouldQueue
                                 $trackingCode = $trackingCodes[0];
                             }
                             //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
-                            $products = $saleProducts->where('shopify_variant_id', $line_item["variant_id"])
-                                ->where('amount', $line_item["quantity"])
-                                ->where('type_enum', (new Product)->present()->getType('physical'));
+                            $products = $saleProducts
+                                ->where("shopify_variant_id", $line_item["variant_id"])
+                                ->where("amount", $line_item["quantity"])
+                                ->where("type_enum", (new Product())->present()->getType("physical"));
                             if (!$products->count()) {
                                 $products = $saleProducts
-                                    ->where('name', $line_item["title"])
-                                    ->where('description', $line_item["variant_title"])
-                                    ->where('amount', $line_item["quantity"]);
+                                    ->where("name", $line_item["title"])
+                                    ->where("description", $line_item["variant_title"])
+                                    ->where("amount", $line_item["quantity"]);
                             }
                             if ($products->count()) {
                                 foreach ($products as $product) {
-                                    $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
+                                    $trackingService->createOrUpdateTracking(
+                                        $trackingCode,
+                                        $product->product_plan_sale_id
+                                    );
                                 }
                             }
                         }

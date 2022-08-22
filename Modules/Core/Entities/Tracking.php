@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
@@ -29,7 +30,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Tracking extends Model
 {
-    use PresentableTrait, LogsActivity;
+    use PresentableTrait, LogsActivity, HasFactory;
 
     /** Tracking Status */
     const STATUS_POSTED = 1;
@@ -54,22 +55,22 @@ class Tracking extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'product_plan_sale_id',
-        'sale_id',
-        'product_id',
-        'amount',
-        'delivery_id',
-        'tracking_code',
-        'tracking_status_enum',
-        'system_status_enum',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "product_plan_sale_id",
+        "sale_id",
+        "product_id",
+        "amount",
+        "delivery_id",
+        "tracking_code",
+        "tracking_status_enum",
+        "system_status_enum",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -93,14 +94,14 @@ class Tracking extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         switch ($eventName) {
-            case 'deleted':
-                $activity->description = 'Código rastreio foi deletedo.';
+            case "deleted":
+                $activity->description = "Código rastreio foi deletedo.";
                 break;
-            case 'updated':
-                $activity->description = 'Código de rastreio foi atualizado.';
+            case "updated":
+                $activity->description = "Código de rastreio foi atualizado.";
                 break;
-            case 'created':
-                $activity->description = 'Código de rastreio foi criado.';
+            case "created":
+                $activity->description = "Código de rastreio foi criado.";
                 break;
             default:
                 $activity->description = $eventName;

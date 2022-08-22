@@ -25,7 +25,7 @@ class PostBackServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -45,12 +45,13 @@ class PostBackServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('postback.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'postback'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("postback.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "postback");
     }
 
     /**
@@ -60,17 +61,26 @@ class PostBackServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/postback');
+        $viewPath = resource_path("views/modules/postback");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/postback';
-        }, \Config::get('view.paths')), [$sourcePath]), 'postback');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/postback";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "postback"
+        );
     }
 
     /**
@@ -80,12 +90,12 @@ class PostBackServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/postback');
+        $langPath = resource_path("lang/modules/postback");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'postback');
+            $this->loadTranslationsFrom($langPath, "postback");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'postback');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "postback");
         }
     }
 
@@ -95,8 +105,8 @@ class PostBackServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production")) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

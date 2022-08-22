@@ -1,4 +1,25 @@
 $(document).ready(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        loadOnAny('.page-content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                $("#project-affiliate").find('option').not(':first').remove();
+                $("#project-affiliate-request").find('option').not(':first').remove();
+                getProjects('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        getProjects();
+    });
+
     var badgeAffiliateRequest = {
         1: "primary",
         2: "warning",
@@ -11,27 +32,47 @@ $(document).ready(function () {
     };
 
     $("#btn-filter-affiliates").on("click", function () {
-        getAffiliates();
+        loadData($("#btn-filter-affiliates"), 1);
     });
 
     $("#btn-filter-affiliates-request").on("click", function () {
-        getAffiliatesRequest();
+        loadData($("#btn-filter-affiliates-request"), 2);
     });
 
-    getProjects();
+    function loadData(elementButton, elementFunction) {
+        if (searchIsLocked(elementButton) != "true") {
+            lockSearch(elementButton);
+            console.log(elementButton.attr("block_search"));
 
-    function getProjects() {
-        loadingOnScreen();
+            switch (elementFunction) {
+                case 1:
+                    getAffiliates();
+                    break;
+                case 2:
+                    getAffiliatesRequest();
+                    break;
+            }
+        }
+    }
+
+    function getProjects(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('.page-content');
+
+        $('#tab-affiliates').trigger('click');
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?affiliate=true&status=active",
+            url: "/api/projects?affiliate=true&status=active&company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -74,7 +115,7 @@ $(document).ready(function () {
                         })
                     );
                 }
-
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
             },
         });
@@ -93,19 +134,9 @@ $(document).ready(function () {
         name = name ? name : null;
 
         if (link == null) {
-            link =
-                "/api/affiliates/getaffiliates?project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/affiliates/getaffiliates?project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         } else {
-            link =
-                "/api/affiliates/getaffiliates" +
-                link +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/affiliates/getaffiliates" + link + "&project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         }
 
         loadOnTable("#body-table-affiliates", ".table-affiliate");
@@ -131,8 +162,8 @@ $(document).ready(function () {
                     );
                 } else {
                     $.each(response.data, function (index, value) {
-                        if (value.percentage=='' || value.percentage=='0')
-                            value.percentage='0%';
+                        if (value.percentage == "" || value.percentage == "0")
+                            value.percentage = "0%";
                         data = "";
                         data += "<tr>";
                         data +=
@@ -204,7 +235,7 @@ $(document).ready(function () {
                                     ).attr("content"),
                                     Accept: "application/json",
                                 },
-                                error: function (_error3) {
+                                error: (function (_error3) {
                                     function error() {
                                         return _error3.apply(this, arguments);
                                     }
@@ -214,10 +245,9 @@ $(document).ready(function () {
                                     };
 
                                     return error;
-                                }(function (response) {
+                                })(function (response) {
                                     loadingOnScreenRemove();
                                     errorAjaxResponse(response);
-
                                 }),
                                 success: function (data) {
                                     loadingOnScreenRemove();
@@ -247,8 +277,11 @@ $(document).ready(function () {
                             errorAjaxResponse(response);
                         },
                         success: function success(response) {
-                            if (response.data.percentage=='' || response.data.percentage=='0')
-                                response.data.percentage='0%';
+                            if (
+                                response.data.percentage == "" ||
+                                response.data.percentage == "0"
+                            )
+                                response.data.percentage = "0%";
                             $("#modal-edit-affiliate .affiliate-id").val(
                                 affiliate
                             );
@@ -290,8 +323,11 @@ $(document).ready(function () {
                             errorAjaxResponse(response);
                         },
                         success: function success(response) {
-                            if (response.data.percentage=='' || response.data.percentage=='0')
-                                response.data.percentage='0%';
+                            if (
+                                response.data.percentage == "" ||
+                                response.data.percentage == "0"
+                            )
+                                response.data.percentage = "0%";
                             $("#modal-show-affiliate .affiliate-name").text(
                                 response.data.name
                             );
@@ -335,10 +371,8 @@ $(document).ready(function () {
 
                 $("#modal-edit-affiliate .btn-update").unbind("click");
                 $("#modal-edit-affiliate .btn-update").on("click", function () {
-                    let formData = new FormData(
-                        document.getElementById("form-update-affiliate")
-                    );
-                    console.log(formData);
+                    let formData = new FormData(document.getElementById("form-update-affiliate"));
+                    //console.log(formData);
                     // formData.append("integration_id", integrationId);
 
                     let affiliate = $(
@@ -374,6 +408,9 @@ $(document).ready(function () {
                     });
                 });
             },
+            complete: (response) => {
+                unlockSearch($("#btn-filter-affiliates"));
+            },
         });
     }
     function getAffiliatesRequest() {
@@ -389,19 +426,9 @@ $(document).ready(function () {
         name = name ? name : null;
 
         if (link == null) {
-            link =
-                "/api/affiliates/getaffiliaterequests?project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/affiliates/getaffiliaterequests?project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         } else {
-            link =
-                "/api/affiliates/getaffiliaterequests" +
-                link +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/affiliates/getaffiliaterequests" + link + "&project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         }
 
         loadOnTable(
@@ -512,6 +539,9 @@ $(document).ready(function () {
                         },
                     });
                 });
+            },
+            complete: (response) => {
+                unlockSearch($("#btn-filter-affiliates-request"));
             },
         });
     }

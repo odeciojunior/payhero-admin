@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Core\Events;
-
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;

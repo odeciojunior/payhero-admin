@@ -14,11 +14,12 @@ class AddColumnE2eIdToPixChargesTableFailedJobs extends Migration
      */
     public function up()
     {
-
-        Schema::table('pix_charges', function (Blueprint $table) {
-            $table->string('e2eId')->nullable()->after('txid');
+        Schema::table("pix_charges", function (Blueprint $table) {
+            $table
+                ->string("e2eId")
+                ->nullable()
+                ->after("txid");
         });
-
     }
 
     /**
@@ -28,8 +29,8 @@ class AddColumnE2eIdToPixChargesTableFailedJobs extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('pix_charges');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("pix_charges");
         });
     }
 }

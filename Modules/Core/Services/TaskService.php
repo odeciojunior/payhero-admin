@@ -25,7 +25,7 @@ class TaskService
 
     public function checkCompletedTask(User $user, Task $task): bool
     {
-        $hasTask = $user->tasks->contains('id', $task->id);
+        $hasTask = $user->tasks->contains("id", $task->id);
         if ($hasTask) {
             return true;
         }
@@ -44,7 +44,7 @@ class TaskService
              * Task ids less than 5 (Task::TASK_FIRST_1000_REVENUE) will be filled as completed when
              * another task with id greater than its is completed
              */
-            $user->load('tasks');
+            $user->load("tasks");
             for ($id = $task->id <= Task::TASK_FIRST_1000_REVENUE ? $task->id : 0; $id > 0; $id--) {
                 if (!$user->tasks->contains($id)) {
                     $user->tasks()->attach(Task::find($id));
@@ -53,7 +53,7 @@ class TaskService
             $user->update();
 
             //Necessary tasks reloading
-            $user->load('tasks');
+            $user->load("tasks");
             if (!$user->tasks->contains($task)) {
                 $user->tasks()->attach($task);
                 $user->update();
@@ -67,16 +67,18 @@ class TaskService
 
     public function getCurrentUserTasks(User $user): array
     {
-        $tasks = (new Task)->select('id', 'name', 'level', 'priority')
-            ->where('level', $user->level)
-            ->orderBy('priority')
+        $tasks = (new Task())
+            ->select("id", "name", "level", "priority")
+            ->where("level", $user->level)
+            ->orderBy("priority")
             ->get();
         $userTasks = $user->tasks();
         $completedTasks = [];
         $uncompletedTasks = [];
+        $userTasksIds = $userTasks->pluck('id')->toArray();
 
         foreach ($tasks as $task) {
-            if (in_array($task->id, $userTasks->pluck('id')->toArray())) {
+            if (in_array($task->id, $userTasksIds)) {
                 $task->status = 1;
                 $completedTasks[] = $task;
             } else {

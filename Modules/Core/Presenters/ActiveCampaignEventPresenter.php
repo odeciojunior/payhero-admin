@@ -6,54 +6,51 @@ use Laracasts\Presenter\Presenter;
 
 class ActiveCampaignEventPresenter extends Presenter
 {
-
-    public function getEvent($event) {
-
-        if(is_numeric($event)){
+    public function getEvent($event)
+    {
+        if (is_numeric($event)) {
             switch ($event) {
                 case 1:
-                    return 'billet_generated';
+                    return "billet_generated";
                 case 2:
-                    return 'billet_paid';
-                case 3: 
-                    return 'credit_paid';
-                case 4: 
-                    return 'abandoned_cart';
-                case 5: 
-                    return 'credit_refused';
+                    return "billet_paid";
+                case 3:
+                    return "credit_paid";
+                case 4:
+                    return "abandoned_cart";
+                case 5:
+                    return "credit_refused";
                 case 6:
-                    return 'tracking';
+                    return "tracking";
             }
-            return '';
-        }
-        else{
+            return "";
+        } else {
             switch ($event) {
-                case 'billet_generated':
+                case "billet_generated":
                     return 1;
-                case 'billet_paid':
+                case "billet_paid":
                     return 2;
-                case 'credit_paid':
+                case "credit_paid":
                     return 3;
-                case 'abandoned_cart': 
+                case "abandoned_cart":
                     return 4;
-                case 'credit_refused': 
+                case "credit_refused":
                     return 5;
-                case 'tracking':
+                case "tracking":
                     return 6;
             }
-            return '';
+            return "";
         }
-
     }
 
-    public function getEvents() {
+    public function getEvents()
+    {
         return [
-            1 => 'billet_generated',
-            2 => 'billet_paid',
-            3 => 'credit_paid',
-            4 => 'abandoned_cart',
-            5 => 'credit_refused',
+            1 => "billet_generated",
+            2 => "billet_paid",
+            3 => "credit_paid",
+            4 => "abandoned_cart",
+            5 => "credit_refused",
         ];
     }
-
 }

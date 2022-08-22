@@ -13,8 +13,12 @@ class AlterPushNotificationTableAddColumnWithdrawalId extends Migration
      */
     public function up()
     {
-        Schema::table('push_notifications', function(Blueprint $table) {
-            $table->unsignedBigInteger('withdrawal_id')->index()->nullable()->after('user_id');
+        Schema::table("push_notifications", function (Blueprint $table) {
+            $table
+                ->unsignedBigInteger("withdrawal_id")
+                ->index()
+                ->nullable()
+                ->after("user_id");
         });
     }
 
@@ -25,8 +29,8 @@ class AlterPushNotificationTableAddColumnWithdrawalId extends Migration
      */
     public function down()
     {
-        Schema::table('push_notifications', function (Blueprint $table) {
-            $table->dropColumn(['withdrawal_id']);
+        Schema::table("push_notifications", function (Blueprint $table) {
+            $table->dropColumn(["withdrawal_id"]);
         });
     }
 }

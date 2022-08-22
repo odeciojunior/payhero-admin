@@ -14,9 +14,9 @@ class SalesByOriginResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'origin'       => $this->origin ?? 0,
-            'sales_amount' => $this->sales_amount ?? 0,
-            'value'        => foxutils()->formatMoney($this->value / 100),
+            "origin" => $this->origin ?? 0,
+            "sales_amount" => $this->sales_amount ?? 0,
+            "value" => foxutils()->formatMoney($this->value / 100),
         ];
     }
 }

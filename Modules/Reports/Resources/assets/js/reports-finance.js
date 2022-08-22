@@ -1,23 +1,32 @@
-$(function() {
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
+	$("#select_projects").val($("#select_projects option:first").val());
+    $(
+        "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
+    ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
     loadingOnScreen();
-    exportReports();
 
-    getProjects();
+    $("#select_projects").html('');
+    sessionStorage.removeItem('info');
 
-    changeCompany();
-    changeCalendar();
-
-    if(sessionStorage.info) {
-        let info = JSON.parse(sessionStorage.getItem('info'));
-        $('input[name=daterange]').val(info.calendar);
-    }
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            if(!isEmpty(data2.company_default_projects)){
+                showFiltersInReports(true);
+                getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+                showFiltersInReports(false);
+            }
+        });
+	});
 });
 
-let resumeUrl = '/api/reports/resume';
-let financesResumeUrl = '/api/reports/finances';
-
-function getProjects() {
-    $.ajax({
+window.fillProjectsSelect = function(){
+    return $.ajax({
         method: "GET",
         url: "/api/projects?select=true",
         dataType: "json",
@@ -26,46 +35,78 @@ function getProjects() {
             Accept: "application/json",
         },
         error: function error(response) {
-            loadingOnScreenRemove();
-            $("#modal-content").hide();
-            errorAjaxResponse(response);
+            console.log('erro')
+            console.log(response)
         },
         success: function success(response) {
-            if (!isEmpty(response.data)) {
-                $(".div-filters").show();
-                $("#project-empty").hide();
-                $("#project-not-empty").show();
-                $("#export-excel").show();
-
-                $.each(response.data, function (i, project) {
-                    $("#select_projects").append(
-                        $("<option>", {
-                            value: project.id,
-                            text: project.name,
-                        })
-                    );
-
-                    removeDuplcateItem("#select_projects option");
-                });
-
-                if(sessionStorage.info) {
-                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-                }
-
-                company = $("#select_projects").val();
-
-                updateReports();
-            } else {
-                $(".div-filters").hide();
-                $("#export-excel").hide();
-                $("#project-not-empty").hide();
-                $("#project-empty").show();
-            }
-
-            loadingOnScreenRemove();
+            return response;
         }
     });
+}
+
+$(function() {
+    loadingOnScreen();
+    exportReports();
+
+    changeCompany();
+    changeCalendar();
+
+    if (sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem("info"));
+        $("input[name=daterange]").val(info.calendar);
+    }
+
+    getCompaniesAndProjects().done( function (data2){
+        if(!isEmpty(data2.company_default_projects)){
+            showFiltersInReports(true);
+            getProjects(data2.companies);
+        }
+        else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            showFiltersInReports(false);
+        }
+    });
+});
+
+let resumeUrl = "/api/reports/resume";
+let financesResumeUrl = "/api/reports/finances";
+
+function getProjects(companies) {
+
+    loadingOnScreen();
+    $(".div-filters").hide();
+    $("#project-empty").hide();
+    $("#project-not-empty").show();
+    $("#export-excel > div >").show();
+
+    window.fillProjectsSelect()
+    .done(function(dataSales)
+    {
+        $(".div-filters").show();
+        $.each(companies, function (c, company) {
+            $.each(company.projects, function (i, project) {
+                $.each(dataSales.data, function (idx, project2) {
+                    if( project2.id == project.id ){
+                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
+                    }
+                });
+            });
+        });
+        $("#select_projects option:first").attr('selected','selected');
+
+        if(sessionStorage.info) {
+            $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+            $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+        }
+
+        company = $("#select_projects").val();
+
+        updateReports();
+    });
+
+    loadingOnScreenRemove();
 }
 
 function distribution() {
@@ -79,12 +120,17 @@ function distribution() {
         </div>
     `;
 
-    $('#card-distribution .onPreLoad *').remove();
-    $('#card-distribution .onPreLoad').html(skeLoad);
+    $("#card-distribution .onPreLoad *").remove();
+    $("#card-distribution .onPreLoad").html(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/distribuitions?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            financesResumeUrl +
+            "/distribuitions?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -96,15 +142,15 @@ function distribution() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-             let { available, blocked, pending, total } = response.data;
-             let series = [
-                    (available.percentage < 0 ? 0 : available.percentage),
-                    (pending.percentage < 0 ? 0 : pending.percentage),
-                    (blocked.percentage < 0 ? 0 : blocked.percentage)
-                ];
+            let { available, blocked, pending, total } = response.data;
+            let series = [
+                available.percentage < 0 ? 0 : available.percentage,
+                pending.percentage < 0 ? 0 : pending.percentage,
+                blocked.percentage < 0 ? 0 : blocked.percentage,
+            ];
 
-             if(total !== null) {
-                 distributionHtml = `
+            if (total !== null) {
+                distributionHtml = `
                     <div class="d-flex box-graph-dist">
                         <div class="info-graph">
                             <h6 class="font-size-14 grey">Saldo Total</h6>
@@ -137,7 +183,9 @@ function distribution() {
                                 <strong class="value-pending">${removeMoneyCurrency(pending.value)}</strong>
                             </footer>
                         </div>
-                        <div class="distribution-area" style="${removeMoneyCurrency(blocked.value) == "0,00" ? 'display: none': ''}">
+                        <div class="distribution-area" style="${
+                            removeMoneyCurrency(blocked.value) == "0,00" ? "display: none" : ""
+                        }">
                             <header class="grey font-size-14">
                                 <span class="cube ${blocked.color}">
                                     <i></i>
@@ -151,20 +199,20 @@ function distribution() {
                         </div>
                     </div>
                  `;
-                 $("#block-distribution").html(distributionHtml);
-                 $(".box-graph-dist").prepend('<div class="distribution-graph"></div>');
-                 distributionGraph(series);
-             } else {
                 $("#block-distribution").html(distributionHtml);
-             }
-        }
+                $(".box-graph-dist").prepend('<div class="distribution-graph"></div>');
+                distributionGraph(series);
+            } else {
+                $("#block-distribution").html(distributionHtml);
+            }
+        },
     });
-
 }
 
 function withdrawals() {
-    let infoWithdraw, graphDraw = '';
-    $('#card-draw .onPreLoad *').remove();
+    let infoWithdraw,
+        graphDraw = "";
+    $("#card-draw .onPreLoad *").remove();
     $("#draw").html(skeLoad);
 
     infoWithdraw = `
@@ -186,7 +234,12 @@ function withdrawals() {
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/withdrawals?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            financesResumeUrl +
+            "/withdrawals?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -198,17 +251,17 @@ function withdrawals() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data !== null) {
+            if (response.data !== null) {
                 let { chart } = response.data;
                 let { withdrawal, income } = chart;
-                let incomeTotal = String(removeMoneyCurrency(income.total).replace(',','.'));
-                let withdrawalTotal = String(removeMoneyCurrency(withdrawal.total).replace(',','.'));
-                const numbers = [incomeTotal, withdrawalTotal].map(Number).reduce((prev, value) => prev + value,0);
+                let incomeTotal = String(removeMoneyCurrency(income.total).replace(",", "."));
+                let withdrawalTotal = String(removeMoneyCurrency(withdrawal.total).replace(",", "."));
+                const numbers = [incomeTotal, withdrawalTotal].map(Number).reduce((prev, value) => prev + value, 0);
 
                 graphDraw = `<div id="block-withdraw"></div>`;
 
                 $("#draw").html(graphDraw);
-                $('#block-withdraw').html('<canvas height="260" id="financesChart"></canvas>');
+                $("#block-withdraw").html('<canvas height="260" id="financesChart"></canvas>');
                 let label = [...chart.labels];
                 let withdraw = [...chart.withdrawal.values];
                 let series = [...chart.income.values];
@@ -217,38 +270,43 @@ function withdrawals() {
             } else {
                 $("#draw").html(infoWithdraw);
             }
-        }
+        },
     });
 }
 
 function blockeds() {
-    let blockedsHtml = '';
-    $('#card-blockeds .onPreLoad *' ).remove();
+    let blockedsHtml = "";
+    $("#card-blockeds .onPreLoad *").remove();
     $("#block-blockeds").prepend(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/blockeds?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            financesResumeUrl +
+            "/blockeds?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
         },
-        beforeSend: function( jqXHR ) {
-            jqXHR.then(dados => {
+        beforeSend: function (jqXHR) {
+            jqXHR.then((dados) => {
                 let { value } = dados.data;
-                if( removeMoneyCurrency(value) == "0,00" ) {
-                    $('#card-blockeds').hide();
+                if (removeMoneyCurrency(value) == "0,00") {
+                    $("#card-blockeds").hide();
                 }
-            })
+            });
         },
         error: function error(response) {
-            $('#card-blockeds').hide();
+            $("#card-blockeds").hide();
             errorAjaxResponse(response);
         },
         success: function success(response) {
             if (response.data != null) {
-                let {amount, value} = response.data;
+                let { amount, value } = response.data;
 
                 blockedsHtml = `
                     <div class="d-flex">
@@ -266,7 +324,7 @@ function blockeds() {
 
                 $("#block-blockeds").html(blockedsHtml);
             }
-        }
+        },
     });
 }
 
@@ -304,12 +362,17 @@ function onResume() {
         </div>
     `;
 
-    $('#finance-card .onPreLoad *').remove();
+    $("#finance-card .onPreLoad *").remove();
     $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").html(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            financesResumeUrl +
+            "/resume?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -324,7 +387,7 @@ function onResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data != undefined) {
+            if (response.data != undefined) {
                 let { transactions, average_ticket, comission, chargeback } = response.data;
                 trans = `
                     <span class="title">N de transações</span>
@@ -339,14 +402,18 @@ function onResume() {
                     <span class="title">Ticket Médio</span>
                     <div class="d-flex">
                         <span class="detail">R$</span>
-                        <strong class="number">${average_ticket == undefined ? '0,00' : removeMoneyCurrency(average_ticket)}</strong>
+                        <strong class="number">${
+                            average_ticket == undefined ? "0,00" : removeMoneyCurrency(average_ticket)
+                        }</strong>
                     </div>
                 `;
                 commission = `
                     <span class="title">Comissão total</span>
                     <div class="d-flex">
                         <span class="detail">R$</span>
-                        <strong class="number">${comission == undefined ? '0,00' : removeMoneyCurrency(comission)}</strong>
+                        <strong class="number">${
+                            comission == undefined ? "0,00" : removeMoneyCurrency(comission)
+                        }</strong>
                     </div>
                 `;
 
@@ -354,21 +421,20 @@ function onResume() {
                     <span class="title">Total em Chargebacks</span>
                     <div class="d-flex">
                         <span class="detail">R$</span>
-                        <strong class="number"><span class="bold">${chargeback == undefined ? '0,00' : removeMoneyCurrency(chargeback)}</span></strong>
+                        <strong class="number"><span class="bold">${
+                            chargeback == undefined ? "0,00" : removeMoneyCurrency(chargeback)
+                        }</span></strong>
                     </div>
                 `;
             } else {
-
             }
-
 
             $("#finance-commission").html(commission);
             $("#finance-ticket").html(ticket);
             $("#finance-chargebacks").html(chargebacks);
             $("#finance-transactions").html(trans);
-        }
+        },
     });
-
 }
 
 function onCommission() {
@@ -388,12 +454,17 @@ function onCommission() {
             </div>
         </div>
     `;
-    $('#card-commission .onPreLoadBig *').remove();
+    $("#card-commission .onPreLoadBig *").remove();
     $("#block-commission").html(skeLoadBig);
 
     return $.ajax({
         method: "GET",
-        url: resumeUrl + "/commissions?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            resumeUrl +
+            "/commissions?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -405,7 +476,7 @@ function onCommission() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data !== null) {
+            if (response.data !== null) {
                 let { chart, total, variation } = response.data;
 
                 // <div class="finances-values">
@@ -424,31 +495,36 @@ function onCommission() {
                     </div>
                     <section style="margin-left: -7px;">
                         <div class="graph-reports">
-                            <div class="${removeMoneyCurrency(total) !== '0,00' ? 'new-finance-graph' : ''  }"></div>
+                            <div class="${removeMoneyCurrency(total) !== "0,00" ? "new-finance-graph" : ""}"></div>
                         </div>
                     </section>
                 `;
                 $("#block-commission").html(infoComission);
 
-                $('.new-finance-graph').html('<canvas id=comission-graph-finance></canvas>');
+                $(".new-finance-graph").html("<canvas id=comission-graph-finance></canvas>");
                 let labels = [...chart.labels];
                 let series = [...chart.values];
                 graphComission(series, labels);
             } else {
                 $("#block-commission").html(infoComission);
             }
-        }
+        },
     });
 }
 
 function getPending() {
-    let pendingBlock = '';
-    $('#card-pending .onPreLoad *' ).remove();
+    let pendingBlock = "";
+    $("#card-pending .onPreLoad *").remove();
     $("#block-pending").html(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/pendings?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            financesResumeUrl +
+            "/pendings?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -470,11 +546,11 @@ function getPending() {
                 </div>
             </footer>
         `;
-        $("#block-pending").html(pendingBlock);
+            $("#block-pending").html(pendingBlock);
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if( response.data != undefined ) {
+            if (response.data != undefined) {
                 let { amount, value } = response.data;
 
                 pendingBlock = `
@@ -511,18 +587,23 @@ function getPending() {
                 `;
                 $("#block-pending").html(pendingBlock);
             }
-        }
+        },
     });
 }
 
 function getCashback() {
-    let cashBlock = '';
-    $('#card-cashback .onPreLoad *' ).remove();
+    let cashBlock = "";
+    $("#card-cashback .onPreLoad *").remove();
     $("#block-cash").prepend(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/cashbacks?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url:
+            financesResumeUrl +
+            "/cashbacks?project_id=" +
+            $("#select_projects option:selected").val() +
+            "&date_range=" +
+            $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -551,8 +632,8 @@ function getCashback() {
         },
         success: function success(response) {
             let { quantity, value } = response.data;
-            if(response.data !== undefined) {
-                if(removeMoneyCurrency(value) !== '0,00') {
+            if (response.data !== undefined) {
+                if (removeMoneyCurrency(value) !== "0,00") {
                     cashBlock = `
                         <div class="balance col-6">
                             <h6 class="grey font-size-14">
@@ -572,7 +653,6 @@ function getCashback() {
                             <strong class="total grey">${quantity} vendas</strong>
                         </div>
                     `;
-
                 } else {
                     cashBlock = `
                         <div class="balance col-4">
@@ -591,7 +671,6 @@ function getCashback() {
                         </div>
                     `;
                 }
-
             } else {
                 cashBlock = `
                         <div class="balance col-4">
@@ -611,51 +690,54 @@ function getCashback() {
                 `;
             }
             $("#block-cash").html(cashBlock);
-        }
+        },
     });
 }
 
 function changeCalendar() {
-    $('.onPreLoad *, .onPreLoadBig *').remove();
+    $(".onPreLoad *, .onPreLoadBig *").remove();
 
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
-    data = sessionStorage.getItem('info') ? JSON.parse(sessionStorage.getItem('info')).calendar : `${startDate}-${endDate}`;
+    data = sessionStorage.getItem("info")
+        ? JSON.parse(sessionStorage.getItem("info")).calendar
+        : `${startDate}-${endDate}`;
 
-    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-    $('input[name="daterange"]').dateRangePicker({
-        setValue: function (s) {
-            if (s) {
-                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
-                $(this).html(s).data('value', normalize);
-                $('input[name="daterange"]').attr('value', normalize);
-                $('input[name="daterange"]').val(normalize);
-            } else {
-                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+    $('input[name="daterange"]')
+        .dateRangePicker({
+            setValue: function (s) {
+                if (s) {
+                    let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                    $(this).html(s).data("value", normalize);
+                    $('input[name="daterange"]').attr("value", normalize);
+                    $('input[name="daterange"]').val(normalize);
+                } else {
+                    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+                    $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+                }
+            },
+        })
+        .on("datepicker-change", function () {
+            $.ajaxQ.abortAll();
+
+            if (data !== $(this).val()) {
+                data = $(this).val();
+
+                updateStorage({ calendar: $(this).val() });
+                updateReports();
             }
-        }
-    })
-    .on('datepicker-change', function () {
-        $.ajaxQ.abortAll();
-
-        if (data !== $(this).val()) {
-            data = $(this).val();
-
-            updateStorage({calendar: $(this).val()});
-            updateReports();
-        }
-    })
-    .on('datepicker-open', function () {
-        $('.filter-badge-input').removeClass('show');
-    })
-    .on('datepicker-close', function () {
-        $(this).removeClass('focused');
-        if ($(this).data('value')) {
-            $(this).addClass('active');
-        }
-    });
+        })
+        .on("datepicker-open", function () {
+            $(".filter-badge-input").removeClass("show");
+        })
+        .on("datepicker-close", function () {
+            $(this).removeClass("focused");
+            if ($(this).data("value")) {
+                $(this).addClass("active");
+            }
+        });
 }
 
 function changeCompany() {
@@ -665,328 +747,322 @@ function changeCompany() {
         if (company !== $(this).val()) {
             company = $(this).val();
 
-            updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+            updateStorage({ company: $(this).val(), companyName: $(this).find("option:selected").text() });
             updateReports();
         }
     });
 }
 
 function updateReports() {
-    $('.sirius-select-container').addClass('disabled');
-    $('input[name="daterange"]').attr('disabled', 'disabled');
+    $(".sirius-select-container").addClass("disabled");
+    $('input[name="daterange"]').attr("disabled", "disabled");
 
-    Promise.all([
-        blockeds(),
-        onResume(),
-        onCommission(),
-        getPending(),
-        getCashback(),
-        withdrawals(),
-        distribution(),
-    ])
-    .then(() => {
-        $('.sirius-select-container').removeClass('disabled');
-        $('input[name="daterange"]').removeAttr('disabled');
-    })
-    .catch(() => {
-        $('.sirius-select-container').removeClass('disabled');
-        $('input[name="daterange"]').removeAttr('disabled');
-    });
+    Promise.all([blockeds(), onResume(), onCommission(), getPending(), getCashback(), withdrawals(), distribution()])
+        .then(() => {
+            $(".sirius-select-container").removeClass("disabled");
+            $('input[name="daterange"]').removeAttr("disabled");
+        })
+        .catch(() => {
+            $(".sirius-select-container").removeClass("disabled");
+            $('input[name="daterange"]').removeAttr("disabled");
+        });
 }
 
-
-function updateStorage(v){
-    var existing = sessionStorage.getItem('info');
+function updateStorage(v) {
+    var existing = sessionStorage.getItem("info");
     existing = existing ? JSON.parse(existing) : {};
-    Object.keys(v).forEach(function(val, key){
+    Object.keys(v).forEach(function (val, key) {
         existing[val] = v[val];
-    })
+    });
 
-    sessionStorage.setItem('info', JSON.stringify(existing));
+    sessionStorage.setItem("info", JSON.stringify(existing));
 }
 
 function graphComission(series, labels, variant = null) {
     const legendMargin = {
-         id: 'legendMargin',
-         beforeInit(chart, legend, options) {
-             const fitValue = chart.legend.fit;
-             chart.legend.fit = function () {
-                 fitValue.bind(chart.legend)();
-                 return this.height += 20;
-             }
-         }
+        id: "legendMargin",
+        beforeInit(chart, legend, options) {
+            const fitValue = chart.legend.fit;
+            chart.legend.fit = function () {
+                fitValue.bind(chart.legend)();
+                return (this.height += 20);
+            };
+        },
     };
-    const ctx = document.getElementById('comission-graph-finance').getContext('2d');
+    const ctx = document.getElementById("comission-graph-finance").getContext("2d");
     var gradient = ctx.createLinearGradient(0, 0, 0, 450);
-    gradient.addColorStop(0, 'rgba(54,216,119, 0.23)');
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    gradient.addColorStop(0, "rgba(54,216,119, 0.23)");
+    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
 
     const myChart = new Chart(ctx, {
         plugins: [legendMargin],
-        type: 'line',
+        type: "line",
         data: {
             labels,
             datasets: [
                 {
-                    label: 'Legenda',
+                    label: "Legenda",
                     data: series,
-                    color:'#636363',
+                    color: "#636363",
                     backgroundColor: gradient,
                     borderColor: "#1BE4A8",
                     borderWidth: 4,
                     fill: true,
                     borderRadius: 4,
                     barThickness: 30,
-                }
-            ]
+                },
+            ],
         },
         options: {
             maintainAspectRatio: false,
             plugins: {
-                legend: {display: false},
-                title: {display: false},
+                legend: { display: false },
+                title: { display: false },
             },
             responsive: true,
             scales: {
                 x: {
                     grid: {
-                        display: false
+                        display: false,
                     },
                     ticks: {
                         font: {
-                            family: 'Muli',
+                            family: "Muli",
                             size: 12,
                         },
                         color: "#A2A3A5",
-                    }
+                    },
                 },
                 y: {
                     grid: {
-                        color: '#ECE9F1',
-                        drawBorder: false
+                        color: "#ECE9F1",
+                        drawBorder: false,
                     },
 
                     ticks: {
                         padding: 15,
                         font: {
-                            family: 'Muli',
+                            family: "Muli",
                             size: 12,
                         },
                         color: "#A2A3A5",
-                        callback: function(value){
-                            return 'R$ ' + (value / 100000) + 'K '
-                        }
-                    }
-
+                        callback: function (value) {
+                            return "R$ " + value / 100000 + "K ";
+                        },
+                    },
                 },
             },
-            pointBackgroundColor:"#1BE4A8",
+            pointBackgroundColor: "#1BE4A8",
             // radius: (variant != '0%') ? 3 : 0,
             interaction: {
-              intersect: false,
-              mode: "index",
-              borderRadius: 4,
-              usePointStyle: true,
-              yAlign: 'bottom',
-              padding: 10,
-              titleSpacing: 10,
-              callbacks: {
-                  label: function (tooltipItem) {
-                      return convertToReal(tooltipItem);
-                  },
-                  labelPointStyle: function (context) {
-                      return {
-                          pointStyle: 'rect',
-                          borderRadius: 4,
-                          rotatio: 0,
-                      }
-                  }
-              }
-            }
-          },
+                intersect: false,
+                mode: "index",
+                borderRadius: 4,
+                usePointStyle: true,
+                yAlign: "bottom",
+                padding: 10,
+                titleSpacing: 10,
+                callbacks: {
+                    label: function (tooltipItem) {
+                        return convertToReal(tooltipItem);
+                    },
+                    labelPointStyle: function (context) {
+                        return {
+                            pointStyle: "rect",
+                            borderRadius: 4,
+                            rotatio: 0,
+                        };
+                    },
+                },
+            },
+        },
     });
 }
 
 function barGraph(series, labels, withdraw) {
     const titleTooltip = (tooltipItems) => {
-        return '';
-    }
+        return "";
+    };
 
     const legendMargin = {
-        id: 'legendMargin',
+        id: "legendMargin",
         beforeInit(chart, legend, options) {
             const fitValue = chart.legend.fit;
             chart.legend.fit = function () {
                 fitValue.bind(chart.legend)();
-                return this.height += 20;
-            }
-        }
+                return (this.height += 20);
+            };
+        },
     };
 
-    const ctx = document.getElementById('financesChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            plugins: [legendMargin],
-            type: 'bar',
-            data: {
-                labels,
-                datasets: [
-                    {
-                        label: 'Receitas',
-                        data: series,
-                        color:'#636363',
-                        backgroundColor: "rgba(69, 208, 126, 1)",
-                        borderRadius: 4,
-                        barPercentage: 0.5
-                    },
-                    {
-                        label: 'Saques',
-                        data: withdraw,
-                        color:'#636363',
-                        backgroundColor: "rgba(216, 245, 228, 1)",
-                        borderRadius: 4,
-                        barPercentage: 0.7
-                    }
-                ]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        align: 'center',
-                        labels: {
-                            boxWidth: 10,
-                            color: '#636363',
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            font: {
-                                size: '12',
-                                family: "'Muli'"
-                            }
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Últimos 6 meses',
-                        align: 'end',
-                        color: '#9E9E9E',
-                        fullSize: false,
-                        padding: {
-                            top: 0,
-                            bottom: -23,
-                        }
-                    },
-                },
-
-                responsive: false,
-                scales: {
-                    x: {
-                        stacked: true,
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            padding: 15,
-                            color: "#747474",
-                            align: 'center',
-                            font: {
-                                family: 'Muli',
-                                size: 12,
-                            },
-                        },
-                    },
-                    y: {
-                        grid: {
-                            color: '#ECE9F1',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            padding: 0,
-                            font: {
-                                family: 'Muli',
-                                size: 12,
-                            },
-                            color: "#747474",
-                            callback: function(value){
-                                return (value / 100000) + 'K '
-                            }
-                        }
-                    }
-                },
-                interaction: {
-                    mode: "index",
+    const ctx = document.getElementById("financesChart").getContext("2d");
+    const myChart = new Chart(ctx, {
+        plugins: [legendMargin],
+        type: "bar",
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: "Receitas",
+                    data: series,
+                    color: "#636363",
+                    backgroundColor: "rgba(69, 208, 126, 1)",
                     borderRadius: 4,
-                    usePointStyle: true,
-                    yAlign: 'bottom',
-                    padding: 15,
-                    titleSpacing: 10,
-                    callbacks: {
-                        title: titleTooltip,
-                        label: function (tooltipItem) {
-                            return convertToReal(tooltipItem);
-                        },
-                        labelPointStyle: function (context) {
-                            return {
-                                pointStyle: 'rect',
-                                borderRadius: 4,
-                                rotatio: 0,
-                            }
-                        }
-                    }
+                    barPercentage: 0.5,
                 },
-            }
-        });
+                {
+                    label: "Saques",
+                    data: withdraw,
+                    color: "#636363",
+                    backgroundColor: "rgba(216, 245, 228, 1)",
+                    borderRadius: 4,
+                    barPercentage: 0.7,
+                },
+            ],
+        },
+        options: {
+            plugins: {
+                legend: {
+                    align: "center",
+                    labels: {
+                        boxWidth: 10,
+                        color: "#636363",
+                        usePointStyle: true,
+                        pointStyle: "circle",
+                        font: {
+                            size: "12",
+                            family: "'Muli'",
+                        },
+                    },
+                },
+                title: {
+                    display: true,
+                    text: "Últimos 6 meses",
+                    align: "end",
+                    color: "#9E9E9E",
+                    fullSize: false,
+                    padding: {
+                        top: 0,
+                        bottom: -23,
+                    },
+                },
+            },
 
+            responsive: false,
+            scales: {
+                x: {
+                    stacked: true,
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        padding: 15,
+                        color: "#747474",
+                        align: "center",
+                        font: {
+                            family: "Muli",
+                            size: 12,
+                        },
+                    },
+                },
+                y: {
+                    grid: {
+                        color: "#ECE9F1",
+                        drawBorder: false,
+                    },
+                    ticks: {
+                        padding: 0,
+                        font: {
+                            family: "Muli",
+                            size: 12,
+                        },
+                        color: "#747474",
+                        callback: function (value) {
+                            return value / 100000 + "K ";
+                        },
+                    },
+                },
+            },
+            interaction: {
+                mode: "index",
+                borderRadius: 4,
+                usePointStyle: true,
+                yAlign: "bottom",
+                padding: 15,
+                titleSpacing: 10,
+                callbacks: {
+                    title: titleTooltip,
+                    label: function (tooltipItem) {
+                        return convertToReal(tooltipItem);
+                    },
+                    labelPointStyle: function (context) {
+                        return {
+                            pointStyle: "rect",
+                            borderRadius: 4,
+                            rotatio: 0,
+                        };
+                    },
+                },
+            },
+        },
+    });
 }
 
- function convertToReal(tooltipItem) {
+function convertToReal(tooltipItem) {
     let tooltipValue = tooltipItem.raw;
-        tooltipValue = tooltipValue + '';
-        tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
-        tooltipValue = tooltipValue + '';
-        tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
+    tooltipValue = tooltipValue + "";
+    tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ""));
+    tooltipValue = tooltipValue + "";
+    tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
 
-        if (tooltipValue.length > 6) {
-            tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-        }
+    if (tooltipValue.length > 6) {
+        tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+    }
 
-        return 'R$ ' + tooltipValue;
+    return "R$ " + tooltipValue;
 }
 
 function exportReports() {
     // show/hide modal de exportar relatórios
-    $(".lk-export").on('click', function(e) {
+    $(".lk-export").on("click", function (e) {
         e.preventDefault();
-        $('.inner-reports').addClass('focus');
-        $('.line-reports').addClass('d-flex');
+        $(".inner-reports").addClass("focus");
+        $(".line-reports").addClass("d-flex");
     });
 
-    $('.reports-remove').on('click', function (e) {
+    $(".reports-remove").on("click", function (e) {
         e.preventDefault();
-        $('.inner-reports').removeClass('focus');
-        $('.line-reports').removeClass('d-flex');
+        $(".inner-reports").removeClass("focus");
+        $(".line-reports").removeClass("d-flex");
     });
-
 }
 
 function distributionGraph(series) {
-    new Chartist.Pie('.distribution-graph', {
-        series
-      }, {
-        donut: true,
-        donutWidth: 30,
-        donutSolid: true,
-        startAngle: 270,
-        showLabel: false,
-        chartPadding: 0,
-        labelOffset: 0,
-        height: 123
-      });
+    new Chartist.Pie(
+        ".distribution-graph",
+        {
+            series,
+        },
+        {
+            donut: true,
+            donutWidth: 30,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: false,
+            chartPadding: 0,
+            labelOffset: 0,
+            height: 123,
+        }
+    );
 }
 
 function kFormatter(num) {
-    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
+    return Math.abs(num) > 999
+        ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+        : Math.sign(num) * Math.abs(num);
 }
 
-const formatCash = n => {
+const formatCash = (n) => {
     if (n < 1e3) return n;
     if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
     if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
@@ -998,43 +1074,43 @@ function removeDuplcateItem(item) {
     for (i = 0; i < $(item).length; i++) {
         text = $(item).get(i);
         for (j = i + 1; j < $(item).length; j++) {
-          text_to_compare = $(item).get(j);
-          if (text.innerHTML == text_to_compare.innerHTML) {
-            $(text_to_compare).remove();
-            j--;
-            maxlength = $(item).length;
-          }
+            text_to_compare = $(item).get(j);
+            if (text.innerHTML == text_to_compare.innerHTML) {
+                $(text_to_compare).remove();
+                j--;
+                maxlength = $(item).length;
+            }
         }
     }
 }
 
 // abort all ajax
-$.ajaxQ = (function() {
-    var id = 0, Q = {};
+$.ajaxQ = (function () {
+    var id = 0,
+        Q = {};
 
-    $(document).ajaxSend(function(e, jqx){
-      jqx._id = ++id;
-      Q[jqx._id] = jqx;
+    $(document).ajaxSend(function (e, jqx) {
+        jqx._id = ++id;
+        Q[jqx._id] = jqx;
     });
-    $(document).ajaxComplete(function(e, jqx){
-      delete Q[jqx._id];
+    $(document).ajaxComplete(function (e, jqx) {
+        delete Q[jqx._id];
     });
 
     return {
-      abortAll: function(){
-        var r = [];
-        $.each(Q, function(i, jqx){
-          r.push(jqx._id);
-          jqx.abort();
-        });
-        return r;
-      }
+        abortAll: function () {
+            var r = [];
+            $.each(Q, function (i, jqx) {
+                r.push(jqx._id);
+                jqx.abort();
+            });
+            return r;
+        },
     };
-
 })();
 
-let company = '';
-let date = '';
+let company = "";
+let date = "";
 
 let skeLoad = `
     <div class="ske-load">

@@ -14,7 +14,7 @@ class AstronMembersController extends Controller
      */
     public function index()
     {
-        return view('astronmembers::index');
+        return view("astronmembers::index");
     }
 
     /**
@@ -23,7 +23,7 @@ class AstronMembersController extends Controller
      */
     public function create()
     {
-        return view('astronmembers::create');
+        return view("astronmembers::create");
     }
 
     /**
@@ -43,7 +43,7 @@ class AstronMembersController extends Controller
      */
     public function show($id)
     {
-        return view('astronmembers::show');
+        return view("astronmembers::show");
     }
 
     /**
@@ -53,7 +53,7 @@ class AstronMembersController extends Controller
      */
     public function edit($id)
     {
-        return view('astronmembers::edit');
+        return view("astronmembers::edit");
     }
 
     /**

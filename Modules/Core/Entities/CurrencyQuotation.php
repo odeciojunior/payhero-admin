@@ -29,22 +29,22 @@ class CurrencyQuotation extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = ["id_code"];
     /**
      * @var array
      */
     protected $fillable = [
-        'currency',
-        'currency_type',
-        'http_response',
-        'value',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "currency",
+        "currency_type",
+        "http_response",
+        "value",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool

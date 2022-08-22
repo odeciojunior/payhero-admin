@@ -78,9 +78,9 @@ class SaleInformation extends Model
 {
     use HasFactory;
 
-    protected $table = 'sale_informations';
+    protected $table = "sale_informations";
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     protected $fillable = [
         "sale_id",
@@ -107,6 +107,8 @@ class SaleInformation extends Model
         "installments",
         "first_six_digits",
         "last_four_digits",
+        'created_at',
+        'updated_at'
     ];
 
     public function sale(): BelongsTo

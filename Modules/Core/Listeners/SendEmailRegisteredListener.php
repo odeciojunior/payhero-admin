@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\Core\Listeners;
 
 use Exception;
@@ -31,26 +30,27 @@ class SendEmailRegisteredListener implements ShouldQueue
     /**
      * @param UserRegisteredEvent $event
      */
-    public function handle(UserRegisteredEvent $event) {
-        $data      = $event->request;
+    public function handle(UserRegisteredEvent $event)
+    {
+        $data = $event->request;
 
         try {
             $this->emailService->sendEmail(
-                'help@cloudfox.net',
-                $data['domainName'],
-                $data['clientEmail'],
-                $data['clientName'],
-                $data['templateId'],
-                $data['bodyEmail']
+                "help@cloudfox.net",
+                $data["domainName"],
+                $data["clientEmail"],
+                $data["clientName"],
+                $data["templateId"],
+                $data["bodyEmail"]
             );
         } catch (Exception $e) {
-            Log::warning('Erro ao enviar email de cadastro de novos usuários');
+            Log::warning("Erro ao enviar email de cadastro de novos usuários");
             report($e);
         }
     }
 
     public function tags()
     {
-        return ['listener:' . static::class, 'SendEmailRegisteredListener'];
+        return ["listener:" . static::class, "SendEmailRegisteredListener"];
     }
 }

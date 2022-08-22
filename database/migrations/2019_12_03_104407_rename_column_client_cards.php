@@ -12,8 +12,8 @@ class RenameColumnClientCards extends Migration
      */
     public function up()
     {
-        Schema::table('client_cards', function(Blueprint $table) {
-            $table->renameColumn('first_four_digits', 'first_six_digits');
+        Schema::table("client_cards", function (Blueprint $table) {
+            $table->renameColumn("first_four_digits", "first_six_digits");
         });
     }
 
@@ -23,8 +23,8 @@ class RenameColumnClientCards extends Migration
      */
     public function down()
     {
-        Schema::table('client_cards', function(Blueprint $table) {
-            $table->renameColumn('first_six_digits', 'first_four_digits');
+        Schema::table("client_cards", function (Blueprint $table) {
+            $table->renameColumn("first_six_digits", "first_four_digits");
         });
     }
 }

@@ -13,8 +13,11 @@ class AlterTableShopifyIntegrationsChangeColumnTokenToNullable extends Migration
      */
     public function up()
     {
-        Schema::table('shopify_integrations', function (Blueprint $table) {
-            $table->string('token')->nullable()->change();        
+        Schema::table("shopify_integrations", function (Blueprint $table) {
+            $table
+                ->string("token")
+                ->nullable()
+                ->change();
         });
     }
 
@@ -25,8 +28,11 @@ class AlterTableShopifyIntegrationsChangeColumnTokenToNullable extends Migration
      */
     public function down()
     {
-        Schema::table('shopify_integrations', function (Blueprint $table) {
-            $table->string('token')->nullable(false)->change();        
+        Schema::table("shopify_integrations", function (Blueprint $table) {
+            $table
+                ->string("token")
+                ->nullable(false)
+                ->change();
         });
     }
 }

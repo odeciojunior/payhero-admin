@@ -15,7 +15,6 @@ class ActiveCampaignPolicy
      */
     public function edit(User $user, ActivecampaignIntegration $activeCampaignIntegration)
     {
-
         if ($user->account_owner_id == $activeCampaignIntegration->user_id) {
             return true;
         } else {
@@ -58,5 +57,4 @@ class ActiveCampaignPolicy
             return false;
         }
     }
-
 }

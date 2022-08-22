@@ -4,6 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Modules\Core\Entities\Domain;
 use Laracasts\Presenter\Presenter;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
@@ -40,9 +41,12 @@ class CheckoutPresenter extends Presenter
         $products = [];
         foreach ($this->checkoutPlans as $checkoutPlan) {
             foreach ($checkoutPlan->plan()->first()->productsPlans as $productPlan) {
-                $product           = $productPlan->product()->first()->toArray();
-                $product['amount'] = $productPlan->amount * $checkoutPlan->amount;
-                $products[]        = $product;
+                $product = $productPlan
+                    ->product()
+                    ->first()
+                    ->toArray();
+                $product["amount"] = $productPlan->amount * $checkoutPlan->amount;
+                $products[] = $product;
             }
         }
 
@@ -51,9 +55,8 @@ class CheckoutPresenter extends Presenter
 
     public function getSmsSentAmount()
     {
-
         if ($this->sms_sent_amount == null || $this->sms_sent_amount == 0) {
-            return 'Não enviado';
+            return "Não enviado";
         } else {
             return $this->sms_sent_amount;
         }
@@ -61,9 +64,8 @@ class CheckoutPresenter extends Presenter
 
     public function getEmailSentAmount()
     {
-
         if ($this->email_sent_amount == null || $this->email_sent_amount == 0) {
-            return 'Não enviado';
+            return "Não enviado";
         } else {
             return $this->email_sent_amount;
         }
@@ -71,13 +73,23 @@ class CheckoutPresenter extends Presenter
 
     public function getCheckoutLink($domain)
     {
+        $hashCheckoutId = Hashids::encode($this->id);
 
-        $link = '';
-        if(FoxUtils::isProduction()) {
-            $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($this->id) : 'Domínio não configurado';
-            //$link = isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado';
-        } else {
-            $link = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/recovery/' . Hashids::encode($this->id);
+        $user = Auth()->user();
+        if($user->company_default == Company::DEMO_ID)
+        {
+            return "https://demo.cloudfox.net". '/recovery/' . $hashCheckoutId;
+        }
+
+        $link = 'Domínio não configurado';
+
+        if(isset($domain))
+        {
+            if(FoxUtils::isProduction()) {
+                $link = 'https://checkout.' . $domain->name. '/recovery/' . $hashCheckoutId;
+            } else {
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/recovery/' . $hashCheckoutId;
+            }
         }
 
         return $link;
@@ -96,54 +108,47 @@ class CheckoutPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'accessed';
+                    return "accessed";
                 case 2:
-                    return 'abandoned cart';
+                    return "abandoned cart";
                 case 3:
-                    return 'recovered';
+                    return "recovered";
                 case 4:
-                    return 'sale finalized';
+                    return "sale finalized";
             }
         } else {
             switch ($status) {
-                case 'accessed':
+                case "accessed":
                     return 1;
-                case 'abandoned cart':
+                case "abandoned cart":
                     return 2;
-                case 'recovered':
+                case "recovered":
                     return 3;
-                case 'sale finalized':
+                case "sale finalized":
                     return 4;
             }
         }
 
-        return '';
+        return "";
     }
 
     public function getOperationalSystemName($operationalSystemEnum)
     {
-        if($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_IOS) {
-            return 'IOS';
+        if ($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_IOS) {
+            return "IOS";
+        } elseif ($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_ANDROID) {
+            return "Android";
+        } elseif ($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_WINDOWS) {
+            return "Windows";
+        } elseif ($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_LINUX) {
+            return "Linux";
+        } elseif ($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_BLACK_BERRY) {
+            return "Black Berry";
+        } elseif ($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_JAVA) {
+            return "Java OS";
+        } elseif ($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_CHROME) {
+            return "Chrome OS";
         }
-        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_ANDROID) {
-            return 'Android';
-        }
-        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_WINDOWS) {
-            return 'Windows';
-        }
-        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_LINUX) {
-            return 'Linux';
-        }
-        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_BLACK_BERRY) {
-            return 'Black Berry';
-        }
-        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_JAVA) {
-            return 'Java OS';
-        }
-        elseif($operationalSystemEnum == Checkout::OPERATIONAL_SYSTEM_CHROME) {
-            return 'Chrome OS';
-        }
-        return 'Desconhecido';
+        return "Desconhecido";
     }
-
 }

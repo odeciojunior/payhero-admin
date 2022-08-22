@@ -26,9 +26,9 @@ class SalesRecoveryController extends Controller
      */
     public function index()
     {
-        return view('salesrecovery::index');
+        return view("salesrecovery::index");
     }
-    
+
     /**
      * @param Request $request
      * @return JsonResponse
@@ -37,13 +37,13 @@ class SalesRecoveryController extends Controller
     public function getDetails(Request $request)
     {
         try {
-            $checkoutModel        = new Checkout();
+            $checkoutModel = new Checkout();
             $salesRecoveryService = new SalesRecoveryService();
-            $details              = null;
+            $details = null;
 
-            if ($request->has('checkout') && !empty($request->input('checkout'))) {
-                $checkoutId = current(Hashids::decode($request->input('checkout')));
-                $checkout   = $checkoutModel->find($checkoutId);
+            if ($request->has("checkout") && !empty($request->input("checkout"))) {
+                $checkoutId = current(Hashids::decode($request->input("checkout")));
+                $checkout = $checkoutModel->find($checkoutId);
                 if (!empty($checkout)) {
                     $details = $salesRecoveryService->getSalesCheckoutDetails($checkout);
                 } else {
@@ -51,20 +51,18 @@ class SalesRecoveryController extends Controller
                 }
 
                 if ($details == null) {
-                    return response()->json(['message' => 'Ocorreu algum erro']);
+                    return response()->json(["message" => "Ocorreu algum erro"]);
                 } else {
                     return response()->json($details->render());
                 }
             } else {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde']);
+                return response()->json(["message" => "Ocorreu algum erro, tente novamente mais tarde"]);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar detalhes do carrinho abandonado');
+            Log::warning("Erro ao buscar detalhes do carrinho abandonado");
             report($e);
 
-            return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde']);
+            return response()->json(["message" => "Ocorreu algum erro, tente novamente mais tarde"]);
         }
     }
 }
-
-

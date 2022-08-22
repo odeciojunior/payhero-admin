@@ -55,7 +55,7 @@ class Gateway extends Model
     public const SAFE2PAY_PRODUCTION_ID = 21;
     public const SAFE2PAY_SANDBOX_ID = 22;
 
-    public const PAYMENT_STATUS_CONFIRMED = 'CONFIRMED';
+    public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
     /**
      * @var string
@@ -64,23 +64,23 @@ class Gateway extends Model
     /**
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = ["deleted_at"];
     /**
      * @var array
      */
     protected $fillable = [
-        'gateway_enum',
-        'name',
-        'json_config',
-        'production_flag',
-        'enabled_flag',
-        'deleted_at',
-        'created_at',
-        'updated_at',
+        "gateway_enum",
+        "name",
+        "json_config",
+        "production_flag",
+        "enabled_flag",
+        "deleted_at",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -101,11 +101,9 @@ class Gateway extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    
-    public static function getServiceById($gatewayId){
-        
-        switch($gatewayId)
-        {
+    public static function getServiceById($gatewayId)
+    {
+        switch ($gatewayId) {
             case self::ASAAS_PRODUCTION_ID:
             case self::ASAAS_SANDBOX_ID:
                 return new AsaasService();
@@ -121,16 +119,15 @@ class Gateway extends Model
             case self::CIELO_PRODUCTION_ID:
             case self::CIELO_SANDBOX_ID:
                 return new CieloService();
-            
+
             case self::SAFE2PAY_PRODUCTION_ID:
             case self::SAFE2PAY_SANDBOX_ID:
                 return new Safe2PayService();
 
             default:
                 throw new LogicException("Gateway {self->name} não encontrado");
-            break;
+                break;
         }
-                 
     }
 
     /**
@@ -138,7 +135,7 @@ class Gateway extends Model
      */
     public function gatewayFlags()
     {
-        return $this->hasMany('Modules\Core\Entities\GatewayFlag');
+        return $this->hasMany("Modules\Core\Entities\GatewayFlag");
     }
 
     /**
@@ -146,7 +143,7 @@ class Gateway extends Model
      */
     public function gatewayPostbacks()
     {
-        return $this->hasMany('Modules\Core\Entities\GatewayPostback');
+        return $this->hasMany("Modules\Core\Entities\GatewayPostback");
     }
 
     /**
@@ -154,7 +151,7 @@ class Gateway extends Model
      */
     public function saleGatewayRequests()
     {
-        return $this->hasMany('Modules\Core\Entities\SaleGatewayRequest');
+        return $this->hasMany("Modules\Core\Entities\SaleGatewayRequest");
     }
 
     /**
@@ -162,6 +159,6 @@ class Gateway extends Model
      */
     public function sales()
     {
-        return $this->hasMany('Modules\Core\Entities\Sale');
+        return $this->hasMany("Modules\Core\Entities\Sale");
     }
 }

@@ -1,20 +1,58 @@
 var statusInvite = {
-    1: 'success',
-    2: 'pendente',
-    3: 'warning',
+    1: "success",
+    2: "pendente",
+    3: "warning",
 };
 
 var statusDocumentUser = {
-    pending: 'Pendente',
-    analyzing: 'Em análise',
-    approved: 'Aprovado',
-    refused: 'Recusado',
+    pending: "Pendente",
+    analyzing: "Em análise",
+    approved: "Aprovado",
+    refused: "Recusado",
 };
 
 let disabledCompany = false;
 let companyVerification = true;
+
 $(document).ready(function () {
-    updateInvites();
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#content-error").hide();
+        $("#store-invite").attr('disabled','disabled');
+        loadOnTable('#table-body-invites', '#table_invites');
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        updateCompanyDefault().done( function(data){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                $("#store-invite").removeAttr('disabled');
+                $('.company_name').val( companiesAndProjects.company_default_fullname );
+                getInvitationData();
+                updateInvitesAfterChangeCompany();
+            })
+        })
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        $('.company_name').val( companiesAndProjects.company_default_fullname );
+        updateInvites();
+    });
+
     var currentPage = 1;
 
     function updateInvites() {
@@ -24,14 +62,307 @@ $(document).ready(function () {
         var cont = 0;
 
         if (link == null) {
-            link = '/api/invitations';
+            link = '/api/invitations'+ '?company='+ $('.company-navbar').val();
         } else {
-            link = '/api/invitations' + link;
+            link = '/api/invitations' + link+ '?company='+ $('.company-navbar').val();
         }
 
         $.ajax({
             method: "GET",
             url: link,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                if (isEmpty(response.data)) {
+                    $("#content-error").show();
+                } else {
+                    $("#content-error").hide();
+                    $("#card-table-invite").css("display", "block");
+                    $("#card-invitation-data").css("display", "block");
+
+                    // $("#text-info").css('display', 'block');
+                    $("#card-table-invite").css("display", "block");
+                    $("#table-body-invites").html("");
+
+                    $.each(response.data, function (index, value) {
+                        dados = "";
+                        dados += "<tr>";
+                        if (index != 9) {
+                            dados +=
+                                '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' +
+                                (currentPage - 1) +
+                                (cont += 1) +
+                                "</button></td>";
+                        } else {
+                            dados +=
+                                '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' +
+                                response.meta.to +
+                                "</button></td>";
+                        }
+                        dados +=
+                            '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + "</td>";
+                        dados +=
+                            '<td class="text-center" style="vertical-align: middle;">' + value.company_name + "</td>";
+                        dados += '<td class="text-center" style="vertical-align: middle;">';
+                        dados +=
+                            '<span class="badge badge-' +
+                            statusInvite[value.status] +
+                            ' text-center">' +
+                            value.status_translated +
+                            "</span>";
+                        dados += "</td>";
+                        dados +=
+                            '<td class="text-center" style="vertical-align: middle;">' + value.register_date + "</td>";
+                        dados +=
+                            '<td class="text-center" style="vertical-align: middle;">' +
+                            value.expiration_date +
+                            "</td>";
+                        if (value.status != "2" || verifyAccountFrozen()) {
+                            dados +=
+                                "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" +
+                                value.id +
+                                "' disabled><span class='o-reload-1'></span></button></td>";
+                            dados +=
+                                "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" +
+                                value.id +
+                                "' disabled><span class='o-bin-1'></span></button></td>";
+                        } else {
+                            dados +=
+                                "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" +
+                                value.id +
+                                "'><span class='o-reload-1'></span></button></td>";
+                            dados +=
+                                "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" +
+                                value.id +
+                                "'><span class='o-bin-1'></span></button></td>";
+                        }
+                        dados += "</tr>";
+                        $("#table-body-invites").append(dados);
+                    });
+
+                    pagination(response, "invites");
+                }
+                getInvitationData();
+
+                // Reenviar convite
+                $(".resend-invitation").unbind("click");
+                $(".resend-invitation").on("click", function () {
+                    let invitationId = $(this).attr("invitation");
+                    $("#modal-resend-invitation").modal("show");
+                    $("#btn-resend-invitation").unbind("click");
+                    $("#btn-resend-invitation").on("click", function () {
+                        loadingOnScreen();
+                        $.ajax({
+                            method: "POST",
+                            url: "/api/invitations/resendinvitation",
+                            data: { invitationId: invitationId },
+                            dataType: "json",
+                            headers: {
+                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Accept: "application/json",
+                            },
+                            error: (response) => {
+                                loadingOnScreenRemove();
+                                errorAjaxResponse(response);
+                            },
+                            success: (response) => {
+                                loadingOnScreenRemove();
+                                updateInvites();
+                                alertCustom("success", response.message);
+                            },
+                        });
+                    });
+                });
+
+                // Excluir convite
+                $(".delete-invitation").unbind("click");
+                $(".delete-invitation").on("click", function () {
+                    let invitationId = $(this).attr("invitation");
+                    $("#modal-delete-invitation").modal("show");
+                    $("#btn-delete-invitation").unbind("click");
+                    $("#btn-delete-invitation").on("click", function () {
+                        loadingOnScreen();
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/api/invitations/" + invitationId,
+                            data: { invitationId: invitationId },
+                            dataType: "json",
+                            headers: {
+                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Accept: "application/json",
+                            },
+                            error: (response) => {
+                                loadingOnScreenRemove();
+                                errorAjaxResponse(response);
+                            },
+                            success: (response) => {
+                                loadingOnScreenRemove();
+                                updateInvites();
+                                alertCustom('success', response.message);
+                            }
+                        });
+                    });
+    //     var cont = 0;
+    //     $.ajax({
+    //         method: "GET",
+    //         url: '/api/invitations?company='+ $('.company-navbar').val(),
+    //         dataType: "json",
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: (response) => {
+    //             loadingOnScreenRemove();
+    //             errorAjaxResponse(response);
+    //         },
+    //         success: (response) => {
+    //             if (isEmpty(response.data)) {
+    //                 $("#card-table-invite").hide();
+    //                 $("#table_invites").hide();
+    //                 $("#content-error").show();
+    //             } else {
+    //                 $("#content-error").hide();
+    //                 $("#table_invites").show();
+    //                 $("#card-table-invite").css('display', 'block');
+    //                 $("#card-invitation-data").css('display', 'block');
+
+    //                 // $("#text-info").css('display', 'block');
+    //                 $("#card-table-invite").css('display', 'block');
+    //                 $("#table-body-invites").html('');
+
+    //                 $.each(response.data, function (index, value) {
+    //                     dados = '';
+    //                     dados += '<tr>';
+    //                     if (index != 9) {
+    //                         dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (currentPage - 1) + (cont += 1) + '</button></td>';
+    //                     } else {
+    //                         dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + response.meta.to + '</button></td>';
+    //                     }
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + '</td>';
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">' + value.company_name + '</td>';
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">';
+    //                     dados += '<span class="badge badge-' + statusInvite[value.status] + ' text-center">' + value.status_translated + '</span>';
+    //                     dados += '</td>';
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
+    //                     if (value.status != '2' || verifyAccountFrozen()) {
+    //                         dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-reload-1'></span></button></td>";
+    //                         dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-bin-1'></span></button></td>";
+
+    //                     } else {
+    //                         dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "'><span class='o-reload-1'></span></button></td>";
+    //                         dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "'><span class='o-bin-1'></span></button></td>";
+    //                     }
+    //                     dados += '</tr>';
+    //                     $("#table-body-invites").append(dados);
+    //                 });
+
+    //             loadingOnScreenRemove()
+    //         }
+    //     });
+    // }
+
+    // function updateInvitesAfterChangeCompany() {
+    //     loadOnTable('#table-body-invites', '#table_invites');
+    //     loadOnAny('.number', false, {
+    //         styles: {
+    //             container: {
+    //                 minHeight: "32px",
+    //                 height: "auto",
+    //             },
+    //             loader: {
+    //                 width: "20px",
+    //                 height: "20px",
+    //                 borderWidth: "4px",
+    //             },
+    //         },
+    //     });
+    //     var cont = 0;
+    //     $.ajax({
+    //         method: "GET",
+    //         url: '/api/invitations?company='+ $('.company-navbar').val(),
+    //         dataType: "json",
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: (response) => {
+    //             loadingOnScreenRemove();
+    //             errorAjaxResponse(response);
+    //         },
+    //         success: (response) => {
+    //             if (isEmpty(response.data)) {
+    //                 $("#card-table-invite").hide();
+    //                 $("#table_invites").hide();
+    //                 $("#content-error").show();
+    //             } else {
+    //                 $("#content-error").hide();
+    //                 $("#table_invites").show();
+    //                 $("#card-table-invite").css('display', 'block');
+    //                 $("#card-invitation-data").css('display', 'block');
+
+    //                 // $("#text-info").css('display', 'block');
+    //                 $("#card-table-invite").css('display', 'block');
+    //                 $("#table-body-invites").html('');
+
+    //                 $.each(response.data, function (index, value) {
+    //                     dados = '';
+    //                     dados += '<tr>';
+    //                     if (index != 9) {
+    //                         dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (currentPage - 1) + (cont += 1) + '</button></td>';
+    //                     } else {
+    //                         dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + response.meta.to + '</button></td>';
+    //                     }
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + '</td>';
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">' + value.company_name + '</td>';
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">';
+    //                     dados += '<span class="badge badge-' + statusInvite[value.status] + ' text-center">' + value.status_translated + '</span>';
+    //                     dados += '</td>';
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
+    //                     dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
+    //                     if (value.status != '2' || verifyAccountFrozen()) {
+    //                         dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-reload-1'></span></button></td>";
+    //                         dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-bin-1'></span></button></td>";
+
+    //                     } else {
+    //                         dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "'><span class='o-reload-1'></span></button></td>";
+    //                         dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "'><span class='o-bin-1'></span></button></td>";
+    //                     }
+    //                     dados += '</tr>';
+    //                     $("#table-body-invites").append(dados);
+                    });
+
+                loadingOnScreenRemove()
+            }
+        });
+    }
+
+    function updateInvitesAfterChangeCompany() {
+        loadOnTable('#table-body-invites', '#table_invites');
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        var cont = 0;
+        $.ajax({
+            method: "GET",
+            url: '/api/invitations?company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -43,9 +374,12 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
+                    $("#card-table-invite").hide();
+                    $("#table_invites").hide();
                     $("#content-error").show();
                 } else {
                     $("#content-error").hide();
+                    $("#table_invites").show();
                     $("#card-table-invite").css('display', 'block');
                     $("#card-invitation-data").css('display', 'block');
 
@@ -82,83 +416,21 @@ $(document).ready(function () {
 
                     pagination(response, 'invites');
                 }
-                getInvitationData();
 
-                // Reenviar convite
-                $(".resend-invitation").unbind('click');
-                $('.resend-invitation').on('click', function () {
-                    let invitationId = $(this).attr('invitation');
-                    $('#modal-resend-invitation').modal('show');
-                    $('#btn-resend-invitation').unbind('click');
-                    $('#btn-resend-invitation').on('click', function () {
-                        loadingOnScreen();
-                        $.ajax({
-                            method: "POST",
-                            url: "/api/invitations/resendinvitation",
-                            data: { invitationId: invitationId },
-                            dataType: "json",
-                            headers: {
-                                'Authorization': $('meta[name="access-token"]').attr('content'),
-                                'Accept': 'application/json',
-                            },
-                            error: (response) => {
-                                loadingOnScreenRemove();
-                                errorAjaxResponse(response);
-                            },
-                            success: (response) => {
-                                loadingOnScreenRemove();
-                                updateInvites();
-                                alertCustom('success', response.message);
-                            }
-                        });
-                    });
-                });
-
-                // Excluir convite
-                $('.delete-invitation').unbind('click');
-                $('.delete-invitation').on('click', function () {
-                    let invitationId = $(this).attr('invitation');
-                    $('#modal-delete-invitation').modal('show');
-                    $('#btn-delete-invitation').unbind('click');
-                    $('#btn-delete-invitation').on('click', function () {
-                        loadingOnScreen();
-                        $.ajax({
-                            method: "DELETE",
-                            url: "/api/invitations/" + invitationId,
-                            data: { invitationId: invitationId },
-                            dataType: "json",
-                            headers: {
-                                'Authorization': $('meta[name="access-token"]').attr('content'),
-                                'Accept': 'application/json',
-                            },
-                            error: (response) => {
-                                loadingOnScreenRemove();
-                                errorAjaxResponse(response);
-                            },
-                            success: (response) => {
-                                loadingOnScreenRemove();
-                                updateInvites();
-                                alertCustom('success', response.message);
-                            }
-                        });
-                    });
-                });
-
-                loadingOnScreenRemove()
+                loadingOnScreenRemove();
             }
         });
     }
 
     $("#store-invite").unbind();
-    $("#store-invite").on('click', function () {
-
+    $("#store-invite").on("click", function () {
         $.ajax({
             method: "GET",
             url: "/api/core/companies",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
                 loadingOnScreenRemove();
@@ -177,25 +449,31 @@ $(document).ready(function () {
                         let contCompanies = 0;
                         let contCompaniesNotApproved = 0;
 
-                        var selCompany = '';
+                        var selCompany = "";
                         selCompany = '<select id="select-company-list" class="sirius-select">';
 
                         disabledCompany = false;
                         $.each(response.data, function (index, company) {
                             contCompanies++;
                             if (companyIsApproved(company)) {
-                                if (company.type_company === 'physical person') {
-                                    if (statusDocumentUser[company.user_address_document_status] !== 'Aprovado' || statusDocumentUser[company.user_personal_document_status] !== 'Aprovado') {
+                                if (company.type_company === "physical person") {
+                                    if (
+                                        statusDocumentUser[company.user_address_document_status] !== "Aprovado" ||
+                                        statusDocumentUser[company.user_personal_document_status] !== "Aprovado"
+                                    ) {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
                                         selCompany += `<option value=${company.id_code} disabled> ${company.fantasy_name}  </option>`;
                                     } else {
                                         selCompany += `<option value=${company.id_code} >  ${company.fantasy_name}  </option>`;
-
                                     }
-
-                                } else if (company.type_company === 'juridical person') {
-                                    if (company.address_document_translate !== 'Aprovado' || company.contract_document_translate !== 'Aprovado' || statusDocumentUser[company.user_address_document_status] !== 'Aprovado' || statusDocumentUser[company.user_personal_document_status] !== 'Aprovado') {
+                                } else if (company.type_company === "juridical person") {
+                                    if (
+                                        company.address_document_translate !== "Aprovado" ||
+                                        company.contract_document_translate !== "Aprovado" ||
+                                        statusDocumentUser[company.user_address_document_status] !== "Aprovado" ||
+                                        statusDocumentUser[company.user_personal_document_status] !== "Aprovado"
+                                    ) {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
                                         selCompany += `<option value=${company.id_code} disabled> ${company.fantasy_name}  </option>`;
@@ -204,11 +482,10 @@ $(document).ready(function () {
                                     }
                                 }
                             } else {
-                                contCompaniesNotApproved++
+                                contCompaniesNotApproved++;
                             }
-
                         });
-                        selCompany += '</select>';
+                        selCompany += "</select>";
 
                         if (contCompanies === contCompaniesNotApproved) {
                             $("#modal-then-companies").hide();
@@ -219,18 +496,18 @@ $(document).ready(function () {
                             $("#modal-not-approved-document-companies").hide();
                             $("#modal-then-companies").show();
 
-                            $("#modal-reverse-title").html('Novo Convite');
+                            $("#modal-reverse-title").html("Novo Convite");
 
-                            $("#company-list").html('').append(selCompany);
+                            $("#company-list").html("").append(selCompany);
 
                             var linkInvite = '';
-                            var companyId = $("#select-company-list option:selected").val();
-                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $("#select-company-list option:selected").val();
+                            var companyId = $('.company-navbar').val();
+                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + companyId;
 
                             $("#invite-link").val(linkInvite);
 
-                            $("#select-company-list").on('change', function () {
-                                linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $(this).val();
+                            $("#select-company-list").on("change", function () {
+                                linkInvite = "https://accounts.cloudfox.net/signup?i=" + $(this).val();
                                 $("#invite-link").val(linkInvite);
                                 companyId = $(this).val();
                             });
@@ -240,17 +517,17 @@ $(document).ready(function () {
                                 copyText.select();
                                 document.execCommand("copy");
 
-                                alertCustom('success', 'Link copiado!');
+                                alertCustom("success", "Link copiado!");
                             });
 
                             $("#btn-send-invite").unbind();
-                            $("#btn-send-invite").on('click', function () {
+                            $("#btn-send-invite").on("click", function () {
                                 var email = $("#email").val();
 
-                                if (email == '') {
-                                    alertCustom('error', 'O campo Email do convidado é obrigatório');
-                                } else if (companyId == '') {
-                                    alertCustom('error', 'O campo Empresa para receber é obrigatório');
+                                if (email == "") {
+                                    alertCustom("error", "O campo Email do convidado é obrigatório");
+                                } else if (companyId == "") {
+                                    alertCustom("error", "O campo Empresa para receber é obrigatório");
                                 } else {
                                     loadingOnScreen();
                                     sendInviteAjax(email, companyId);
@@ -261,11 +538,10 @@ $(document).ready(function () {
                 } else {
                     $("#modal-not-invites-today").show();
                 }
-
-            }
+            },
         });
 
-        $("#modal-invite").modal('show');
+        $("#modal-invite").modal("show");
     });
 
     function sendInviteAjax(email, companyId) {
@@ -274,12 +550,12 @@ $(document).ready(function () {
             url: "/api/invitations",
             data: {
                 email: email,
-                company: companyId
+                company: companyId,
             },
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
                 loadingOnScreenRemove();
@@ -287,36 +563,43 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $(".close").click();
-                alertCustom('success', response.message);
+                alertCustom("success", response.message);
                 loadingOnScreenRemove();
                 updateInvites();
-            }
+            },
         });
     }
 
     function getInvitationData() {
         $.ajax({
             method: "GET",
-            url: '/api/invitations/getinvitationdata',
+            url: '/api/invitations/getinvitationdata' + '?company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
                 errorAjaxResponse(response)
+                loadingOnScreenRemove();
+                loadOnAny('.number',true);
             },
             success: (response) => {
-                $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '');
-                $("#invitations_sent").html('' + response.data.invitation_sent_count + '');
+                $("#invitations_accepted").html("" + response.data.invitation_accepted_count + "");
+                $("#invitations_sent").html("" + response.data.invitation_sent_count + "");
                 var commission_paid = response.data.commission_paid.split(/\s/g);
-                $("#commission_paid").html(commission_paid[0] + ' <strong class="font-size-30">' + commission_paid[1] + '</strong>');
+                $("#commission_paid").html(
+                    commission_paid[0] + ' <strong class="font-size-30">' + commission_paid[1] + "</strong>"
+                );
                 var commission_pending = response.data.commission_pending.split(/\s/g);
-                $("#commission_pending").html(commission_pending[0] + ' <strong class="font-size-30">' + commission_pending[1] + '</strong>');
-                $("#invitations_amount").html('' + response.data.invitations_available);
+                $("#commission_pending").html(
+                    commission_pending[0] + ' <strong class="font-size-30">' + commission_pending[1] + "</strong>"
+                );
+                $("#invitations_amount").html("" + response.data.invitations_available);
                 if (verifyAccountFrozen()) {
-                    $('#store-invite').attr('disabled', true);
+                    $("#store-invite").attr("disabled", true);
                 }
+                loadOnAny('.number',true);
             }
         });
     }
@@ -333,66 +616,79 @@ $(document).ready(function () {
 
             $("#pagination-" + model).append(first_page);
 
-            if (response.meta.current_page == '1') {
-                $("#first_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+            if (response.meta.current_page == "1") {
+                $("#first_page").attr("disabled", true).addClass("nav-btn").addClass("active");
             }
 
-            $('#first_page').on("click", function () {
+            $("#first_page").on("click", function () {
                 currentPage = 1;
-                updateInvites('?page=1');
+                updateInvites("?page=1");
             });
 
             for (x = 3; x > 0; x--) {
-
                 if (response.meta.current_page - x <= 1) {
                     continue;
                 }
 
-                $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+                $("#pagination-" + model).append(
+                    "<button id='page_" +
+                        (response.meta.current_page - x) +
+                        "' class='btn nav-btn'>" +
+                        (response.meta.current_page - x) +
+                        "</button>"
+                );
 
-                $('#page_' + (response.meta.current_page - x)).on("click", function () {
+                $("#page_" + (response.meta.current_page - x)).on("click", function () {
                     currentPage = $(this).html();
-                    updateInvites('?page=' + $(this).html());
+                    updateInvites("?page=" + $(this).html());
                 });
             }
 
             if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                var current_page = "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
+                var current_page =
+                    "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
                 $("#pagination-" + model).append(current_page);
 
-                $("#current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+                $("#current_page").attr("disabled", true).addClass("nav-btn").addClass("active");
             }
             for (x = 1; x < 4; x++) {
-
                 if (response.meta.current_page + x >= response.meta.last_page) {
                     continue;
                 }
 
-                $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+                $("#pagination-" + model).append(
+                    "<button id='page_" +
+                        (response.meta.current_page + x) +
+                        "' class='btn nav-btn'>" +
+                        (response.meta.current_page + x) +
+                        "</button>"
+                );
 
-                $('#page_' + (response.meta.current_page + x)).on("click", function () {
+                $("#page_" + (response.meta.current_page + x)).on("click", function () {
                     currentPage = $(this).html();
-                    updateInvites('?page=' + $(this).html());
+                    updateInvites("?page=" + $(this).html());
                 });
             }
 
-            if (response.meta.last_page != '1') {
+            if (response.meta.last_page != "1") {
                 var last_page = "<button id='last_page' class='btn nav-btn'>" + response.meta.last_page + "</button>";
 
                 $("#pagination-" + model).append(last_page);
 
                 if (response.meta.current_page == response.meta.last_page) {
-                    $("#last_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+                    $("#last_page").attr("disabled", true).addClass("nav-btn").addClass("active");
                 }
 
-                $('#last_page').on("click", function () {
+                $("#last_page").on("click", function () {
                     currentPage = $(this).html();
-                    updateInvites('?page=' + response.meta.last_page);
+                    updateInvites("?page=" + response.meta.last_page);
                 });
             }
         }
     }
+
+    //$('.company_name').val( $('.company-navbar').find('option:selected').text() );
 
     //ALTERAÇÃO DE HTML
 

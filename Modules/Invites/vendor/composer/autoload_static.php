@@ -6,38 +6,45 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit9485133edde4b8ff0501e0cda0736d90
 {
-    public static $prefixLengthsPsr4 = array (
-        'M' => 
-        array (
-            'Modules\\Invites\\' => 16,
-        ),
-    );
+    public static $prefixLengthsPsr4 = [
+        "M" => [
+            "Modules\\Invites\\" => 16,
+        ],
+    ];
 
-    public static $prefixDirsPsr4 = array (
-        'Modules\\Invites\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/',
-        ),
-    );
+    public static $prefixDirsPsr4 = [
+        "Modules\\Invites\\" => [
+            0 => __DIR__ . "/../.." . "/",
+        ],
+    ];
 
-    public static $classMap = array (
-        'Modules\\Invites\\Database\\Seeders\\InvitesDatabaseSeeder' => __DIR__ . '/../..' . '/Database/Seeders/InvitesDatabaseSeeder.php',
-        'Modules\\Invites\\Http\\Controllers\\InvitesApiController' => __DIR__ . '/../..' . '/Http/Controllers/InvitesApiController.php',
-        'Modules\\Invites\\Http\\Controllers\\InvitesController' => __DIR__ . '/../..' . '/Http/Controllers/InvitesController.php',
-        'Modules\\Invites\\Http\\Requests\\SendInvitationRequest' => __DIR__ . '/../..' . '/Http/Requests/SendInvitationRequest.php',
-        'Modules\\Invites\\Providers\\InvitesServiceProvider' => __DIR__ . '/../..' . '/Providers/InvitesServiceProvider.php',
-        'Modules\\Invites\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Providers/RouteServiceProvider.php',
-        'Modules\\Invites\\Transformers\\InviteResource' => __DIR__ . '/../..' . '/Transformers/InviteResource.php',
-        'Modules\\Invites\\Transformers\\InvitesResource' => __DIR__ . '/../..' . '/Transformers/InvitesResource.php',
-    );
+    public static $classMap = [
+        "Modules\\Invites\\Database\\Seeders\\InvitesDatabaseSeeder" =>
+            __DIR__ . "/../.." . "/Database/Seeders/InvitesDatabaseSeeder.php",
+        "Modules\\Invites\\Http\\Controllers\\InvitesApiController" =>
+            __DIR__ . "/../.." . "/Http/Controllers/InvitesApiController.php",
+        "Modules\\Invites\\Http\\Controllers\\InvitesController" =>
+            __DIR__ . "/../.." . "/Http/Controllers/InvitesController.php",
+        "Modules\\Invites\\Http\\Requests\\SendInvitationRequest" =>
+            __DIR__ . "/../.." . "/Http/Requests/SendInvitationRequest.php",
+        "Modules\\Invites\\Providers\\InvitesServiceProvider" =>
+            __DIR__ . "/../.." . "/Providers/InvitesServiceProvider.php",
+        "Modules\\Invites\\Providers\\RouteServiceProvider" =>
+            __DIR__ . "/../.." . "/Providers/RouteServiceProvider.php",
+        "Modules\\Invites\\Transformers\\InviteResource" => __DIR__ . "/../.." . "/Transformers/InviteResource.php",
+        "Modules\\Invites\\Transformers\\InvitesResource" => __DIR__ . "/../.." . "/Transformers/InvitesResource.php",
+    ];
 
     public static function getInitializer(ClassLoader $loader)
     {
-        return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9485133edde4b8ff0501e0cda0736d90::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9485133edde4b8ff0501e0cda0736d90::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit9485133edde4b8ff0501e0cda0736d90::$classMap;
-
-        }, null, ClassLoader::class);
+        return \Closure::bind(
+            function () use ($loader) {
+                $loader->prefixLengthsPsr4 = ComposerStaticInit9485133edde4b8ff0501e0cda0736d90::$prefixLengthsPsr4;
+                $loader->prefixDirsPsr4 = ComposerStaticInit9485133edde4b8ff0501e0cda0736d90::$prefixDirsPsr4;
+                $loader->classMap = ComposerStaticInit9485133edde4b8ff0501e0cda0736d90::$classMap;
+            },
+            null,
+            ClassLoader::class
+        );
     }
 }

@@ -37,8 +37,8 @@ class BoletoPaidNotifyUser implements ShouldQueue
      */
     public function handle(BoletoPaidEvent $event)
     {
-        $user        = $event->data['user'];
-        $boletoCount = $event->data['boleto_count'];
+        $user = $event->data["user"];
+        $boletoCount = $event->data["boleto_count"];
 
         /** @var UserNotificationService $userNotificationService */
         $userNotificationService = app(UserNotificationService::class);

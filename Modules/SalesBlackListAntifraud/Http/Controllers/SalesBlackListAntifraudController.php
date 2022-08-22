@@ -20,7 +20,7 @@ class SalesBlackListAntifraudController extends Controller
      */
     public function index()
     {
-        return view('salesblacklistantifraud::index');
+        return view("salesblacklistantifraud::index");
     }
 
     /**
@@ -30,6 +30,6 @@ class SalesBlackListAntifraudController extends Controller
      */
     public function show($id)
     {
-        return view('salesblacklistantifraud::show');
+        return view("salesblacklistantifraud::show");
     }
 }

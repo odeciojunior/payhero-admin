@@ -19,12 +19,11 @@ class NotazzPolicy
      */
     public function show(User $user, NotazzIntegration $notazzIntegration)
     {
+        $notazzIntegration->load("project");
 
-        $notazzIntegration->load('project');
-
-        $userProject = UserProject::where('user_id', $user->account_owner_id)
-                                  ->where('project_id', $notazzIntegration->project->id)
-                                  ->first();
+        $userProject = UserProject::where("user_id", $user->account_owner_id)
+            ->where("project_id", $notazzIntegration->project->id)
+            ->first();
         if ($userProject) {
             return true;
         } else {

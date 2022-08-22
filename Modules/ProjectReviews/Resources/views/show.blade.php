@@ -1,10 +1,12 @@
-<br/>
+<br />
 
 <div class="card m-4">
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <img class="review-photo img-fluid rounded-circle p-0 m-0" width="40" height="40"
+                <img class="review-photo img-fluid rounded-circle p-0 m-0"
+                     width="40"
+                     height="40"
                      src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png">
                 <b class="pl-2 review-name"></b>
             </div>

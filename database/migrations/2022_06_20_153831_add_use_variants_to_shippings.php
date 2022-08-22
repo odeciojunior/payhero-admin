@@ -13,8 +13,11 @@ class AddUseVariantsToShippings extends Migration
      */
     public function up()
     {
-        Schema::table('shippings', function (Blueprint $table) {
-            $table->boolean('use_variants')->after('pre_selected')->default(true);
+        Schema::table("shippings", function (Blueprint $table) {
+            $table
+                ->boolean("use_variants")
+                ->after("pre_selected")
+                ->default(true);
         });
     }
 
@@ -25,8 +28,8 @@ class AddUseVariantsToShippings extends Migration
      */
     public function down()
     {
-        Schema::table('shippings', function (Blueprint $table) {
-            $table->dropColumn(['use_variants']);
+        Schema::table("shippings", function (Blueprint $table) {
+            $table->dropColumn(["use_variants"]);
         });
     }
 }

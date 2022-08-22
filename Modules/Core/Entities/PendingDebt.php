@@ -27,25 +27,25 @@ class PendingDebt extends Model
 {
     use LogsActivity;
 
-    const REVERSED = 'REVERSED';
-    const ADJUSTMENT = 'ADJUSTMENT';
+    const REVERSED = "REVERSED";
+    const ADJUSTMENT = "ADJUSTMENT";
 
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
     protected $fillable = [
-        'company_id',
-        'sale_id',
-        'type',
-        'request_date',
-        'confirm_date',
-        'payment_date',
-        'reason',
-        'value',
-        'created_at',
-        'updated_at'
+        "company_id",
+        "sale_id",
+        "type",
+        "request_date",
+        "confirm_date",
+        "payment_date",
+        "reason",
+        "value",
+        "created_at",
+        "updated_at",
     ];
 
     public function company(): BelongsTo
@@ -60,6 +60,6 @@ class PendingDebt extends Model
 
     public function withdrawals(): BelongsToMany
     {
-        return $this->belongsToMany(Withdrawal::class, 'pending_debt_withdrawals');
+        return $this->belongsToMany(Withdrawal::class, "pending_debt_withdrawals");
     }
 }

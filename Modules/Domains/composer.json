@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Domains\\Providers\\DomainsServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

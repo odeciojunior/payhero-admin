@@ -6,7 +6,7 @@
                     <!--
                     <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
                     -->
-                    <span class="new-register-open-modal-btn">Clique aqui para começar</span>
+                    <span class="new-register-open-modal-btn"><span style="color: #5B5B5B; font-weight:normal">Você está em uma conta demo. </span><br/>Clique para começar<span class="count"></span></span>
                 </div>
             </div>
         </div>

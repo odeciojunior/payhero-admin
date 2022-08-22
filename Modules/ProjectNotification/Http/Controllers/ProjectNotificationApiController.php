@@ -29,21 +29,25 @@ class ProjectNotificationApiController extends Controller
 
             $projectId = current(Hashids::decode($projectId));
 
-            activity()->on($projectNotificationModel)->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela de notificaçoes do projeto');
+            activity()
+                ->on($projectNotificationModel)
+                ->tap(function (Activity $activity) {
+                    $activity->log_name = "visualization";
+                })
+                ->log("Visualizou tela de notificaçoes do projeto");
 
             $userId = auth()->user()->account_owner_id;
 
-            $projectNotifications = $projectNotificationModel->where('project_id', $projectId)
-                                                             ->whereHas('userProject', function($q) use ($userId) {
-                                                                 $q->where('user_id', $userId);
-                                                             })
-                                                             ->paginate(5);
+            $projectNotifications = $projectNotificationModel
+                ->where("project_id", $projectId)
+                ->whereHas("userProject", function ($q) use ($userId) {
+                    $q->where("user_id", $userId);
+                })
+                ->paginate(5);
 
             return ProjectNotificationResource::collection($projectNotifications);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Ocorreu algum erro'], 400);
+            return response()->json(["message" => "Ocorreu algum erro"], 400);
         }
     }
 
@@ -57,35 +61,38 @@ class ProjectNotificationApiController extends Controller
         try {
             if (isset($projectId) && isset($id)) {
                 $projectNotificationModel = new ProjectNotification();
-                $projectModel             = new Project();
-                $projectNotification      = $projectNotificationModel->find(current(Hashids::decode($id)));
-                $project                  = $projectModel->find(current(Hashids::decode($projectId)));
+                $projectModel = new Project();
+                $projectNotification = $projectNotificationModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
 
-                activity()->on($projectModel)->tap(function(Activity $activity) use ($projectNotification) {
-                    $activity->log_name   = 'visualization';
-                    $activity->subject_id = $projectNotification->id;
-                })->log('Visualizou tela detalhes da notificação do projeto');
+                activity()
+                    ->on($projectModel)
+                    ->tap(function (Activity $activity) use ($projectNotification) {
+                        $activity->log_name = "visualization";
+                        $activity->subject_id = $projectNotification->id;
+                    })
+                    ->log("Visualizou tela detalhes da notificação do projeto");
 
-                $projectNotification->project_image   = $project->photo;
-                $projectNotification->project_name    = $project->name;
+                $projectNotification->project_image = $project->photo;
+                $projectNotification->project_name = $project->name;
 
-                if (Gate::allows('edit', [$project])) {
+                if (Gate::allows("edit", [$project])) {
                     if ($projectNotification) {
                         return new ProjectNotificationResource($projectNotification);
                     } else {
-                        return response()->json(['message' => 'Erro ao buscar notificação'], 400);
+                        return response()->json(["message" => "Erro ao buscar notificação"], 400);
                     }
                 } else {
-                    return response()->json(['message' => 'Sem permissão para visualizar notificação'], 400);
+                    return response()->json(["message" => "Sem permissão para visualizar notificação"], 400);
                 }
             }
 
-            return response()->json(['message' => 'Erro ao buscar Notificação'], 400);
+            return response()->json(["message" => "Erro ao buscar Notificação"], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da notificação (ProjectNotificationApiController - show)');
+            Log::warning("Erro ao buscar dados da notificação (ProjectNotificationApiController - show)");
             report($e);
 
-            return response()->json(['message' => 'Erro ao buscar Notificação'], 400);
+            return response()->json(["message" => "Erro ao buscar Notificação"], 400);
         }
     }
 
@@ -95,7 +102,6 @@ class ProjectNotificationApiController extends Controller
      */
     public function store(Request $request)
     {
-
     }
 
     /**
@@ -112,13 +118,16 @@ class ProjectNotificationApiController extends Controller
 
                 // $project = $projectModel->find(current(Hashids::decode($notificationId)));
 
-                activity()->on($projectNotificationModel)->tap(function(Activity $activity) use ($notificationId) {
-                    $activity->log_name   = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($notificationId));
-                })->log('Visualizou tela editar notificação do projeto');
+                activity()
+                    ->on($projectNotificationModel)
+                    ->tap(function (Activity $activity) use ($notificationId) {
+                        $activity->log_name = "visualization";
+                        $activity->subject_id = current(Hashids::decode($notificationId));
+                    })
+                    ->log("Visualizou tela editar notificação do projeto");
 
                 $notificationId = current(Hashids::decode($notificationId));
-                $notification   = $projectNotificationModel->where('id', $notificationId)->first();
+                $notification = $projectNotificationModel->where("id", $notificationId)->first();
 
                 // if (Gate::denies('edit', [$project])) {
                 //     return response()->json([
@@ -130,23 +139,33 @@ class ProjectNotificationApiController extends Controller
                 if ($notification) {
                     return new ProjectNotificationResource($notification);
                 } else {
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                            ], 400);
+                    return response()->json(
+                        [
+                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                        ],
+                        400
+                    );
                 }
             } else {
-
-                return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                        ], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar tela editar notificação do projeto (ProjectNotificationApiController - edit)');
+            Log::warning(
+                "Erro ao tentar acessar tela editar notificação do projeto (ProjectNotificationApiController - edit)"
+            );
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                    ], 400);
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                ],
+                400
+            );
         }
     }
 
@@ -160,63 +179,68 @@ class ProjectNotificationApiController extends Controller
     {
         try {
             if (isset($projectId) && isset($id)) {
-                $projectNotificationModel   = new ProjectNotification();
-                $projectModel               = new Project();
+                $projectNotificationModel = new ProjectNotification();
+                $projectModel = new Project();
                 $projectNotificationPresent = $projectNotificationModel->present();
 
                 $projectNotificationId = current(Hashids::decode($id));
 
                 $projectNotification = $projectNotificationModel->find($projectNotificationId);
-                $project             = $projectModel->find(current(Hashids::decode($projectId)));
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
 
-                activity()->on($projectNotificationModel)
-                          ->tap(function(Activity $activity) use ($projectNotificationId) {
-                              $activity->log_name   = 'updated';
-                              $activity->subject_id = $projectNotificationId;
-                          })->log('Atualizou notificação do projeto');
+                activity()
+                    ->on($projectNotificationModel)
+                    ->tap(function (Activity $activity) use ($projectNotificationId) {
+                        $activity->log_name = "updated";
+                        $activity->subject_id = $projectNotificationId;
+                    })
+                    ->log("Atualizou notificação do projeto");
 
-                if (Gate::allows('edit', [$project])) {
+                if (Gate::allows("edit", [$project])) {
                     $data = [];
-                    if (!empty($request->input('message'))) {
-                        if ($projectNotification->type_enum == $projectNotificationPresent->getTypeEnum('email')) {
-                            if (!empty($request->input('title')) && !empty($request->input('subject'))) {
-                                $data['message'] = json_encode([
-                                                                   'subject' => $request->input('subject'),
-                                                                   'title'   => $request->input('title'),
-                                                                   'content' => $request->input('message'),
-                                                               ]);
+                    if (!empty($request->input("message"))) {
+                        if ($projectNotification->type_enum == $projectNotificationPresent->getTypeEnum("email")) {
+                            if (!empty($request->input("title")) && !empty($request->input("subject"))) {
+                                $data["message"] = json_encode([
+                                    "subject" => $request->input("subject"),
+                                    "title" => $request->input("title"),
+                                    "content" => $request->input("message"),
+                                ]);
                             }
                         } else {
-                            $data['message'] = $request->input('message');
+                            $data["message"] = $request->input("message");
                         }
                     }
 
-                    if (!is_null($request->input('status'))) {
-                        $data['status'] = $request->input('status');
+                    if (!is_null($request->input("status"))) {
+                        $data["status"] = $request->input("status");
                     }
 
                     if (count($data) > 0) {
                         $notificationUpdated = $projectNotification->update($data);
 
                         if ($notificationUpdated) {
-                            return response()->json(['message' => 'Atualizado com sucesso', 'status' => $data['status']], 200);
+                            return response()->json(
+                                ["message" => "Atualizado com sucesso", "status" => $data["status"]],
+                                200
+                            );
                         } else {
-                            return response()->json(['message' => 'Erro ao atualizar notificação'], 400);
+                            return response()->json(["message" => "Erro ao atualizar notificação"], 400);
                         }
                     } else {
-                        return response()->json(['message' => 'Dados inválidos para atualizar notificação'], 400);
+                        return response()->json(["message" => "Dados inválidos para atualizar notificação"], 400);
                     }
                 } else {
-                    return response()->json(['message' => 'Sem permissão para atualizar notificação'], 400);
+                    return response()->json(["message" => "Sem permissão para atualizar notificação"], 400);
                 }
             }
 
-            return response()->json(['message' => 'Erro ao atualizar notificação'], 400);
+            return response()->json(["message" => "Erro ao atualizar notificação"], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao atualizar notificação (ProjectNotificationApiController - update)');
+            Log::warning("Erro ao atualizar notificação (ProjectNotificationApiController - update)");
             report($e);
 
-            return response()->json(['message' => 'Erro ao atualizar notificação'], 400);
+            return response()->json(["message" => "Erro ao atualizar notificação"], 400);
         }
     }
 
@@ -226,6 +250,5 @@ class ProjectNotificationApiController extends Controller
      */
     public function destroy($id)
     {
-
     }
 }

@@ -13,9 +13,12 @@ class AddColumnAsaasBalanceOnCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->integer('asaas_balance')->default(0)->after('balance');
-            $table->renameColumn('balance', 'cielo_balance');
+        Schema::table("companies", function (Blueprint $table) {
+            $table
+                ->integer("asaas_balance")
+                ->default(0)
+                ->after("balance");
+            $table->renameColumn("balance", "cielo_balance");
         });
     }
 
@@ -26,9 +29,9 @@ class AddColumnAsaasBalanceOnCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('asaas_balance');
-            $table->renameColumn('cielo_balance', 'balance');
+        Schema::table("companies", function (Blueprint $table) {
+            $table->dropColumn("asaas_balance");
+            $table->renameColumn("cielo_balance", "balance");
         });
     }
 }

@@ -21,14 +21,15 @@ class TransfersApiController
             $gatewayId = hashids_decode($request->gateway_id);
 
             return Gateway::getServiceById($gatewayId)
-                    ->setCompany($company)
-                    ->getStatement($request->all());
-
+                ->setCompany($company)
+                ->getStatement($request->all());
         } catch (Exception $e) {
             report($e);
-            return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ],400
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                ],
+                400
             );
         }
     }
@@ -38,17 +39,19 @@ class TransfersApiController
         try {
             $dataRequest = request()->all();
 
-            if (!empty(request('sale'))) {
-                request()->merge(['sale' => str_replace('#', '', request('sale'))]);
+            if (!empty(request("sale"))) {
+                request()->merge(["sale" => str_replace("#", "", request("sale"))]);
             }
 
-            if (!empty($dataRequest['sale'])) {
-                $dataRequest['sale'] = str_replace('#', '', $dataRequest['sale']);
+            if (!empty($dataRequest["sale"])) {
+                $dataRequest["sale"] = str_replace("#", "", $dataRequest["sale"]);
             }
 
-            $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement(hashids_decode($dataRequest['company']));
-            $filters = $filtersAndStatement['filters'];
-            $result = json_decode($filtersAndStatement['statement']);
+            $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement(
+                hashids_decode($dataRequest["company"])
+            );
+            $filters = $filtersAndStatement["filters"];
+            $result = json_decode($filtersAndStatement["statement"]);
 
             if (isset($result->errors)) {
                 return response()->json($result->errors, 400);
@@ -59,15 +62,15 @@ class TransfersApiController
             report($exception);
 
             $error = [
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                "message" => "Ocorreu um erro, tente novamente mais tarde!",
             ];
 
             $error += [
-                'dev_message' => $exception->getMessage(),
-                'dev_file' => $exception->getFile(),
-                'dev_line' => $exception->getLine(),
-                'dev_code' => $exception->getCode(),
-                'dev_trace' => $exception->getTrace(),
+                "dev_message" => $exception->getMessage(),
+                "dev_file" => $exception->getFile(),
+                "dev_line" => $exception->getLine(),
+                "dev_code" => $exception->getCode(),
+                "dev_trace" => $exception->getTrace(),
             ];
             return response()->json($error, 400);
         }
@@ -78,30 +81,31 @@ class TransfersApiController
         try {
             $dataRequest = \request()->all();
 
-            activity()->tap(function (Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Exportou tabela ' . $dataRequest['format'] . ' da agenda financeira');
+            activity()
+                ->tap(function (Activity $activity) {
+                    $activity->log_name = "visualization";
+                })
+                ->log("Exportou tabela " . $dataRequest["format"] . " da agenda financeira");
 
             $user = auth()->user();
-            $filename = 'finances_report_' . Hashids::encode($user->id) . '.xls';
+            $filename = "finances_report_" . Hashids::encode($user->id) . ".xls";
 
-            (new FinanceReportExport($dataRequest, $user, $filename))
-                ->queue($filename)->allOnQueue('high');
+            (new FinanceReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue("high");
 
-            return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
+            return response()->json(["message" => "A exportação começou", "email" => $dataRequest["email"]]);
         } catch (Exception $exception) {
             report($exception);
 
             $error = [
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                "message" => "Ocorreu um erro, tente novamente mais tarde!",
             ];
 
             $error += [
-                'dev_message' => $exception->getMessage(),
-                'dev_file' => $exception->getFile(),
-                'dev_line' => $exception->getLine(),
-                'dev_code' => $exception->getCode(),
-                'dev_trace' => $exception->getTrace(),
+                "dev_message" => $exception->getMessage(),
+                "dev_file" => $exception->getFile(),
+                "dev_line" => $exception->getLine(),
+                "dev_code" => $exception->getCode(),
+                "dev_trace" => $exception->getTrace(),
             ];
             return response()->json($error, 400);
         }

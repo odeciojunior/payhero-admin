@@ -13,8 +13,11 @@ class AddColumnGatewayTransferredToTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->boolean('gateway_transferred')->default(false)->after('gateway_released_at');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->boolean("gateway_transferred")
+                ->default(false)
+                ->after("gateway_released_at");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnGatewayTransferredToTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('gateway_transferred');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("gateway_transferred");
         });
     }
 }

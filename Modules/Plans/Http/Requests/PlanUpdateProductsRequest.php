@@ -14,14 +14,14 @@ class PlanUpdateProductsRequest extends FormRequest
     public function rules()
     {
         return [
-            'products'        => 'required|array',
+            "products" => "required|array",
         ];
     }
 
     public function messages()
     {
         return [
-            'products.required'        => 'O campo Produtos é obrigatório'
+            "products.required" => "O campo Produtos é obrigatório",
         ];
     }
 

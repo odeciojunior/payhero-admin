@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        "middleware" => ["auth:api", "scopes:admin", "demo_account"],
     ],
     function () {
 
@@ -22,7 +22,7 @@ Route::group(
         Route::post('/withdrawals/get-transactions/{withdrawal_id}', 'WithdrawalsApiController@getTransactions');
 
         Route::get('/withdrawals/settings', 'WithdrawalsSettingsApiController@index');
-        Route::get('/withdrawals/settings/{settingsId}', 'WithdrawalsSettingsApiController@show');
+        Route::get('/withdrawals/settings/{companyId}', 'WithdrawalsSettingsApiController@show');
 
         Route::apiResource('/withdrawals/settings', 'WithdrawalsSettingsApiController')
                 ->only('store', 'update', 'destroy')
@@ -34,4 +34,3 @@ Route::group(
         Route::get('/withdrawals/get-resume/', 'WithdrawalsApiController@getResume');
     }
 );
-

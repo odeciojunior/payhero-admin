@@ -12,8 +12,8 @@ class AddColumnIsMobileTableCheckout extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->boolean('is_mobile')->default(1);
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->boolean("is_mobile")->default(1);
         });
     }
 
@@ -23,8 +23,8 @@ class AddColumnIsMobileTableCheckout extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->dropColumn('is_mobile');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("is_mobile");
         });
     }
 }

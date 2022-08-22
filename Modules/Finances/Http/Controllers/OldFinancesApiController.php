@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Finances\Http\Controllers;
-
 
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -27,12 +25,11 @@ class OldFinancesApiController
     public function getBalances(Request $request): JsonResponse
     {
         try {
-            return response()->json('Not found', 404);
-
+            return response()->json("Not found", 404);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
+            return response()->json(["message" => "Ocorreu algum erro, tente novamente!"], 400);
         }
     }
 
@@ -45,23 +42,23 @@ class OldFinancesApiController
         try {
             $dataRequest = $request->all();
 
-            activity()->tap(
-                function (Activity $activity) {
-                    $activity->log_name = 'visualization';
-                }
-            )->log('Exportou tabela ' . $dataRequest['format'] . ' de transferências');
+            activity()
+                ->tap(function (Activity $activity) {
+                    $activity->log_name = "visualization";
+                })
+                ->log("Exportou tabela " . $dataRequest["format"] . " de transferências");
 
             $user = auth()->user();
 
-            $filename = 'extract_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+            $filename = "extract_report_" . Hashids::encode($user->id) . "." . $dataRequest["format"];
 
-            (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+            (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue("high");
 
-            return response()->json(['message' => 'A exportação começou', 'email' => $user->email]);
+            return response()->json(["message" => "A exportação começou", "email" => $user->email]);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
+            return response()->json(["message" => "Erro ao tentar gerar o arquivo Excel."], 200);
         }
     }
 }

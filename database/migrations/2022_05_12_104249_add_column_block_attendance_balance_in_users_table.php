@@ -13,8 +13,11 @@ class AddColumnBlockAttendanceBalanceInUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('block_attendance_balance')->default(true)->after('mkt_information');
+        Schema::table("users", function (Blueprint $table) {
+            $table
+                ->boolean("block_attendance_balance")
+                ->default(true)
+                ->after("mkt_information");
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnBlockAttendanceBalanceInUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('block_attendance_balance');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropColumn("block_attendance_balance");
         });
     }
 }

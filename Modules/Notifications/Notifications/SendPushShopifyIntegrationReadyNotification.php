@@ -34,7 +34,7 @@ class SendPushShopifyIntegrationReadyNotification extends Notification
      */
     public function __construct(User $user, Project $project)
     {
-        $this->user    = $user;
+        $this->user = $user;
         $this->project = $project;
     }
 
@@ -54,13 +54,13 @@ class SendPushShopifyIntegrationReadyNotification extends Notification
             $pusherService = new PusherService();
 
             $data = [
-                'message' => 'Integração do seu projeto ' . $this->project->name . 'com o shopify está pronto',
-                'user'    => $this->user->id,
+                "message" => "Integração do seu projeto " . $this->project->name . "com o shopify está pronto",
+                "user" => $this->user->id,
             ];
 
             $pusherService->sendPusher($data);
         } catch (Exception $e) {
-            Log::warning('erro ao enviar notificação com pusher');
+            Log::warning("erro ao enviar notificação com pusher");
             report($e);
         }
     }

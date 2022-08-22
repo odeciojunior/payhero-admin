@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Activity;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property integer $id
@@ -22,23 +23,16 @@ use App\Traits\LogsActivity;
  */
 class SmartfunnelIntegration extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use SoftDeletes, LogsActivity, HasFactory;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
-    protected $fillable = [
-        'user_id',
-        'project_id',
-        'api_url',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ["user_id", "project_id", "api_url", "created_at", "updated_at", "deleted_at"];
     /**
      * @var bool
      */
@@ -64,12 +58,12 @@ class SmartfunnelIntegration extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Integração com SmartfunnelIntegration foi deletedo.';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Integração com SmartfunnelIntegration foi atualizado.';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Integração com SmartfunnelIntegration foi criado.';
+        if ($eventName == "deleted") {
+            $activity->description = "Integração com SmartfunnelIntegration foi deletedo.";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Integração com SmartfunnelIntegration foi atualizado.";
+        } elseif ($eventName == "created") {
+            $activity->description = "Integração com SmartfunnelIntegration foi criado.";
         } else {
             $activity->description = $eventName;
         }

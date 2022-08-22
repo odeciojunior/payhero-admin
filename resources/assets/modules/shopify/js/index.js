@@ -1,40 +1,38 @@
 $(document).ready(function () {
-    $('#btn-integration-model').on('click', function () {
-        $('.modal_integration_shopify').modal('show');
+    $("#btn-integration-model").on("click", function () {
+        $(".modal_integration_shopify").modal("show");
     });
     $("#bt_add_integration").on("click", function () {
-
-        if ($('#token').val() == '' || $('#url_store').val() == '' || $('#company').val() == '') {
-            alertCustom('error', 'Dados informados inválidos');
+        if ($("#token").val() == "" || $("#url_store").val() == "" || $("#company").val() == "") {
+            alertCustom("error", "Dados informados inválidos");
             return false;
         }
         loadingOnScreen();
 
-        var form_data = new FormData(document.getElementById('form_add_integration'));
+        var form_data = new FormData(document.getElementById("form_add_integration"));
 
         $.ajax({
             method: "POST",
             url: "/apps/shopify",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             processData: false,
             contentType: false,
             cache: false,
             data: form_data,
             error: function (response) {
-                loadingOnScreenRemove()
-                alertCustom('error', response.responseJSON.message);//'Ocorreu algum erro'
+                loadingOnScreenRemove();
+                alertCustom("error", response.responseJSON.message); //'Ocorreu algum erro'
             },
             success: function (response) {
-                loadingOnScreenRemove()
-                alertCustom('success', response.message);
+                loadingOnScreenRemove();
+                alertCustom("success", response.message);
             },
         });
-
     });
 });
 
 function openInNewWindow(url) {
-   window.open(url)
+    window.open(url);
 }

@@ -1,22 +1,33 @@
 <!-- Page -->
-<div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+<div class="card card-body"
+     style="margin-bottom: 25px; padding-bottom: 0;">
     <div class='row no-gutters mb-20'>
-        <div class="top-holder text-right mb-0" style="width: 100%;">
+        <div class="top-holder text-right mb-0"
+             style="width: 100%;">
             <div class='d-flex align-items-center'>
                 <div class='col-md-5'>
                     <div class="d-flex align-items-center">
-                        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-dominio" style="border-color: #76838f;" >
-                            <span class="o-info-1" style="font-size: 24px;"></span>
+                        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline"
+                           data-toggle="modal"
+                           data-target="#modal-detalhes-dominio"
+                           style="border-color: #76838f;">
+                            <span class="o-info-1"
+                                  style="font-size: 24px;"></span>
                         </a>
-                        <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
+                        <span class="link-button-dependent blue-50 pointer"
+                              data-toggle="modal"
+                              data-target="#modal-detalhes-dominio"
+                              style='margin-left:5px'>Como configurar o domínio?</span>
                     </div>
                 </div>
                 <div class='col-md-7'>
                     <div class="d-flex justify-content-end">
                         <div class="btn-holder add-domain d-flex align-items-center pointer">
                             <span class="link-button-dependent blue">Adicionar </span>
-                            <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
-                                <img src="/build/global/img/icon-add.svg" style="width: 18px;">
+                            <a class="ml-10 rounded-add pointer"
+                               style="display: inline-flex;">
+                                <img src="/build/global/img/icon-add.svg"
+                                     style="width: 18px;">
                             </a>
                         </div>
                     </div>
@@ -24,10 +35,13 @@
             </div>
         </div>
     </div>
-    <div class="card shadow" style="margin: 0 -1.429rem;">
+    <div class="card shadow"
+         style="margin: 0 -1.429rem;">
         <div style='min-height: 300px'>
             <div class='page-invoice-table table-responsive'>
-                <table id='tabela-dominios' class='table table-striped text-left table-dominios table-striped unify' style="width: 100%; margin-bottom: 0px;">
+                <table id='tabela-dominios'
+                       class='table table-striped text-left table-dominios table-striped unify'
+                       style="width: 100%; margin-bottom: 0px;">
                     <thead>
                         <tr>
                             <td class='table-title text-center'>Nome</td>
@@ -35,7 +49,8 @@
                             <td class='table-title options-column-width text-center'></td>
                         </tr>
                     </thead>
-                    <tbody id='domain-table-body' class='min-row-height'>
+                    <tbody id='domain-table-body'
+                           class='min-row-height'>
                         {{-- js carregando dados --}}
                     </tbody>
                 </table>
@@ -45,28 +60,43 @@
 </div>
 
 <div class="d-flex justify-content-center justify-content-md-end">
-    <ul id="pagination-domain" class="pagination-sm margin-chat-pagination text-right m-0">
+    <ul id="pagination-domain"
+        class="pagination-sm margin-chat-pagination text-right m-0">
         {{-- js pagination carrega --}}
     </ul>
 </div>
 
-{{-- Modal Create Domain--}}
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-add-domain" role="dialog" tabindex="-1">
+{{-- Modal Create Domain --}}
+<div class="modal fade example-modal-lg modal-3d-flip-vertical"
+     id="modal-add-domain"
+     role="dialog"
+     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="modal-title" id="modal-title-add-domain"></h4>
-                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <h4 class="modal-title"
+                    id="modal-title-add-domain"></h4>
+                <a id="modal-button-close"
+                   class="pointer close"
+                   role="button"
+                   data-dismiss="modal"
+                   aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
             <div class='modal-content-add-domain'>
-                <div id="modal-body-add-domain" class="modal-body" style='min-height: 100px;'>
+                <div id="modal-body-add-domain"
+                     class="modal-body"
+                     style='min-height: 100px;'>
                     <form id='form-add-domain'>
                         <div class='row'>
                             <div class='form-group'>
                                 <label for='name'>Domínio</label>
-                                <input name='name' type='text' class='input-pad name-domain' id='name' placeholder='seudominio.com'>
+                                <input name='name'
+                                       type='text'
+                                       class='input-pad name-domain'
+                                       id='name'
+                                       placeholder='seudominio.com'>
                                 <span class='info-domain'></span>
                             </div>
                         </div>
@@ -74,34 +104,57 @@
                 </div>
             </div>
             <div class="modal-footer-add-domain">
-                <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                <a id="btn-mobile-modal-close"
+                   class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none"
+                   style='color:white'
+                   role="button"
+                   data-dismiss="modal"
+                   aria-label="Close">
                     Fechar
                 </a>
-                <button id="btn-modal-add-domain" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success float-right" style='display:none;'>
+                <button id="btn-modal-add-domain"
+                        type="button"
+                        class="col-sm-6 col-md-3 col-lg-3 btn btn-success float-right"
+                        style='display:none;'>
                     <i class="material-icons btn-fix"> save </i> Salvar
                 </button>
             </div>
         </div>
     </div>
 </div>
-{{-- Modal Create Domain--}}
+{{-- Modal Create Domain --}}
 
 <!-- Modal Editar Dominio -->
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content-domain" role="dialog" tabindex="-1" style='padding-right: 15px;'>
+<div class="modal fade example-modal-lg modal-3d-flip-vertical"
+     id="modal-content-domain"
+     role="dialog"
+     tabindex="-1"
+     style='padding-right: 15px;'>
     <div class="modal-dialog modal-dialog-centered modal-simple modal-lg">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="modal-title" id="modal-title-edit-domain">Gerenciador de registros DNS </h4>
-                <a id="modal-button-close-edit-domain-record" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                <h4 class="modal-title"
+                    id="modal-title-edit-domain">Gerenciador de registros DNS </h4>
+                <a id="modal-button-close-edit-domain-record"
+                   class="pointer close"
+                   role="button"
+                   data-dismiss="modal"
+                   aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
-            <div id="modal-body-content-domain" class="modal-body" style='min-height: 100px'>
-                <a id='domain' hidden></a>
-                <form id='form-modal-add-domain-record' class=''>
+            <div id="modal-body-content-domain"
+                 class="modal-body"
+                 style='min-height: 100px'>
+                <a id='domain'
+                   hidden></a>
+                <form id='form-modal-add-domain-record'
+                      class=''>
                     <div class="row">
                         <div class='form-group col-lg-2'>
-                            <select id='type-register' name='type-register' class='sirius-select'>
+                            <select id='type-register'
+                                    name='type-register'
+                                    class='sirius-select'>
                                 <option value='A'>A</option>
                                 <option value='AAAA'>AAAA</option>
                                 <option value='CNAME'>CNAME</option>
@@ -110,21 +163,41 @@
                             </select>
                         </div>
                         <div class='form-group col-lg-10'>
-                            <input id='name-register' name='name-register' class='input-pad' placeholder='Nome' required style="height: 49px;">
-                            <p id='error-name-register-dns' class='text-primary' style='display:none;'>O campo nome é obrigatório</p>
+                            <input id='name-register'
+                                   name='name-register'
+                                   class='input-pad'
+                                   placeholder='Nome'
+                                   required
+                                   style="height: 49px;">
+                            <p id='error-name-register-dns'
+                               class='text-primary'
+                               style='display:none;'>O campo nome é obrigatório</p>
                         </div>
                         <div class='form-group col-lg-3'>
-                            <select id='proxy-select' name='proxy' class='sirius-select'>
-                                <option id='proxy-active' value='1'>Proxy Ativado</option>
-                                <option id='proxy-inactive' value='0'>Proxy Desativado</option>
+                            <select id='proxy-select'
+                                    name='proxy'
+                                    class='sirius-select'>
+                                <option id='proxy-active'
+                                        value='1'>Proxy Ativado</option>
+                                <option id='proxy-inactive'
+                                        value='0'>Proxy Desativado</option>
                             </select>
                         </div>
                         <div class='col-lg-8'>
-                            <input id='value-record' name='value-record' class='input-pad' placeholder='Valor' required style="height: 49px;">
-                            <p id='error-value-record' class='text-primary' style='display:none;'>O campo valor é obrigatório</p>
+                            <input id='value-record'
+                                   name='value-record'
+                                   class='input-pad'
+                                   placeholder='Valor'
+                                   required
+                                   style="height: 49px;">
+                            <p id='error-value-record'
+                               class='text-primary'
+                               style='display:none;'>O campo valor é obrigatório</p>
                         </div>
                         <div class='col-lg-1'>
-                            <button class='btn btn-primary' id='bt-add-record' title='Adicionar novo registro dns'>
+                            <button class='btn btn-primary'
+                                    id='bt-add-record'
+                                    title='Adicionar novo registro dns'>
                                 <i class='fa fa-plus'></i>
                             </button>
                         </div>
@@ -133,8 +206,11 @@
                 <div class='row mx-2 col-sm-12'>
                     <h4 class='text-sm-center col-sm-12'>Listas de registros DNS</h4>
                 </div>
-                <div id='divCustomDomain' class='table-responsive' style='overflow-y:scroll; height: 300px;'>
-                    <table id='new-registers-table' class='table table-hover table-bordered table-striped'>
+                <div id='divCustomDomain'
+                     class='table-responsive'
+                     style='overflow-y:scroll; height: 300px;'>
+                    <table id='new-registers-table'
+                           class='table table-hover table-bordered table-striped'>
                         <thead>
                             <tr>
                                 <th>Tipo</th>
@@ -145,10 +221,13 @@
                             </tr>
                         </thead>
                         <tbody id='table-body-new-records'>
-                            {{-- JS carrega tabela  --}}
+                            {{-- JS carrega tabela --}}
                         </tbody>
                     </table>
-                    <div id='empty-info' class='alert alert-info' align='center' style='display:none;'>
+                    <div id='empty-info'
+                         class='alert alert-info'
+                         align='center'
+                         style='display:none;'>
                         <h4>Você ainda não possui nenhuma entrada personalizada!</h4>
                         <h4>Fique a vontade para adicionar acima!</h4>
                     </div>
@@ -156,10 +235,18 @@
                 <div class='bg-info'></div>
             </div>
             <div class="modal-footer-domain-content">
-                <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                <a id="btn-mobile-modal-close"
+                   class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none"
+                   style='color:white'
+                   role="button"
+                   data-dismiss="modal"
+                   aria-label="Close">
                     Fechar
                 </a>
-                <button id="btn-modal-continue-domain" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success float-right btn-continue-domain" style='display:none;'>
+                <button id="btn-modal-continue-domain"
+                        type="button"
+                        class="col-sm-6 col-md-3 col-lg-3 btn btn-success float-right btn-continue-domain"
+                        style='display:none;'>
                     Continuar
                 </button>
             </div>
@@ -167,31 +254,53 @@
     </div>
 </div>
 <!-- Modal detalhes do domínio -->
-{{--   --}}
-
+{{--  --}}
 
 <!-- Modal Excluir Modal -->
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-domain" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1" style='padding-right: 15px;'>
+<div class="modal fade example-modal-lg modal-3d-flip-vertical"
+     id="modal-delete-domain"
+     aria-hidden="true"
+     aria-labelledby="exampleModalTitle"
+     role="dialog"
+     tabindex="-1"
+     style='padding-right: 15px;'>
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
-        <div class="modal-content" id='modal-content-domain-delete' style="height: 294px;">
+        <div class="modal-content"
+             id='modal-content-domain-delete'
+             style="height: 294px;">
             <div class="modal-header text-center">
-                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete-domain">
+                <a class="pointer close"
+                   role="button"
+                   data-dismiss="modal"
+                   aria-label="Close"
+                   id="close-modal-delete-domain">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
-            <div id="modal-delete-domain-body" class="modal-body text-center p-20">
+            <div id="modal-delete-domain-body"
+                 class="modal-body text-center p-20">
                 <div class="d-flex justify-content-center not-domain-none">
-                    <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                    <i class="material-icons gradient"
+                       style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
                 </div>
-                <h3 class="black not-domain-none" id='title-delete-domain'> Você tem certeza? </h3>
-                <p class="gray not-domain-none" id='description-delete-domain'> Se você excluir esse registro, não será possível recuperá-lo! </p>
+                <h3 class="black not-domain-none"
+                    id='title-delete-domain'> Você tem certeza? </h3>
+                <p class="gray not-domain-none"
+                   id='description-delete-domain'> Se você excluir esse registro, não será possível recuperá-lo! </p>
             </div>
             <div class="modal-delete-footer modal-footer d-flex align-items-center justify-content-center">
-                <button id='btn-cancel-delete-domain' type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal btn-delete-modal-domain form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                <button id='btn-cancel-delete-domain'
+                        type="button"
+                        class="col-4 btn border-0 btn-gray btn-cancel-modal btn-delete-modal-domain form-control d-flex justify-content-center align-items-center align-self-center flex-row"
+                        data-dismiss="modal"
+                        style="width: 20%;">
                     <b>Cancelar</b>
                     <!-- <b><span class="o-bin-1"></span></b> -->
                 </button>
-                <button id="btn-delete-domain" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal btn-delete-modal-domain form-control d-flex justify-content-center align-items-center align-self-center flex-row" style="width: 20%;">
+                <button id="btn-delete-domain"
+                        type="button"
+                        class="col-4 btn border-0 btn-outline btn-delete-modal btn-delete-modal-domain form-control d-flex justify-content-center align-items-center align-self-center flex-row"
+                        style="width: 20%;">
                     <b class="mr-2">Excluir </b>
                     <span class="o-bin-1"></span>
                 </button>
@@ -201,47 +310,92 @@
 </div>
 <!-- End Modal -->
 <!--Modal Informações de dominios-->
-<div class="modal fade modal-3d-flip-vertical" id="modal-detalhes-dominio" aria-hidden='true' aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+<div class="modal fade modal-3d-flip-vertical"
+     id="modal-detalhes-dominio"
+     aria-hidden='true'
+     aria-labelledby="exampleModalTitle"
+     role="dialog"
+     tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="panel-group panel-group-continuous m-0" id="exampleAccrodion1" aria-multiselectable="true" role="tablist">
+            <div class="panel-group panel-group-continuous m-0"
+                 id="exampleAccrodion1"
+                 aria-multiselectable="true"
+                 role="tablist">
                 <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingFirst" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseFirst" aria-controls="exampleCollapseFirst" aria-expanded="false">
+                    <div class="panel-heading"
+                         id="exampleHeadingFirst"
+                         role="tab">
+                        <a class="panel-title collapsed"
+                           data-parent="#exampleAccrodion1"
+                           data-toggle="collapse"
+                           href="#exampleCollapseFirst"
+                           aria-controls="exampleCollapseFirst"
+                           aria-expanded="false">
                             <strong>Primeiro passo</strong>
                         </a>
                     </div>
-                    <div class="panel-collapse collapse" id="exampleCollapseFirst" aria-labelledby="exampleHeadingFirst" role="tabpanel" style="">
+                    <div class="panel-collapse collapse"
+                         id="exampleCollapseFirst"
+                         aria-labelledby="exampleHeadingFirst"
+                         role="tabpanel"
+                         style="">
                         <div class="panel-body justify-content-center">
                             <div class="d-flex align-items-center">
                                 <span> Clique em <strong>Adicionar domínio</strong></span>
                                 <a class="ml-10 rounded-add pointer">
-                                    <i class="o-add-1" aria-hidden="true"></i></a>
+                                    <i class="o-add-1"
+                                       aria-hidden="true"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingSecond" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseSecond" aria-controls="exampleCollapseSecond" aria-expanded="false">
+                    <div class="panel-heading"
+                         id="exampleHeadingSecond"
+                         role="tab">
+                        <a class="panel-title collapsed"
+                           data-parent="#exampleAccrodion1"
+                           data-toggle="collapse"
+                           href="#exampleCollapseSecond"
+                           aria-controls="exampleCollapseSecond"
+                           aria-expanded="false">
                             <strong>Segundo passo</strong>
                         </a>
                     </div>
-                    <div class="panel-collapse collapse" id="exampleCollapseSecond" aria-labelledby="exampleHeadingSecond" role="tabpanel" style="">
+                    <div class="panel-collapse collapse"
+                         id="exampleCollapseSecond"
+                         aria-labelledby="exampleHeadingSecond"
+                         role="tabpanel"
+                         style="">
                         <div class="panel-body justify-content-center">
                             <div class="d-flex align-items-center">
-                                <span> Digite o nome do seu <strong>domínio</strong> onde seu site esta hospedado e clique em  <i class="material-icons btn-fix" style='color:green'> save </i><strong style='color:green'>Salvar</strong></span>
+                                <span> Digite o nome do seu <strong>domínio</strong> onde seu site esta hospedado e
+                                    clique em <i class="material-icons btn-fix"
+                                       style='color:green'> save </i><strong
+                                            style='color:green'>Salvar</strong></span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingThird" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseThird" aria-controls="exampleCollapseThird" aria-expanded="false">
+                    <div class="panel-heading"
+                         id="exampleHeadingThird"
+                         role="tab">
+                        <a class="panel-title collapsed"
+                           data-parent="#exampleAccrodion1"
+                           data-toggle="collapse"
+                           href="#exampleCollapseThird"
+                           aria-controls="exampleCollapseThird"
+                           aria-expanded="false">
                             <strong>Terceiro passo</strong>
                         </a>
                     </div>
-                    <div class="panel-collapse collapse" id="exampleCollapseThird" aria-labelledby="exampleHeadingThird" role="tabpanel" style="">
+                    <div class="panel-collapse collapse"
+                         id="exampleCollapseThird"
+                         aria-labelledby="exampleHeadingThird"
+                         role="tabpanel"
+                         style="">
                         <div class="panel-body">
                             Se você estiver utilizando esse domínio em algum site, adicione uma entrada do tipo
                             <strong>A</strong> para seu site continuar funcionando normalmente.
@@ -256,43 +410,81 @@
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingFourth" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseFourth" aria-controls="exampleCollapseFourth" aria-expanded="false">
+                    <div class="panel-heading"
+                         id="exampleHeadingFourth"
+                         role="tab">
+                        <a class="panel-title collapsed"
+                           data-parent="#exampleAccrodion1"
+                           data-toggle="collapse"
+                           href="#exampleCollapseFourth"
+                           aria-controls="exampleCollapseFourth"
+                           aria-expanded="false">
                             <strong>Quarto passo</strong>
                         </a>
                     </div>
-                    <div class="panel-collapse collapse" id="exampleCollapseFourth" aria-labelledby="exampleHeadingFourth" role="tabpanel" style="">
+                    <div class="panel-collapse collapse"
+                         id="exampleCollapseFourth"
+                         aria-labelledby="exampleHeadingFourth"
+                         role="tabpanel"
+                         style="">
                         <div class="panel-body">
                             Logo após, vá até onde você registrou seu domínio e
-                            <strong>atualize as configurações</strong> com as novas entradas DNS geradas. Por fim clique em
+                            <strong>atualize as configurações</strong> com as novas entradas DNS geradas. Por fim clique
+                            em
                             <strong>Verificar</strong>
                         </div>
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingFifth" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseFifth" aria-controls="exampleCollapseFifth" aria-expanded="false">
+                    <div class="panel-heading"
+                         id="exampleHeadingFifth"
+                         role="tab">
+                        <a class="panel-title collapsed"
+                           data-parent="#exampleAccrodion1"
+                           data-toggle="collapse"
+                           href="#exampleCollapseFifth"
+                           aria-controls="exampleCollapseFifth"
+                           aria-expanded="false">
                             <strong>Quinto passo</strong>
                         </a>
                     </div>
-                    <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="">
+                    <div class="panel-collapse collapse"
+                         id="exampleCollapseFifth"
+                         aria-labelledby="exampleHeadingFifth"
+                         role="tabpanel"
+                         style="">
                         <div class="panel-body">
-                            Obtendo sucesso o sistema estará pronto para uso. Caso contrário aguarde alguns minutos e utilize o botão
+                            Obtendo sucesso o sistema estará pronto para uso. Caso contrário aguarde alguns minutos e
+                            utilize o botão
                             <span class="o-eye-1"></span> para verificar novamente.
                         </div>
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="panel-heading" id="exampleHeadingSixth" role="tab">
-                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseSixth" aria-controls="exampleCollapseFifth" aria-expanded="false">
+                    <div class="panel-heading"
+                         id="exampleHeadingSixth"
+                         role="tab">
+                        <a class="panel-title collapsed"
+                           data-parent="#exampleAccrodion1"
+                           data-toggle="collapse"
+                           href="#exampleCollapseSixth"
+                           aria-controls="exampleCollapseFifth"
+                           aria-expanded="false">
                             <strong>Porque preciso configurar meu domínio?</strong>
                         </a>
                     </div>
-                    <div class="panel-collapse collapse" id="exampleCollapseSixth" aria-labelledby="exampleHeadingSixth" role="tabpanel" style="">
+                    <div class="panel-collapse collapse"
+                         id="exampleCollapseSixth"
+                         aria-labelledby="exampleHeadingSixth"
+                         role="tabpanel"
+                         style="">
                         <div class="panel-body">
                             <ul>
-                                <li>Checkout transparente - assim que seu domínio estiver configurado o cliente final não precisa sair do seu domínio para finalizar o pagamento. (Ex: https://checkout.minhaloja.com</li>
-                                <li>Servidor de email - seus clientes receberão notificações de email em nome da sua loja.</li>
+                                <li>Checkout transparente - assim que seu domínio estiver configurado o cliente final
+                                    não precisa sair do seu domínio para finalizar o pagamento. (Ex:
+                                    https://checkout.minhaloja.com</li>
+                                <li>Servidor de email - seus clientes receberão notificações de email em nome da sua
+                                    loja.</li>
                             </ul>
                         </div>
                     </div>
@@ -303,31 +495,47 @@
 </div>
 <!--Modal Informações de dominios-->
 {{-- Modal Informações dns e recheck --}}
-<div class='modal fade example-modal-lg modal-3d-flip-vertical' id='modal-info-dns' role='dialog' tabindex='-1' style='padding-right: 15px;'>
+<div class='modal fade example-modal-lg modal-3d-flip-vertical'
+     id='modal-info-dns'
+     role='dialog'
+     tabindex='-1'
+     style='padding-right: 15px;'>
     <div class='modal-dialog modal-dialog-centered modal-simple'>
         <div class='modal-content p-10'>
             {{-- Modal verificação --}}
             <div id='content-modal-recheck-dns'>
-                <div class='modal-header' id='modal-dns-header'>
-                    <h4 class='modal-title' id='modal-title-dns-recheck'>Verificação</h4>
-                    <a id='modal-button-close-dns-rechek' class='pointer close' role='button' data-dismiss='modal' aria-label='Close'>
+                <div class='modal-header'
+                     id='modal-dns-header'>
+                    <h4 class='modal-title'
+                        id='modal-title-dns-recheck'>Verificação</h4>
+                    <a id='modal-button-close-dns-rechek'
+                       class='pointer close'
+                       role='button'
+                       data-dismiss='modal'
+                       aria-label='Close'>
                         <i class='material-icons md-16'>close</i>
                     </a>
                 </div>
                 <div class='content-dns'>
-                    <div class='modal-body' id='modal-info-dsn-body' style='min-height: 100px;'>
-                        <div class='swal2-icon swal2-info swal2-animate-info-icon' style='display: flex;'>i</div>
+                    <div class='modal-body'
+                         id='modal-info-dsn-body'
+                         style='min-height: 100px;'>
+                        <div class='swal2-icon swal2-info swal2-animate-info-icon'
+                             style='display: flex;'>i</div>
                         <h3 align='center'>
                             <strong>Domínio cadastrado</strong>
                         </h3>
                         <h4 align='center'>Agora falta pouco</h4>
-                        <p align='center' style="font-size: 16px">
+                        <p align='center'
+                           style="font-size: 16px">
                             Entre onde você registrou seu dominio
                             <span id='nameHost'></span>
-                            e remova os nameservers atuais, logo após você só precisa adicionar esses novos nameservers. Depois clique em
+                            e remova os nameservers atuais, logo após você só precisa adicionar esses novos nameservers.
+                            Depois clique em
                             <strong style='color: green;'>Verificar</strong>
                         </p>
-                        <div id="table-info-dns-check" style="width:100%">
+                        <div id="table-info-dns-check"
+                             style="width:100%">
                             <table class="table table-striped">
                                 <thead></thead>
                                 <tbody id='table-zones-add'>
@@ -335,72 +543,117 @@
                             </table>
                         </div>
                         <span id='domain-hash'></span>
-                        <div style='width: 100%; text-align: center; padding-top: 3%;' id='div-recheck-dns'>
-{{--                            <button class='btn btn-success btn-verify-domain' domain='' style='font-size: 16px;'>Verificar</button>--}}
+                        <div style='width: 100%; text-align: center; padding-top: 3%;'
+                             id='div-recheck-dns'>
+                            {{-- <button class='btn btn-success btn-verify-domain' domain='' style='font-size: 16px;'>Verificar</button> --}}
                         </div>
                     </div>
                 </div>
-                <div class='modal-footer' id='modal-dns-footer'>
+                <div class='modal-footer'
+                     id='modal-dns-footer'>
                 </div>
             </div>
             {{-- Modal erro verificação --}}
-            <div id='content-modal-recheck-dns-error' style='display:none;'>
-                <div class='modal-header' id='modal-dns-header'>
-                    <h4 class='modal-title' id='modal-title-dns-recheck'>Oppsssss...</h4>
-                    <a id='modal-button-close-dns-rechek' class='pointer close' role='button' data-dismiss='modal' aria-label='Close'>
+            <div id='content-modal-recheck-dns-error'
+                 style='display:none;'>
+                <div class='modal-header'
+                     id='modal-dns-header'>
+                    <h4 class='modal-title'
+                        id='modal-title-dns-recheck'>Oppsssss...</h4>
+                    <a id='modal-button-close-dns-rechek'
+                       class='pointer close'
+                       role='button'
+                       data-dismiss='modal'
+                       aria-label='Close'>
                         <i class='material-icons md-16'>close</i>
                     </a>
                 </div>
-                <div class='modal-body' id='modal-info-dsn-body' style='min-height: 100px;'>
-                    <div id="modal-add-body-domain-erro-verificacao" class="modal-body" style="min-height: 100px">
-                        <div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;">
-                            <span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span>
+                <div class='modal-body'
+                     id='modal-info-dsn-body'
+                     style='min-height: 100px;'>
+                    <div id="modal-add-body-domain-erro-verificacao"
+                         class="modal-body"
+                         style="min-height: 100px">
+                        <div class="swal2-icon swal2-error swal2-animate-error-icon"
+                             style="display: flex;">
+                            <span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span
+                                      class="swal2-x-mark-line-right"></span></span>
                         </div>
                         <h3 align="center"><strong>Domínio ainda não registrado</strong></h3>
                         <h4 align="center">Parece que o seu dominio ainda não foi liberado</h4>
-                        <p align="center" style="font-size: 16px">
-                            Seria bom conferir as configurações no seu provedor de dominio, caso tenha alguma duvida em como realizar a configuração
-                            <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span>
+                        <p align="center"
+                           style="font-size: 16px">
+                            Seria bom conferir as configurações no seu provedor de dominio, caso tenha alguma duvida em
+                            como realizar a configuração
+                            <span class="red pointer"
+                                  data-dismiss="modal"
+                                  data-toggle="modal"
+                                  data-target="#modal-detalhes-dominio">clique aqui</span>
                         </p>
                         <div style="width:100%;text-align:center;padding-top:3%">
-                            <span class="btn btn-primary" data-dismiss="modal" style="font-size: 16px">Retornar</span>
+                            <span class="btn btn-primary"
+                                  data-dismiss="modal"
+                                  style="font-size: 16px">Retornar</span>
                         </div>
                     </div>
                 </div>
-                <div class='modal-footer' id='modal-dns-footer'>
+                <div class='modal-footer'
+                     id='modal-dns-footer'>
                 </div>
             </div>
             {{-- Modal Sucesso --}}
-            <div id='content-modal-recheck-dns-success' style='display:none;'>
-                <div class='modal-header' id='modal-dns-success-header'>
-                    <h4 class='modal-title' id='modal-title-dns-success-recheck'>Verificação</h4>
-                    <a id='modal-button-close-dns-success-rechek' class='pointer close' role='button' data-dismiss='modal' aria-label='Close'>
+            <div id='content-modal-recheck-dns-success'
+                 style='display:none;'>
+                <div class='modal-header'
+                     id='modal-dns-success-header'>
+                    <h4 class='modal-title'
+                        id='modal-title-dns-success-recheck'>Verificação</h4>
+                    <a id='modal-button-close-dns-success-rechek'
+                       class='pointer close'
+                       role='button'
+                       data-dismiss='modal'
+                       aria-label='Close'>
                         <i class='material-icons md-16'>close</i>
                     </a>
                 </div>
                 <div class='content-dns'>
-                    <div class='modal-body' id='modal-info-dsn-success-body' style='min-height: 100px;'>
-                        <div class='' style='display: flex;'>
-                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    <div class='modal-body'
+                         id='modal-info-dsn-success-body'
+                         style='min-height: 100px;'>
+                        <div class=''
+                             style='display: flex;'>
+                            <svg class="checkmark"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 52 52">
+                                <circle class="checkmark__circle"
+                                        cx="26"
+                                        cy="26"
+                                        r="25"
+                                        fill="none" />
+                                <path class="checkmark__check"
+                                      fill="none"
+                                      d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                             </svg>
                         </div>
                         <h3 align='center'>
                             <h4 align="center">Tudo pronto já podemos começar</h4>
                         </h3>
-                        <p align="center" style='font-size: 16px;'>
-                            O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.
+                        <p align="center"
+                           style='font-size: 16px;'>
+                            O checkout transparente e o servidor de email já estão configurados apenas aguardando suas
+                            vendas.
                         </p>
                         <div style="width:100%;text-align:center;padding-top:3%">
-                            <span class="btn btn-success" data-dismiss="modal" style="font-size: 16px">Começar</span>
+                            <span class="btn btn-success"
+                                  data-dismiss="modal"
+                                  style="font-size: 16px">Começar</span>
                         </div>
                     </div>
                 </div>
-                <div class='modal-footer' id='modal-dns-footer'>
+                <div class='modal-footer'
+                     id='modal-dns-footer'>
                 </div>
             </div>
         </div>
     </div>
 </div>
-

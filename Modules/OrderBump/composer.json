@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\OrderBump\\Providers\\OrderBumpServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

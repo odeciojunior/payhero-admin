@@ -13,9 +13,15 @@ class AddColumnAnticipationIdOnTransfers extends Migration
      */
     public function up()
     {
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->bigInteger('anticipation_id')->unsigned()->nullable();
-            $table->foreign('anticipation_id')->references('id')->on('anticipations');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table
+                ->bigInteger("anticipation_id")
+                ->unsigned()
+                ->nullable();
+            $table
+                ->foreign("anticipation_id")
+                ->references("id")
+                ->on("anticipations");
         });
     }
 
@@ -26,9 +32,9 @@ class AddColumnAnticipationIdOnTransfers extends Migration
      */
     public function down()
     {
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->dropForeign(['anticipation_id']);
-            $table->dropColumn('anticipation_id');
+        Schema::table("transfers", function (Blueprint $table) {
+            $table->dropForeign(["anticipation_id"]);
+            $table->dropColumn("anticipation_id");
         });
     }
 }

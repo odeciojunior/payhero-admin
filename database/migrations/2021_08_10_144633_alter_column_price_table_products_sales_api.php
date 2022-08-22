@@ -13,8 +13,8 @@ class AlterColumnPriceTableProductsSalesApi extends Migration
      */
     public function up()
     {
-        Schema::table('products_sales_api', function(Blueprint $table) {
-            $table->string('price', 191)->change();
+        Schema::table("products_sales_api", function (Blueprint $table) {
+            $table->string("price", 191)->change();
         });
     }
 
@@ -25,8 +25,8 @@ class AlterColumnPriceTableProductsSalesApi extends Migration
      */
     public function down()
     {
-        Schema::table('products_sales_api', function(Blueprint $table) {
-            $table->float('price');
+        Schema::table("products_sales_api", function (Blueprint $table) {
+            $table->float("price");
         });
     }
 }

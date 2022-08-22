@@ -13,32 +13,30 @@ class CreateAbandonedSignupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('abandoned_signups', function (Blueprint $table) {
+        Schema::create("abandoned_signups", function (Blueprint $table) {
+            $table->bigIncrements("id");
 
-            $table->bigIncrements('id');
-
-            $table->integer('last_step')->default(0);
-            $table->integer('status')->default(0);
+            $table->integer("last_step")->default(0);
+            $table->integer("status")->default(0);
 
             //Person
             $table->string("email")->unique();
             $table->string("name")->nullable();
             $table->string("document")->unique();
             $table->string("phone")->nullable();
-            
+
             //Leads
             $table->string("monthly_income")->nullable();
-            
-            $table->json('niche')->nullable();
-            
+
+            $table->json("niche")->nullable();
+
             $table->string("website_url")->nullable();
-            
+
             $table->string("gateway")->nullable();
 
-            $table->json('ecommerce')->nullable();
-            
-            $table->json('cloudfox_referer')->nullable();
-            
+            $table->json("ecommerce")->nullable();
+
+            $table->json("cloudfox_referer")->nullable();
 
             //Person address
             $table->string("zip_code")->nullable();
@@ -62,12 +60,11 @@ class CreateAbandonedSignupsTable extends Migration
             $table->string("company_complement")->nullable();
 
             //bank account
-            $table->string('bank')->nullable();
-            $table->string('agency')->nullable();
-            $table->string('agency_digit')->nullable();
-            $table->string('account')->nullable();
-            $table->string('account_digit')->nullable();
-
+            $table->string("bank")->nullable();
+            $table->string("agency")->nullable();
+            $table->string("agency_digit")->nullable();
+            $table->string("account")->nullable();
+            $table->string("account_digit")->nullable();
 
             $table->timestamps();
         });
@@ -80,6 +77,6 @@ class CreateAbandonedSignupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('abandoned_signups');
+        Schema::dropIfExists("abandoned_signups");
     }
 }

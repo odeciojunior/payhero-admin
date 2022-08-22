@@ -12,12 +12,12 @@ class VerifyBoletoExpiring extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'verify:boletoexpiring';
+    protected $signature = "verify:boletoexpiring";
     /**
      * The console command description.
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -30,15 +30,11 @@ class VerifyBoletoExpiring extends Command
 
     public function handle()
     {
-
         try {
-
             $boletoService = new BoletoService();
             $boletoService->verifyBoletosExpiring();
-
         } catch (Exception $e) {
             report($e);
         }
-
     }
 }

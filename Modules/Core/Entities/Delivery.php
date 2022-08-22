@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\DeliveryPresenter;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property integer $id
@@ -34,7 +35,7 @@ use App\Traits\LogsActivity;
  */
 class Delivery extends Model
 {
-    use PresentableTrait, SoftDeletes, FoxModelTrait, LogsActivity;
+    use PresentableTrait, SoftDeletes, FoxModelTrait, LogsActivity, HasFactory;
     /**
      * @var string
      */
@@ -43,27 +44,27 @@ class Delivery extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'customer_id',
-        'receiver_name',
-        'zip_code',
-        'country',
-        'state',
-        'city',
-        'neighborhood',
-        'street',
-        'number',
-        'complement',
-        'type',
-        'melhorenvio_carrier_id',
-        'melhorenvio_order_id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "customer_id",
+        "receiver_name",
+        "zip_code",
+        "country",
+        "state",
+        "city",
+        "neighborhood",
+        "street",
+        "number",
+        "complement",
+        "type",
+        "melhorenvio_carrier_id",
+        "melhorenvio_order_id",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -89,7 +90,7 @@ class Delivery extends Model
      */
     public function carrier()
     {
-        return $this->belongsTo('Modules\Core\Entities\Carrier');
+        return $this->belongsTo("Modules\Core\Entities\Carrier");
     }
 
     /**
@@ -97,13 +98,14 @@ class Delivery extends Model
      */
     public function sales()
     {
-        return $this->hasMany('Modules\Core\Entities\Sale');
+        return $this->hasMany("Modules\Core\Entities\Sale");
     }
 
     /**
      * @return BelongsTo
      */
-    public function customer(){
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
     }
 }

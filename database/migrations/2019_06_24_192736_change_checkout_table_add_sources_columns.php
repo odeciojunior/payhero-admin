@@ -13,13 +13,13 @@ class ChangeCheckoutTableAddSourcesColumns extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->string('utm_source')->nullable();
-            $table->string('utm_medium')->nullable();
-            $table->string('utm_campaign')->nullable();
-            $table->string('utm_term')->nullable();
-            $table->string('utm_content')->nullable();
-            $table->string('src')->nullable();
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->string("utm_source")->nullable();
+            $table->string("utm_medium")->nullable();
+            $table->string("utm_campaign")->nullable();
+            $table->string("utm_term")->nullable();
+            $table->string("utm_content")->nullable();
+            $table->string("src")->nullable();
         });
     }
 
@@ -30,13 +30,13 @@ class ChangeCheckoutTableAddSourcesColumns extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->dropColumn('utm_source');
-            $table->dropColumn('utm_medium');
-            $table->dropColumn('utm_campaign');
-            $table->dropColumn('utm_term');
-            $table->dropColumn('utm_content');
-            $table->dropColumn('src');
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table->dropColumn("utm_source");
+            $table->dropColumn("utm_medium");
+            $table->dropColumn("utm_campaign");
+            $table->dropColumn("utm_term");
+            $table->dropColumn("utm_content");
+            $table->dropColumn("src");
         });
     }
 }

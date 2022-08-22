@@ -23,16 +23,16 @@ class ActivecampaignCustom extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'activecampaign_integration_id',
-        'custom_field',
-        'custom_field_id',
-        'created_at',
-        'updated_at',
+        "activecampaign_integration_id",
+        "custom_field",
+        "custom_field_id",
+        "created_at",
+        "updated_at",
     ];
     /**
      * @var bool
@@ -59,12 +59,12 @@ class ActivecampaignCustom extends Model
      */
     public function tapActivity(Activity $activity, string $eventName)
     {
-        if ($eventName == 'deleted') {
-            $activity->description = 'Evento foi deletado para ActivecampaignCustom';
-        } else if ($eventName == 'updated') {
-            $activity->description = 'Evento foi atualizado para ActivecampaignCustom';
-        } else if ($eventName == 'created') {
-            $activity->description = 'Evento foi criado para ActivecampaignCustom';
+        if ($eventName == "deleted") {
+            $activity->description = "Evento foi deletado para ActivecampaignCustom";
+        } elseif ($eventName == "updated") {
+            $activity->description = "Evento foi atualizado para ActivecampaignCustom";
+        } elseif ($eventName == "created") {
+            $activity->description = "Evento foi criado para ActivecampaignCustom";
         } else {
             $activity->description = $eventName;
         }
@@ -75,6 +75,6 @@ class ActivecampaignCustom extends Model
      */
     public function activecampaignIntegration()
     {
-        return $this->belongsTo('Modules\Core\Entities\ActivecampaignIntegration');
+        return $this->belongsTo("Modules\Core\Entities\ActivecampaignIntegration");
     }
 }

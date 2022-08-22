@@ -12,9 +12,7 @@
             "providers": [
                 "Modules\\Transfers\\Providers\\TransfersServiceProvider"
             ],
-            "aliases": {
-                
-            }
+            "aliases": {}
         }
     },
     "autoload": {

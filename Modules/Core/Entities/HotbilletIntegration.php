@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property integer $id
@@ -28,30 +29,30 @@ use App\Traits\LogsActivity;
  */
 class HotbilletIntegration extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use SoftDeletes, LogsActivity, HasFactory;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id',
-        'user_id',
-        'link',
-        'boleto_generated',
-        'boleto_paid',
-        'credit_card_refused',
-        'credit_card_paid',
-        'abandoned_cart',
-        'pix_generated',
-        'pix_paid',
-        'pix_expired',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        "project_id",
+        "user_id",
+        "link",
+        "boleto_generated",
+        "boleto_paid",
+        "credit_card_refused",
+        "credit_card_paid",
+        "abandoned_cart",
+        "pix_generated",
+        "pix_paid",
+        "pix_expired",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
     /**
      * @var bool
@@ -77,7 +78,7 @@ class HotbilletIntegration extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo("Modules\Core\Entities\Project");
     }
 
     /**
@@ -85,6 +86,6 @@ class HotbilletIntegration extends Model
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo("Modules\Core\Entities\User");
     }
 }

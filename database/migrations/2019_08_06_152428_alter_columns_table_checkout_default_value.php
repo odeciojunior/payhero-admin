@@ -12,9 +12,15 @@ class AlterColumnsTableCheckoutDefaultValue extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->integer('email_sent_amount')->default(0)->change();
-            $table->integer('sms_sent_amount')->default(0)->change();
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table
+                ->integer("email_sent_amount")
+                ->default(0)
+                ->change();
+            $table
+                ->integer("sms_sent_amount")
+                ->default(0)
+                ->change();
         });
     }
 
@@ -24,9 +30,15 @@ class AlterColumnsTableCheckoutDefaultValue extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
-            $table->integer('email_sent_amount')->default(null)->change();
-            $table->integer('sms_sent_amount')->default(null)->change();
+        Schema::table("checkouts", function (Blueprint $table) {
+            $table
+                ->integer("email_sent_amount")
+                ->default(null)
+                ->change();
+            $table
+                ->integer("sms_sent_amount")
+                ->default(null)
+                ->change();
         });
     }
 }

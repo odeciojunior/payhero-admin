@@ -20,38 +20,33 @@ class ProductsResource extends JsonResource
     public function toArray($request)
     {
         // shopify
-        if($this->shopify == 1){
-            $this->id_view=1;
+        if ($this->shopify == 1) {
+            $this->id_view = 1;
         }
         // woocommerce
-        else if(
-            ($this->shopify == 0) AND (
-            (!empty($this->shopify_id) AND !empty($this->shopify_variant_id)) OR
-            (empty($this->shopify_id) AND !empty($this->shopify_variant_id)) OR
-            (!empty($this->shopify_id) AND empty($this->shopify_variant_id)))
-        ){
-            $this->id_view=2;
+        elseif (
+            $this->shopify == 0 and
+            (!empty($this->shopify_id) and !empty($this->shopify_variant_id) or
+                empty($this->shopify_id) and !empty($this->shopify_variant_id) or
+                !empty($this->shopify_id) and empty($this->shopify_variant_id))
+        ) {
+            $this->id_view = 2;
         }
         // sirius
-        else if(
-            $this->shopify ==  0 AND
-            empty($this->shopify_id) AND
-            empty($this->shopify_variant_id)
-        ){
-            $this->id_view=0;
+        elseif ($this->shopify == 0 and empty($this->shopify_id) and empty($this->shopify_variant_id)) {
+            $this->id_view = 0;
         }
 
         return [
-            'id'          => $this->id_code,
-            'id_view'     => $this->id_view, //($this->shopify == 1 ? $this->shopify_id : $this->id_code),
-            'name'        => $this->name,
-            'description' => $this->description,
-            'image'       => $this->photo == '' ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $this->photo,
-            'link'        => '/api/products/' . $this->id_code . '/edit',
-            'created_at'  => Carbon::parse($this->created_at)->format('d/m/Y'),
-            'type_enum'   => $this->type_enum,
-            'status_enum' => $this->status_enum,
-
+            "id" => $this->id_code,
+            "id_view" => $this->id_view, //($this->shopify == 1 ? $this->shopify_id : $this->id_code),
+            "name" => $this->name,
+            "description" => $this->description,
+            "image" => $this->photo == "" ? "https://cloudfox-files.s3.amazonaws.com/produto.svg" : $this->photo,
+            "link" => "/api/products/" . $this->id_code . "/edit",
+            "created_at" => Carbon::parse($this->created_at)->format("d/m/Y"),
+            "type_enum" => $this->type_enum,
+            "status_enum" => $this->status_enum,
         ];
     }
 }

@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Modules\Transfers\Getnet;
-
 
 class StatementItem
 {
-
     /*
     Tipo de registro | 1 - Resumo da transação.
     Tipo de registro | 2 - Detalhe da transação.
@@ -14,14 +11,14 @@ class StatementItem
     Tipo de registro | 4 - Ajustes.
     Tipo de registro | 5 - Chargeback.
      * */
-    const TYPE_TRANSACTION = 'TRANSACTION';
-    const TYPE_COMMISSION = 'COMMISSION';
-    const TYPE_ADJUSTMENT = 'ADJUSTMENT';
-    const TYPE_CHARGEBACK = 'CHARGEBACK';
-    const TYPE_REVERSED = 'REVERSED';
+    const TYPE_TRANSACTION = "TRANSACTION";
+    const TYPE_COMMISSION = "COMMISSION";
+    const TYPE_ADJUSTMENT = "ADJUSTMENT";
+    const TYPE_CHARGEBACK = "CHARGEBACK";
+    const TYPE_REVERSED = "REVERSED";
 
-    const PAID_WITH_CREDIT_CARD = 'CREDIT_CARD';
-    const PAID_WITH_BANK_SLIP = 'BANK_SLIP';
+    const PAID_WITH_CREDIT_CARD = "CREDIT_CARD";
+    const PAID_WITH_BANK_SLIP = "BANK_SLIP";
 
     public ?Order $order;
     public Details $details;
@@ -39,11 +36,17 @@ class StatementItem
 
     public function __toString()
     {
-        return '$order.saleId: ' . $this->order->getSaleId() . ' | ' .
-            '$order.hashId: ' . $this->order->getHashId() . ' | ' .
-            '$order.orderId: ' . $this->order->getOrderId() . ' | ' .
-
-            '$date: ' . $this->date;
+        return '$order.saleId: ' .
+            $this->order->getSaleId() .
+            " | " .
+            '$order.hashId: ' .
+            $this->order->getHashId() .
+            " | " .
+            '$order.orderId: ' .
+            $this->order->getOrderId() .
+            " | " .
+            '$date: ' .
+            $this->date;
 
         /*return '$order.saleId: '.$this->order->getSaleId().' | '.
             '$order.hashId: '.$this->order->getHashId().' | '.

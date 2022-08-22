@@ -28,35 +28,29 @@ class CompanyAdjustments extends Model
      *
      * @var string
      */
-    protected $keyType = 'integer';
+    protected $keyType = "integer";
 
     /**
      * @var array
      */
-    protected $dates = [
-        'date_adjustment',
-        'subseller_rate_closing_date',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $dates = ["date_adjustment", "subseller_rate_closing_date", "created_at", "updated_at", "deleted_at"];
     /**
      * @var array
      */
     protected $fillable = [
-        'company_id',
-        'adjustment_id',
-        'adjustment_amount',
-        'transaction_sign',
-        'adjustment_type',
-        'adjustment_amount_total',
-        'adjustment_reason',
-        'date_adjustment',
-        'subseller_rate_closing_date',
-        'data',
-        'created_at',
-        'updated_at',
-        'deleted_at'
+        "company_id",
+        "adjustment_id",
+        "adjustment_amount",
+        "transaction_sign",
+        "adjustment_type",
+        "adjustment_amount_total",
+        "adjustment_reason",
+        "date_adjustment",
+        "subseller_rate_closing_date",
+        "data",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     /**
@@ -64,6 +58,6 @@ class CompanyAdjustments extends Model
      */
     public function company()
     {
-        return $this->belongsTo('Modules\Core\Entities\Company');
+        return $this->belongsTo("Modules\Core\Entities\Company");
     }
 }

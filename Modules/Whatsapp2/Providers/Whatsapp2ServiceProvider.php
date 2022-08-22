@@ -18,7 +18,7 @@ class Whatsapp2ServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . "/../Database/Migrations");
     }
 
     /**
@@ -38,12 +38,13 @@ class Whatsapp2ServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('whatsapp2.php'),
-        ], 'config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'whatsapp2'
+        $this->publishes(
+            [
+                __DIR__ . "/../Config/config.php" => config_path("whatsapp2.php"),
+            ],
+            "config"
         );
+        $this->mergeConfigFrom(__DIR__ . "/../Config/config.php", "whatsapp2");
     }
 
     /**
@@ -53,17 +54,26 @@ class Whatsapp2ServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/whatsapp2');
+        $viewPath = resource_path("views/modules/whatsapp2");
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . "/../Resources/views";
 
-        $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+        $this->publishes(
+            [
+                $sourcePath => $viewPath,
+            ],
+            "views"
+        );
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/whatsapp2';
-        }, \Config::get('view.paths')), [$sourcePath]), 'whatsapp2');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(function ($path) {
+                    return $path . "/modules/whatsapp2";
+                }, \Config::get("view.paths")),
+                [$sourcePath]
+            ),
+            "whatsapp2"
+        );
     }
 
     /**
@@ -73,12 +83,12 @@ class Whatsapp2ServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/whatsapp2');
+        $langPath = resource_path("lang/modules/whatsapp2");
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'whatsapp2');
+            $this->loadTranslationsFrom($langPath, "whatsapp2");
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'whatsapp2');
+            $this->loadTranslationsFrom(__DIR__ . "/../Resources/lang", "whatsapp2");
         }
     }
 
@@ -89,8 +99,8 @@ class Whatsapp2ServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(__DIR__ . '/../Database/factories');
+        if (!app()->environment("production") && $this->app->runningInConsole()) {
+            app(Factory::class)->load(__DIR__ . "/../Database/factories");
         }
     }
 

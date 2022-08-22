@@ -13,10 +13,11 @@ class AddGatewayReleasedAtToTransactions extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->timestamp('gateway_released_at')
+        Schema::table("transactions", function (Blueprint $table) {
+            $table
+                ->timestamp("gateway_released_at")
                 ->nullable()
-                ->after('invitation_id');
+                ->after("invitation_id");
         });
     }
 
@@ -27,8 +28,8 @@ class AddGatewayReleasedAtToTransactions extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('gateway_released_at');
+        Schema::table("transactions", function (Blueprint $table) {
+            $table->dropColumn("gateway_released_at");
         });
     }
 }

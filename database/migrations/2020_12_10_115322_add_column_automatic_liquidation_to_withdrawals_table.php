@@ -13,12 +13,9 @@ class AddColumnAutomaticLiquidationToWithdrawalsTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'withdrawals',
-            function (Blueprint $table) {
-                $table->boolean('automatic_liquidation')->default(false);
-            }
-        );
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->boolean("automatic_liquidation")->default(false);
+        });
     }
 
     /**
@@ -28,11 +25,8 @@ class AddColumnAutomaticLiquidationToWithdrawalsTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'withdrawals',
-            function (Blueprint $table) {
-                $table->dropColumn(['automatic_liquidation']);
-            }
-        );
+        Schema::table("withdrawals", function (Blueprint $table) {
+            $table->dropColumn(["automatic_liquidation"]);
+        });
     }
 }

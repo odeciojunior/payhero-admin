@@ -1,71 +1,101 @@
 $(document).ready(function () {
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project").find('option').not(':first').remove();
+        $("#project").val($("#project option:first").val());
+        loadOnTable("#chargebacks-table-data", "#chargebacks-table");
+        loadOnAny(".total-number", false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                if(!isEmpty(data2.company_default_projects)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    fillProjectsSelect(data2.companies)
+                    atualizar();
+                    getTotalValues();
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            });
+        });
+    });
+
     let statusObject = {
-        1: "Aprovada",
-        2: "Pendente",
-        3: "Recusado",
-        4: "ChargeBack",
-        5: "Cancelada",
-        6: "Em processo",
-        7: "Estornada",
-        8: "Estorno Parcial",
-        10: "BlackList",
-        20: "Revisão Antifraude",
-        21: "Cancelada Antifraude",
-        22: "Estornado",
-        24: "Em disputa",
-        99: "Erro Sistema",
+        1: "Em andamento",
+        2: "Perdido",
+        3: "Ganho",
         null: "Em Processo",
     };
 
     let badgeObject = {
-        1: "badge-success",
-        2: "badge-pendente",
-        3: "badge-danger",
-        4: "badge-danger",
-        5: "badge-danger",
-        6: "badge-secondary",
-        7: "badge-danger",
-        8: "badge-warning",
-        10: "badge-dark",
-        20: "badge-antifraude",
-        21: "badge-danger",
-        22: "badge-danger",
-        24: "badge-antifraude",
-        99: "badge-danger",
+        1: "badge-pendente",
+        2: "badge-danger",
+        3: "badge-success",
         null: "badge-primary",
     };
 
-    $('#date_range').val(moment().subtract(29, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY')).
-    dateRangePicker({
-        format: 'DD/MM/YYYY',
-        endDate: moment().add(30, 'days'),
-        customShortcuts: [
-            {
-                name: 'Hoje',
-                dates: () => [moment().startOf('day').toDate(), new Date()]
-            },
-            {
-                name: '7 dias',
-                dates: () => [moment().subtract(6, 'days').toDate(), new Date()]
-            },
-            {
-                name: '15 dias',
-                dates: () => [moment().subtract(14, 'days').toDate(), new Date()]
-            },
-            {
-                name: 'Último mês',
-                dates: () => [moment().subtract(30, 'days').toDate(), new Date()]
-            },
-            {
-                name: 'Próximo 30 dias',
-                dates: () => [moment().add(30, 'days').toDate(), new Date()]
-            },
-            {
-                name: 'Desde o início',
-                dates: () => [moment('2018-01-01').toDate(), new Date()]
-            }
-        ]
-    });
+    $("#date_range")
+        .val(
+            moment().format("DD/MM/YYYY") +
+                " - " +
+                moment().add(30, "days").format("DD/MM/YYYY")
+        )
+        .dateRangePicker({
+            format: "DD/MM/YYYY",
+            endDate: moment().add(30, "days"),
+            customShortcuts: [
+                {
+                    name: "Hoje",
+                    dates: () => [moment().startOf("day").toDate(), new Date()],
+                },
+                {
+                    name: "7 dias",
+                    dates: () => [
+                        moment().subtract(6, "days").toDate(),
+                        new Date(),
+                    ],
+                },
+                {
+                    name: "15 dias",
+                    dates: () => [
+                        moment().subtract(14, "days").toDate(),
+                        new Date(),
+                    ],
+                },
+                {
+                    name: "Último mês",
+                    dates: () => [
+                        moment().subtract(30, "days").toDate(),
+                        new Date(),
+                    ],
+                },
+                {
+                    name: "Próximo 30 dias",
+                    dates: () => [
+                        moment().add(30, "days").toDate(),
+                        new Date(),
+                    ],
+                },
+                {
+                    name: "Desde o início",
+                    dates: () => [moment("2018-01-01").toDate(), new Date()],
+                },
+            ],
+        });
 
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
@@ -76,13 +106,16 @@ $(document).ready(function () {
             project: $("#project").val() ?? "",
             customer: $("#customer").val() ?? "",
             customer_document: $("#customer_document").val() ?? "",
-            date_range: $('#date_range').val().replace(" à ", " - ") ?? "",
+            date_range: $("#date_range").val().replace(" à ", " - ") ?? "",
             date_type: $("#date_type").val() ?? "",
-            order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
+            order_by_expiration_date: $("#expiration_date").is(":checked")
+                ? 1
+                : 0,
             contestation_situation: $("#contestation_situation").val() ?? "",
-            is_contested: $("#is_contested").val() ?? "",
+            //is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
-            sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
+            //sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
+            company: $('.company-navbar').val(),
         };
         if (urlParams) {
             let params = "";
@@ -96,7 +129,8 @@ $(document).ready(function () {
         return data;
     }
 
-    const addZeroLeft = (value) => value > 0 && value < 10 ? String(value).padStart(2, '0') : value
+    const addZeroLeft = (value) =>
+        value > 0 && value < 10 ? String(value).padStart(2, "0") : value;
 
     function pagination(response) {
         $("#pagination").html("");
@@ -226,14 +260,28 @@ $(document).ready(function () {
             });
         });
     }
-    
+
+    function loadData() {
+        elementButton = $("#bt_filtro");
+        if (searchIsLocked(elementButton) != "true") {
+            lockSearch(elementButton);
+            console.log(elementButton.attr("block_search"));
+            atualizar();
+            getTotalValues();
+        }
+    }
+
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
 
         if (link == null) {
             link = "/api/contestations/getcontestations?" + getFilters();
         } else {
-            link = "/api/contestations/getcontestations" + link + "&" + getFilters();
+            link =
+                "/api/contestations/getcontestations" +
+                link +
+                "&" +
+                getFilters();
         }
         $.ajax({
             method: "GET",
@@ -261,7 +309,9 @@ $(document).ready(function () {
 
                     dados = "";
                     dados += `
-                        <tr ${value.expiration_user == "Ganha" ? "class='won-contestation'" : ""}>
+                        <tr ${
+                            value.status == 3 ? "class='won-contestation'" : ""
+                        }>
                             <td id='${value.id}'>
                                 <span>${value.sale_code}</span>
                             </td>
@@ -282,38 +332,57 @@ $(document).ready(function () {
                                 </small>
                             </td>`;
 
-                            if (value.sale_status in statusObject) {
-                                dados +=`
+                    /*
+                            ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
+                                ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
+                                : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
+                            */
+                    if (value.status in statusObject) {
+                        dados += `
                                     <td class='copy_link'>
                                         <div class="d-flex justify-content-center align-items-center text-center" >
-                                            <span class='badge ${badgeObject[value.sale_status]} ${value.sale_status === 10 ? "pointer" : "cursor-default"} font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">
-                                                ${statusObject[value.sale_status]}
+                                            <span class='badge ${
+                                                badgeObject[value.status]
+                                            } ${
+                            value.sale_status === 10
+                                ? "pointer"
+                                : "cursor-default"
+                        } font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${
+                            statusObject[value.status]
+                        }">
+                                                ${statusObject[value.status]}
                                             </span>
-                                            ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
-                                                ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
-                                                : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
-                                            ${value.sale_is_chargeback_recovered ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">' : ""}
+                                            ${
+                                                value.sale_is_chargeback_recovered
+                                                    ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">'
+                                                    : ""
+                                            }
                                         </div>
-                                    </td>`
-                                ;
-                            } else {
-                                dados +=`
+                                    </td>`;
+                    } else {
+                        dados += `
                                     <td>
                                         <span class='badge badge-danger'>
                                             Vazio
                                         </span>
-                                    </td>`
-                                ;
-                            }
-                            dados+=`
-                                    <td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
+                                    </td>`;
+                    }
+
+                    dados += `
+                                    <td class="bold">${value.expiration_user} ${
+                        value.expiration_user.includes("dia")
+                            ? '<br><span class="font-size-12 text-muted"> para expirar</span>'
+                            : ""
+                    }</td>
                                 `;
-                                
+
                             dados +=`
                                 <td class="font-size-12 bold line-overflow" style="white-space: normal;">
                                     ${value.reason}
                                 </td>
-                                <!-- <td style='white-space: nowrap'> <b>${value.amount}</b> </td>-->
+                                <!-- <td style='white-space: nowrap'> <b>${
+                                    value.amount
+                                }</b> </td>-->
                                     <td>
                                         ${
                                             value.is_file_user_completed
@@ -419,6 +488,9 @@ $(document).ready(function () {
                     });
                 });
             },
+            complete: (response) => {
+                unlockSearch($("#bt_filtro"));
+            },
         });
     }
 
@@ -452,75 +524,105 @@ $(document).ready(function () {
             success: function (response) {
                 loadOnAny(".total-number", true);
 
-                $("#total-contestation").html(addZeroLeft(response.total_contestation));
-                $("#total-contestation-tax").html(" (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")");
+                $("#total-contestation").html(
+                    addZeroLeft(response.total_contestation)
+                );
 
-                $("#total-chargeback-tax-val").html(addZeroLeft(response.total_chargeback));
-                $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
+                $("#total-chargeback-tax-val").html(
+                    addZeroLeft(response.total_chargeback)
+                );
 
-                $("#total-contestation-value").html(response.total_contestation_value);
+                if ($("#date_type").val() == "transaction_date") {
+                    $("#total-contestation-tax").html(
+                        " (" +
+                            response.total_contestation_tax +
+                            " de " +
+                            response.total_sale_approved +
+                            ")"
+                    );
+                    $("#total-chargeback-tax").html(
+                        " (" + response.total_chargeback_tax + ")"
+                    );
+                }
+
+                $("#total-contestation-value").html(
+                    response.total_contestation_value
+                );
             },
         });
     }
 
     // Obtem o os campos dos filtros
-    function getProjects() {
+    function getProjects(data) {
         loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    // $("#export-excel").show();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        fillProjectsSelect(data.companies)
+        atualizar();
+        loadingOnScreenRemove();
 
-                    $.each(response.data, function (i, project) {
-                        $("#project").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
+        // $.ajax({
+        //     method: "GET",
+        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
+        //     dataType: "json",
+        //     headers: {
+        //         Authorization: $('meta[name="access-token"]').attr("content"),
+        //         Accept: "application/json",
+        //     },
+        //     error: function error(response) {
+        //         loadingOnScreenRemove();
+        //         errorAjaxResponse(response);
+        //     },
+        //     success: function success(response) {
+        //         if (!isEmpty(response.data)) {
+        //             $("#project-empty").hide();
+        //             $("#project-not-empty").show();
+        //             // $("#export-excel").show();
 
-                    atualizar();
-                } else {
-                    // $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
+        //             $.each(response.data, function (i, project) {
+        //                 $("#project").append(
+        //                     $("<option>", {
+        //                         value: project.id,
+        //                         text: project.name,
+        //                     })
+        //                 );
+        //             });
 
-                loadingOnScreenRemove();
-            },
-        });
+        //             window.atualizar();
+        //         } else {
+        //             // $("#export-excel").hide();
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
+
+        //         loadingOnScreenRemove();
+        //     },
+        // });
     }
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
-        getTotalValues();
+        loadData();
     });
-    
+
     $('#transaction').on('change paste keyup select', function () {
         let val = $(this).val();
 
-        if (val === '') {
-            $('#date_type').attr('disabled', false).removeClass('disableFields');
-            $('#date_range').attr('disabled', false).removeClass('disableFields');
+        if (val === "") {
+            $("#date_type")
+                .attr("disabled", false)
+                .removeClass("disableFields");
+            $("#date_range")
+                .attr("disabled", false)
+                .removeClass("disableFields");
         } else {
-            $('#date_range').val(moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY"));
-            $('#date_type').attr('disabled', true).addClass('disableFields');
-            $('#date_range').attr('disabled', true).addClass('disableFields');
+            $("#date_range").val(
+                moment("2018-01-01").format("DD/MM/YYYY") +
+                    " - " +
+                    moment().format("DD/MM/YYYY")
+            );
+            $("#date_type").attr("disabled", true).addClass("disableFields");
+            $("#date_range").attr("disabled", true).addClass("disableFields");
         }
     });
 
@@ -587,7 +689,47 @@ $(document).ready(function () {
 
     $("#pagination").css({ marginBottom: "100px" });
 
-    atualizar();
+    //window.atualizar();
     getTotalValues();
-    getProjects();
+
+    function fillProjectsSelect(data){
+        $.ajax({
+            method: "GET",
+            url: "/api/contestations/projects-with-contestations",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                //if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        if( dataSales.includes(project.id) )
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                    });
+                //}
+            });
+        });
+    }
+
+    getCompaniesAndProjects().done( function (data){
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
+    });
+
 });

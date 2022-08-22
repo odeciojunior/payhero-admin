@@ -128,8 +128,6 @@
     outline: 1px solid #ff3434 !important;
 }
 
-
-
 .tag {
     font-size: 16px;
     padding: 3.5px 5px 3.5px 5px;
@@ -429,9 +427,7 @@ input[type="number"] {
         height: 40px;
         font-size: 14px;
     }
-
 }
-
 
 /* ------------ Crop -------------- */
 
@@ -536,8 +532,6 @@ input[type="number"] {
     color: #2e85ec;
 }
 
-
-
 #notification-table thead > tr > td:last-child,
 #notification-table thead > tr > th:last-child,
 #notification-table thead > tr > td:first-child,
@@ -550,7 +544,6 @@ input[type="number"] {
     /* padding: 20px 20px 30px 20px; */
 }
 
-
 .table tbody tr:last-child td:last-child {
     border-radius: 0;
 }
@@ -561,7 +554,7 @@ input[type="number"] {
     /* padding: 10px 40px!important; */
 }
 
-#notification-table tr, 
+#notification-table tr,
 #notification-table th,
 #notification-table td {
     height: 95px !important;
@@ -609,7 +602,7 @@ input[type="number"] {
 }
 
 .notification-table-cointainer table tr {
-    height: 70px; 
+    height: 70px;
 }
 
 a:focus,
@@ -705,7 +698,7 @@ textarea:focus {
 }
 
 .verified-button {
-    background-color: #4B8FEF;
+    background-color: #4b8fef;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -802,9 +795,13 @@ textarea:focus {
     max-width: 400px;
 }
 
+#checkout_editor #payments .sirius-select-container {
+    max-width: none !important;
+}
+
 #checkout_editor .sirius-select-text {
     height: 43px !important;
-    padding: 5px 41px 10px 16px !important;
+    padding: 10px 41px 10px 16px !important;
 }
 
 .quantity-selector-label {
@@ -853,7 +850,6 @@ textarea:focus {
     width: 230px;
     height: 130px;
 }
-
 
 .tooltip-content p {
     font-style: normal;
@@ -950,8 +946,8 @@ textarea:focus {
     height: 35px;
     padding: 5px 10px;
 
-    background: #FFFFFF;
-    border: 0.6px solid #F0F0F0;
+    background: #ffffff;
+    border: 0.6px solid #f0f0f0;
     box-sizing: border-box;
     border-radius: 8px 8px 0px 0px;
 }
@@ -970,13 +966,13 @@ textarea:focus {
 }
 
 .radio-row {
-    display:flex;
+    display: flex;
     align-items: center;
     gap: 5px;
     margin-bottom: 5px;
 }
 
-.radio-row label{
+.radio-row label {
     margin: 0px;
 }
 
@@ -1056,7 +1052,6 @@ textarea:focus {
     border-radius: 10px;
 }
 
-
 .favicon-logo-container {
     display: flex;
     flex-direction: row;
@@ -1091,7 +1086,7 @@ textarea:focus {
     flex-direction: row;
     gap: 10px;
     align-items: center;
-    
+
     -webkit-transition: all 0.7s;
     -moz-transition: all 0.7s;
     -ms-transition: all 0.7s;
@@ -1104,7 +1099,7 @@ textarea:focus {
     font-weight: bold;
     font-size: 14px;
     line-height: 12px;
-    color: #2E85EC;
+    color: #2e85ec;
 }
 
 .favicon-container {
@@ -1255,6 +1250,3 @@ input[type="color"]::-moz-color-swatch {
         transform: rotate(360deg);
     }
 }
-
-
-

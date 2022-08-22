@@ -19,8 +19,8 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         parent::boot();
 
-        if(request()->has('horizon_access') && request('horizon_access') == 'VHIkkugCPtxZge7cVGOYtoFwhvMA3z'){
-            Session::put('horizon_access', 'true');
+        if (request()->has("horizon_access") && request("horizon_access") == "VHIkkugCPtxZge7cVGOYtoFwhvMA3z") {
+            Session::put("horizon_access", "true");
         }
 
         // Horizon::routeSmsNotificationsTo('15556667777');
@@ -38,10 +38,8 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewHorizon', function ($user = null) {
-            return Session::has('horizon_access');
+        Gate::define("viewHorizon", function ($user = null) {
+            return Session::has("horizon_access");
         });
     }
 }
-
-

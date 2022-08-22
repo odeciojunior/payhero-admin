@@ -13,10 +13,9 @@ class AlterTableShopifyIntegrationsAddSharedSecretColumn extends Migration
      */
     public function up()
     {
-        Schema::table('shopify_integrations', function(Blueprint $table) {
-            $table->string('shared_secret')->after('token');
+        Schema::table("shopify_integrations", function (Blueprint $table) {
+            $table->string("shared_secret")->after("token");
         });
-
     }
 
     /**
@@ -26,8 +25,8 @@ class AlterTableShopifyIntegrationsAddSharedSecretColumn extends Migration
      */
     public function down()
     {
-        Schema::table('shopify_integrations', function(Blueprint $table) {
-            $table->dropColumn('shared_secret');
+        Schema::table("shopify_integrations", function (Blueprint $table) {
+            $table->dropColumn("shared_secret");
         });
     }
 }
