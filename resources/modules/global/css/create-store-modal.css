@@ -1,20 +1,23 @@
 .new-store-modal-option a {
     width: 115px;
     height: 115px;
-    border: 1px solid #2E85EC;
+    border: 1px solid #2e85ec;
     border-radius: 8px;
-    background: #F4F6FB;
+    background: #f4f6fb;
 }
+
 .new-store-modal-option a:hover {
-    border: 2px solid #2E85EC;
-    background: #CBE0FA;;
+    border: 2px solid #2e85ec;
+    background: #cbe0fa;
 }
+
 .new-store-modal-option span {
     font-weight: 400;
-    color: #5B5B5B;
+    color: #5b5b5b;
     margin-top: 12px;
     font-size: 16px;
 }
+
 @media screen and (max-width: 430px) {
     .new-store-modal-option a {
         width: 90px;
@@ -45,6 +48,7 @@
     font-size: 26px;
     color: #636363;
 }
+
 .new-store-modal-option-close-btn:focus {
     border: none;
     outline: none;

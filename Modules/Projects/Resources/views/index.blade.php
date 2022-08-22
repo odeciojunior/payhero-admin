@@ -16,9 +16,10 @@
     @endpush
 
     <!-- PAGINA INTEIRA -->
-    <div class="page" style="padding-bottom: 0;">
+    <div class="page"
+         style="padding-bottom: 0;">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
         <!-- CONTAINER DO CONTEUDO DA PAGINA -->
         <div class="page-content container pr-5"
@@ -43,7 +44,8 @@
                         <div class="row no-gutters align-items-center justify-content-sm-end justify-content-between">
 
                             <!-- BOTAO EXIBIR/ESCONDER EXCLUIDOS -->
-                            <div id="button_toggle" class="d-flex mr-60">
+                            <div id="button_toggle"
+                                 class="d-flex mr-60">
                                 <label class="switch mr-3">
                                     <input type="checkbox"
                                            class='check'
@@ -52,7 +54,9 @@
                                            id="deleted_project_filter">
                                     <span class="slider round"></span>
                                 </label>
-                                <div for='deleted_project_filter' class="mt-3"><b>Exibir lojas excluídas nos filtros</b></div>
+                                <div for='deleted_project_filter'
+                                     class="mt-3"><b>Exibir lojas excluídas nos filtros</b>
+                                </div>
                             </div>
 
                             <!-- BOTAO ADICIONAR LOJA -->
