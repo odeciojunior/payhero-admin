@@ -16,9 +16,10 @@
     @endpush
 
     <!-- PAGINA INTEIRA -->
-    <div class="page" style="padding-bottom: 0;">
+    <div class="page"
+         style="padding-bottom: 0;">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
         <!-- CONTAINER DO CONTEUDO DA PAGINA -->
         <div class="page-content container pr-5"
@@ -43,7 +44,8 @@
                         <div class="row no-gutters align-items-center justify-content-sm-end justify-content-between">
 
                             <!-- BOTAO EXIBIR/ESCONDER EXCLUIDOS -->
-                            <div id="button_toggle" class="d-flex mr-60">
+                            <div id="button_toggle"
+                                 class="d-flex mr-60">
                                 <label class="switch mr-3">
                                     <input type="checkbox"
                                            class='check'
@@ -52,7 +54,9 @@
                                            id="deleted_project_filter">
                                     <span class="slider round"></span>
                                 </label>
-                                <div for='deleted_project_filter' class="mt-3"><b>Exibir lojas excluídas nos filtros</b></div>
+                                <div for='deleted_project_filter'
+                                     class="mt-3"><b>Exibir lojas excluídas nos filtros</b>
+                                </div>
                             </div>
 
                             <!-- BOTAO ADICIONAR LOJA -->
@@ -90,57 +94,7 @@
             </div>
         </div>
 
-        <div class="modal fade"
-             id="new-store-modal"
-             tabindex="-1"
-             role="dialog">
-            <div class="modal-dialog modal-dialog-centered"
-                 role="document"
-                 style="max-width: 450px">
-                <div class="modal-content"
-                     style="border-radius: 8px;">
-                    <div class="d-flex flex-row-reverse simple-border-bottom py-10 px-20">
-                        <h4 class="new-store-modal-option-title text-center">Criar nova loja</h4>
-                        <button type="button"
-                                class="new-store-modal-option-close-btn"
-                                data-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="d-flex flex-row justify-content-around"
-                         style="padding: 32px 16px">
-                        <div class="d-flex flex-column align-items-center new-store-modal-option">
-                            <a href="/apps/shopify"
-                               class="d-flex justify-content-center align-items-center">
-                                <img src="{{ mix('build/global/img/svg/shopify-logo.svg') }}"
-                                     data-value="product_digital"
-                                     alt="novo produto digital">
-                            </a>
-                            <span>Shopify</span>
-                        </div>
-                        <div class="d-flex flex-column align-items-center new-store-modal-option">
-                            <a href="/apps/woocommerce"
-                               class="d-flex justify-content-center align-items-center">
-                                <img src="{{ mix('build/global/img/svg/woocommerce-logo.svg') }}"
-                                     data-value="product_digital"
-                                     alt="novo produto digital">
-                            </a>
-                            <span>Woocommerce</span>
-                        </div>
-                        <div class="d-flex flex-column align-items-center new-store-modal-option">
-                            <a href="/projects/create"
-                               class="d-flex justify-content-center align-items-center">
-                                <img src="{{ mix('build/global/img/svg/landing-logo.svg') }}"
-                                     data-value="product_physical"
-                                     alt="novo produto fisico">
-                            </a>
-                            <span>Landing Page</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('projects::create-store-modal')
 
         @include('projects::empty')
         @include('projects::empty-company')
