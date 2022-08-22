@@ -383,7 +383,7 @@ trait DemoPaymentFlowTrait
 
             $this->installmentsValue = $installmentsData['installment_value'];
             $this->cloudfoxValue = ((int)(($this->totalValue - $interestValue) / 100 * $this->company->gateway_tax));
-            $this->cloudfoxValue += str_replace('.', '', $this->company->transaction_rate);
+            $this->cloudfoxValue += str_replace('.', '', $this->company->transaction_tax);
             $this->cloudfoxValue += $interestValue;
         } else {
             $this->cloudfoxValue = (int)(($this->totalValue / 100) * $this->company->gateway_tax);
@@ -391,7 +391,7 @@ trait DemoPaymentFlowTrait
             if (($this->totalValue / 100) <= 40) {
                 $transactionRate = 300;
             } else {
-                $transactionRate = $this->company->transaction_rate;
+                $transactionRate = $this->company->transaction_tax;
             }
             $this->cloudfoxValue += FoxUtils::onlyNumbers($transactionRate);
         }

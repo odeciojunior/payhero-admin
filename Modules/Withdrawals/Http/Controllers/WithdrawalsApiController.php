@@ -287,7 +287,12 @@ class WithdrawalsApiController
 
             $data = $request->all();
 
-            $company = Company::find(current(Hashids::decode($data["company_id"])));
+            $companyId = auth()->user()->company_default;
+            if(!empty($filters['company_id'])){
+                $companyId = hashids_decode($filters['company_id']);
+            }
+
+            $company = Company::find($companyId);
             if (!Gate::allows("edit", [$company])) {
                 return response()->json(["message" => "Sem permissão para visualizar dados da conta"], 403);
             }
