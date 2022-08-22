@@ -14,7 +14,7 @@ class AddColumnPipefyCardIdInUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer("pipefy_card_id")->after("block_attendance_balance");
+            $table->integer("pipefy_card_id")->nullable()->after("block_attendance_balance");
         });
     }
 
