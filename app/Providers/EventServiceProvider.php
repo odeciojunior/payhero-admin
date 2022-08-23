@@ -43,7 +43,6 @@ use Modules\Core\Events\WithdrawalsExportedEvent;
 use Modules\Core\Listeners\AffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\AffiliateSendEmailListener;
 use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
-use Modules\Core\Listeners\ManualRefundedSendEmailListener;
 use Modules\Core\Listeners\CheckSaleHasValidTrackingListener;
 use Modules\Core\Listeners\CheckTransactionReleasedListener;
 use Modules\Core\Listeners\CreateChargebackDebitListener;
@@ -52,6 +51,7 @@ use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\HotBilletPixExpiredListener;
+use Modules\Core\Listeners\ManualRefundedSendEmailListener;
 use Modules\Core\Listeners\NotificacoesInteligentesPixExpiredListener;
 use Modules\Core\Listeners\NotifyAntifraudChargebackListener;
 use Modules\Core\Listeners\NotifyExtractExportedListener;
@@ -72,21 +72,22 @@ use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\Sac\NotifyTicketClosedListener;
 use Modules\Core\Listeners\Sac\NotifyTicketMediationListener;
 use Modules\Core\Listeners\Sac\NotifyTicketOpenListener;
+use Modules\Core\Listeners\Sac\TicketMessageSendEmailListener;
 use Modules\Core\Listeners\Sak\SakPixExpiredListener;
 use Modules\Core\Listeners\SaleRefundedSendEmailListener;
 use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
 use Modules\Core\Listeners\SendChargebackNotificationsListener;
 use Modules\Core\Listeners\SendEmailListener;
+use Modules\Core\Listeners\SendEmailPedingDocumentoListener;
 use Modules\Core\Listeners\SendEmailRegisteredListener;
 use Modules\Core\Listeners\SendSmsListener;
 use Modules\Core\Listeners\SetApprovedShopifyOrderListener;
-use Modules\Core\Listeners\Sac\TicketMessageSendEmailListener;
-use Modules\Core\Listeners\SendEmailPedingDocumentoListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\UserDocumentBureauValidationListener;
+use Modules\Core\Listeners\Webhooks\WebhooksSaleStatusChangeListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -105,14 +106,19 @@ class EventServiceProvider extends ServiceProvider
             BilletExpiredWhatsapp2Listener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
+            WebhooksSaleStatusChangeListener::class,
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
             SaleRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
+            WebhooksSaleStatusChangeListener::class,
         ],
-        ManualRefundEvent::class => [ManualRefundedSendEmailListener::class, IntegrationOrderCancelListener::class],
-
+        ManualRefundEvent::class => [
+            ManualRefundedSendEmailListener::class,
+            IntegrationOrderCancelListener::class,
+            WebhooksSaleStatusChangeListener::class,
+        ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
             NotifyUserShopifyIntegrationStoreListener::class,
@@ -127,37 +133,70 @@ class EventServiceProvider extends ServiceProvider
             BoletoPaidNotifyUser::class,
             BoletoPaidEmailNotifyUser::class,
         ],
-        TrackingsImportedEvent::class => [NotifyTrackingsImportedListener::class],
+        TrackingsImportedEvent::class => [
+            NotifyTrackingsImportedListener::class,
+        ],
         SalesExportedEvent::class => [NotifySalesExportedListener::class],
         ExtractExportedEvent::class => [NotifyExtractExportedListener::class],
-        TrackingsExportedEvent::class => [NotifyTrackingsExportedListener::class],
+        TrackingsExportedEvent::class => [
+            NotifyTrackingsExportedListener::class,
+        ],
         TrackingCodeUpdatedEvent::class => [
             TrackingCodeUpdatedSendEmailClientListener::class,
             TrackingCodeUpdatedActiveCampaignListener::class,
         ],
-        CheckSaleHasValidTrackingEvent::class => [CheckSaleHasValidTrackingListener::class],
+        CheckSaleHasValidTrackingEvent::class => [
+            CheckSaleHasValidTrackingListener::class,
+        ],
         ResetPasswordEvent::class => [ResetPasswordSendEmailListener::class],
-        ReleasedBalanceEvent::class => [ReleasedBalanceNotifyUserListener::class],
-        SaleApprovedEvent::class => [SetApprovedShopifyOrderListener::class],
-        SocialiteWasCalled::class => ["SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle"],
-        WithdrawalRequestEvent::class => [WithdrawalRequestSendEmailListener::class],
+        ReleasedBalanceEvent::class => [
+            ReleasedBalanceNotifyUserListener::class,
+        ],
+        SaleApprovedEvent::class => [
+            SetApprovedShopifyOrderListener::class,
+            WebhooksSaleStatusChangeListener::class,
+        ],
+        SocialiteWasCalled::class => [
+            "SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle",
+        ],
+        WithdrawalRequestEvent::class => [
+            WithdrawalRequestSendEmailListener::class,
+        ],
         SendEmailEvent::class => [SendEmailListener::class],
-        SendEmailPendingDocumentEvent::class => [SendEmailPedingDocumentoListener::class],
+        SendEmailPendingDocumentEvent::class => [
+            SendEmailPedingDocumentoListener::class,
+        ],
         SendSmsEvent::class => [SendSmsListener::class],
         TicketMessageEvent::class => [TicketMessageSendEmailListener::class],
-        NotifyTicketMediationEvent::class => [NotifyTicketMediationListener::class],
+        NotifyTicketMediationEvent::class => [
+            NotifyTicketMediationListener::class,
+        ],
         NotifyTicketOpenEvent::class => [NotifyTicketOpenListener::class],
         NotifyTicketClosedEvent::class => [NotifyTicketClosedListener::class],
-        AffiliateRequestEvent::class => [AffiliateRequestSendEmailListener::class],
+        AffiliateRequestEvent::class => [
+            AffiliateRequestSendEmailListener::class,
+        ],
         AffiliateEvent::class => [AffiliateSendEmailListener::class],
-        EvaluateAffiliateRequestEvent::class => [EvaluateAffiliateRequestSendEmailListener::class],
+        EvaluateAffiliateRequestEvent::class => [
+            EvaluateAffiliateRequestSendEmailListener::class,
+        ],
         UserRegisteredEvent::class => [SendEmailRegisteredListener::class],
-        UserRegistrationFinishedEvent::class => [UserDocumentBureauValidationListener::class],
-        UpdateCompanyGetnetEvent::class => [UpdateCompanyGetnetSendEmailListener::class],
+        UserRegistrationFinishedEvent::class => [
+            UserDocumentBureauValidationListener::class,
+        ],
+        UpdateCompanyGetnetEvent::class => [
+            UpdateCompanyGetnetSendEmailListener::class,
+        ],
         FinancesExportedEvent::class => [NotifyFinancesExportedListener::class],
-        WithdrawalsExportedEvent::class => [NotifyWithdrawalsExportedListener::class],
-        NotifyUserLevelEvent::class => [NotifyUserLevelSendEmailListener::class],
-        NotifyUserAchievementEvent::class => [NotifyUserAchievementSendEmailListener::class],
+        WithdrawalsExportedEvent::class => [
+            NotifyWithdrawalsExportedListener::class,
+        ],
+        NotifyUserLevelEvent::class => [
+            NotifyUserLevelSendEmailListener::class,
+        ],
+        NotifyUserAchievementEvent::class => [
+            NotifyUserAchievementSendEmailListener::class,
+        ],
         PixExpiredEvent::class => [
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
@@ -166,8 +205,11 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredUnicodropListener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
+            WebhooksSaleStatusChangeListener::class,
         ],
-        CheckTransactionReleasedEvent::class => [CheckTransactionReleasedListener::class],
+        CheckTransactionReleasedEvent::class => [
+            CheckTransactionReleasedListener::class,
+        ],
         NewChargebackEvent::class => [
             UpdateSaleChargebackListener::class,
             CreateChargebackDebitListener::class,
