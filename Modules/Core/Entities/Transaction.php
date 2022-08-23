@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Entities;
 
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TransactionPresenter;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property int $id
@@ -118,13 +119,13 @@ class Transaction extends Model
         "deleted_at",
     ];
 
-    protected static $logFillable = true;
-
-    protected static $logUnguarded = true;
-
-    protected static $logOnlyDirty = true;
-
-    protected static $submitEmptyLogs = false;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
+    }
 
     public function save(array $options = [])
     {

@@ -6,7 +6,6 @@ use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PostbackLogPresenter;
-use App\Traits\LogsActivity;
 
 /**
  * @property integer $id

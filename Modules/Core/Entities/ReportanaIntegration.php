@@ -5,11 +5,12 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Models\Activity;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ReportanaIntegrationPresenter;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property integer $id
@@ -63,40 +64,13 @@ class ReportanaIntegration extends Model
         "created_at",
         "updated_at",
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que o pacote armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
-    /**
-     * @param Activity $activity
-     * @param string $eventName
-     */
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        if ($eventName == "deleted") {
-            $activity->description = "Integração Reportana para o projeto " . $this->project->name . " foi deletedo.";
-        } elseif ($eventName == "updated") {
-            $activity->description = "Integração Reportana para o projeto " . $this->project->name . " foi atualizado.";
-        } elseif ($eventName == "created") {
-            $activity->description = "Integração Reportana para o projeto " . $this->project->name . " foi criado.";
-        } else {
-            $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     /**

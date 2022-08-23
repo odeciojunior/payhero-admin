@@ -88,7 +88,6 @@ use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\UserDocumentBureauValidationListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
-use SocialiteProviders\Manager\SocialiteWasCalled;
 
 /**
  * Class EventServiceProvider
@@ -139,7 +138,6 @@ class EventServiceProvider extends ServiceProvider
         ResetPasswordEvent::class => [ResetPasswordSendEmailListener::class],
         ReleasedBalanceEvent::class => [ReleasedBalanceNotifyUserListener::class],
         SaleApprovedEvent::class => [SetApprovedShopifyOrderListener::class],
-        SocialiteWasCalled::class => ["SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle"],
         WithdrawalRequestEvent::class => [WithdrawalRequestSendEmailListener::class],
         SendEmailEvent::class => [SendEmailListener::class],
         SendEmailPendingDocumentEvent::class => [SendEmailPedingDocumentoListener::class],
