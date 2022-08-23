@@ -277,7 +277,7 @@ class SalesRecoveryApiController extends Controller
         $paymentMethod = (new Sale())->present()->getPaymentType("boleto");
         $status = [5];
 
-        $company_id = hashids_decode($data["company"]);
+        $company_id = hashids_decode($data["company"]??auth()->user()->company_default);
         $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans, $company_id);
 
         return SalesRecoveryCardRefusedResource::collection($sales);

@@ -6,6 +6,7 @@ use App\Jobs\RevalidateTrackingDuplicateJob;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
@@ -268,6 +269,13 @@ class TrackingService
             $userId = auth()->user()->getAccountOwnerId();
         }
 
+        $companyId = Company::DEMO_ID;
+        if(!empty($filters['company'])){
+            $companyId = hashids_decode($filters['company']);
+        }else{
+            $companyId = DB::table('users')->select('company_default')->where('id',$userId)->first()->company_default;
+        }
+
         $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
         $filters["project"] = is_array($filters["project"]) ? implode(",", $filters["project"]) : $filters["project"];
 
@@ -306,7 +314,7 @@ class TrackingService
             }
         })
         ->join('checkout_configs','s.project_id','=','checkout_configs.project_id')
-        ->where('checkout_configs.company_id',hashids_decode($filters['company']));
+        ->where('checkout_configs.company_id',$companyId);
 
         //filtro transactions
         if (!empty($filters["transaction_status"])) {

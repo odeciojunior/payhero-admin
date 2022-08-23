@@ -362,7 +362,7 @@ class CoreApiController extends Controller
         }
 
         if($companyId > 1){
-            $company = Company::where('user_id',$user->id)->where('id',$companyId)->exists();
+            $company = Company::where('user_id',$user->account_owner_id)->where('id',$companyId)->exists();
             if(empty($company)){
                 return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
             }

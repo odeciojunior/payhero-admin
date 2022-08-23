@@ -1490,13 +1490,13 @@ function changeNewRegisterLayoutOnWindowResize() {
         return;
     }
 
-    // if (window.innerWidth >= 847) {
-    //     $('.new-register-page-open-modal-container').fadeOut();
-    //     $('.new-register-navbar-open-modal-container').fadeIn();
-    // } else {
-    //     $('.new-register-navbar-open-modal-container').fadeOut();
-    //     $('.new-register-page-open-modal-container').fadeIn();
-    // }
+    if (window.innerWidth >= 847) {
+        $('.new-register-page-open-modal-container').fadeOut();
+        $('.new-register-navbar-open-modal-container').fadeIn();
+    } else {
+        $('.new-register-navbar-open-modal-container').fadeOut();
+        $('.new-register-page-open-modal-container').fadeIn();
+    }
 }
 
 function validateStep(step) {

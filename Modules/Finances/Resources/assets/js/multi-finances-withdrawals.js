@@ -445,6 +445,11 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             click.removeData("clicked");
         }, 2000);
 
+        if(!$('.company-navbar').val()){
+            alertCustom('error', 'Não foi identificado a empresa selecionada.');
+            return false;
+        }
+
         loadOnModal("#modal-body-withdrawal-custom");
 
         $("#bt-confirm-withdrawal-modal-custom").attr("disabled", "disabled");
