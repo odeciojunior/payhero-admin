@@ -40,7 +40,6 @@ $(document).ready(function () {
         if(!$hasProjects){
             $('#integration-actions').hide();
             $("#no-integration-found").hide();
-            //$('#project-integrated').hide();
             $('#project-empty').show();
             loadingOnScreenRemove();
             loadOnAny('#content',true);
@@ -60,27 +59,21 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
-                    //$("#content").html("");
-                    if (isEmpty(response.projects)) {
-                        $("#project-empty").show();
-                        $("#integration-actions").hide();
+                    $("#content").html("");
+                    $("#project_id").html("");
+                    fillSelectProject(companiesAndProjects,'#project_id')
+                    if (isEmpty(response.integrations)) {
+                        $("#no-integration-found").show();
                     } else {
                         $("#content").html("");
-                        $("#project_id").html("");
-                        fillSelectProject(companiesAndProjects,'#project_id')
-                        if (isEmpty(response.integrations)) {
-                            $("#no-integration-found").show();
-                        } else {
-                            $("#content").html("");
-                            let integrations = response.integrations;
-                            for (let i = 0; i < integrations.length; i++) {
-                                renderIntegration(integrations[i]);
-                            }
-                            $("#no-integration-found").hide();
+                        let integrations = response.integrations;
+                        for (let i = 0; i < integrations.length; i++) {
+                            renderIntegration(integrations[i]);
                         }
-                        $("#project-empty").hide();
-                        $("#integration-actions").show();
+                        $("#no-integration-found").hide();
                     }
+                    $("#project-empty").hide();
+                    $("#integration-actions").show();
                     if(loading=='y')
                         loadingOnScreenRemove();
                     loadOnAny('#content',true);

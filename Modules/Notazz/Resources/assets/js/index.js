@@ -40,7 +40,6 @@ $(document).ready(function () {
         if(!$hasProjects){
             $('#integration-actions').hide();
             $("#no-integration-found").hide();
-            //$('#project-integrated').hide();
             $('#project-empty').show();
             loadingOnScreenRemove();
             loadOnAny('#content',true);
@@ -60,11 +59,6 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
-                    //$("#content").html("");
-                    if (isEmpty(response.projects)) {
-                        $("#project-empty").show();
-                        $("#integration-actions").hide();
-                    } else {
                         $('#project_id, #select_projects_edit').html("");
                         if (isEmpty(response.data)) {
                             $("#no-integration-found").show();
@@ -334,7 +328,6 @@ $(document).ready(function () {
                         }
                         $('#project-empty').hide();
                         $('#integration-actions').show();
-                    }
                     if(loading=='y')
                         loadingOnScreenRemove();
                     loadOnAny('#content',true)
