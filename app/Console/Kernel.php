@@ -44,7 +44,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
-        $schedule->command('demo:create-fake-sale')->withoutOverlapping()->everyFiveMinutes();
 
         $schedule->command("check:systems")->everyTenMinutes();
         $schedule->command("ethoca:proccess-postback")->everyTenMinutes();
@@ -54,6 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('generate:notazzinvoicessalesapproved')->everyThirtyMinutes();
         $schedule->command('verify:pendingnotazzinvoices')->everyThirtyMinutes()->withoutOverlapping();
         $schedule->command('verify:abandonedcarts')->everyFifteenMinutes()->withoutOverlapping();
+        $schedule->command('demo:create-fake-sale')->withoutOverlapping()->everyFifteenMinutes();
 
         $schedule->command('verify:pendingdomains')->hourly();
         $schedule->command('verify:tickets')->withoutOverlapping()->hourly();
