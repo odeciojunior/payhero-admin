@@ -60,7 +60,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:tickets-refunded')->withoutOverlapping()->hourly();
 
         $schedule->command('command:checkUpdateCompanyGetnet')->sundays()->at('05:00');
-        $schedule->command('demo:create-fake-withdrawal')->sundays()->at('05:20');
+        $schedule->command('demo:create-fake-withdrawal')
+        ->days([Schedule::MONDAY,Schedule::WEDNESDAY,Schedule::FRIDAY])->at('05:20');
         $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('06:30');
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('06:25');
         $schedule->command('getnet:check-withdrawals-released-cloudfox')->mondays()->at('22:00');
