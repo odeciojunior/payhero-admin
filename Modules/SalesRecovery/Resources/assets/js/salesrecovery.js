@@ -56,7 +56,7 @@ $(document).ready(function () {
         });
     }
 
-    getCompaniesAndProjects().done( function (data){console.log(data)
+    getCompaniesAndProjects().done( function (data){
         if(!isEmpty(data.company_default_projects)){
             getProjects(data);
         }
@@ -258,7 +258,7 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {console.log(response)
+            success: function success(response) {
                 const BOLETO_TYPE = '5'
 
                 $("#table_data").html("");
@@ -362,7 +362,6 @@ $(document).ready(function () {
         elementButton = $("#bt_filtro");
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr("block_search"));
             updateSalesRecovery();
         }
     }
