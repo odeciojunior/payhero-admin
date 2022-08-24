@@ -548,13 +548,13 @@ $(document).ready(function () {
                                             <div class='d-flex justify-content-end align-items-center'>
                                                 <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${
                                                     value.shipping_id
-                                                }"><span class="o-eye-1"></span></a>
+                                                }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
                                                 <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${
                                                     value.shipping_id
-                                                }"><span class='o-edit-1'></span></a>
+                                                }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
                                                 <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${
                                                     value.shipping_id
-                                                }" data-toggle='modal' data-target='#modal-delete-shipping'><span class='o-bin-1'></span></a>
+                                                }" data-toggle='modal' data-target='#modal-delete-shipping'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                                             </div>
                                         </td>
                                      </tr>`;

@@ -315,7 +315,7 @@ function atualizarCoupon() {
                 $("#count-coupons").html(response.meta.total);
                 $.each(response.data, function (index, value) {
                     let data = `<tr>
-                        <td class=""><strong>${value.discount}</strong></td>
+                        <td class="">${value.discount}</td>
                         <td class="">${value.name}<br><span class="small-text">${value.plans}</span></td>
                         <td class="">${value.value}</td>
                         <td class="">${value.code}</td>
@@ -329,10 +329,10 @@ function atualizarCoupon() {
                             <div class="d-flex justify-content-end align-items-right" style="margin-right:-10px">
                                 <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" discount="${
                                     value.discount
-                                }" coupon="${value.id}"><span class="o-eye-1"></span> </a>
+                                }" coupon="${value.id}"><span class=""><img src='/build/global/img/icon-eye.svg'/></span> </a>
                                 <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${
                                     value.id
-                                }"><span class='o-bin-1'></span></a>
+                                }"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                             </div>
                         </td>
 

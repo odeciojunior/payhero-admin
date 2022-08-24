@@ -461,17 +461,17 @@ $(document).ready(function () {
             value.status +
             "' domain='" +
             value.id +
-            "' data-target='#modal-content' data-toggle='modal'><span class='o-eye-1'></span> </a>";
+            "' data-target='#modal-content' data-toggle='modal'><span class=''><img src='/build/global/img/icon-eye.svg'/></span> </a>";
         dados +=
             "<a role='button' class='mg-responsive edit-domain    pointer'       status='" +
             value.status +
             "' domain='" +
             value.id +
-            "' data-target='#modal-content' data-toggle='modal'><span class='o-edit-1'></span> </a>";
+            "' data-target='#modal-content' data-toggle='modal'><span class=''><img src='/build/global/img/pencil-icon.svg'/></span> </a>";
         dados +=
             "<a role='button' class='mg-responsive delete-domain  pointer'       status=''                     domain='" +
             value.id +
-            "' data-target='#modal-delete'  data-toggle='modal'><span class='o-bin-1'></span> </a>";
+            "' data-target='#modal-delete'  data-toggle='modal'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span> </a>";
         dados += "</td>";
         dados += "</tr>";
         $("#domain-table-body").append(dados);

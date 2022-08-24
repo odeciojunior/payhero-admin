@@ -43,13 +43,13 @@ $(() => {
                                             <div class='d-flex justify-content-end align-items-center'>
                                                 <a class="pointer mg-responsive show-order-bump" data-id="${
                                                     rule.id
-                                                }" title="Visualizar"><span class="o-eye-1"></span></a>
+                                                }" title="Visualizar"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
                                                 <a class="pointer mg-responsive edit-order-bump" data-id="${
                                                     rule.id
-                                                }" title="Editar" ><span class="o-edit-1"></span></a>
+                                                }" title="Editar" ><span class=""><img src='/build/global/img/pencil-icon.svg'/></span></a>
                                                 <a class="pointer mg-responsive destroy-order-bump" data-id="${
                                                     rule.id
-                                                }" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class="o-bin-1"></span></a>
+                                                }" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class=""><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                                             </div>
                                        </td>
                                    </tr>`;

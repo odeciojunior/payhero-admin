@@ -22,22 +22,18 @@
             </div>
         </div>
     </div>
-    <div class="card shadow"
-         style="margin: 0 -1.429rem;">
-        <div style='min-height: 300px'>
-            <div class='page-invoice-table table-responsive'
-                 style='border-radius: 0 0 12px 12px;'>
-                <table id='tabela-sms'
-                       class='table text-left table-sms table-striped unify'
-                       style='width: 100%; margin-bottom: 0px;'>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div>
+            <div class='page-invoice-table table-responsive' style='border-radius: 0 0 12px 12px;'>
+                <table id='tabela-sms' class='table text-left table-sms table-striped unify mb-0' style='width: 100%;'>
                     <thead>
                         <tr>
-                            <td class='table-title'>Tipo</td>
-                            <td class='table-title display-m-none display-sm-none'>Evento</td>
-                            <td class='table-title'>Tempo</td>
-                            <td class='table-title'>Mensagem</td>
-                            <td class='table-title text-center'>Status</td>
-                            <td class='table-title text-center options-column-width'></td>
+                            <td class=''>Tipo</td>
+                            <td class=' display-m-none display-sm-none'>Evento</td>
+                            <td class=''>Tempo</td>
+                            <td class=''>Mensagem</td>
+                            <td class='text-center'>Status</td>
+                            <td class='text-center options-column-width'></td>
                         </tr>
                     </thead>
                     <tbody id='data-table-sms'
@@ -50,8 +46,7 @@
 </div>
 
 <div class="d-flex justify-content-center justify-content-md-end">
-    <div id="pagination-project-notification"
-         class="pagination-sm text-right margin-chat-pagination text-right m-0">
+    <div id="pagination-project-notification" class="pagination-sm text-right margin-chat-pagination text-right m-0">
         {{-- js carrega... --}}
     </div>
 </div>

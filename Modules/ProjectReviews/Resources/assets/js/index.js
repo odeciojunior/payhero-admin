@@ -184,13 +184,13 @@ $(document).ready(function () {
                                 <div class='d-flex justify-content-end align-items-center'>
                                     <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${
                                         value.id
-                                    }" data-target='#modal-detail-review' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                    }" data-target='#modal-detail-review' data-toggle='modal'><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
                                     <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${
                                         value.id
-                                    }"><span class='o-edit-1'></span></a>
+                                    }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
                                     <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${
                                         value.id
-                                    }" data-toggle="modal" data-target="#modal-delete-review"><span class='o-bin-1'></span></a>
+                                    }" data-toggle="modal" data-target="#modal-delete-review"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                                 </div>
                             </td>
                         </tr>

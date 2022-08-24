@@ -87,13 +87,13 @@ $(document).ready(function () {
                                 <div class='d-flex justify-content-end align-items-center'>
                                     <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${
                                         value.id
-                                    }"><span class="o-eye-1"></span></a>
+                                    }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
                                     <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${
                                         value.id
-                                    }"><span class='o-edit-1'></span></a>
+                                    }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
                                     <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${
                                         value.id
-                                    }" data-toggle="modal" data-target="#modal-delete-upsell"><span class='o-bin-1'></span></a>
+                                    }" data-toggle="modal" data-target="#modal-delete-upsell"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                                 </div>
                             </td>
                         </tr>

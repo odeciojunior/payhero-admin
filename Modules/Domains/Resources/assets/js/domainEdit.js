@@ -178,17 +178,17 @@ $(document).ready(function () {
             value.status +
             "' domain='" +
             value.id +
-            "' ><span class='o-eye-1'></span> </a>";
+            "' ><span class=''><img src='/build/global/img/icon-eye.svg'/></span> </a>";
         dados +=
             "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" +
             value.status +
             "' domain='" +
             value.id +
-            "' data-toggle='modal'><span class='o-edit-1'></span> </a>";
+            "' data-toggle='modal'><span class=''><img src='/build/global/img/pencil-icon.svg'/></span> </a>";
         dados +=
             "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" +
             value.id +
-            "' data-toggle='modal'><span class='o-bin-1'></span> </a>";
+            "' data-toggle='modal'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span> </a>";
         dados += "</div>";
         dados += "</td>";
         dados += "</tr>";

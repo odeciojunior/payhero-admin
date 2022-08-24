@@ -271,9 +271,7 @@
 
                 <div class="card shadow">
                     <div class="page-invoice-table table-responsive">
-                        <table id="chargebacks-table"
-                               class="table-vendas table table-striped unify"
-                               style="width:100%;">
+                        <table id="chargebacks-table" class="table-vendas table table-striped unify" style="width:100%;">
                             <thead>
                                 <tr class="">
                                     <td class="">Transação</td>

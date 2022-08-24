@@ -89,21 +89,19 @@
     </div>
     <div class="card shadow "
          style="margin: 0 -1.429rem;">
-        <div style='min-height: 300px'>
+        <div>
             <div class='page-invoice-table table-responsive '>
-                <table id='tabela-coupon'
-                       class='table text-left table-coupon table-striped unify'
-                       style='width:100%'>
+                <table id='tabela-coupon' class='table text-left table-coupon table-striped unify' style='width:100%'>
                     <thead>
                         <tr style="background: #FBFBFB;">
-                            <td class='table-title'>Categoria</td>
-                            <td class='table-title'>Nome</td>
-                            <td class='table-title'>Desconto de</td>
-                            <td class='table-title'>Código</td>
+                            <td class=''>Categoria</td>
+                            <td class=''>Nome</td>
+                            <td class=''>Desconto de</td>
+                            <td class=''>Código</td>
 
-                            <td class='table-title'
+                            <td class=''
                                 style="text-align: center">Status</td>
-                            <td class='table-title options-column-width text-right'
+                            <td class='options-column-width text-right'
                                 style="width: 126px !important"></td>
                         </tr>
                     </thead>

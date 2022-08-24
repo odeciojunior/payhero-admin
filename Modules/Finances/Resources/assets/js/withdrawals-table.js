@@ -98,7 +98,7 @@ window.loadWithdrawalsTable = function (link = null) {
                     let dateRelease = getReleaseTime(data);
 
                     tableData += `<tr class="s-table table-finance-transfers">;
-                                <td class="text-center sale-finance-transfers" style="grid-area: sale">#${
+                                <td class="sale-finance-transfers" style="grid-area: sale">#${
                                     data.id
                                 }</td>";
                                 <td class="text-left truncate bank-finance-transfers" style="grid-area: bank">
@@ -140,7 +140,7 @@ window.loadWithdrawalsTable = function (link = null) {
                     }
                     tableData += "</td>";
                     if (window.gatewayCode == "w7YL9jZD6gp4qmv") {
-                        tableData += `</td><td class="d-none d-lg-table-cell"><a role='button' class='details_transaction pointer' withdrawal='${data.id}'><span class='o-eye-1'></span></a></td></tr>`;
+                        tableData += `</td><td class="d-none d-lg-table-cell"><a role='button' class='details_transaction pointer' withdrawal='${data.id}'><span class=''><img src='/build/global/img/icon-eye.svg'/></span></a></td></tr>`;
                     }
                     tableData += "</tr>";
                     $("#withdrawals-table-data").append(tableData);

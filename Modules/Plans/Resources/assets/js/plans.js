@@ -2983,12 +2983,12 @@ $(function () {
                             data +=
                                 "<a title='Visualizar' class='mg-responsive pointer details-plan' plan='" +
                                 value.id +
-                                "' role='button'><span class='o-eye-1'></span></a>";
+                                "' role='button'><span class=''><img src='/build/global/img/icon-eye.svg'/></span></a>";
                             //data += "<a title='Editar' class='mg-responsive pointer edit-plan' plan='" + value.id + "' role='button'><span class='o-edit-1'></span></a>"
                             data +=
                                 "<a title='Excluir' class='mr-0 mg-responsive pointer delete-plan' plan='" +
                                 value.id +
-                                "' role='button'><span class='o-bin-1'></span></a>";
+                                "' role='button'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>";
                             data += "</div>";
                             data += "</td>";
                             data += "</tr>";

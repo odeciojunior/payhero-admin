@@ -126,7 +126,7 @@ window.updateTransfersTable = function (link = null) {
                     let dateRelease = getReleaseTime(value);
 
                     if (value.is_owner && value.sale_id) {
-                        data += `<td style="grid-area: sale" class="sale-finance-schedule text-center">
+                        data += `<td style="grid-area: sale" class="sale-finance-schedule ">
                             <span class="d-block mb-10"> ${value.reason} </span>
                             <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
                                 <span class="transfers-sale">#${value.sale_id}</span>
@@ -134,12 +134,12 @@ window.updateTransfersTable = function (link = null) {
                         </td>`;
                     } else {
                         if (value.reason === "Antecipação") {
-                            data += `<td style="grid-area: sale" class="text-center sale-finance-schedule">
+                            data += `<td style="grid-area: sale" class="sale-finance-schedule">
                                         <span class="d-block mb-10"> ${value.reason} </span>
                                         <span class="transfers-sale"> #${value.anticipation_id} </span>
                                     </td>`;
                         } else {
-                            data += `<td style="grid-area: sale" class="text-center sale-finance-schedule">
+                            data += `<td style="grid-area: sale" class="sale-finance-schedule">
                                         <span class="d-block mb-10"> ${value.reason} </span>
                                         ${value.sale_id ? `<span class="transfers-sale"> #${value.sale_id}</span>` : ""}
                                     </td>`;
@@ -151,8 +151,8 @@ window.updateTransfersTable = function (link = null) {
 
                     if (value.type_enum === 1) {
                         data += `<td class="value-finance-schedule" style="grid-area: value">
-                                    <span class="font-md-size-20 bold" style="color:green"> R$ </span>
-                                    <strong class="font-md-size-20" style="color:green"> ${value.value} </strong>`;
+                                    <span class="font-md-size-20 bold" style="color:#41DC8F"> R$ </span>
+                                    <strong class="font-md-size-20" style="color:#41DC8F"> ${value.value} </strong>`;
                         if (value.reason === "Antecipação") {
                             data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
                         } else {

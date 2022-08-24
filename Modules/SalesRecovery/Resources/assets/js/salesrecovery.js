@@ -398,7 +398,7 @@ $(document).ready(function () {
         data +=
             "<td style='padding:0 !important;' class='display-sm-none text-center' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
             value.link +
-            "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
+            "' title='Copiar link'><span class=''> <img src='build/global/img/icon-copy-table.svg'/> </span></a></td>";
         data +=
             "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
             value.id +
@@ -437,7 +437,7 @@ $(document).ready(function () {
         data +=
             "<td class='display-sm-none text-right' style='padding:0!important' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
             value.link +
-            "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
+            "' title='Copiar link'><span class=''><img src='build/global/img/icon-copy-table.svg'/></span></a></td>";
         data +=
             "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
             value.id_default +

@@ -24,21 +24,18 @@
     </div>
     <div class="card shadow"
          style="margin: 0 -1.429rem;">
-        <div style='min-height: 300px'>
+        <div>
             <div class='page-invoice-table table-responsive'>
-                <table id='tabela-fretes'
-                       class='table text-left table-fretes table-striped unify'
-                       style="width: 100%; margin-bottom: 0px;">
+                <table id='tabela-fretes' class='table text-left table-fretes table-striped unify' style="width: 100%; margin-bottom: 0px;">
                     <thead>
                         <tr>
-                            <td class='table-title'>Tipo</td>
-                            <td class='table-title'>Descrição</td>
-                            <td class='table-title'>Valor</td>
-                            <td class='table-title'>Informação</td>
-                            <td class='table-title text-center'>Status</td>
-                            <td class='table-title display-sm-none display-m-none'
-                                style='text-align:center'>Pré-Selecionado</td>
-                            <td class='table-title text-center options-column-width'></td>
+                            <td class=''>Tipo</td>
+                            <td class=''>Descrição</td>
+                            <td class=''>Valor</td>
+                            <td class=''>Informação</td>
+                            <td class='text-center'>Status</td>
+                            <td class='display-sm-none display-m-none' style='text-align:center'>Pré-Selecionado</td>
+                            <td class='text-center options-column-width'></td>
                         </tr>
                     </thead>
                     <tbody id='dados-tabela-frete'

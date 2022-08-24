@@ -321,7 +321,7 @@ $(function () {
                                     <a role="button" title='Visualizar' class="details-project-notification mg-responsive pointer" project-notification="${
                                         value.id
                                     }">
-                                        <span class="o-eye-1"></span>
+                                        <span class=""><img src='/build/global/img/icon-eye.svg'/></span>
                                     </a>
 
                                     ${
@@ -333,7 +333,7 @@ $(function () {
                                             <span class="o-edit-1"></span>
                                         </button>`
                                             : `<a role="button" title="Editar" class="edit-project-notification mg-responsive pointer" project-notification='${value.id}'>
-                                            <span class="o-edit-1"></span>
+                                            <span class=""><img src='/build/global/img/pencil-icon.svg'/></span>
                                         </a>`
                                     }
                                     <div class="switch-holder d-inline mg-responsive pointer mr-0" ${

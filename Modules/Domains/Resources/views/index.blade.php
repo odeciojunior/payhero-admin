@@ -35,18 +35,15 @@
             </div>
         </div>
     </div>
-    <div class="card shadow"
-         style="margin: 0 -1.429rem;">
-        <div style='min-height: 300px'>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div>
             <div class='page-invoice-table table-responsive'>
-                <table id='tabela-dominios'
-                       class='table table-striped text-left table-dominios table-striped unify'
-                       style="width: 100%; margin-bottom: 0px;">
+                <table id='tabela-dominios' class='table table-striped table-dominios unify mb-0' style="width: 100%;">
                     <thead>
                         <tr>
-                            <td class='table-title text-center'>Nome</td>
-                            <td class='table-title text-center'>Status</td>
-                            <td class='table-title options-column-width text-center'></td>
+                            <td class='text-center'>Nome</td>
+                            <td class='text-center'>Status</td>
+                            <td class='options-column-width text-center'></td>
                         </tr>
                     </thead>
                     <tbody id='domain-table-body'

@@ -21,18 +21,15 @@
             </div>
         </div>
     </div>
-    <div class="card shadow"
-         style="margin: 0 -1.429rem;">
-        <div style="min-height: 300px">
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div>
             <div class="page-invoice-table table-responsive">
-                <table id="table-order-bump"
-                       class="table text-left table-striped unify"
-                       style="width: 100%; margin-bottom: 0px;">
+                <table id="table-order-bump"class="table text-left table-striped unify mb-0" style="width: 100%;">
                     <thead>
                         <tr>
-                            <td class="table-title">Descrição</td>
-                            <td class="table-title text-center">Status</td>
-                            <td class="table-title text-center options-column-width"></td>
+                            <td class="">Descrição</td>
+                            <td class="text-center">Status</td>
+                            <td class="text-center options-column-width"></td>
                         </tr>
                     </thead>
                     <tbody class="min-row-height">

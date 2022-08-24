@@ -80,18 +80,16 @@
     </div>
     <div class="card shadow"
          style="margin: 0 -1.429rem;">
-        <div style='min-height: 300px'>
+        <div>
             <div class='page-invoice-table table-responsive'>
-                <table id='table-pixel'
-                       class='table text-left table-pixels table-striped unify'
-                       style="width: 100%; margin-bottom: 0px;">
+                <table id='table-pixel' class='table text-left table-pixels table-striped unify mb-0' style="width: 100%;">
                     <thead>
                         <tr>
-                            <td class='table-title'>Nome</td>
-                            <td class='table-title'>Código</td>
-                            <td class='table-title'>Plataforma</td>
-                            <td class='table-title text-center'>Status</td>
-                            <td class='table-title options-column-width text-center'></td>
+                            <td class=''>Nome</td>
+                            <td class=''>Código</td>
+                            <td class=''>Plataforma</td>
+                            <td class='text-center'>Status</td>
+                            <td class='options-column-width text-center'></td>
                         </tr>
                     </thead>
                     <tbody id='data-table-pixel'
