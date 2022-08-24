@@ -18,6 +18,7 @@
     "doctrine/dbal": "3.4.2",
     "fakerphp/faker": "^1.20",
     "fideloper/proxy": "^4.0",
+    "firebase/php-jwt": "^6.3",
     "google/apiclient": "^2.10",
     "guzzlehttp/guzzle": "^7.4.5",
     "guzzlehttp/psr7": "2.4.0",
