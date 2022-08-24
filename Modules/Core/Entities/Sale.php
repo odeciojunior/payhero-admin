@@ -3,7 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -165,24 +166,6 @@ class Sale extends Model
     const PAYMENT_TYPE_PIX = 4;
 
     /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
-    /**
      * @var string
      */
     protected $presenter = SalePresenter::class;
@@ -249,6 +232,14 @@ class Sale extends Model
         "original_total_paid_value",
         "antifraud_warning_level",
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
+    }
 
     public function checkout(): BelongsTo
     {

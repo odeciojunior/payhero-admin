@@ -21,6 +21,8 @@ Route::group(
 
         Route::post('/core/company-default','CoreApiController@updateCompanyDefault');
         Route::get("/core/get-bonus-balance", "CoreApiController@getBonusBalance");
+
+        Route::get("/core/zendesk-token", "CoreApiController@getZendeskToken");
     }
 );
 

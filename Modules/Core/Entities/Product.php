@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProductPresenter;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -96,40 +97,13 @@ class Product extends Model
         "type_enum",
         "status_enum",
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
-    /**
-     * @param Activity $activity
-     * @param string $eventName
-     */
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        if ($eventName == "deleted") {
-            $activity->description = "Produto " . $this->name . " foi deletedo.";
-        } elseif ($eventName == "updated") {
-            $activity->description = "Produto " . $this->name . " foi atualizado.";
-        } elseif ($eventName == "created") {
-            $activity->description = "Produto " . $this->name . " foi criado.";
-        } else {
-            $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     /**
