@@ -14,7 +14,6 @@ use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Events\SaleApprovedEvent;
-use Slince\Shopify\Client as ShopifyClient;
 use Modules\Core\Entities\ShopifyIntegration;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -42,8 +41,8 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
 
             if (!empty($shopifyIntegration)) {
                 $credential = new PublicAppCredential($shopifyIntegration->token);
-                $shopifyClient = new ShopifyClient($credential, $shopifyIntegration->url_store, [
-                    "metaCacheDir" => "./tmp",
+                $shopifyClient = new Client($shopifyIntegration->url_store, $this->credential, [
+                    "metaCacheDir" => '/var/tmp'
                 ]);
 
                 $names = explode(" ", $event->delivery->receiver_name);
@@ -160,8 +159,7 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
             if (!empty($shopifyIntegration)) {
                 try {
                     $credential = new PublicAppCredential($shopifyIntegration["token"]);
-
-                    $client = new Client($credential, $shopifyIntegration["url_store"], [
+                    $client = new Client($shopifyIntegration["url_store"],$credential, [
                         "metaCacheDir" => "./tmp",
                     ]);
 
