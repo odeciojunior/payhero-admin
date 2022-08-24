@@ -372,8 +372,9 @@ class ProjectService
             )
                 ->leftJoin(
                     'affiliates',
-                    function ($join) use ($userId) {
+                    function ($join) use ($userId, $companyId) {
                         $join->on('projects.id', '=', 'affiliates.project_id')
+                            ->where('affiliates.company_id', $companyId)
                             ->where('affiliates.user_id', $userId)
                             ->whereNull('affiliates.deleted_at');
                     }
