@@ -42,7 +42,7 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
             if (!empty($shopifyIntegration)) {
                 $credential = new PublicAppCredential($shopifyIntegration->token);
                 $shopifyClient = new Client($shopifyIntegration->url_store, $this->credential, [
-                    "metaCacheDir" => '/var/tmp'
+                    "meta_cache_dir" => '/var/tmp'
                 ]);
 
                 $names = explode(" ", $event->delivery->receiver_name);
@@ -160,7 +160,7 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
                 try {
                     $credential = new PublicAppCredential($shopifyIntegration["token"]);
                     $client = new Client($shopifyIntegration["url_store"],$credential, [
-                        "metaCacheDir" => "./tmp",
+                        "meta_cache_dir" => "./tmp",
                     ]);
 
                     $client->getTransactionManager()->create($event->sale->shopify_order, [

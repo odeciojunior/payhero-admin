@@ -34,7 +34,6 @@ use Slince\Shopify\Manager\ProductVariant\Variant;
 use Slince\Shopify\Manager\Theme\Theme;
 use Slince\Shopify\Manager\Webhook\Webhook;
 use Slince\Shopify\PublicAppCredential;
-use stdClass;
 
 class ShopifyService
 {
@@ -68,7 +67,7 @@ class ShopifyService
         $this->credential = new PublicAppCredential($token);
 
         $this->shopifyClient = new Client($urlStore, $this->credential, [
-            "metaCacheDir" => empty($this->cacheDir) ? '/var/tmp' : $this->cacheDir
+            "meta_cache_dir" => empty($this->cacheDir) ? '/var/tmp' : $this->cacheDir
         ]);
 
         if ($getThemes) {
