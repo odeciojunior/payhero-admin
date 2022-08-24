@@ -66,7 +66,7 @@ class ShopifyService
     {
         $this->credential = new PublicAppCredential($token);
 
-        $this->shopifyClient = new Client($urlStore, $this->credential, [
+        $this->client = new Client($urlStore, $this->credential, [
             "meta_cache_dir" => empty($this->cacheDir) ? '/var/tmp' : $this->cacheDir
         ]);
 
