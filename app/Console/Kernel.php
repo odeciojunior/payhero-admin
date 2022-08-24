@@ -40,20 +40,20 @@ class Kernel extends ConsoleKernel
         setlocale(LC_ALL, 'pt_BR');
 
         $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
-        $schedule->command('demo:create-fake-checkout')->everyMinute()->withoutOverlapping();
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
 
         $schedule->command("check:systems")->everyTenMinutes();
         $schedule->command("ethoca:proccess-postback")->everyTenMinutes();
+        $schedule->command('demo:create-fake-checkout')->everyTenMinutes()->withoutOverlapping();
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
         $schedule->command('withdrawals:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
         $schedule->command('generate:notazzinvoicessalesapproved')->everyThirtyMinutes();
         $schedule->command('verify:pendingnotazzinvoices')->everyThirtyMinutes()->withoutOverlapping();
         $schedule->command('verify:abandonedcarts')->everyFifteenMinutes()->withoutOverlapping();
-        $schedule->command('demo:create-fake-sale')->withoutOverlapping()->everyFifteenMinutes();
+        $schedule->command('demo:create-fake-sale')->withoutOverlapping()->everyThirtyMinutes();
 
         $schedule->command('verify:pendingdomains')->hourly();
         $schedule->command('verify:tickets')->withoutOverlapping()->hourly();
