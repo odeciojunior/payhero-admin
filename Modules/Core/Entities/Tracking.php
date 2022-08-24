@@ -2,12 +2,13 @@
 
 namespace Modules\Core\Entities;
 
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TrackingPresenter;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -72,40 +73,13 @@ class Tracking extends Model
         "updated_at",
         "deleted_at",
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        switch ($eventName) {
-            case "deleted":
-                $activity->description = "Código rastreio foi deletedo.";
-                break;
-            case "updated":
-                $activity->description = "Código de rastreio foi atualizado.";
-                break;
-            case "created":
-                $activity->description = "Código de rastreio foi criado.";
-                break;
-            default:
-                $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     public function delivery(): BelongsTo

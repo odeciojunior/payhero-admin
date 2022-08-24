@@ -3,8 +3,6 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Traits\LogsActivity;
 
 /**
  * Modules\Core\Entities\ProductSaleApi

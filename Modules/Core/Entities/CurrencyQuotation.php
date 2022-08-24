@@ -4,10 +4,10 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CurrencyQuotationPresenter;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -46,22 +46,12 @@ class CurrencyQuotation extends Model
         "updated_at",
         "deleted_at",
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
+    }
 }
