@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PixelPresenter;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 
 /**
