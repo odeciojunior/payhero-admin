@@ -87,7 +87,7 @@ use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\UserDocumentBureauValidationListener;
-use Modules\Core\Listeners\Webhooks\WebhooksSaleStatusChangeListener;
+use Modules\Core\Listeners\Webhooks\WebhooksSaleStatusUpdateListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -106,18 +106,18 @@ class EventServiceProvider extends ServiceProvider
             BilletExpiredWhatsapp2Listener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
-            WebhooksSaleStatusChangeListener::class,
+            WebhooksSaleStatusUpdateListener::class,
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
             SaleRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
-            WebhooksSaleStatusChangeListener::class,
+            WebhooksSaleStatusUpdateListener::class,
         ],
         ManualRefundEvent::class => [
             ManualRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
-            WebhooksSaleStatusChangeListener::class,
+            WebhooksSaleStatusUpdateListener::class,
         ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
@@ -154,7 +154,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         SaleApprovedEvent::class => [
             SetApprovedShopifyOrderListener::class,
-            WebhooksSaleStatusChangeListener::class,
+            WebhooksSaleStatusUpdateListener::class,
         ],
         SocialiteWasCalled::class => [
             "SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle",
@@ -205,7 +205,7 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredUnicodropListener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
-            WebhooksSaleStatusChangeListener::class,
+            WebhooksSaleStatusUpdateListener::class,
         ],
         CheckTransactionReleasedEvent::class => [
             CheckTransactionReleasedListener::class,

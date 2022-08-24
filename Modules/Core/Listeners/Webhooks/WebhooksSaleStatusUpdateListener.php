@@ -9,10 +9,10 @@ use Modules\Core\Services\WebhookService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 /**
- * Class WebhooksSaleStatusChangeListener
+ * Class WebhooksSaleStatusUpdateListener
  * @package Modules\Core\Listeners\Webhooks
  */
-class WebhooksSaleStatusChangeListener implements ShouldQueue
+class WebhooksSaleStatusUpdateListener implements ShouldQueue
 {
     public $queue = "high";
 
@@ -55,7 +55,7 @@ class WebhooksSaleStatusChangeListener implements ShouldQueue
 
             if (!empty($webhook)) {
                 $service = new WebhookService($webhook->url);
-                $service->saleStatusChange($sale);
+                $service->saleStatusUpdate($sale);
             }
         } catch (Exception $e) {
             report($e);

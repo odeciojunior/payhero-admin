@@ -24,7 +24,7 @@ class WebhookService
     /**
      * @param $sale
      */
-    function saleStatusChange($sale)
+    function saleStatusUpdate($sale)
     {
         try {
             $data = [
