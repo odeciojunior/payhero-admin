@@ -8,10 +8,12 @@
               href="{!! mix('build/layouts/reports/coupons.min.css') !!}">
     @endpush
 
-    <div class="page">
-        <div style="display: none"
-             class="page-header container inner-header">
-            @can('report_sales')
+        <div class="page">
+
+            @include('layouts.company-select',['version'=>'mobile'])
+
+            <div style="display: none" class="page-header container inner-header">
+                @can('report_sales')
                 <header class="top-system">
                     <a href="{!! route('reports.marketing') !!}"
                        class="back">

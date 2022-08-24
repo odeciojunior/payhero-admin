@@ -24,35 +24,44 @@ class AstronMembersApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $astronMembersIntegration = new AstronMembersIntegration();
-            $userProjectModel = new UserProject();
-            $projectModel = new Project();
 
-            $astronMembersIntegrations = $astronMembersIntegration
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->with("project")
-                ->get();
+            $astronMembersIntegrations = AstronMembersIntegration::with('project', 'project.usersProjects')
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
-            $projects = collect();
-            $userProjects = $userProjectModel
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->orderBy("id", "desc")
-                ->get();
+            $projects     = collect();
+            $userProjects = UserProject::where([[
+                'user_id', auth()->user()->getAccountOwnerId()],[
+                'company_id', auth()->user()->company_default
+            ]])->orderBy('id', 'desc')->get();
+
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->where("status", $projectModel->present()->getStatus("active"))
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
                         ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                 "integrations" => AstronMembersResource::collection($astronMembersIntegrations),
                 "projects" => ProjectsSelectResource::collection($projects),
@@ -97,46 +106,14 @@ class AstronMembersApiController extends Controller
                         400
                     );
                 }
-                // if (empty($data['boleto_generated'])) {
-                //     $data['boleto_generated'] = 0;
-                // }
-                // if (empty($data['boleto_paid'])) {
-                //     $data['boleto_paid'] = 0;
-                // }
-                // if (empty($data['credit_card_paid'])) {
-                //     $data['credit_card_paid'] = 0;
-                // }
-                // if (empty($data['credit_card_refused'])) {
-                //     $data['credit_card_refused'] = 0;
-                // }
-                // if (empty($data['abandoned_cart'])) {
-                //     $data['abandoned_cart'] = 0;
-                // }
 
-                // if (empty($data['pix_paid'])) {
-                //     $data['pix_paid'] = 0;
-                // }
-                // if (empty($data['pix_generated'])) {
-                //     $data['pix_generated'] = 0;
-                // }
-                // if (empty($data['pix_expired'])) {
-                //     $data['pix_expired'] = 0;
-                // }
 
                 $integrationCreated = $astronMembersIntegrationModel->create([
-                    "link" => $data["link"],
-                    "token" => $token,
-                    //    'boleto_generated'    => $data['boleto_generated'],
-                    //    'boleto_paid'         => $data['boleto_paid'],
-                    //    'credit_card_refused' => $data['credit_card_refused'],
-                    //    'credit_card_paid'    => $data['credit_card_paid'],
-                    //    'abandoned_cart'      => $data['abandoned_cart'],
-                    //    'pix_generated'       => $data['pix_generated'],
-                    //    'pix_paid'            => $data['pix_paid'],
-                    //    'pix_expired'         => $data['pix_expired'],
-                    "project_id" => $projectId,
-                    "user_id" => auth()->user()->account_owner_id,
-                ]);
+                                                                           'link'                => $data['link'],
+                                                                           'token'                => $token,
+                                                                           'project_id'          => $projectId,
+                                                                           'user_id'             => auth()->user()->getAccountOwnerId(),
+                                                                       ]);
 
                 if ($integrationCreated) {
                     return response()->json(
@@ -234,34 +211,6 @@ class AstronMembersApiController extends Controller
         $data = $request->all();
         $integrationId = current(Hashids::decode($id));
         $astronMembersIntegration = $astronMembersIntegrationModel->find($integrationId);
-        // if (empty($data['boleto_generated'])) {
-        //     $data['boleto_generated'] = 0;
-        // }
-        // if (empty($data['boleto_paid'])) {
-        //     $data['boleto_paid'] = 0;
-        // }
-        // if (empty($data['credit_card_paid'])) {
-        //     $data['credit_card_paid'] = 0;
-        // }
-        // if (empty($data['credit_card_refused'])) {
-        //     $data['credit_card_refused'] = 0;
-        // }
-        // if (empty($data['abandoned_cart'])) {
-        //     $data['abandoned_cart'] = 0;
-        // }
-        // if (empty($data['abandoned_cart'])) {
-        //     $data['abandoned_cart'] = 0;
-        // }
-
-        // if (empty($data['pix_generated'])) {
-        //     $data['pix_generated'] = 0;
-        // }
-        // if (empty($data['pix_paid'])) {
-        //     $data['pix_paid'] = 0;
-        // }
-        // if (empty($data['pix_expired'])) {
-        //     $data['pix_expired'] = 0;
-        // }
 
         $integrationUpdated = $astronMembersIntegration->update([
             "link" => $data["link"],
@@ -351,18 +300,13 @@ class AstronMembersApiController extends Controller
                     ->nextWeekday()
                     ->format("Y-m-d");
             }
-            //            if (in_array($sale->gateway_id, [7])) {
+
             $checkoutService = new CheckoutService();
             $boletoRegenerated = $checkoutService->regenerateBillet(
                 Hashids::connection("sale_id")->encode($sale->id),
                 $totalPaidValue + $shippingPrice,
                 $dueDate
             );
-            //            } else {
-            //                $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
-            //
-            //                $boletoRegenerated = $pagarmeService->boletoPayment($dueDate);
-            //            }
 
             $sale = Sale::find($saleId);
 

@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,6 +38,7 @@ class ShopifyIntegration extends Model
     use LogsActivity;
     use PresentableTrait;
     use SoftDeletes;
+    use HasFactory;
 
     public const SHOPIFY_BASIC_THEME = 1;
     public const SHOPIFY_AJAX_THEME = 2;

@@ -107,6 +107,8 @@ class SaleInformation extends Model
         "installments",
         "first_six_digits",
         "last_four_digits",
+        'created_at',
+        'updated_at'
     ];
 
     public function sale(): BelongsTo

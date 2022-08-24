@@ -8,15 +8,13 @@
 @section('content')
     <!-- Page -->
     <div class="page">
-        <div style=""
-             class="page-header container">
-            <h1 class="page-title"
-                style="min-height: 28px">
-                <a class="gray"
-                   href="/projects"
-                   style="outline: none">
-                    <span class="o-arrow-right-1 font-size-30 ml-2 gray"
-                          aria-hidden="true"></span>
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
+        <div style="" class="page-header container">
+            <h1 class="page-title" style="min-height: 28px">
+                <a class="gray" href="/projects" style="outline: none">
+                    <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
                     Minhas Lojas
                 </a>
             </h1>

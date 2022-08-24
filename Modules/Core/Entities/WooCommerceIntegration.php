@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WooCommerceIntegrationPresenter;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -26,7 +27,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class WooCommerceIntegration extends Model
 {
-    use SoftDeletes, FoxModelTrait, PresentableTrait, LogsActivity;
+    use SoftDeletes, FoxModelTrait, PresentableTrait, LogsActivity, HasFactory;
     /**
      * @var string
      */

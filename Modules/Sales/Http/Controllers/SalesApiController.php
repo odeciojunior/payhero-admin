@@ -25,6 +25,7 @@ use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SalesApiController extends Controller
 {
@@ -69,8 +70,8 @@ class SalesApiController extends Controller
                 $users = [$sale->owner_id];
             }
 
-            if (!in_array(auth()->user()->account_owner_id, $users)) {
-                return response()->json(["message" => "Sem permissão para visualizar detalhes da venda"], 400);
+            if (!in_array(auth()->user()->getAccountOwnerId(), $users)) {
+                return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
 
             return new SalesResource($sale);
@@ -345,46 +346,60 @@ class SalesApiController extends Controller
     {
         try {
             $data = $request->all();
-            $planModel = new Plan();
-            $userProjectModel = new UserProject();
-
-            $projectIds = [hashids_decode($data["project_id"])];
 
             if (is_array($data["project_id"])) {
                 $projectIds = [];
-                foreach ($data["project_id"] as $project) {
-                    array_push($projectIds, hashids_decode($project));
-                }
+                foreach($data['project_id'] as $project){
+                    if(!empty($project)){
+                        array_push($projectIds, hashids_decode($project));
+                    }
+                };
             }
 
-            if (current($projectIds)) {
-                $plans = null;
+            $user = auth()->user();
+            $userId = $user->getAccountOwnerId();
+            $plans = null;
 
-                if (!empty($data["search"])) {
-                    $plans = $planModel
-                        ->where("name", "like", "%" . $data["search"] . "%")
-                        ->whereIn("project_id", $projectIds)
-                        ->get();
-                } else {
-                    $plans = $planModel
-                        ->whereIn("project_id", $projectIds)
+            if (current($projectIds)) {
+
+                if (!empty($data['search'])) {
+                    $plans = Plan::
+                        where('name', 'like', '%' . $data['search'] . '%')
+                        ->whereIn('project_id', $projectIds)
                         ->limit(30)
                         ->get();
+
+                } else {
+                    $plans = Plan::
+                        whereIn('project_id', $projectIds)
+                        ->limit(30)
+                        ->get();
+
                 }
                 return PlansSelectResource::collection($plans);
             } else {
-                $userId = auth()->user()->account_owner_id;
-                $userProjects = $userProjectModel->where("user_id", $userId)->pluck("project_id");
-                $plans = null;
+                $userProjects = UserProject::
+                     where('user_id', $userId)
+                     ->pluck('project_id');
 
-                if (!empty($data["search"])) {
-                    $plans = $planModel
-                        ->where("name", "like", "%" . $data["search"] . "%")
+                if(!$user->deleted_project_filter){
+                    $userProjects = UserProject::
+                        join('projects','projects.id','=','users_projects.project_id')
+                        ->where('projects.status', '!=', 2)
+                        ->where('users_projects.user_id', $userId)
+                        ->pluck('users_projects.project_id');
+                }
+
+                if (!empty($data['search'])) {
+                    $plans = Plan::
+                        where('name', 'like', '%' . $data['search'] . '%')
                         ->whereIn("project_id", $userProjects)
+                        ->limit(30)
                         ->get();
+
                 } else {
-                    $plans = $planModel
-                        ->whereIn("project_id", $userProjects)
+                    $plans = Plan::
+                        whereIn("project_id", $userProjects)
                         ->limit(30)
                         ->get();
                 }
@@ -442,4 +457,14 @@ class SalesApiController extends Controller
             );
         }
     }
+
+    public function getProjectsWithSales(){
+        $projects = SaleService::getProjectsWithSales();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
+
 }

@@ -33,12 +33,9 @@
         <div class="row"
              style="margin-top:30px">
             <div class="col-12">
-                <label for="company">Selecione sua empresa</label>
-                <select class="sirius-select"
-                        id="select_companies"
-                        name="company">
-                    {{-- JS LOAD --}}
-                </select>
+                <label for="company">Empresa</label>
+                <input type="text" disabled class="company_name" style="text-overflow: ellipsis;">
+                <input type="hidden" name="company" id="company-navbar-value">
             </div>
         </div>
     </div>

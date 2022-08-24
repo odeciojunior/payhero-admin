@@ -9,6 +9,7 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Company;
 
 class PlansResource extends JsonResource
 {
@@ -25,10 +26,18 @@ class PlansResource extends JsonResource
                 ? "https://checkout." . $this->project->domains[0]->name . "/" . $this->code
                 : "Domínio não configurado";
         } else {
-            $link = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/" . $this->code;
+            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/' . $this->code;
         }
 
-        $costCurrency = !is_null($this->project->notazz_configs) ? json_decode($this->project->notazz_configs) : null;
+        $user = auth()->user();
+        if($user->company_default==Company::DEMO_ID){
+            $link = "https://demo.cloudfox.net/" . $this->code;
+            if(env('APP_ENV') == 'local'){
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/' . $this->code;
+            }
+        }
+
+        $costCurrency = (!is_null($this->project->notazz_configs)) ? json_decode($this->project->notazz_configs) : null;
 
         $limit_name = 24;
         $limit_description = 38;

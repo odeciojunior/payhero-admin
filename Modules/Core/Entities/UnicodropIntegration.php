@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Models\Activity;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ReportanaIntegrationPresenter;
@@ -29,7 +30,7 @@ use Modules\Core\Presenters\ReportanaIntegrationPresenter;
  */
 class UnicodropIntegration extends Model
 {
-    use SoftDeletes, LogsActivity, PresentableTrait;
+    use SoftDeletes, LogsActivity, PresentableTrait, HasFactory;
     /**
      * @var string
      */

@@ -8,11 +8,11 @@
 @section('content')
     <div class="page">
 
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div id="project-empty-title">
-            <div class="page-header container px-25 px-md-30"
-                 style="padding-bottom: 0; padding-top:30px; display: none;">
-                <div class="col-12 col-md-7 order-0 px-md-15"
-                     style="padding: 10px 0 20px">
+            <div class="page-header container px-25 px-md-30" style="padding-bottom: 0; padding-top:30px; display: none;">
+                <div class="col-12 col-md-7 order-0" style="padding: 10px 0 20px">
                     <h1 class="page-title d-flex">
                         Finanças
                     </h1>
@@ -32,21 +32,17 @@
                             Finanças
                         </h1>
                     </div>
-                    <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 p-0">
+                    {{-- <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 p-0">
                         <div class="col-12 col-md-11 float-right px-0">
-                            {{-- <div class="skeleton skeleton-gateway-logo" style="height: 50px" id="skeleton-select"></div> --}}
+
                             <div class="input-holder">
                                 <select class="sirius-select"
                                         id="transfers_company_select"
                                         data-width="100%"></select>
                             </div>
                         </div>
-                        {{-- <div class="col-sm-12 float-right d-none d-sm-flex justify-content-end"> --}}
-                        {{-- <div class="d-flex justify-content-end align-items-center" style="font-size: 16px;color: #636363;"> --}}
-                        {{-- <span style="margin-right: 9px" class="o-question-help-1"></span> Dúvidas sobre adquirentes? --}}
-                        {{-- </div> --}}
-                        {{-- </div> --}}
-                    </div>
+
+                    </div> --}}
                     <div class="col-sm-12 order-1 order-md-2 p-0 px-md-15">
                         <p class="mt-10 mb-0">
                             <span class="badge badge-primary d-none d-md-inline-block">NOVO!</span>
@@ -83,8 +79,7 @@
                          style="display:none;"
                          id="container-return">
                         <div class="d-flex align-items-center h-p100 default-hover">
-                            <i class="o-arrow-right-1 back-button"
-                               style="margin-right: 8px"></i> Voltar
+                            <i class="o-arrow-right-1 back-button" style="margin-right: 8px; margin-top: 20px;"></i> Voltar
                         </div>
                     </div>
                     <div class="col-3 col-md-6 d-none d-md-flex justify-content-end align-items-center order-4 pr-0">

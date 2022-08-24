@@ -35,7 +35,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyApiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
             $projectModel = new Project();
@@ -48,7 +48,11 @@ class ShopifyApiController extends Controller
                 })
                 ->log("Visualizou tela todos as integrações com o shopify");
 
-            $shopifyIntegrations = $shopifyIntegrationModel->where("user_id", auth()->user()->account_owner_id)->get();
+            $shopifyIntegrations = $shopifyIntegrationModel
+            ->join('checkout_configs as cc', 'cc.project_id', '=', 'shopify_integrations.project_id')
+            ->where('cc.company_id', hashids_decode($request->company))
+            ->where('user_id', auth()->user()->getAccountOwnerId())
+            ->get();
 
             $projects = [];
 

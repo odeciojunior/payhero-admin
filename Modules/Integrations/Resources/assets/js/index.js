@@ -1,66 +1,126 @@
 $(document).ready(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        loadOnAny('#page-integrates');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                $('.company_name').val( companiesAndProjects.company_default_fullname );
+                onlyData();
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        $('.company_name').val( companiesAndProjects.company_default_fullname );
+        refreshIntegrations();
+        createIntegration();
+    });
+
+    function onlyData(){
+        $("#content-error").css('display','none');
+        $("#content-script").css('display','none');
+        $("#card-table-integrate").css('display','none');
+        $("#pagination-integrates").css('display','none');
+        $.ajax({
+            method: "GET",
+            url: "/api/integrations?resume=true&page=1&company_id="+$('.company-navbar').val(),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+                loadOnAny('#page-integrates',true);
+            },
+            success: (response) => {
+                if (isEmpty(response.data)) {
+                    $(".page-header").find('.store-integrate').css('display', 'none');
+                    $("#content-error").find('.store-integrate').css('display', 'block');
+
+                    $("#content-error").css('display', 'block');
+                    $("#content-script").css('display', 'none');
+                    $("#card-table-integrate").css('display', 'none');
+                    $("#card-integration-data").css('display', 'none');
+                } else {
+                    $(".page-header").find('.store-integrate').css('display', 'block');
+                    $("#content-error").find('.store-integrate').css('display', 'none');
+                    $("#content-error").hide();
+                    updateIntegrationTableData(response);
+                    pagination(response, 'integrates');
+                }
+
+                getIntegration();
+                refreshToken();
+                deleteIntegration();
+                loadOnAny('#page-integrates',true);
+            }
+        });
+    }
+
     let integrationTypeEnum = {
-        external: "Integração externa",
-        checkout_api: "Checkout API",
+        external: 'Integração externa',
+        checkout_api: 'Checkout API'
     };
     let integrationTypeEnumBadge = {
-        admin: "default",
-        personal: "default",
-        external: "success",
-        checkout_api: "primary",
+        admin: 'default',
+        personal: 'default',
+        external: 'success',
+        checkout_api: 'primary'
     };
     let status = {
-        active: "Ativo",
-        inactive: "Inativo",
+        active: 'Ativo',
+        inactive: 'Inativo',
     };
     let statusBadge = {
-        active: "success",
-        inactive: "danger",
+        active: 'success',
+        inactive: 'danger',
         // 3: 'warning',
     };
-
-    refreshIntegrations();
-    createIntegration();
-    getCompanies();
 
     function refreshIntegrations(page = 1) {
         loadingOnScreen();
 
         $.ajax({
             method: "GET",
-            url: "/api/integrations?resume=true&page=" + page,
+            url: "/api/integrations?resume=true&page=" + page + "&company_id=" + $('.company-navbar').val(),
             dataType: "json",
             headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: (response) => {
-                loadingOnScreenRemove();
+                loadingOnScreenRemove();//loadOnAny('#page-integrates',true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
-                    $(".page-header").find(".store-integrate").css("display", "none");
-                    $("#content-error").find(".store-integrate").css("display", "block");
+                    $(".page-header").find('.store-integrate').css('display', 'none');
+                    $("#content-error").find('.store-integrate').css('display', 'block');
 
-                    $("#content-error").css("display", "block");
-                    $("#content-script").css("display", "none");
-                    $("#card-table-integrate").css("display", "none");
-                    $("#card-integration-data").css("display", "none");
+                    $("#content-error").css('display', 'block');
+                    $("#content-script").css('display', 'none');
+                    $("#card-table-integrate").css('display', 'none');
+                    $("#card-integration-data").css('display', 'none');
                 } else {
-                    $(".page-header").find(".store-integrate").css("display", "block");
-                    $("#content-error").find(".store-integrate").css("display", "none");
+                    $(".page-header").find('.store-integrate').css('display', 'block');
+                    $("#content-error").find('.store-integrate').css('display', 'none');
 
                     $("#content-error").hide();
                     updateIntegrationTableData(response);
-                    pagination(response, "integrates");
+                    pagination(response, 'integrates');
                 }
 
                 getIntegration();
                 refreshToken();
                 deleteIntegration();
-                loadingOnScreenRemove();
-            },
+                loadingOnScreenRemove();//loadOnAny('#page-integrates',true);
+            }
         });
     }
 
@@ -304,9 +364,9 @@ $(document).ready(function () {
                 let description = $("#modal-integrate").find("input[name='description']").val();
                 let tokenTypeEnum = $("#select-enum-list").val();
                 let postback = $("#modal-integrate").find("input[name='postback']").val();
-                let companyHash = $("#companies").val();
-                if (description == "") {
-                    alertCustom("error", "O campo Descrição é obrigatório");
+                let companyHash = $('.company-navbar').val();
+                if (description == '') {
+                    alertCustom('error', 'O campo Descrição é obrigatório');
                 } else if (!companyHash && tokenTypeEnum == 4) {
                     alertCustom("error", "O campo Empresa é obrigatório para a integração Checkout API");
                 } else if (tokenTypeEnum == 4 && postback == "") {
@@ -514,4 +574,5 @@ $(document).ready(function () {
         $('select[name="token_type_enum"]').val(4).change();
         $("#modal-integrate").modal("show");
     }
+
 });

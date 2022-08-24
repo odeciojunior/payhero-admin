@@ -28,8 +28,10 @@
     @endpush
 
     <div class="page mb-0">
-        <div style="display: none"
-             class="page-header container inner-header">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
+        <div style="display: none" class="page-header container inner-header">
             @can('report_sales')
                 <header class="top-system">
                     <a href="{!! route('reports.finances') !!}"
@@ -108,14 +110,13 @@
                             <div id=""
                                  class="card shadow p-20">
                                 <div class="row align-items-baseline">
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                    {{-- <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="company">Empresa</label>
-                                        <select name='select_company'
-                                                id="company"
-                                                class="sirius-select">
+                                        <input type="text" disabled="" class="company_name">
+                                        {{-- <select name='select_company' id="company" class="sirius-select">
                                             <option value="0">Todas as empresas</option>
-                                        </select>
-                                    </div>
+                                        </select> - -}}
+                                    </div> --}}
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="project">Lojas</label>
                                         <select name='select_project'
@@ -140,11 +141,7 @@
                                                placeholder="Digite o CPF"
                                                data-mask="000.000.000-00">
                                     </div>
-                                </div>
-                                <div class="collapse pt-20"
-                                     id="bt_collapse">
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3">
+                                    <div class="col-sm-6 col-md-3">
                                             <label for="payment_method">Forma de pagamento</label>
                                             <select name='select_payment_method'
                                                     id="payment_method"
@@ -155,6 +152,9 @@
                                                 <option value="4">PIX</option>
                                             </select>
                                         </div>
+                                </div>
+                                <div class="collapse pt-20" id="bt_collapse">
+                                    <div class="row">
                                         <div class="col-sm-6 col-md-3">
                                             <label for="sale_code">Transação</label>
                                             <input type="text"
@@ -263,30 +263,29 @@
                         <div class="fixhalf"></div>
                         @if (!auth()->user()->hasRole('attendance'))
                             <!-- <div class='container col-sm-12 d-lg-block'>
-                                        <div class='row'>
-                                            <div class="col-md-4 col-sm-6 col-xs-12 card">
-                                                <div class="card-body">
-                                                    <h6 class="font-size-14 gray-600">Quantidade de vendas</h6>
-                                                    <h4 id="total_sales" class="font-size-30 bold"></h4>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 col-sm-6 col-xs-12 card">
-                                                <div class="card-body">
-                                                    <h6 class="font-size-14 gray-600">Comissão</h6>
-                                                    <h4 id="commission_pending"></h4>
-                                                </div>
-                                                <div class="s-border-right yellow"></div>
-                                            </div>
-                                            <div class="col-md-4 col-sm-6 col-xs-12 card">
-                                                <div class="card-body">
-                                                    <h6 class="font-size-14 gray-600">Valor Total</h6>
-                                                    <h4 id="total">
-                                                    </h4>
-                                                </div>
-                                                <div class="s-border-right red"></div>
-                                            </div>
+                                <div class='row'>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600">Quantidade de vendas</h6>
+                                            <h4 id="total_sales" class="font-size-30 bold number"></h4>
                                         </div>
-                                    </div> -->
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600">Comissão</h6>
+                                            <h4 id="commission_pending" class="number"></h4>
+                                        </div>
+                                        <div class="s-border-right yellow"></div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
+                                            <h6 class="font-size-14 gray-600">Valor Total</h6>
+                                            <h4 id="total" class="number"></h4>
+                                        </div>
+                                        <div class="s-border-right red"></div>
+                                    </div>
+                                </div>
+                            </div> -->
                         @endif
                     </div>
 

@@ -21,39 +21,46 @@ class ReportanaApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $reportanaIntegration = new ReportanaIntegration();
-            $userProjectModel = new UserProject();
-            $projectModel = new Project();
+            activity()->on((new ReportanaIntegration()))->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todos as integrações Reportana');
 
-            activity()
-                ->on($reportanaIntegration)
-                ->tap(function (Activity $activity) {
-                    $activity->log_name = "visualization";
-                })
-                ->log("Visualizou tela todos as integrações Reportana");
+            $reportanaIntegrations = ReportanaIntegration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
-            $reportanaIntegrations = $reportanaIntegration
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->with("project")
-                ->get();
-
-            $projects = collect();
-            $userProjects = $userProjectModel->where("user_id", auth()->user()->account_owner_id)->get();
+            $projects     = collect();
+            $userProjects = UserProject::where([[
+                'user_id', auth()->user()->getAccountOwnerId()],[
+                'company_id', auth()->user()->company_default
+            ]])->orderBy('id', 'desc')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject
                         ->project()
-                        ->where("status", $projectModel->present()->getStatus("active"))
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
                         ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                 "integrations" => ReportanaResource::collection($reportanaIntegrations),
                 "projects" => ProjectsSelectResource::collection($projects),

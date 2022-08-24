@@ -44,16 +44,25 @@ $(() => {
     });
 
     $("#tracking-product-image").on("error", function () {
-        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+        $(this).attr(
+            "src",
+            "https://cloudfox-files.s3.amazonaws.com/produto.svg"
+        );
     });
 
     $("#sale").on("change paste keyup select", function () {
         let val = $(this).val();
 
         if (val === "") {
-            $("#date_updated").attr("disabled", false).removeClass("disableFields");
+            $("#date_updated")
+                .attr("disabled", false)
+                .removeClass("disableFields");
         } else {
-            $("#date_updated").val(moment("2018-01-01").format("DD/MM/YYYY") + " - " + moment().format("DD/MM/YYYY"));
+            $("#date_updated").val(
+                moment("2018-01-01").format("DD/MM/YYYY") +
+                    " - " +
+                    moment().format("DD/MM/YYYY")
+            );
             $("#date_updated").attr("disabled", true).addClass("disableFields");
         }
     });
@@ -105,8 +114,8 @@ $(() => {
         $(this).hide();
     });
 
-    $("#bt_filter").on("click", function () {
-        loadData();
+    $('#bt_filter').on('click', function () {
+        window.loadData();
     });
 
     let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
@@ -148,10 +157,16 @@ $(() => {
             },
             ranges: {
                 Hoje: [moment(), moment()],
-                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                Ontem: [
+                    moment().subtract(1, "days"),
+                    moment().subtract(1, "days"),
+                ],
                 "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
                 "Últimos 30 dias": [moment().subtract(30, "days"), moment()],
-                "Este mês": [moment().startOf("month"), moment().endOf("month")],
+                "Este mês": [
+                    moment().startOf("month"),
+                    moment().endOf("month"),
+                ],
                 "Mês passado": [
                     moment().subtract(1, "month").startOf("month"),
                     moment().subtract(1, "month").endOf("month"),
@@ -179,11 +194,11 @@ $(() => {
         //layout do button block
     }
 
-    function loadData() {
-        elementButton = $("#bt_filter");
-        if (searchIsLocked(elementButton) != "true") {
+    window.loadData = function() {
+        elementButton = $('#bt_filter');
+        if (searchIsLocked(elementButton) != 'true') {
             lockSearch(elementButton);
-            console.log(elementButton.attr("block_search"));
+            //console.log(elementButton.attr('block_search'));
             index();
             getResume();
         }
@@ -191,15 +206,15 @@ $(() => {
 
     function getFilters(urlParams = false) {
         let data = {
-            tracking_code: $("#tracking_code").val(),
-            status: $("#status").val(),
-            project: $("#project-select").val(),
-            date_updated: $("#date_updated").val(),
-            sale: $("#sale").val().replace("#", ""),
-            transaction_status: $("#status_commission").val(),
-            problem: $("#tracking_problem").prop("checked") ? 1 : 0,
+            'tracking_code': $('#tracking_code').val(),
+            'status': $('#status').val(),
+            'project': $('#project-select').val(),
+            'date_updated': $('#date_updated').val(),
+            'sale': $('#sale').val().replace('#', ''),
+            'transaction_status': $("#status_commission").val(),
+            'problem': $('#tracking_problem').prop('checked') ? 1 : 0,
+            'company': $('.company-navbar').val(),
         };
-
         if (urlParams) {
             let params = "";
             for (let param in data) {
@@ -211,53 +226,95 @@ $(() => {
         }
     }
 
-    getProjects();
-
-    /**
-     * List Projects
-     */
-    function getProjects() {
-        loadingOnScreen();
-
+    window.fillProjectsSelect = function(data){
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&affiliate=false",
+            url: "/api/sales/projects-with-sales",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
-            error: (response) => {
-                errorAjaxResponse(response);
-                loadingOnScreenRemove();
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
             },
-            success: (response) => {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel").show();
-
-                    if (response.data != "api sales") {
-                        $.each(response.data, function (i, project) {
-                            $("#project-select").append(
-                                $("<option>", {
-                                    value: project.id,
-                                    text: project.name,
-                                })
-                            );
-                        });
-                    }
-
-                    loadData();
-                } else {
-                    $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-
-                loadingOnScreenRemove();
-            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                //if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        if( dataSales.includes(project.id) )
+                            $("#project-select").append($("<option>", {value: project.id,text: project.name,}));
+                    });
+                //}
+            });
         });
+    }
+
+    getCompaniesAndProjects().done( function (data){
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
+    });
+
+    /**
+     * List Projects
+     */
+    function getProjects(data) {
+        loadingOnScreen();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel").show();
+        window.fillProjectsSelect(data.companies)
+        window.loadData();
+        loadingOnScreenRemove();
+
+        // $.ajax({
+        //     method: 'GET',
+        //     url: '/api/projects?select=true&affiliate=false&company='+ $('.company-navbar').val(),
+        //     dataType: 'json',
+        //     headers: {
+        //         'Authorization': $('meta[name="access-token"]').attr('content'),
+        //         'Accept': 'application/json',
+        //     },
+        //     error: response => {
+        //         errorAjaxResponse(response);
+        //         loadingOnScreenRemove();
+        //     },
+        //     success: response => {
+        //         if (!isEmpty(response.data)) {
+        //             $("#project-empty").hide();
+        //             $("#project-not-empty").show();
+        //             $("#export-excel").show()
+
+        //             if (response.data != "api sales") {
+        //                 $.each(response.data, function (i, project) {
+        //                     $("#project-select").append($("<option>", {
+            //                         value: project.id,
+            //                         text: project.name,
+        //                         }));
+        //                 });
+        //             }
+
+        //             window.loadData();
+        //         } else {
+        //             $("#export-excel").hide();
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
+
+        //         loadingOnScreenRemove();
+        //     }
+        // });
     }
 
     //CARD RESUMO DE ENTREGAS E GRAFICO
@@ -304,9 +361,20 @@ $(() => {
                         callbacks: {
                             title: (tooltipItem) => `${tooltipItem[0].label}`,
                             label: (tooltipItem) =>
-                                tooltipItem.dataset.data[tooltipItem.dataIndex] > 10000
-                                    ? Math.round(tooltipItem.dataset.data[tooltipItem.dataIndex] / 1000, 1) + "K"
-                                    : numberWithDecimal(tooltipItem.dataset.data[tooltipItem.dataIndex]),
+                                tooltipItem.dataset.data[
+                                    tooltipItem.dataIndex
+                                ] > 10000
+                                    ? Math.round(
+                                          tooltipItem.dataset.data[
+                                              tooltipItem.dataIndex
+                                          ] / 1000,
+                                          1
+                                      ) + "K"
+                                    : numberWithDecimal(
+                                          tooltipItem.dataset.data[
+                                              tooltipItem.dataIndex
+                                          ]
+                                      ),
                         },
                     },
                 },
@@ -314,9 +382,12 @@ $(() => {
         });
     }
 
-    function showLoading(loadOnAny, loadingSelector, loadingSettings) {
+    window.showLoading = function(loadOnAny, loadingSelector, loadingSettings) {
         loadOnAny(loadingSelector, false, loadingSettings);
-        $("#graphic-loading").append($(".loader-any-container")[6]).show().css("z-index", "2");
+        $("#graphic-loading")
+            .append($(".loader-any-container")[6])
+            .show()
+            .css("z-index", "2");
     }
 
     //GERANDO DADOS DO CARD E DO GRAFICO
@@ -338,7 +409,7 @@ $(() => {
             },
         };
 
-        showLoading(loadOnAny, loadingSelector, loadingSettings);
+        window.showLoading(loadOnAny, loadingSelector, loadingSettings);
 
         $.ajax({
             method: "GET",
@@ -352,17 +423,27 @@ $(() => {
                 errorAjaxResponse(response);
                 inicializeChart(chartDefaultColorsLabel, [1, 0, 0, 0, 0, 0]);
                 loadOnAny(loadingSelector, true);
-                $("#graphic-loading").append($(".loader-any-container")[6]).hide();
+                $("#graphic-loading")
+                    .append($(".loader-any-container")[6])
+                    .hide();
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
-                    alertCustom("error", "Erro ao carregar resumo dos rastreios");
-                    inicializeChart(chartDefaultColorsLabel, [1, 0, 0, 0, 0, 0]);
+                    alertCustom(
+                        "error",
+                        "Erro ao carregar resumo dos rastreios"
+                    );
+                    inicializeChart(
+                        chartDefaultColorsLabel,
+                        [1, 0, 0, 0, 0, 0]
+                    );
                     return;
                 }
                 setDataView(response.data);
                 loadOnAny(loadingSelector, true);
-                $("#graphic-loading").append($(".loader-any-container")[6]).hide();
+                $("#graphic-loading")
+                    .append($(".loader-any-container")[6])
+                    .hide();
             },
         });
     }
@@ -375,15 +456,27 @@ $(() => {
     }
 
     function setDataView(data) {
-        let { total, posted, dispatched, out_for_delivery, delivered, exception, unknown } = data;
+        let {
+            total,
+            posted,
+            dispatched,
+            out_for_delivery,
+            delivered,
+            exception,
+            unknown,
+        } = data;
         const thousand = 10000;
 
         if (verifyValueIsZero(data.total)) {
             if ($("#noData").length > 0) {
                 return;
             }
-            $("#dataCharts").append('<img id="noData" src="/build/global/img/sem-dados.svg" />');
-            $("#data-labels").append('<span id="warning-text" class="d-flex"> Nenhum rastreamento encontrado </span>');
+            $("#dataCharts").append(
+                '<img id="noData" src="/build/global/img/sem-dados.svg" />'
+            );
+            $("#data-labels").append(
+                '<span id="warning-text" class="d-flex"> Nenhum rastreamento encontrado </span>'
+            );
             $("#myChart, .labels, .total-container").hide();
         } else {
             if ($("#noData").length > 0) {
@@ -400,32 +493,49 @@ $(() => {
                 delivered,
             ]);
         }
-        const formatTotal = "<div>Total:<br> <b>" + numberWithDecimal(total) + "</b> </div>";
+        const formatTotal =
+            "<div>Total:<br> <b>" + numberWithDecimal(total) + "</b> </div>";
 
         $("#total-products")
-            .text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total))
+            .text(
+                total > thousand
+                    ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K`
+                    : numberWithDecimal(total)
+            )
             .attr("data-original-title", formatTotal);
 
-        $("#percentual-posted .resume-number").html(posted <= 0 ? (posted = 0) : (posted = numberWithDecimal(posted)));
+        $("#percentual-posted .resume-number").html(
+            posted <= 0 ? (posted = 0) : (posted = numberWithDecimal(posted))
+        );
 
         $("#percentual-dispatched .resume-number").html(
-            dispatched <= 0 ? (dispatched = 0) : (dispatched = numberWithDecimal(dispatched))
+            dispatched <= 0
+                ? (dispatched = 0)
+                : (dispatched = numberWithDecimal(dispatched))
         );
 
         $("#percentual-out .resume-number").html(
-            out_for_delivery <= 0 ? (out_for_delivery = 0) : (out_for_delivery = numberWithDecimal(out_for_delivery))
+            out_for_delivery <= 0
+                ? (out_for_delivery = 0)
+                : (out_for_delivery = numberWithDecimal(out_for_delivery))
         );
 
         $("#percentual-exception .resume-number").html(
-            exception <= 0 ? (exception = 0) : (exception = numberWithDecimal(exception))
+            exception <= 0
+                ? (exception = 0)
+                : (exception = numberWithDecimal(exception))
         );
 
         $("#percentual-unknown .resume-number").html(
-            unknown <= 0 ? (unknown = 0) : (unknown = numberWithDecimal(unknown))
+            unknown <= 0
+                ? (unknown = 0)
+                : (unknown = numberWithDecimal(unknown))
         );
 
         $("#percentual-delivered .resume-number").html(
-            delivered <= 0 ? (delivered = 0) : (delivered = numberWithDecimal(delivered))
+            delivered <= 0
+                ? (delivered = 0)
+                : (delivered = numberWithDecimal(delivered))
         );
 
         //add this line here for all $('#percentual-delivered .resume-percentual').html('(' + (delivered ? (delivered * total / 100).toFixed(2) : '0.00') + '%)');
@@ -460,7 +570,9 @@ $(() => {
                     $("#dados_tabela").html(`
                     <tr class="text-center">
                       <td colspan="6" style="vertical-align: middle;height:257px;">
-                        <img style="width:124px;margin-right:12px;" src="${$("#dados_tabela").attr("img-empty")}">
+                        <img style="width:124px;margin-right:12px;" src="${$(
+                            "#dados_tabela"
+                        ).attr("img-empty")}">
                         Nenhum rastreamento encontrado
                       </td>
                     </tr>`);
@@ -511,8 +623,12 @@ $(() => {
 
                             <td class="col-sm-4">
                                 <span style="max-width: 330px; display:block; margin: 0px 0px 0px 0px;">
-                                    ${tracking.product.amount}x ${tracking.product.name} ${
-                        tracking.product.description ? "(" + tracking.product.description + ")" : ""
+                                    ${tracking.product.amount}x ${
+                        tracking.product.name
+                    } ${
+                        tracking.product.description
+                            ? "(" + tracking.product.description + ")"
+                            : ""
                     }
                                 </span>
                             </td>
@@ -520,7 +636,9 @@ $(() => {
                             <td class="col-sm-1">${tracking.approved_date}</td>
 
                             <td class="text-center col-sm-2">
-                                <span class="badge ${statusEnum[tracking.tracking_status_enum]}">
+                                <span class="badge ${
+                                    statusEnum[tracking.tracking_status_enum]
+                                }">
                                     ${tracking.tracking_status}
                                 </span>
                             </td>
@@ -597,19 +715,39 @@ $(() => {
 
                 //preenche os campos
                 $("#tracking-code").text(tracking.tracking_code);
-                $("#tracking-product-image").attr("src", tracking.product.photo);
+                $("#tracking-product-image").attr(
+                    "src",
+                    tracking.product.photo
+                );
                 $("#tracking-product-name").text(
                     tracking.product.name +
-                        (tracking.product.description ? "(" + tracking.product.description + ")" : "")
+                        (tracking.product.description
+                            ? "(" + tracking.product.description + ")"
+                            : "")
                 );
                 $("#tracking-product-amount").text(tracking.amount + "x");
                 $("#tracking-delivery-address").text(
-                    "Endereço: " + tracking.delivery.street + ", " + tracking.delivery.number
+                    "Endereço: " +
+                        tracking.delivery.street +
+                        ", " +
+                        tracking.delivery.number
                 );
-                $("#tracking-delivery-neighborhood").text("Bairro: " + tracking.delivery.neighborhood);
-                $("#tracking-delivery-zipcode").text("CEP: " + tracking.delivery.zip_code);
-                $("#tracking-delivery-city").text("Cidade: " + tracking.delivery.city + "/" + tracking.delivery.state);
-                $("#modal-tracking-details .btn-notify-trackingcode").attr("tracking", tracking.id);
+                $("#tracking-delivery-neighborhood").text(
+                    "Bairro: " + tracking.delivery.neighborhood
+                );
+                $("#tracking-delivery-zipcode").text(
+                    "CEP: " + tracking.delivery.zip_code
+                );
+                $("#tracking-delivery-city").text(
+                    "Cidade: " +
+                        tracking.delivery.city +
+                        "/" +
+                        tracking.delivery.state
+                );
+                $("#modal-tracking-details .btn-notify-trackingcode").attr(
+                    "tracking",
+                    tracking.id
+                );
 
                 if (tracking.link) {
                     $("#link-tracking a").attr("href", tracking.link);
@@ -626,7 +764,9 @@ $(() => {
                               <td>${checkpoint.created_at}</td>
                               <td>
                                   <span class="text-secondary badge badge-${
-                                      statusEnum[checkpoint.tracking_status_enum]
+                                      statusEnum[
+                                          checkpoint.tracking_status_enum
+                                      ]
                                   }">${checkpoint.tracking_status}</span>
                               </td>
                               <td>${checkpoint.event}</td>
@@ -651,7 +791,11 @@ $(() => {
         let btnSave = $(this);
         btnSave.prop("disabled", true);
 
-        let tracking_code = btnSave.parent().parent().find(".input-tracking-code").val();
+        let tracking_code = btnSave
+            .parent()
+            .parent()
+            .find(".input-tracking-code")
+            .val();
         let ppsId = btnSave.attr("pps");
 
         $.ajax({
@@ -667,7 +811,11 @@ $(() => {
                 btnSave.prop("disabled", false);
                 errorAjaxResponse(response);
 
-                btnSave.parent().parent().find(".input-tracking-code").addClass("border-danger");
+                btnSave
+                    .parent()
+                    .parent()
+                    .find(".input-tracking-code")
+                    .addClass("border-danger");
                 setTimeout(() => {
                     btnSave
                         .parent()
@@ -676,7 +824,11 @@ $(() => {
                         .val("")
                         .removeClass("border-danger")
                         .attr("placeholder", "Clique para adicionar");
-                    btnSave.parent().parent().find(".tracking-close").trigger("click");
+                    btnSave
+                        .parent()
+                        .parent()
+                        .find(".tracking-close")
+                        .trigger("click");
                 }, 1000);
             },
             success: (response) => {
@@ -688,9 +840,13 @@ $(() => {
 
                     td.find(".tracking-add, .edit-detail").remove();
 
-                    td.find(".tracking-close").attr("data-code", response.data.tracking_code).trigger("click");
+                    td.find(".tracking-close")
+                        .attr("data-code", response.data.tracking_code)
+                        .trigger("click");
 
-                    td.find(".input-tracking-code").removeClass("fake-label, border-danger");
+                    td.find(".input-tracking-code").removeClass(
+                        "fake-label, border-danger"
+                    );
 
                     let buttons = `
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
@@ -709,7 +865,11 @@ $(() => {
                         </div>`;
                     $(buttons).insertBefore(saveClose);
 
-                    let statusBadge = btnSave.parent().parent().parent().find(".badge");
+                    let statusBadge = btnSave
+                        .parent()
+                        .parent()
+                        .parent()
+                        .find(".badge");
                     statusBadge
                         .removeClass(
                             "statusPosted statusOnDelivery statusDelivered statusInTransit statusProblem statusWithoutInfo"
@@ -717,7 +877,10 @@ $(() => {
                         .addClass(statusEnum[tracking.tracking_status_enum])
                         .html(tracking.tracking_status);
 
-                    alertCustom("success", "Código de rastreio salvo com sucesso");
+                    alertCustom(
+                        "success",
+                        "Código de rastreio salvo com sucesso"
+                    );
                 }
                 btnSave.prop("disabled", false).hide();
             },
@@ -725,23 +888,29 @@ $(() => {
     });
 
     //enviar e-mail com o codigo de rastreio
-    $(document).on("click", "#modal-tracking-details .btn-notify-trackingcode", function () {
-        $.ajax({
-            method: "POST",
-            url: "/api/tracking/notify/" + tracking_id,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: () => {
-                alertCustom("success", "Notificação enviada com sucesso");
-            },
-        });
-    });
+    $(document).on(
+        "click",
+        "#modal-tracking-details .btn-notify-trackingcode",
+        function () {
+            $.ajax({
+                method: "POST",
+                url: "/api/tracking/notify/" + tracking_id,
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: () => {
+                    alertCustom("success", "Notificação enviada com sucesso");
+                },
+            });
+        }
+    );
 
     //exportar excel
     $("#btn-export-csv").on("click", function () {
@@ -813,7 +982,10 @@ $(() => {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {
@@ -824,7 +996,7 @@ $(() => {
 
     $("#filters").on("keypress", function (e) {
         if (e.keyCode == 13) {
-            loadData();
+            window.loadData();
         }
     });
 
@@ -833,7 +1005,10 @@ $(() => {
         var $select = $("#" + selectId);
         var values = $select.val();
 
-        if ($(`#${selectId}`).val()[0] == "all" || $(`#${selectId}`).val()[0] == "") {
+        if (
+            $(`#${selectId}`).val()[0] == "all" ||
+            $(`#${selectId}`).val()[0] == ""
+        ) {
             var valueToRemove = $(`#${selectId}`).val()[0];
         }
 

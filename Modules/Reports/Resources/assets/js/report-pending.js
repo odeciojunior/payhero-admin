@@ -2,7 +2,44 @@ var currentPage = null;
 //var atualizar = null;
 let hasSale = false;
 
-$(function () {
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
+    $("#project").find('option').not(':first').remove();
+    loadOnTable('#body-table-pending', '.table-pending');
+    loadOnAny('.number', false, {
+        styles: {
+            container: {
+                minHeight: '32px',
+                height: 'auto'
+            },
+            loader: {
+                width: '20px',
+                height: '20px',
+                borderWidth: '4px'
+            },
+        }
+    });
+
+    $("#select_projects").html('');
+    sessionStorage.removeItem('info');
+
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            if(!isEmpty(data2.company_default_projects)){
+                showFiltersInReports(true);
+                getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+                showFiltersInReports(false);
+            }
+        });
+	});
+});
+
+$(function() {
     changeCalendar();
     changeCompany();
 });
@@ -22,10 +59,9 @@ function unlockSearch(elementButton) {
 }
 
 function loadData() {
-    elementButton = $('#bt_filtro');
-    if (searchIsLocked(elementButton) != 'true') {
+    elementButton = $("#bt_filtro");
+    if (searchIsLocked(elementButton) != "true") {
         lockSearch(elementButton);
-        console.log(elementButton.attr('block_search'));
         atualizar();
     }
 }
@@ -109,7 +145,9 @@ function atualizar(link = null) {
                     $("#body-table-pending").append(dados);
                 });
 
-                $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                $("#date").val(
+                    moment(new Date()).add(3, "days").format("YYYY-MM-DD")
+                );
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
             } else {
                 $("#body-table-pending").html(
@@ -120,9 +158,9 @@ function atualizar(link = null) {
             }
             pagination(response, "pending", atualizar);
         },
-        complete: response => {
-            unlockSearch($('#bt_filtro'));
-        }
+        complete: (response) => {
+            unlockSearch($("#bt_filtro"));
+        },
     });
 
     if (updateResume) {
@@ -140,7 +178,10 @@ function getFilters(urlParams = false) {
         sale_code: $("#sale_code").val().replace("#", ""),
         date_type: $("#date_type").val(),
         date_range: $("#date-filter").val(),
-        statement: hasSale == false ? "automatic_liquidation" : $("#type_statement").val(),
+        statement:
+            hasSale == false
+                ? "automatic_liquidation"
+                : $("#type_statement").val(),
         acquirer: $("#acquirer").val(),
         is_security_reserve: $("#is-security-reserve").is(":checked") ? 1 : 0,
     };
@@ -151,9 +192,9 @@ function getFilters(urlParams = false) {
             params += "&" + param + "=" + data[param];
         }
         return encodeURI(params);
-    } else {
-        return data;
     }
+
+    return data;
 }
 
 function resumePending() {
@@ -184,7 +225,9 @@ function resumePending() {
         },
         error: function error(response) {
             //loadOnAny('.number', true);
-            $("#total-pending, #total").html('R$ <strong class="font-size-30">0,00</strong>');
+            $("#total-pending, #total").html(
+                'R$ <strong class="font-size-30">0,00</strong>'
+            );
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -195,9 +238,16 @@ function resumePending() {
                 $("#total_sales, #total-pending, #total").text("");
                 $("#total_sales").text(response.total_sales);
                 var comission = response.commission.split(/\s/g);
-                $("#total-pending").html(comission[0] + ' <span class="font-size-30 bold">' + comission[1] + "</span>");
+                $("#total-pending").html(
+                    comission[0] +
+                        ' <span class="font-size-30 bold">' +
+                        comission[1] +
+                        "</span>"
+                );
             } else {
-                $("#total-pending, #total").html('R$ <strong class="font-size-30">0,00</strong>');
+                $("#total-pending, #total").html(
+                    'R$ <strong class="font-size-30">0,00</strong>'
+                );
             }
         },
     });
@@ -222,7 +272,10 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {
@@ -231,51 +284,49 @@ $(document).ready(function () {
         }
     });
 
-    let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
-    let endDate = moment().format("YYYY-MM-DD");
-    // $('#date-filter').daterangepicker({
-    //     startDate: moment('2018-01-01 00:00:00'),
-    //     endDate: moment(),
-    //     opens: 'center',
-    //     maxDate: moment().endOf("day"),
-    //     alwaysShowCalendar: true,
-    //     showCustomRangeLabel: 'Customizado',
-    //     autoUpdateInput: true,
-    //     locale: {
-    //         locale: 'pt-br',
-    //         format: 'DD/MM/YYYY',
-    //         applyLabel: "Aplicar",
-    //         cancelLabel: "Limpar",
-    //         fromLabel: 'De',
-    //         toLabel: 'Até',
-    //         customRangeLabel: 'Customizado',
-    //         weekLabel: 'W',
-    //         daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-    //         monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-    //         firstDay: 0
-    //     },
-    //     ranges: {
-    //         'Hoje': [moment(), moment()],
-    //         'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-    //         'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-    //         'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-    //         'Este mês': [moment().startOf('month'), moment().endOf('month')],
-    //         'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-    //         'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
-    //     }
-    // }, function (start, end) {
-    //     startDate = start.format('YYYY-MM-DD');
-    //     endDate = end.format('YYYY-MM-DD');
-    // });
+    let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+    let endDate = moment().format('YYYY-MM-DD');
 
-    getCompanies();
+    getCompaniesAndProjects().done( function (data2){
+        if(!isEmpty(data2.company_default_projects)){
+            showFiltersInReports(true);
+            getProjects(data2.companies);
+        }
+        else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            showFiltersInReports(false);
+        }
+    });
 
-    function getCompanies() {
-        loadingOnScreen();
+    window.fillProjectsSelect = function(){
+        return $.ajax({
+            method: "GET",
+            url: "/api/projects?select=true",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        });
+    }
+
+    window.getCompanies = function(data,loading='y') {
+        if(loading=='y'){
+            loadingOnScreen();
+            window.fillProjectsSelect(data.companies)
+        }
         $.ajax({
             method: "GET",
-            //url: '/api/projects?select=true',
-            url: "/api/core/companies?select=true",
+            url: '/api/core/companies?select=true',
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
@@ -290,7 +341,13 @@ $(document).ready(function () {
                         if (company.company_has_sale_before_getnet) {
                             hasSale = true;
                         }
-                        $("#company").append('<option value="' + company.id + '">' + company.name + "</option>");
+                        $("#company").append(
+                            '<option value="' +
+                                company.id +
+                                '">' +
+                                company.name +
+                                "</option>"
+                        );
                     });
 
                     if (hasSale) {
@@ -298,68 +355,53 @@ $(document).ready(function () {
                     }
                 }
 
-                getProjects();
+                getProjects(data.companies);
                 getAcquirer();
             },
         });
     }
 
-    function getProjects() {
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel").show();
+    window.getProjects = function(companies)
+    {
+        loadingOnScreen();
+        $(".div-filters").hide();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel > div >").show();
 
-                    $.each(response.data, function (i, project) {
-                        $("#project").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                        $("#select_projects").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
+        window.fillProjectsSelect()
+        .done(function(dataSales)
+        {
+            $(".div-filters").show();
+            $.each(companies, function (c, company) {
+                $.each(company.projects, function (i, project) {
+                    $.each(dataSales.data, function (idx, project2) {
+                        if( project2.id == project.id ){
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                        }
                     });
-                    if (sessionStorage.info) {
-                        $("#select_projects").val(JSON.parse(sessionStorage.getItem("info")).company);
-                        $("#select_projects")
-                            .find("option:selected")
-                            .text(JSON.parse(sessionStorage.getItem("info")).companyName);
-                    }
+                });
+            });
+            $("#project option:first").attr('selected','selected');
 
-                    atualizar();
-                } else {
-                    $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
+            if(sessionStorage.info) {
+                $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
+                $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+            }
 
-                loadingOnScreenRemove();
-            },
+            company = $("#project").val();
+
+            getAcquirer();
+
         });
+
+        loadingOnScreenRemove();
     }
 
     function getAcquirer() {
         $.ajax({
             method: "GET",
-            url: "/api/finances/acquirers/" + $("#company").val(),
+            url: '/api/finances/acquirers/'+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -385,6 +427,42 @@ $(document).ready(function () {
             },
         });
     }
+
+
+    // function resumePending() {
+
+    //     //$("#total_sales").html(skeLoadMini);
+
+    //     $.ajax({
+    //         method: "GET",
+    //         url: '/api/reports/resume-pending-balance',
+    //         data: getFilters(),
+    //         dataType: "json",
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: function error(response) {
+    //             //loadOnAny('.number', true);
+    //             $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+    //             errorAjaxResponse(response);
+    //         },
+    //         success: function success(response) {
+    //             //loadOnAny('.number', true);
+    //             //$('#total_sales').text('0');
+
+    //             if (response.total_sales) {
+    //                 $('#total_sales, #total-pending, #total').text('');
+    //                 $('#total_sales').text(response.total_sales);
+    //                 var comission=response.commission.split(/\s/g);
+    //                 $('#total-pending').html(comission[0]+' <span class="font-size-30 bold">'+comission[1]+'</span>');
+    //             } else {
+    //                 $('#total-pending, #total').html('R$ <strong class="font-size-30">0,00</strong>');
+    //             }
+    //         }
+    //     });
+    // }
+
 
     function resumePending() {
         $("#total-pending, #total_sales").html(skeLoadMini).width("100%");
@@ -416,9 +494,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                //loadOnAny('.number', true);
+                loadOnAny('.number', true);
                 //$('#total_sales').text('0');
-
                 if (response.total_sales) {
                     $("#total_sales, #commission_blocked, #total").text("");
                     $("#total_sales").text(response.total_sales);
@@ -434,7 +511,9 @@ $(document).ready(function () {
                     $("#total-pending, #total").html(
                         '<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange">0,00</strong>'
                     );
-                    $("#total_sales").html('<strong class="font-size-24 orange">0</strong>');
+                    $("#total_sales").html(
+                        '<strong class="font-size-24 orange">0</strong>'
+                    );
                 }
             },
         });
@@ -520,8 +599,13 @@ $(document).ready(function () {
                         $("#body-table-pending").append(dados);
                     });
 
-                    $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                    $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
+                    $("#date").val(
+                        moment(new Date()).add(3, "days").format("YYYY-MM-DD")
+                    );
+                    $("#date").attr(
+                        "min",
+                        moment(new Date()).format("YYYY-MM-DD")
+                    );
                 } else {
                     $("#body-table-pending").html(
                         "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
@@ -531,9 +615,9 @@ $(document).ready(function () {
                 }
                 pagination(response, "pending", atualizar);
             },
-            complete: response => {
-                unlockSearch($('#bt_filtro'));
-            }
+            complete: (response) => {
+                unlockSearch($("#bt_filtro"));
+            },
         });
 
         if (updateResume) {
@@ -546,7 +630,11 @@ $(document).ready(function () {
             atualizar();
         }
     });
+
+    $('.company_name').val( $('.company-navbar').find('option:selected').text() );
+
 });
+
 
 function changeCalendar() {
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
@@ -557,12 +645,18 @@ function changeCalendar() {
         .dateRangePicker({
             setValue: function (s) {
                 if (s) {
-                    let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                    let normalize = s.replace(
+                        /(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/,
+                        "$120$2-$320$4"
+                    );
                     $(this).html(s).data("value", normalize);
                     $('input[name="daterange"]').attr("value", normalize);
                     $('input[name="daterange"]').val(normalize);
                 } else {
-                    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+                    $('input[name="daterange"]').attr(
+                        "value",
+                        `${startDate}-${endDate}`
+                    );
                     $('input[name="daterange"]').val(`${startDate}-${endDate}`);
                 }
             },
@@ -578,9 +672,13 @@ function changeCalendar() {
             }
         });
 }
+
 function changeCompany() {
-    $("#select_projects").on("change", function () {
-        updateStorage({ company: $(this).val(), companyName: $(this).find("option:selected").text() });
+    $("#project").on("change", function () {
+        updateStorage({
+           company: $(this).val(),
+            companyName: $(this).find('option:selected').text(),
+       });
     });
 }
 

@@ -46,10 +46,10 @@
             <div class="col-sm-3 transfers_company_select">
                 <div class="input-holder">
                     <label for="transfers_company_select"> Empresa</label>
-                    <select style='border-radius: 8px'
-                            class="sirius-select"
+                    <input type="text" disabled class="company_name">
+                    {{-- <select style='border-radius: 8px' class="sirius-select"
                             name="company"
-                            id="transfers_company_select"> </select>
+                            id="transfers_company_select"> </select> --}}
                 </div>
             </div>
             <div class="col-sm-3">
@@ -104,10 +104,11 @@
                 <div class="col-md-12 px-0 mb-20">
                     <div class="input-holder transfers_company_select_mobile">
                         <label for="transfers_company_select_mobile"> Empresa</label>
-                        <select style='border-radius: 8px'
+                        <input type="text" disabled class="company_name">
+                        {{-- <select style='border-radius: 8px'
                                 class="sirius-select"
                                 name="company"
-                                id="transfers_company_select_mobile"> </select>
+                                id="transfers_company_select_mobile"> </select> --}}
                     </div>
                 </div>
                 <div class="col-md-12 p-0 mt-10">

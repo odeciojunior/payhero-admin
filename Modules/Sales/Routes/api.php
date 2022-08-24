@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 //'role:account_owner|admin|attendance|finantial'
 Route::group(
     [
-        "middleware" => ["auth:api", "permission:sales|contestations|trackings|finances", "scopes:admin"],
+        "middleware" => ["auth:api", "demo_account", "permission:sales|contestations|trackings|finances", "scopes:admin"],
         "prefix" => "sales",
     ],
     function () {
@@ -40,12 +40,17 @@ Route::group(
         Route::post("/set-observation/{transaction_id}", "SalesApiController@setValueObservation")->middleware(
             "permission:sales_manage"
         );
+        Route::get('/projects-with-sales', 'SalesApiController@getProjectsWithSales');
     }
 );
+Route::group([
+    'middleware' => ['demo_account']
+],function(){
+    Route::apiResource('sales', 'SalesApiController')
+         ->only('index', 'show')
+         ->middleware(['auth:api', 'scopes:admin']);
 
-Route::apiResource("sales", "SalesApiController")
-    ->only("index", "show")
-    ->middleware(["auth:api", "scopes:admin"]);
+});
 
 //rotas consumida por terceiros: profitfy
 Route::group(["middleware" => ["auth:api", "scopes:sale", "throttle:120,1"], "prefix" => "profitfy"], function () {

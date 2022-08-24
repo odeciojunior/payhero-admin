@@ -9,8 +9,10 @@
     <!-- Page -->
     <div class='page'>
         <div class='page-header container'>
-            <div class='row align-items-center justify-content-between'
-                 style='min-height:50px'>
+
+            @include('layouts.company-select',['version'=>'mobile'])
+
+            <div class='row align-items-center justify-content-between' style='min-height:50px'>
                 <div class='col-12'>
                     <h1 class='page-title'>Antifraude</h1><br>
                     <p id="text-info"

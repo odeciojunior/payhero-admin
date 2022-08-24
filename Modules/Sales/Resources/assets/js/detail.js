@@ -200,7 +200,6 @@ $(() => {
 
                 $("#refundAmount").val(response.data.total);
                 $("#refundBilletAmount").text(response.data.total);
-
                 $(".btn_refund_transaction").unbind("click");
                 $(".btn_refund_transaction").on("click", function () {
                     $("#refund-observation-transaction").val("");
@@ -679,7 +678,7 @@ $(() => {
             $("#resendeShopifyOrderButton").attr("sale", "");
         }
         //Detalhes da venda
-        $("#nav-profile #card-copany").text("Empresa: Nome da Empresa"); // + sale.company_name);
+        $("#nav-profile #card-company").text("Empresa: Nome da Empresa"); // + sale.company_name);
         if (sale.payment_method === 1) {
             $("#details-card #card-flag").text("Bandeira: " + sale.flag);
             $("#details-card #card-installments").text("Quantidade de parcelas: " + sale.installments_amount);
@@ -1234,9 +1233,14 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    function refundedClick(refundedValue = 0, refundObservation, refundUrl, partial = 0) {
-        $(".btn-confirm-refund-transaction").prop("disabled", true);
-        loadingOnChart("#modal-refund-transaction");
+    function refundedClick(
+        refundedValue = 0,
+        refundObservation,
+        refundUrl,
+        partial = 0
+    ) {
+        $(".btn-confirm-refund-transaction").prop('disabled', true);
+        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: refundUrl,
@@ -1251,19 +1255,23 @@ $(() => {
                 Accept: "application/json",
             },
             error: (response) => {
-                loadingOnChartRemove(".sirius-loading");
-                $("#modal-refund-transaction").modal("toggle");
+                loadingOnScreenRemove();
+                $("#modal-refund-transaction").modal('toggle')
                 errorAjaxResponse(response);
-                atualizar(currentPage);
+                //atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop("disabled", false);
             },
             success: (response) => {
-                loadingOnChartRemove(".sirius-loading");
-                $("#modal-refund-transaction").modal("toggle");
+                loadingOnScreenRemove();
+                $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
                 $("#refund-observation-transaction").val("");
                 atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop("disabled", false);
+
+                if(window.location.pathname.includes('finances')){
+                    $('#bt_filtro').trigger('click');
+                }
             },
         });
     }

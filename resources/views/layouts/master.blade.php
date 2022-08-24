@@ -56,6 +56,7 @@
           href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
           color="#5bbad5">
     <!-- Stylesheets -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
     <link rel="stylesheet"
           href="{{ mix('build/layouts/master/master.min.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -132,9 +133,9 @@
         $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
     @endphp
 
-    @if (!auth()->user()->account_is_approved)
+    {{-- @if (!auth()->user()->account_is_approved)
         @include('utils.new-register-link')
-    @endif
+    @endif --}}
 
     @yield('content')
 

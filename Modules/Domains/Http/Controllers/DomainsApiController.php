@@ -55,7 +55,8 @@ class DomainsApiController extends Controller
 
             $domains = Domain::with("project")->where("project_id", $projectId);
 
-            return DomainResource::collection($domains->orderBy("id", "DESC")->paginate(5));
+            return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
+
         } catch (Exception $e) {
             report($e);
 

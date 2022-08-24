@@ -5,8 +5,10 @@
               href="{{ mix('build/layouts/projects/create.min.css') }}">
     @endpush
 
-    <div class="page"
-         style="display: none; margin-bottom: 0 !important;">
+    <div class="page" style="display: none; margin-bottom: 0 !important;">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div id="card-project">
             <div style="display: none"
                  class="page-header container">
@@ -57,12 +59,8 @@
 
                                     <div class='form-group col-12'>
                                         <label for='company'>Empresa</label>
-                                        <select name='company'
-                                                class='sirius-select'
-                                                id='company'
-                                                required>
-                                            <option value=''>Selecione</option>
-                                        </select>
+                                        <input type="text" disabled class="company_name" style="text-overflow: ellipsis;">
+                                        <input type="hidden" name='company' id='company' class="company_id" required>
                                     </div>
 
                                     <div class="form-group col-12">

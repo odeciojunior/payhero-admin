@@ -1119,6 +1119,15 @@ input[type=radio] {
     -webkit-text-stroke: 0.8px #fff;
 }
 
+#notification + .announcekit-widget-badge{
+    margin-bottom: 12px;
+    margin-left: -24px;
+    padding-right: 1px;
+}
+#notification{
+    padding: 0.72rem 1.2rem 0.72rem 1rem !important
+}
+
 #notification > img {
     top: 39px;
     left: 1683px;

@@ -1,4 +1,39 @@
 $(document).ready(function () {
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project").find('option').not(':first').remove();
+        $("#project").val($("#project option:first").val());
+        loadOnTable("#chargebacks-table-data", "#chargebacks-table");
+        loadOnAny(".total-number", false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                if(!isEmpty(data2.company_default_projects)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    fillProjectsSelect(data2.companies)
+                    atualizar();
+                    getTotalValues();
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            });
+        });
+    });
+
     let statusObject = {
         1: "Em andamento",
         2: "Perdido",
@@ -14,7 +49,11 @@ $(document).ready(function () {
     };
 
     $("#date_range")
-        .val(moment().format("DD/MM/YYYY") + " - " + moment().add(30, "days").format("DD/MM/YYYY"))
+        .val(
+            moment().format("DD/MM/YYYY") +
+                " - " +
+                moment().add(30, "days").format("DD/MM/YYYY")
+        )
         .dateRangePicker({
             format: "DD/MM/YYYY",
             endDate: moment().add(30, "days"),
@@ -25,19 +64,31 @@ $(document).ready(function () {
                 },
                 {
                     name: "7 dias",
-                    dates: () => [moment().subtract(6, "days").toDate(), new Date()],
+                    dates: () => [
+                        moment().subtract(6, "days").toDate(),
+                        new Date(),
+                    ],
                 },
                 {
                     name: "15 dias",
-                    dates: () => [moment().subtract(14, "days").toDate(), new Date()],
+                    dates: () => [
+                        moment().subtract(14, "days").toDate(),
+                        new Date(),
+                    ],
                 },
                 {
                     name: "Último mês",
-                    dates: () => [moment().subtract(30, "days").toDate(), new Date()],
+                    dates: () => [
+                        moment().subtract(30, "days").toDate(),
+                        new Date(),
+                    ],
                 },
                 {
                     name: "Próximo 30 dias",
-                    dates: () => [moment().add(30, "days").toDate(), new Date()],
+                    dates: () => [
+                        moment().add(30, "days").toDate(),
+                        new Date(),
+                    ],
                 },
                 {
                     name: "Desde o início",
@@ -57,11 +108,14 @@ $(document).ready(function () {
             customer_document: $("#customer_document").val() ?? "",
             date_range: $("#date_range").val().replace(" à ", " - ") ?? "",
             date_type: $("#date_type").val() ?? "",
-            order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
+            order_by_expiration_date: $("#expiration_date").is(":checked")
+                ? 1
+                : 0,
             contestation_situation: $("#contestation_situation").val() ?? "",
             //is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
             //sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
+            company: $('.company-navbar').val(),
         };
         if (urlParams) {
             let params = "";
@@ -75,7 +129,8 @@ $(document).ready(function () {
         return data;
     }
 
-    const addZeroLeft = (value) => (value > 0 && value < 10 ? String(value).padStart(2, "0") : value);
+    const addZeroLeft = (value) =>
+        value > 0 && value < 10 ? String(value).padStart(2, "0") : value;
 
     function pagination(response) {
         $("#pagination").html("");
@@ -84,7 +139,8 @@ $(document).ready(function () {
             return;
         }
 
-        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+        var primeira_pagina =
+            "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         $("#pagination").append(primeira_pagina);
 
@@ -111,14 +167,22 @@ $(document).ready(function () {
                     "</button>"
             );
 
-            $("#pagina_" + (response.meta.current_page - x)).on("click", function () {
-                atualizar("?page=" + $(this).html());
-            });
+            $("#pagina_" + (response.meta.current_page - x)).on(
+                "click",
+                function () {
+                    atualizar("?page=" + $(this).html());
+                }
+            );
         }
 
-        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+        if (
+            response.meta.current_page != 1 &&
+            response.meta.current_page != response.meta.last_page
+        ) {
             var pagina_atual =
-                "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
+                "<button id='pagina_atual' class='btn nav-btn active'>" +
+                response.meta.current_page +
+                "</button>";
 
             $("#pagination").append(pagina_atual);
 
@@ -139,14 +203,19 @@ $(document).ready(function () {
                     "</button>"
             );
 
-            $("#pagina_" + (response.meta.current_page + x)).on("click", function () {
-                atualizar("?page=" + $(this).html());
-            });
+            $("#pagina_" + (response.meta.current_page + x)).on(
+                "click",
+                function () {
+                    atualizar("?page=" + $(this).html());
+                }
+            );
         }
 
         if (response.meta.last_page != "1") {
             var ultima_pagina =
-                "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+                "<button id='ultima_pagina' class='btn nav-btn'>" +
+                response.meta.last_page +
+                "</button>";
 
             $("#pagination").append(ultima_pagina);
 
@@ -174,7 +243,9 @@ $(document).ready(function () {
                 method: "GET",
                 url: "api/contestations/" + ckargeback,
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                     Accept: "application/json",
                 },
                 error: function (response) {
@@ -190,28 +261,14 @@ $(document).ready(function () {
         });
     }
 
-    function searchIsLocked(elementButton) {
-        return elementButton.attr('block_search');
-    }
-
-    function lockSearch(elementButton) {
-        elementButton.attr('block_search', 'true');
-        //set layout do button block
-    }
-
-    function unlockSearch(elementButton) {
-        elementButton.attr('block_search', 'false');
-        //layout do button block
-    }
-
     function loadData() {
-        elementButton = $('#bt_filtro');
-        if (searchIsLocked(elementButton) != 'true') {
+        elementButton = $("#bt_filtro");
+        if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr('block_search'));
+            console.log(elementButton.attr("block_search"));
             atualizar();
             getTotalValues();
-        };
+        }
     }
 
     function atualizar(link = null) {
@@ -220,7 +277,11 @@ $(document).ready(function () {
         if (link == null) {
             link = "/api/contestations/getcontestations?" + getFilters();
         } else {
-            link = "/api/contestations/getcontestations" + link + "&" + getFilters();
+            link =
+                "/api/contestations/getcontestations" +
+                link +
+                "&" +
+                getFilters();
         }
         $.ajax({
             method: "GET",
@@ -241,12 +302,16 @@ $(document).ready(function () {
                     let valuesObject = ``;
 
                     objectArray.forEach(([key, value]) => {
-                        valuesObject += `${Object.keys(value)} - ${Object.values(value)}`;
+                        valuesObject += `${Object.keys(
+                            value
+                        )} - ${Object.values(value)}`;
                     });
 
                     dados = "";
                     dados += `
-                        <tr ${value.status == 3 ? "class='won-contestation'" : ""}>
+                        <tr ${
+                            value.status == 3 ? "class='won-contestation'" : ""
+                        }>
                             <td id='${value.id}'>
                                 <span>${value.sale_code}</span>
                             </td>
@@ -311,12 +376,16 @@ $(document).ready(function () {
                                 <td class="line-overflow" style="white-space: normal;">
                                     ${value.reason}
                                 </td>
-                                <!-- <td style='white-space: nowrap'> <b>${value.amount}</b> </td>-->
+                                <!-- <td style='white-space: nowrap'> <b>${
+                                    value.amount
+                                }</b> </td>-->
                                     <td>
                                         ${
                                             value.is_file_user_completed
                                                 ? '<a  role="button" class="contetation_file pointer  ' +
-                                                  (value.has_expired ? "disabled" : "") +
+                                                  (value.has_expired
+                                                      ? "disabled"
+                                                      : "") +
                                                   '" title="' +
                                                   (value.has_expired
                                                       ? "Prazo para recurso encerrado"
@@ -369,7 +438,10 @@ $(document).ready(function () {
                     $("#pdf-modal").modal("show");
                     $("#update-contestation-pdf").on("click", function () {
                         let files = new FormData();
-                        files.append("file_contestation", $("#file_contestation")[0].files[0]);
+                        files.append(
+                            "file_contestation",
+                            $("#file_contestation")[0].files[0]
+                        );
 
                         loadOnAny("#pdf-modal .modal-user-pdf-body");
 
@@ -380,7 +452,9 @@ $(document).ready(function () {
                             contentType: false,
                             data: files,
                             headers: {
-                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Authorization: $(
+                                    'meta[name="access-token"]'
+                                ).attr("content"),
                                 Accept: "application/json",
                             },
                             error: function (response) {
@@ -391,17 +465,22 @@ $(document).ready(function () {
                                 alertCustom("success", response.message);
                             },
                             complete: function (data) {
-                                loadOnAny("#pdf-modal .modal-user-pdf-body", true);
+                                loadOnAny(
+                                    "#pdf-modal .modal-user-pdf-body",
+                                    true
+                                );
                             },
                         });
 
-                        $(".icon-observation-value_" + response.data.id).addClass("green");
+                        $(
+                            ".icon-observation-value_" + response.data.id
+                        ).addClass("green");
                     });
                 });
             },
-            complete: response => {
-                unlockSearch($('#bt_filtro'));
-            }
+            complete: (response) => {
+                unlockSearch($("#bt_filtro"));
+            },
         });
     }
 
@@ -435,62 +514,80 @@ $(document).ready(function () {
             success: function (response) {
                 loadOnAny(".total-number", true);
 
-                $("#total-contestation").html(addZeroLeft(response.total_contestation));
+                $("#total-contestation").html(
+                    addZeroLeft(response.total_contestation)
+                );
 
-                $("#total-chargeback-tax-val").html(addZeroLeft(response.total_chargeback));
+                $("#total-chargeback-tax-val").html(
+                    addZeroLeft(response.total_chargeback)
+                );
 
                 if ($("#date_type").val() == "transaction_date") {
                     $("#total-contestation-tax").html(
-                        " (" + response.total_contestation_tax + " de " + response.total_sale_approved + ")"
+                        " (" +
+                            response.total_contestation_tax +
+                            " de " +
+                            response.total_sale_approved +
+                            ")"
                     );
-                    $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
+                    $("#total-chargeback-tax").html(
+                        " (" + response.total_chargeback_tax + ")"
+                    );
                 }
 
-                $("#total-contestation-value").html(response.total_contestation_value);
+                $("#total-contestation-value").html(
+                    response.total_contestation_value
+                );
             },
         });
     }
 
     // Obtem o os campos dos filtros
-    function getProjects() {
+    function getProjects(data) {
         loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    // $("#export-excel").show();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        fillProjectsSelect(data.companies)
+        atualizar();
+        loadingOnScreenRemove();
 
-                    $.each(response.data, function (i, project) {
-                        $("#project").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
+        // $.ajax({
+        //     method: "GET",
+        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
+        //     dataType: "json",
+        //     headers: {
+        //         Authorization: $('meta[name="access-token"]').attr("content"),
+        //         Accept: "application/json",
+        //     },
+        //     error: function error(response) {
+        //         loadingOnScreenRemove();
+        //         errorAjaxResponse(response);
+        //     },
+        //     success: function success(response) {
+        //         if (!isEmpty(response.data)) {
+        //             $("#project-empty").hide();
+        //             $("#project-not-empty").show();
+        //             // $("#export-excel").show();
 
-                    atualizar();
-                } else {
-                    // $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
+        //             $.each(response.data, function (i, project) {
+        //                 $("#project").append(
+        //                     $("<option>", {
+        //                         value: project.id,
+        //                         text: project.name,
+        //                     })
+        //                 );
+        //             });
 
-                loadingOnScreenRemove();
-            },
-        });
+        //             window.atualizar();
+        //         } else {
+        //             // $("#export-excel").hide();
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
+
+        //         loadingOnScreenRemove();
+        //     },
+        // });
     }
 
     $("#bt_filtro").on("click", function (event) {
@@ -498,14 +595,22 @@ $(document).ready(function () {
         loadData();
     });
 
-    $("#transaction").on("change paste keyup select", function () {
+    $('#transaction').on('change paste keyup select', function () {
         let val = $(this).val();
 
         if (val === "") {
-            $("#date_type").attr("disabled", false).removeClass("disableFields");
-            $("#date_range").attr("disabled", false).removeClass("disableFields");
+            $("#date_type")
+                .attr("disabled", false)
+                .removeClass("disableFields");
+            $("#date_range")
+                .attr("disabled", false)
+                .removeClass("disableFields");
         } else {
-            $("#date_range").val(moment("2018-01-01").format("DD/MM/YYYY") + " - " + moment().format("DD/MM/YYYY"));
+            $("#date_range").val(
+                moment("2018-01-01").format("DD/MM/YYYY") +
+                    " - " +
+                    moment().format("DD/MM/YYYY")
+            );
             $("#date_type").attr("disabled", true).addClass("disableFields");
             $("#date_range").attr("disabled", true).addClass("disableFields");
         }
@@ -553,7 +658,10 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {
@@ -571,7 +679,47 @@ $(document).ready(function () {
 
     $("#pagination").css({ marginBottom: "100px" });
 
-    atualizar();
+    //window.atualizar();
     getTotalValues();
-    getProjects();
+
+    function fillProjectsSelect(data){
+        $.ajax({
+            method: "GET",
+            url: "/api/contestations/projects-with-contestations",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                //if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        if( dataSales.includes(project.id) )
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                    });
+                //}
+            });
+        });
+    }
+
+    getCompaniesAndProjects().done( function (data){
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
+    });
+
 });

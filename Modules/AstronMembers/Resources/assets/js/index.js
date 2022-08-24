@@ -1,16 +1,37 @@
 $(document).ready(function () {
-    index();
-    function index() {
-        loadingOnScreen();
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    function index(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/astronmembers",
+            url: "/api/apps/astronmembers?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: (response) => {
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -21,11 +42,9 @@ $(document).ready(function () {
                     $("#integration-actions").hide();
                 } else {
                     $("#project_id").html("");
-                    let projects = response.projects;
-                    for (let i = 0; i < projects.length; i++) {
-                        $("#project_id").append(
-                            '<option value="' + projects[i].id + '">' + projects[i].name + "</option>"
-                        );
+
+                    for (let project of response.projects) {
+                        $("#project_id, #select_projects_edit").append(`<option value="${project.id}">${project.name}</option>`);
                     }
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
@@ -40,10 +59,16 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#integration-actions").show();
                 }
+                loadOnAny('#content',true)
                 loadingOnScreenRemove();
             },
         });
     }
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
 
     //checkbox
     $(".check").on("click", function () {

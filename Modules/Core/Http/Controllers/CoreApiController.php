@@ -2,32 +2,35 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Exception;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use DateTime;
-use Exception;
 use Firebase\JWT\JWT;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Modules\Core\Entities\BonusBalance;
-use Modules\Core\Entities\Ticket;
-use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
-use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
-use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
-use Modules\Core\Events\UserRegistrationFinishedEvent;
-use Modules\Core\Transformers\CompaniesSelectResource;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\CompanyDocument;
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserDocument;
-use Modules\Core\Entities\UserInformation;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\Gateways\Safe2PayService;
-use Modules\Core\Services\UserService;
-use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\Ticket;
+use Illuminate\Routing\Controller;
+use Modules\Core\Events\UserRegistrationFinishedEvent;
+use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\UserService;
+use Modules\Core\Entities\BonusBalance;
+use Modules\Core\Entities\CheckoutConfig;
+use Modules\Core\Entities\UserDocument;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\UserInformation;
+use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
+use Modules\Core\Transformers\CompaniesSelectResource;
+use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
 
 class CoreApiController extends Controller
 {
@@ -267,14 +270,69 @@ class CoreApiController extends Controller
     public function getCompanies()
     {
         try {
+            $user = auth()->user();
             $companyModel = new Company();
-            $companies = $companyModel
-                ->newQuery()
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->orderBy("order_priority")
-                ->get();
+            $companies = $companyModel->newQuery()
+                ->where('user_id', $user->account_owner_id);
 
-            return CompaniesSelectResource::collection($companies);
+            # se empresa default for null, torna default a primeira empresa válida ou, em ultimo caso, a empresa demo
+            if($user->company_default == null){
+                $id_code = '';
+                $fantasy_name = '';
+                $newCompanyDefault = $companies
+                    ->where('active_flag', true)
+                    ->get();
+                $companyService = new CompanyService();
+                foreach($newCompanyDefault as $item){
+                    if($companyService->isDocumentValidated($item->id)){
+                        $id_code = $item->id_code;
+                        $fantasy_name = $item->fantasy_name;
+                        break;
+                    }
+                }
+                if(empty($id_code)){
+                    $id_code = Hashids::encode(1);
+                    $fantasy_name = 'Empresa Demo';
+                }
+                $request = new Request(['company_id' => $id_code]);
+                $this->updateCompanyDefault($request);
+                $return = array(
+                    'company_default'=>$id_code,
+                    'company_default_name'=>$fantasy_name,
+                    'company_default_fullname'=>$fantasy_name
+                );
+            }
+            # se company default for empresa demo
+            else if($user->company_default == Company::DEMO_ID){
+                $return = array(
+                    'company_default'=>Hashids::encode(1),
+                    'company_default_name'=>'Empresa Demo',
+                    'company_default_fullname'=>'Empresa Demo'
+                );
+            }
+            # se company default for qq outra empresa
+            else if($user->company_default > Company::DEMO_ID){
+                $companyDefault = Company::select('company_type','fantasy_name')
+                    ->where('id', $user->company_default)
+                    ->first();
+                $company_default_name = $companyDefault->company_type == 1 ? 'Pessoa física' : Str::limit(
+                        $companyDefault->fantasy_name,
+                        20
+                    ) ?? '';
+                $return = array(
+                    'company_default'=>Hashids::encode($user->company_default),
+                    'company_default_name'=>$company_default_name,
+                    'company_default_fullname'=>$companyDefault->fantasy_name
+                );
+            }
+
+            $return['companies'] = collect(CompaniesSelectResource::collection($companies->get()))
+             ->sortBy('order_priority')
+             ->sortByDesc('active_flag')
+             ->sortByDesc('company_is_approved')
+             ->values()->all();
+
+            return $return;
         } catch (Exception $e) {
             report($e);
 
@@ -285,6 +343,43 @@ class CoreApiController extends Controller
                 400
             );
         }
+    }
+
+    public function updateCompanyDefault(Request $request){
+
+        if(empty($request->company_id)){
+            return response()->json(['message'=>'Informe a empresa selecionada'],400);
+        }
+
+        $companyId = current(Hashids::decode($request->company_id));
+        if(empty($companyId)){
+            return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
+        }
+
+        $user = Auth::user();
+        if($user->company_default == $companyId){
+            return; //response()->json(['message'=>'A empresa selecionada já é a default.'],400);
+        }
+
+        if($companyId > 1){
+            $company = Company::where('user_id',$user->account_owner_id)->where('id',$companyId)->exists();
+            if(empty($company)){
+                return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
+            }
+        }
+
+        try{
+
+            $user->company_default = $companyId;
+            $user->save();
+
+            return response()->json(['message'=>'Empresa atualizada.']);
+
+        }catch(Exception $e){
+            report($e);
+            return response()->json(['message'=>'Não foi possivel atualizar a empresa default.']);
+        }
+
     }
 
     public function allowBlockBalance($companyId, $saleId)

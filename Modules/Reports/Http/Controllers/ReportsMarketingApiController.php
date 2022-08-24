@@ -146,8 +146,8 @@ class ReportsMarketingApiController extends Controller
     {
         try {
             $request->validate([
-                "date_range" => "required",
-                "project_id" => "required",
+                'date_range' => 'required',
+                'project_id' => 'required'
             ]);
 
             $data = $request->all();
@@ -189,10 +189,10 @@ class ReportsMarketingApiController extends Controller
     {
         try {
             $request->validate([
-                "paginate" => "required",
-                "date_range" => "required",
-                "origin" => "required",
-                "project_id" => "required",
+                'paginate' => 'required',
+                'date_range' => 'required',
+                'origin' => 'required',
+                'project_id' => 'required'
             ]);
 
             $data = $request->all();

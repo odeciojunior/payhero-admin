@@ -228,6 +228,7 @@ $(function () {
         const inputCodeEdit = $("#modal-edit-pixel .code-edit").val();
         const inputConversionalEdit = $("#modal-edit-pixel .conversional-edit").val();
         const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value-edit").val();
+        const valuePercentagePurchasePix = $("#modal-edit-pixel .percentage-pix-value-edit").val();
         const facebookTokenApi = $("#modal-edit-pixel #facebook-token-api-edit").val();
         const inputPurchaseEventName = $("#modal-edit-pixel .input-purchase-event-name-edit").val();
         const plansApply = $("#modal-edit-pixel .apply_plans").val();
@@ -240,6 +241,7 @@ $(function () {
                 code: inputCodeEdit,
                 conversional: inputConversionalEdit,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
+                value_percentage_purchase_pix: valuePercentagePurchasePix,
                 facebook_token_api: facebookTokenApi,
                 purchase_event_name: inputPurchaseEventName,
                 plans_apply: plansApply,
@@ -279,6 +281,7 @@ $(function () {
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
+                value_percentage_purchase_pix: valuePercentagePurchasePix,
                 url_facebook_domain_edit: $("#modal-edit-pixel .url_facebook_domain_edit").val(),
             },
             error: function (response) {
@@ -321,6 +324,7 @@ $(function () {
         }
 
         $(".percentage-boleto-value-edit").val(pixel.value_percentage_purchase_boleto);
+        $(".percentage-pix-value-edit").val(pixel.value_percentage_purchase_pix);
 
         // plans
         const plansInput = $(".apply_plans");
@@ -549,6 +553,7 @@ $(function () {
                 is_api: formData.get("api-facebook"),
                 code: formData.get("code"),
                 value_percentage_purchase_boleto: formData.get("value_percentage_purchase_boleto"),
+                value_percentage_purchase_pix: formData.get("value_percentage_purchase_pix"),
                 facebook_token_api: formData.get("facebook-token-api"),
                 purchase_event_name: formData.get("purchase-event-name"),
                 plans_apply: formData.get("add_pixel_plans[]"),
@@ -604,11 +609,24 @@ $(function () {
             return false;
         }
 
+        if (formData.value_percentage_purchase_pix.length > 3) {
+            alertCustom("error", "O valore do campo % Valor PIX está incorreto!");
+            return false;
+        }
+
         if (
             formData.value_percentage_purchase_boleto.length > 0 &&
             (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10)
         ) {
             alertCustom("error", "O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100");
+            return false;
+        }
+
+        if (
+            formData.value_percentage_purchase_pix.length > 0 &&
+            (formData.value_percentage_purchase_pix > 100 || formData.value_percentage_purchase_pix < 10)
+        ) {
+            alertCustom("error", "O valores permitidos para o campo % Valor PIX deve ser entre 10 e 100");
             return false;
         }
 

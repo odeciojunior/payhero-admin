@@ -17,7 +17,7 @@ Route::middleware("auth:api")->get("/unicodrop", function (Request $request) {
     return $request->user();
 });
 
-Route::group(["middleware" => ["auth:api"]], function () {
+Route::group(["middleware" => ["auth:api", "demo_account"]], function () {
     Route::apiResource("apps/unicodrop", "UnicodropApiController")->only(
         "index",
         "create",

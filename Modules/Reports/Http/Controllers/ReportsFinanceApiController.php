@@ -13,8 +13,8 @@ class ReportsFinanceApiController extends Controller
     {
         try {
             $request->validate([
-                "date_range" => "required",
-                "project_id" => "required",
+                'date_range' => 'required',
+                'project_id' => 'required',
             ]);
 
             $data = $request->all();
@@ -33,8 +33,8 @@ class ReportsFinanceApiController extends Controller
     {
         try {
             $request->validate([
-                "date_range" => "required",
-                "project_id" => "required",
+                'date_range' => 'required',
+                'project_id' => 'required',
             ]);
 
             $data = $request->all();
@@ -53,8 +53,8 @@ class ReportsFinanceApiController extends Controller
     {
         try {
             $request->validate([
-                "date_range" => "required",
-                "project_id" => "required",
+                'date_range' => 'required',
+                'project_id' => 'required',
             ]);
 
             $data = $request->all();

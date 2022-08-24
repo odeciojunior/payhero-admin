@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Exception;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\User;
@@ -55,5 +56,45 @@ class InstallmentsService
         }
 
         return $installmentsData;
+    }
+
+    /**
+     * @param $totalValue
+     * @param $installmentSelected
+     * @param $freeInstallments
+     * @param $user
+     * @return array
+     */
+    public static function getFullInstallmentValue(
+        $totalValue,
+        $installmentSelected,
+        $freeInstallments,
+        $installmentTax
+    ) {
+        try {
+            $installmentValueTax = intval($totalValue / 100 * $installmentTax);
+
+            $totalValue = preg_replace("/[^0-9]/", "", $totalValue);
+
+            if ($installmentSelected == 1) {
+                $totalValueWithTax = intval($totalValue);
+                $installmentValue = intval($totalValue);
+            } else {
+                $totalValueWithTax = $totalValue + $installmentValueTax * ($installmentSelected - 1);
+
+                if ($freeInstallments >= $installmentSelected) {
+                    $installmentValue = intval($totalValue / $installmentSelected);
+                } else {
+                    $installmentValue = intval($totalValueWithTax / $installmentSelected);
+                }
+            }
+
+            return [
+                'total_value_with_tax' => $totalValueWithTax,
+                'installment_value' => $installmentValue
+            ];
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 }

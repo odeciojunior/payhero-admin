@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -75,6 +76,7 @@ class Project extends Model
     use LogsActivity;
     use PresentableTrait;
     use SoftDeletes;
+    use HasFactory;
 
     public const STATUS_ACTIVE = 1;
     public const STATUS_DESABLE = 2;

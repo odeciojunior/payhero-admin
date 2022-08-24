@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::group(["middleware" => ["auth:api", "permission:apps"]], function () {
+Route::group(["middleware" => ["auth:api", "permission:apps", "demo_account"]], function () {
     Route::get("apps/smartfunnel", "SmartfunnelApiController@index");
     Route::get("apps/smartfunnel/{id}", "SmartfunnelApiController@show");
     Route::get("apps/smartfunnel/{id}/edit", "SmartfunnelApiController@edit");

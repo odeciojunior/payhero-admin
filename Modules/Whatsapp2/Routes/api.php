@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:apps"]], function () {
+Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:apps", "demo_account"]], function () {
     Route::get("apps/whatsapp2", "Whatsapp2ApiController@index");
     Route::get("apps/whatsapp2/{id}", "Whatsapp2ApiController@show");
     Route::get("apps/whatsapp2/{id}/edit", "Whatsapp2ApiController@edit");

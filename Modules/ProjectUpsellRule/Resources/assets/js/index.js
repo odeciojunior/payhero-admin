@@ -141,11 +141,11 @@ $(document).ready(function () {
             url: "/api/projectupsellrule/" + upsellId + "/edit",
             dataType: "json",
             headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function (response) {},
-            success: function (response) {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            }, error: function (response) {
+                errorAjaxResponse(response);
+            }, success: function (response) {
                 let upsell = response.data;
                 $("#edit_description_upsell").val(`${upsell.description}`);
                 $("#edit_discount_upsell").val(`${upsell.discount}`);

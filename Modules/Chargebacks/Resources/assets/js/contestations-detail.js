@@ -21,19 +21,19 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                $("#sale_hash").html(response.data.sale_code);
-                $("#contestation").html(response.data.sale_code);
-                $("#payment-type").html(response.data.sale_payment_method === 2 ? "Boleto" : "Cartão ");
-                $("#payday").html(response.data.sale_start_date);
-                $("#company").html(response.data.company);
-                $("#liberation").html(response.data.sale_release_date);
-                $("#request_date").html(response.data.request_date);
-                $("#reason").html(response.data.reason);
-                $("#status-file").prop("checked", response.data.is_file_user_completed);
+                $("#sale_hash").html(response.data.sale_code)
+                $("#contestation").html(response.data.sale_code)
+                $("#payment-type").html(response.data.sale_payment_method === 2 ? 'Boleto' : 'Cartão ' )
+                $("#payday").html(response.data.sale_start_date)
+                $("#company").html(response.data.company)
+                $("#liberation").html(response.data.sale_release_date)
+                $("#request_date").html(response.data.request_date)
+                $("#reason").html(response.data.reason)
+                $("#status-file").prop("checked", response.data.is_file_user_completed)
 
                 let createSelect = '<select name="type" class="form-control" id="type">';
-                response.data.files_types.forEach((fItem) => {
-                    createSelect += `<option value="${fItem.id}">${fItem.option}</option>`;
+                response.data.files_types.forEach(fItem => {
+                    createSelect+=`<option value="${fItem.id}">${fItem.option}</option>`;
                 });
                 createSelect += "</select>";
                 $("#type-select").html(createSelect);

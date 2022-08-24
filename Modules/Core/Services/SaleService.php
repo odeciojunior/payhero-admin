@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
@@ -26,6 +27,7 @@ use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Transfers\Services\GetNetStatementService;
 use PDF;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SaleService
 {
@@ -42,10 +44,9 @@ class SaleService
             $companyModel = new Company();
             $customerModel = new Customer();
             $transactionModel = new Transaction();
-            $couponModel = new DiscountCoupon();
 
             if (!$userId) {
-                $userId = auth()->user()->account_owner_id;
+                $userId = auth()->user()->getAccountOwnerId();
             }
 
             if (empty($filters["company"])) {
@@ -113,7 +114,7 @@ class SaleService
                 });
             }
 
-            if (!empty($filters["client"]) && empty($filters["email_client"])) {
+            if (!empty($filters["client"])) {// && empty($filters["email_client"])
                 $customers = $customerModel->where("name", "LIKE", "%" . $filters["client"] . "%")->pluck("id");
                 $transactions->whereHas("sale", function ($querySale) use ($customers) {
                     $querySale->whereIn("customer_id", $customers);
@@ -150,24 +151,24 @@ class SaleService
                 $transactions->where("value", $value);
             }
 
-            // novo filtro
-            if (!empty($filters["email_client"]) && empty($filters["client"])) {
-                $customers = $customerModel->where("email", "LIKE", "%" . $filters["email_client"] . "%")->pluck("id");
-                $transactions->whereHas("sale", function ($querySale) use ($customers) {
-                    $querySale->whereIn("customer_id", $customers);
-                });
-            }
+            // // novo filtro
+            // if (!empty($filters["email_client"]) && empty($filters["client"])) {
+            //     $customers = $customerModel->where("email", "LIKE", "%" . $filters["email_client"] . "%")->pluck("id");
+            //     $transactions->whereHas("sale", function ($querySale) use ($customers) {
+            //         $querySale->whereIn("customer_id", $customers);
+            //     });
+            // }
 
-            // novo filtro
-            if (!empty($filters["email_client"]) && !empty($filters["client"])) {
-                $customers = $customerModel
-                    ->where("name", "LIKE", "%" . $filters["client"] . "%")
-                    ->where("email", "LIKE", "%" . $filters["email_client"] . "%")
-                    ->pluck("id");
-                $transactions->whereHas("sale", function ($querySale) use ($customers) {
-                    $querySale->whereIn("customer_id", $customers);
-                });
-            }
+            // // novo filtro
+            // if (!empty($filters["email_client"]) && !empty($filters["client"])) {
+            //     $customers = $customerModel
+            //         ->where("name", "LIKE", "%" . $filters["client"] . "%")
+            //         ->where("email", "LIKE", "%" . $filters["email_client"] . "%")
+            //         ->pluck("id");
+            //     $transactions->whereHas("sale", function ($querySale) use ($customers) {
+            //         $querySale->whereIn("customer_id", $customers);
+            //     });
+            // }
 
             if (!empty($filters["shopify_error"]) && $filters["shopify_error"] == true) {
                 $transactions->whereHas("sale.project.shopifyIntegrations", function ($queryShopifyIntegration) {
@@ -742,7 +743,7 @@ class SaleService
 
     public function getResumeBlocked($filters)
     {
-        $cacheName = "blocked-resume-" . json_encode($filters);
+        $cacheName = 'blocked-resume-'.(Auth::user()->getAccountOwnerId()).'-' . json_encode($filters);
         return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactionModel = new Transaction();
             $filters["invite"] = 1;
@@ -804,11 +805,13 @@ class SaleService
                     "sale.affiliate" => function ($funtionTrash) {
                         $funtionTrash->withTrashed()->with("user");
                     },
-                    "blockReasonSale" => $blockReasonQuery,
-                ])
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->join("sales", "sales.id", "transactions.sale_id")
-                ->whereHas("blockReasonSale", $blockReasonQuery);
+                    'blockReasonSale' => $blockReasonQuery,
+                ]
+            )
+                ->where('company_id', current(Hashids::decode($filters["company"])))
+                ->where('user_id', auth()->user()->getAccountOwnerId())
+                ->join('sales', 'sales.id', 'transactions.sale_id')
+                ->whereHas('blockReasonSale', $blockReasonQuery);
 
             if (!empty($filters["company"])) {
                 $companyId = hashids_decode($filters["company"]);
@@ -867,8 +870,16 @@ class SaleService
                     $dateRange[1] . " 23:59:59",
                 ])
                 //->whereIn('sales.status', $status)
-                ->selectRaw("transactions.*, sales.start_date")
-                ->orderByDesc("sales.start_date");
+                ->selectRaw('transactions.*, sales.start_date')
+                ->orderByDesc('sales.start_date');
+
+            // $companyId = current(Hashids::decode($filters["plan"]));
+            // $transactions->whereHas(
+            //     'sale.plansSales',
+            //     function ($query) use ($planId) {
+            //         $query->where('plan_id', $planId);
+            //     }
+            // );
 
             return $transactions;
         } catch (Exception $e) {
@@ -883,6 +894,7 @@ class SaleService
         $cacheName = "pending-resume-" . json_encode($filters);
         return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactions = $this->getSalesPendingBalance($filters);
+            \Log::info(str_replace_array('?',$transactions->getBindings(),$transactions->toSql()));
             $transactionStatus = implode(",", [Transaction::STATUS_PAID]);
 
             $resume = $transactions
@@ -906,18 +918,19 @@ class SaleService
         try {
             $relationsArray = ["sale", "sale.project", "sale.customer"];
 
-            $transactions = (new Transaction())
-                ->with($relationsArray)
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->join("sales", "sales.id", "transactions.sale_id")
-                ->where("transactions.status_enum", Transaction::STATUS_PAID)
-                ->whereNull("invitation_id");
+            $transactions = Transaction::with($relationsArray)
+                ->where('user_id', auth()->user()->getAccountOwnerId())
+                ->where('company_id',auth()->user()->company_default)
+                ->join('sales', 'sales.id', 'transactions.sale_id')
+                ->leftJoin("block_reason_sales", "block_reason_sales.sale_id", "transactions.sale_id")
+                ->where('transactions.status_enum', Transaction::STATUS_PAID)
+                ->whereNull('invitation_id');
 
             // Filtro Company
-            if (!empty($filters["company"])) {
-                $companyId = hashids_decode($filters["company"]);
-                $transactions->where("company_id", $companyId);
-            }
+            // if (!empty($filters["company"])) {
+            //     $companyId = hashids_decode($filters["company"]);
+            //     $transactions->where('company_id', $companyId);
+            // }
 
             $transactions->whereNull("withdrawal_id");
             if (!empty($filters["acquirer"])) {
@@ -955,33 +968,36 @@ class SaleService
                             "2021-09-20"
                         );
                     })
-                        ->orWhere(function ($qr2) {
-                            $qr2->whereIn("transactions.gateway_id", $this->getGatewayIdsByFilter("Vega"));
-                        })
-                        ->orWhere(function ($qr2) {
+                    ->orWhere(function ($qr2) {
+                        $qr2->whereIn("transactions.gateway_id", $this->getGatewayIdsByFilter("Vega"));
+                    })
+                    ->orWhere(function ($qr2) {
+                        $qr2->whereIn(
+                            "transactions.gateway_id",
+                            $this->getGatewayIdsByFilter("Gerencianet")
+                        )->where("is_waiting_withdrawal", 0);
+                    })
+                    ->orWhere(function ($qr3) {
+                        $qr3->where("is_waiting_withdrawal", 0)->whereIn(
+                            "transactions.gateway_id",
+                            $this->getGatewayIdsByFilter("Getnet")
+                        );
+                    })
+                    ->orWhere(function ($qr2) {
+                        if (auth()->user()->show_old_finances) {
                             $qr2->whereIn(
                                 "transactions.gateway_id",
-                                $this->getGatewayIdsByFilter("Gerencianet")
-                            )->where("is_waiting_withdrawal", 0);
-                        })
-                        ->orWhere(function ($qr3) {
-                            $qr3->where("is_waiting_withdrawal", 0)->whereIn(
-                                "transactions.gateway_id",
-                                $this->getGatewayIdsByFilter("Getnet")
-                            );
-                        })
-                        ->orWhere(function ($qr2) {
-                            if (auth()->user()->show_old_finances) {
-                                $qr2->whereIn(
-                                    "transactions.gateway_id",
-                                    $this->getGatewayIdsByFilter("Cielo")
-                                )->orWhere(function ($query) {
-                                    $query
-                                        ->where("transactions.gateway_id", Gateway::ASAAS_PRODUCTION_ID)
-                                        ->where("transactions.created_at", "<", "2021-09");
-                                });
-                            }
-                        });
+                                $this->getGatewayIdsByFilter("Cielo")
+                            )
+                            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+                            ->whereNull("block_reason_sales.id")
+                            ->orWhere(function ($query) {
+                                $query
+                                    ->where("transactions.gateway_id", Gateway::ASAAS_PRODUCTION_ID)
+                                    ->where("transactions.created_at", "<", "2021-09");
+                            });
+                        }
+                    });
                 });
             }
 
@@ -1081,19 +1097,25 @@ class SaleService
 
     public function getApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
     {
-        return Sale::whereIn("status", [
-            Sale::STATUS_APPROVED,
-            Sale::STATUS_CHARGEBACK,
-            Sale::STATUS_REFUNDED,
-            Sale::STATUS_IN_DISPUTE,
-        ])
-            ->whereBetween("start_date", [
-                $startDate->format("Y-m-d") . " 00:00:00",
-                $endDate->format("Y-m-d") . " 23:59:59",
-            ])
-            ->where(function ($query) use ($user) {
-                $query->where("owner_id", $user->id)->orWhere("affiliate_id", $user->id);
-            });
+        return Sale::whereIn(
+            'status',
+            [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_CHARGEBACK,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_IN_DISPUTE
+            ]
+        )
+            ->whereBetween(
+                'start_date',
+                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+            )
+            ->where(
+                function ($query) use ($user) {
+                    $query->where('owner_id', $user->id)
+                        ->orWhere('affiliate_id', $user->id);
+                }
+            );
     }
 
     public function getCreditCardApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
@@ -1197,15 +1219,17 @@ class SaleService
             ->where("sale_id", "=", $transaction->sale_id)
             ->get();
 
-        $refundDate = $transaction->sale
-            ->saleLogs()
-            ->whereIn("status_enum", [Sale::STATUS_REFUNDED, Sale::STATUS_BILLET_REFUNDED])
-            ->first()->created_at;
+        $refundDate = $transaction->sale->saleLogs()->whereIn('status_enum', [Sale::STATUS_REFUNDED, Sale::STATUS_BILLET_REFUNDED])->first()->created_at;
 
-        return PDF::loadView(
-            "sales::refund_receipt",
-            compact("company", "transaction", "saleInfo", "checkoutConfigs", "productsPlansSales", "refundDate")
-        );
+        return PDF::loadView('sales::refund_receipt', compact('company', 'transaction', 'saleInfo', 'checkoutConfigs', 'productsPlansSales', 'refundDate'));
+    }
+
+    public static function getProjectsWithSales(){
+        return Sale::select('sales.project_id')
+            ->distinct()
+            ->leftjoin('projects','projects.id','sales.project_id')
+            ->where('owner_id',auth()->user()->getAccountOwnerId())
+            ->get();
     }
 
     public function refund(Sale $sale, $refundObservation = null)

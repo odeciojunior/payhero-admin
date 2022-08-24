@@ -4,16 +4,21 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Domain;
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Checkout;
-use Illuminate\Contracts\View\Factory;
-use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Log as CheckoutLog;
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\UserProject;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SalesRecoveryService
 {
@@ -66,32 +71,27 @@ class SalesRecoveryService
         string $dateEnd = null,
         string $customer = null,
         string $customerDocument = null,
-        array $plans = null
+        array $plans = null,
+        int $company_id = null
     ) {
-        $salesModel = new Sale();
+
         $userProjectsModel = new UserProject();
         $customerModel = new Customer();
 
-        $salesExpired = $salesModel
-            ->select(
-                "sales.*",
-                "checkout.email_sent_amount",
-                "checkout.sms_sent_amount",
-                "checkout.id as checkout_id",
-                "checkout.id_log_session",
-                DB::raw("(plan_sale.amount * plan_sale.plan_value ) AS value")
-            )
-            ->leftJoin("plans_sales as plan_sale", function ($join) {
-                $join->on("plan_sale.sale_id", "=", "sales.id");
+        $salesExpired = Sale::select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
+                'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
+            ->leftJoin('plans_sales as plan_sale', function ($join) {
+                $join->on('plan_sale.sale_id', '=', 'sales.id');
+            })->leftJoin('checkouts as checkout', function ($join) {
+                $join->on('sales.checkout_id', '=', 'checkout.id');
+            })->leftJoin('customers as customer', function ($join) {
+                $join->on('sales.customer_id', '=', 'customer.id');
+            })->leftJoin('checkout_configs as checkout_config', function ($join) {
+                $join->on('sales.project_id', '=', 'checkout_config.project_id');
             })
-            ->leftJoin("checkouts as checkout", function ($join) {
-                $join->on("sales.checkout_id", "=", "checkout.id");
-            })
-            ->leftJoin("customers as customer", function ($join) {
-                $join->on("sales.customer_id", "=", "customer.id");
-            })
-            ->whereIn("sales.status", $status)
-            ->where("sales.payment_method", $paymentMethod)
+            ->where('checkout_config.company_id', $company_id)
+            ->whereIn('sales.status', $status)
+            ->where('sales.payment_method', $paymentMethod)
             ->with([
                 "project",
                 "customer",
@@ -132,13 +132,14 @@ class SalesRecoveryService
         if (!empty($projectIds) && !in_array("all", $projectIds)) {
             $salesExpired->whereIn("sales.project_id", $projectIds);
         } else {
-            $userProjects = $userProjectsModel
-                ->where([
-                    ["user_id", auth()->user()->account_owner_id],
-                    ["type_enum", $userProjectsModel->present()->getTypeEnum("producer")],
-                ])
-                ->pluck("project_id")
-                ->toArray();
+            $userProjects = $userProjectsModel->where([
+                ['user_id', auth()->user()->getAccountOwnerId()],
+                [
+                    'type_enum',
+                    $userProjectsModel->present()
+                    ->getTypeEnum('producer'),
+                ],
+            ])->pluck('project_id')->toArray();
 
             $salesExpired->whereIn("sales.project_id", $userProjects);
         }
@@ -254,7 +255,7 @@ class SalesRecoveryService
         $saleService = new SaleService();
         $delivery = $sale->delivery;
         $customer = $sale->customer;
-        $checkout = $sale->checkout;
+        $checkout = $sale->checkout??Checkout::find($sale->checkout_id);
 
         if (!empty($customer->telephone)) {
             $customer->telephone = preg_replace("/[^0-9]/", "", $customer->telephone);
@@ -329,25 +330,38 @@ class SalesRecoveryService
         //    $link = 'Domínio removido';
         // }
 
-        $link = "";
-        if ($sale->payment_method === Sale::PIX_PAYMENT) {
-            if (foxutils()->isProduction()) {
-                $link = isset($domain)
-                    ? "https://checkout." . $domain->name . "/pix/" . hashids_encode($sale->id, "sale_id")
-                    : "Domínio removido";
+        $link = '';
+        if($sale->payment_method === Sale::PIX_PAYMENT) {
+            if(foxutils()->isProduction()) {
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . hashids_encode($sale->id, 'sale_id') : 'Domínio removido';
             } else {
-                $link =
-                    env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/pix/" . hashids_encode($sale->id, "sale_id");
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . hashids_encode($sale->id, 'sale_id');
             }
-        } else {
-            if (foxutils()->isProduction()) {
-                $link = isset($domain)
-                    ? "https://checkout." . $domain->name . "/recovery/" . hashids_encode($checkout->id)
-                    : "Domínio removido";
+
+        }else {
+            if(foxutils()->isProduction()) {
+                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . hashids_encode($checkout->id) : 'Domínio removido';
             } else {
-                $link =
-                    env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/recovery/" . hashids_encode($checkout->id);
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . hashids_encode($checkout->id);
             }
+        }
+
+        $user = Auth::user();
+        if($user->company_default==Company::DEMO_ID){
+            $link = "https://demo.cloudfox.net";
+        }
+
+        if(!empty($link))
+        {
+            if($sale->payment_method === Sale::PIX_PAYMENT)
+            {
+                $link.='/pix/' . Hashids::connection('sale_id')->encode($sale->id);
+            }else {
+                $link.= '/recovery/' . Hashids::encode($checkout->id);
+            }
+
+        }else{
+            $link = 'Domínio removido';
         }
 
         $products = $saleService->getProducts($checkout->sale_id);
@@ -366,5 +380,22 @@ class SalesRecoveryService
             "status" => $status,
             "link" => $link,
         ];
+    }
+
+    public static function getProjectsWithRecovery(){
+        $first = Sale::select('project_id')
+            ->distinct()
+            ->where('owner_id',auth()->user()->getAccountOwnerId())
+            ->where('status',3);
+
+        $s = Checkout::select('checkouts.project_id')
+            ->distinct()
+            ->leftjoin('checkout_configs','checkout_configs.project_id','checkouts.project_id')
+            ->join('companies','companies.id','checkout_configs.company_id')
+            ->where('companies.user_id',auth()->user()->getAccountOwnerId())
+            ->where('checkouts.status_enum',2)
+            ->union($first)
+            ->get();
+        return $s;
     }
 }

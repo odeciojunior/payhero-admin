@@ -16,7 +16,7 @@ class PlansSelectResource extends JsonResource
      */
     public function toArray($request)
     {
-        $photo = "/build/global/img/produto.svg";
+        $photo = '/build/global/img/produto.svg';
 
         if (!empty($this->productsPlans[0]->product->photo)) {
             if (\foxutils()->remoteUrlExists($this->productsPlans[0]->product->photo)) {

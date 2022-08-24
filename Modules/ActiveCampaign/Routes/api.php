@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:apps"]], function () {
+Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:apps","demo_account"]], function () {
     Route::get("apps/activecampaign", "ActiveCampaignApiController@index");
     Route::get("apps/activecampaign/{id}", "ActiveCampaignApiController@show");
     Route::get("apps/activecampaign/{id}/edit", "ActiveCampaignApiController@edit");

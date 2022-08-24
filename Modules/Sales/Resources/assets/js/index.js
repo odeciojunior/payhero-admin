@@ -1,5 +1,4 @@
 var currentPage = null;
-//var atualizar = null;
 var exportFormat = null;
 
 function searchIsLocked(elementButton) {
@@ -17,16 +16,14 @@ function unlockSearch(elementButton) {
 }
 
 function loadData() {
-    elementButton = $('#bt_filtro');
-    if (searchIsLocked(elementButton) != 'true') {
+    elementButton = $("#bt_filtro");
+    if (searchIsLocked(elementButton) != "true") {
         lockSearch(elementButton);
-        console.log(elementButton.attr('block_search'));
+        console.log(elementButton.attr("block_search"));
         atualizar();
     }
 }
 
-// Obtem lista de vendas
-//atualizar = function (link = null) {
 function atualizar(link = null) {
     currentPage = link;
 
@@ -49,6 +46,7 @@ function atualizar(link = null) {
             Accept: "application/json",
         },
         error: function error(response) {
+            loadingOnScreenRemove();
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -219,7 +217,9 @@ function atualizar(link = null) {
                                 <br>
 
                                 <small class="gray font-size-12">
-                                    ${value.project}
+                                    ${
+                                    value.project
+                                }
                                 </small>
                             </td>
 
@@ -275,7 +275,9 @@ function atualizar(link = null) {
                     $("#dados_tabela").append(dados);
                 });
 
-                $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                $("#date").val(
+                    moment(new Date()).add(3, "days").format("YYYY-MM-DD")
+                );
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
             } else {
                 $("#dados_tabela").html(
@@ -286,10 +288,11 @@ function atualizar(link = null) {
                 $("#export-excel").hide();
             }
             pagination(response, "sales", atualizar);
+            loadingOnScreenRemove();
         },
-        complete: response => {
-            unlockSearch($('#bt_filtro'));
-        }
+        complete: (response) => {
+            unlockSearch($("#bt_filtro"));
+        },
     });
 
     if (updateResume) {
@@ -302,7 +305,10 @@ function getFilters(urlParams = false) {
     let transaction = $("#transaction").val().replace("#", "");
     let date_range = $("#date_range").val();
     if (transaction.length > 0) {
-        date_range = moment("2018-01-01").format("DD/MM/YYYY") + " - " + moment().format("DD/MM/YYYY");
+        date_range =
+            moment("2018-01-01").format("DD/MM/YYYY") +
+            " - " +
+            moment().format("DD/MM/YYYY");
     }
 
     let data = {
@@ -317,10 +323,17 @@ function getFilters(urlParams = false) {
         cashback: $("#cashback").val(),
         plan: $("#plan").val(),
         coupon: $("#cupom").val(),
-        company: $("#empresa").val(),
-        value: $("#valor")
-            .val()
-            .replace(/[^\d]+/g, ""),
+        company: $('.company-navbar').val(),
+        value:
+            parseInt(
+                $("#valor")
+                    .val()
+                    .replace(/[^\d]+/g, "")
+            ) > 0
+                ? $("#valor")
+                      .val()
+                      .replace(/[^\d]+/g, "")
+                : "",
         email_client: $("#email_cliente").val(),
         upsell: $("#upsell").val(),
         order_bump: $("#order-bump").val(),
@@ -344,7 +357,6 @@ function getFilters(urlParams = false) {
     }
 }
 
-// Resumo
 function salesResume() {
     loadOnAny(".number", false, {
         styles: {
@@ -382,7 +394,9 @@ function salesResume() {
 
             if (response.total_sales) {
                 $("#total-sales, #commission, #total").text("");
-                $("#total-sales").html(`<span class="font-size-30 bold"> ${response.total_sales} </span>`);
+                $("#total-sales").html(
+                    `<span class="font-size-30 bold"> ${response.total_sales} </span>`
+                );
                 $("#commission").html(
                     `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.commission} </span>`
                 );
@@ -435,7 +449,45 @@ function hoverBilletPending() {
     }
 }
 
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
+    $("#projeto").find('option').not(':first').remove();
+    $("#plan").find('option').not(':first').remove();
+    $('#plan').data('select2').results.clear();
+    $("#projeto").val($("#projeto option:first").val());
+    $("#plan").val($("#plan option:first").val());
+    loadOnAny(".number", false, {
+        styles: {
+            container: {
+                minHeight: "32px",
+                height: "auto",
+            },
+            loader: {
+                width: "20px",
+                height: "20px",
+                borderWidth: "4px",
+            },
+        },
+    });
+    loadOnTable("#dados_tabela", "#tabela_vendas");
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            if(!isEmpty(data2.company_default_projects)){
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                window.fillProjectsSelect(data2.companies)
+                atualizar();
+            }
+            else{
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+            }
+        });
+	});
+});
+
 $(document).ready(function () {
+
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
     $(".applySelect2").select2({
         //dropdownParent : $('#bt_collapse'),
@@ -457,7 +509,16 @@ $(document).ready(function () {
         }
     });
 
-    $(".transaction-value").mask("#.##0,00", { reverse: true }).removeAttr("maxlength");
+    $("#valor").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
+    });
+
+    $(".transaction-value")
+        .mask("#.##0,00", { reverse: true })
+        .removeAttr("maxlength");
     $(".transaction-value").on("blur", function () {
         if ($(this).val().length == 1) {
             let val = "0,0" + $(this).val();
@@ -472,10 +533,18 @@ $(document).ready(function () {
         let val = $(this).val();
 
         if (val === "") {
-            $("#date_type").attr("disabled", false).removeClass("disableFields");
-            $("#date_range").attr("disabled", false).removeClass("disableFields");
+            $("#date_type")
+                .attr("disabled", false)
+                .removeClass("disableFields");
+            $("#date_range")
+                .attr("disabled", false)
+                .removeClass("disableFields");
         } else {
-            $("#date_range").val(moment("2018-01-01").format("DD/MM/YYYY") + " - " + moment().format("DD/MM/YYYY"));
+            $("#date_range").val(
+                moment("2018-01-01").format("DD/MM/YYYY") +
+                    " - " +
+                    moment().format("DD/MM/YYYY")
+            );
             $("#date_type").attr("disabled", true).addClass("disableFields");
             $("#date_range").attr("disabled", true).addClass("disableFields");
         }
@@ -493,7 +562,9 @@ $(document).ready(function () {
     });
 
     $(".btn-confirm-export-sale").on("click", function () {
-        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+        var regexEmail = new RegExp(
+            /^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/
+        );
         var email = $("#email_export").val();
 
         if (email == "" || !regexEmail.test(email)) {
@@ -515,6 +586,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
+        //atualizar();
         loadData();
     });
 
@@ -557,10 +629,16 @@ $(document).ready(function () {
             },
             ranges: {
                 Hoje: [moment(), moment()],
-                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                Ontem: [
+                    moment().subtract(1, "days"),
+                    moment().subtract(1, "days"),
+                ],
                 "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
                 "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [moment().startOf("month"), moment().endOf("month")],
+                "Este mês": [
+                    moment().startOf("month"),
+                    moment().endOf("month"),
+                ],
                 "Mês passado": [
                     moment().subtract(1, "month").startOf("month"),
                     moment().subtract(1, "month").endOf("month"),
@@ -574,10 +652,52 @@ $(document).ready(function () {
         }
     );
 
-    // FIM - COMPORTAMENTOS DA JANELA
+    window.fillProjectsSelect = function(data){
+        $.ajax({
+            method: "GET",
+            url: "/api/sales/projects-with-sales",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                //if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        if( dataSales.includes(project.id) )
+                            $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
+                    });
+                //}
+            });
+        });
+    }
 
-    getProjects();
-    getCompanies();
+    // FIM - COMPORTAMENTOS DA JANELA
+    getCompaniesAndProjects().done( function (data){
+        getProjects(data);
+    });
+
+    function loadData() {
+        elementButton = $('#bt_filtro');
+        if (searchIsLocked(elementButton) != 'true') {
+            lockSearch(elementButton);
+            console.log(elementButton.attr('block_search'));
+            atualizar();
+        }
+    }
+
+
+    function searchIsLocked(elementButton) {
+        return elementButton.attr('block_search');
+    }
 
     //Carrega o modal para regerar boleto
     $(document).on("click", ".boleto-pending", function () {
@@ -621,46 +741,62 @@ $(document).ready(function () {
     });
 
     // Obtem o os campos dos filtros
-    function getProjects() {
+    function getProjects(data) {
         loadingOnScreen();
 
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel > div >").show();
+        if(!isEmpty(data.company_default_projects)){
+            $("#project-empty").hide();
+            $("#project-not-empty").show();
+            $("#export-excel > div >").show();
+            window.fillProjectsSelect(data.companies)
+            $("#projeto option:first").attr('selected','selected');
+            atualizar();
+            loadingOnScreenRemove();
+        }
+        else{
+            $("#project-not-empty").hide();
+            $("#project-empty").show();
+            loadingOnScreenRemove();
+        }
 
-                    $.each(response.data, function (i, project) {
-                        $("#projeto").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
+        // $.ajax({
+        //     method: "GET",
+        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
+        //     dataType: "json",
+        //     headers: {
+        //         Authorization: $('meta[name="access-token"]').attr("content"),
+        //         Accept: "application/json",
+        //     },
+        //     error: function error(response) {
+        //         loadingOnScreenRemove();
+        //         errorAjaxResponse(response);
+        //     },
+        //     success: function success(response) {
+        //         if (!isEmpty(response.data)) {
+        //             $("#project-empty").hide();
+        //             $("#project-not-empty").show();
+        //             $("#export-excel > div >").show();
+        //             if (response.data != 'api sales') {
+        //                 $.each(response.data, function (i, project) {
+        //                     $("#projeto").append(
+        //                         $("<option>", {
+        //                             value: project.id,
+        //                             text: project.name,
+        //                         })
+        //                     );
+        //                 });
+        //             }
+        //             $("#projeto option:first").attr('selected','selected');
+        //             atualizar();
+        //         } else {
+        //             $("#export-excel > div >").hide();
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
 
-                    atualizar();
-                } else {
-                    $("#export-excel > div >").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-
-                loadingOnScreenRemove();
-            },
-        });
+        //         loadingOnScreenRemove();
+        //     },
+        // });
     }
 
     // Obtem os campos dos filtros
@@ -683,7 +819,9 @@ $(document).ready(function () {
                 $("#cupom").html("");
 
                 if (response.data.length > 0) {
-                    $("#cupom").append("<option value=''>Todos cupons</option>");
+                    $("#cupom").append(
+                        "<option value=''>Todos cupons</option>"
+                    );
 
                     $.each(response.data, function (i, coupon) {
                         $("#cupom").append(
@@ -696,7 +834,9 @@ $(document).ready(function () {
 
                     atualizar();
                 } else {
-                    $("#cupom").append("<option value=''>Nenhum cupom encontrado</option>");
+                    $("#cupom").append(
+                        "<option value=''>Nenhum cupom encontrado</option>"
+                    );
                 }
 
                 loadingOnScreenRemove();
@@ -826,6 +966,7 @@ $(document).ready(function () {
     $("#projeto").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
+        $('#plan').data('select2').results.clear();
     });
 
     $("#plan").select2({
@@ -860,7 +1001,9 @@ $(document).ready(function () {
                 result = $.map(res.data, function (obj) {
                     return {
                         id: obj.id,
-                        text: obj.name + (obj.description ? " - " + obj.description : ""),
+                        text:
+                            obj.name +
+                            (obj.description ? " - " + obj.description : ""),
                     };
                 });
 
@@ -884,9 +1027,14 @@ $(document).ready(function () {
         let remove;
 
         text.fadeOut(10);
-        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
             collapse.css("transform", "rotate(180deg)");
-            text.html("Minimizar <br class='d-flex d-sm-none'> filtros").fadeIn();
+            text.html(
+                "Minimizar <br class='d-flex d-sm-none'> filtros"
+            ).fadeIn();
         } else {
             collapse.css("transform", "rotate(0deg)");
             text.text("Filtros avançados").fadeIn();
@@ -899,5 +1047,6 @@ $(document).ready(function () {
         }
     });
 
-    //$.getScript('build/layouts/sales/details.min.js')
+    $('.company_name').val( $('.company-navbar').find('option:selected').text() );
+
 });

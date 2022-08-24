@@ -1,16 +1,37 @@
 $(document).ready(function () {
-    index();
-    function index() {
-        loadingOnScreen();
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    function index(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('#content');
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/reportana",
+            url: "/api/apps/reportana?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: (response) => {
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -42,11 +63,16 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     $("#integration-actions").show();
                 }
-
+                loadOnAny('#content',true);
                 loadingOnScreenRemove();
             },
         });
     }
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
 
     //checkbox
     $(".check").on("click", function () {
@@ -242,27 +268,37 @@ $(document).ready(function () {
         });
     });
 
-    //destroy
-    $(document).on("click", ".delete-integration", function (e) {
+    // load delete modal
+    $(document).on('click', '.delete-integration', function (e) {
         e.stopPropagation();
-        var project = $(this).attr("project");
-        var card = $(this).parent().parent().parent().parent().parent();
-        card.find(".card-edit").unbind("click");
-        $.ajax({
-            method: "DELETE",
-            url: "/api/apps/reportana/" + project,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                index();
-                alertCustom("success", response.message);
-            },
-        });
+        var project = $(this).attr('project');
+        $("#modal-delete-integration .btn-delete").attr("project", project);
+        $("#modal-delete-integration").modal("show");
     });
+    //destroy
+    $(document).on(
+        "click",
+        "#modal-delete-integration .btn-delete",
+        function (e) {
+            e.stopPropagation();
+            var project = $(this).attr("project");
+
+            $.ajax({
+                method: "DELETE",
+                url: "/api/apps/reportana/" + project,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index();
+                    alertCustom("success", response.message);
+                }
+            });
+        }
+    );
 });

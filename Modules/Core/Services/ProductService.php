@@ -68,7 +68,7 @@ class ProductService
         return $productModel
             ->with("productsPlanSales")
             ->with("productsPlans")
-            ->where("user_id", auth()->user()->account_owner_id)
+            ->where("user_id", auth()->user()->getAccountOwnerId())
             ->withCount("productsPlanSales")
             ->take(16)
             ->get();

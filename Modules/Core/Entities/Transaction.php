@@ -64,7 +64,8 @@ class Transaction extends Model
     const TYPE_PARTNER = 5;
     const TYPE_CONVERTAX = 6;
     const TYPE_REFUNDED = 7;
-    const TYPE_CASHBACK = 8;
+//    const TYPE_CASHBACK = 8;
+    const TYPE_CLOUDFOX_PROCESSING = 8;
 
     const TYPE_PERCENTAGE_TAX = 1;
     const TYPE_VALUE_TAX = 2;
@@ -78,7 +79,8 @@ class Transaction extends Model
     const STATUS_REFUSED = 7;
     const STATUS_PENDING_ANTIFRAUD = 8;
     const STATUS_CANCELED_ANTIFRAUD = 9;
-    const STATUS_WAITING_WITHDRAWAL = 10;
+    const STATUS_IN_PROCESS = 10;
+    //const STATUS_WAITING_WITHDRAWAL = 10;
     const STATUS_ANTICIPATED = 12;
     const STATUS_BILLET_REFUNDED = 13;
 

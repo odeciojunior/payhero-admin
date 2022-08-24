@@ -630,6 +630,13 @@ mix.babel([
 ], 'public/build/layouts/projects/index.min.js');
 
 /**
+ * Modules/Projects/Resources/views/create-store-modal.blade.php
+ */
+mix.styles([
+    'resources/modules/global/css/create-store-modal.css'
+], 'public/build/layouts/projects/create-store-modal.min.css');
+
+/**
  * Modules/Projects/Resources/views/empty.blade.php
  */
 mix.styles([
@@ -713,23 +720,7 @@ mix.babel([
     'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
     'resources/cdn/select2.min.js'
 ], 'public/build/layouts/reports/blockedbalance.min.js');
-/**
- * Modules/Reports/Resources/views/checkouts.blade.php
- */
-mix.styles([
-    'Modules/Reports/Resources/assets/css/chartist.min.css',
-    'Modules/Reports/Resources/assets/css/chartist-plugin-tooltip.min.css',
-    'Modules/Reports/Resources/assets/css/reports.css',
-    'resources/modules/global/css/empty.css'
-], 'public/build/layouts/reports/checkouts.min.css');
-mix.babel([
-    'Modules/Reports/Resources/assets/js/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
-    'Modules/Reports/Resources/assets/js/chartist.min.js',
-    'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
-    'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',
-    'Modules/Reports/Resources/assets/js/report-checkouts.js'
-], 'public/build/layouts/reports/checkouts.min.js');
+
 /**
  * Modules/Reports/Resources/views/coupons.blade.php
  */

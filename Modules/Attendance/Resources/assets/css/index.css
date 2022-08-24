@@ -961,7 +961,7 @@ button:active {
     opacity: 0.5;
 }
 
-.sirius-select-container {
+.page .sirius-select-container {
     width: 285px;
 }
 

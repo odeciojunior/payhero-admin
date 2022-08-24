@@ -22,46 +22,53 @@ class MobileController extends Controller
     public function sales(Request $request)
     {
         try {
+            $request->validate([
+                "company_id" => "required|string",
+            ]);
+
             $companyId = hashids_decode($request->company_id);
 
             $relations = [
-                'sale',
-                'sale.project',
-                'sale.plansSales',
-                'sale.productsPlansSale.plan',
-                'sale.productsPlansSale.product'
+                "sale",
+                "sale.project",
+                "sale.plansSales",
+                "sale.productsPlansSale.plan",
+                "sale.productsPlansSale.product",
             ];
 
             $sales = Transaction::with($relations)
-                ->selectRaw('transactions.*')
-                ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereNull('invitation_id')
-                ->where('company_id', $companyId)
-                ->orderByDesc('sales.start_date');
+                ->selectRaw("transactions.*")
+                ->join("sales", "sales.id", "transactions.sale_id")
+                ->whereNull("invitation_id")
+                ->where("company_id", $companyId)
+                ->orderByDesc("sales.start_date");
 
             if (!$request->status) {
                 $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
-            }
-            else {
-                $status = explode(',', $request->status);
-                $status = in_array(7, $status) ? array_merge($status, [22]) : $status;
+            } else {
+                $status = explode(",", $request->status);
+                $status = in_array(7, $status)
+                    ? array_merge($status, [22])
+                    : $status;
             }
 
             if (!empty($status)) {
-                $sales->whereHas('sale', function ($query) use ($status) {
-                    $query->whereIn('status', $status);
+                $sales->whereHas("sale", function ($query) use ($status) {
+                    $query->whereIn("status", $status);
                 });
             }
 
-            if ($request->has('limit')) {
+            if ($request->has("limit")) {
                 $sales->limit($request->limit);
             }
 
             return SalesResource::collection($sales->get());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao carregar vendas'], 400);
+            return response()->json(
+                ["message" => "Erro ao carregar vendas"],
+                Response::HTTP_BAD_REQUEST
+            );
         }
     }
 
@@ -72,11 +79,31 @@ class MobileController extends Controller
      */
     public function statementsResume(Request $request)
     {
-        $companyId = hashids_decode($request->company_id);
-        $company = Company::find($companyId);
-        $companyService = new CompanyBalanceService($company);
-        $statementResumes = $companyService->getResumeTotals($request);
+        try {
+            $request->validate([
+                "company_id" => "required|string",
+            ]);
 
-        return StatementsResource::collection($statementResumes);
+            $companyId = hashids_decode($request->company_id);
+            $company = Company::find($companyId);
+
+            if (!$company) {
+                return response()->json(
+                    ["message" => "Empresa não encontrada"],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $companyService = new CompanyBalanceService($company);
+            $statementResumes = $companyService->getResumeTotals($request);
+
+            return StatementsResource::collection($statementResumes);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(
+                ["message" => "Erro ao carregar dados"],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 }

@@ -492,10 +492,7 @@ class ProductsApiController extends Controller
             $projectModel = new Project();
             $project = $projectModel->find($projectId);
 
-            $products
-                ->with("productsPlanSales")
-                ->with("productsPlans")
-                ->where("user_id", auth()->user()->account_owner_id);
+            $products->with('productsPlanSales')->with('productsPlans')->where('user_id', auth()->user()->getAccountOwnerId());
 
             if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
                 $products->where("project_id", $projectId);

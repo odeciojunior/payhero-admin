@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\AffiliatePresenter;
 
@@ -30,7 +31,11 @@ use Modules\Core\Presenters\AffiliatePresenter;
  */
 class Affiliate extends Model
 {
-    use SoftDeletes, LogsActivity, PresentableTrait;
+    use SoftDeletes, LogsActivity, PresentableTrait, HasFactory;
+
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISABLED = 2;
+    
     /**
      * @var string
      */

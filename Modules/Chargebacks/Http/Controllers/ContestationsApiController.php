@@ -206,4 +206,13 @@ class ContestationsApiController extends Controller
             return response()->json(["message" => "Erro"], 400);
         }
     }
+
+    public function getProjectsWithContestations(){
+        $projects = ContestationService::getProjectsWithContestations();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
 }

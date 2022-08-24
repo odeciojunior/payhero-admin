@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CustomerPresenter;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -30,7 +31,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Customer extends Model
 {
-    use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
+    use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity, HasFactory;
     /**
      * @var string
      */

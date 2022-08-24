@@ -21,20 +21,66 @@ function unlockSearch(elementButton) {
 }
 
 function loadData() {
-    elementButton = $('#bt_filtro');
-    if (searchIsLocked(elementButton) != 'true') {
+    elementButton = $("#bt_filtro");
+    if (searchIsLocked(elementButton) != "true") {
         lockSearch(elementButton);
-        console.log(elementButton.attr('block_search'));
+        console.log(elementButton.attr("block_search"));
         atualizar();
     }
 }
 
-function atualizar(link = null) {
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
+    $("#project").find('option').not(':first').remove();
+    loadOnTable('#dados_tabela', '#tabela_vendas');
+    loadOnAny('.number', false, {
+        styles: {
+            container: {
+                minHeight: '32px',
+                height: 'auto'
+            },
+            loader: {
+                width: '20px',
+                height: '20px',
+                borderWidth: '4px'
+            },
+        }
+    });
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            if(!isEmpty(data2.company_default_projects)){
+                window.getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+            }
+        });
+	});
+});
+
+window.atualizar = function (link = null) {
+
     currentPage = link;
     let updateResume = true;
 
     loadOnTable("#dados_tabela", "#tabela_vendas");
     //$('#dados_tabela').html(skeLoad);
+
+    loadOnAny('.number', false, {
+        styles: {
+            container: {
+                minHeight: '32px',
+                height: 'auto'
+            },
+            loader: {
+                width: '20px',
+                height: '20px',
+                borderWidth: '4px'
+            },
+        }
+    });
 
     if (link == null) {
         link = "/api/reports/blocked-balance?" + getFilters(true).substr(1);
@@ -105,11 +151,20 @@ function atualizar(link = null) {
                     dados = `  <tr>
                                 <td class='display-sm-none display-m-none display-lg-none text-center text-left font-size-14'>
                                     ${value.sale_code}
-                                    ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ""}
+                                    ${
+                                        value.upsell
+                                            ? '<span class="text-muted font-size-10">(Upsell)</span>'
+                                            : ""
+                                    }
                                 </td>
-                                <td class="text-left font-size-14">${value.project}</td>
-                                <td class="text-left font-size-14">${value.product}${
-                        value.affiliate != null && value.user_sale_type == "producer"
+                                <td class="text-left font-size-14">${
+                                    value.project
+                                }</td>
+                                <td class="text-left font-size-14">${
+                                    value.product
+                                }${
+                        value.affiliate != null &&
+                        value.user_sale_type == "producer"
                             ? `<br><small>(Afiliado: ${value.affiliate})</small>`
                             : ""
                     }</td>
@@ -117,19 +172,31 @@ function atualizar(link = null) {
                                     value.client
                                 }</td>
                                 <td>
-                                    <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
+                                    <img src='/build/global/img/cartoes/${
+                                        value.brand
+                                    }.png'  style='width: 45px'>
                                 </td>
                                 <td>
                                    <div class="d-flex align-items-center">
-                                        <span class="badge badge-${statusArray[value.status]} ${
-                        value.status_translate === "Pendente" ? "boleto-pending" : ""
+                                        <span class="badge badge-${
+                                            statusArray[value.status]
+                                        } ${
+                        value.status_translate === "Pendente"
+                            ? "boleto-pending"
+                            : ""
                     }" ${
                         value.status_translate === "Pendente"
-                            ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"'
+                            ? 'status="' +
+                              value.status_translate +
+                              '" sale="' +
+                              value.id_default +
+                              '"'
                             : ""
                     }>${value.status_translate}</span>
                                            ${
-                                               value.is_chargeback_recovered && value.status_translate === "Aprovado"
+                                               value.is_chargeback_recovered &&
+                                               value.status_translate ===
+                                                   "Aprovado"
                                                    ? `
                                             <img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
                                                    : ""
@@ -149,7 +216,9 @@ function atualizar(link = null) {
                     $("#dados_tabela").append(dados);
                 });
 
-                $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                $("#date").val(
+                    moment(new Date()).add(3, "days").format("YYYY-MM-DD")
+                );
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
             } else {
                 $("#dados_tabela").html(
@@ -160,9 +229,9 @@ function atualizar(link = null) {
             }
             pagination(response, "sales", atualizar);
         },
-        complete: response => {
-            unlockSearch($('#bt_filtro'));
-        }
+        complete: (response) => {
+            unlockSearch($("#bt_filtro"));
+        },
     });
 
     if (updateResume) {
@@ -172,19 +241,18 @@ function atualizar(link = null) {
 
 function getFilters(urlParams = false) {
     let data = {
-        company: $("#company").val(),
-        project: $("#project").val(),
-        payment_method: $("#payment_method").val(),
-        status: $("#status").val(),
-        client: $("#client").val(),
-        customer_document: $("#customer_document").val(),
-        date_type: $("#date_type").val(),
-        date_range: $("#date-filter").val(),
-        transaction: $("#transaction").val().replace("#", ""),
-        reason: $("#reason").val(),
-        plan: $("#plan").val(),
+        'company': $('.company-navbar').val(),
+        'project': $("#project").val(),
+        'payment_method': $("#payment_method").val(),
+        'status': $("#status").val(),
+        'client': $("#client").val(),
+        'customer_document': $("#customer_document").val(),
+        'date_type': $("#date_type").val(),
+        'date_range': $("#date-filter").val(),
+        'transaction': $("#transaction").val().replace('#', ''),
+        'reason': $('#reason').val(),
+        'plan': $('#plan').val(),
     };
-
     if (urlParams) {
         let params = "";
         for (let param in data) {
@@ -226,7 +294,7 @@ function blockedResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            //loadOnAny('.number', true);
+            loadOnAny('.number', true);
             //$('#total_sales').text('0');
 
             if (response.total_sales) {
@@ -236,17 +304,29 @@ function blockedResume() {
                     `<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 bold">${response.commission}</strong>`
                 );
                 $(".blocked-balance-icon")
-                    .attr("title", "Saldo retido de convites: R$ " + response.commission_invite)
+                    .attr(
+                        "title",
+                        "Saldo retido de convites: R$ " +
+                            response.commission_invite
+                    )
                     .tooltip({ placement: "bottom" });
                 $(".blocked-balance-icon")
-                    .attr("data-original-title", "Saldo retido de convites: R$ " + response.commission_invite)
+                    .attr(
+                        "data-original-title",
+                        "Saldo retido de convites: R$ " +
+                            response.commission_invite
+                    )
                     .tooltip({ placement: "bottom" });
-                $("#total").html(`R$ <span class="font-size-24 bold">${response.total}</span>`);
+                $("#total").html(
+                    `R$ <span class="font-size-24 bold">${response.total}</span>`
+                );
             } else {
                 $("#commission_blocked, #total").html(
                     '<small class="font-size-16 small gray-1">R$</small> <span class="font-size-24 bold">0,00</span>'
                 );
-                $("#total_sales").html('<strong class="font-size-24 orange">0</strong>');
+                $("#total_sales").html(
+                    '<strong class="font-size-24 orange">0</strong>'
+                );
             }
         },
     });
@@ -273,7 +353,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        loadData();
+        window.atualizar();
     });
 
     $(".btn-light-1").click(function () {
@@ -281,7 +361,10 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {
@@ -351,29 +434,44 @@ $(document).ready(function () {
         });
     }
 
-    getCompanies();
+    getCompaniesAndProjects().done( function (data2){
+        if(!isEmpty(data2.company_default_projects)){
+            showFiltersInReports(true);
+            window.getProjects(data2.companies);
+        }
+        else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            showFiltersInReports(false);
+        }
+    });
 
-    function getCompanies() {
-        loadingOnScreen();
-        $.ajax({
+    window.fillProjectsSelect = function(){
+        return $.ajax({
             method: "GET",
-            url: "/api/core/companies?select=true",
+            url: "/api/projects?select=true",
+            dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
+                console.log('erro')
+                console.log(response)
             },
             success: function success(response) {
+                return response;
+                /*
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, company) {
                         if (company.company_has_sale_before_getnet) {
                             hasSale = true;
                         }
                         const document =
-                            (company.document.replace(/\D/g, "").length > 11 ? "CNPJ: " : "CPF: ") + company.document;
+                            (company.document.replace(/\D/g, "").length > 11
+                                ? "CNPJ: "
+                                : "CPF: ") + company.document;
                         $("#company").append(
                             `<option value="${company.id}" data-toggle="tooltip" title="${document}">${company.name}</option>`
                         );
@@ -383,67 +481,39 @@ $(document).ready(function () {
                     //     $("#select-statement-div").show();
                     // }
                 }
-
+*/
                 // getProjects();
                 // getAcquirer();
-            },
+            }
         });
     }
 
-    getProjects();
-
-    // Obtem o os campos dos filtros
-    function getProjects() {
+    window.getProjects = function(companies) {
         loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel").show();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel").show();
 
-                    $.each(response.data, function (i, project) {
-                        $("#project").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                        $("#select_projects").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
+        window.fillProjectsSelect()
+        .done(function(dataSales)
+        {
+            $(".div-filters").show();
+            $.each(companies, function (c, company) {
+                $.each(company.projects, function (i, project) {
+                    $.each(dataSales.data, function (idx, project2) {
+                        if( project2.id == project.id ){
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                        }
                     });
-                    if (sessionStorage.info) {
-                        $("#select_projects").val(JSON.parse(sessionStorage.getItem("info")).company);
-                        $("#select_projects")
-                            .find("option:selected")
-                            .text(JSON.parse(sessionStorage.getItem("info")).companyName);
-                    }
+                });
+            });
+            $("#project option:first").attr('selected','selected');
 
-                    atualizar();
-                } else {
-                    $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
+            company = $("#project").val();
 
-                loadingOnScreenRemove();
-            },
+            atualizar();
         });
+        loadingOnScreenRemove();
     }
 
     $("#project").on("change", function () {
@@ -483,7 +553,14 @@ $(document).ready(function () {
             processResults: function (res) {
                 return {
                     results: $.map(res.data, function (obj) {
-                        return { id: obj.id, text: obj.name + (obj.description ? " - " + obj.description : "") };
+                        return {
+                            id: obj.id,
+                            text:
+                                obj.name +
+                                (obj.description
+                                    ? " - " + obj.description
+                                    : ""),
+                        };
                     }),
                 };
             },
@@ -492,7 +569,7 @@ $(document).ready(function () {
 
     $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
-            atualizar();
+            window.atualizar();
         }
     });
 
@@ -527,18 +604,32 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny(".number", true);
                 $("#total_sales").text("0");
-                $("#commission_blocked, #total").html('R$ <span class="font-size-30 bold">0,00</span>');
+                $("#commission_blocked, #total").html(
+                    'R$ <span class="font-size-30 bold">0,00</span>'
+                );
                 if (response.total_sales) {
                     $("#total_sales, #commission_blocked, #total").text("");
                     $("#total_sales").html(response.total_sales);
-                    $("#commission_blocked").html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
+                    $("#commission_blocked").html(
+                        `R$ <span class="font-size-30 bold">${response.commission}</span>`
+                    );
                     $(".blocked-balance-icon")
-                        .attr("title", "Saldo bloqueado de convites: R$ " + response.commission_invite)
+                        .attr(
+                            "title",
+                            "Saldo bloqueado de convites: R$ " +
+                                response.commission_invite
+                        )
                         .tooltip({ placement: "bottom" });
                     $(".blocked-balance-icon")
-                        .attr("data-original-title", "Saldo bloqueado de convites: R$ " + response.commission_invite)
+                        .attr(
+                            "data-original-title",
+                            "Saldo bloqueado de convites: R$ " +
+                                response.commission_invite
+                        )
                         .tooltip({ placement: "bottom" });
-                    $("#total").html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
+                    $("#total").html(
+                        `R$ <span class="font-size-30 bold">${response.total}</span>`
+                    );
                 }
             },
         });
@@ -554,12 +645,18 @@ function changeCalendar() {
         .dateRangePicker({
             setValue: function (s) {
                 if (s) {
-                    let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                    let normalize = s.replace(
+                        /(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/,
+                        "$120$2-$320$4"
+                    );
                     $(this).html(s).data("value", normalize);
                     $('input[name="daterange"]').attr("value", normalize);
                     $('input[name="daterange"]').val(normalize);
                 } else {
-                    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+                    $('input[name="daterange"]').attr(
+                        "value",
+                        `${startDate}-${endDate}`
+                    );
                     $('input[name="daterange"]').val(`${startDate}-${endDate}`);
                 }
             },
@@ -577,7 +674,10 @@ function changeCalendar() {
 }
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        updateStorage({ company: $(this).val(), companyName: $(this).find("option:selected").text() });
+        updateStorage({
+            company: $(this).val(),
+            companyName: $(this).find("option:selected").text(),
+        });
     });
 }
 
@@ -615,3 +715,4 @@ let skeLoadMini = `
         </div>
     </div>
 `;
+

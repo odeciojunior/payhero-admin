@@ -9,8 +9,10 @@
     @endpush
 
     <div class="page mb-0">
-        <div style="display: none"
-             class="page-header container">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
+        <div style="display: none" class="page-header container">
             <div class="filter-container row justify-content-between">
 
                 <div class="col-sm-12 col-lg-3 col-xl-3">
@@ -24,7 +26,7 @@
 
                 <div class=" col-sm-12 col-lg-9 col-xl-7 div-filters">
                     <div class="row justify-content-end align-items-center">
-                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects margin-store">
+                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects margin-store" id="box-projects">
                             <select id='select_projects'
                                     class="sirius-select">
                                 {{-- JS carrega.. --}}

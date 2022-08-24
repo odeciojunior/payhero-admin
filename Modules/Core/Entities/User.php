@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -75,6 +76,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $total_commission_value
  * @property int $attendance_average_response_time
  * @property string $mkt_information
+ * @property int|null $company_default
  * @property boolean $block_attendance_balance
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
@@ -103,6 +105,7 @@ class User extends Authenticable
     use Notifiable;
     use PresentableTrait;
     use SoftDeletes;
+    use HasFactory;
 
     public const STATUS_ACTIVE = 1;
     public const STATUS_WITHDRAWAL_BLOCKED = 2;
@@ -117,6 +120,8 @@ class User extends Authenticable
 
     public const CELLPHONE_VERIFIED = 1;
     public const EMAIL_VERIFIED = 1;
+
+    public const DEMO_ID = 1;
 
     protected $presenter = UserPresenter::class;
     /**
@@ -180,6 +185,7 @@ class User extends Authenticable
         "total_commission_value",
         "show_old_finances",
         "mkt_information",
+        "company_default",
         "block_attendance_balance",
         "created_at",
         "updated_at",
@@ -436,12 +442,17 @@ class User extends Authenticable
     public function benefits()
     {
         return $this->hasMany(UserBenefit::class)
-            ->join("benefits", "benefits.id", "=", "user_benefits.benefit_id")
-            ->select(
-                "user_benefits.*",
-                "benefits.name",
-                "benefits.description",
-                "benefits.level"
-            );
+            ->join('benefits', 'benefits.id', '=', 'user_benefits.benefit_id')
+            ->select('user_benefits.*', 'benefits.name', 'benefits.description', 'benefits.level');
+    }
+
+    public function getAccountOwnerId()
+    {
+        return $this->company_default == Company::DEMO_ID ? self::DEMO_ID : $this->account_owner_id;
+    }
+
+    public function getAccountIsApproved()
+    {
+        return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;
     }
 }

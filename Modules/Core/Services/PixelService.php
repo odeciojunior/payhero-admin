@@ -83,6 +83,10 @@ class PixelService
             $dataValidated["value_percentage_purchase_boleto"] = 100;
         }
 
+        if (empty($dataValidated["value_percentage_purchase_pix"])) {
+            $dataValidated["value_percentage_purchase_pix"] = 100;
+        }
+
         Pixel::create([
             "project_id" => $project->id,
             "name" => $dataValidated["name"],
@@ -108,6 +112,7 @@ class PixelService
             "facebook_token" => $facebookToken,
             "is_api" => $isApi,
             "value_percentage_purchase_boleto" => $dataValidated["value_percentage_purchase_boleto"],
+            "value_percentage_purchase_pix" => $dataValidated["value_percentage_purchase_pix"],
             "url_facebook_domain" => $facebookDomainUrl,
         ]);
 
@@ -174,6 +179,10 @@ class PixelService
             $dataValidated["value_percentage_purchase_boleto"] = 100;
         }
 
+        if (empty($dataValidated["value_percentage_purchase_pix"])) {
+            $dataValidated["value_percentage_purchase_pix"] = 100;
+        }
+
         if ($dataValidated["platform"] == "google_adwords") {
             $this->dataGoogleAds($dataValidated);
         }
@@ -202,6 +211,7 @@ class PixelService
             "facebook_token" => $dataValidated["facebook_token_api"],
             "is_api" => $dataValidated["is_api"],
             "value_percentage_purchase_boleto" => $dataValidated["value_percentage_purchase_boleto"],
+            "value_percentage_purchase_pix" => $dataValidated["value_percentage_purchase_pix"],
             "url_facebook_domain" => $dataValidated["url_facebook_domain_edit"],
         ]);
 

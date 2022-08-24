@@ -72,14 +72,100 @@ $(window).on("load", function () {
         <rect width="146" height="40" fill="white"/>
         </clipPath>
         </defs>
-        </svg>`,
-    };
+        </svg>`
+    }
 
-    window.gatewayCode = window.location.href.split("/")[4];
-    getGateway(window.gatewayCode);
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('.company_name').val( $('.company-navbar').first().find('option:selected').text() );
+        loadOnAny(".number", false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
+        $("#table-transfers-body").html('');
+        loadOnTable('#table-transfers-body', '#transfersTable');
+        $("#available-in-period").html('');
+        updateCompanyDefault().done( function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                if(!isEmpty(data2.company_default)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    window.gatewayCode = window.location.href.split('/')[4];
+                    getGateway(window.gatewayCode);
+                    checkBlockedWithdrawal();
+                    updateBalances();
+                    loadStatementTable();
+                    $("#nav-statement").css('display', '');
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                    loadingOnScreenRemove();
+                }
+            });
+        });
+    });
 
-    $("#date_range").daterangepicker({
-        startDate: moment().startOf("week"),
+    window.gatewayCode = window.location.href.split('/')[4];
+    getGateway(window.gatewayCode)
+
+    function getGateway(nome){
+        switch (nome) {
+            case 'NzJqoR32egVj5D6':
+                $(".page-title").html(`<a href="/finances">
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
+                                                ${gatewayLogos.asaas}
+                                            </a>`);
+                break;
+            case 'w7YL9jZD6gp4qmv':
+                $(".page-title").html(`<a href="/finances">
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
+                                                ${gatewayLogos.getnet}
+                                            </a>`);
+                $("#transfersTable").hide();
+                $("#statementTable").show();
+                $("#default-statement-filters").hide();
+                $("#custom-statement-filters").show();
+                $("#pagination-transfers").hide();
+                $("#pagination-statement").show();
+                break;
+            case 'oXlqv13043xbj4y':
+                $(".page-title").html(`<a href="/finances">
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
+                                                ${gatewayLogos.gerencianet}
+                                            </a>`);
+                break;
+            case 'pM521rZJrZeaXoQ':
+                $(".page-title").html(`<a href="/finances">
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
+                                                ${gatewayLogos.cielo}
+                                            </a>`);
+                break;
+            case 'BeYEwR3AdgdKykA':
+                $(".page-title").html(`<a href="/finances">
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
+                                                ${gatewayLogos.vega}
+                                            </a>`);
+                break;
+
+            default:
+                // return html;
+                break;
+        }
+    }
+
+    $('#date_range').daterangepicker({
+        startDate: moment().startOf('week'),
         endDate: moment(),
         opens: "center",
         maxDate: moment().endOf("day"),
@@ -176,53 +262,20 @@ $(window).on("load", function () {
 
     function getCompanies() {
         loadingOnScreen();
-
-        $.ajax({
-            method: "GET",
-            url: "/api/core/companies?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                if (isEmpty(response.data)) {
-                    $(".page-content").hide();
-                    $(".content-error").show();
-                    loadingOnScreenRemove();
-                    return;
-                }
-
-                $(".page-content").show();
-                $(".content-error").hide();
-
-                $(response.data).each(function (index, value) {
-                    let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
-                    $("#transfers_company_select").append(data);
-                    $("#transfers_company_select_mobile").append(data);
-                    $("#extract_company_select").append(data);
-                    $("#statement_company_select").append(data);
-                });
-
-                checkBlockedWithdrawal();
-                updateBalances();
-                loadStatementTable();
-                $("#nav-statement").css("display", "");
-                $("#nav-statement").css("display", "");
-                $("#nav-statement-tab").on("click", function () {
-                    $("#nav-statement").css("display", "");
-                });
-
-                loadingOnScreenRemove();
-            },
+        checkBlockedWithdrawal();
+        updateBalances();
+        loadStatementTable();
+        $("#nav-statement").css('display', '');
+        $("#nav-statement-tab").on('click', function () {
+            $("#nav-statement").css('display', '');
         });
+        $('.company_name').val( $('.company-navbar').first().find('option:selected').text() );
+        loadingOnScreenRemove();
     }
 
-    getCompanies();
+    getCompaniesAndProjects().done( function (data){
+        getCompanies(data);
+    })
 
     $("#transaction").on("change paste keyup select", function () {
         let val = $(this).val();
@@ -263,48 +316,6 @@ $(window).on("load", function () {
         });
     }
 
-    function getGateway(nome) {
-        switch (nome) {
-            case "NzJqoR32egVj5D6":
-                $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
-                                                ${gatewayLogos.asaas}
-                                            </a>`);
-                break;
-            case "w7YL9jZD6gp4qmv":
-                $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
-                                                ${gatewayLogos.getnet}
-                                            </a>`);
-                $("#transfersTable").hide();
-                $("#statementTable").show();
-                $("#default-statement-filters").hide();
-                $("#custom-statement-filters").show();
-                $("#pagination-transfers").hide();
-                $("#pagination-statement").show();
-                break;
-            case "oXlqv13043xbj4y":
-                $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
-                                                ${gatewayLogos.gerencianet}
-                                            </a>`);
-                break;
-            case "pM521rZJrZeaXoQ":
-                $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
-                                                ${gatewayLogos.cielo}
-                                            </a>`);
-                break;
-            case "BeYEwR3AdgdKykA":
-                $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
-                                                ${gatewayLogos.vega}
-                                            </a>`);
-                break;
 
-            default:
-                // return html;
-                break;
-        }
-    }
+
 });

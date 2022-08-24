@@ -33,8 +33,8 @@ class FinancesApiController extends Controller
                 return response()->json(["message" => "Ocorreu algum erro, tente novamente!"], 400);
             }
 
-            if (Gate::denies("edit", [$company])) {
-                return response()->json(["message" => "Sem permissão"], Response::HTTP_FORBIDDEN);
+            if ($company->id <> Company::DEMO_ID && Gate::denies('edit', [$company])) {
+                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 
             $gatewayService = Gateway::getServiceById($gatewayId);
@@ -94,12 +94,10 @@ class FinancesApiController extends Controller
     public function getAcquirers($companyId = null)
     {
         $companies = null;
-        if (empty($companyId)) {
-            $companies = Company::with("user")
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->get();
-        } else {
-            $companies = Company::where("id", $companyId)->get();
+        if(empty($companyId)){
+            $companies = Company::with('user')->where('user_id', auth()->user()->account_owner_id)->get();
+        }else{
+            $companies = Company::where('id',hashids_decode($companyId))->get();
         }
         $gatewayIds = [];
 

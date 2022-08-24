@@ -26,6 +26,7 @@ class PixelsResource extends JsonResource
             "is_api" => $this->is_api,
             "facebook_token" => $this->facebook_token,
             "value_percentage_purchase_boleto" => $this->value_percentage_purchase_boleto,
+            "value_percentage_purchase_pix" => $this->value_percentage_purchase_pix,
         ];
     }
 }

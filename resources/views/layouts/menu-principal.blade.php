@@ -11,27 +11,31 @@
         <span class="hamburger-bar"></span>
     </button>
 
-    <!-- SIRIUS LOGO -->
-    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle"
-         data-toggle="gridmenu">
+    <!-- CLOUDFOX LOGO -->
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop site-menubar"
+         data-toggle="gridmenu" style="background-color: #0e0233; overflow: hidden; top:0px">
         <img id="logoIconSirius"
              class="navbar-brand-logo"
-             src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
+             src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
         <img id="logoSirius"
              class="navbar-brand-logo d-none logo-sirius"
-             src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}"
-             width="100">
+             src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}"
+             height="26" style="margin: 0px 2rem 0px 1rem;">
     </div>
 
-    <!-- BOTAO HAMBURGUER NO DESKTOP-->
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-mobile" data-toggle="gridmenu">
+        <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-secundary.svg') }}" style="height:  2.7rem;">
+    </div>
+
+    <!-- BOTAO HAMBURGUER NO DESKTOP -->
     <div>
-        <ul class="nav navbar-toolbar">
+        <ul class="nav navbar-toolbar hamburger-desk" style="margin-left:70px">
             <li class="nav-item hidden-float"
                 id="toggleMenubar">
                 <a class="nav-link"
                    data-toggle="menubar"
                    href="#"
-                   role="button">
+                   role="button" onclick=" if($(this).hasClass('hided')) $('#logoSirius').css('margin-right','2rem'); else $('#logoSirius').css('margin-right','1rem') ">
                     <i class="icon hamburger hamburger-arrow-left">
                         <span class="sr-only">Toggle menubar</span>
                         <span class="hamburger-bar"></span>
@@ -41,6 +45,7 @@
         </ul>
     </div>
 
+    <!-- BOTAO BONUS BALANCE NO MOBILE -->
     <div class="bonus-balance-menu d-flex justify-content-center align-items-center">
         <button id="bonus-balance"
                 class="bonus-balance-button mobile justify-content-center align-items-center"
@@ -56,20 +61,24 @@
         </button>
     </div>
 
-    @php
-        $userModel = new \Modules\Core\Entities\User();
-        $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
-    @endphp
 
-    @if (!auth()->user()->account_is_approved && $account_type === 'admin')
-        <div class="new-register-navbar-open-modal-container"
-             style="display: none;">
-            <div class="row new-register-open-modal">
-                <span class="new-register-open-modal-btn">Clique aqui para começar</span>
+    <div class="row no-gutters">
+        <div style="margin:auto 100px auto auto">
+        <!-- CONVITE PARA INICIAR -->
+        @php
+            $userModel = new \Modules\Core\Entities\User();
+            $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+        @endphp
+
+        @if (!auth()->user()->account_is_approved && $account_type === 'admin')
+            <div class="new-register-navbar-open-modal-container">
+                <div class="row new-register-open-modal no-gutters">
+                    Você está em uma conta demonstrativa. <span class="new-register-open-modal-btn">Clique para começar<span class="count"></span></span>
+                </div>
             </div>
+        @endif
         </div>
-    @endif
-
+    </div>
     <div class="row no-gutters ml-auto">
 
         <!-- CONTAINER DOS ICONES/LINKS DO ANNOUNCEKIT, NOTIFICACOES E USUARIO -->
@@ -93,10 +102,15 @@
             <div class="row no-gutters d-flex"
                  id="site-navbar-collapse">
 
+
+                @include('layouts.company-select')
+
+                <div id="top-vertical-bar" style="background-color: #f4f4f4; width:2px; margin:15px 7px 15px 0"></div>
+
                 <div class="bonus-balance-menu d-flex justify-content-center align-items-center">
                     <button id="bonus-balance"
                             class="bonus-balance-button desktop justify-content-center align-items-center"
-                            style="display: none">
+                            style="display: none; margin-right: 0px; margin-left: 17px">
                         <svg width="11"
                              height="12"
                              viewBox="0 0 11 12"
@@ -116,63 +130,25 @@
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
                 <div id="my-iframe"
                      class="announcekit-widget d-none d-sm-flex align-items-center justify-content-center"
-                     style="width: 105px;">
-                    <b class="pr-5"> Novidades </b>
+                     style="padding-right: 10px">
+                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='padding-right: 10px'><!--  style='cursor:pointer; padding-right: .0rem' -->
+                        <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Novidades">
+                    </span>
                 </div>
 
                 <!-- BOTOES DE NOTIFICAO E USUARIO -->
                 <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
 
-                    <!-- BOTAO DE NOTIFICACAO -->
-                    @hasanyrole('account_owner|admin')
-
-                        <li id="notifications_button"
-                            class="nav-item dropdown"
-                            disabled='true'>
-
-                            <span class="nav-link navbar-avatar"
-                                  data-toggle="dropdown"
-                                  title="Notificações"
-                                  id='notification'
-                                  aria-expanded="false"
-                                  data-animation="scale-up"
-                                  role="button"
-                                  style='cursor:pointer'>
-                                <img class="svg-menu"
-                                     src="{{ mix('build/global/img/svg/notificacao.svg') }}"
-                                     alt="Notificacao">
-
-                                @if (count(auth()->user()->unreadNotifications) > 0)
-                                    <span class="badge badge-notification"
-                                          id="notification-amount"></span>
-                                @else
-                                    <span class="badge badge-notification-false"
-                                          id="notification-amount"></span>
-                                @endif
-                            </span>
-
-                            <!-- MODAL DE NOTIFICACAO -->
-                            <div id="notifications_card"
-                                 class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
-                                <div id='notificationTemplate'
-                                     class="scrollable-content"
-                                     img-empty="{!! mix('build/global/img/notificacoes.svg') !!}"
-                                     style="scrollbar-width:thin;"></div>
-                            </div>
-
-                        </li>
-                    @endhasanyrole
-
                     <!-- BOTAO DE USUARIO -->
                     <li class="nav-item dropdown">
 
                         <!-- FOTO DO USUARIO -->
-                        <a class="nav-link navbar-avatar pr-10 pr-sm-25"
+                        <a class="nav-link navbar-avatar pr-10 pr-sm-35"
                            data-toggle="dropdown"
                            href="#"
                            aria-expanded="false"
                            data-animation="scale-up"
-                           role="button">
+                           role="button" style="margin-left: -2px;">
                             <span class="avatar avatar-online">
                                 <img class='img-user-menu-principal'
                                      src="{!! \Auth::user()->photo
@@ -383,73 +359,18 @@
         @endcan
 
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
-        @if (auth()->user()->hasAnyPermission([
-                'report_sales',
-                'report_checkouts',
-                'report_coupons',
-                'report_pending',
-                'report_blockedbalance',
-            ]))
+        @if (auth()->user()->hasAnyPermission(['reports']))
             <li class="site-menu-item has-sub">
-                <a href="{{ auth()->user()->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id) == 'admin'? route('reports.resume'): 'javascript:void(0)' }}"
+                <a href="{{route('reports.resume')}}"
                    id="reports-link">
                     <span class="bg-menu">
                         <img src="{{ mix('build/global/img/svg/relatorios.svg') }}"
                              alt="Relatórios">
                     </span>
                     <span class="site-menu-title">Relatórios</span>
-                    @if (auth()->user()->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id) == 'collaborator')
-                        <span class="site-menu-arrow"></span>
-                        <ul class="site-menu-sub">
-                            @can('report_sales')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.resume') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Visão geral</span>
-                                    </a>
-                                </li>
-                            @endcan
-
-                            @can('report_checkouts')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.checkouts') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Checkouts</span>
-                                    </a>
-                                </li>
-                            @endcan
-
-                            @can('report_coupons')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.coupons') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Cupons</span>
-                                    </a>
-                                </li>
-                            @endcan
-
-                            @can('report_pending')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.pending') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Saldo pendente</span>
-                                    </a>
-                                </li>
-                            @endcan
-
-                            @can('report_blockedbalance')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.blockedbalance') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Saldo retido</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    @endif
                 </a>
             </li>
-        @endhasanyrole
+        @endif
 
         <!-- hasanyrole('account_owner|admin') -->
         @can('affiliates')
@@ -477,8 +398,7 @@
                 </a>
             </li>
         @endcan
-        @if (auth()->user()->hasRole('account_owner') ||
-            auth()->user()->hasRole('admin'))
+        @if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('integrations.index') }}"
                    id='api-sirius-link'>

@@ -31,6 +31,7 @@ class PixelEditResource extends JsonResource
             "facebook_token" => $this->facebook_token,
             "url_facebook_domain" => $this->url_facebook_domain,
             "value_percentage_purchase_boleto" => $this->value_percentage_purchase_boleto,
+            "value_percentage_purchase_pix" => $this->value_percentage_purchase_pix,
             "event_select" => $this->event_select,
             "send_value_checkout" => $this->send_value_checkout ? "true" : "false",
         ];
