@@ -2,8 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet"
-              href="{{ mix('build/layouts/affiliates/projectaffiliates.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/affiliates/projectaffiliates.min.css') }}">
     @endpush
 
     <div class='page'>
@@ -53,45 +52,36 @@
                     </div>
                 </div>
 
-                <div class="shadow"
-                     data-plugin="matchHeight"
-                     style="margin-top: 2px;">
+                <div class="shadow" data-plugin="matchHeight" style="margin-top: 2px;">
                     <div class="tab-content">
                         <div class="tab-content">
-                            <div id="tab_affiliates_panel"
-                                 class="tab-pane active"
-                                 role="tabpanel">
+                            <div id="tab_affiliates_panel" class="tab-pane active" role="tabpanel">
                                 <div class="fixhalf"></div>
-                                <div class="card card-body shadow "
-                                     style="min-height: 300px">
+
+                                <div class="card card-body shadow">
+
                                     <div class="row mb-15">
+
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Lojas</label>
-                                                <select class="sirius-select"
-                                                        id="project-affiliate"
-                                                        data-name="projects">
+                                                <select class="sirius-select" id="project-affiliate" data-name="projects">
                                                     <option value="0">Todas lojas</option>
                                                 </select>
                                             </div>
                                         </div>
+                                        
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Nome do afiliado</label>
-                                                <input id="name-affiliate"
-                                                       class="input-pad form-control"
-                                                       placeholder="Nome"
-                                                       maxlength="100"
-                                                       style="height: 50px !important;">
+                                                <input id="name-affiliate" class="input-pad form-control" placeholder="Nome" maxlength="100" style="height: 50px !important;">
                                             </div>
                                         </div>
-                                        <div class="col-lg-2 col-md-6"
-                                             style="margin-top: 28px">
-                                            <button id="btn-filter-affiliates"
-                                                    class="btn btn-primary w-full px-10"
-                                                    style="height: 50px;">
-                                                <img style="height: 12px; margin-right: 4px"
-                                                     src="{{ mix('build/global/img/svg/check-all.svg') }}">Aplicar filtros
+                                        
+                                        <div class="col-lg-2 col-md-6" style="margin-top: 28px">
+                                            <button id="btn-filter-affiliates" class="btn btn-primary w-full px-10" style="height: 50px;">
+                                                <img style="height: 12px; margin-right: 4px"src="{{ mix('build/global/img/svg/check-all.svg') }}">
+                                                Aplicar filtros
                                             </button>
                                         </div>
                                     </div>
@@ -100,13 +90,13 @@
                                            style='width:100%'>
                                         <thead>
                                             <tr>
-                                                <td class="table-title">Nome</td>
+                                                <td class="">Nome</td>
                                                 {{-- <td class="table-title">Email</td> --}}
-                                                <td class="table-title">Loja</td>
-                                                <td class="table-title">Data afiliação</td>
-                                                <td class="text-center table-title">Porcentagem</td>
-                                                <td class="text-center table-title">Status</td>
-                                                <td class="text-center table-title">Opções</td>
+                                                <td class="">Loja</td>
+                                                <td class="">Data afiliação</td>
+                                                <td class="text-center">Porcentagem</td>
+                                                <td class="text-center">Status</td>
+                                                <td class="text-center">Opções</td>
                                                 {{-- excluir, ativar/inativar --}}
                                             </tr>
                                         </thead>
@@ -132,58 +122,53 @@
                                 </div>
                             </div>
 
-                            <div id="tab_affiliates_request_panel"
-                                 class="tab-pane"
-                                 role="tabpanel">
+                            <div id="tab_affiliates_request_panel" class="tab-pane" role="tabpanel">
+
                                 <div class="fixhalf"></div>
-                                <div class="card card-body shadow "
-                                     style="min-height: 300px">
+
+                                <div class="card card-body shadow">
+
                                     <div class="row mb-15">
+
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Lojas</label>
-                                                <select class="sirius-select"
-                                                        id="project-affiliate-request"
-                                                        data-name="projects">
+                                                <select class="sirius-select" id="project-affiliate-request" data-name="projects">
                                                     <option value="0">Todas lojas</option>
                                                 </select>
                                             </div>
                                         </div>
+
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Nome do afiliado</label>
-                                                <input id="name-affiliate-request"
-                                                       class="input-pad form-control"
-                                                       placeholder="Nome"
-                                                       maxlength="100"
-                                                       style="height: 50px !important">
+                                                <input id="name-affiliate-request" class="input-pad form-control" placeholder="Nome" maxlength="100" style="height: 50px !important">
                                             </div>
                                         </div>
-                                        <div class="col-lg-2 col-md-6"
-                                             style="margin-top: 28px">
-                                            <button id="btn-filter-affiliates-request"
-                                                    class="btn btn-primary w-full px-10"
-                                                    style="height: 50px;">
-                                                <img style="height: 12px; margin-right: 4px"
-                                                     src="{{ mix('build/global/img/svg/check-all.svg') }}">Aplicar filtros
+
+                                        <div class="col-lg-2 col-md-6" style="margin-top: 28px">
+                                            <button id="btn-filter-affiliates-request" class="btn btn-primary w-full px-10" style="height: 50px;">
+                                                <img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Aplicar filtros
                                             </button>
                                         </div>
+
                                     </div>
                                     <table class="table table-striped table-affiliate-request">
+
                                         <thead>
                                             <tr>
-                                                <td class="table-title">Nome</td>
-                                                <td class="table-title">Email</td>
-                                                <td class="table-title">Loja</td>
-                                                <td class="table-title">Data</td>
+                                                <td class="">Nome</td>
+                                                <td class="">Email</td>
+                                                <td class="">Loja</td>
+                                                <td class="">Data</td>
                                                 {{-- <td class="table-title" class="text-center">Status</td> --}}
-                                                <td class="table-title"
+                                                <td class=""
                                                     class="text-center">Opções</td>
                                                 {{-- aceitar, recusar --}}
                                             </tr>
                                         </thead>
-                                        <tbody id="body-table-affiliate-requests"
-                                               img-empty="{!! mix('build/global/img/afiliados.svg') !!}">
+
+                                        <tbody id="body-table-affiliate-requests" img-empty="{!! mix('build/global/img/afiliados.svg') !!}">
                                         </tbody>
                                     </table>
                                 </div>

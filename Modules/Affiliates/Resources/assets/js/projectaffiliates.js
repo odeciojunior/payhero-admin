@@ -193,15 +193,15 @@ $(document).ready(function () {
                         data +=
                             "<a title='Visualizar' class='mg-responsive pointer details-affiliate' affiliate='" +
                             value.id +
-                            "'><span class='o-eye-1'></span></a>";
+                            "'><span class=''><img src='/build/global/img/icon-eye.svg'/></span></a>";
                         data +=
                             "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" +
                             value.id +
-                            "'><span class='o-edit-1'></span></a>";
+                            "'><span class=''><img src='build/global/img/pencil-icon.svg'/></span></a>";
                         data +=
                             "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" +
                             value.id +
-                            "'><span class='o-bin-1'></span></a>";
+                            "'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>";
                         data += "</td>";
                         data += "</tr>";
                         $("#body-table-affiliates").append(data);

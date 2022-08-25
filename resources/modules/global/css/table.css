@@ -48,3 +48,7 @@ thead {
         background-color: #FBFBFB;
     }
 }
+
+.badge {
+    padding: 8px 20px;
+}
