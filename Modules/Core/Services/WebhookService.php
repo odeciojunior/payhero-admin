@@ -40,6 +40,29 @@ class WebhookService
     }
 
     /**
+     * @param $tracking
+     */
+    function trackingCodeStatusUpdate($tracking)
+    {
+        try {
+            $data = [
+                "tracking_id" => hashids_encode($tracking->id),
+                "tracking_status" => $tracking
+                    ->present()
+                    ->getTrackingStatusEnum($tracking->tracking_status_enum),
+                "system_status" => $tracking
+                    ->present()
+                    ->getSystemStatusEnum($tracking->system_status_enum),
+                "updated_at" => $tracking->updated_at->format("Y-m-d H:i:s"),
+            ];
+
+            self::sendPost($data);
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
+
+    /**
      * @param $data
      */
     private function sendPost($data)

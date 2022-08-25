@@ -88,6 +88,7 @@ use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\UserDocumentBureauValidationListener;
 use Modules\Core\Listeners\Webhooks\WebhooksSaleStatusUpdateListener;
+use Modules\Core\Listeners\Webhooks\WebhooksTrackingCodeStatusUpdateListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
 
 /**
@@ -143,9 +144,11 @@ class EventServiceProvider extends ServiceProvider
         TrackingCodeUpdatedEvent::class => [
             TrackingCodeUpdatedSendEmailClientListener::class,
             TrackingCodeUpdatedActiveCampaignListener::class,
+            WebhooksTrackingCodeStatusUpdateListener::class,
         ],
         CheckSaleHasValidTrackingEvent::class => [
             CheckSaleHasValidTrackingListener::class,
+            WebhooksTrackingCodeStatusUpdateListener::class,
         ],
         ResetPasswordEvent::class => [ResetPasswordSendEmailListener::class],
         ReleasedBalanceEvent::class => [
@@ -212,7 +215,10 @@ class EventServiceProvider extends ServiceProvider
             SendChargebackNotificationsListener::class,
             NotifyAntifraudChargebackListener::class,
         ],
-        ReportanaTrackingEvent::class => [ReportanaSaleListener::class],
+        ReportanaTrackingEvent::class => [
+            ReportanaSaleListener::class,
+            WebhooksTrackingCodeStatusUpdateListener::class,
+        ],
     ];
 
     /**
