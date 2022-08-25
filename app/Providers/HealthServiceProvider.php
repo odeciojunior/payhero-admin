@@ -40,7 +40,7 @@ class HealthServiceProvider extends ServiceProvider
             HorizonCheck::new(),
             DebugModeCheck::new(),
             DatabaseTableSizeCheck::new(),
-            DatabaseConnectionCountCheck::new()->warnWhenMoreConnectionsThan(200)->failWhenMoreConnectionsThan(400),
+            DatabaseConnectionCountCheck::new()->warnWhenMoreConnectionsThan(400)->failWhenMoreConnectionsThan(600),
             CacheCheck::new(),
             EnvironmentCheck::new(),
             UsedDiskSpaceCheck::new(),
