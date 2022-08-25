@@ -19,10 +19,6 @@ use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 Route::get("/", "\App\Http\Controllers\Auth\LoginController@showLoginForm");
 
-Route::get("/up", function(){
-    return 'System is up';
-});
-
 Route::get("/termos", function () {
     return response()->file(public_path("terms-of-use.pdf"));
 });
