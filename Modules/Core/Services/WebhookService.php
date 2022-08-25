@@ -116,7 +116,9 @@ class WebhookService
                 "company_id" => $this->webhook->company_id,
                 "url" => $this->webhook->url,
                 "sent_data" => json_encode($data),
-                "response" => json_encode($response),
+                "response" => !json_decode($response)
+                    ? json_encode($response)
+                    : $response,
             ]);
         } catch (Exception $e) {
             report($e);
