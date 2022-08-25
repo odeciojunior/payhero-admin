@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    var th = null;
     let scoreInfo = {
         0: {
             textColor: "text-color-red",
@@ -182,7 +183,9 @@ $(document).ready(function () {
 
                     $(".sirius-account > .card").append(item);
 
-                    updateGauge(data.account_score);
+                    setTimeout(() => {
+                        updateGauge(data.account_score);
+                    }, 3000);
 
                     nextCard();
 
@@ -241,7 +244,6 @@ $(document).ready(function () {
 
     function updateGauge(account_score)
     {
-        console.log('updateGauge');
         var opts = {
             angle: 0, // A extensão do arco do medidor
             lineWidth: 0.3, // A espessura da linha
@@ -278,7 +280,6 @@ $(document).ready(function () {
             ],
         };
         var target = document.getElementById("account-health-chart-gauge"); // your canvas element
-        console.log(target);
         var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
         gauge.maxValue = 10; // set max gauge value
         gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
