@@ -13,3 +13,8 @@
 #postback:focus {
     border-color: #88bfff;
 }
+
+.modal-simple .modal-header + .modal-body {
+    padding-top: 20px;
+    padding-bottom: 0;
+}

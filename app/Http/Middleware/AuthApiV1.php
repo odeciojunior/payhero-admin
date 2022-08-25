@@ -20,13 +20,12 @@ class AuthApiV1
         $bearerToken = explode(" ", $request->header("Authorization"));
         if (isset($bearerToken[1])) {
             $apiToken = ApiToken::where("access_token", $bearerToken[1])
-                ->where("integration_type_enum", 4)
+                ->where("integration_type_enum", 5)
                 ->first();
 
             if ($apiToken) {
                 $request->company_id = $apiToken->company->id;
                 $request->user_id = $apiToken->user->id;
-                $request->api_flag = true;
 
                 return $next($request);
             }

@@ -56,12 +56,12 @@ class IntegrationsApiController extends Controller
             $description = $request->get("description");
             if (empty($description)) {
                 return response()->json(
-                    ["message" => "O campo Nome da Integração é obrigatório!"],
+                    ["message" => "O campo Descrição é obrigatório!"],
                     Response::HTTP_BAD_REQUEST
                 );
             }
 
-            $tokenTypeEnum = $request->get("token_type_enum");
+            $tokenTypeEnum = ApiToken::INTEGRATION_TYPE_SPLIT_API;
             if (empty($tokenTypeEnum)) {
                 return response()->json(
                     ["message" => "O Tipo de Integração é obrigatório!"],
@@ -69,6 +69,7 @@ class IntegrationsApiController extends Controller
                 );
             }
 
+            $company_id = current(hashids()->decode($request->get("company_id")));
             if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API) {
                 $company = Company::find(current(hashids()->decode($request->get("company_id"))));
                 if (!$company) {
@@ -100,7 +101,7 @@ class IntegrationsApiController extends Controller
             /** @var ApiToken $token */
             $token = $apiTokenModel->create([
                 "user_id" => auth()->user()->account_owner_id,
-                "company_id" => $tokenTypeEnum == 4 ? $company->id : null,
+                "company_id" => $company_id,
                 "token_id" => $tokenIntegration->token->getKey(),
                 "access_token" => $tokenIntegration->accessToken,
                 "scopes" => json_encode($scopes, true),

@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +18,6 @@ Route::group(
         "middleware" => "authApiV1",
     ],
     function () {
-
+        Route::get('teste', 'V1\SubsellersApiController@createSubseller');
     }
 );

@@ -62,5 +62,6 @@
     "UserInformations": true,
     "Users": true,
     "NotificacoesInteligentes": true,
-    "Api": true
+    "Api": true,
+    "Webhooks": true
 }
