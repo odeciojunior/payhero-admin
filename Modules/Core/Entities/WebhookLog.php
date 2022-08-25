@@ -7,21 +7,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class Webhook
+ * Class WebhookLog
  * @package Modules\Core\Entities
  *
  * @property integer $id
  * @property integer $user_id
  * @property integer $company_id
- * @property string $description
  * @property string $url
+ * @property json $sent_data
+ * @property json $response
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
  * @property User $user
  * @property Company $company
  */
-class Webhook extends Model
+class WebhookLog extends Model
 {
     use SoftDeletes;
 
@@ -37,8 +38,9 @@ class Webhook extends Model
     protected $fillable = [
         "user_id",
         "company_id",
-        "description",
         "url",
+        "sent_data",
+        "response",
         "created_at",
         "updated_at",
         "deleted_at",

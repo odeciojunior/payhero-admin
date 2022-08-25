@@ -3,26 +3,34 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Modules\Core\Entities\Webhook;
+use Modules\Core\Entities\WebhookLog;
 
 /**
  * Class WebhookService
+ *
  * @package Modules\Core\Services
  */
 class WebhookService
 {
-    private $link;
+    private $webhook;
 
     /**
      * WebhookService constructor.
-     * @param $link
+     *
+     * @param Webhook $webhook
+     * @return void
      */
-    function __construct($link)
+    function __construct(Webhook $webhook)
     {
-        $this->link = $link;
+        $this->webhook = $webhook;
     }
 
     /**
+     * Formats the sale status update data.
+     *
      * @param $sale
+     * @return void
      */
     function saleStatusUpdate($sale)
     {
@@ -40,7 +48,10 @@ class WebhookService
     }
 
     /**
+     * Formats the tracking code status update data.
+     *
      * @param $tracking
+     * @return void
      */
     function trackingCodeStatusUpdate($tracking)
     {
@@ -63,7 +74,10 @@ class WebhookService
     }
 
     /**
+     * Send a request to the URL configured in the webhook.
+     *
      * @param $data
+     * @return void
      */
     private function sendPost($data)
     {
@@ -71,7 +85,7 @@ class WebhookService
             $curl = curl_init();
 
             curl_setopt_array($curl, [
-                CURLOPT_URL => $this->link,
+                CURLOPT_URL => $this->webhook->url,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_CUSTOMREQUEST => "POST",
                 CURLOPT_POSTFIELDS => json_encode($data),
@@ -80,6 +94,30 @@ class WebhookService
 
             $response = curl_exec($curl);
             curl_close($curl);
+
+            $this->storeWebhookLogs($data, $response);
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
+
+    /**
+     * Stores webhook send and return data.
+     *
+     * @param $data
+     * @param $response
+     * @return void
+     */
+    private function storeWebhookLogs($data, $response)
+    {
+        try {
+            WebhookLog::create([
+                "user_id" => $this->webhook->user_id,
+                "company_id" => $this->webhook->company_id,
+                "url" => $this->webhook->url,
+                "sent_data" => json_encode($data),
+                "response" => json_encode($response),
+            ]);
         } catch (Exception $e) {
             report($e);
         }

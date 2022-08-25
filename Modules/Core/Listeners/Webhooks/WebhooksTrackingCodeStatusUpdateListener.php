@@ -71,7 +71,7 @@ class WebhooksTrackingCodeStatusUpdateListener implements ShouldQueue
             )->first();
 
             if (!empty($webhook)) {
-                $service = new WebhookService($webhook->url);
+                $service = new WebhookService($webhook);
                 $service->trackingCodeStatusUpdate($tracking);
             }
         } catch (Exception $e) {

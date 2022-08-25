@@ -54,7 +54,7 @@ class WebhooksSaleStatusUpdateListener implements ShouldQueue
             )->first();
 
             if (!empty($webhook)) {
-                $service = new WebhookService($webhook->url);
+                $service = new WebhookService($webhook);
                 $service->saleStatusUpdate($sale);
             }
         } catch (Exception $e) {
