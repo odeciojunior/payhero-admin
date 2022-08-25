@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +91,4 @@ if (env("APP_ENV", "production") !== "production") {
     Route::view("/qa-utils", "utils.info");
 }
 
-Route::view("/carriers", "carriers");
-
-Route::get("/generate-zend-jwt", "HomeController@generateZendesktoken");
+Route::get('/JeH8GqXkkPM7ZCNiI66GEpmU4MItRLkI/health', [Spatie\Health\Http\Controllers\HealthCheckResultsController::class, '__invoke']);
