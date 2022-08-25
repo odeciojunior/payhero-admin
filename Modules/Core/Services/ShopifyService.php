@@ -64,16 +64,10 @@ class ShopifyService
 
     public function __construct(string $urlStore, string $token, $getThemes = true)
     {
-        if (!$this->cacheDir) {
-            $cache = "/var/tmp";
-            //$cache = storage_path();
-        } else {
-            $cache = $this->cacheDir;
-        }
-
         $this->credential = new PublicAppCredential($token);
-        $this->client = new Client($this->credential, $urlStore, [
-            "metaCacheDir" => $cache, // Metadata cache dir, required
+
+        $this->client = new Client($urlStore, $this->credential, [
+            "meta_cache_dir" => empty($this->cacheDir) ? '/var/tmp' : $this->cacheDir
         ]);
 
         if ($getThemes) {
@@ -404,7 +398,7 @@ class ShopifyService
             }
         }
 
-        if ($cartForm ?? null) {
+        if (!empty($cartForm)) {
             $inputUpdate = new Selector("button[name=checkout]", new Parser());
             $inputsUpdates = $inputUpdate->find($cartForm);
             foreach ($inputsUpdates as $item) {
@@ -528,7 +522,7 @@ class ShopifyService
             }
         }
 
-        if ($cartForm ?? null) {
+        if (!empty($cartForm)) {
             //div Foxdata
             $divFoxData = new Selector("#foxData", new Parser());
             $divs = $divFoxData->find($cartForm);
@@ -580,7 +574,7 @@ class ShopifyService
             }
         }
 
-        if ($cartForm ?? null) {
+        if (!empty($cartForm)) {
             //div Foxdata
             $divFoxData = new Selector("#foxData", new Parser());
             $divs = $divFoxData->find($cartForm);
@@ -1165,9 +1159,6 @@ class ShopifyService
         }
     }
 
-    /**
-     * @return array
-     */
     public function getShopProducts()
     {
         if (!empty($this->client)) {
@@ -2184,12 +2175,8 @@ class ShopifyService
     {
         try {
             $cost = $this->getShopInventoryItem($variant->getInventoryItemId());
-            if (method_exists($cost, "getCost")) {
-                $cost = $cost->getCost();
-                $cost = empty($cost) ? 0 : $cost;
-            } else {
-                $cost = "";
-            }
+            $cost = $cost->getCost() ?? 0;
+            $cost = empty($cost) ? 0 : $cost;
             return $cost;
         } catch (Exception $e) {
             return "";

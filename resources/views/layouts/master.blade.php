@@ -189,20 +189,35 @@
             <!-- End of cloudfoxhelp Zendesk Widget script -->
 
             <script type="text/javascript">
-                zE('messenger', 'close');
+                function zendeskAuthentication()
+                {
+                    $.ajax({
+                        method: 'GET',
+                        url: '/api/core/zendesk-token',
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        error: function () {
+                            //
+                        },
+                        success: function (response) {
+                            zE('messenger', 'loginUser', function (callback) {
+                                    callback(response);
+                                }
+                            );
+                        }
+                    });
 
-                /*
-                var signedToken = generateJwt('{{ auth()->user()->id }}', '{{ auth()->user()->name }}', '{{ auth()->user()->email }}');
-                        zE('messenger', 'loginUser', function (callback) {
-                            callback(signedToken);
-                        });
-                        */
+                    return null;
+                }
+
+                zendeskAuthentication();
+
             </script>
         @endif
     @endif
 
-    <!-- Announcekiit configuracoes -->
-    {{-- resources/modules/global/js/global.js --}}
     <script async
             src="https://cdn.announcekit.app/widget-v2.js"></script>
 </body>

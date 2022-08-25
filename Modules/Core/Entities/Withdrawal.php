@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Entities;
 
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WithdrawalPresenter;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -79,36 +80,12 @@ class Withdrawal extends Model
         "deleted_at",
     ];
 
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que o pacote armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
-
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        if ($eventName == "deleted") {
-            $activity->description = "Pedido saque foi deletedo.";
-        } elseif ($eventName == "updated") {
-            $activity->description = "Pedido saque foi atualizado.";
-        } elseif ($eventName == "created") {
-            $activity->description = "Pedido saque foi criado.";
-        } else {
-            $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     public function company(): BelongsTo

@@ -480,4 +480,18 @@ class CoreApiController extends Controller
             return response("Internal server error.", 500);
         }
     }
+
+    public function getZendeskToken()
+    {
+        $payload = [
+            'scope' => 'user',
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            'external_id' => ''. auth()->user()->id . '',
+            'iat' => time(),
+        ];
+        $token = JWT::encode($payload, 'v5D7n6jaGlc2nviUtU5eYOuG9MmtIuJ_t9K8KERl5PK6a46sWNH6q5_28jsGaTU1I4eStyGmzDOUntuhdHfoGg', 'HS256', 'app_630519303703d200f36b2a98');
+
+        return response()->json($token);
+    }
 }

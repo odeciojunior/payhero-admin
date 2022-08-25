@@ -3,7 +3,6 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,8 +16,9 @@ use Laracasts\Presenter\PresentableTrait;
 use Laravel\Passport\HasApiTokens;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Presenters\UserPresenter;
-use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -124,6 +124,9 @@ class User extends Authenticable
     public const DEMO_ID = 1;
 
     protected $presenter = UserPresenter::class;
+
+    protected $guard_name = 'web';
+
     /**
      * @var array
      */
@@ -191,47 +194,13 @@ class User extends Authenticable
         "updated_at",
         "deleted_at",
     ];
-    /**
-     * @var array
-     */
-    protected static $logAttributes = ["*"];
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
-    /**
-     * Ignora atributos
-     * @var array
-     */
-    protected static $logAttributesToIgnore = ["last_login", "updated_at"];
 
-    /**
-     * @param Activity $activity
-     * @param string $eventName
-     */
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        if ($eventName == "deleted") {
-            $activity->description =
-                "Usuário " . $this->name . " foi deletado.";
-        } elseif ($eventName == "updated") {
-            $activity->description =
-                "Usuário " . $this->name . " foi atualizado.";
-        } elseif ($eventName == "created") {
-            $activity->description = "Usuário " . $this->name . " foi criado.";
-        } else {
-            $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     /**
