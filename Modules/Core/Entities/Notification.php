@@ -3,8 +3,8 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\LogsActivity;
-use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property string $id
@@ -33,39 +33,12 @@ class Notification extends Model
      * @var array
      */
     protected $fillable = ["type", "notifiable_type", "notifiable_id", "data", "read_at", "created_at", "updated_at"];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
 
-    /**
-     * @param Activity $activity
-     * @param string $eventName
-     */
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        if ($eventName == "deleted") {
-            $activity->description = "Notificação foi deleteda.";
-        } elseif ($eventName == "updated") {
-            $activity->description = "Notificação foi atualizada.";
-        } elseif ($eventName == "created") {
-            $activity->description = "Notificação foi criada.";
-        } else {
-            $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 }

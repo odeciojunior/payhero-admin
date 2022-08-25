@@ -5,9 +5,10 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\AffiliateRequestPresenter;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property integer $id
@@ -36,24 +37,14 @@ class AffiliateRequest extends Model
      * @var array
      */
     protected $fillable = ["user_id", "project_id", "company_id", "status", "created_at", "updated_at", "deleted_at"];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
+    }
 
     /**
      * @return BelongsTo

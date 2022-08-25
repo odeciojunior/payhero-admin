@@ -73,8 +73,10 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                getChart(response);
                 loadingOnChartRemove("#chart-loading");
+                setTimeout(() => {
+                    getChart(response);
+                }, 2000);
             },
         });
     }
