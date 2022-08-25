@@ -2175,12 +2175,8 @@ class ShopifyService
     {
         try {
             $cost = $this->getShopInventoryItem($variant->getInventoryItemId());
-            if (method_exists($cost, "getCost")) {
-                $cost = $cost->getCost();
-                $cost = empty($cost) ? 0 : $cost;
-            } else {
-                $cost = "";
-            }
+            $cost = $cost->getCost();
+            $cost = empty($cost) ? 0 : $cost;
             return $cost;
         } catch (Exception $e) {
             return "";
