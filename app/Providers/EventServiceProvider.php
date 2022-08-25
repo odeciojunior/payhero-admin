@@ -89,7 +89,6 @@ use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\UserDocumentBureauValidationListener;
 use Modules\Core\Listeners\Webhooks\WebhooksSaleStatusUpdateListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
-use SocialiteProviders\Manager\SocialiteWasCalled;
 
 /**
  * Class EventServiceProvider
@@ -152,13 +151,7 @@ class EventServiceProvider extends ServiceProvider
         ReleasedBalanceEvent::class => [
             ReleasedBalanceNotifyUserListener::class,
         ],
-        SaleApprovedEvent::class => [
-            SetApprovedShopifyOrderListener::class,
-            WebhooksSaleStatusUpdateListener::class,
-        ],
-        SocialiteWasCalled::class => [
-            "SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle",
-        ],
+        SaleApprovedEvent::class => [SetApprovedShopifyOrderListener::class],
         WithdrawalRequestEvent::class => [
             WithdrawalRequestSendEmailListener::class,
         ],

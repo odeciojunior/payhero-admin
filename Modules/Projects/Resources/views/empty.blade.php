@@ -11,19 +11,26 @@
                                                                 -webkit-justify-content: center;
                                                                 justify-content: center;
                                                                 padding-bottom:116px">
-    <img src="{!! mix('build/global/img/projetos.svg') !!}" width="156px">
+    <img src="{!! mix('build/global/img/projetos.svg') !!}"
+         width="156px">
     <h1 class="big gray">Sua empresa ainda não tem nenhuma loja!</h1>
     <p class="desc gray">Que tal criar uma primeira loja para começar a vender? </p>
 
     @if (auth()->user()->account_is_approved &&
         auth()->user()->address_document_status == 3 &&
         auth()->user()->personal_document_status == 3)
-        <a href="/projects/create"
-           class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white"
-           style="position: relative;">
+        <button id="new-store-button"
+                data-toggle="modal"
+                data-target="#new-store-modal"
+                class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white"
+                style="position: relative;">
             <i class="o-add-1"
                aria-hidden="true"></i>
-        </a>
+        </button>
+
+        @if (!Request::is('projects'))
+            @include('projects::create-store-modal')
+        @endif
     @else
         @if (Request::is('projects'))
             @if (auth()->user()->address_document_status == 3 && auth()->user()->personal_document_status == 3)

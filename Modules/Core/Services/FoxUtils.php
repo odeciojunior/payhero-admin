@@ -18,51 +18,21 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class FoxUtils
 {
-    /**
-     * @param $host
-     * @return bool
-     */
-    public static function checkDNS($host)
-    {
-        $variant = INTL_IDNA_VARIANT_2003;
-        if (defined("INTL_IDNA_VARIANT_UTS46")) {
-            $variant = INTL_IDNA_VARIANT_UTS46;
-        }
-        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), ".") . ".";
 
-        $Aresult = true;
-        $MXresult = checkdnsrr($host, "MX");
-
-        if (!$MXresult) {
-            $warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
-            $Aresult = checkdnsrr($host, "A") || checkdnsrr($host, "AAAA");
-            if (!$Aresult) {
-                $error = new NoDNSRecord();
-                Log::warning(print_r($error));
-            }
-        }
-
-        return $MXresult || $Aresult;
-    }
-
-    /**
-     * @param $email
-     * @return bool
-     */
     public static function validateEmail($email)
     {
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($email)) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $emailExploded = explode("@", $email);
-            $variant = INTL_IDNA_VARIANT_2003;
-            if (defined("INTL_IDNA_VARIANT_UTS46")) {
-                $variant = INTL_IDNA_VARIANT_UTS46;
+            $variant = INTL_IDNA_VARIANT_UTS46;
+            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), ".") . ".";
+
+            $checkdnsrr = checkdnsrr($host, "MX");
+            if ($checkdnsrr) {
+                return true;
             }
-            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), ".");
 
-            return checkdnsrr($host, "MX");
+            return false;
         }
-
-        return false;
     }
 
     public static function prepareCellPhoneNumber($phoneNumber)
