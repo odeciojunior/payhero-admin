@@ -7,13 +7,13 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
 use Modules\Core\Events\BilletExpiredEvent;
-use Modules\Core\Events\ManualRefundEvent;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\CheckTransactionReleasedEvent;
 use Modules\Core\Events\DomainApprovedEvent;
 use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Events\ExtractExportedEvent;
 use Modules\Core\Events\FinancesExportedEvent;
+use Modules\Core\Events\ManualRefundEvent;
 use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Events\NotifyUserAchievementEvent;
 use Modules\Core\Events\NotifyUserLevelEvent;
@@ -24,14 +24,14 @@ use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
 use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
 use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Events\Sac\TicketMessageEvent;
 use Modules\Core\Events\SaleApprovedEvent;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Events\SalesExportedEvent;
 use Modules\Core\Events\SendEmailEvent;
+use Modules\Core\Events\SendEmailPendingDocumentEvent;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
-use Modules\Core\Events\Sac\TicketMessageEvent;
-use Modules\Core\Events\SendEmailPendingDocumentEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Events\TrackingsExportedEvent;
 use Modules\Core\Events\TrackingsImportedEvent;
@@ -151,7 +151,10 @@ class EventServiceProvider extends ServiceProvider
         ReleasedBalanceEvent::class => [
             ReleasedBalanceNotifyUserListener::class,
         ],
-        SaleApprovedEvent::class => [SetApprovedShopifyOrderListener::class],
+        SaleApprovedEvent::class => [
+            SetApprovedShopifyOrderListener::class,
+            WebhooksSaleStatusUpdateListener::class,
+        ],
         WithdrawalRequestEvent::class => [
             WithdrawalRequestSendEmailListener::class,
         ],
