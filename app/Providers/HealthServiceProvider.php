@@ -28,8 +28,8 @@ class HealthServiceProvider extends ServiceProvider
     {
         Health::checks([
             DatabaseCheck::new()->name('Database check'),
-            DatabaseCheck::new()->connectionName('cloudfox_demo')->name('Demo database check'),
-            ScheduleCheck::new(),
+            DatabaseCheck::new()->connectionName('demo')->name('Demo database check'),
+            //ScheduleCheck::new(),
             RedisCheck::new(),
             PingCheck::new()->url('https://sirius.cloudfox.net')->timeout(5)->name('Sirius check'),
             PingCheck::new()->url('https://sac.cloudfox.net')->timeout(5)->name('Sac check'),
@@ -40,7 +40,7 @@ class HealthServiceProvider extends ServiceProvider
             HorizonCheck::new(),
             DebugModeCheck::new(),
             DatabaseTableSizeCheck::new(),
-            DatabaseConnectionCountCheck::new(),
+            DatabaseConnectionCountCheck::new()->warnWhenMoreConnectionsThan(200)->failWhenMoreConnectionsThan(400),
             CacheCheck::new(),
             EnvironmentCheck::new(),
             UsedDiskSpaceCheck::new(),
