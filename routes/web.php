@@ -92,3 +92,4 @@ if (env("APP_ENV", "production") !== "production") {
 }
 
 Route::get('/JeH8GqXkkPM7ZCNiI66GEpmU4MItRLkI/health', [Spatie\Health\Http\Controllers\HealthCheckResultsController::class, '__invoke']);
+Route::get('/JeH8GqXkkPM7ZCNiI66GEpmU4MItRLkI/health-json', [Spatie\Health\Http\Controllers\HealthCheckJsonResultsController::class, '__invoke']);
