@@ -36,7 +36,7 @@ class HealthServiceProvider extends ServiceProvider
             PingCheck::new()->url('https://manager.cloudfox.net')->timeout(5)->name('Manager check'),
             PingCheck::new()->url('https://accounts.cloudfox.net')->timeout(5)->name('Accounts check'),
             PingCheck::new()->url('https://checkout.cloudfox.net')->timeout(5)->name('Checkout check'),
-            OptimizedAppCheck::new(),
+            //OptimizedAppCheck::new(),
             HorizonCheck::new(),
             DebugModeCheck::new(),
             DatabaseTableSizeCheck::new(),
