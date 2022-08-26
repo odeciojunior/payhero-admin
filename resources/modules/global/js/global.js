@@ -1980,7 +1980,7 @@ function onlyNumbers(string) {
     if (string == undefined) {
         return 0;
     }
-    return string.replace(/[^-\d]/, '');
+    return (string.includes('-') ? -1:1) * string .replace(/\D/g, '');
 }
 
 function removeMoneyCurrency(string) {
