@@ -20,7 +20,7 @@ $('.company-navbar').change(function () {
 
         }
     });
-    loadingOnAccountsHealth('.sirius-performance > .card','150px');
+    loadingOnAccountsHealth('.sirius-performance > .card','60px');
     loadingOnAccountsHealth('.sirius-account > .card');
     $(".sirius-cashback > .card").addClass("d-none");
     loadingOnChart('#chart-loading');
