@@ -39,7 +39,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function gate()
     {
         Gate::define("viewHorizon", function ($user = null) {
-            return Session::has("horizon_access") || request()->bearerToken() === 'test';
+            return Session::has("horizon_access");
         });
     }
 }
