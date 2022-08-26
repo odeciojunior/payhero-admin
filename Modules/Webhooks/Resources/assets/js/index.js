@@ -49,6 +49,7 @@ $(document).ready(function () {
                         .find(".store-webhook")
                         .css("display", "block");
                     $("#content-error").css("display", "block");
+                    $("#content-script").css("display", "none");
                     $("#card-table-webhook").css("display", "none");
                     $("#card-webhook-data").css("display", "none");
                 } else {
@@ -59,6 +60,7 @@ $(document).ready(function () {
                         .find(".store-webhook")
                         .css("display", "none");
                     $("#content-error").hide();
+                    $("#content-script").show();
                     updateWebhookTableData(response);
                     pagination(response, "webhooks");
                 }
@@ -70,6 +72,7 @@ $(document).ready(function () {
     }
 
     function updateWebhookTableData(response) {
+        $("#content-script").css("display", "block");
         $("#card-table-webhook").css("display", "block");
         $("#card-webhook-data").css("display", "block");
         $("#table-body-webhook").html("");

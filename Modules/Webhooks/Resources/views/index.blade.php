@@ -42,7 +42,21 @@
                 </div>
             </div>
 
-            <div class="card shadow" id="card-table-webhook" data-plugin="matchHeight" style="display:none;">
+            <div class="mb-30" id="content-script" style="display:none">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-8"></div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-4 text-right">
+                        <a href="https://docs.cloudfox.net/" target="_blank"
+                            class="font-weight-bold d-flex justify-content-end align-items-center"
+                            style="line-height: 46px;">
+                            <span>Acesse a documentação da API</span>
+                            <span class="o-arrow-right-1 ml-15" style="color: #2E85EC;" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow" id="card-table-webhook" data-plugin="matchHeight" style="display:none">
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
                         <thead>
@@ -91,14 +105,15 @@
                             <div class="row url-container">
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="url">URL</label>
-                                    <input name="url" type="text" class="form-control form-control-lg" id="url"
-                                        placeholder="Digite uma URL válida">
+                                    <input name="url" type="text" class="form-control form-control-lg"
+                                        id="url" placeholder="Digite uma URL válida">
                                     <small class="text-muted">Digite uma URL válida</small>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="btn-save-webhook" type="button" class="btn btn-lg btn-primary">Cadastrar</button>
+                            <button id="btn-save-webhook" type="button"
+                                class="btn btn-lg btn-primary">Cadastrar</button>
                         </div>
                     </div>
                 </div>
