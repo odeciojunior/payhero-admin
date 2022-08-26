@@ -119,14 +119,14 @@
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify" id="table_invites">
                         <thead class="text-center">
-                            <td class="table-title text-left">Convite</td>
-                            <td class="table-title text-center">Email convidado</td>
-                            <td class="table-title text-center">Empresa Recebedora</td>
-                            <td class="table-title text-center">Status</td>
-                            <td class="table-title text-center">Data cadastro</td>
-                            <td class="table-title text-center">Data expiração</td>
-                            <td class="table-title text-center"></td>
-                            <td class="table-title text-center"></td>
+                            <td class="text-left">Convite</td>
+                            <td class="text-center">Email convidado</td>
+                            <td class="text-center">Empresa Recebedora</td>
+                            <td class="text-center">Status</td>
+                            <td class="text-center">Data cadastro</td>
+                            <td class="text-center">Data expiração</td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
                         </thead>
                         <tbody id='table-body-invites'>
                             {{-- js invites carrega --}}

@@ -128,20 +128,20 @@ $(document).ready(function () {
                             dados +=
                                 "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" +
                                 value.id +
-                                "' disabled><span class='o-reload-1'></span></button></td>";
+                                "' disabled><span class=''><img src='/build/global/img/icons-cashback.svg'/></span></button></td>";
                             dados +=
                                 "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" +
                                 value.id +
-                                "' disabled><span class='o-bin-1'></span></button></td>";
+                                "' disabled><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></button></td>";
                         } else {
                             dados +=
                                 "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" +
                                 value.id +
-                                "'><span class='o-reload-1'></span></button></td>";
+                                "'><span class=''><img src='/build/global/img/icons-cashback.svg'/></span></button></td>";
                             dados +=
                                 "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" +
                                 value.id +
-                                "'><span class='o-bin-1'></span></button></td>";
+                                "'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></button></td>";
                         }
                         dados += "</tr>";
                         $("#table-body-invites").append(dados);

@@ -113,7 +113,7 @@ $(function () {
                             <td>${value.name_short}</td>
                             <td>${value.code}</td>
                             <td>${value.platform_enum}</td>
-                            <td>
+                            <td class="text-center">
                                 <span class="badge badge-${statusPixel[value.status]}">
                                     ${value.status_translated}
                                 </span>
@@ -122,13 +122,13 @@ $(function () {
                                 <div class='d-flex justify-content-end align-items-center'>
                                     <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${
                                         value.id
-                                    }' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                    }' data-target='#modal-details-pixel' data-toggle='modal'><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
                                     <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${
                                         value.id
-                                    }' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
+                                    }' data-toggle='modal' type='a'><span class=""><img src='/build/global/img/pencil-icon.svg'/></span></a>
                                     <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${
                                         value.id
-                                    }' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
+                                    }' data-toggle='modal' type='a'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                                 </div>
                             </td>
                         </tr>

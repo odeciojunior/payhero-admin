@@ -78,11 +78,11 @@
                        style="width: 100%; margin-bottom: 0px;">
                     <thead>
                         <tr>
-                            <td class='table-title'>Nome</td>
-                            <td class='table-title'>Código</td>
-                            <td class='table-title'>Plataforma</td>
-                            <td class='table-title text-center'>Status</td>
-                            <td class='table-title options-column-width text-center'></td>
+                            <td class=''>Nome</td>
+                            <td class=''>Código</td>
+                            <td class=''>Plataforma</td>
+                            <td class=' text-center'>Status</td>
+                            <td class='options-column-width text-center'></td>
                         </tr>
                     </thead>
                     <tbody id='data-table-pixel'

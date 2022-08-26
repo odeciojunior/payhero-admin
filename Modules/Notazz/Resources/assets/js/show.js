@@ -238,7 +238,7 @@ $(document).ready(function () {
                                     <td>
                                         <a role='button' class='detalhes_venda pointer' sale="${
                                             value.sale_code
-                                        }"><span class="o-eye-1"></span></button></a>
+                                        }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></button></a>
                                     </td>
                                 </tr>`;
 

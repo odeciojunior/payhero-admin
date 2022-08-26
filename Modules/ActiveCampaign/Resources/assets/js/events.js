@@ -232,15 +232,15 @@ $(function () {
                         data +=
                             "<a title='Visualizar' class='mg-responsive pointer details-event' event='" +
                             value.id +
-                            "' role='button'><span class='o-eye-1'></span></a>";
+                            "' role='button'><span class=''><img src='/build/global/img/icon-eye.svg'/></span></a>";
                         data +=
                             "<a title='Editar' class='mg-responsive pointer edit-event' event='" +
                             value.id +
-                            "' role='button'data-toggle='modal' data-target='#modal-content'><span class='o-edit-1'></span></a>";
+                            "' role='button'data-toggle='modal' data-target='#modal-content'><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>";
                         data +=
                             "<a title='Excluir' class='mg-responsive pointer delete-event' event='" +
                             value.id +
-                            "' role='button'data-toggle='modal' data-target='#modal-delete'><span class='o-bin-1'></span></a>";
+                            "' role='button'data-toggle='modal' data-target='#modal-delete'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>";
                         data += "</td>";
                         data += "</tr>";
                         $("#data-table-event").append(data);

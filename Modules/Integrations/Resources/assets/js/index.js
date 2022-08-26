@@ -186,14 +186,14 @@ $(document).ready(function () {
                 value.id_code +
                 '"' +
                 disabled +
-                ' title="Editar integração"><span class="o-edit-1"></span></button>';
+                ' title="Editar integração"><span class=""><img src="/build/global/img/pencil-icon.svg"/></span></button>';
             //dados += '<button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
             dados +=
                 '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' +
                 value.id_code +
                 '"' +
                 disabled +
-                ' title="Deletar token"><span class="o-bin-1"></span></button>';
+                ' title="Deletar token"><span class=""><img src="/build/global/img/icon-trash-tale.svg"/></span></button>';
             dados += "</td>";
 
             dados += "</tr>";

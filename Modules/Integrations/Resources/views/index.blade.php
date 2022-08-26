@@ -91,20 +91,15 @@
                 </div>
             </div>
 
-            <div class="card shadow"
-                 id='card-table-integrate'
-                 data-plugin="matchHeight"
-                 style='display:none;'>
-                <div class="tab-pane active"
-                     id="tab_convites_enviados"
-                     role="tabpanel">
+            <div class="card shadow" id='card-table-integrate' data-plugin="matchHeight" style='display:none;'>
+                <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
                         <thead>
                             <tr>
-                                <td class="table-title">Descrição</td>
-                                <td class="table-title text-center">Tipo</td>
-                                <td class="table-title">Token</td>
-                                <td class="table-title"></td>
+                                <td class="">Descrição</td>
+                                <td class="text-center">Tipo</td>
+                                <td class="">Token</td>
+                                <td class=""></td>
                             </tr>
                         </thead>
                         <tbody id='table-body-integrates'>

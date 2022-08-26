@@ -135,22 +135,18 @@
                     </div> --}}
             <!-- Tabela -->
             <div class="fixhalf"></div>
-            <div class="card shadow "
-                 style="min-height: 300px">
+            <div class="card shadow ">
                 <div class="page-invoice-table table-responsive">
-                    <table id="tabela_vendas"
-                           class="table-vendas table table-striped unify"
-                           style="">
+                    <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                         <thead>
                             <tr>
-                                <td class="table-title display-sm-none display-m-none display-lg-none">Transação</td>
-                                <td class="table-title">Descrição</td>
-                                <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                <td class="table-title">Status</td>
-                                <td class="table-title display-sm-none display-m-none">Data</td>
-                                <td class="table-title">Valor</td>
-                                <td class="table-title"
-                                    width="80px;"> &nbsp;</td>
+                                <td class="display-sm-none display-m-none display-lg-none">Transação</td>
+                                <td class="">Descrição</td>
+                                <td class="display-sm-none display-m-none display-lg-none">Cliente</td>
+                                <td class="">Status</td>
+                                <td class="display-sm-none display-m-none">Data</td>
+                                <td class="">Valor</td>
+                                <td class=""width="80px;"> &nbsp;</td>
                             </tr>
                         </thead>
                         <tbody id="dados_tabela">

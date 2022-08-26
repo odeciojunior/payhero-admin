@@ -13,3 +13,27 @@
 #postback:focus {
     border-color: #88bfff;
 }
+
+.table thead > tr > td, .table thead > tr > th {
+    background-color: #FAFAFA;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    color: #15034C;
+}
+
+.table thead > tr > td:first-child {
+    padding: 22px 18px 22px 32px;
+}
+
+.table tbody > tr > td {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.badge{
+    min-width: 180px;
+}

@@ -310,14 +310,14 @@ $(function () {
                                     data +=
                                         '<a title="Editar" class="mg-responsive edit-link pointer" link="' +
                                         value.id +
-                                        '" data-toggle="modal"><span class=""><img src="build/global/img/pencil-icon.svg"/></span></a>';
+                                        '" data-toggle="modal"><span class=""><img src="/build/global/img/pencil-icon.svg"/></span></a>';
                                     data +=
                                         '<a title="Excluir" class="mg-responsive delete-link pointer" link="' +
                                         value.id +
                                         '" data-toggle="modal"><span class=""><img src="/build/global/img/icon-trash-tale.svg"/></span></a>';
                                 } else {
                                     data +=
-                                        '<a title="Editar" class="mg-responsive pointer disabled"><span class=""><img src="build/global/img/pencil-icon.svg"/></span></a>';
+                                        '<a title="Editar" class="mg-responsive pointer disabled"><span class=""><img src="/build/global/img/pencil-icon.svg"/></span></a>';
                                     data +=
                                         '<a title="Excluir" class="mg-responsive pointer disabled"><span class=""><img src="/build/global/img/icon-trash-tale.svg"/></span></a>';
                                 }

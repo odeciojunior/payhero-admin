@@ -17,17 +17,15 @@
 <div class="card shadow">
     <div style='min-height: 300px'>
         <div class='page-invoice-table table-responsive'>
-            <table id='table-events'
-                   class='table text-left table-pixels table-striped unify'
-                   style='width:100%'>
+            <table id='table-events' class='table text-left table-pixels table-striped unify' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title'>Evento</td>
-                        <td class='table-title'>Adicionar tags</td>
-                        <td class='table-title'>Remover Tags</td>
-                        <td class='table-title'>Adicionar na lista</td>
-                        <td class='table-title'>Remover da lista</td>
-                        <td class='table-title text-center options-column-width'>Opções</td>
+                        <td class=''>Evento</td>
+                        <td class=''>Adicionar tags</td>
+                        <td class=''>Remover Tags</td>
+                        <td class=''>Adicionar na lista</td>
+                        <td class=''>Remover da lista</td>
+                        <td class='text-center options-column-width'>Opções</td>
                     </tr>
                 </thead>
                 <tbody id='data-table-event'
