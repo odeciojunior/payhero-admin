@@ -76,7 +76,7 @@ $(document).ready(function () {
                 setTimeout(() => {
                     loadingOnChartRemove("#chart-loading");
                     getChart(response);
-                }, 4000);
+                }, 2000);
             },
         });
     }
