@@ -69,7 +69,7 @@ $(document).ready(function () {
     };
 
     function nextPerformance(data) {
-        loadingOnAccountsHealthRemove('.sirius-performance > .card');
+        loadingOnAccountsHealthRemove('.sirius-performance > .card .loader-any');
         $(".sirius-performance .card-indicators > .active").on("click", function () {
             $('.sirius-performance > .card').html('');
             let card = $(this).data('slide-to')
