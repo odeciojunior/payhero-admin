@@ -2,9 +2,12 @@
 
 namespace Modules\Api\Http\Controllers\V1;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Modules\Core\Services\Api\SaleApiService;
+use Modules\Sales\Transformers\TransactionResource;
 
 class SalesApiController extends Controller
 {
@@ -32,6 +35,17 @@ class SalesApiController extends Controller
             return ['status'=>'error','message'=>$validator->errors()->all()];
         }
 
-        return ['ok'=>true];
+        try {
+
+            $saleService = new SaleApiService();
+
+            $sales = $saleService->getPaginatedSales($request->all());
+
+            return TransactionResource::collection($sales);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(["message" => "Erro ao carregar vendas"], 400);
+        }
     }
 }
