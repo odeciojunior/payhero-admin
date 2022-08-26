@@ -75,7 +75,8 @@ class WithdrawalsApiController
                 return response()->json(["message" => "Sem permissão para realizar saques"], 403);
             }
 
-            $company = Company::find(hashids_decode($request->company_id));
+            $companyId = $request->company_id? hashids_decode($request->company_id): auth()->user()->company_default;
+            $company = Company::find($companyId);
             if (empty($company)) {
                 return response()->json(["message" => "Não identificamos a empresa."], 400);
             }

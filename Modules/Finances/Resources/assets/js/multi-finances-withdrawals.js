@@ -1,5 +1,7 @@
 window.defaultWithdrawal = function (gatewayId) {
     let availableBalanceText = onlyNumbers($("#available-balance-" + gatewayId).html());
+    console.log('defaultWithdrawal');
+    console.log(availableBalanceText);
     let toTransferText = onlyNumbers($("#withdrawal-value-" + gatewayId).val());
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
@@ -445,6 +447,11 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             click.removeData("clicked");
         }, 2000);
 
+        if(!$('.company-navbar').val()){
+            alertCustom('error', 'Não foi identificado a empresa selecionada.');
+            return false;
+        }
+
         loadOnModal("#modal-body-withdrawal-custom");
 
         $("#bt-confirm-withdrawal-modal-custom").attr("disabled", "disabled");
@@ -589,7 +596,8 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance, gatewayId) {
         });
         return false;
     }
-
+console.log('toTransfer:'+toTransfer);
+console.log('availableBalance:'+availableBalance);
     if (toTransfer > availableBalance) {
         alertCustom("error", "O valor requerido ultrapassa o limite disponivel");
         $("#withdrawal-value-" + gatewayId).val("");

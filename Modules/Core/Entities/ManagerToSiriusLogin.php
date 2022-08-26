@@ -3,8 +3,6 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -19,7 +17,6 @@ use App\Traits\LogsActivity;
  */
 class ManagerToSiriusLogin extends Model
 {
-    //use SoftDeletes, LogsActivity;
     /**
      * The "type" of the auto-incrementing ID.
      *

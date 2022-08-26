@@ -3,12 +3,13 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\UserProjectsPresenter;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property integer $id
@@ -64,24 +65,15 @@ class UserProject extends Model
         "updated_at",
         "deleted_at",
     ];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que o pacote armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
+    }
+
 
     public function company(): BelongsTo
     {

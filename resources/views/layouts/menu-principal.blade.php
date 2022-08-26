@@ -306,65 +306,17 @@
         @endcan
 
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
-        @if (auth()->user()->hasAnyPermission(['report_sales', 'report_coupons', 'report_pending', 'report_blockedbalance']))
+        @if (auth()->user()->hasAnyPermission(['reports']))
             <li class="site-menu-item has-sub">
-                <a href="{{ auth()->user()->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id) == 'admin'? route('reports.resume'): 'javascript:void(0)' }}"
-                    id="reports-link">
+                <a href="{{route('reports.resume')}}"
+                   id="reports-link">
                     <span class="bg-menu">
                         <img src="{{ mix('build/global/img/svg/relatorios.svg') }}" alt="Relatórios">
                     </span>
                     <span class="site-menu-title">Relatórios</span>
-                    @if (auth()->user()->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id) == 'collaborator')
-                        <span class="site-menu-arrow"></span>
-                        <ul class="site-menu-sub">
-                            @can('report_sales')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.resume') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Visão geral</span>
-                                    </a>
-                                </li>
-                            @endcan
-                            {{-- @can('report_checkouts')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.checkouts') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Checkouts</span>
-                                    </a>
-                                </li>
-                            @endcan --}}
-
-                            @can('report_coupons')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.coupons') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Cupons</span>
-                                    </a>
-                                </li>
-                            @endcan
-
-                            @can('report_pending')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.pending') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Saldo pendente</span>
-                                    </a>
-                                </li>
-                            @endcan
-
-                            @can('report_blockedbalance')
-                                <li class="site-menu-item">
-                                    <a href="{{ route('reports.blockedbalance') }}">
-                                        <span class="bg-menu"></span>
-                                        <span class="site-menu-title">Saldo retido</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    @endif
                 </a>
             </li>
-        @endhasanyrole
+        @endif
 
         <!-- hasanyrole('account_owner|admin') -->
         @can('affiliates')
@@ -388,8 +340,7 @@
                 </a>
             </li>
         @endcan
-        @if (auth()->user()->hasRole('account_owner') ||
-            auth()->user()->hasRole('admin'))
+        @if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="api-sirius-link">
                     <span class="bg-menu">

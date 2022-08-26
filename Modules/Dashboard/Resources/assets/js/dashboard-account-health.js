@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    var th = null;
     let scoreInfo = {
         0: {
             textColor: "text-color-red",
@@ -182,7 +183,9 @@ $(document).ready(function () {
 
                     $(".sirius-account > .card").append(item);
 
-                    updateGauge(data.account_score);
+                    setTimeout(() => {
+                        updateGauge(data.account_score);
+                    }, 3000);
 
                     nextCard();
 
@@ -239,7 +242,8 @@ $(document).ready(function () {
         $(".sirius-account > .card").append(item);
     }
 
-    function updateGauge(account_score) {
+    function updateGauge(account_score)
+    {
         var opts = {
             angle: 0, // A extensão do arco do medidor
             lineWidth: 0.3, // A espessura da linha

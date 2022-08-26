@@ -106,7 +106,7 @@ $(document).ready(function () {
                             '<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>'
                         );
                     } else if (response.data.documents_status == "pending") {
-                        let companie = $("#transfers_company_select").val();
+                        let companie = $('.company-navbar').val();
                         let route = "/companies/" + companie + "/edit";
                         $("#modal-withdrawal").modal("show");
                         $("#modal-withdrawal-title").text("Oooppsssss!");
@@ -162,7 +162,7 @@ $(document).ready(function () {
                                 url: "/withdrawals",
                                 type: "POST",
                                 data: {
-                                    company_id: $("#transfers_company_select").val(),
+                                    company_id: $('.company-navbar').val(),
                                     withdrawal_value: $("#custom-input-addon").val(),
                                 },
                                 headers: {

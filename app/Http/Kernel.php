@@ -72,8 +72,6 @@ class Kernel extends HttpKernel
         ],
 
         "api" => ["throttle:500,1", "bindings", CheckAccountStatusApi::class, VerifyFrozenAccountApi::class],
-
-        "api-socialite" => [EncryptCookies::class, StartSession::class, "throttle:60,1", "bindings"],
     ];
     /**
      * The application's route middleware.
