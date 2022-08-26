@@ -26,10 +26,9 @@ class HealthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Health::checks([
+        $checks = [
             DatabaseCheck::new()->name('Database check'),
             DatabaseCheck::new()->connectionName('demo')->name('Demo database check'),
-            //ScheduleCheck::new(),
             RedisCheck::new(),
             PingCheck::new()->url('https://sirius.cloudfox.net')->timeout(5)->name('Sirius check'),
             PingCheck::new()->url('https://sac.cloudfox.net')->timeout(5)->name('Sac check'),
@@ -44,7 +43,14 @@ class HealthServiceProvider extends ServiceProvider
             CacheCheck::new(),
             EnvironmentCheck::new(),
             UsedDiskSpaceCheck::new(),
-        ]);
+
+        ];
+
+        if(env('APP_NAME') == 'Cloudfox-cron') {
+            $checks[] = ScheduleCheck::new();
+        }
+
+        Health::checks($checks);
     }
 
     /**
