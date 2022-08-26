@@ -19,5 +19,7 @@ Route::group(
     ],
     function () {
         Route::get('teste', 'V1\SubsellersApiController@createSubseller');
+
+        Route::get('sales','V1\SalesApiController@index');
     }
 );
