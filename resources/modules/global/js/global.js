@@ -492,7 +492,7 @@ function loadingOnChartRemove(target) {
 }
 
 function loadingOnAccountsHealthRemove(target) {
-    $('.loader-any').remove();
+    $(target).remove();
 }
 
 function loadOnAnyEllipsis(target, remove = false, options = {}) {

@@ -1,7 +1,5 @@
 window.defaultWithdrawal = function (gatewayId) {
     let availableBalanceText = onlyNumbers($("#available-balance-" + gatewayId).html());
-    console.log('defaultWithdrawal');
-    console.log(availableBalanceText);
     let toTransferText = onlyNumbers($("#withdrawal-value-" + gatewayId).val());
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
@@ -596,8 +594,8 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance, gatewayId) {
         });
         return false;
     }
-console.log('toTransfer:'+toTransfer);
-console.log('availableBalance:'+availableBalance);
+
+    console.log('toTransfer:'+toTransfer);
     if (toTransfer > availableBalance) {
         alertCustom("error", "O valor requerido ultrapassa o limite disponivel");
         $("#withdrawal-value-" + gatewayId).val("");
