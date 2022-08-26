@@ -12,7 +12,6 @@ use Spatie\Health\Checks\Checks\DatabaseTableSizeCheck;
 use Spatie\Health\Checks\Checks\DebugModeCheck;
 use Spatie\Health\Checks\Checks\EnvironmentCheck;
 use Spatie\Health\Checks\Checks\HorizonCheck;
-use Spatie\Health\Checks\Checks\OptimizedAppCheck;
 use Spatie\Health\Checks\Checks\PingCheck;
 use Spatie\Health\Checks\Checks\RedisCheck;
 use Spatie\Health\Checks\Checks\ScheduleCheck;
@@ -43,7 +42,6 @@ class HealthServiceProvider extends ServiceProvider
             CacheCheck::new(),
             EnvironmentCheck::new(),
             UsedDiskSpaceCheck::new(),
-
         ];
 
         if(env('APP_NAME') == 'Cloudfox-cron') {
