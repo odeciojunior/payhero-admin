@@ -1746,6 +1746,12 @@ input[type="checkbox"], input[type="radio"] {
     color: #2E85EC;
 }
 
+.pagination-style{
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
 .pagination-sm .btn {
     min-width: 30px;
     height: 30px;
@@ -2035,7 +2041,7 @@ tbody td{
 .page-project .pagination-sm .nav-btn {
     color: #3D4456;
     background: #FFFFFF !important;
-    border: 1px solid #EBEBEB !important;
+
     border-radius: 8px;
     margin-right: 10px;
     min-width: 40px;
@@ -2045,10 +2051,11 @@ tbody td{
     padding: 5px;
 }
 .page-project .pagination-sm .nav-btn.active {
-    border-radius: 8px;
-    color: #2E85EC !important;
-    background: #FFFFFF !important;
-    border: 1px solid #2E85EC !important;
+    background-color: #2E85EC !important;
+
+    border-radius: 4px;
+    opacity: 1 !important;
+    color: white !important;
 }
 
 .page-project .table > tbody > tr:nth-child(2n+2) > td,

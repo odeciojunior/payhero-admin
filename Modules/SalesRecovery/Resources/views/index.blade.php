@@ -39,11 +39,9 @@
                 @endcan
             </div>
         </div>
-        <div id='project-not-empty'
-             style='display:none'>
+        <div id='project-not-empty' style='display:none'>
             <div class="page-content container">
-                <div id=""
-                     class="card shadow p-20">
+                <div id="" class="card shadow p-20">
 
                     <div class="row align-items-baseline">
 
@@ -435,10 +433,8 @@
                     </div>
                     <!-- End Modal -->
                 </div>
-                <div class="row justify-content-center justify-content-md-end">
-                    <ul id="pagination-salesRecovery"
-                        class="pl-5 pr-md-15 pb-20"
-                        style="margin-top:10px;position:relative;float:right;">
+                <div class="row no-gutters justify-content-center justify-content-md-end">
+                    <ul id="pagination-salesRecovery" class="pagination-style" style="margin-top:10px;position:relative;float:right;">
                         {{-- js carrega... --}}
                     </ul>
                 </div>

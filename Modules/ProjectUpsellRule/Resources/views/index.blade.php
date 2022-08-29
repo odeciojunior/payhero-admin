@@ -56,8 +56,7 @@
 </div>
 
 <div class="d-flex justify-content-center justify-content-md-end">
-    <ul id="pagination-upsell"
-        class="pagination-sm margin-chat-pagination text-right m-0">
+    <ul id="pagination-upsell" class="pagination-sm margin-chat-pagination text-right m-0 pagination-style">
         {{-- js carrega... --}}
     </ul>
 </div>

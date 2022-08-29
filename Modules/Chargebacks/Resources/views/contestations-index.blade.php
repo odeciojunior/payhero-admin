@@ -289,9 +289,8 @@
                         </table>
                     </div>
                 </div>
-                <div class="row justify-content-center justify-content-md-end pb-60">
-                    <ul id="pagination"
-                        class="pl-5 pr-md-15 mb-10">
+                <div class="row no-gutters justify-content-center justify-content-md-end pb-60">
+                    <ul id="pagination" class="pagination-style">
                         {{-- js carrega... --}}
                     </ul>
                 </div>

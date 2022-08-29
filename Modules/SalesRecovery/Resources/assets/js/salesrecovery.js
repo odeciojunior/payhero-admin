@@ -521,7 +521,7 @@ $(document).ready(function () {
         data +=
             "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
             value.id_default +
-            "' ><span class='o-eye-1'></span></button></td>";
+            "' ><span class=''><img src='/build/global/img/icon-eye.svg'/></span></button></td>";
         data += "</tr>";
 
         return data;

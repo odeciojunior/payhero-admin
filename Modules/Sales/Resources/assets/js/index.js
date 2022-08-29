@@ -149,7 +149,7 @@ function atualizar(link = null) {
                     ) {
                         cupomCode = `
                             <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}" role="button" style='margin-left: 5px;'>
-                                <img width="20px" src="/build/global/img/coupon.svg">
+                                <img width="25px" src="/build/global/img/icons-cupom.svg">
                             </a>`
                         ;
                     }
@@ -159,7 +159,7 @@ function atualizar(link = null) {
                     if (value.upsell) {
                         upsell = `
                             <a data-toggle="tooltip" title="Upsell" role="button" style='margin-left: 5px;'>
-                                <img width="20px" src="/build/global/img/upsell.svg">
+                                <img width="20px" src="/build/global/img/icon-upsell.svg">
                             </a>`
                         ;
                     }

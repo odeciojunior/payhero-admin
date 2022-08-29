@@ -42,8 +42,7 @@
 </div>
 
 <div class="d-flex justify-content-center justify-content-md-end">
-    <ul id="pagination-order-bump"
-        class="pagination-s margin-chat-pagination float-right text-right m-0">
+    <ul id="pagination-order-bump" class="pagination-s margin-chat-pagination float-right text-right m-0 pagination-style">
         {{-- js carrega... --}}
     </ul>
 </div>

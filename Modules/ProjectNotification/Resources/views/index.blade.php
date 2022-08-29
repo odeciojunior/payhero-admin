@@ -46,7 +46,7 @@
 </div>
 
 <div class="d-flex justify-content-center justify-content-md-end">
-    <div id="pagination-project-notification" class="pagination-sm text-right margin-chat-pagination text-right m-0">
+    <div id="pagination-project-notification" class="pagination-sm text-right margin-chat-pagination text-right m-0 pagination-style">
         {{-- js carrega... --}}
     </div>
 </div>

@@ -58,8 +58,7 @@
 </div>
 
 <div class="d-flex justify-content-center justify-content-md-end">
-    <ul id="pagination-review"
-        class="pagination-sm margin-chat-pagination text-right m-0">
+    <ul id="pagination-review" class="pagination-sm margin-chat-pagination text-right m-0 pagination-style">
         {{-- js carrega... --}}
     </ul>
 </div>
