@@ -399,7 +399,6 @@ class MappingCronTasks extends Command
                 "frequently" => "min",
             ],
             ["command" => "horizon:snapshot", "time" => "00:00", "repeat" => 15, "repeat" => 1, "frequently" => "min"],
-            ["command" => "check:systems", "time" => "00:00", "repeat" => 10, "repeat" => 1, "frequently" => "min"],
             ["command" => "change:pix-to-canceled", "time" => "00:00", "repeat" => 1, "frequently" => "min"],
         ];
     }
