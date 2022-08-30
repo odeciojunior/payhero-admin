@@ -4,23 +4,38 @@ namespace Modules\Api\Http\Controllers\V1;
 
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Api\Http\Requests\V1\SubsellersApiRequest;
+use Modules\Api\Transformers\V1\SubsellerApiResource;
+use Modules\Core\Services\Api\V1\SubsellersApiService;
+use Modules\Core\Entities\User;
 
 class SubsellersApiController extends Controller
 {
-    public function createSubseller(Request $request)
+    private SubsellersApiService $subsellersApiService;
+
+    public function __construct(SubsellersApiService $subsellersApiService)
+    {
+        $this->subsellersApiService = $subsellersApiService;
+    }
+
+    public function createSubseller(SubsellersApiRequest $request)
     {
         try {
+            $requestData = $this->subsellersApiService->prepareRequestData();
+
+            $user = User::create($requestData);
+
             return response()->json([
-                'data' => $request
-            ], Response::HTTP_OK);
+                'data' => new SubsellerApiResource($user),
+                'message' => 'Usuário cadastrado com sucesso.'
+            ], 201);
         } catch(Exception $exception) {
             report($exception);
 
             return response()->json([
-                'message' => ''
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => 'Ocorreu um erro ao tentar cadastrar o usuário.'
+            ], 500);
         }
     }
 
@@ -29,13 +44,13 @@ class SubsellersApiController extends Controller
         try {
             return response()->json([
                 'data' => ''
-            ], Response::HTTP_OK);
+            ], 200);
         } catch(Exception $exception) {
             report($exception);
 
             return response()->json([
                 'message' => ''
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], 500);
         }
     }
 
@@ -44,13 +59,13 @@ class SubsellersApiController extends Controller
         try {
             return response()->json([
                 'data' => ''
-            ], Response::HTTP_OK);
+            ], 200);
         } catch(Exception $exception) {
             report($exception);
 
             return response()->json([
                 'message' => ''
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], 500);
         }
     }
 
@@ -59,13 +74,13 @@ class SubsellersApiController extends Controller
         try {
             return response()->json([
                 'data' => ''
-            ], Response::HTTP_OK);
+            ], 200);
         } catch(Exception $exception) {
             report($exception);
 
             return response()->json([
                 'message' => ''
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], 500);
         }
     }
 }

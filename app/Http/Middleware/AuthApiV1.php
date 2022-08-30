@@ -24,7 +24,6 @@ class AuthApiV1
                 ->first();
 
             if ($apiToken) {
-                $request->company_id = $apiToken->company->id;
                 $request->user_id = $apiToken->user->id;
 
                 return $next($request);

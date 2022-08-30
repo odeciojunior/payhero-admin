@@ -13,11 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(
-    [
-        "middleware" => "authApiV1",
-    ],
-    function () {
-        Route::get('teste', 'V1\SubsellersApiController@createSubseller');
-    }
-);
+Route::group([ "middleware" => "authApiV1" ], function () {
+    Route::post('subsellers', 'V1\SubsellersApiController@createSubseller');
+});
