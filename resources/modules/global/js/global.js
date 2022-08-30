@@ -472,7 +472,7 @@ function loadingOnChart(target) {
 
 function loadingOnAccountsHealth(target,margin='80px') {
     $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="d-flex justify-content-center align-items-center align-self-center bg-white"
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;width: 100%;height: 100%;" class="d-flex justify-content-center align-items-center align-self-center bg-white block-loader-any"
         style="background-color: #f4f4f4;
         position: fixed;
         width: 100%;

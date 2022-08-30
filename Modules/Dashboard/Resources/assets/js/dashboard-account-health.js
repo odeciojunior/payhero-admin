@@ -105,14 +105,14 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
                 if (!data.account_score) {
                     updateEmptyScore();
                 } else {
-                    loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any");
+                    loadingOnAccountsHealth(".sirius-account > .card",'13px');
                     let item = `
                             <div
                                 class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-health">
@@ -130,12 +130,7 @@ $(document).ready(function () {
                             </div>
                             <div class="card-body pt-0 d-flex flex-column justify-content-start align-items-start account-health">
                                 <div id="" class="d-flex flex-row justify-content-start align-items-start align-self-start" >
-                                    <div id="account-health-chart-gauge-box" class="mr-15">
-                                        <canvas id="account-health-chart-gauge" class="mr-15"></canvas>
-                                        <div style="z-index: 100; border-radius: 16px; position: absolute;" class="d-flex justify-content-center align-items-center align-self-center bg-white">
-                                            <span class="loader-any" style="margin-top: -80px"></span>
-                                        </div>
-                                    </div>
+                                    <canvas id="account-health-chart-gauge" class="mr-15"></canvas>
                                     <div class="mt-15 d-flex flex-column justify-content-center align-self-center">
                                         <span id="account-health-note"><span class="${
                                             scoreInfo[Math.floor(data.account_score)].textColor
@@ -194,7 +189,6 @@ $(document).ready(function () {
                     }, 3000);
 
                     nextCard();
-
                 }
 
                 $(".page.dashboard .sirius-account .sirius-account-health").css({ height: " 225px" });
@@ -204,7 +198,7 @@ $(document).ready(function () {
 
     function updateEmptyScore() {
 
-        loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any");
+        loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
 
         let item = `
                     <div
@@ -292,7 +286,7 @@ $(document).ready(function () {
         gauge.animationSpeed = 64; // set animation speed (32 is default value)
         gauge.set(account_score); // set actual value
 
-        loadingOnAccountsHealthRemove("#account-health-chart-gauge-box  .loader-any");
+        loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
     }
 
     function updateChargeback() {
@@ -310,11 +304,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-chargeback">
@@ -433,7 +427,7 @@ $(document).ready(function () {
     }
 
     function updateAttendance() {
-        loadingOnAccountsHealth(".sirius-account > .card");
+        loadingOnAccountsHealth(".sirius-account > .card","13px");
 
         $.ajax({
             method: "GET",
@@ -447,11 +441,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any ");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any ");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-attendance">
@@ -516,7 +510,7 @@ $(document).ready(function () {
     }
 
     function updateTracking() {
-        loadingOnAccountsHealth(".sirius-account > .card");
+        loadingOnAccountsHealth(".sirius-account > .card",'13px');
 
         $.ajax({
             method: "GET",
@@ -530,11 +524,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any ");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .loader-any ");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-tracking">

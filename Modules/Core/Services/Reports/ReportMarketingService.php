@@ -35,22 +35,35 @@ class ReportMarketingService
         $ownerId = $user->getAccountOwnerId();
 
         $cacheName = 'marketing-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId)
+        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId,$user)
         {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters["project_id"]);
 
-            $checkoutsCount =   Checkout::where('project_id', $projectId)
-                                ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                ->count();
+            $affiliate =  DB::table('affiliates')->select('id')
+                            ->where('user_id',$user->id)->where('project_id',$projectId)->whereNull('deleted_at')
+                            ->first();
 
-            $salesCount =   Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
+            $checkoutsQr =  Checkout::where('project_id', $projectId)
+                            ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+
+            if(!empty($affiliate)){
+                $checkoutsQr = $checkoutsQr->where('affiliate_id',$affiliate->id);
+            }
+
+            $checkoutsCount = $checkoutsQr->count();
+
+            $salesQr =   Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                             ->where('t.company_id',$filters['company_id'])
                             ->where('owner_id', $ownerId)
                             ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                             ->where('sales.status', Sale::STATUS_APPROVED)
-                            ->where('sales.project_id', $projectId)
-                            ->count();
+                            ->where('sales.project_id', $projectId);
+
+            if(!empty($affiliate)){
+                $salesQr = $salesQr->where('sales.affiliate_id',$affiliate->id);
+            }
+            $salesCount = $salesQr->count();
 
             $salesValue =   Transaction::join('sales', 'sales.id', 'transactions.sale_id')
                             ->where('user_id', $ownerId)
