@@ -391,8 +391,8 @@ class SalesRecoveryService
         $s = Checkout::select('checkouts.project_id')
             ->distinct()
             ->leftjoin('checkout_configs','checkout_configs.project_id','checkouts.project_id')
-            ->join('companies','companies.id','checkout_configs.company_id')
-            ->join('affiliates','affiliates.id','checkouts.affiliate_id')
+            ->leftjoin('companies','companies.id','checkout_configs.company_id')
+            ->leftjoin('affiliates','affiliates.id','checkouts.affiliate_id')
             ->where(function($query) {
                 $query
                 ->where('affiliates.user_id', auth()->user()->getAccountOwnerId())
