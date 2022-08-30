@@ -12,7 +12,6 @@ use Spatie\Health\Checks\Checks\DatabaseTableSizeCheck;
 use Spatie\Health\Checks\Checks\DebugModeCheck;
 use Spatie\Health\Checks\Checks\EnvironmentCheck;
 use Spatie\Health\Checks\Checks\HorizonCheck;
-use Spatie\Health\Checks\Checks\OptimizedAppCheck;
 use Spatie\Health\Checks\Checks\PingCheck;
 use Spatie\Health\Checks\Checks\RedisCheck;
 use Spatie\Health\Checks\Checks\ScheduleCheck;
@@ -26,16 +25,10 @@ class HealthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Health::checks([
+        $checks = [
             DatabaseCheck::new()->name('Database check'),
             DatabaseCheck::new()->connectionName('demo')->name('Demo database check'),
-            //ScheduleCheck::new(),
             RedisCheck::new(),
-            PingCheck::new()->url('https://sirius.cloudfox.net')->timeout(5)->name('Sirius check'),
-            PingCheck::new()->url('https://sac.cloudfox.net')->timeout(5)->name('Sac check'),
-            PingCheck::new()->url('https://manager.cloudfox.net')->timeout(5)->name('Manager check'),
-            PingCheck::new()->url('https://accounts.cloudfox.net')->timeout(5)->name('Accounts check'),
-            PingCheck::new()->url('https://checkout.cloudfox.net')->timeout(5)->name('Checkout check'),
             //OptimizedAppCheck::new(),
             HorizonCheck::new(),
             DebugModeCheck::new(),
@@ -44,7 +37,13 @@ class HealthServiceProvider extends ServiceProvider
             CacheCheck::new(),
             EnvironmentCheck::new(),
             UsedDiskSpaceCheck::new(),
-        ]);
+        ];
+
+        if(env('APP_NAME') == 'Cloudfox-cron') {
+            $checks[] = ScheduleCheck::new();
+        }
+
+        Health::checks($checks);
     }
 
     /**

@@ -15,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([ "middleware" => "authApiV1" ], function () {
     Route::post('subsellers', 'V1\SubsellersApiController@createSubseller');
+    Route::get('sales','V1\SalesApiController@index');
 });

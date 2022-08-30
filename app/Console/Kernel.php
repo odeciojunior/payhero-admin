@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
 
 /**
  * Class Kernel
@@ -39,6 +40,7 @@ class Kernel extends ConsoleKernel
 
         setlocale(LC_ALL, 'pt_BR');
 
+        $schedule->command(ScheduleCheckHeartbeatCommand::class)->everyMinute();
         $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
