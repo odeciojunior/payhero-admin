@@ -129,6 +129,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('demo:create-fake-invite')->weekly();
 
+        $schedule->command('check:company')->saturdays()->at('05:00');
+
         // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
     }
 
