@@ -392,7 +392,12 @@ class SalesRecoveryService
             ->distinct()
             ->leftjoin('checkout_configs','checkout_configs.project_id','checkouts.project_id')
             ->join('companies','companies.id','checkout_configs.company_id')
-            ->where('companies.user_id',auth()->user()->getAccountOwnerId())
+            ->join('affiliates','affiliates.id','checkouts.affiliate_id')
+            ->where(function($query) {
+                $query
+                ->where('affiliates.user_id', auth()->user()->getAccountOwnerId())
+                ->orWhere('companies.user_id',auth()->user()->getAccountOwnerId());
+            })
             ->where('checkouts.status_enum',2)
             ->union($first)
             ->get();

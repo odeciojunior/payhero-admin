@@ -29,12 +29,23 @@ class CheckoutService
 
     public function getAbandonedCart(): LengthAwarePaginator
     {
+        $companyId = hashids_decode(request('company'));
+        $projectIdsAffiliate = [];
         $projectIds = [];
 
         $ownerId = auth()->user()->getAccountOwnerId();
 
         if (request('project') == 'all') {
-            $projectIds = UserProject::where('user_id', $ownerId)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
+            $projectIds = UserProject::where('user_id', $ownerId)
+                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+                ->pluck('project_id')
+                ->toArray();
+
+            $projectIdsAffiliate = Affiliate::where('user_id', $ownerId)
+                ->where('affiliates.company_id',$companyId)
+                ->where('status_enum', Affiliate::STATUS_ACTIVE)
+                ->pluck('project_id')
+                ->toArray();
 
         } else {
             $projects = explode(",", request("project"));
@@ -59,6 +70,7 @@ class CheckoutService
 
         $abandonedCarts = Checkout::
         join('checkout_configs','checkouts.project_id','=','checkout_configs.project_id')
+        ->leftJoin('affiliates','affiliates.id','=','checkouts.affiliate_id')
         ->select('checkouts.*')
         ->with(
             [
@@ -69,10 +81,17 @@ class CheckoutService
             ]
         )->whereHas('checkoutPlans', function ($query) {
             $query->whereHas('plan');
-        })->whereIn('status_enum', $abandonedCartsStatus)
-            ->whereIn('checkouts.project_id', $projectIds)
-            ->whereBetween('checkouts.created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
-            ->where('checkout_configs.company_id',hashids_decode(request('company')))
+        })
+        ->whereIn('checkouts.status_enum', $abandonedCartsStatus)
+        ->whereBetween('checkouts.created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+        ->where(function($query) use ($projectIds, $projectIdsAffiliate, $companyId){
+            $query->where(function ($query) use ($projectIds, $projectIdsAffiliate, $companyId) {
+                $query->whereIn('checkouts.project_id', $projectIdsAffiliate)->where('affiliates.company_id', $companyId);
+            })
+            ->orWhere(function ($query) use ($projectIds, $companyId) {
+                $query->whereIn('checkouts.project_id', $projectIds)->where('checkout_configs.company_id', $companyId);
+            });
+        })
             ->when(
                 !empty(request('client')),
                 function ($query) {
@@ -101,13 +120,6 @@ class CheckoutService
                     );
                 }
             );
-
-        $affiliateIds = Affiliate::where('user_id', $ownerId)
-            ->whereIn('project_id', $projectIds)->pluck('id')->toArray();
-
-        if (!empty($affiliateIds) && count($affiliateIds) > 0) {
-            $abandonedCarts->whereIn("affiliate_id", $affiliateIds);
-        }
 
         return $abandonedCarts->orderBy('checkouts.id', 'DESC')->paginate(10);
     }

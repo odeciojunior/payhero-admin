@@ -1225,11 +1225,19 @@ class SaleService
     }
 
     public static function getProjectsWithSales(){
-        return Sale::select('sales.project_id')
+        $first = Sale::select('sales.project_id')
             ->distinct()
             ->leftjoin('projects','projects.id','sales.project_id')
-            ->where('owner_id',auth()->user()->getAccountOwnerId())
+            ->where('owner_id', auth()->user()->getAccountOwnerId());
+
+        $s = Sale::select('sales.project_id')
+            ->distinct()
+            ->leftjoin('affiliates','affiliates.id','sales.affiliate_id')
+            ->where('affiliates.user_id', auth()->user()->getAccountOwnerId())
+            ->union($first)
             ->get();
+
+        return $s;
     }
 
     public function refund(Sale $sale, $refundObservation = null)
