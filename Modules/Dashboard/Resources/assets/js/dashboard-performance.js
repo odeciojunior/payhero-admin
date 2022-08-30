@@ -69,7 +69,7 @@ $(document).ready(function () {
     };
 
     function nextPerformance(data) {
-        loadingOnAccountsHealthRemove('.sirius-performance > .card');
+        loadingOnAccountsHealthRemove('.sirius-performance > .card .block-loader-any');
         $(".sirius-performance .card-indicators > .active").on("click", function () {
             $('.sirius-performance > .card').html('');
             let card = $(this).data('slide-to')
@@ -90,7 +90,7 @@ $(document).ready(function () {
 
     window.updatePerformance = function () {
 
-        loadingOnAccountsHealth('.sirius-performance > .card','150px');
+        loadingOnAccountsHealth('.sirius-performance > .card','60px');
 
         $.ajax({
             method: "GET",

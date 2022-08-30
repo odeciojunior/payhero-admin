@@ -67,7 +67,7 @@ $(document).ready(function () {
 
     function nextCard() {
         //setTimeout(function(){loadingOnAccountsHealthRemove('.sirius-account > .card  .sirius-loading '); }, 500);
-        loadingOnAccountsHealthRemove(".sirius-account > .card  .sirius-loading ");
+
         $(".sirius-account .card-indicators > .active").on("click", function () {
             $(".sirius-account > .card").html("");
             loadingOnAccountsHealth(".sirius-account > .card");
@@ -105,13 +105,14 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .sirius-loading ");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
                 if (!data.account_score) {
                     updateEmptyScore();
                 } else {
+                    loadingOnAccountsHealth(".sirius-account > .card",'13px');
                     let item = `
                             <div
                                 class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-health">
@@ -188,7 +189,6 @@ $(document).ready(function () {
                     }, 3000);
 
                     nextCard();
-
                 }
 
                 $(".page.dashboard .sirius-account .sirius-account-health").css({ height: " 225px" });
@@ -197,47 +197,47 @@ $(document).ready(function () {
     };
 
     function updateEmptyScore() {
-        setTimeout(function () {
-            loadingOnAccountsHealthRemove(".sirius-account > .card  .sirius-loading");
-        }, 500);
+
+        loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
+
         let item = `
-                            <div
-                                class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-health">
-                            </div>
-                            <div class="card-body pt-0 d-flex flex-column justify-content-start align-items-start empty-score">
-                                <div class="d-flex flex-column flex-nowrap justify-content-center align-items-center align-self-center">
-                                    <span class="bg-color-blue "></span>
-                                    <h4>EM BREVE</h4>
-                                    <p>Faça +100 vendas para ativar este recurso.</p>
+                    <div
+                        class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-health">
+                    </div>
+                    <div class="card-body pt-0 d-flex flex-column justify-content-start align-items-start empty-score">
+                        <div class="d-flex flex-column flex-nowrap justify-content-center align-items-center align-self-center">
+                            <span class="bg-color-blue "></span>
+                            <h4>EM BREVE</h4>
+                            <p>Faça +100 vendas para ativar este recurso.</p>
+                        </div>
+                        <div class="d-flex flex-row flex-nowrap justify-content-around align-items-stretch align-self-stretch" >
+                            <div class="d-flex flex-column justify-content-between align-items-center align-self-center">
+                                <div class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
+                                    <span class="bg-color-gray empty-cilce"></span>
+                                    <span></span>
                                 </div>
-                                <div class="d-flex flex-row flex-nowrap justify-content-around align-items-stretch align-self-stretch" >
-                                    <div class="d-flex flex-column justify-content-between align-items-center align-self-center">
-                                        <div class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
-                                            <span class="bg-color-gray empty-cilce"></span>
-                                            <span></span>
-                                        </div>
-                                        <span class="account-health-note-description">Contestações</span>
-                                    </div>
-                                    <div class="hr-vertical d-flex justify-content-center align-items-center align-self-center"></div>
-                                    <div class="d-flex flex-column justify-content-between align-items-center align-self-center">
-                                        <div class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
-                                            <span class="bg-color-gray empty-cilce"></span>
-                                            <span></span>
-                                        </div>
-                                        <span class="account-health-note-description">Atendimento</span>
-                                    </div>
-                                    <div class="hr-vertical d-flex justify-content-center align-items-center align-self-center"></div>
-                                    <div class="d-flex flex-column justify-content-between align-items-center align-self-center">
-                                        <div class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
-                                            <span class="bg-color-gray empty-cilce"></span>
-                                            <span></span>
-                                        </div>
-                                        <span class="account-health-note-description">Cod. Rastreio</span>
-                                    </div>
-                                </div>
-                                <div class="sirius-account-loading"></div>
+                                <span class="account-health-note-description">Contestações</span>
                             </div>
-                    `;
+                            <div class="hr-vertical d-flex justify-content-center align-items-center align-self-center"></div>
+                            <div class="d-flex flex-column justify-content-between align-items-center align-self-center">
+                                <div class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
+                                    <span class="bg-color-gray empty-cilce"></span>
+                                    <span></span>
+                                </div>
+                                <span class="account-health-note-description">Atendimento</span>
+                            </div>
+                            <div class="hr-vertical d-flex justify-content-center align-items-center align-self-center"></div>
+                            <div class="d-flex flex-column justify-content-between align-items-center align-self-center">
+                                <div class="d-flex flex-row flex-nowrap justify-content-center align-items-center align-self-center">
+                                    <span class="bg-color-gray empty-cilce"></span>
+                                    <span></span>
+                                </div>
+                                <span class="account-health-note-description">Cod. Rastreio</span>
+                            </div>
+                        </div>
+                        <div class="sirius-account-loading"></div>
+                    </div>
+            `;
 
         $(".sirius-account > .card").append(item);
     }
@@ -285,6 +285,8 @@ $(document).ready(function () {
         gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
         gauge.animationSpeed = 64; // set animation speed (32 is default value)
         gauge.set(account_score); // set actual value
+
+        loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
     }
 
     function updateChargeback() {
@@ -302,10 +304,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .sirius-loading ");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-chargeback">
@@ -424,7 +427,7 @@ $(document).ready(function () {
     }
 
     function updateAttendance() {
-        loadingOnAccountsHealth(".sirius-account > .card");
+        loadingOnAccountsHealth(".sirius-account > .card","13px");
 
         $.ajax({
             method: "GET",
@@ -438,10 +441,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .sirius-loading ");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-attendance">
@@ -506,7 +510,7 @@ $(document).ready(function () {
     }
 
     function updateTracking() {
-        loadingOnAccountsHealth(".sirius-account > .card");
+        loadingOnAccountsHealth(".sirius-account > .card",'13px');
 
         $.ajax({
             method: "GET",
@@ -520,10 +524,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .sirius-loading ");
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
                 errorAjaxResponse(response);
             },
             success: function success(data) {
+                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-tracking">

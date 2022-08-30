@@ -171,6 +171,7 @@ return [
         App\Rules\ValidatorProvider::class,
 
         Barryvdh\DomPDF\ServiceProvider::class,
+        App\Providers\HealthServiceProvider::class,
     ],
 
     /*
