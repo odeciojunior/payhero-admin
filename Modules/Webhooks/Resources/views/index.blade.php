@@ -16,7 +16,7 @@
                             alt="Webhooks">
                         <span style="line-height:40px">Webhooks</span>
                     </h1>
-                    <p id="text-info" style="margin-bottom:0">Faça uma integração via webhook para sua loja.</p>
+                    <p id="text-info" style="margin-bottom:0">Configure webhooks para integrar com outros sistemas.</p>
                 </div>
                 <div>
                     <button type="button" class="btn btn-floating btn-primary store-webhook"
@@ -34,7 +34,7 @@
                     <img src="build/global/img/image-empty-state.svg" width="260px" style="margin-bottom:32px" />
                     <h1 class="m-0" style="color:#636363;font-weight:normal;font-size:24px;line-height:30px">Você ainda
                         não cadastrou nenhum webhook!</h1>
-                    <p class="m-0">Faça uma integração via webhook para sua loja.</p>
+                    <p class="m-0">Configure webhooks para integrar com outros sistemas.</p>
                     <button style="margin:34px auto 0;box-shadow:none" type="button"
                         class="btn btn-floating btn-primary store-webhook">
                         <i class="o-add-1" aria-hidden="true"></i>
@@ -91,20 +91,20 @@
                         <div id="modal-reverse-body" class="modal-body">
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <label for="description">Nome</label>
+                                    <label for="description">Descrição</label>
                                     <input name="description" type="text" class="form-control form-control-lg"
-                                        id="description" placeholder="Digite um nome para seu webhook">
+                                        id="description" placeholder="Digite uma descrição para seu webhook">
                                 </div>
                             </div>
                             <div class="row companies-container">
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="empresa">Empresa</label>
-                                    <input type="text" disabled="" class="company_name">
+                                    <input type="text" disabled="" class="form-control company_name">
                                 </div>
                             </div>
                             <div class="row url-container">
                                 <div class="form-group col-sm-12 col-md">
-                                    <label for="url">URL</label>
+                                    <label for="url">URL para receber os webhooks</label>
                                     <input name="url" type="text" class="form-control form-control-lg"
                                         id="url" placeholder="Digite uma URL válida">
                                     <small class="text-muted">Digite uma URL válida</small>
@@ -135,20 +135,20 @@
                 <div id="modal-reverse-body" class="modal-body">
                     <div class="row">
                         <div class="form-group col-12">
-                            <label for="description">Nome</label>
+                            <label for="description">Descrição</label>
                             <input name="description" type="text" class="form-control form-control-lg"
-                                id="description_edit" placeholder="Digite um nome para seu webhook">
+                                id="description_edit" placeholder="Digite uma descrição para seu webhook">
                         </div>
                     </div>
                     <div class="row companies-container">
                         <div class="form-group col-sm-12 col-md">
                             <label for="empresa">Empresa</label>
-                            <input type="text" disabled="" class="company_name">
+                            <input type="text" disabled="" class="form-control company_name">
                         </div>
                     </div>
                     <div class="row url-container">
                         <div class="form-group col-sm-12 col-md">
-                            <label for="url">URL</label>
+                            <label for="url">URL para receber os webhooks</label>
                             <input name="url" type="text" class="form-control form-control-lg" id="url_edit"
                                 placeholder="Digite uma URL válida">
                             <small class="text-muted">Digite uma URL válida</small>

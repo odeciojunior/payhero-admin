@@ -16,6 +16,14 @@ class CreateWebhookLogsTable extends Migration
         Schema::create("webhook_logs", function (Blueprint $table) {
             $table->bigIncrements("id");
             $table
+                ->bigInteger("webhook_id")
+                ->unsigned()
+                ->index();
+            $table
+                ->foreign("webhook_id")
+                ->references("id")
+                ->on("webhooks");
+            $table
                 ->integer("user_id")
                 ->unsigned()
                 ->index();

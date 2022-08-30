@@ -1,42 +1,54 @@
 <?php
 
-namespace Modules\Core\Listeners\Webhooks;
+namespace App\Jobs;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Webhook;
 use Modules\Core\Services\WebhookService;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 /**
- * Class WebhooksSaleStatusUpdateListener
- * @package Modules\Core\Listeners\Webhooks
+ * Class WebhookSaleUpdateJob
+ *
+ * @package App\Jobs
  */
-class WebhooksSaleStatusUpdateListener implements ShouldQueue
+class WebhookSaleUpdateJob implements ShouldQueue
 {
-    public $queue = "high";
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * Create the event listener.
+     * The sale instance.
      *
+     * @var Sale
+     */
+    private $sale;
+
+    /**
+     * Create a new job instance.
+     *
+     * @param Sale $sale
      * @return void
      */
-    public function __construct()
+    public function __construct(Sale $sale)
     {
-        //
+        $this->sale = $sale;
     }
 
     /**
-     * Handle the event.
+     * Execute the job.
      *
-     * @param $event
      * @return void
      */
-    public function handle($event)
+    public function handle()
     {
         try {
-            $sale = $event->sale;
-            $checkout = $event->sale->checkout;
+            $checkout = $this->sale->checkout;
             $checkout->load("project");
 
             $userProject = UserProject::where(
@@ -55,7 +67,7 @@ class WebhooksSaleStatusUpdateListener implements ShouldQueue
 
             if (!empty($webhook)) {
                 $service = new WebhookService($webhook);
-                $service->saleStatusUpdate($sale);
+                $service->saleStatusUpdate($this->sale);
             }
         } catch (Exception $e) {
             report($e);

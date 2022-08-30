@@ -87,8 +87,6 @@ use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\UserDocumentBureauValidationListener;
-use Modules\Core\Listeners\Webhooks\WebhooksSaleStatusUpdateListener;
-// use Modules\Core\Listeners\Webhooks\WebhooksTrackingCodeStatusUpdateListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
 
 /**
@@ -106,18 +104,15 @@ class EventServiceProvider extends ServiceProvider
             BilletExpiredWhatsapp2Listener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
-            WebhooksSaleStatusUpdateListener::class,
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
             SaleRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
-            WebhooksSaleStatusUpdateListener::class,
         ],
         ManualRefundEvent::class => [
             ManualRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
-            WebhooksSaleStatusUpdateListener::class,
         ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
@@ -144,20 +139,15 @@ class EventServiceProvider extends ServiceProvider
         TrackingCodeUpdatedEvent::class => [
             TrackingCodeUpdatedSendEmailClientListener::class,
             TrackingCodeUpdatedActiveCampaignListener::class,
-            // WebhooksTrackingCodeStatusUpdateListener::class,
         ],
         CheckSaleHasValidTrackingEvent::class => [
             CheckSaleHasValidTrackingListener::class,
-            // WebhooksTrackingCodeStatusUpdateListener::class,
         ],
         ResetPasswordEvent::class => [ResetPasswordSendEmailListener::class],
         ReleasedBalanceEvent::class => [
             ReleasedBalanceNotifyUserListener::class,
         ],
-        SaleApprovedEvent::class => [
-            SetApprovedShopifyOrderListener::class,
-            WebhooksSaleStatusUpdateListener::class,
-        ],
+        SaleApprovedEvent::class => [SetApprovedShopifyOrderListener::class],
         WithdrawalRequestEvent::class => [
             WithdrawalRequestSendEmailListener::class,
         ],
@@ -204,7 +194,6 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredUnicodropListener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
-            WebhooksSaleStatusUpdateListener::class,
         ],
         CheckTransactionReleasedEvent::class => [
             CheckTransactionReleasedListener::class,
@@ -215,10 +204,7 @@ class EventServiceProvider extends ServiceProvider
             SendChargebackNotificationsListener::class,
             NotifyAntifraudChargebackListener::class,
         ],
-        ReportanaTrackingEvent::class => [
-            ReportanaSaleListener::class,
-            // WebhooksTrackingCodeStatusUpdateListener::class,
-        ],
+        ReportanaTrackingEvent::class => [ReportanaSaleListener::class],
     ];
 
     /**

@@ -229,7 +229,7 @@ $(document).ready(function () {
         }
 
         if (isEmpty(description)) {
-            alertCustom("error", "Digite um nome para seu webhook");
+            alertCustom("error", "Digite uma descrição para seu webhook");
             return false;
         }
 
