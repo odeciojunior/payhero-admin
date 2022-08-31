@@ -3,6 +3,54 @@ $(document).ready(function () {
     let countdownInterval = null;
     let descriptionconfig;
 
+
+    $('.value').maskMoney({thousands: '', decimal: '.', allowZero: true, prefix: ''});
+
+    //store type
+    $('#us_type_value').click(function () {
+        $('#us_percent_opt').hide()
+        $('#us_money_opt').show()
+        $('#us_money_opt input').focus()
+        $('#add_discount_upsell').val($('#us_money_opt input').val())
+    })
+
+    $('#us_type_percent').click(function () {
+        $('#us_money_opt').hide()
+        $('#us_percent_opt').show()
+        $('#us_percent_opt input').focus()
+        $('#add_discount_upsell').val($('#us_percent_opt input').val())
+    })
+    $('#us_money_opt input').change(function () {
+        $('#add_discount_upsell').val($('#us_money_opt input').val())
+        // .replace('.','').replace(',','.')
+    })
+    $('#us_percent_opt input').change(function () {
+        $('#add_discount_upsell').val($('#us_percent_opt input').val())
+    })
+
+    //update type
+    $('#usu_type_value').click(function () {
+        $('#usu_percent_opt').hide()
+        $('#usu_money_opt').show()
+        $('#usu_money_opt input').focus()
+        $('#edit_discount_upsell').val($('#usu_money_opt input').val())
+    })
+
+    $('#usu_type_percent').click(function () {
+        $('#usu_money_opt').hide()
+        $('#usu_percent_opt').show()
+        $('#usu_percent_opt input').focus()
+        $('#edit_discount_upsell').val($('#usu_percent_opt input').val())
+    })
+    $('#usu_money_opt input').change(function () {
+        $('#edit_discount_upsell').val($('#usu_money_opt input').val())
+        // .replace('.','').replace(',','.')
+    })
+    $('#usu_percent_opt input').change(function () {
+        $('#edit_discount_upsell').val($('#usu_percent_opt input').val())
+    })
+
+
     ClassicEditor.create(document.querySelector("#description_config"), {
         language: "pt-br",
         uiColor: "#F1F4F5",
@@ -122,6 +170,8 @@ $(document).ready(function () {
         $("#modal_add_upsell .use-variants-upsell").prop("checked", true).trigger("change");
         $("#add_description_upsell").val("");
         $("#add_discount_upsell").val("");
+        $("#us_money_opt input").val("");
+        $("#us_percent_opt input").val("");
     });
 
     $(document).on("click", ".edit-upsell", function (event) {
@@ -149,6 +199,14 @@ $(document).ready(function () {
                 let upsell = response.data;
                 $("#edit_description_upsell").val(`${upsell.description}`);
                 $("#edit_discount_upsell").val(`${upsell.discount}`);
+
+                if(upsell.type == 1){
+                    $("#usu_type_value").trigger('click');
+                    $("#usu_money_opt input").val(upsell.discount);
+                }else{
+                    $("#usu_percent_opt input").val(upsell.discount);
+                    $("#usu_type_percent").trigger('click');
+                }
 
                 $("#edit_active_flag")
                     .prop("checked", upsell.active_flag === 1)
@@ -306,7 +364,12 @@ $(document).ready(function () {
                 $(".upsell-apply-plans").html("");
                 $(".upsell-offer-plans").html("");
                 $(".upsell-description").html(`${upsell.description}`);
-                $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}%` : `Valor sem desconto`}`);
+                $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}` : `Valor sem desconto`}`);
+                if(upsell.type == 1 && upsell.discount != 0){
+                    $(".upsell-discount").prepend('R$')
+                }else{
+                    $(".upsell-discount").append('%')
+                }
 
                 $(".upsell-status").html(
                     `${

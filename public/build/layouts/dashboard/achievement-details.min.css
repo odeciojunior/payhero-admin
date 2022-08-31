@@ -1,1 +1,170 @@
-.achievement-details-style{top:10vh}.achievement-details-style .modal-content{background-color:#06223e;background-image:url("/build/global/adminremark/assets/images/pattern-sirius.svg");background-repeat:no-repeat;background-position:-30px 0;border-radius:20px;margin:0 auto;max-width:500px}.achievement-details-style .modal-header{height:150px;text-align:center;padding-right:20px!important}.achievement-details-style .close{color:#fff;margin-right:1px;opacity:1;order:unset;cursor:pointer}.achievement-details-style .close span{background-color:rgba(255,255,255,.3);border-radius:50px;padding:5px;font-size:20px}.achievement-details-style .modal-body{background-color:#fff;border-radius:0 0 19px 19px;text-align:center;padding-top:90px!important;padding-left:40px!important;padding-right:40px!important}.achievement-details-style #icon{position:relative;top:40px;z-index:1;height:160px}.achievement-details-style #description{font:normal normal bold 16px Muli;margin-bottom:.5rem}.achievement-details-style #description-achievement{color:#ababab;font:normal normal normal 12px Muli;text-transform:uppercase}.achievement-details-style #description-achievement:after{content:"";width:50%;display:block;margin:1rem auto;border-bottom:1px solid #e5e5e5}.achievement-details-style #name{font:normal normal bold 25px Muli;color:#2e85ec;margin-bottom:2rem}.achievement-details-style #name-title{font:normal normal bold 25px Muli;color:#2e85ec}.achievement-details-style #storytelling{font:normal normal normal 14px Muli;color:#919191}.achievement-details-style #benefits-title{color:#707070;font:normal normal normal 16px Muli;margin-bottom:.5rem}.achievement-details-style #benefits .material-icons{background-color:#5ee2a1;color:#fff;font-size:15px;padding:5px;margin-right:5px;border-radius:50px}.achievement-details-style #benefits{margin-top:2rem}.achievement-details-style #benefits-data{color:#5e5e5e;font:normal normal bold 14px Muli}.achievement-details-style [id*=reward-check-data-]{position:relative;top:35px;background-color:#00a6ff;padding:15px;border-radius:5px;font:normal normal bold 20px Muli}body.blurred{overflow:hidden!important}body.blurred .page,body.blurred .site-menubar,body.blurred .site-navbar{-webkit-filter:blur(2px);-moz-filter:blur(2px);-o-filter:blur(2px);-ms-filter:blur(2px);filter:blur(2px);transition:all .5s ease-in-out}#title-achievement{color:#707070;font:normal normal normal 16px Muli}@media (max-width:767px){.achievement-details-style{top:unset}}@media (min-width:1200px){.achievement-details-style{top:15vh}}
+.achievement-details-style {
+    top: 10vh;
+}
+
+.achievement-details-style .modal-content {
+    background-color: #06223e;
+    background-image: url("/build/global/adminremark/assets/images/pattern-sirius.svg");
+    background-repeat: no-repeat;
+    background-position: -30px 0;
+    border-radius: 20px;
+    margin: 0 auto;
+    max-width: 500px;
+}
+
+.achievement-details-style .modal-header {
+    height: 150px;
+
+    text-align: center;
+    padding-right: 20px !important;
+}
+
+.achievement-details-style .close {
+    color: white;
+
+    margin-right: 1px;
+
+    opacity: 1;
+    order: unset;
+
+    cursor: pointer;
+}
+
+.achievement-details-style .close span {
+    background-color: rgba(255, 255, 255, 0.3);
+
+    border-radius: 50px;
+    padding: 5px;
+
+    font-size: 20px;
+}
+
+.achievement-details-style .modal-body {
+    background-color: white;
+
+    border-radius: 0 0 19px 19px;
+
+    text-align: center;
+
+    padding-top: 90px !important;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+}
+
+.achievement-details-style #icon {
+    position: relative;
+    top: 40px;
+    z-index: 1;
+
+    height: 160px;
+}
+
+.achievement-details-style #description {
+    font: normal normal bold 16px Muli;
+
+    margin-bottom: 0.5rem;
+}
+
+.achievement-details-style #description-achievement {
+    color: #ababab;
+
+    font: normal normal normal 12px Muli;
+    text-transform: uppercase;
+}
+
+.achievement-details-style #description-achievement:after {
+    content: "";
+    width: 50%;
+    display: block;
+
+    margin: 1rem auto;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.achievement-details-style #name {
+    font: normal normal bold 25px Muli;
+    color: #2e85ec;
+
+    margin-bottom: 2rem;
+}
+
+.achievement-details-style #name-title {
+    font: normal normal bold 25px Muli;
+    color: #2e85ec;
+}
+
+.achievement-details-style #storytelling {
+    font: normal normal normal 14px Muli;
+    color: #919191;
+}
+
+.achievement-details-style #benefits-title {
+    color: #707070;
+    font: normal normal normal 16px Muli;
+
+    margin-bottom: 0.5rem;
+}
+
+.achievement-details-style #benefits .material-icons {
+    background-color: #5ee2a1;
+
+    color: white;
+    font-size: 15px;
+
+    padding: 5px;
+    margin-right: 5px;
+    border-radius: 50px;
+}
+
+.achievement-details-style #benefits {
+    margin-top: 2rem;
+}
+
+.achievement-details-style #benefits-data {
+    color: #5e5e5e;
+    font: normal normal bold 14px Muli;
+}
+
+.achievement-details-style [id*="reward-check-data-"] {
+    position: relative;
+    top: 35px;
+
+    background-color: #00a6ff;
+
+    padding: 15px;
+    border-radius: 5px;
+
+    font: normal normal bold 20px Muli;
+}
+
+body.blurred {
+    overflow: hidden !important;
+}
+
+body.blurred .site-navbar,
+body.blurred .site-menubar,
+body.blurred .page {
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -o-filter: blur(2px);
+    -ms-filter: blur(2px);
+    filter: blur(2px);
+    transition: all 0.5s ease-in-out;
+}
+
+#title-achievement {
+    color: #707070;
+    font: normal normal normal 16px Muli;
+}
+
+@media (max-width: 767px) {
+    .achievement-details-style {
+        top: unset;
+    }
+}
+
+@media (min-width: 1200px) {
+    .achievement-details-style {
+        top: 15vh;
+    }
+}

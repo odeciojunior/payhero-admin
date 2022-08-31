@@ -22,6 +22,7 @@ class ProjectUpsellRule extends Model
         "project_id",
         "description",
         "discount",
+        "type",
         "use_variants",
         "apply_on_shipping",
         "apply_on_plans",
