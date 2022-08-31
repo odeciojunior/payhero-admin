@@ -36,10 +36,9 @@ class CoreController extends Controller
                 //Só consegue logar caso o token tenha menos de 10min
 
                 // login agora será pelo usuario logado no manager
-                // $this->assingPermissions($managerIdDecode, $userIdDecode);
-                // $user = auth()->loginUsingId($managerIdDecode);
+                $this->assingPermissions($managerIdDecode, $userIdDecode);
+                $user = auth()->loginUsingId($managerIdDecode);
 
-                $user = auth()->loginUsingId($userIdDecode);
                 $userModel = new User();
                 activity()
                     ->on($userModel)
