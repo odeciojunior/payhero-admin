@@ -6,6 +6,8 @@ use App\Jobs\ProcessTrackingJob;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Entities\User;
+use Spatie\Permission\Models\Role;
 
 class GenericCommand extends Command
 {
@@ -14,30 +16,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        try {
-
-            $trackings = Tracking::where("system_status_enum", Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE)
-                ->where(function($q) {
-                    $q->whereDate("created_at", ">=", now()->subMonths(4));
-                    $q->orWhereDate("updated_at", ">=", now()->subMonths(4));
-                });
-
-
-            $bar = $this->output->createProgressBar($trackings->count());
-            $bar->start();
-
-            foreach($trackings->cursor() as $key=>$tracking) {
-
-                ProcessTrackingJob::dispatch($tracking);
-
-                $bar->advance();
-            }
-
-            $bar->finish();
-
-        } catch (Exception $e) {
-            report($e->getMessage());
-        }
+        dd(User::find(3520)->roles()->where('guard_name','web')->get()->detach());
     }
 
 }

@@ -323,7 +323,7 @@
                     <span class="site-menu-title">Produtos</span>
                 </a>
             </li>
-        @endcan
+        @endif
         <!-- hasanyrole('account_owner|admin|attendance') -->
         @can('attendance')
             <li class="site-menu-item has-sub">
