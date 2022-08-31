@@ -35,7 +35,7 @@ class CheckDocumentOnBureau extends Command
                         ->whereRaw("DATEDIFF(now(), bureau_data_updated_at) > 0")
                         ->orWhereNull("bureau_data_updated_at");
                 })
-                ->limit(1);
+                ->limit(50);
 
             $userService = new UserService();
             foreach ($usersQuery->get() as $user) {
