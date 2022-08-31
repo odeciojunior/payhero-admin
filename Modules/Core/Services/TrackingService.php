@@ -190,6 +190,7 @@ class TrackingService
                 "products_plans_sales.sale_id",
                 "products_plans_sales.product_id",
                 "products_plans_sales.amount",
+                "products_plans_sales.created_at",
                 "s.delivery_id",
                 "s.customer_id",
                 "s.upsell_id",
