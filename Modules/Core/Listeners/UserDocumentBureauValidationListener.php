@@ -4,7 +4,6 @@ namespace Modules\Core\Listeners;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Modules\Core\Entities\User;
 use Modules\Core\Events\UserRegisteredEvent;
 use Modules\Core\Events\UserRegistrationFinishedEvent;
 use Modules\Core\Services\UserService;
@@ -33,14 +32,8 @@ class UserDocumentBureauValidationListener implements ShouldQueue
     {
         try {
             $user = $event->user;
-            $bureauUserData = $this->userService->getBureauUserData($user->document);
-            $user->bureau_result = json_encode($bureauUserData->getRawData());
-            $user->name = $bureauUserData->getName() ?: $user->name;
-            if (!$bureauUserData->isAbleToCreateAccount()) {
-//                $user->status = User::STATUS_ACCOUNT_BLOCKED;
-                $user->observation = $bureauUserData->getIssues();
-            }
-            $user->save();
+            $service = new UserService();
+            $service->updateUserDataFromBureau($user->document);
         } catch (\Exception $e) {
             report($e);
         }

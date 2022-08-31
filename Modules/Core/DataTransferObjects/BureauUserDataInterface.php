@@ -10,6 +10,10 @@ interface BureauUserDataInterface
 
     public function getName(): string;
 
+    public function getMotherName(): ?string;
+
+    public function getBirthDate(): ?\DateTime;
+
     public function hasObitIndication(): bool;
 
     public function isUnderAgePerson(): bool;
