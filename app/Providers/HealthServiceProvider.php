@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Spatie\Health\Checks\Checks\CacheCheck;
 use Spatie\Health\Facades\Health;
+use Illuminate\Support\ServiceProvider;
+use Modules\Core\Services\CustomChecks\QueueSizeCheck;
+use Modules\Core\Services\CustomChecks\YourCustomCheck;
 use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
 use Spatie\Health\Checks\Checks\DatabaseConnectionCountCheck;
@@ -12,7 +13,6 @@ use Spatie\Health\Checks\Checks\DatabaseTableSizeCheck;
 use Spatie\Health\Checks\Checks\DebugModeCheck;
 use Spatie\Health\Checks\Checks\EnvironmentCheck;
 use Spatie\Health\Checks\Checks\HorizonCheck;
-use Spatie\Health\Checks\Checks\PingCheck;
 use Spatie\Health\Checks\Checks\RedisCheck;
 use Spatie\Health\Checks\Checks\ScheduleCheck;
 
@@ -36,6 +36,7 @@ class HealthServiceProvider extends ServiceProvider
             DatabaseConnectionCountCheck::new()->warnWhenMoreConnectionsThan(400)->failWhenMoreConnectionsThan(600),
             // CacheCheck::new(),
             EnvironmentCheck::new(),
+            QueueSizeCheck::new()->maxSize(10000),
             UsedDiskSpaceCheck::new(),
         ];
 
