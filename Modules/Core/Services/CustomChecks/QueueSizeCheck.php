@@ -13,6 +13,7 @@ class QueueSizeCheck extends Check
     public function maxSize($maxSize)
     {
         $this->maxSize = $maxSize;
+        return $this;
     }
 
     public function run(): Result
