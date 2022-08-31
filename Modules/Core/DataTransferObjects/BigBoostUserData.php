@@ -26,6 +26,16 @@ class BigBoostUserData implements BureauUserDataInterface
         return $this->rawData["Result"][0]["BasicData"]["Name"] ?? "";
     }
 
+    public function getMotherName(): ?string
+    {
+        return $this->rawData["Result"][0]["BasicData"]["MotherName"] ?? null;
+    }
+
+    public function getBirthDate(): ?\DateTime
+    {
+        return new \DateTime($this->rawData["Result"][0]["BasicData"]["BirthDate"]) ?? null;
+    }
+
     public function isTaxIdActive(): bool
     {
         $statusMessage = $this->rawData["Result"][0]["BasicData"]["TaxIdStatus"] ?? "";
