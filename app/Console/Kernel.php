@@ -165,7 +165,7 @@ class Kernel extends ConsoleKernel
         $schedule->command("safe2pay:update-reason-sale-contestations")->dailyAt("19:30");
 
         $schedule->command("antifraud:backfill-asaas-chargebacks")->dailyAt("20:00");
-        //        $schedule->command("antifraud:check-document-on-bureau")->everyThirtyMinutes();
+        $schedule->command("antifraud:check-document-on-bureau")->everyThirtyMinutes();
         $schedule->command("getnet:check-withdrawals-released")->dailyAt("20:30");
         $schedule->command("check:menv-tracking")->dailyAt("20:45");
         $schedule->command("getnet:import-sale-contestations-txt-format")->dailyAt("21:00");
