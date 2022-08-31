@@ -1107,13 +1107,6 @@ function verifyDocumentPending()
                     "Temos algumas perguntas para conhecer melhor você e seu negócio.";
 
                 if (!response.data.user.informations) {
-                    var userId = $('meta[name="user-id"]').attr("content");
-
-                    if (localStorage.getItem("new-register-step-" + userId) || localStorage.getItem("new-register-data-" + userId)) {
-                        localStorage.removeItem("new-register-step-" + userId);
-                        localStorage.removeItem("new-register-data-" + userId);
-                    }
-
                     count += 1;
 
                     card_user_info_status = "extra-informations-user";
