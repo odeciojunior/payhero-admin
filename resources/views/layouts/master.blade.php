@@ -210,7 +210,7 @@
                     return null;
                 }
 
-                zendeskAuthentication();
+                // zendeskAuthentication();
 
             </script>
         @endif
