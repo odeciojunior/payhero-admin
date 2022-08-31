@@ -16,8 +16,7 @@ class GenericCommand extends Command
     {
         try {
 
-            $trackings = Tracking::select("product_plan_sale_id", "tracking_code")
-                ->where("system_status_enum", Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE)
+            $trackings = Tracking::where("system_status_enum", Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE)
                 ->where(function($q) {
                     $q->whereDate("created_at", ">=", now()->subMonths(4));
                     $q->orWhereDate("updated_at", ">=", now()->subMonths(4));

@@ -25,7 +25,7 @@ class ProcessTrackingJob implements ShouldQueue
      */
     public function __construct(Tracking $tracking)
     {
-        $this->tracking = $tracking;;
+        $this->tracking = $tracking;
     }
 
     /**
