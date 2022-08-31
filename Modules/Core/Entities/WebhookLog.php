@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @package Modules\Core\Entities
  *
  * @property integer $id
+ * @property integer $webhook_id
  * @property integer $user_id
  * @property integer $company_id
  * @property string $url
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property Webhook $webhook
  * @property User $user
  * @property Company $company
  */
@@ -36,6 +38,7 @@ class WebhookLog extends Model
      * @var array
      */
     protected $fillable = [
+        "webhook_id",
         "user_id",
         "company_id",
         "url",
@@ -45,6 +48,14 @@ class WebhookLog extends Model
         "updated_at",
         "deleted_at",
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function webhook()
+    {
+        return $this->belongsTo(Webhook::class);
+    }
 
     /**
      * @return BelongsTo

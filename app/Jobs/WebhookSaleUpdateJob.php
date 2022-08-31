@@ -32,12 +32,12 @@ class WebhookSaleUpdateJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param Sale $sale
+     * @param $saleId
      * @return void
      */
-    public function __construct(Sale $sale)
+    public function __construct($saleId)
     {
-        $this->sale = $sale;
+        $this->sale = Sale::find($saleId);
     }
 
     /**
@@ -49,6 +49,11 @@ class WebhookSaleUpdateJob implements ShouldQueue
     {
         try {
             $checkout = $this->sale->checkout;
+
+            if (empty($checkout)) {
+                return;
+            }
+
             $checkout->load("project");
 
             $userProject = UserProject::where(

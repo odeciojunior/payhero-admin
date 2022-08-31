@@ -112,6 +112,7 @@ class WebhookService
     {
         try {
             WebhookLog::create([
+                "webhook_id" => $this->webhook->id,
                 "user_id" => $this->webhook->user_id,
                 "company_id" => $this->webhook->company_id,
                 "url" => $this->webhook->url,

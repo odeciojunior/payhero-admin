@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use App\Jobs\WebhookSaleUpdateJob;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -1455,6 +1456,7 @@ class SaleService
         try {
             if (is_integer($saleId) && !empty($status)) {
                 $statusPresenter = (new Sale())->present()->getStatus($status);
+
                 SaleLog::create([
                     "sale_id" => $saleId,
                     "status" => is_integer($status)
@@ -1464,6 +1466,8 @@ class SaleService
                         ? $statusPresenter
                         : $status,
                 ]);
+
+                WebhookSaleUpdateJob::dispatch($saleId);
             }
         } catch (Exception $e) {
             report($e);
