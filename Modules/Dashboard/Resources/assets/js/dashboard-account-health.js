@@ -290,7 +290,8 @@ $(document).ready(function () {
     }
 
     function updateChargeback() {
-        //loadingOnAccountsHealth('.sirius-account > .card');
+
+        loadingOnAccountsHealth(".sirius-account > .card",'12px');
 
         $.ajax({
             method: "GET",
@@ -427,7 +428,7 @@ $(document).ready(function () {
     }
 
     function updateAttendance() {
-        loadingOnAccountsHealth(".sirius-account > .card","13px");
+        loadingOnAccountsHealth(".sirius-account > .card","12px");
 
         $.ajax({
             method: "GET",
@@ -510,7 +511,7 @@ $(document).ready(function () {
     }
 
     function updateTracking() {
-        loadingOnAccountsHealth(".sirius-account > .card",'13px');
+        loadingOnAccountsHealth(".sirius-account > .card",'12px');
 
         $.ajax({
             method: "GET",

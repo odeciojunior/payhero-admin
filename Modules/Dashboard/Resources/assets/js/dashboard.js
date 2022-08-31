@@ -22,8 +22,8 @@ $(document).ready(function () {
 
             }
         });
-        loadingOnAccountsHealth('.sirius-performance > .card','60px');
-        loadingOnAccountsHealth('.sirius-account > .card');
+        loadingOnAccountsHealth('.sirius-performance > .card','20px');
+        loadingOnAccountsHealth('.sirius-account > .card','12px');
         $(".sirius-cashback > .card").addClass("d-none");
         loadingOnChart('#chart-loading');
         $('#scoreLineToMonth').html('')
