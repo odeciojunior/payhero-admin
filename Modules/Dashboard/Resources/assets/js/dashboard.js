@@ -1,54 +1,55 @@
-$('.company-navbar').change(function () {
-    if (verifyIfCompanyIsDefault($(this).val())) return;
-    $('.sirius-performance > .card').html('');
-    $('.sirius-account > .card').html('');
-    $('.sirius-cashback > .card').html('');
-    $('#cashback-container #cashback-container-money').text("")
-    loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
-        styles: {
-            container: {
-                minHeight: '30px',
-                width: '30px',
-                height: 'auto',
-                margin: 'auto'
-            },
-            loader: {
-                width: '30px',
-                height: '30px',
-                borderWidth: '6px'
-            },
+$(document).ready(function () {
 
-        }
-    });
-    loadingOnAccountsHealth('.sirius-performance > .card','60px');
-    loadingOnAccountsHealth('.sirius-account > .card');
-    $(".sirius-cashback > .card").addClass("d-none");
-    loadingOnChart('#chart-loading');
-    $('#scoreLineToMonth').html('')
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            if(!isEmpty(data2.company_default_projects)){
-                if( $("#project-empty").css('display')!='none' ){
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    window.getDataDashboard();
-                }
-                else{
-                    window.updateValues();
-                    window.updateChart();
-                    window.updatePerformance();
-                    window.updateAccountHealth('80px');
-                }
-            }
-            else{
-                $("#project-empty").show();
-                $("#project-not-empty").hide();
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('.sirius-performance > .card').html('');
+        $('.sirius-account > .card').html('');
+        $('.sirius-cashback > .card').html('');
+        $('#cashback-container #cashback-container-money').text("")
+        loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
+            styles: {
+                container: {
+                    minHeight: '30px',
+                    width: '30px',
+                    height: 'auto',
+                    margin: 'auto'
+                },
+                loader: {
+                    width: '30px',
+                    height: '30px',
+                    borderWidth: '6px'
+                },
+
             }
         });
-	});
-});
-
-$(document).ready(function () {
+        loadingOnAccountsHealth('.sirius-performance > .card','60px');
+        loadingOnAccountsHealth('.sirius-account > .card');
+        $(".sirius-cashback > .card").addClass("d-none");
+        loadingOnChart('#chart-loading');
+        $('#scoreLineToMonth').html('')
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                // if(!isEmpty(data2.company_default_projects)){
+                    if( $("#project-empty").css('display')!='none' ){
+                        $("#project-empty").hide();
+                        // $("#project-not-empty").show();
+                        // window.getDataDashboard();
+                    }
+                    getProjects('company-navbar')
+                    // else{
+                    //     window.updateValues();
+                    //     window.updateChart();
+                    //     window.updatePerformance();
+                    //     window.updateAccountHealth('80px');
+                    // }
+                // }
+                // else{
+                //     $("#project-empty").show();
+                //     $("#project-not-empty").hide();
+                // }
+            });
+        });
+    });
 
     let userAccepted = true;
 
@@ -303,8 +304,9 @@ $(document).ready(function () {
     }
 
 
-    function getProjects() {
-        loadingOnScreen();
+    function getProjects(origin='') {
+        if(!origin)
+            loadingOnScreen();
 
         $.ajax({
             method: "GET",
@@ -315,7 +317,8 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnScreenRemove();
+                if(!origin)
+                    loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -328,7 +331,8 @@ $(document).ready(function () {
                     $("#project-not-empty").hide();
                 }
 
-                loadingOnScreenRemove();
+                if(!origin)
+                    loadingOnScreenRemove();
             },
         });
     }
