@@ -1343,30 +1343,36 @@ function verifyDocumentPending()
 }
 
 function setNewRegisterSavedItem(item, value) {
-    if (!localStorage.getItem("newRegisterData")) {
-        localStorage.setItem("newRegisterData", JSON.stringify({}));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (!localStorage.getItem("new-register-data-" + userId)) {
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify({}));
     }
 
     if (item) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         obj[item] = value;
 
-        localStorage.setItem("newRegisterData", JSON.stringify(obj));
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
 function removeNewRegisterSavedItem(item) {
-    if (localStorage.getItem("newRegisterData")) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (localStorage.getItem("new-register-data-" + userId)) {
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         delete obj[item];
 
-        localStorage.setItem("newRegisterData", JSON.stringify(obj));
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
 function setNewRegisterStep(step) {
     try {
-        localStorage.setItem("new-register-step", step);
+        var userId = $('meta[name="user-id"]').attr("content");
+
+        localStorage.setItem("new-register-step-" + userId, step);
     } catch (e) {
         newRegisterStepAux = step;
     }
@@ -1376,7 +1382,9 @@ function getNewRegisterStep() {
     let value;
 
     try {
-        value = localStorage.getItem("new-register-step");
+        var userId = $('meta[name="user-id"]').attr("content");
+
+        value = localStorage.getItem("new-register-step-" + userId);
     } catch (e) {
         value = newRegisterStepAux;
     }
@@ -1587,8 +1595,10 @@ function setInputRangeOnInput(target) {
 }
 
 function loadNewRegisterSavedData() {
-    if (localStorage.getItem("newRegisterData")) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (localStorage.getItem("new-register-data-" + userId)) {
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
 
         for (const prop in obj) {
             const element = $("#" + prop);
@@ -1715,7 +1725,9 @@ function saveNewRegisterData() {
                 '<button type="button" class="btn new-register-btn close-modal">Fechar</button>'
             );
 
-            localStorage.removeItem("newRegisterData");
+            var userId = $('meta[name="user-id"]').attr("content");
+
+            localStorage.removeItem("new-register-data-" + userId);
 
             loadingOnScreenRemove();
         },
