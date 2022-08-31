@@ -33,7 +33,6 @@ class HealthServiceProvider extends ServiceProvider
             DatabaseTableSizeCheck::new(),
             DatabaseConnectionCountCheck::new()->warnWhenMoreConnectionsThan(400)->failWhenMoreConnectionsThan(600),
             EnvironmentCheck::new(),
-            QueueSizeCheck::new()->maxSize(10000),
             UsedDiskSpaceCheck::new(),
             //OptimizedAppCheck::new(),
             //CacheCheck::new(),
@@ -41,6 +40,7 @@ class HealthServiceProvider extends ServiceProvider
 
         if(env('APP_NAME') == 'Cloudfox-cron') {
             $checks[] = ScheduleCheck::new();
+            $checks[] = QueueSizeCheck::new()->maxSize(10000);
         }
 
         Health::checks($checks);
