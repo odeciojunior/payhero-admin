@@ -8,6 +8,15 @@ use Spatie\Health\Checks\Result;
 
 class QueueSizeCheck extends Check
 {
+    protected array $queues = [
+        'high',
+        'default',
+        'low',
+        'long',
+        'postback',
+        'postback-shopify-tracking'
+    ];
+
     protected int $maxSize = 10000;
 
     public function maxSize($maxSize)
@@ -18,7 +27,10 @@ class QueueSizeCheck extends Check
 
     public function run(): Result
     {
-        $currentQueueSize = Queue::size();
+        $currentQueueSize = 0;
+        foreach($this->queues as $queueName) {
+            $currentQueueSize += Queue::size($queueName);
+        }
 
         $result = Result::make();
 
