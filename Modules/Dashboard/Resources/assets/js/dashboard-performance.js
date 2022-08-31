@@ -90,7 +90,7 @@ $(document).ready(function () {
 
     window.updatePerformance = function () {
 
-        loadingOnAccountsHealth('.sirius-performance > .card','60px');
+        loadingOnAccountsHealth('.sirius-performance > .card','20px');
 
         $.ajax({
             method: "GET",
