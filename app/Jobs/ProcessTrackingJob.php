@@ -35,14 +35,12 @@ class ProcessTrackingJob implements ShouldQueue
      */
     public function handle()
     {
-        try {
+ 
             $trackingService = new TrackingService();
             $trackingService->createOrUpdateTracking(
                 $this->tracking->tracking_code,
                 $this->tracking->product_plan_sale_id,
             );
-        } catch (Exception $e) {
-            report($e->getMessage());
-        }
+
     }
 }
