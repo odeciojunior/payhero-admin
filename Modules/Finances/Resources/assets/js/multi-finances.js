@@ -29,31 +29,18 @@ $(document).ready(function(){
         if($('#container-config').is(':visible')){
             hiddenConfig()
         }
-
         resetSkeleton();
-
         updateCompanyDefault().done( function(data1){
             getCompaniesAndProjects().done(function(data2){
-                if(!isEmpty(data2.company_default_projects)){
-
-                    getSettings($('.company-navbar').val());
-                    window.updateWithdrawals();
-                    window.updateStatements();
-                }
-                else{
-                    $("#project-empty").show();
-                    $("#project-empty-title").show();
-                    $("#project-not-empty").hide();
-                }
+                getProjects('company-navbar');
             });
         });
     });
 
-
-
-    function getProjects()
+    function getProjects(origin='')
     {
-        loadingOnScreen();
+        if(!origin)
+            loadingOnScreen();
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true',
@@ -63,30 +50,26 @@ $(document).ready(function(){
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
+                if(!origin)
+                    loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadingOnScreenRemove();
-
+                if(!origin)
+                    loadingOnScreenRemove();
                 if (!isEmpty(response.data)) {
                     $("#project-empty-title").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-
-                    //getCompanies();
                     resetSkeleton();
                     getSettings($('.company-navbar').val());
                     window.updateWithdrawals();
                     window.updateStatements();
-
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                     $("#project-empty-title").show();
                 }
-
-
             }
         });
     }

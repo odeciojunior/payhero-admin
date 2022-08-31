@@ -53,6 +53,8 @@ use Illuminate\Support\Collection as SupportCollection;
  * @property int $deleted_project_filter
  * @property mixed|null $id_wall_result
  * @property mixed|null $bureau_result
+ * @property Carbon|null $bureau_data_updated_at
+ * @property int $bureau_check_count
  * @property string|null $sex
  * @property string|null $mother_name
  * @property bool $has_sale_before_getnet
@@ -164,6 +166,8 @@ class User extends Authenticable
         "deleted_project_filter",
         "id_wall_result",
         "bureau_result",
+        "bureau_data_updated_at",
+        "bureau_check_count",
         "sex",
         "mother_name",
         "has_sale_before_getnet",
