@@ -692,6 +692,8 @@ $(document).ready(function () {
             error: function error(response) {
                 console.log('erro')
                 console.log(response)
+                if(origin=='')
+                    loadingOnScreen();
             },
             success: function success(response) {
                 if(!isEmpty(response)){

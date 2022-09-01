@@ -349,11 +349,19 @@ class SalesApiController extends Controller
 
             if (is_array($data["project_id"])) {
                 $projectIds = [];
-                foreach($data['project_id'] as $project){
-                    if(!empty($project)){
-                        array_push($projectIds, hashids_decode($project));
+                if(!empty($data['project_id'][0])){
+                    foreach($data['project_id'] as $project){
+                        if(!empty($project)){
+                            array_push($projectIds, hashids_decode($project));
+                        }
+                    };
+                }
+                else{
+                    $projects = SaleService::getProjectsWithSales();
+                    foreach($projects as $item){
+                        array_push($projectIds, $item->project_id);
                     }
-                };
+                }
             }
 
             $user = auth()->user();
