@@ -50,7 +50,18 @@ class CheckoutService
         } else {
             $projects = explode(",", request("project"));
             foreach ($projects as $project) {
-                array_push($projectIds, hashids_decode($project));
+                $project = hashids_decode($project);
+                $isAffiliate = Affiliate::when($project, function($query) use($ownerId, $companyId, $project) {
+                    return $query
+                        ->where('user_id', $ownerId)
+                        ->where('affiliates.company_id',$companyId)
+                        ->where('status_enum', Affiliate::STATUS_ACTIVE)
+                        ->where('affiliates.project_id', $project);
+                });
+                if($isAffiliate)
+                    array_push($projectIdsAffiliate, $project);
+                else
+                    array_push($projectIds, $project);
             }
         }
 
