@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,10 @@ use Illuminate\Support\Facades\Route;
 //})->middleware('broadcast')->name('broadcast.auth');
 
 Route::get("/", "\App\Http\Controllers\Auth\LoginController@showLoginForm");
+
+Route::get("/up", function(){
+    return 'System is up';
+});
 
 Route::get("/termos", function () {
     return response()->file(public_path("terms-of-use.pdf"));
@@ -90,6 +95,5 @@ if (env("APP_ENV", "production") !== "production") {
     Route::view("/qa-utils", "utils.info");
 }
 
-Route::view("/carriers", "carriers");
-
-Route::get("/generate-zend-jwt", "HomeController@generateZendesktoken");
+Route::get('/JeH8GqXkkPM7ZCNiI66GEpmU4MItRLkI/health', [Spatie\Health\Http\Controllers\HealthCheckResultsController::class, '__invoke']);
+Route::get('/JeH8GqXkkPM7ZCNiI66GEpmU4MItRLkI/health-json', [Spatie\Health\Http\Controllers\HealthCheckJsonResultsController::class, '__invoke']);

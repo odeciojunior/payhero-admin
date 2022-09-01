@@ -17,8 +17,8 @@ $(document).ready(function(){
 
     $(document).on("change","#transfers_company_select", function () {
         resetSkeleton();
-        updateWithdrawals();
         updateStatements();
+        updateWithdrawals();
     });
 
     $('.company-navbar').change(function () {
@@ -518,15 +518,14 @@ $(document).ready(function(){
                         <div style="height: 15px"></div>
                     `);
 
-                    if (response.data.length > 3) {
-                        setTimeout(() => {
-                            $('#container-withdraw').asScrollable();
-                            asScrollableTop();
-                        }, 500);
-                    }else{
-                        asScrollableTop();
+                    if (response.data.length > 3){
+                        $('#container-withdraw').asScrollable();
+                        $('.asScrollable ').css('height','360px');
+                        $('.asScrollable-container').css('height','360px');
+                        $('#container-withdraw').css('width','92%');
                     }
 
+                    asScrollableTop();
                 } else {
                     $(".skeleton-withdrawal").hide();
                     $("#empty-history")

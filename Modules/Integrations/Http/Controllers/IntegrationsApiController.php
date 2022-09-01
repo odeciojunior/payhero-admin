@@ -32,7 +32,6 @@ class IntegrationsApiController extends Controller
             $apiTokenModel = new ApiToken();
             $tokens        = $apiTokenModel->newQuery()
                                             ->where('user_id', auth()->user()->getAccountOwnerId())
-                                            ->where('company_id', current(Hashids::decode($request->company_id)) )
                                             ->latest()
                                             ->paginate();
             return new ApiTokenCollection($tokens);

@@ -3,7 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProjectPresenter;
-use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property integer $carrier_id
@@ -81,14 +81,6 @@ class Project extends Model
     public const STATUS_ACTIVE = 1;
     public const STATUS_DESABLE = 2;
 
-    protected static $logFillable = true;
-
-    protected static $logUnguarded = true;
-
-    protected static $logOnlyDirty = true;
-
-    protected static $submitEmptyLogs = false;
-
     protected $presenter = ProjectPresenter::class;
 
     protected $appends = ["formatted_created_at", "id_code"];
@@ -127,21 +119,12 @@ class Project extends Model
         "deleted_at",
     ];
 
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        switch ($eventName) {
-            case "deleted":
-                $activity->description = "Projeto " . $this->name . " foi deletedo.";
-                break;
-            case "updated":
-                $activity->description = "Projeto " . $this->name . " foi atualizado.";
-                break;
-            case "created":
-                $activity->description = "Projeto " . $this->name . " foi criado.";
-                break;
-            default:
-                $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     public function affiliateRequests(): HasMany

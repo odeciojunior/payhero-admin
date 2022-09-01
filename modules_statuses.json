@@ -61,5 +61,6 @@
     "DemoAccount": true,
     "UserInformations": true,
     "Users": true,
-    "NotificacoesInteligentes": true
+    "NotificacoesInteligentes": true,
+    "Webhooks": true
 }
