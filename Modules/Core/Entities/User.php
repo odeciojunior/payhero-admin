@@ -113,6 +113,9 @@ class User extends Authenticable
     public const STATUS_ACCOUNT_FROZEN = 4;
     public const STATUS_ACCOUNT_EXCLUDED = 5;
 
+    public const ACCOUNT_IS_APPROVED = true;
+    public const ACCOUNT_NOT_APPROVED = false;
+
     public const DOCUMENT_STATUS_PENDING = 1;
     public const DOCUMENT_STATUS_ANALYZING = 2;
     public const DOCUMENT_STATUS_APPROVED = 3;
@@ -185,6 +188,7 @@ class User extends Authenticable
         "total_commission_value",
         "show_old_finances",
         "mkt_information",
+        "pipefy_card",
         "company_default",
         "block_attendance_balance",
         "created_at",
