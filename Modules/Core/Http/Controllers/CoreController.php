@@ -97,32 +97,19 @@ class CoreController extends Controller
         $userRoles = $user->getRoleNames();
         foreach ($userRoles as $role)
         {
-            $userManager->syncRoles([]);
-            if($role <> $userManager->role_default){
-                $userManager->syncRoles([$userManager->role_default,$role]);
-            }else{
-                $userManager->syncRoles([$userManager->role_default]);
-            }
+            $userManager->syncGuardRoles('web',[$role]);
             break;
         }
 
-        $newPermissions = $user->getAllPermissions()->pluck('name');
-        if($userManager->hasPermissionTo('login_sirius_by_manager')){
-            $newPermissions[] = 'login_sirius_by_manager';
-        }
-
-        if($userManager->hasPermissionTo('extract_reports')){
-            $newPermissions[] = 'extract_reports';
-        }
-
-        $userManager->syncPermissions([]);
+        $newPermissions = $user->getGuardAllPermissions()->pluck('name');
 
         $userManager->update([
             'account_owner_id'=>$user->account_owner_id,
             'company_default'=>$user->company_default??1
         ]);
 
-        $userManager->syncPermissions($newPermissions);
+        //manter essa sequencia
+        $userManager->syncGuardPermissions('web',$newPermissions);
 
     }
 }
