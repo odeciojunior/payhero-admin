@@ -871,7 +871,7 @@ $(document).ready(function () {
                 };
             },
             method: "GET",
-            url: "/api/sales/user-plans",
+            url: "/api/recovery/user-plans",
             delay: 300,
             dataType: "json",
             headers: {
