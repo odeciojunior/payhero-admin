@@ -349,7 +349,7 @@ class SalesApiController extends Controller
 
             if (is_array($data["project_id"])) {
                 $projectIds = [];
-                if(!empty($data['project_id'][0])){
+                if(!empty($data['project_id'][0]) && $data['project_id'][0]!='all'){ // come from sales or sales recovery, with project
                     foreach($data['project_id'] as $project){
                         if(!empty($project)){
                             array_push($projectIds, hashids_decode($project));
