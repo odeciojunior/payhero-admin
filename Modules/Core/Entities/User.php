@@ -194,6 +194,8 @@ class User extends Authenticable
         "show_old_finances",
         "mkt_information",
         "company_default",
+        "role_default",
+        "is_cloudfox",
         "block_attendance_balance",
         "created_at",
         "updated_at",

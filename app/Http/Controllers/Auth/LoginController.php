@@ -78,6 +78,11 @@ class LoginController extends Controller
         $userModel = new User();
 
         $user = $userModel->where("email", $request->email)->first();
+        if ($user->is_cloudfox) {
+            return response()
+                ->redirectTo("/")
+                ->withErrors(["accountErrors" => "Nome de usuário ou senha é inválido!"]);
+        }
 
         if (!empty($user) && $user->status == User::STATUS_ACCOUNT_BLOCKED) {
             activity()

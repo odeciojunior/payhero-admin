@@ -14,7 +14,7 @@
 
         @include('dashboard::achievement-details')
         @include('dashboard::onboarding.presentation')
-        @include('dashboard::pix.pix')
+
         <div style="display: none"
              class="page-header container mb-15 mb-sm-0">
 
