@@ -462,7 +462,9 @@ class SalesApiController extends Controller
         $projects = SaleService::getProjectsWithSales();
         $projectsEncoded=[];
         foreach($projects as $item){
-            $projectsEncoded[]= Hashids::encode($item->project_id);
+            $projectsEncoded[] = array(
+                'project_id'=>Hashids::encode($item->project_id),
+                'name'=>$item->name);
         }
         return $projectsEncoded;
     }
