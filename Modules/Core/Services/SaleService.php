@@ -1554,21 +1554,29 @@ class SaleService
         );
     }
 
-    public static function getProjectsWithSales()
-    {
-        $first = Sale::select("sales.project_id")
-            ->distinct()
-            ->leftjoin('projects','projects.id','sales.project_id')
-            ->where('owner_id', auth()->user()->getAccountOwnerId());
+    public static function getProjectsWithSales(){
+        $company_id = auth()->user()->company_default;
+        $user_id = auth()->user()->getAccountOwnerId();
 
-        $s = Sale::select('sales.project_id')
+        $projects = Transaction::select('sales.project_id','projects.name')
             ->distinct()
-            ->leftjoin('affiliates','affiliates.id','sales.affiliate_id')
-            ->where('affiliates.user_id', auth()->user()->getAccountOwnerId())
-            ->union($first)
-            ->get();
-
-        return $s;
+            ->leftJoin('sales','sales.id','=','transactions.sale_id')
+            ->leftJoin('projects','projects.id','=','sales.project_id')
+            ->leftJoin('affiliates','affiliates.id','=','sales.affiliate_id')
+            ->where('transactions.user_id',$user_id)
+            ->where('transactions.company_id',$company_id)
+            ->where(function($query) use($user_id){
+                $query->where('sales.owner_id',$user_id)
+                ->orWhere('affiliates.user_id',$user_id);
+            })
+            ->where(function($query){
+                if(auth()->user()->deleted_project_filter)
+                    $query->whereIn('projects.status', [1,2]);
+                else
+                    $query->where('projects.status',1);
+            });
+        $projects = $projects->get();
+        return $projects;
     }
 
     public function refund(Sale $sale, $refundObservation = null)
