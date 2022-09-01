@@ -795,9 +795,16 @@ $(
     ".mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled"
 ).attr("overflow", "hidden");
 
+function isMobile() {
+    var width = window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
+
+    return width < 500;
+}
+
 function pagination(response, model, callback) {
     let paginationContainer = "#pagination-" + model;
-
     $(paginationContainer).html("");
 
     let currentPage = response.meta.current_page;
@@ -819,28 +826,29 @@ function pagination(response, model, callback) {
     }
 
     $(paginationContainer + " .first_page").on("click", function () {
-        console.log($(this).html() + " -1111");
         callback("?page=1");
     });
 
+    // 2 anteriores paginas
     for (let x = 3; x > 0; x--) {
         if (currentPage - x <= 1) {
             continue;
         }
 
-        $(paginationContainer).append(
-            `<button class='btn nav-btn page_${currentPage - x}'>${
-                currentPage - x
-            }</button>`
-        );
-
-        $(paginationContainer + " .page_" + (currentPage - x)).on(
-            "click",
-            function () {
-                console.log($(this).html() + " 00000");
-                callback("?page=" + $(this).html());
-            }
-        );
+        if( x <= 1 && isMobile()){
+            $(paginationContainer).append(`
+                <button class='btn nav-btn page_${currentPage - x}'>
+                    ${currentPage - x}
+                </button>
+            `);
+    
+            $(paginationContainer + " .page_" + (currentPage - x)).on(
+                "click",
+                function () {
+                    callback("?page=" + $(this).html());
+                }
+            );
+        }
     }
 
     if (currentPage !== 1 && currentPage !== lastPage) {
@@ -853,24 +861,25 @@ function pagination(response, model, callback) {
             .addClass("nav-btn")
             .addClass("active");
     }
-    for (let x = 1; x < 4; x++) {
+    
+    // 2 ultimas paginas
+    for (let x = 1; x < 2; x++) {
         if (currentPage + x >= lastPage) {
             continue;
         }
 
-        $(paginationContainer).append(
-            `<button class='btn nav-btn page_${currentPage + x}'>${
-                currentPage + x
-            }</button>`
-        );
-
-        $(paginationContainer + " .page_" + (currentPage + x)).on(
-            "click",
-            function () {
-                console.log($(this).html() + " 1111");
-                callback("?page=" + $(this).html());
-            }
-        );
+        if(x >= 1 && isMobile()){
+            $(paginationContainer).append(
+                `<button class='btn nav-btn page_${currentPage + x}'>
+                    ${currentPage + x}
+                </button>`
+            );
+    
+            $(paginationContainer + " .page_" + (currentPage + x)).on("click",function () {
+                    callback("?page=" + $(this).html());
+                }
+            );
+        }
     }
 
     if (lastPage !== 1) {
@@ -886,7 +895,6 @@ function pagination(response, model, callback) {
         }
 
         $(paginationContainer + " .last_page").on("click", function () {
-            console.log($(this).html() + " 2222");
             callback("?page=" + lastPage);
         });
     }

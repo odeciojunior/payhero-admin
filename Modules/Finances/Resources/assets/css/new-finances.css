@@ -225,8 +225,7 @@
     margin-right: 5px !important;
     background: #fff;
     color: #3d4456;
-    border-radius: 11px !important;
-    border: 1px solid #d2d2d2 !important;
+    border-radius: 4px !important;
     font-weight: normal !important;
     display: inline-block;
     height: auto;
@@ -238,13 +237,11 @@
 
 .nav-btn.active,
 #pagination-statement .jp-current {
-    background: #fff !important;
-    border: 1px solid #2e85ec !important;
-    border-radius: 11px;
+    background-color: #2E85EC !important;
+    border: 1px solid #2E85EC;
+    border-radius: 4px;
     opacity: 1 !important;
-    color: #2e85ec !important;
-    font-weight: 700 !important;
-    cursor: no-drop;
+    color: white !important;
 }
 
 .fill-red {
@@ -563,10 +560,6 @@ select,
     height: 20px;
     margin-left: 10px;
     margin-top: 5px;
-}
-
-.pagination-sm button {
-    margin-bottom: 5px;
 }
 
 .transfers-sale {

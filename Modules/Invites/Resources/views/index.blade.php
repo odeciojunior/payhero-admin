@@ -135,9 +135,7 @@
                 </div>
             </div>
             <div class="row d-flex justify-content-center justify-content-md-end pb-35">
-                <ul id="pagination-invites"
-                    class="pagination-sm margin-chat-pagination mb-0"
-                    style="margin-top:10px;position:relative;float:right">
+                <ul id="pagination-invites" class="pagination-sm margin-chat-pagination mb-0 pagination-style" style="margin-top:10px;position:relative;float:right">
                     {{-- js pagination carrega --}}
                 </ul>
             </div>

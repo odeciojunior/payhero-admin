@@ -108,9 +108,7 @@
                     </table>
                 </div>
             </div>
-            <ul id="pagination-integrates"
-                class="pagination-sm margin-chat-pagination"
-                style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-integrates" class="pagination-sm margin-chat-pagination pagination-style" style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>
 

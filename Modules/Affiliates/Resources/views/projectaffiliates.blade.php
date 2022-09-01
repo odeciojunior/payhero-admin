@@ -114,9 +114,7 @@
                                     </table>
                                 </div>
                                 <div class="row d-flex justify-content-center justify-content-md-end">
-                                    <ul id="pagination-affiliates"
-                                        class="pagination-sm pagination-affiliates margin-chat-pagination"
-                                        style="margin-top:10px;position:relative;float:right">
+                                    <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates margin-chat-pagination pagination-style" style="margin-top:10px;position:relative;float:right">
                                         {{-- js carrega... --}}
                                     </ul>
                                 </div>
@@ -173,9 +171,7 @@
                                     </table>
                                 </div>
                                 <div class="row d-flex justify-content-center justify-content-md-end">
-                                    <ul id="pagination-affiliates-request"
-                                        class="pagination-sm pagination-affiliates-request margin-chat-pagination"
-                                        style="margin-top:10px;position:relative;float:right">
+                                    <ul id="pagination-affiliates-request" class="pagination-sm pagination-affiliates-request margin-chat-pagination pagination-style" style="margin-top:10px;position:relative;float:right">
                                         {{-- js carrega... --}}
                                     </ul>
                                 </div>
