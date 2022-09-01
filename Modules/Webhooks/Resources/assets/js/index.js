@@ -1,12 +1,12 @@
 $(document).ready(function () {
     $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        loadingOnScreen();
+        loadOnAny("#page-webhooks", false);
         updateCompanyDefault().done(function (data1) {
             getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2;
                 $(".company_name").val(companiesAndProjects.company_default_fullname);
-                refreshWebhooks(1);
+                refreshWebhooks(1, false);
             });
         });
     });
@@ -19,7 +19,7 @@ $(document).ready(function () {
         refreshWebhooks();
     });
 
-    function refreshWebhooks(page = 1) {
+    function refreshWebhooks(page = 1, reload = true) {
         $.ajax({
             method: "GET",
             url: "/api/webhooks?resume=true&page=" + page + "&company_id=" + $(".company-navbar").val(),
@@ -29,7 +29,9 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             beforeSend: function () {
-                loadingOnScreen();
+                if (reload) {
+                    loadOnAny("#page-webhooks", false);
+                }
             },
             error: (response) => {
                 errorAjaxResponse(response);
@@ -52,6 +54,7 @@ $(document).ready(function () {
                 }
             },
             complete: function () {
+                loadOnAny("#page-webhooks", true);
                 loadingOnScreenRemove();
             },
         });
@@ -253,16 +256,13 @@ $(document).ready(function () {
                 clearForm();
                 refreshWebhooks();
             },
-            complete: function () {
-                loadingOnScreenRemove();
-            },
         });
     });
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
-            $("#primeira_pagina_" + model).hide();
-            $("#ultima_pagina_" + model).hide();
+            $("#first_page").hide();
+            $("#last_page").hide();
         } else {
             $("#pagination-" + model).html("");
 
