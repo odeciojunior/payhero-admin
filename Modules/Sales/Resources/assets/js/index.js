@@ -617,8 +617,8 @@ $(document).ready(function () {
     );
 
     // FIM - COMPORTAMENTOS DA JANELA
-    getCompaniesAndProjects().done( function (data){
-        getProjects(data);
+    getCompaniesAndProjects().done( function (){
+        getProjects();
     });
 
     function loadData() {
