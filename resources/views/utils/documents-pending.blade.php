@@ -33,10 +33,10 @@
                             <div class="user-informations-status">
                                 <!-- JS load -->
                             </div>
-                            <div class="company-status">
+                            <div class="user-status">
                                 <!-- JS load -->
                             </div>
-                            <div class="user-status">
+                            <div class="company-status">
                                 <!-- JS load -->
                             </div>
                         </div>
