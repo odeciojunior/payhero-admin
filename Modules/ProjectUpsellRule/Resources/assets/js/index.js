@@ -6,6 +6,9 @@ $(document).ready(function () {
 
     $('.value').maskMoney({thousands: '', decimal: '.', allowZero: true, prefix: ''});
 
+    function formatDouble(number) {
+        return number.replace('.','').replace(',','.')
+    }
     //store type
     $('#us_type_value').click(function () {
         $('#us_percent_opt').hide()
@@ -365,10 +368,12 @@ $(document).ready(function () {
                 $(".upsell-offer-plans").html("");
                 $(".upsell-description").html(`${upsell.description}`);
                 $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}` : `Valor sem desconto`}`);
-                if(upsell.type == 1 && upsell.discount != 0){
-                    $(".upsell-discount").prepend('R$')
-                }else{
-                    $(".upsell-discount").append('%')
+                if(upsell.discount != 0){
+                    if(upsell.type == 1){
+                        $(".upsell-discount").prepend('R$')
+                    }else{
+                        $(".upsell-discount").append('%')
+                    }
                 }
 
                 $(".upsell-status").html(
