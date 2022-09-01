@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(
-    ["middleware" => ["auth:api", "scopes:admin", "permission:apps"]],
+    ["middleware" => ["auth:api", "scopes:admin", "demo_account","permission:apps"]],
     function () {
         Route::get("webhooks", "WebhooksApiController@index");
         Route::get("webhooks/{id}", "WebhooksApiController@show");
