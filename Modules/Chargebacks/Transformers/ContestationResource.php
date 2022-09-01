@@ -131,16 +131,16 @@ class ContestationResource extends JsonResource
         ];
     }
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     * @see https://github.com/laravel/framework/issues/29916
-     */
-    public function offsetExists($offset)
-    {
-        // array_key_exists($offset, $this->resource) is deprecated php7.4;
-        return property_exists($this->resource, $offset);
-    }
+    // /**
+    //  * @param mixed $offset
+    //  * @return bool
+    //  * @see https://github.com/laravel/framework/issues/29916
+    //  */
+    // public function offsetExists($offset)
+    // {
+    //     // array_key_exists($offset, $this->resource) is deprecated php7.4;
+    //     return property_exists($this->resource, $offset);
+    // }
 
     public function getAsaasDocFromReason($reasonEnum)
     {

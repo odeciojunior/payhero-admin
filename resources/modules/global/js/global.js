@@ -472,7 +472,7 @@ function loadingOnChart(target) {
 
 function loadingOnAccountsHealth(target,margin='80px') {
     $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="d-flex justify-content-center align-items-center align-self-center bg-white"
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;width: 100%;height: 100%;" class="d-flex justify-content-center align-items-center align-self-center bg-white block-loader-any"
         style="background-color: #f4f4f4;
         position: fixed;
         width: 100%;
@@ -492,7 +492,7 @@ function loadingOnChartRemove(target) {
 }
 
 function loadingOnAccountsHealthRemove(target) {
-    $('.loader-any').remove();
+    $(target).remove();
 }
 
 function loadOnAnyEllipsis(target, remove = false, options = {}) {
@@ -1343,30 +1343,36 @@ function verifyDocumentPending()
 }
 
 function setNewRegisterSavedItem(item, value) {
-    if (!localStorage.getItem("newRegisterData")) {
-        localStorage.setItem("newRegisterData", JSON.stringify({}));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (!localStorage.getItem("new-register-data-" + userId)) {
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify({}));
     }
 
     if (item) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         obj[item] = value;
 
-        localStorage.setItem("newRegisterData", JSON.stringify(obj));
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
 function removeNewRegisterSavedItem(item) {
-    if (localStorage.getItem("newRegisterData")) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (localStorage.getItem("new-register-data-" + userId)) {
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         delete obj[item];
 
-        localStorage.setItem("newRegisterData", JSON.stringify(obj));
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
 function setNewRegisterStep(step) {
     try {
-        localStorage.setItem("new-register-step", step);
+        var userId = $('meta[name="user-id"]').attr("content");
+
+        localStorage.setItem("new-register-step-" + userId, step);
     } catch (e) {
         newRegisterStepAux = step;
     }
@@ -1376,7 +1382,9 @@ function getNewRegisterStep() {
     let value;
 
     try {
-        value = localStorage.getItem("new-register-step");
+        var userId = $('meta[name="user-id"]').attr("content");
+
+        value = localStorage.getItem("new-register-step-" + userId);
     } catch (e) {
         value = newRegisterStepAux;
     }
@@ -1587,8 +1595,10 @@ function setInputRangeOnInput(target) {
 }
 
 function loadNewRegisterSavedData() {
-    if (localStorage.getItem("newRegisterData")) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (localStorage.getItem("new-register-data-" + userId)) {
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
 
         for (const prop in obj) {
             const element = $("#" + prop);
@@ -1715,7 +1725,9 @@ function saveNewRegisterData() {
                 '<button type="button" class="btn new-register-btn close-modal">Fechar</button>'
             );
 
-            localStorage.removeItem("newRegisterData");
+            var userId = $('meta[name="user-id"]').attr("content");
+
+            localStorage.removeItem("new-register-data-" + userId);
 
             loadingOnScreenRemove();
         },
@@ -1980,7 +1992,7 @@ function onlyNumbers(string) {
     if (string == undefined) {
         return 0;
     }
-    return string.replace(/\D/g, "");
+    return (string.includes('-') ? -1:1) * string .replace(/\D/g, '');
 }
 
 function removeMoneyCurrency(string) {
@@ -2025,7 +2037,6 @@ function buildModalBonusBalance(bonusObject) {
     content = `
         <div class="bonus-balance-content">
             <img class="bonus-illustration-1" src="../../../../../../build/global/img/svg/bonus-illustration-1.svg" alt=""/>
-            <img class="bonus-illustration-2" src="../../../../../../build/global/img/svg/bonus-illustration-2.svg" alt=""/>
 
             <div class="bonus-text">
                 <div class="d-flex justify-content-between align-items-center">
@@ -2042,14 +2053,12 @@ function buildModalBonusBalance(bonusObject) {
 
 
                 <h3 class="bonus-title"><span id="bonus-username">${
-                    userName || "Olá!"
+                    (userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase()) || "Olá!"
                 }</span>, aqui está seu <b>desconto!</b></h3>
 
                 <p>
-                    Você tentou sua sorte e conseguiu <span id="total-bonus-balance" class="bold">${totalBalance}</span> em
-                    desconto nas taxas de suas vendas. Obrigado pela
-                    sua visita no nosso estande no Afiliados Brasil.
-                    Que esse seja o início de uma lucrativa parceria!
+                    Você ganhou <span id="total-bonus-balance" class="bold">${totalBalance}</span> em isenção de taxa sobre suas vendas. Você vai se impressionar com toda a tecnologia embarcada em sua
+                    conta, que seja o início de uma parceria lucrativa. Boas vendas!
                 </p>
 
 

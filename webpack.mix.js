@@ -630,6 +630,13 @@ mix.babel([
 ], 'public/build/layouts/projects/index.min.js');
 
 /**
+ * Modules/Projects/Resources/views/create-store-modal.blade.php
+ */
+mix.styles([
+    'resources/modules/global/css/create-store-modal.css'
+], 'public/build/layouts/projects/create-store-modal.min.css');
+
+/**
  * Modules/Projects/Resources/views/empty.blade.php
  */
 mix.styles([
@@ -961,6 +968,17 @@ mix.copy(
 mix.babel([
     'Modules/Unicodrop/Resources/assets/js/index.js'
 ],'public/build/layouts/unicodrop/index.min.js')
+
+/**
+ * Modules/Webhooks/Resources/views/index.blade.php
+ */
+ mix.styles([
+    'resources/modules/global/css/new-dashboard.css',
+    'resources/modules/global/css/empty.css'
+],'public/build/layouts/webhooks/index.min.css')
+mix.babel([
+    'Modules/Webhooks/Resources/assets/js/index.js'
+],'public/build/layouts/webhooks/index.min.js')
 
 /**
  * Modules/Whatsapp2/Resources/views/index.blade.php

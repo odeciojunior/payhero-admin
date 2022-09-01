@@ -445,6 +445,11 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             click.removeData("clicked");
         }, 2000);
 
+        if(!$('.company-navbar').val()){
+            alertCustom('error', 'Não foi identificado a empresa selecionada.');
+            return false;
+        }
+
         loadOnModal("#modal-body-withdrawal-custom");
 
         $("#bt-confirm-withdrawal-modal-custom").attr("disabled", "disabled");
@@ -590,6 +595,7 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance, gatewayId) {
         return false;
     }
 
+    console.log('toTransfer:'+toTransfer);
     if (toTransfer > availableBalance) {
         alertCustom("error", "O valor requerido ultrapassa o limite disponivel");
         $("#withdrawal-value-" + gatewayId).val("");

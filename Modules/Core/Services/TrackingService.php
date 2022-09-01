@@ -6,6 +6,7 @@ use App\Jobs\RevalidateTrackingDuplicateJob;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
@@ -189,6 +190,7 @@ class TrackingService
                 "products_plans_sales.sale_id",
                 "products_plans_sales.product_id",
                 "products_plans_sales.amount",
+                "products_plans_sales.created_at",
                 "s.delivery_id",
                 "s.customer_id",
                 "s.upsell_id",
@@ -264,14 +266,15 @@ class TrackingService
 
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
-        $user = auth()->user();
         if (!$userId) {
-            $userId = $user->getAccountOwnerId();
+            $userId = auth()->user()->getAccountOwnerId();
         }
 
-        $companyId = $user->company_default;
+        $companyId = Company::DEMO_ID;
         if(!empty($filters['company'])){
             $companyId = hashids_decode($filters['company']);
+        }else{
+            $companyId = DB::table('users')->select('company_default')->where('id',$userId)->first()->company_default;
         }
 
         $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];

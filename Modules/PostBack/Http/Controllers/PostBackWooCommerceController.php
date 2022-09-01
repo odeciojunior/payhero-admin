@@ -164,6 +164,9 @@ class PostBackWooCommerceController extends Controller
 
             if (!empty($request["price"])) {
                 $newValues["price"] = $request["price"];
+                if($request['on_sale'] && $request['sale_price']){
+                    $newValues['price'] = $request['sale_price'];
+                }
             }
 
             if (!empty($request["images"][0]["src"])) {

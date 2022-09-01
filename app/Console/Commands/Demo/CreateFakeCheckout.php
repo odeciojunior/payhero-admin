@@ -97,9 +97,13 @@ class CreateFakeCheckout extends Command
 
     public function createCheckoutPlan()
     {
+        $limit = 1;
+        if(mt_rand(1,7)===1){
+            $limit = mt_rand(2,3);
+        }
         $plans = Plan::with(['productsPlans.product'])
         ->where('project_id',$this->project->id)
-        ->inRandomOrder()->limit(Rand(1,3))->get();
+        ->inRandomOrder()->limit($limit)->get();
 
         $this->total = 0;
         foreach($plans as $plan){

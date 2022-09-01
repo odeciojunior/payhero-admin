@@ -271,50 +271,21 @@ class CoreApiController extends Controller
     {
         try {
             $user = auth()->user();
-            $companyModel = new Company();
-            $companies = $companyModel->newQuery()
-                ->where('user_id', $user->account_owner_id);
 
-            # se empresa default for null, torna default a primeira empresa válida ou, em ultimo caso, a empresa demo
-            if($user->company_default == null){
-                $id_code = '';
-                $fantasy_name = '';
-                $newCompanyDefault = $companies
-                    ->where('active_flag', true)
-                    ->get();
-                $companyService = new CompanyService();
-                foreach($newCompanyDefault as $item){
-                    if($companyService->isDocumentValidated($item->id)){
-                        $id_code = $item->id_code;
-                        $fantasy_name = $item->fantasy_name;
-                        break;
-                    }
-                }
-                if(empty($id_code)){
-                    $id_code = Hashids::encode(1);
-                    $fantasy_name = 'Empresa Demo';
-                }
-                $request = new Request(['company_id' => $id_code]);
-                $this->updateCompanyDefault($request);
-                $return = array(
-                    'company_default'=>$id_code,
-                    'company_default_name'=>$fantasy_name,
-                    'company_default_fullname'=>$fantasy_name
-                );
-            }
-            # se company default for empresa demo
-            else if($user->company_default == Company::DEMO_ID){
-                $return = array(
-                    'company_default'=>Hashids::encode(1),
-                    'company_default_name'=>'Empresa Demo',
-                    'company_default_fullname'=>'Empresa Demo'
-                );
-            }
-            # se company default for qq outra empresa
-            else if($user->company_default > Company::DEMO_ID){
-                $companyDefault = Company::select('company_type','fantasy_name')
+            $return = [
+                'company_default'=>Hashids::encode(Company::DEMO_ID),
+                'company_default_name'=>'Empresa Demo',
+                'company_default_fullname'=>'Empresa Demo'
+            ];
+
+            if($user->company_default > Company::DEMO_ID)
+            {
+                $companyDefault = cache()->remember('company-default-'.$user->company_default, 60, function () use($user) {
+                    return Company::select('company_type','fantasy_name')
                     ->where('id', $user->company_default)
                     ->first();
+                });
+
                 $company_default_name = $companyDefault->company_type == 1 ? 'Pessoa física' : Str::limit(
                         $companyDefault->fantasy_name,
                         20
@@ -326,13 +297,19 @@ class CoreApiController extends Controller
                 );
             }
 
-            $return['companies'] = collect(CompaniesSelectResource::collection($companies->get()))
+            $companies = cache()->remember('companies-'.$user->account_owner_id, 60, function () use($user) {
+                return Company::where('user_id', $user->account_owner_id)->get();
+            });
+
+
+            $return['companies'] = collect(CompaniesSelectResource::collection($companies))
              ->sortBy('order_priority')
              ->sortByDesc('active_flag')
              ->sortByDesc('company_is_approved')
              ->values()->all();
 
             return $return;
+
         } catch (Exception $e) {
             report($e);
 
@@ -479,5 +456,19 @@ class CoreApiController extends Controller
             report($e);
             return response("Internal server error.", 500);
         }
+    }
+
+    public function getZendeskToken()
+    {
+        $payload = [
+            'scope' => 'user',
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            'external_id' => ''. auth()->user()->id . '',
+            'iat' => time(),
+        ];
+        $token = JWT::encode($payload, 'v5D7n6jaGlc2nviUtU5eYOuG9MmtIuJ_t9K8KERl5PK6a46sWNH6q5_28jsGaTU1I4eStyGmzDOUntuhdHfoGg', 'HS256', 'app_630519303703d200f36b2a98');
+
+        return response()->json($token);
     }
 }

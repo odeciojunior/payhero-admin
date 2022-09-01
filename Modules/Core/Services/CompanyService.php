@@ -79,12 +79,21 @@ class CompanyService
     public function getCompaniesUser($paginate = false)
     {
         try {
-            $companyModel = new Company();
-            $companies = $companyModel->with("user")->where("user_id", auth()->user()->account_owner_id);
+            $ownerId = auth()->user()->account_owner_id;
+            $companies = cache()->remember('companies-user-'.$ownerId, 60, function () use($ownerId,$paginate) {
+                $companiesQr =  Company::with("user")->where("user_id", $ownerId)->orderBy("order_priority");
+                if ($paginate) {
+                    return $companiesQr->paginate(10);
+                }
+                return $companiesQr->get();
+            });
+
             if ($paginate) {
-                return CompanyResource::collection($companies->orderBy("order_priority")->paginate(10));
+                return CompanyResource::collection($companies);
             }
-            return CompaniesSelectResource::collection($companies->orderBy("order_priority")->get());
+
+            return CompaniesSelectResource::collection($companies);
+
         } catch (Exception $e) {
             report($e);
             return [];
