@@ -440,5 +440,12 @@ Route::group([
         ]);
     });
 
+    Route::group([],
+        function () {
+            Route::get("webhooks", "WebhooksApiDemoController@index");
+            Route::get("webhooks/{id}", "WebhooksApiDemo@show");
+        }
+    );
+
     Route::get('/not-authorized','DemoAccountController@notAuthorized')->name('demo.not_authorized');
 });
