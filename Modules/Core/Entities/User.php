@@ -163,6 +163,7 @@ class User extends Authenticable
         "last_login",
         "invites_amount",
         "account_owner_id",
+        "logged_id",
         "deleted_project_filter",
         "id_wall_result",
         "bureau_result",
