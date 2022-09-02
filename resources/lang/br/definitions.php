@@ -184,5 +184,12 @@ return [
             "dolar" => "$",
             "euro" => "€",
         ],
+        "situation" => [
+            "active" => "Ativo",
+            "suspended" => "Suspenso",
+            "unfit" => "Inapto",
+            "downloaded" => "Baixado",
+            "invalid" => "Invalido"
+        ],
     ],
 ];
