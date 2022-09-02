@@ -849,6 +849,21 @@ function pagination(response, model, callback) {
                 }
             );
         }
+
+        if( x <= 1 && !isMobile()){
+            $(paginationContainer).append(`
+                <button class='btn nav-btn page_${currentPage - x}'>
+                    ${currentPage - x}
+                </button>
+            `);
+    
+            $(paginationContainer + " .page_" + (currentPage - x)).on(
+                "click",
+                function () {
+                    callback("?page=" + $(this).html());
+                }
+            );
+        }
     }
 
     if (currentPage !== 1 && currentPage !== lastPage) {
@@ -880,6 +895,19 @@ function pagination(response, model, callback) {
                 }
             );
         }
+        
+        if(x >= 1 && !isMobile()){
+            $(paginationContainer).append(
+                `<button class='btn nav-btn page_${currentPage + x}'>
+                    ${currentPage + x}
+                </button>`
+            );
+    
+            $(paginationContainer + " .page_" + (currentPage + x)).on("click",function () {
+                    callback("?page=" + $(this).html());
+                }
+            );
+        }
     }
 
     if (lastPage !== 1) {
@@ -898,6 +926,7 @@ function pagination(response, model, callback) {
             callback("?page=" + lastPage);
         });
     }
+    
     $("table").addClass("table-striped");
 }
 

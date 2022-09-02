@@ -2040,8 +2040,7 @@ tbody td{
 
 .page-project .pagination-sm .nav-btn {
     color: #3D4456;
-    background: #FFFFFF !important;
-
+    background: #FFFFFF;
     border-radius: 8px;
     margin-right: 10px;
     min-width: 40px;
@@ -2050,8 +2049,13 @@ tbody td{
     font-size: 16px;
     padding: 5px;
 }
+.page-project .pagination-sm .nav-btn:hover{
+    background: #68aafa;
+    color: #ffffff;
+}
+
 .page-project .pagination-sm .nav-btn.active {
-    background-color: #2E85EC !important;
+    background-color: #4990e7 !important;
 
     border-radius: 4px;
     opacity: 1 !important;
