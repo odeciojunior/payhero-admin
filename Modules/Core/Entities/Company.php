@@ -76,7 +76,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string|null $id_wall_date_update
  * @property string|null $transaction_tax
  * @property int $block_checkout
- //* @property int|null $annual_income
+ * @property int|null $annual_income
+ * @property json $situation
  * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read int|null $affiliates_count
@@ -115,6 +116,12 @@ class Company extends Model
     public const GATEWAY_TAX_30 = 4.9;
 
     public const DEMO_ID = 1;
+
+    public const SITUACTION_ACTIVE = 1;
+    public const SITUACTION_SUSPENDED = 2;
+    public const SITUACTION_UNFIT = 3;
+    public const SITUACTION_DOWNLOADED = 4;
+    public const SITUACTION_INVALID = 5;
 
     protected $presenter = CompanyPresenter::class;
     /**
@@ -169,9 +176,14 @@ class Company extends Model
         "transaction_tax",
         "block_checkout",
         "annual_income",
+        "situation",
         "created_at",
         "updated_at",
         "deleted_at"
+    ];
+
+    protected $casts = [
+        "situation" => "array",
     ];
 
     public function getActivitylogOptions(): LogOptions

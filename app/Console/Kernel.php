@@ -174,6 +174,8 @@ class Kernel extends ConsoleKernel
         $schedule->command("getnet:check-withdrawals-liquidated")->dailyAt("23:30");
         $schedule->command("verify:promotional-tax")->dailyAt("23:45");
 
+        $schedule->command('check:company')->saturdays()->at('05:00');
+
         $schedule->command("demo:create-fake-invite")->weekly();
         // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
     }
