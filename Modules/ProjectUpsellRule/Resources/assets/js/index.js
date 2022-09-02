@@ -4,17 +4,20 @@ $(document).ready(function () {
     let descriptionconfig;
 
 
-    $('.value').maskMoney({thousands: '', decimal: '.', allowZero: true, prefix: ''});
+    $('.value-mask').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
 
     function formatDouble(number) {
         return number.replace('.','').replace(',','.')
+    }
+    function formatMoney(number) {
+        return (Math.round(number * 100) / 100).toFixed(2).replace('.',',');
     }
     //store type
     $('#us_type_value').click(function () {
         $('#us_percent_opt').hide()
         $('#us_money_opt').show()
         $('#us_money_opt input').focus()
-        $('#add_discount_upsell').val($('#us_money_opt input').val())
+        $('#add_discount_upsell').val( formatDouble($('#us_money_opt input').val()))
     })
 
     $('#us_type_percent').click(function () {
@@ -24,7 +27,7 @@ $(document).ready(function () {
         $('#add_discount_upsell').val($('#us_percent_opt input').val())
     })
     $('#us_money_opt input').change(function () {
-        $('#add_discount_upsell').val($('#us_money_opt input').val())
+        $('#add_discount_upsell').val(formatDouble($('#us_money_opt input').val()))
         // .replace('.','').replace(',','.')
     })
     $('#us_percent_opt input').change(function () {
@@ -36,7 +39,7 @@ $(document).ready(function () {
         $('#usu_percent_opt').hide()
         $('#usu_money_opt').show()
         $('#usu_money_opt input').focus()
-        $('#edit_discount_upsell').val($('#usu_money_opt input').val())
+        $('#edit_discount_upsell').val(formatDouble($('#usu_money_opt input').val()))
     })
 
     $('#usu_type_percent').click(function () {
@@ -46,7 +49,7 @@ $(document).ready(function () {
         $('#edit_discount_upsell').val($('#usu_percent_opt input').val())
     })
     $('#usu_money_opt input').change(function () {
-        $('#edit_discount_upsell').val($('#usu_money_opt input').val())
+        $('#edit_discount_upsell').val(formatDouble($('#usu_money_opt input').val()))
         // .replace('.','').replace(',','.')
     })
     $('#usu_percent_opt input').change(function () {
@@ -201,15 +204,15 @@ $(document).ready(function () {
             }, success: function (response) {
                 let upsell = response.data;
                 $("#edit_description_upsell").val(`${upsell.description}`);
-                $("#edit_discount_upsell").val(`${upsell.discount}`);
 
                 if(upsell.type == 1){
                     $("#usu_type_value").trigger('click');
-                    $("#usu_money_opt input").val(upsell.discount);
+                    $("#usu_money_opt input").val(formatMoney(upsell.discount));
                 }else{
                     $("#usu_percent_opt input").val(upsell.discount);
                     $("#usu_type_percent").trigger('click');
                 }
+                $("#edit_discount_upsell").val(`${upsell.discount}`);
 
                 $("#edit_active_flag")
                     .prop("checked", upsell.active_flag === 1)
@@ -370,6 +373,7 @@ $(document).ready(function () {
                 $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}` : `Valor sem desconto`}`);
                 if(upsell.discount != 0){
                     if(upsell.type == 1){
+                        $(".upsell-discount").html(formatMoney(upsell.discount))
                         $(".upsell-discount").prepend('R$')
                     }else{
                         $(".upsell-discount").append('%')

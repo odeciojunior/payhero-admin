@@ -44,12 +44,12 @@
                     <div class="input-group-prepend">
                         <span style="border-color: #e0e7ee; background-color: #fafafa" class="input-group-text" id="basic-addon1">R$</span>
                     </div>
-                    <input onkeyup="$(this).removeClass('warning-input')" maxlength="9" name="discount_value" id="usu_discount_value" type="text" class=" input-pad form-control value" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    <input  maxlength="9" name="discount_value" id="usu_discount_value" type="text" class=" input-pad form-control value-mask" >
                 </div>
 
                 <div id="usu_percent_opt" class="input-group-lg input-group mb-3" style="display: none;">
 
-                    <input onkeyup="$(this).removeClass('warning-input')" maxlength="2" data-mask="0#" name="percent_value" id="usu_percent_value" style="" type="text" class=" input-dad form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" autocomplete="off">
+                    <input  maxlength="2" data-mask="0#" name="percent_value" id="usu_percent_value" style="" type="text" class=" input-dad form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" autocomplete="off">
                     <div class="input-group-append">
                         <span style="border-color: #e0e7ee; background-color: #fafafa" class="input-group-text" id="basic-addon1">%</span>
                     </div>
