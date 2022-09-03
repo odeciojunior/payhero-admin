@@ -48,27 +48,13 @@ class WebhookSaleUpdateJob implements ShouldQueue
     public function handle()
     {
         try {
-            $checkout = $this->sale->checkout;
-
-            if (empty($checkout)) {
-                return;
-            }
-
-            $checkout->load("project");
-
-            $userProject = UserProject::where(
-                "project_id",
-                $checkout->project_id
-            )->first();
+            $userProject = UserProject::where("project_id", $this->sale->project_id)->first();
 
             if (empty($userProject)) {
                 return;
             }
 
-            $webhook = Webhook::where(
-                "company_id",
-                $userProject->company_id
-            )->first();
+            $webhook = Webhook::where("company_id", $userProject->company_id)->first();
 
             if (!empty($webhook)) {
                 $service = new WebhookService($webhook);
