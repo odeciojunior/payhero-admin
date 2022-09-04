@@ -66,6 +66,23 @@ return [
             'engine' => null,
         ],
 
+        'demo' => [
+            
+            'host' => env('DB_HOST_DEMO', '127.0.0.1'),
+            'port' => env('DB_PORT_DEMO', '3307'),
+            'database' => env('DB_DATABASE_DEMO', 'forge'),
+            'username' => env('DB_USERNAME_DEMO', 'forge'),
+            'password' => env('DB_PASSWORD_DEMO', ''),
+
+            'driver' => 'mysql',
+            'unix_socket' => env('DB_SOCKET_DEMO', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),

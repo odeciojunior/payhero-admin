@@ -67,7 +67,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".extra-informations-user").on("click", function () {
+    $(".init-operation-container").on("click", ".extra-informations-user", function () {
         $("#new-register-first-page").hide();
 
         $(".modal-top-btn").hide();
@@ -457,36 +457,30 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    $("#loadingOnScreen")
-        .append(
-            `<div class="sirius-loading">
-            <img style="height: 125px; width: 125px" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
-                 class="img-responsive"/>
-        </div>`
-        )
-        .fadeIn();
-
-    $("body").css("overflow-y", "hidden");
+    loadOnAnyPage('.page');
+    $('body').css('overflow-y', 'hidden');
+    $('.new-register-page-open-modal-container').hide();
 }
 
 function loadingOnChart(target) {
-    $(target)
-        .fadeIn()
-        .append(
-            `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading">
-            <img style="height: 125px; width: 125px;" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
-                 class="img-responsive"/>
+    $(target).fadeIn().append(
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading bg-white">
+        <span class="loader-any" style="margin-top: 150px"></span>
         </div>`
         );
 }
 
-function loadingOnAccountsHealth(target) {
-    $(target)
-        .fadeIn()
-        .append(
-            `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
-            <img style="height: 125px; width: 125px; top: auto;" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
-                 class="img-responsive"/>
+function loadingOnAccountsHealth(target,margin='80px') {
+    $(target).fadeIn().append(
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;width: 100%;height: 100%;" class="d-flex justify-content-center align-items-center align-self-center bg-white block-loader-any"
+        style="background-color: #f4f4f4;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        ">
+            <span class="loader-any" style="margin-top: `+margin+`"></span>
         </div>`
         );
 }
@@ -498,9 +492,6 @@ function loadingOnChartRemove(target) {
 }
 
 function loadingOnAccountsHealthRemove(target) {
-    //$(target).fadeOut(function () {
-    //    $(target).html('');
-    //});
     $(target).remove();
 }
 
@@ -564,14 +555,11 @@ function heightAnimate(element, height) {
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        $("#loadingOnScreen").fadeOut(function () {
-            $(this).html("");
-            $("body").css("overflow-y", "unset");
-        });
-    }, 2000);
-
-    $(".page-header").fadeIn();
-    $("#btn-modal").fadeIn();
+        loadOnAnyPage('.page',true);
+        $('body').css('overflow-y', 'unset')
+    }, 2000)
+    $('.page-header').fadeIn();
+    $('#btn-modal').fadeIn();
 }
 
 function loadOnNotification(whereToLoad) {
@@ -702,6 +690,55 @@ function loadOnAny(target, remove = false, options = {}) {
             !target.hasClass("tab-pane") ||
             (target.hasClass("tab-pane") && target.hasClass("active"))
         ) {
+            $(target).fadeIn();
+        }
+    }
+}
+
+function loadOnAnyPage(target, remove = false, options = {}) {
+    //cleanup
+    target = $(target);
+    target.parent()
+        .find('.loader-any-container-page')
+        .remove();
+
+    if (!remove) {
+
+        //create elements
+        let container = $('<div class="loader-any-container-page"></div>');
+        let loader = $('<span class="loader-any-page"></span>');
+
+        //apply styles or use default
+        options.styles = options.styles ? options.styles : {};
+        options.styles.container = options.styles.container ? options.styles.container : {};
+        options.styles.container.minWidth = options.styles.container.minWidth ? options.styles.container.minWidth : $(target).css('width');
+        options.styles.container.minHeight = options.styles.container.minHeight ? options.styles.container.minHeight : $(window.top).height() * 0.7; //70% of visible window area
+        container.css(options.styles.container);
+        if (options.styles.loader) {
+            loader.css(options.styles.loader);
+        }
+
+        //add message load
+        if (options.message) {
+            container.append(`<p class='mb-30'>${options.message}</p>`);
+            container.addClass('d-flex').addClass('flex-column');
+        }
+
+        //add loader to container
+        container.append(loader);
+
+        //add loader to screen
+        target.hide();
+        if (options.insertBefore) {
+            container.insertBefore(target.parent().find(options.insertBefore));
+        } else {
+            target.parent().append(container);
+        }
+    } else {
+        // show target again with fix to Bootstrap tabs
+        if (!target.hasClass('tab-pane') ||
+            (target.hasClass('tab-pane') &&
+                target.hasClass('active'))) {
             $(target).fadeIn();
         }
     }
@@ -1023,7 +1060,9 @@ $(".top-alert-close").on("click", function () {
 
 sessionStorage.removeItem("documentsPending");
 
-function verifyDocumentPending() {
+function verifyDocumentPending()
+{
+    changeNewRegisterLayoutOnWindowResize();
     var count = 0;
 
     $.ajax({
@@ -1046,8 +1085,8 @@ function verifyDocumentPending() {
             if (response.data.account.status !== "approved") {
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
-                    $(".new-register-page-open-modal-container").fadeOut();
-                    $(".new-register-navbar-open-modal-container").fadeOut();
+                    $('.new-register-page-open-modal-container').hide();
+                    $('.new-register-navbar-open-modal-container').fadeOut();
 
                     setStepContainer();
 
@@ -1304,30 +1343,36 @@ function verifyDocumentPending() {
 }
 
 function setNewRegisterSavedItem(item, value) {
-    if (!localStorage.getItem("newRegisterData")) {
-        localStorage.setItem("newRegisterData", JSON.stringify({}));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (!localStorage.getItem("new-register-data-" + userId)) {
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify({}));
     }
 
     if (item) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         obj[item] = value;
 
-        localStorage.setItem("newRegisterData", JSON.stringify(obj));
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
 function removeNewRegisterSavedItem(item) {
-    if (localStorage.getItem("newRegisterData")) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (localStorage.getItem("new-register-data-" + userId)) {
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         delete obj[item];
 
-        localStorage.setItem("newRegisterData", JSON.stringify(obj));
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
 function setNewRegisterStep(step) {
     try {
-        localStorage.setItem("new-register-step", step);
+        var userId = $('meta[name="user-id"]').attr("content");
+
+        localStorage.setItem("new-register-step-" + userId, step);
     } catch (e) {
         newRegisterStepAux = step;
     }
@@ -1337,7 +1382,9 @@ function getNewRegisterStep() {
     let value;
 
     try {
-        value = localStorage.getItem("new-register-step");
+        var userId = $('meta[name="user-id"]').attr("content");
+
+        value = localStorage.getItem("new-register-step-" + userId);
     } catch (e) {
         value = newRegisterStepAux;
     }
@@ -1452,11 +1499,11 @@ function changeNewRegisterLayoutOnWindowResize() {
     }
 
     if (window.innerWidth >= 847) {
-        $(".new-register-page-open-modal-container").fadeOut();
-        $(".new-register-navbar-open-modal-container").fadeIn();
+        $('.new-register-page-open-modal-container').fadeOut();
+        $('.new-register-navbar-open-modal-container').fadeIn();
     } else {
-        $(".new-register-navbar-open-modal-container").fadeOut();
-        $(".new-register-page-open-modal-container").fadeIn();
+        $('.new-register-navbar-open-modal-container').fadeOut();
+        $('.new-register-page-open-modal-container').fadeIn();
     }
 }
 
@@ -1548,8 +1595,10 @@ function setInputRangeOnInput(target) {
 }
 
 function loadNewRegisterSavedData() {
-    if (localStorage.getItem("newRegisterData")) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (localStorage.getItem("new-register-data-" + userId)) {
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
 
         for (const prop in obj) {
             const element = $("#" + prop);
@@ -1676,7 +1725,9 @@ function saveNewRegisterData() {
                 '<button type="button" class="btn new-register-btn close-modal">Fechar</button>'
             );
 
-            localStorage.removeItem("newRegisterData");
+            var userId = $('meta[name="user-id"]').attr("content");
+
+            localStorage.removeItem("new-register-data-" + userId);
 
             loadingOnScreenRemove();
         },
@@ -1739,9 +1790,7 @@ $.fn.shake = function () {
 
 function initSiriusSelect(target) {
     let $target = $(target);
-    let classes = Array.from(target[0].classList)
-        .filter((e) => e !== "sirius-select")
-        .join(" ");
+    let classes = Array.from(target[0].classList).filter(e => (e !== 'sirius-select' && e !== 'company-navbar')).join(' ');
     $target.removeClass(classes);
     if ($target.is(":disabled")) classes += " disabled";
     $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
@@ -1791,17 +1840,17 @@ $(document).ready(function () {
     var bodyEl = $("body");
     var menuBarToggle = $('[data-toggle="menubar"]');
     var toggle = $('[data-toggle="menubar"].nav-link');
-    menuBarToggle.off().on("click", function () {
-        bodyEl.toggleClass(
-            "site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide"
-        );
-        menuBarToggle.toggleClass("hided");
-        if (toggle.hasClass("hided")) {
-            $("#logoIconSirius").fadeOut().addClass("d-none");
-            $("#logoSirius").fadeIn().removeClass("d-none");
+    menuBarToggle.off().on('click', function () {
+        bodyEl.toggleClass('site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide');
+        menuBarToggle.toggleClass('hided')
+        if (toggle.hasClass('hided')) {
+            $('#logoIconSirius').fadeOut().addClass('d-none');
+            $('#logoSirius').fadeIn().removeClass('d-none');
+            $('.hamburger-desk').css('margin-left','240px');
         } else {
-            $("#logoIconSirius").fadeIn().removeClass("d-none");
-            $("#logoSirius").fadeOut().addClass("d-none");
+            $('#logoIconSirius').fadeIn().removeClass('d-none');
+            $('#logoSirius').fadeOut().addClass('d-none');
+            $('.hamburger-desk').css('margin-left','70px');
         }
     });
 
@@ -1943,7 +1992,7 @@ function onlyNumbers(string) {
     if (string == undefined) {
         return 0;
     }
-    return string.replace(/\D/g, "");
+    return (string.includes('-') ? -1:1) * string .replace(/\D/g, '');
 }
 
 function removeMoneyCurrency(string) {
@@ -1988,7 +2037,6 @@ function buildModalBonusBalance(bonusObject) {
     content = `
         <div class="bonus-balance-content">
             <img class="bonus-illustration-1" src="../../../../../../build/global/img/svg/bonus-illustration-1.svg" alt=""/>
-            <img class="bonus-illustration-2" src="../../../../../../build/global/img/svg/bonus-illustration-2.svg" alt=""/>
 
             <div class="bonus-text">
                 <div class="d-flex justify-content-between align-items-center">
@@ -2005,14 +2053,12 @@ function buildModalBonusBalance(bonusObject) {
 
 
                 <h3 class="bonus-title"><span id="bonus-username">${
-                    userName || "Olá!"
+                    (userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase()) || "Olá!"
                 }</span>, aqui está seu <b>desconto!</b></h3>
 
                 <p>
-                    Você tentou sua sorte e conseguiu <span id="total-bonus-balance" class="bold">${totalBalance}</span> em
-                    desconto nas taxas de suas vendas. Obrigado pela
-                    sua visita no nosso estande no Afiliados Brasil.
-                    Que esse seja o início de uma lucrativa parceria!
+                    Você ganhou <span id="total-bonus-balance" class="bold">${totalBalance}</span> em isenção de taxa sobre suas vendas. Você vai se impressionar com toda a tecnologia embarcada em sua
+                    conta, que seja o início de uma parceria lucrativa. Boas vendas!
                 </p>
 
 
@@ -2307,6 +2353,129 @@ const loadSkeletonBonus = `
                 <div class="skeleton skeleton-p" style="width: 60%; margin-top: 10px"></div>
             </div>
             `;
+
+function getCompaniesAndProjects() {
+    var ajax = $.ajax({
+        method: "GET",
+        url: `/api/core/usercompanies`,
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'appliation/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(data) {
+            data.companies.push({
+                "id":"v2RmA83EbZPVpYB",
+                "name":"Empresa Demo",
+                "company_document_status": "approved",
+                "active_flag": 1,
+                "projects": [{
+                    "id" : "v2RmA83EbZPVpYB",
+                    "name": "Loja Demonstrativa Cloudfox",
+                    "order_p":1,
+                    "status":1
+                }]
+            });
+
+            companies = data.companies;
+            company_default = data.company_default;
+            company_default_name = data.company_default_name;
+            $.each(companies, function (c, company) {
+                if( data.company_default == company.id){
+                    data.company_default_projects = company.projects
+                }
+            });
+            if (!isEmpty(companies)) {
+                //$('.company_name').val( company_default_name );
+                $('.company_id').val( company_default );
+                $('.company-navbar').html('');
+
+                for (let i = 0; i < companies.length; i++) {
+                    if (company_default === companies[i].id)
+                        itemSelected = 'selected="selected" style="font-weight:bold"'
+                    else
+                        itemSelected = ''
+
+                    if (companies[i].active_flag == false || companies[i].company_document_status != "approved")
+                        itemDisabled = 'disabled="disabled"';
+                    else
+                        itemDisabled = '';
+
+                    if (companies[i].company_type == '1') {
+                        $('.company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa Física</option>')
+                    } else {
+                        if(companies[i].name.length>20)
+                            companyName = companies[i].name.substring(0,20)+'...';
+                        else
+                            companyName = companies[i].name;
+                        $('.company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
+                    }
+                }
+                $('#company-select').addClass('d-sm-flex').css('display','block');
+                return data;
+
+            } else {
+                //$(".content-error").show();
+                $('#company-select, .page-content').hide();
+                loadingOnScreenRemove();
+            }
+        }
+    });
+    return ajax
+}
+
+function updateCompanyDefault() {
+    var company_id = $('.company-navbar').val()
+    var ajax = $.ajax({
+        method: 'POST',
+        url: '/api/core/company-default',
+        data:{company_id:company_id},
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(data) {
+            getCompaniesAndProjects();
+            return;
+        },
+    });
+    return ajax;
+}
+
+function verifyIfCompanyIsDefault(companyId){
+    $('.company-navbar').val( companyId )
+    if( $('.company-navbar').find('option:selected').css('font-weight')=='700' ){
+        $('.sirius-select-options').css('display','none');
+        return true;
+    }
+    return false;
+}
+
+function fillSelectProject(companiesAndProjects,selectorName,value=''){
+    $.each(companiesAndProjects.company_default_projects, function (i, project) {
+        if(project.status===1){
+            $(selectorName).append($("<option>", {value: project.id ,text: project.name}));
+        }
+    });
+    if(!isEmpty(value)){
+        $(selectorName).val(value)
+    }
+}
+function showFiltersInReports(show){
+    if(show){
+        $('#box-projects').show();
+        $('.date-report').show();
+        return;
+    }
+    $('#box-projects').hide();
+    $('.date-report').hide();
+}
 
 // Returns the status of the filtering button
 function searchIsLocked(elementButton) {

@@ -36,6 +36,8 @@ sftp-config.json
 ### PHPStorm ###
 .idea/
 xdebug-*/
+.phpstorm.meta.php
+_ide_helper_models.php
 
 ### MySQL ###
 dump.sql
@@ -85,3 +87,5 @@ logs/
 result
 result_migrations
 *ngrok
+
+.vscode

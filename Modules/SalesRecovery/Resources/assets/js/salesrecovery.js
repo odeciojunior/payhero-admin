@@ -1,7 +1,73 @@
 var exportFormat = null;
 
 $(document).ready(function () {
-    getProjects();
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project").find('option').not(':first').remove();
+        $("#plan").find('option').not(':first').remove();
+        $("#project").val($("#project option:first").val());
+        $("#plan").val($("#plan option:first").val());
+        $('#plan').data('select2').results.clear();
+        loadOnTable("#table_data", "#carrinhoAbandonado");
+        updateCompanyDefault().done(function(data){
+            getCompaniesAndProjects().done(function(data2){
+                if(!isEmpty(data2.company_default_projects)){
+                    $('#export-excel').show();
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    fillProjectsSelect(data2.companies)
+                    updateSalesRecovery();
+                }
+                else{
+                    $('#export-excel').hide();
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            });
+        });
+    });
+
+    function fillProjectsSelect(data){
+        $.ajax({
+            method: "GET",
+            url: "/api/recovery/projects-with-recovery",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                //if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        if( dataSales.includes(project.id) )
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                    });
+                //}
+            });
+        });
+    }
+
+    getCompaniesAndProjects().done( function (data){console.log(data)
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
+
+    });
 
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
     $(".applySelect2").select2({
@@ -112,47 +178,18 @@ $(document).ready(function () {
     /**
      * Busca os lojas para montar o select
      */
-    function getProjects() {
+    function getProjects(data) {
         loadingOnScreen();
 
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function (response) {
-                console.log("entrei erro");
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function (response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    $("#export-excel").show();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        $("#export-excel").show();
+        fillProjectsSelect(data.companies)
+        $("#project").val($("#project option:first").val());
+        $("#plan").val($("#plan option:first").val());
+        updateSalesRecovery();
 
-                    $.each(response.data, function (i, project) {
-                        $("#project").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
-
-                    updateSalesRecovery();
-                } else {
-                    $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-
-                loadingOnScreenRemove();
-            },
-        });
+        loadingOnScreenRemove();
     }
 
     /**
@@ -184,6 +221,7 @@ $(document).ready(function () {
 
             &plan=${$("#plan").val()}`;
         }
+        url += "&company="+ $('.company-navbar').val();
 
         let recoveryTypeSelected = $("#recovery_type option:selected").val();
         if (recoveryTypeSelected == 1) {
@@ -220,8 +258,8 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
-                const BOLETO_TYPE = "5";
+            success: function success(response) {console.log(response)
+                const BOLETO_TYPE = '5'
 
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
@@ -807,6 +845,13 @@ $(document).ready(function () {
     });
     // FIM DO COMPORTAMENTO DO FILTRO
 
+    //LISTA PLANOS DE ACORDO COM O PROJETO(S)
+    $("#project").on("change", function () {
+        let value = $(this).val();
+        $("#plan").val(null).trigger("change");
+        $('#plan').data('select2').results.clear();
+    });
+
     //Search plan
     $("#plan").select2({
         language: {
@@ -823,6 +868,7 @@ $(document).ready(function () {
                     list: "plan",
                     search: params.term,
                     project_id: $("#project").val(),
+                    company: $(".company-navbar").val()
                 };
             },
             method: "GET",

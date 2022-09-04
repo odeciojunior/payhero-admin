@@ -212,19 +212,11 @@ class SalesRecoveryApiController extends Controller
                 $dateEnd = $dateRange[1] . " 23:59:59";
             }
 
-            $paymentMethod = (new Sale())->present()->getPaymentType("credit_card");
-            $status = [3];
+            $paymentMethod = (new Sale())->present()->getPaymentType('credit_card');
+            $status        = [3];
 
-            $sales = $salesRecoveryService->getSaleExpiredOrRefused(
-                $paymentMethod,
-                $status,
-                $projectIds,
-                $dateStart,
-                $dateEnd,
-                $client,
-                $clientDocument,
-                $plans
-            );
+            $company_id = hashids_decode($data["company"]);
+            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans, $company_id);
 
             return SalesRecoveryCardRefusedResource::collection($sales);
         } catch (Exception $e) {
@@ -285,16 +277,8 @@ class SalesRecoveryApiController extends Controller
         $paymentMethod = (new Sale())->present()->getPaymentType("boleto");
         $status = [5];
 
-        $sales = $salesRecoveryService->getSaleExpiredOrRefused(
-            $paymentMethod,
-            $status,
-            $projectIds,
-            $dateStart,
-            $dateEnd,
-            $client,
-            $clientDocument,
-            $plans
-        );
+        $company_id = hashids_decode($data["company"]??auth()->user()->company_default);
+        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans, $company_id);
 
         return SalesRecoveryCardRefusedResource::collection($sales);
     }
@@ -310,28 +294,26 @@ class SalesRecoveryApiController extends Controller
             $checkoutModel = new Checkout();
             $salesRecoveryService = new SalesRecoveryService();
 
-            if ($request->has("checkout") && !empty($request->input("checkout"))) {
-                $saleId = current(Hashids::decode($request->input("checkout")));
-                $sale = $saleModel->find($saleId);
+            if ($request->has('checkout') && !empty($request->input('checkout'))) {
+                $saleId = current(Hashids::decode($request->input('checkout')));
+                $sale   = $saleModel->find($saleId);
+
                 if (!empty($sale)) {
-                    return SalesRecoverydetailsResourceTransformer::make(
-                        $salesRecoveryService->getSalesCartOrBoletoDetails($sale)
-                    );
-                } else {
-                    $checkout = $checkoutModel->find($saleId);
-                    if (!empty($checkout)) {
-                        return SalesRecoveryCartAbandonedDetailsResourceTransformer::make(
-                            $salesRecoveryService->getSalesCheckoutDetails($checkout)
-                        );
-                    } else {
-                        return response()->json(["message" => "Ocorreu algum erro, tente novamente mais tarde"], 400);
-                    }
+                    return SalesRecoverydetailsResourceTransformer::make($salesRecoveryService->getSalesCartOrBoletoDetails($sale));
                 }
-            } else {
-                return response()->json(["message" => "Ocorreu algum erro, tente novamente mais tarde"], 400);
+
+                $checkout = $checkoutModel->find($saleId);
+                if (!empty($checkout)) {
+                    return SalesRecoveryCartAbandonedDetailsResourceTransformer::make($salesRecoveryService->getSalesCheckoutDetails($checkout));
+                }
+
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
             }
-        } catch (Exception $e) {
-            Log::warning("Erro ao buscar detalhes do carrinho abandonado");
+
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
+
+        } catch (Exception $e)
+        {
             report($e);
 
             return response()->json(["message" => "Ocorreu algum erro, tente novamente mais tarde"], 400);
@@ -371,20 +353,21 @@ class SalesRecoveryApiController extends Controller
 
             $totalPaidValue = $sale->original_total_paid_value;
             if (!empty($request->discountValue)) {
-                if ($request->discountType == "percentage") {
-                    $discount = $totalPaidValue * (foxutils()->onlyNumbers($request->discountValue) / 100);
-                    $discount = number_format($discount / 100, 2, ".", ""); //converte para decimal
-                    $totalPaidValue -= $discount * 100;
+
+                if ($request->discountType == 'percentage') {
+                    $discount = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));
+                    $discount = number_format($discount/100,2,'.',''); //converte para decimal
+                    $totalPaidValue -= $discount*100;
                 } else {
                     $discount = (int) preg_replace("/[^0-9]/", "", $request->discountValue);
                     $totalPaidValue -= $discount;
                     $discount = number_format($discount / 100, 2, ".", ""); //converte para decimal
                 }
 
-                $totalPaidValue += foxutils()->onlyNumbers($sale->shopify_discount);
+                $totalPaidValue+=foxutils()->onlyNumbers($sale->shopify_discount);
 
                 $sale->update([
-                    "shopify_discount" => $discount,
+                    'shopify_discount' => $discount,
                 ]);
             }
 
@@ -397,25 +380,20 @@ class SalesRecoveryApiController extends Controller
 
             $checkoutService = new CheckoutService();
 
-            $boletoRegenerated = $checkoutService->regenerateBillet(
-                Hashids::connection("sale_id")->encode($sale->id),
-                $totalPaidValue,
-                $dueDate
-            );
+            $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
+            ->encode($sale->id), $totalPaidValue, $dueDate);
 
-            $message = $boletoRegenerated["message"] ?? "[359] Ocorreu um erro tente novamente mais tarde.";
-            $status = 400;
-            if ($boletoRegenerated["status"] == "success") {
-                $message = "Boleto regenerado com sucesso";
-                $status = 200;
+            $message = $boletoRegenerated['message']??'[359] Ocorreu um erro tente novamente mais tarde.';
+            $status  = 400;
+            if ($boletoRegenerated['status'] == 'success') {
+                $message = 'Boleto regenerado com sucesso';
+                $status  = 200;
             }
 
-            return response()->json(
-                [
-                    "message" => $message,
-                ],
-                $status
-            );
+            return response()->json([
+                'message' => $message,
+            ], $status);
+
         } catch (Exception $e) {
             report($e);
 
@@ -504,6 +482,7 @@ class SalesRecoveryApiController extends Controller
         $paymentMethod = (new Sale())->present()->getPaymentType("pix");
         $status = [5];
 
+        $company_id = hashids_decode($data["company"]);
         $sales = $salesRecoveryService->getSaleExpiredOrRefused(
             $paymentMethod,
             $status,
@@ -512,9 +491,19 @@ class SalesRecoveryApiController extends Controller
             $dateEnd,
             $client,
             $clientDocument,
-            $plans
+            $plans,
+            $company_id
         );
 
         return SalesRecoveryCardRefusedResource::collection($sales);
+    }
+
+    public function getProjectsWithRecovery(){
+        $projects = SalesRecoveryService::getProjectsWithRecovery();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
     }
 }

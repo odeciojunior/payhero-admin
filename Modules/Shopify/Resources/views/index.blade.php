@@ -13,6 +13,9 @@
 @section('content')
     <!-- Page -->
     <div class="page">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         <div style="display: none !important;"
              class="page-header container">
             <div class="row jusitfy-content-between"

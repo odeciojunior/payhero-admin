@@ -5,7 +5,7 @@ $(document).ready(function () {
     loading("#cardDisponivel", "#loaderCard");
     loading("#cardTotal", "#loaderCard");
 
-    $("#company").on("change", function () {
+    $(".company-navbar").on("change", function () {
         updateValues();
     });
 
@@ -16,7 +16,9 @@ $(document).ready(function () {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
-            data: { company: $("#company").val() },
+            data: {
+                company: $('.company-navbar').val(),
+            },
             error: function () {
                 //
             },

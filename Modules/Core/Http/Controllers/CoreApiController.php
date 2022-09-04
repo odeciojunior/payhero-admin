@@ -2,32 +2,35 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Exception;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use DateTime;
-use Exception;
 use Firebase\JWT\JWT;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Modules\Core\Entities\BonusBalance;
-use Modules\Core\Entities\Ticket;
-use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
-use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
-use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
-use Modules\Core\Events\UserRegistrationFinishedEvent;
-use Modules\Core\Transformers\CompaniesSelectResource;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\CompanyDocument;
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserDocument;
-use Modules\Core\Entities\UserInformation;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\Gateways\Safe2PayService;
-use Modules\Core\Services\UserService;
-use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\Ticket;
+use Illuminate\Routing\Controller;
+use Modules\Core\Events\UserRegistrationFinishedEvent;
+use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\UserService;
+use Modules\Core\Entities\BonusBalance;
+use Modules\Core\Entities\CheckoutConfig;
+use Modules\Core\Entities\UserDocument;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\UserInformation;
+use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
+use Modules\Core\Transformers\CompaniesSelectResource;
+use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
 
 class CoreApiController extends Controller
 {
@@ -267,14 +270,46 @@ class CoreApiController extends Controller
     public function getCompanies()
     {
         try {
-            $companyModel = new Company();
-            $companies = $companyModel
-                ->newQuery()
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->orderBy("order_priority")
-                ->get();
+            $user = auth()->user();
 
-            return CompaniesSelectResource::collection($companies);
+            $return = [
+                'company_default'=>Hashids::encode(Company::DEMO_ID),
+                'company_default_name'=>'Empresa Demo',
+                'company_default_fullname'=>'Empresa Demo'
+            ];
+
+            if($user->company_default > Company::DEMO_ID)
+            {
+                $companyDefault = cache()->remember('company-default-'.$user->company_default, 60, function () use($user) {
+                    return Company::select('company_type','fantasy_name')
+                    ->where('id', $user->company_default)
+                    ->first();
+                });
+
+                $company_default_name = $companyDefault->company_type == 1 ? 'Pessoa física' : Str::limit(
+                        $companyDefault->fantasy_name,
+                        20
+                    ) ?? '';
+                $return = array(
+                    'company_default'=>Hashids::encode($user->company_default),
+                    'company_default_name'=>$company_default_name,
+                    'company_default_fullname'=>$companyDefault->fantasy_name
+                );
+            }
+
+            $companies = cache()->remember('companies-'.$user->account_owner_id, 60, function () use($user) {
+                return Company::where('user_id', $user->account_owner_id)->get();
+            });
+
+
+            $return['companies'] = collect(CompaniesSelectResource::collection($companies))
+             ->sortBy('order_priority')
+             ->sortByDesc('active_flag')
+             ->sortByDesc('company_is_approved')
+             ->values()->all();
+
+            return $return;
+
         } catch (Exception $e) {
             report($e);
 
@@ -285,6 +320,43 @@ class CoreApiController extends Controller
                 400
             );
         }
+    }
+
+    public function updateCompanyDefault(Request $request){
+
+        if(empty($request->company_id)){
+            return response()->json(['message'=>'Informe a empresa selecionada'],400);
+        }
+
+        $companyId = current(Hashids::decode($request->company_id));
+        if(empty($companyId)){
+            return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
+        }
+
+        $user = Auth::user();
+        if($user->company_default == $companyId){
+            return; //response()->json(['message'=>'A empresa selecionada já é a default.'],400);
+        }
+
+        if($companyId > 1){
+            $company = Company::where('user_id',$user->account_owner_id)->where('id',$companyId)->exists();
+            if(empty($company)){
+                return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
+            }
+        }
+
+        try{
+
+            $user->company_default = $companyId;
+            $user->save();
+
+            return response()->json(['message'=>'Empresa atualizada.']);
+
+        }catch(Exception $e){
+            report($e);
+            return response()->json(['message'=>'Não foi possivel atualizar a empresa default.']);
+        }
+
     }
 
     public function allowBlockBalance($companyId, $saleId)
@@ -384,5 +456,19 @@ class CoreApiController extends Controller
             report($e);
             return response("Internal server error.", 500);
         }
+    }
+
+    public function getZendeskToken()
+    {
+        $payload = [
+            'scope' => 'user',
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            'external_id' => ''. auth()->user()->id . '',
+            'iat' => time(),
+        ];
+        $token = JWT::encode($payload, 'v5D7n6jaGlc2nviUtU5eYOuG9MmtIuJ_t9K8KERl5PK6a46sWNH6q5_28jsGaTU1I4eStyGmzDOUntuhdHfoGg', 'HS256', 'app_630519303703d200f36b2a98');
+
+        return response()->json($token);
     }
 }

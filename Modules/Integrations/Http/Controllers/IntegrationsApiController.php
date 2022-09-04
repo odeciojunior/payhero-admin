@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ApiToken;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\FoxUtils;
 use Modules\Integrations\Transformers\ApiTokenCollection;
 use Modules\Integrations\Transformers\ApiTokenResource;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,16 +26,14 @@ class IntegrationsApiController extends Controller
      * Display a listing of the resource.
      * @return AnonymousResourceCollection|ApiTokenCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $apiTokenModel = new ApiToken();
-            $tokens = $apiTokenModel
-                ->newQuery()
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->latest()
-                ->paginate();
-
+            $tokens        = $apiTokenModel->newQuery()
+                                            ->where('user_id', auth()->user()->getAccountOwnerId())
+                                            ->latest()
+                                            ->paginate();
             return new ApiTokenCollection($tokens);
         } catch (Exception $ex) {
             Log::debug($ex);
@@ -78,7 +77,7 @@ class IntegrationsApiController extends Controller
                     );
                 }
 
-                $postback = $request->get("postback");
+                $postback = $request->get('postback');
                 if (empty($postback)) {
                     return response()->json(
                         ["message" => "O campo Postback é obrigatório!"],
@@ -165,9 +164,9 @@ class IntegrationsApiController extends Controller
                 return response()->json(["message" => "O campo Descrição é obrigatório!"], Response::HTTP_BAD_REQUEST);
             }
 
-            $tokenTypeEnum = $request->get("token_type_enum");
+            $tokenTypeEnum = $request->get('token_type_enum');
             if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API) {
-                $postback = $request->get("postback");
+                $postback = $request->get('postback');
                 if (empty($postback)) {
                     return response()->json(
                         ["message" => "O campo Postback é obrigatório!"],

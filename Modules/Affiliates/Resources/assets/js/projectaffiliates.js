@@ -1,4 +1,25 @@
 $(document).ready(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        loadOnAny('.page-content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                $("#project-affiliate").find('option').not(':first').remove();
+                $("#project-affiliate-request").find('option').not(':first').remove();
+                getProjects('n');
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        getProjects();
+    });
+
     var badgeAffiliateRequest = {
         1: "primary",
         2: "warning",
@@ -34,20 +55,24 @@ $(document).ready(function () {
         }
     }
 
-    getProjects();
+    function getProjects(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else
+            loadOnAny('.page-content');
 
-    function getProjects() {
-        loadingOnScreen();
+        $('#tab-affiliates').trigger('click');
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?affiliate=true&status=active",
+            url: "/api/projects?affiliate=true&status=active&company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -90,7 +115,7 @@ $(document).ready(function () {
                         })
                     );
                 }
-
+                loadOnAny('.page-content',true);
                 loadingOnScreenRemove();
             },
         });
@@ -109,19 +134,9 @@ $(document).ready(function () {
         name = name ? name : null;
 
         if (link == null) {
-            link =
-                "/api/affiliates/getaffiliates?project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/affiliates/getaffiliates?project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         } else {
-            link =
-                "/api/affiliates/getaffiliates" +
-                link +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/affiliates/getaffiliates" + link + "&project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         }
 
         loadOnTable("#body-table-affiliates", ".table-affiliate");
@@ -356,10 +371,8 @@ $(document).ready(function () {
 
                 $("#modal-edit-affiliate .btn-update").unbind("click");
                 $("#modal-edit-affiliate .btn-update").on("click", function () {
-                    let formData = new FormData(
-                        document.getElementById("form-update-affiliate")
-                    );
-                    console.log(formData);
+                    let formData = new FormData(document.getElementById("form-update-affiliate"));
+                    //console.log(formData);
                     // formData.append("integration_id", integrationId);
 
                     let affiliate = $(
@@ -413,19 +426,9 @@ $(document).ready(function () {
         name = name ? name : null;
 
         if (link == null) {
-            link =
-                "/api/affiliates/getaffiliaterequests?project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/affiliates/getaffiliaterequests?project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         } else {
-            link =
-                "/api/affiliates/getaffiliaterequests" +
-                link +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/affiliates/getaffiliaterequests" + link + "&project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         }
 
         loadOnTable(

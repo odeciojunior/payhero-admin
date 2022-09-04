@@ -12,7 +12,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Transformers\CompaniesSelectResource;
-use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
@@ -21,21 +20,19 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\ShopifyErrors;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TaskService;
-use Modules\Core\Services\UserService;
 use Modules\Shopify\Transformers\ShopifyResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyApiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
             $projectModel = new Project();
@@ -48,7 +45,11 @@ class ShopifyApiController extends Controller
                 })
                 ->log("Visualizou tela todos as integrações com o shopify");
 
-            $shopifyIntegrations = $shopifyIntegrationModel->where("user_id", auth()->user()->account_owner_id)->get();
+            $shopifyIntegrations = $shopifyIntegrationModel
+            ->join('checkout_configs as cc', 'cc.project_id', '=', 'shopify_integrations.project_id')
+            ->where('cc.company_id', hashids_decode($request->company))
+            ->where('user_id', auth()->user()->getAccountOwnerId())
+            ->get();
 
             $projects = [];
 

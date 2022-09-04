@@ -199,19 +199,22 @@ $(() => {
                                     $("#save_success").fadeOut("slow", "linear");
                                 }, 4000);
                             },
-                            error: function (response) {
-                                console.log(response.responseText);
-                                $(".select-type").removeClass("low-opacity");
-                                $(".visual").removeClass("low-opacity");
-                                $(".payment").removeClass("low-opacity");
-                                $(".post-purchase-pages").removeClass("low-opacity");
-                                $(".preview").removeClass("low-opacity");
+                            error: function (response){
+                                $('.select-type').removeClass('low-opacity')
+                                $('.visual').removeClass('low-opacity')
+                                $('.payment').removeClass('low-opacity')
+                                $('.post-purchase-pages').removeClass('low-opacity')
+                                $('.preview').removeClass('low-opacity')
 
-                                $("#save_load").fadeOut("slow", "linear");
-                                $("#save_error").fadeIn("slow", "linear");
+                                $('#save_load').fadeOut('slow', 'linear');
+                                $('#save_error').fadeIn('slow', 'linear');
 
-                                setTimeout(function () {
-                                    $("#save_error").fadeOut("slow", "linear");
+                                if(response.responseJSON.message && response.responseJSON.message.search(/demo/) > 0){
+                                    $('#save_error p').html(response.responseJSON.message);
+                                }
+
+                                setTimeout(function() {
+                                    $('#save_error').fadeOut('slow', 'linear');
                                 }, 4000);
                             },
                         });
@@ -301,6 +304,7 @@ $(() => {
 
         $("#cancel_button").on("click", function () {
             fillForm(checkout);
+            $('.company-navbar').val( $('#checkout_editor #companies').val() ).change();
             $("#save_changes").fadeOut("slow", "swing");
         });
 
@@ -807,13 +811,14 @@ $(() => {
             $("#checkout_editor #invoice_description").val(checkout.invoice_description || "");
 
             for (let company of checkout.companies) {
-                const document =
-                    (company.document.replace(/\D/g, "").length > 11 ? "CNPJ: " : "CPF: ") + company.document;
-                if (company.status != "pending") {
-                    $("#checkout_editor #companies").append(`<option value="${company.id}" ${
-                        company.id === checkout.company_id ? "selected" : ""
-                    } data-toggle="tooltip" title="${document}" >
-                                                                ${company.name}
+                const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
+                if ( company.status != "pending") {
+                    if(company.name.length>20)
+                        companyName = company.name.substring(0,20)+'...';
+                    else
+                        companyName = company.name;
+                    $("#checkout_editor #companies").append(`<option value="${company.id}" ${company.id === checkout.company_id ? "selected" : ""} data-toggle="tooltip" title="${document}" >
+                                                                ${companyName}
                                                              </option>`);
                 }
             }

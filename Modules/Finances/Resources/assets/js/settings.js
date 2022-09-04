@@ -11,22 +11,22 @@ $(document).ready(function () {
         company_id: null,
         rule: null, //rules: period, amount
         frequency: null, //frequency: daily, weekly, monthly
-        weekday: null, //from 0 (monday) to 6 (sunday) as mysql weekday() function
-        day: null, //day of month
-        amount: 0, //minimal amount to make withdrawal
-    };
+        weekday: null,   //from 0 (monday) to 6 (sunday) as mysql weekday() function
+        day: null,       //day of month
+        amount: 0,       //minimal amount to make withdrawal
+    }
 
-    var financesSettingsForm = $("#finances-settings-form");
-    var companySelect = $("#transfers_company_select");
-    var withdrawalByPeriod = $("#withdrawal_by_period");
-    var frequencyContainer = $(".frequency-container");
-    var frequencyButtons = frequencyContainer.find(".btn");
-    var weekdaysContainer = $(".weekdays-container");
-    var weekdaysButtons = weekdaysContainer.find(".btn");
-    var dayContainer = $(".day-container");
-    var dayButtons = dayContainer.find(".btn");
-    var withdrawalByAmount = $("#withdrawal_by_value");
-    var withdrawalAmount = $("#withdrawal_amount");
+    var financesSettingsForm = $('#finances-settings-form')
+    var companySelect = $('.company-navbar').val()
+    var withdrawalByPeriod = $('#withdrawal_by_period')
+    var frequencyContainer = $('.frequency-container')
+    var frequencyButtons = frequencyContainer.find('.btn')
+    var weekdaysContainer = $('.weekdays-container')
+    var weekdaysButtons = weekdaysContainer.find('.btn')
+    var dayContainer = $('.day-container')
+    var dayButtons = dayContainer.find('.btn')
+    var withdrawalByAmount = $('#withdrawal_by_value')
+    var withdrawalAmount = $('#withdrawal_amount')
 
     window.getSettings = function (companyId, settingsId = null, notify = false) {
         clearSettingsForm();
@@ -55,7 +55,7 @@ $(document).ready(function () {
 
     window.saveSettings = function (data) {
         settingsData = Object.assign(settingsData, {
-            company_id: companySelect.val(),
+            company_id: $('.company-navbar').val(),
             amount: withdrawalAmount.val(),
         });
 
@@ -167,7 +167,7 @@ $(document).ready(function () {
 
     window.clearSettingsForm = function () {
         settingsData = {
-            company_id: companySelect.val(),
+            company_id: $('.company-navbar').val(),
             rule: null,
             frequency: null,
             weekday: null,
@@ -231,9 +231,9 @@ $(document).ready(function () {
         }
     };
 
-    companySelect.on("change", function () {
-        getSettings($(this).val());
-    });
+    // companySelect.on('change', function () {
+    //     getSettings($(this).val())
+    // })
 
     frequencyButtons.on("click", function () {
         frequencyButtons.removeClass("active");
@@ -298,8 +298,8 @@ $(document).ready(function () {
     withdrawalAmount.maskMoney({ thousands: ".", decimal: ",", allowZero: true });
     frequencyButtons.removeClass("active");
 
-    if (!isEmpty(companySelect.val())) {
-        getSettings(companySelect.val());
+    if (!isEmpty($('.company-navbar').val())) {
+        getSettings($('.company-navbar').val())
     } else {
         onWithdrawalByAmountChange();
         onWithdrawalByPeriodChange();

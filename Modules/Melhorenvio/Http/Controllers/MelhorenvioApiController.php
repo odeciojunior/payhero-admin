@@ -15,7 +15,8 @@ class MelhorenvioApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $userId = auth()->user()->account_owner_id;
+
+            $userId = auth()->user()->getAccountOwnerId();
 
             $integrations = MelhorenvioIntegration::where("user_id", $userId);
 

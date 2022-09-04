@@ -148,7 +148,6 @@
     min-height: 110px;
     top: 0px;
     left: 0px;
-    background-colour: #FFFFFF08;
 }
 .foxLoaderTable {
     width: auto;
@@ -165,7 +164,7 @@
     100% { transform: rotate(360deg); }
 }
 
-.loader-any-container{
+.loader-any-container, .loader-any-container-page{
     width: 100%;
     height: 100%;
     min-height: 250px;
@@ -183,7 +182,7 @@
     justify-content: center;
 }
 
-.loader-any{
+.loader-any, .loader-any-page{
     width: 75px;
     height: 75px;
     margin: 0;
@@ -230,7 +229,7 @@
 }
 
 .sirius-loading {
-    background-color: rgba(255, 255, 255, 1);
+    background-color: #f4f4f4;/*rgba(255, 255, 255, 1);*/
     position: fixed;
     width: 100%;
     height: 100%;
@@ -238,19 +237,19 @@
     left: 0;
     z-index: 1101;
     text-align: center;
-    /* -webkit-animation: 2.1s infinite linear;
+    -webkit-animation: 2.1s infinite linear;
     animation: 2.1s infinite linear;
-    animation-delay: 0.5s; */
+    animation-delay: 0.5s;
 }
 
 .sirius-loading img {
     position: relative;
     top: 37%;
-    /* -webkit-animation: sirius-loading 2s infinite;
-    animation: sirius-loading 2s infinite; */
+    -webkit-animation: sirius-loading 2s infinite;
+    animation: sirius-loading 2s infinite;
 }
 
-/* @-webkit-keyframes sirius-loading {
+@-webkit-keyframes sirius-loading {
     0% { opacity: 0.3; }
     50% { opacity: 1; }
     100% { opacity: 0.3; }
@@ -260,4 +259,4 @@
     0% { opacity: 0.3; }
     50% { opacity: 1; }
     100% { opacity: 0.3; }
-} */
+}

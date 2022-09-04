@@ -1,4 +1,39 @@
 $(document).ready(function () {
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project").find('option').not(':first').remove();
+        $("#project").val($("#project option:first").val());
+        loadOnTable("#chargebacks-table-data", "#chargebacks-table");
+        loadOnAny(".total-number", false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                if(!isEmpty(data2.company_default_projects)){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    fillProjectsSelect(data2.companies)
+                    atualizar();
+                    getTotalValues();
+                }
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            });
+        });
+    });
+
     let statusObject = {
         1: "Em andamento",
         2: "Perdido",
@@ -80,6 +115,7 @@ $(document).ready(function () {
             //is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
             //sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
+            company: $('.company-navbar').val(),
         };
         if (urlParams) {
             let params = "";
@@ -340,7 +376,7 @@ $(document).ready(function () {
                     }</td>
                                 `;
 
-                    dados += `
+                            dados +=`
                                 <td class="font-size-12 bold line-overflow" style="white-space: normal;">
                                     ${value.reason}
                                 </td>
@@ -517,45 +553,51 @@ $(document).ready(function () {
     }
 
     // Obtem o os campos dos filtros
-    function getProjects() {
+    function getProjects(data) {
         loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    // $("#export-excel").show();
+        $("#project-empty").hide();
+        $("#project-not-empty").show();
+        fillProjectsSelect(data.companies)
+        atualizar();
+        loadingOnScreenRemove();
 
-                    $.each(response.data, function (i, project) {
-                        $("#project").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
+        // $.ajax({
+        //     method: "GET",
+        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
+        //     dataType: "json",
+        //     headers: {
+        //         Authorization: $('meta[name="access-token"]').attr("content"),
+        //         Accept: "application/json",
+        //     },
+        //     error: function error(response) {
+        //         loadingOnScreenRemove();
+        //         errorAjaxResponse(response);
+        //     },
+        //     success: function success(response) {
+        //         if (!isEmpty(response.data)) {
+        //             $("#project-empty").hide();
+        //             $("#project-not-empty").show();
+        //             // $("#export-excel").show();
 
-                    atualizar();
-                } else {
-                    // $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
+        //             $.each(response.data, function (i, project) {
+        //                 $("#project").append(
+        //                     $("<option>", {
+        //                         value: project.id,
+        //                         text: project.name,
+        //                     })
+        //                 );
+        //             });
 
-                loadingOnScreenRemove();
-            },
-        });
+        //             window.atualizar();
+        //         } else {
+        //             // $("#export-excel").hide();
+        //             $("#project-not-empty").hide();
+        //             $("#project-empty").show();
+        //         }
+
+        //         loadingOnScreenRemove();
+        //     },
+        // });
     }
 
     $("#bt_filtro").on("click", function (event) {
@@ -563,7 +605,7 @@ $(document).ready(function () {
         loadData();
     });
 
-    $("#transaction").on("change paste keyup select", function () {
+    $('#transaction').on('change paste keyup select', function () {
         let val = $(this).val();
 
         if (val === "") {
@@ -647,7 +689,47 @@ $(document).ready(function () {
 
     $("#pagination").css({ marginBottom: "100px" });
 
-    atualizar();
+    //window.atualizar();
     getTotalValues();
-    getProjects();
+
+    function fillProjectsSelect(data){
+        $.ajax({
+            method: "GET",
+            url: "/api/contestations/projects-with-contestations",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                console.log('erro')
+                console.log(response)
+            },
+            success: function success(response) {
+                return response;
+            }
+        }).done(function(dataSales){
+            $.each(data, function (c, company) {
+                //if( data2.company_default == company.id){
+                    $.each(company.projects, function (i, project) {
+                        if( dataSales.includes(project.id) )
+                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
+                    });
+                //}
+            });
+        });
+    }
+
+    getCompaniesAndProjects().done( function (data){
+        if(!isEmpty(data.company_default_projects)){
+            getProjects(data);
+        }
+        else{
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            loadingOnScreenRemove();
+        }
+    });
+
 });

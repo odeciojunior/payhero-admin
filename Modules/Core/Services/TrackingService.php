@@ -6,10 +6,9 @@ use App\Jobs\RevalidateTrackingDuplicateJob;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\ProductSaleApi;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
@@ -17,7 +16,6 @@ use Modules\Core\Entities\User;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\ReportanaTrackingEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingService
 {
@@ -189,6 +187,7 @@ class TrackingService
                 "products_plans_sales.sale_id",
                 "products_plans_sales.product_id",
                 "products_plans_sales.amount",
+                "products_plans_sales.created_at",
                 "s.delivery_id",
                 "s.customer_id",
                 "s.upsell_id",
@@ -265,7 +264,14 @@ class TrackingService
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         if (!$userId) {
-            $userId = auth()->user()->account_owner_id;
+            $userId = auth()->user()->getAccountOwnerId();
+        }
+
+        $companyId = Company::DEMO_ID;
+        if(!empty($filters['company'])){
+            $companyId = hashids_decode($filters['company']);
+        }else{
+            $companyId = DB::table('users')->select('company_default')->where('id',$userId)->first()->company_default;
         }
 
         $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
@@ -277,7 +283,7 @@ class TrackingService
                 : $filters["transaction_status"];
         }
 
-        $productPlanSales = ProductPlanSale::join("sales as s", function ($join) use ($userId, $filters) {
+        $productPlanSales = ProductPlanSale::join("sales as s", function ($join) use ($userId, $filters, $companyId) {
             $join->on("s.id", "=", "products_plans_sales.sale_id")->whereNull("s.deleted_at");
 
             $saleStatus = [Sale::STATUS_APPROVED, Sale::STATUS_IN_DISPUTE];
@@ -305,6 +311,13 @@ class TrackingService
                 $join->whereIn("s.project_id", $projectsIds);
             }
         });
+
+        $productPlanSales->leftJoin('transactions as t', function($q) use($companyId) {
+            $q->on('t.sale_id', 's.id')
+            ->where('t.company_id', $companyId);
+        });
+
+        $productPlanSales->whereNotNull('t.id');
 
         //filtro transactions
         if (!empty($filters["transaction_status"])) {

@@ -11,57 +11,28 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Affiliate;
 use NumberFormatter;
 use Symfony\Component\HttpFoundation\File\File;
 use Vinkla\Hashids\Facades\Hashids;
 
 class FoxUtils
 {
-    /**
-     * @param $host
-     * @return bool
-     */
-    public static function checkDNS($host)
-    {
-        $variant = INTL_IDNA_VARIANT_2003;
-        if (defined("INTL_IDNA_VARIANT_UTS46")) {
-            $variant = INTL_IDNA_VARIANT_UTS46;
-        }
-        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), ".") . ".";
 
-        $Aresult = true;
-        $MXresult = checkdnsrr($host, "MX");
-
-        if (!$MXresult) {
-            $warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
-            $Aresult = checkdnsrr($host, "A") || checkdnsrr($host, "AAAA");
-            if (!$Aresult) {
-                $error = new NoDNSRecord();
-                Log::warning(print_r($error));
-            }
-        }
-
-        return $MXresult || $Aresult;
-    }
-
-    /**
-     * @param $email
-     * @return bool
-     */
     public static function validateEmail($email)
     {
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($email)) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $emailExploded = explode("@", $email);
-            $variant = INTL_IDNA_VARIANT_2003;
-            if (defined("INTL_IDNA_VARIANT_UTS46")) {
-                $variant = INTL_IDNA_VARIANT_UTS46;
+            $variant = INTL_IDNA_VARIANT_UTS46;
+            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), ".") . ".";
+
+            $checkdnsrr = checkdnsrr($host, "MX");
+            if ($checkdnsrr) {
+                return true;
             }
-            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), ".");
 
-            return checkdnsrr($host, "MX");
+            return false;
         }
-
-        return false;
     }
 
     public static function prepareCellPhoneNumber($phoneNumber)
@@ -793,5 +764,17 @@ class FoxUtils
 
         $urlPath = $s3drive->url($pathToSave . $nameFile);
         dd($urlPath);
+    }
+
+    public static function getCookieAffiliate(int $projectId)
+    {
+        if (!empty(request()->cookie('affiliate_cf-' . $projectId))) {
+            $affiliate = Affiliate::find(request()->cookie('affiliate_cf-' . $projectId));
+            if (!empty($affiliate) && $affiliate->status_enum == Affiliate::STATUS_ACTIVE) {
+                return $affiliate->id;
+            }
+        }
+
+        return null;
     }
 }

@@ -75,9 +75,10 @@ class TaskService
         $userTasks = $user->tasks();
         $completedTasks = [];
         $uncompletedTasks = [];
+        $userTasksIds = $userTasks->pluck('id')->toArray();
 
         foreach ($tasks as $task) {
-            if (in_array($task->id, $userTasks->pluck("id")->toArray())) {
+            if (in_array($task->id, $userTasksIds)) {
                 $task->status = 1;
                 $completedTasks[] = $task;
             } else {

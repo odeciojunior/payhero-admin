@@ -19,43 +19,57 @@ class Whatsapp2ApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            activity()
-                ->on(new Whatsapp2Integration())
-                ->tap(function (Activity $activity) {
-                    $activity->log_name = "visualization";
-                })
-                ->log("Visualizou tela todos as integrações whatsapp 2.0");
+            $user = auth()->user();
 
-            $authUser = auth()->user();
+            activity()->on((new Whatsapp2Integration()))->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todos as integrações whatsapp 2.0');
 
-            $whatsapp2Integrations = Whatsapp2Integration::where("user_id", $authUser->account_owner_id)
-                ->with("project")
-                ->get();
+            $accountOwnerId = auth()->user()->getAccountOwnerId();
+
+            $whatsapp2Integrations = Whatsapp2Integration::with(['project', 'project.usersProjects'])
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) {
+                    $query
+                    ->where('company_id', auth()->user()->company_default)
+                    ->where('user_id', auth()->user()->getAccountOwnerId());
+                }
+            )->get();
 
             $projects = collect();
             $userProjects = UserProject::with([
-                "project" => function ($query) {
-                    $query->where("status", Project::STATUS_ACTIVE);
-                },
-            ])
-                ->where("user_id", $authUser->account_owner_id)
-                ->get();
-
+                'project' => function ($query) {
+                    $query->where('status', Project::STATUS_ACTIVE);
+                }
+            ])->where([['user_id', $accountOwnerId],[
+                'company_id', auth()->user()->company_default
+            ]])->orderBy('id', 'desc')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    if (!empty($userProject->project)) {
+                    $project = $userProject
+                        ->project()
+                        ->leftjoin('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
+                    if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
-                "integrations" => Whatsapp2Resource::collection($whatsapp2Integrations),
-                "projects" => ProjectsSelectResource::collection($projects),
-                "token_whatsapp2" => hashids_encode($authUser->account_owner_id, "whatsapp2_token"),
+                'integrations' => Whatsapp2Resource::collection($whatsapp2Integrations),
+                'projects' => ProjectsSelectResource::collection($projects),
+                'token_whatsapp2' => hashids_encode($accountOwnerId, 'whatsapp2_token'),
             ]);
         } catch (Exception $e) {
             return response()->json(["message" => "Ocorreu algum erro"], 400);

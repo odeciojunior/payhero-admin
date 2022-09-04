@@ -13,7 +13,7 @@
 
 Route::group(
     [
-        "middleware" => ["auth:api", "scopes:admin"],
+        "middleware" => ["auth:api", "scopes:admin","demo_account"],
     ],
     function () {
         Route::get("/projectreviews", "ProjectReviewsApiController@index");

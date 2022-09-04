@@ -1,10 +1,34 @@
 $(document).ready(function () {
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                $('.company_name').val( companiesAndProjects.company_default_fullname );
+                $("#company-navbar-value").val( $('.company-navbar').val() )
+                location.reload();
+            })
+        })
+    })
+
+    companiesAndProjects = '';
+
+    getCompaniesAndProjects().done(function(data){
+        companiesAndProjects = data
+        $('.company_name').val( companiesAndProjects.company_default_fullname );
+        $("#company-navbar-value").val( $('.company-navbar').val() )
+    })
+
     let allCompanyNotApproved = false;
     let companyNotFound = false;
     let woocommerceIntegrationNotFound = false;
 
     loadingOnScreen();
-    $("#btn-integration-model").hide();
+
+
+
+    $('#btn-integration-model').hide();
 
     index();
 
@@ -19,6 +43,7 @@ $(document).ready(function () {
         error: function error(response) {
             $("#modal-content").hide();
             errorAjaxResponse(response);
+            loadingOnScreenRemove();
         },
         success: function success(response) {
             create(response.data);
@@ -38,15 +63,16 @@ $(document).ready(function () {
             $("#button-information").hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
-            $("#btn-integration-model").show();
-            $("#button-information").show().addClass("d-flex").css("display", "flex");
+            $('#btn-integration-model').show();
+            $('#button-information').show().addClass('d-flex').css('display', 'flex');
         }
+        loadingOnScreenRemove();
     }
 
     function index() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/woocommerce",
+            url: "/api/apps/woocommerce?company="+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -64,7 +90,8 @@ $(document).ready(function () {
                     woocommerceIntegrationNotFound = true;
                     if (woocommerceIntegrationNotFound) {
                         $("#no-integration-found").show();
-                    } else {
+                        loadingOnScreenRemove();
+                    }else{
                         $("#no-integration-found").hide();
                     }
                     return;
@@ -272,12 +299,21 @@ $(document).ready(function () {
             success: function success(r) {
                 $("#close-modal").click();
 
-                if (r.status == true) {
-                    alertCustom("success", "Chaves de acesso atualizadas com sucesso!");
-                } else {
-                    alertCustom("error", "Erro ao atualizar as chaves!");
+
+                $('#close-modal').click()
+
+
+                if(r.status == true){
+                    alertCustom('success', 'Chaves de acesso atualizadas com sucesso!');
+
+
+
+                }else{
+                    alertCustom('error', 'Erro ao atualizar as chaves!');
+
                 }
-            },
+
+            }
         });
 
         $("#keys-content").slideUp();

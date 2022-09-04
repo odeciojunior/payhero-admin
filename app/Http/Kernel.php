@@ -13,6 +13,7 @@ use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Middleware\VerifyShopifyPostback;
+use App\Http\Middleware\DemoAccount;
 use App\Http\Middleware\CheckAccountStatusWeb;
 use App\Http\Middleware\CheckAccountStatusApi;
 use Fruitcake\Cors\HandleCors;
@@ -70,8 +71,6 @@ class Kernel extends HttpKernel
         ],
 
         "api" => ["throttle:500,1", "bindings", CheckAccountStatusApi::class, VerifyFrozenAccountApi::class],
-
-        "api-socialite" => [EncryptCookies::class, StartSession::class, "throttle:60,1", "bindings"],
     ];
     /**
      * The application's route middleware.
@@ -96,5 +95,6 @@ class Kernel extends HttpKernel
         "scope" => CheckForAnyScope::class,
         "InternalApiAuth" => InternalApiAuth::class,
         "IsCloudFoxAccount" => IsCloudFoxAccount::class,
+        "demo_account"=>DemoAccount::class
     ];
 }

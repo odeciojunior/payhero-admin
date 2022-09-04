@@ -9,11 +9,10 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\Gateways\Safe2payGateway;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\Transaction;
-
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\SaleService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\WooCommerceService;
 
@@ -58,9 +57,13 @@ class CheckSales extends Command
                 str_pad($totalSalesIn["0"]->total, 20, " ", STR_PAD_LEFT)
         );
         $this->line(
-            str_pad("Total Fox In:", 20, " ", STR_PAD_RIGHT) . str_pad($totalFoxIn["0"]->total, 20, " ", STR_PAD_LEFT)
+            str_pad("Total Fox In:", 20, " ", STR_PAD_RIGHT) .
+                str_pad($totalFoxIn["0"]->total, 20, " ", STR_PAD_LEFT)
         );
-        $this->line(str_pad("Total In:", 20, " ", STR_PAD_RIGHT) . str_pad($totalIn, 20, " ", STR_PAD_LEFT));
+        $this->line(
+            str_pad("Total In:", 20, " ", STR_PAD_RIGHT) .
+                str_pad($totalIn, 20, " ", STR_PAD_LEFT)
+        );
     }
 
     public function calcTotalApproved()
@@ -89,7 +92,12 @@ class CheckSales extends Command
 
         foreach ($rows as $row) {
             $sale = DB::table("sales")
-                ->select("id", "status", "payment_method", "original_total_paid_value")
+                ->select(
+                    "id",
+                    "status",
+                    "payment_method",
+                    "original_total_paid_value"
+                )
                 ->where("gateway_id", 21)
                 ->where("status", "!=", Sale::STATUS_APPROVED)
                 ->where("id", $row->SaleId)
@@ -142,7 +150,12 @@ class CheckSales extends Command
             $saleSafe2pay[] = $row->SaleId;
         }
 
-        $sales = Sale::select("id", "status", "payment_method", "original_total_paid_value")
+        $sales = Sale::select(
+            "id",
+            "status",
+            "payment_method",
+            "original_total_paid_value"
+        )
             ->whereIn("id", $saleSafe2pay)
             ->get()
             ->toArray();
@@ -228,7 +241,12 @@ class CheckSales extends Command
             foreach ($sales->cursor()->toArray() as $key => $sale) {
                 $saleCloudfox[] = $sale["gateway_transaction_id"];
                 $aux++; //
-                if (!in_array($sale["status"], [Sale::STATUS_PENDING, Sale::STATUS_CANCELED])) {
+                if (
+                    !in_array($sale["status"], [
+                        Sale::STATUS_PENDING,
+                        Sale::STATUS_CANCELED,
+                    ])
+                ) {
                     Log::info(
                         json_encode([
                             "SaleId" => $sale["id"],
@@ -243,7 +261,9 @@ class CheckSales extends Command
             $i = 0;
         }
         //$this->createFileJson('storage/logs/pending_safe_not_pending_cloudfox.json');
-        $this->createFileJson("storage/logs/temp_pending_safe_not_exists_cloudfox.json");
+        $this->createFileJson(
+            "storage/logs/temp_pending_safe_not_exists_cloudfox.json"
+        );
         $bar->finish();
         $this->warn("Not exists sale: " . $aux2);
         dd("Fim");
@@ -283,7 +303,9 @@ class CheckSales extends Command
         $this->warn("aux4: " . $aux4); //
         $this->warn("aux5: " . $aux5); //
 
-        $this->createFileJson("storage/logs/pending_safe_not_exists_cloudfox.json");
+        $this->createFileJson(
+            "storage/logs/pending_safe_not_exists_cloudfox.json"
+        );
         $bar->finish();
 
         //$this->verifySaleCloudfoxPendingByIdTransaction();
@@ -392,7 +414,13 @@ class CheckSales extends Command
             $saleSafe2pay[] = $row->IdTransaction;
         }
 
-        $sales = Sale::select("id", "status", "payment_method", "original_total_paid_value", "gateway_transaction_id")
+        $sales = Sale::select(
+            "id",
+            "status",
+            "payment_method",
+            "original_total_paid_value",
+            "gateway_transaction_id"
+        )
             ->where("gateway_id", Gateway::SAFE2PAY_PRODUCTION_ID)
             ->whereIn("gateway_transaction_id", $saleSafe2pay);
 
@@ -431,7 +459,13 @@ class CheckSales extends Command
             $saleSafe2pay[] = $row->IdTransaction;
         }
 
-        $sales = Sale::select("id", "status", "payment_method", "original_total_paid_value", "gateway_transaction_id")
+        $sales = Sale::select(
+            "id",
+            "status",
+            "payment_method",
+            "original_total_paid_value",
+            "gateway_transaction_id"
+        )
             ->whereIn("gateway_transaction_id", $saleSafe2pay)
             ->get()
             ->toArray();
@@ -467,7 +501,11 @@ class CheckSales extends Command
                 }
 
                 if ($index === array_key_first($line_array)) {
-                    file_put_contents($filePut, "[\n" . $newStg . ",\n", FILE_APPEND);
+                    file_put_contents(
+                        $filePut,
+                        "[\n" . $newStg . ",\n",
+                        FILE_APPEND
+                    );
                     continue;
                 }
 
@@ -520,7 +558,12 @@ class CheckSales extends Command
             }
 
             if (!$exists) {
-                \Log::info(json_encode(["id" => $sale->id, "payment_method" => $sale->payment_method]));
+                \Log::info(
+                    json_encode([
+                        "id" => $sale->id,
+                        "payment_method" => $sale->payment_method,
+                    ])
+                );
             }
         }
     }
@@ -532,11 +575,15 @@ class CheckSales extends Command
 
     public function verifySale()
     {
-        $json = file_get_contents("storage/logs/safetopay_credit_card_chargeback.json");
+        $json = file_get_contents(
+            "storage/logs/safetopay_credit_card_chargeback.json"
+        );
         $rows = json_decode($json);
         $ids = [];
         foreach ($rows as $row) {
-            $saleId = current(Hashids::connection("sale_id")->decode($row->Reference));
+            $saleId = current(
+                Hashids::connection("sale_id")->decode($row->Reference)
+            );
             if (empty($saleId)) {
                 continue;
             }
@@ -614,7 +661,9 @@ class CheckSales extends Command
 
         foreach ($sales->cursor() as $sale) {
             $this->line("sale " . $sale->id);
-            \Log::info((array) $safe->getTransaction($sale->gateway_transaction_id));
+            \Log::info(
+                (array) $safe->getTransaction($sale->gateway_transaction_id)
+            );
         }
     }
 
@@ -661,7 +710,13 @@ class CheckSales extends Command
             1829673,
         ];
 
-        $sales = Sale::select("id", "status", "payment_method", "original_total_paid_value", "gateway_transaction_id")
+        $sales = Sale::select(
+            "id",
+            "status",
+            "payment_method",
+            "original_total_paid_value",
+            "gateway_transaction_id"
+        )
             ->with("transactions")
             ->whereIn("id", $saleIds)
             ->where("status", Sale::STATUS_REFUNDED)
@@ -693,11 +748,7 @@ class CheckSales extends Command
                     ]);
                 }
 
-                SaleLog::create([
-                    "status" => "canceled_antifraud",
-                    "status_enum" => 21,
-                    "sale_id" => $sale->id,
-                ]);
+                SaleService::createSaleLog($sale->id, "canceled_antifraud");
             }
         }
     }
@@ -818,7 +869,10 @@ class CheckSales extends Command
                 $this->line($sale["id"] . ",");
                 //Shopify
                 if (!empty($sale->shopify_order)) {
-                    $shopifyIntegration = ShopifyIntegration::where("project_id", $sale->project_id)->first();
+                    $shopifyIntegration = ShopifyIntegration::where(
+                        "project_id",
+                        $sale->project_id
+                    )->first();
                     if (!empty($shopifyIntegration)) {
                         $shopifyService = new ShopifyService(
                             $shopifyIntegration->url_store,
@@ -832,7 +886,10 @@ class CheckSales extends Command
 
                 //WooCommerce
                 if (!empty($sale->woocommerce_order)) {
-                    $integration = WooCommerceIntegration::where("project_id", $sale->project_id)->first();
+                    $integration = WooCommerceIntegration::where(
+                        "project_id",
+                        $sale->project_id
+                    )->first();
                     if (!empty($integration)) {
                         $service = new WooCommerceService(
                             $integration->url_store,
@@ -866,11 +923,15 @@ class CheckSales extends Command
 
             $gatewaySale = $safe->getTransaction($sale->gateway_transaction_id);
 
-            if (empty($gatewaySale) || $gatewaySale->ResponseDetail->Status != 3) {
+            if (
+                empty($gatewaySale) ||
+                $gatewaySale->ResponseDetail->Status != 3
+            ) {
                 Log::info(
                     json_encode([
                         "SaleId" => $sale->id,
-                        "StatusSafe" => $gatewaySale->ResponseDetail->Status ?? null,
+                        "StatusSafe" =>
+                            $gatewaySale->ResponseDetail->Status ?? null,
                         "StatusCloudfox" => $sale->status,
                     ])
                 );

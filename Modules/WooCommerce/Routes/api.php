@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        "middleware" => ["auth:api", "scopes:admin", "permission:apps|projects"],
+        "middleware" => ["auth:api", "demo_account", "scopes:admin", "permission:apps|projects"],
     ],
     function () {
         Route::get("/apps/woocommerce", "WooCommerceApiController@index");

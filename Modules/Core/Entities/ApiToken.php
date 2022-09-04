@@ -3,10 +3,11 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use App\Traits\PaginatableTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,6 +18,7 @@ use Laravel\Passport\PersonalAccessTokenFactory;
 use Laravel\Passport\PersonalAccessTokenResult;
 use Laravel\Passport\Token;
 use Modules\Core\Presenters\ApiTokenPresenter;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * Class ApiToken
@@ -38,7 +40,7 @@ use Modules\Core\Presenters\ApiTokenPresenter;
  */
 class ApiToken extends Model
 {
-    use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes, LogsActivity;
+    use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes, LogsActivity, HasFactory;
 
     const TOKEN_SCOPE_ADMIN = "admin";
     const TOKEN_SCOPE_USER = "user";
@@ -90,24 +92,14 @@ class ApiToken extends Model
      * @var array
      */
     protected $hidden = ["user_id", "token_id"];
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
+    }
 
     /**
      * @return BelongsTo

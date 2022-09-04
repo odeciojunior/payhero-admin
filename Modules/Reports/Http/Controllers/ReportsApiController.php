@@ -14,6 +14,10 @@ use Spatie\Activitylog\Models\Activity;
 use Modules\Reports\Transformers\ReportCouponResource;
 use Modules\Reports\Transformers\PendingBalanceResource;
 use Modules\Reports\Transformers\TransactionBlockedResource;
+use ParagonIE\Sodium\Compat;
+use Modules\Core\Http\Controllers\CoreApiController;
+use Modules\Core\Services\Reports\ReportService;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ReportsApiController extends Controller
 {
@@ -140,5 +144,41 @@ class ReportsApiController extends Controller
             report($e);
             return response()->json(["message" => "Erro ao obter lista de motivos de bloqueio"], 400);
         }
+    }
+
+    public static function getProjectsWithCheckouts(){
+        $projects = ReportService::getProjectsWithCheckouts();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
+
+    public static function getProjectsWithCoupons(){
+        $projects = ReportService::getProjectsWithCoupons();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
+
+    public static function getProjectsWithPendingBalance(){
+        $projects = ReportService::getProjectsWithPendingBalance();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
+    }
+
+    public static function getProjectsWithBlockedBalance(){
+        $projects = ReportService::getProjectsWithBlockedBalance();
+        $projectsEncoded=[];
+        foreach($projects as $item){
+            $projectsEncoded[]= Hashids::encode($item->project_id);
+        }
+        return $projectsEncoded;
     }
 }

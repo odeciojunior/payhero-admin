@@ -69,13 +69,10 @@ $(document).ready(function () {
     };
 
     function nextPerformance(data) {
-        setTimeout(function () {
-            loadingOnAccountsHealthRemove(".sirius-performance > .card .sirius-loading");
-        }, 500);
+        loadingOnAccountsHealthRemove('.sirius-performance > .card .block-loader-any');
         $(".sirius-performance .card-indicators > .active").on("click", function () {
-            $(".sirius-performance > .card").html("");
-            loadingOnAccountsHealth(".sirius-performance > .card");
-            let card = $(this).data("slide-to");
+            $('.sirius-performance > .card').html('');
+            let card = $(this).data('slide-to')
             switch (card) {
                 case 1:
                     updatePerformanceCard1(data);
@@ -92,7 +89,8 @@ $(document).ready(function () {
     }
 
     window.updatePerformance = function () {
-        loadingOnAccountsHealth(".sirius-performance > .card");
+
+        loadingOnAccountsHealth('.sirius-performance > .card','20px');
 
         $.ajax({
             method: "GET",
@@ -103,16 +101,19 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             data: {
-                company: $("#company").val(),
+                company: $('.company-navbar').val(),
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-performance > .card .sirius-loading");
+                loadingOnAccountsHealthRemove('.sirius-performance > .card');
                 errorAjaxResponse(response);
             },
             success: function success(data) {
+                //loadingOnAccountsHealthRemove('.sirius-performance > .card');
                 updatePerformanceCard1(data);
                 if (data.money_cashback !== "0,00") {
                     updateCashback(data.money_cashback);
+                }else{
+                    $(".sirius-cashback > .card").addClass("d-none");
                 }
             },
         });
@@ -256,12 +257,31 @@ $(document).ready(function () {
     }
 
     function updateCashback(money) {
-        $("#cashback-container #cashback-container-money").text(`${money}`);
+        $(".sirius-cashback > .card").append(`
+        <div class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 ">
+            <div class="font-size-14 gray-600 mr-auto">
+                <span class="ml-0">Cashback total recebido</span>
+            </div>
+            <ol
+                class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
+            </ol>
+        </div>
+        <div
+                class="card-body pt-0 mt-15 mb-5 d-flex flex-column justify-content-start align-items-start ">
+            <div
+                    class="pt-5 pb-5 flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
+                <div id="cashback-container"
+                        class="d-flex flex-row justify-content-start align-items-center align-self-start">
+                    <span class="cashback-container-icon">R$</span>
+                    <span id="cashback-container-money">${money}</span>
+                    <span class="o-reload-1 cashback-container-icon"></span>
+                </div>
+            </div>
+        </div>` );
         $(".sirius-cashback > .card").removeClass("d-none");
     }
 
     function updatePerformanceCard2(data) {
-        loadingOnAccountsHealth(".sirius-performance > .card");
         let currentLevel = levelInfo[data.level];
 
         let item = `
@@ -400,7 +420,6 @@ $(document).ready(function () {
     }
 
     function updatePerformanceCard3(data) {
-        loadingOnAccountsHealth(".sirius-performance > .card");
         let currentLevel = levelInfo[data.level];
 
         let item = `

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        "middleware" => ["auth:api", "scopes:admin"],
+        "middleware" => ["auth:api", "scopes:admin","demo_account"],
     ],
     function () {
         Route::get("/project/{projectId}/couponsdiscounts", "DiscountCouponsApiController@index");

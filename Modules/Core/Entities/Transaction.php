@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Entities;
 
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TransactionPresenter;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property int $id
@@ -64,7 +65,8 @@ class Transaction extends Model
     const TYPE_PARTNER = 5;
     const TYPE_CONVERTAX = 6;
     const TYPE_REFUNDED = 7;
-    const TYPE_CASHBACK = 8;
+//    const TYPE_CASHBACK = 8;
+    const TYPE_CLOUDFOX_PROCESSING = 8;
 
     const TYPE_PERCENTAGE_TAX = 1;
     const TYPE_VALUE_TAX = 2;
@@ -78,7 +80,8 @@ class Transaction extends Model
     const STATUS_REFUSED = 7;
     const STATUS_PENDING_ANTIFRAUD = 8;
     const STATUS_CANCELED_ANTIFRAUD = 9;
-    const STATUS_WAITING_WITHDRAWAL = 10;
+    const STATUS_IN_PROCESS = 10;
+    //const STATUS_WAITING_WITHDRAWAL = 10;
     const STATUS_ANTICIPATED = 12;
     const STATUS_BILLET_REFUNDED = 13;
 
@@ -116,13 +119,13 @@ class Transaction extends Model
         "deleted_at",
     ];
 
-    protected static $logFillable = true;
-
-    protected static $logUnguarded = true;
-
-    protected static $logOnlyDirty = true;
-
-    protected static $submitEmptyLogs = false;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
+    }
 
     public function save(array $options = [])
     {

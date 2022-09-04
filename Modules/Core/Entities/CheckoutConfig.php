@@ -2,11 +2,11 @@
 
 namespace Modules\Core\Entities;
 
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property integer $id
@@ -117,7 +117,6 @@ class CheckoutConfig extends Model
         "checkout_banner",
         "countdown_enabled",
         "countdown_time",
-
         "countdown_finish_message",
         "topbar_enabled",
         "topbar_content",
@@ -167,15 +166,12 @@ class CheckoutConfig extends Model
         "deleted_at",
     ];
 
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        switch ($eventName) {
-            case "updated":
-                $activity->description = "Configuração do Checkout foi atualizada.";
-                break;
-            default:
-                $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     public function project(): BelongsTo

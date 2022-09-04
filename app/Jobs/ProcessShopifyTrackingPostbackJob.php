@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\ProductService;
@@ -29,6 +30,16 @@ class ProcessShopifyTrackingPostbackJob implements ShouldQueue
 
     public function handle()
     {
+        PostbackLog::create([
+            "origin" => 5,
+            "data" => json_encode($this->postback),
+            "description" => "shopify-tracking",
+        ]);
+
+        if(env("APP_NAME") != "Cloudfox-cron") {
+            sleep(1);
+        }
+
         $productService = new ProductService();
         $trackingService = new TrackingService();
 

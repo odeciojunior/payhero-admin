@@ -13,12 +13,16 @@ Route::group(
 
         Route::get("/core/usercompanies", "CoreApiController@getCompanies")
             //->name('api.companies.getcompanies')
-            ->middleware("role:account_owner|admin");
+            ->middleware("role:account_owner|attendance|finantial|custom|admin");
 
         Route::get("/core/companies", "CoreApiController@companies")
             //->names('api.companies')
             ->middleware("permission:sales|finances|report_pending|apps|invitations");
+
+        Route::post('/core/company-default','CoreApiController@updateCompanyDefault');
         Route::get("/core/get-bonus-balance", "CoreApiController@getBonusBalance");
+
+        Route::get("/core/zendesk-token", "CoreApiController@getZendeskToken");
     }
 );
 

@@ -56,6 +56,7 @@
           href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
           color="#5bbad5">
     <!-- Stylesheets -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
     <link rel="stylesheet"
           href="{{ mix('build/layouts/master/master.min.css') }}">
     @stack('css')
@@ -130,9 +131,9 @@
         $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
     @endphp
 
-    @if (!auth()->user()->account_is_approved)
+    {{-- @if (!auth()->user()->account_is_approved)
         @include('utils.new-register-link')
-    @endif
+    @endif --}}
 
     @yield('content')
 
@@ -186,20 +187,35 @@
             <!-- End of cloudfoxhelp Zendesk Widget script -->
 
             <script type="text/javascript">
-                zE('messenger', 'close');
+                function zendeskAuthentication()
+                {
+                    $.ajax({
+                        method: 'GET',
+                        url: '/api/core/zendesk-token',
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        error: function () {
+                            //
+                        },
+                        success: function (response) {
+                            zE('messenger', 'loginUser', function (callback) {
+                                    callback(response);
+                                }
+                            );
+                        }
+                    });
 
-                /*
-                var signedToken = generateJwt('{{ auth()->user()->id }}', '{{ auth()->user()->name }}', '{{ auth()->user()->email }}');
-                        zE('messenger', 'loginUser', function (callback) {
-                            callback(signedToken);
-                        });
-                        */
+                    return null;
+                }
+
+                // zendeskAuthentication();
+
             </script>
         @endif
     @endif
 
-    <!-- Announcekiit configuracoes -->
-    {{-- resources/modules/global/js/global.js --}}
     <script async
             src="https://cdn.announcekit.app/widget-v2.js"></script>
 </body>

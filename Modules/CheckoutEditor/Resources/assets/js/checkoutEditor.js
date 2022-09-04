@@ -1,4 +1,7 @@
-$(document).ready(function () {
+$(document).ready( function () {
+    $('#checkout_editor #companies').on("change", function () {
+        $('.company-navbar').val( $('#checkout_editor #companies').val() ).change();
+    });
     // ----------------------- Funções de Botão ----------------------------
     $("#default_finish_color").on("change", function () {
         if ($(this).is(":checked")) {
@@ -284,7 +287,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#installments_limit").on("change", function () {
+    $('#installments_limit').on('change', function() {
         var installmentsLimit = parseInt($("#installments_limit option:selected").val());
         var interestFreeInstallments = parseInt($("#interest_free_installments option:selected").val());
         var preselectedInstallment = parseInt($("#preselected_installment option:selected").val());
@@ -352,20 +355,21 @@ $(document).ready(function () {
             $("#selectable-all-notification").removeClass("dash-check");
         }
 
-        if (selectableCheckboxes.length == 4) {
-            $("#selectable-all-notification").removeClass("dash-check");
+        if (selectableCheckboxes.length == 4){
+            $('#selectable-all-notification').removeClass('dash-check');
         }
     });
 
-    $("#selectable-all-notification").on("click", function () {
-        if ($(this).is(":checked")) {
-            $(".selectable-notification").prop("checked", true);
-        } else {
-            $(".selectable-notification").prop("checked", false);
-            $("#selectable-all-notification").removeClass("dash-check");
+    $('#selectable-all-notification').on('click', function(){
+        if($(this).is(':checked')){
+            $('.selectable-notification').prop('checked', true);
+        }else{
+            $('.selectable-notification').prop('checked', false);
+            $('#selectable-all-notification').removeClass('dash-check');
         }
     });
     // ---------------- Functions Table - END ---------------------
+
 });
 
 function replacePreview(name, src, fname = "") {

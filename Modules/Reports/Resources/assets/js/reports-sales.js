@@ -2,16 +2,27 @@ $(function () {
     loadingOnScreen();
     exportReports();
 
-    getProjects();
-
     changeCompany();
     changeCalendar();
-    changeSaleStatus();
 
-    if (sessionStorage.info) {
-        let info = JSON.parse(sessionStorage.getItem("info"));
-        $("input[name=daterange]").val(info.calendar);
+
+    if(sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem('info'));
+        $('input[name=daterange]').val(info.calendar);
     }
+
+    getCompaniesAndProjects().done( function (data2){
+        if(!isEmpty(data2.company_default_projects)){
+            showFiltersInReports(true);
+            getProjects(data2.companies);
+        }
+        else{
+            loadingOnScreenRemove();
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+            showFiltersInReports(false);
+        }
+    });
 });
 
 let salesUrl = "/api/reports/sales";
@@ -21,29 +32,37 @@ let company = "";
 let date = "";
 let sales_status = "";
 
-function changeSaleStatus() {
-    $("#status-graph").on("change", function () {
-        if (sales_status !== $(this).val()) {
-            sales_status = $(this).val();
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
 
-            $(".sirius-select-container").addClass("disabled");
-            $('input[name="daterange"]').attr("disabled", "disabled");
+    loadingOnScreen();
 
-            Promise.all([salesStatus($(this).find("option:selected").val())])
-                .then(() => {
-                    $(".sirius-select-container").removeClass("disabled");
-                    $('input[name="daterange"]').removeAttr("disabled", "disabled");
-                })
-                .catch(() => {
-                    $(".sirius-select-container").removeClass("disabled");
-                    $('input[name="daterange"]').removeAttr("disabled", "disabled");
-                });
-        }
-    });
-}
+    $("#select_projects").val($("#select_projects option:first").val());
+    $(
+        "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
+    ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
 
-function getProjects() {
-    $.ajax({
+    $("#select_projects").html('');
+    sessionStorage.removeItem('info');
+
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            if(!isEmpty(data2.company_default_projects)){
+                showFiltersInReports(true);
+                getProjects(data2.companies);
+            }
+            else{
+                loadingOnScreenRemove();
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+                showFiltersInReports(false);
+            }
+        });
+	});
+});
+
+window.fillProjectsSelect = function(){
+    return $.ajax({
         method: "GET",
         url: "/api/projects?select=true",
         dataType: "json",
@@ -52,48 +71,74 @@ function getProjects() {
             Accept: "application/json",
         },
         error: function error(response) {
-            loadingOnScreenRemove();
-            $("#modal-content").hide();
-            errorAjaxResponse(response);
+            console.log('erro')
+            console.log(response)
         },
         success: function success(response) {
-            if (!isEmpty(response.data)) {
-                $(".div-filters").show();
-                $("#project-empty").hide();
-                $("#project-not-empty").show();
-                $("#export-excel").show();
-
-                $.each(response.data, function (i, project) {
-                    $("#select_projects").append(
-                        $("<option>", {
-                            value: project.id,
-                            text: project.name,
-                        })
-                    );
-
-                    removeDuplcateItem("#select_projects option");
-                });
-
-                if (sessionStorage.info) {
-                    $("#select_projects").val(JSON.parse(sessionStorage.getItem("info")).company);
-                    $("#select_projects")
-                        .find("option:selected")
-                        .text(JSON.parse(sessionStorage.getItem("info")).companyName);
-                }
-
-                company = $("#select_projects").val();
-
-                updateReports();
-            } else {
-                $(".div-filters").hide();
-                $("#export-excel").hide();
-                $("#project-not-empty").hide();
-                $("#project-empty").show();
-            }
-
-            loadingOnScreenRemove();
-        },
+            return response;
+        }
     });
+}
+
+function changeSaleStatus() {
+    $("#status-graph").on('change', function() {
+        if (sales_status !== $(this).val()) {
+            sales_status = $(this).val();
+
+            $('.sirius-select-container').addClass('disabled');
+            $('input[name="daterange"]').attr('disabled', 'disabled');
+
+            Promise.all([
+                salesStatus($(this).find('option:selected').val())
+            ])
+            .then(() => {
+                $('.sirius-select-container').removeClass('disabled');
+                $('input[name="daterange"]').removeAttr('disabled', 'disabled');
+            })
+            .catch(() => {
+                $('.sirius-select-container').removeClass('disabled');
+                $('input[name="daterange"]').removeAttr('disabled', 'disabled');
+            });
+        }
+	});
+}
+
+function getProjects(companies) {
+
+    loadingOnScreen();
+    $(".div-filters").hide();
+    $("#project-empty").hide();
+    $("#project-not-empty").show();
+    $("#export-excel > div >").show();
+
+    window.fillProjectsSelect()
+    .done(function(dataSales)
+    {
+        $(".div-filters").show();
+        $.each(companies, function (c, company) {
+            $.each(company.projects, function (i, project) {
+                $.each(dataSales.data, function (idx, project2) {
+                    if( project2.id == project.id ){
+                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
+                    }
+                });
+            });
+        });
+
+        $("#select_projects option:first").attr('selected','selected');
+
+        if(sessionStorage.info) {
+            $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+            $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+        }
+
+        company = $("#select_projects").val();
+        updateReports();
+
+        changeSaleStatus();
+    });
+
+    loadingOnScreenRemove();
 }
 
 function barGraph(data, labels, total) {

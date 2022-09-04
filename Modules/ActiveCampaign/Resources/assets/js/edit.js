@@ -50,6 +50,7 @@ $(() => {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
                 loadOnAny("#tab_configuration .card", true);
+                loadingOnScreenRemove();
             },
         });
     }

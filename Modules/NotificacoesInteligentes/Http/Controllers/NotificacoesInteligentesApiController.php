@@ -24,29 +24,33 @@ class NotificacoesInteligentesApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $notificacoesInteligentesIntegration = new NotificacoesInteligentesIntegration();
-            $userProjectModel = new UserProject();
-            $projectModel = new Project();
+            $user = auth()->user();
+            $ownerId = $user->getAccountOwnerId();
+            $companyDefault = $user->company_default;
 
-            $notificacoesInteligentesIntegrations = $notificacoesInteligentesIntegration
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->with("project")
-                ->get();
+            $notificacoesInteligentesIntegrations = NotificacoesInteligentesIntegration::with('project', 'project.usersProjects')
+            ->whereHas(
+                'project.usersProjects',
+                function ($query) use($companyDefault,$ownerId){
+                    $query
+                    ->where('company_id', $companyDefault)
+                    ->where('user_id', $ownerId);
+                }
+            )->get();
 
-            $projects = collect();
-            $userProjects = $userProjectModel
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->orderBy("id", "desc")
-                ->get();
+            $projects     = collect();
+            $userProjects = UserProject::where([[
+                'user_id', $ownerId],[
+                'company_id', $companyDefault
+            ]])->orderBy('id', 'desc')->get();
+
             if ($userProjects->count() > 0) {
-                foreach ($userProjects as $userProject) {
-                    $project = $userProject
-                        ->project()
-                        ->where("status", $projectModel->present()->getStatus("active"))
-                        ->first();
+                foreach ($userProjects as $userProject)
+                {
+                    $project = $userProject->project()->where('status',Project::STATUS_ACTIVE)->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }

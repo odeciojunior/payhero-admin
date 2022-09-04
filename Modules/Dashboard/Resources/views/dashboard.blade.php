@@ -9,39 +9,19 @@
     @endpush
 
     <div class="page dashboard">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
         @include('dashboard::achievement-details')
         @include('dashboard::onboarding.presentation')
         @include('dashboard::pix.pix')
         <div style="display: none"
              class="page-header container mb-15 mb-sm-0">
 
-            <div class="row align-items-center justify-content-between"
-                 style="min-height:50px">
-
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-lg-6 mb-25">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
-
-                <div class="announcekit-widget-mobile col-lg-2 mb-25 font-size-14 text-primary d-sm-none"
-                     name="Qkw3C">
-                    <span id="announcekit-news"
-                          class="p-5">
-                        <b>NOVO</b>
-                    </span>
-                    <b>Clique para ver as novidades</b>
-                </div>
-
-                <div class="col-lg-4"
-                     id="company-select"
-                     style="display:none">
-                    <div class="d-lg-flex align-items-center justify-content-end">
-                        <div>
-                            <select id="company"
-                                    class="sirius-select"> </select>
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
         </div>
@@ -168,28 +148,8 @@
                         </div>
 
                         <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-1 sirius-cashback">
-                            <div class="card bg-white w-full d-none">
-                                <div
-                                     class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 ">
-                                    <div class="font-size-14 gray-600 mr-auto">
-                                        <span class="ml-0">Cashback total recebido</span>
-                                    </div>
-                                    <ol
-                                        class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
-                                    </ol>
-                                </div>
-                                <div
-                                     class="card-body pt-0 mt-15 mb-5 d-flex flex-column justify-content-start align-items-start ">
-                                    <div
-                                         class="pt-5 pb-5 flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
-                                        <div id="cashback-container"
-                                             class="d-flex flex-row justify-content-start align-items-center align-self-start">
-                                            <span class="cashback-container-icon">R$</span>
-                                            <span id="cashback-container-money"></span>
-                                            <span class="o-reload-1 cashback-container-icon"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="card pb-15 bg-white w-full d-none">
+
                             </div>
                         </div>
 

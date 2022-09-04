@@ -29,12 +29,14 @@ class InvitesApiController extends Controller
     /**
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $invitationModel = new Invitation();
 
-            $invites = $invitationModel->where("invite", auth()->user()->account_owner_id)->with("company");
+            $invites = $invitationModel->where('invite', auth()->user()->getAccountOwnerId())
+            ->where('company_id', Hashids::decode($request->company))
+            ->with('company');
 
             activity()
                 ->on($invitationModel)
@@ -214,8 +216,8 @@ class InvitesApiController extends Controller
                 ],
                 400
             );
-        } catch (Exception $e) {
-            Log::warning("Erro ao tentar excluir convite (InvitesApiController - destroy)");
+        } catch (Exception $e)
+        {
             report($e);
 
             return response()->json(
@@ -230,32 +232,47 @@ class InvitesApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function getInvitationData()
+    public function getInvitationData(Request $request)
     {
         try {
+            $accountOwnerId = auth()->user()->getAccountOwnerId();
+
             $invitationModel = new Invitation();
             $transactionModel = new Transaction();
-            $invitationAcceptedCount = $invitationModel
-                ->where([
-                    ["invite", auth()->user()->account_owner_id],
-                    ["status", $invitationModel->present()->getStatus("accepted")],
-                ])
+            $invitationAcceptedCount = $invitationModel->where(
+                [
+                    [
+                        'invite',
+                        $accountOwnerId,
+                    ],
+                    [
+                        'status',
+                        $invitationModel->present()->getStatus('accepted'),
+                    ],
+                    [
+                        'company_id',
+                        Hashids::decode($request->company)
+                    ]
+                ]
+            )->count();
+
+            $invitationSentCount = $invitationModel->where('invite', $accountOwnerId)
+                ->where('company_id', Hashids::decode($request->company))
                 ->count();
-            $invitationSentCount = $invitationModel->where("invite", auth()->user()->account_owner_id)->count();
-            $userIdInvites = $invitationModel
-                ->where("invite", auth()->user()->account_owner_id)
-                ->pluck("id")
+            $userIdInvites = $invitationModel->where('invite', $accountOwnerId)
+                ->pluck('id')
                 ->toArray();
-            $commissionPaid = $transactionModel
-                ->whereIn("invitation_id", $userIdInvites)
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->where("status_enum", $transactionModel->present()->getStatusEnum("transfered"))
-                ->sum("value");
-            $commissionPending = $transactionModel
-                ->whereIn("invitation_id", $userIdInvites)
-                ->where("user_id", auth()->user()->account_owner_id)
-                ->where("status_enum", $transactionModel->present()->getStatusEnum("paid"))
-                ->sum("value");
+            $commissionPaid = $transactionModel->whereIn('invitation_id', $userIdInvites)->where('user_id', $accountOwnerId)
+                ->where('company_id', Hashids::decode($request->company))
+                ->where('status_enum', $transactionModel->present()->getStatusEnum('transfered'))->sum('value');
+
+            if($accountOwnerId == User::DEMO_ID){
+                $commissionPaid = date('ymd')*3;
+            }
+
+            $commissionPending = $transactionModel->whereIn('invitation_id', $userIdInvites)->where('user_id', $accountOwnerId)
+                ->where('company_id', Hashids::decode($request->company))
+                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))->sum('value');
 
             return response()->json(
                 [
@@ -270,8 +287,8 @@ class InvitesApiController extends Controller
                 ],
                 200
             );
-        } catch (Exception $e) {
-            Log::warning("Erro ao tentar listar dados dos convites (InvitesApiController - getInvitationData)");
+        } catch (Exception $e)
+        {
             report($e);
 
             return response()->json(
@@ -439,9 +456,8 @@ class InvitesApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro com o link do convite, tente novamente mais tarde",
-                ],
-                400
+                    'message' => 'Ocorreu um erro com o link do convite, tente novamente mais tarde.',
+                ], 400
             );
         }
     }

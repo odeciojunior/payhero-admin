@@ -1,16 +1,67 @@
+$('.company-navbar').change(function () {
+    if (verifyIfCompanyIsDefault($(this).val())) return;
+    $('.sirius-performance > .card').html('');
+    $('.sirius-account > .card').html('');
+    $('.sirius-cashback > .card').html('');
+    $('#cashback-container #cashback-container-money').text("")
+    loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
+        styles: {
+            container: {
+                minHeight: '30px',
+                width: '30px',
+                height: 'auto',
+                margin: 'auto'
+            },
+            loader: {
+                width: '30px',
+                height: '30px',
+                borderWidth: '6px'
+            },
+
+        }
+    });
+    loadingOnAccountsHealth('.sirius-performance > .card','20px');
+    loadingOnAccountsHealth('.sirius-account > .card','12px');
+    $(".sirius-cashback > .card").addClass("d-none");
+    loadingOnChart('#chart-loading');
+    $('#scoreLineToMonth').html('')
+    updateCompanyDefault().done(function(data1){
+        getCompaniesAndProjects().done(function(data2){
+            if(!isEmpty(data2.company_default_projects)){
+                if( $("#project-empty").css('display')!='none' ){
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    window.getDataDashboard();
+                }
+                else{
+                    window.updateValues();
+                    window.updateChart();
+                    window.updatePerformance();
+                    window.updateAccountHealth('80px');
+                }
+            }
+            else{
+                $("#project-empty").show();
+                $("#project-not-empty").hide();
+            }
+        });
+	});
+});
+
 $(document).ready(function () {
+
     let userAccepted = true;
 
-    function updateChart() {
-        $("#scoreLineToMonth").html("");
-        loadingOnChart("#chart-loading");
+    window.updateChart = function() {
+        $('#scoreLineToMonth').html('')
+        loadingOnChart('#chart-loading');
 
         $.ajax({
             method: "GET",
             url: `/api/dashboard/get-chart-data`,
             dataType: "json",
             data: {
-                company: $("#company").val(),
+                company: $('.company-navbar').val(),
             },
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -22,8 +73,10 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                getChart(response);
-                loadingOnChartRemove("#chart-loading");
+                setTimeout(() => {
+                    loadingOnChartRemove("#chart-loading");
+                    getChart(response);
+                }, 2000);
             },
         });
     }
@@ -159,7 +212,7 @@ $(document).ready(function () {
         }
     }
 
-    function getDataDashboard() {
+    window.getDataDashboard = function() {
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -174,29 +227,10 @@ $(document).ready(function () {
             },
             success: function success(data) {
                 if (!isEmpty(data.companies)) {
-                    for (let i = 0; i < data.companies.length; i++) {
-                        if (data.companies[i].company_type == "1") {
-                            $("#company").append(
-                                '<option value="' + data.companies[i].id_code + '">Pessoa física</option>'
-                            );
-                        } else {
-                            $("#company").append(
-                                '<option value="' +
-                                    data.companies[i].id_code +
-                                    '">' +
-                                    data.companies[i].fantasy_name +
-                                    "</option>"
-                            );
-                        }
-                    }
-
-                    $(".content-error").hide();
-                    $("#company-select").show();
-
-                    updateValues();
-                    updateChart();
-                    updatePerformance();
-                    updateAccountHealth();
+                    window.updateValues();
+                    window.updateChart();
+                    window.updatePerformance();
+                    window.updateAccountHealth();
                     setTimeout(verifyPixOnboarding, 1600);
                 } else {
                     $(".content-error").show();
@@ -207,8 +241,9 @@ $(document).ready(function () {
         });
     }
 
-    function updateValues() {
-        loadOnAnyEllipsis(".text-money, .update-text, .text-circle", false, {
+    window.updateValues = function() {
+
+        loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
             styles: {
                 container: {
                     minHeight: "30px",
@@ -236,7 +271,9 @@ $(document).ready(function () {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
-            data: { company: $("#company").val() },
+            data: {
+                company: $('.company-navbar').val()
+            },
             error: function error(response) {
                 loadOnAnyEllipsis(".text-money, .update-text, .text-circle", true);
                 loadingOnScreenRemove();
@@ -260,169 +297,18 @@ $(document).ready(function () {
 
                 $("#info-total-balance").attr("title", title).tooltip({ placement: "bottom" });
 
-                //--updateTrackings(data.trackings);
-                //--updateChargeback(data.chargeback_tax);
-                //--updateTickets(data.tickets);
-
-                loadOnAnyEllipsis(".text-money, .update-text, .text-circle", true);
-                //loadingOnScreenRemove();
-            },
+                loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
+            }
         });
     }
 
-    // function updateTrackings(trackings) {
-    //     $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));
-    //     $('#oldest_sale').html(trackings.oldest_sale + ' dia' + (trackings.oldest_sale === 1 ? '' : 's'));
-    //     $('#problem').html(trackings.problem + ' <small>(' + trackings.problem_percentage + '%)</small>');
-    //     $('#unknown').html(trackings.unknown + ' <small>(' + trackings.unknown_percentage + '%)</small>');
-    // }
-    //
-    // function updateTickets(data) {
-    //     $('#open-tickets').text(data.open || 0);
-    //     $('#closed-tickets').text(data.closed || 0);
-    //     $('#mediation-tickets').text(data.mediation || 0);
-    //     $('#total-tickets').text(data.total);
-    // }
-    //
-    // function updateNews(data) {
-    //
-    //     $('#carouselNews .carousel-inner').html('');
-    //     $('#carouselNews .carousel-indicators').html('');
-    //
-    //     if (!isEmpty(data)) {
-    //
-    //         for (let i = 0; i < data.length; i++) {
-    //
-    //             let active = i === 0 ? 'active' : '';
-    //
-    //             let slide = `<div class="carousel-item ${active}">
-    //                              <div class="card shadow news-background">
-    //                                  <div class="card-body p-md-60 d-flex flex-column justify-content-center" style="height: 354px">
-    //                                      <h1 class="news-title">${data[i].title}</h1>
-    //                                      <div class="news-content">${data[i].content}</div>
-    //                                  </div>
-    //                              </div>
-    //                          </div>`;
-    //
-    //             let indicator = `<li data-target="#carouselNews" data-slide-to="${i}" class="${active}"></li>`;
-    //
-    //             $('#carouselNews .carousel-inner').append(slide);
-    //             $('#carouselNews .carousel-indicators').append(indicator);
-    //         }
-    //
-    //         if (data.length === 1) {
-    //             $('#carouselNews .carousel-indicators').hide();
-    //             $('#carouselNews .carousel-control-prev, #carouselNews .carousel-control-next').hide();
-    //         } else {
-    //             $('#carouselNews .carousel-indicators').show();
-    //             $('#carouselNews .carousel-control-prev, #carouselNews .carousel-control-next').show();
-    //         }
-    //
-    //         $('#news-col').show();
-    //     } else {
-    //         $('#news-col').hide();
-    //     }
-    // }
-    //
-    // function updateReleases(data) {
-    //     $('#releases-div').html('');
-    //
-    //     if (!isEmpty(data)) {
-    //         $.each(data, function (index, value) {
-    //             let item = `<div class="d-flex align-items-center my-15">
-    //                             <div class="release-progress" id="${index}">
-    //                                 <strong>${value.progress}%</strong>
-    //                             </div>
-    //                             <span class="ml-2">${value.release}</span>
-    //                         </div>`;
-    //             $('#releases-div').append(item);
-    //
-    //             updateReleasesProgress(index, value.progress);
-    //         });
-    //
-    //         $('#releases-col').show();
-    //     } else {
-    //         $('#releases-col').hide();
-    //     }
-    // }
-
-    // function verifyPendingData() {
-    //     $.ajax({
-    //         method: "GET",
-    //         url: "/api/dashboard/verifypendingdata",
-    //         dataType: "json",
-    //         headers: {
-    //             'Authorization': $('meta[name="access-token"]').attr('content'),
-    //             'Accept': 'application/json',
-    //         },
-    //         data: {company: $('#company').val()},
-    //         error: function error(response) {
-    //             errorAjaxResponse(response);
-    //         },
-    //         success: function success(response) {
-    //             let companies = response.companies;
-    //             if ((!isEmpty(companies)) || response.pending_user_data) {
-    //                 if (response.pending_user_data) {
-    //                     $('.tr-pending-profile').show();
-    //                 } else {
-    //                     $('.tr-pending-profile').hide();
-    //                 }
-    //                 for (let company of companies) {
-    //                     $('.table-pending-data-body').append(`
-    //                             <tr>
-    //                                 <td style='width:2px;' class='text-center'>
-    //                                 <span class="status status-lg status-away"></span>
-    //                                 </td>
-    //                                 <td class='text-left'>
-    //                                     Empresas > ${company.fantasy_name}
-    //                                 </td>
-    //                                 <td class='text-center'>
-    //                                     <a class='btn' style='color:darkorange;' href='/companies/${company.id_code}/edit?type=${company.type}' target='_blank'><b><i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i>Atualizar</b></a>
-    //                                 </td>
-    //                             </tr>
-    //                         `);
-    //                 }
-    //                 if (!userAccepted) {
-    //                     $('#modal-peding-data').modal('hide');
-    //                 } else {
-    //                     $('#modal-peding-data').modal('show');
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
-    // function updateReleasesProgress(id, value) {
-    //
-    //     let circle = $('#' + id);
-    //
-    //     let color = '';
-    //     switch (true) {
-    //         case value <= 33:
-    //             color = '#FFA040';
-    //             break;
-    //         case value > 33 && value <= 66:
-    //             color = '#FF6F00';
-    //             break;
-    //         default:
-    //             color = '#C43E00';
-    //             break;
-    //     }
-    //
-    //     circle.circleProgress({
-    //         size: 55,
-    //         startAngle: -Math.PI / 2,
-    //         thickness: 6,
-    //         value: value / 100,
-    //         fill: {
-    //             color: color,
-    //         }
-    //     });
-    // }
 
     function getProjects() {
+        loadingOnScreen();
+
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true",
+            url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -436,8 +322,7 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-
-                    getDataDashboard();
+                    window.getDataDashboard();
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
@@ -487,36 +372,6 @@ $(document).ready(function () {
             startVelocity: 40,
         });
     }
-
-    // function showConfetti() {
-    //
-    //     let velocity = window.innerWidth * 4 / 100;
-    //
-    //     let end = Date.now() + velocity * 20;
-    //
-    //     let common = {
-    //         particleCount: 5,
-    //         spread: velocity,
-    //         zIndex: 1700,
-    //         startVelocity: velocity,
-    //     };
-    //
-    //     (function frame() {
-    //         confetti({
-    //             ...common,
-    //             angle: 60,
-    //             origin: {x: 0},
-    //         });
-    //         confetti({
-    //             ...common,
-    //             angle: 120,
-    //             origin: {x: 1},
-    //         });
-    //         if (Date.now() < end) {
-    //             requestAnimationFrame(frame);
-    //         }
-    //     }());
-    // }
 
     function verifyAchievements() {
         $.ajax({
@@ -820,10 +675,7 @@ $(document).ready(function () {
         $("#cardWelcome").slideUp("600");
     });
 
-    $("#company").on("change", function () {
-        updateValues();
-        updateChart();
+    getCompaniesAndProjects().done( function (data){
+        getProjects();
     });
-
-    getProjects();
 });

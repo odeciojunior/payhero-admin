@@ -2,10 +2,12 @@
 
 namespace Modules\Core\Entities;
 
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -31,7 +33,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Whatsapp2Integration extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use SoftDeletes, LogsActivity, HasFactory;
 
     public const STATUS_PENDING = "pending";
     public const STATUS_PAID = "paid";
@@ -58,35 +60,12 @@ class Whatsapp2Integration extends Model
         "updated_at",
     ];
 
-    protected static $logFillable = true;
-
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que o pacote armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
-
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        switch ($eventName) {
-            case "deleted":
-                $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi deletedo.";
-                break;
-            case "created":
-                $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi criado";
-                break;
-            case "updated":
-                $activity->description = "Integração whatsapp 2.0 para o projeto {$this->project->name} foi atualizada.";
-                break;
-            default:
-                $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     public function project(): BelongsTo

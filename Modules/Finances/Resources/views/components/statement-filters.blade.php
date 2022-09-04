@@ -36,9 +36,8 @@
                     <div class="col-12 col-lg-3 px-0 px-lg-10">
                         <div class="input-holder form-group">
                             <label for="extract_company_select">Empresa</label>
-                            <select class="sirius-select"
-                                    name="company"
-                                    id="extract_company_select"> </select>
+                            <input type="text" disabled class="company_name">
+                            {{-- <select class="sirius-select" name="company" id="extract_company_select"> </select> --}}
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 px-0 px-lg-10">
@@ -142,10 +141,9 @@
                     <div class="col-md-3">
                         <div class="input-holder form-group">
                             <label for="statement_company_select">Empresa</label>
-                            <select class="sirius-select"
-                                    name="company"
-                                    id="statement_company_select">
-                            </select>
+                            <input type="text" disabled class="company_name">
+                            {{-- <select class="sirius-select" name="company" id="statement_company_select">
+                            </select> --}}
                         </div>
                     </div>
                     <div class="col-md-3"

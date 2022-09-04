@@ -8,10 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleContestationFile;
+use Modules\Core\Entities\User;
 use Modules\Sales\Http\Controllers\SalesController;
+use ParagonIE\Sodium\Compat;
 use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -38,6 +41,8 @@ class ContestationService
 
     function getQuery($filters)
     {
+        $account_owner_id = auth()->user()->getAccountOwnerId();
+
         $contestations = SaleContestation::select(
             "sale_contestations.*",
             "sales.start_date",
@@ -61,8 +66,10 @@ class ContestationService
             ->join("transactions", function ($query) {
                 $query->on("sales.id", "=", "transactions.sale_id")->where("transactions.type", "=", 2);
             })
-            ->leftJoin("customers", "sales.customer_id", "=", "customers.id")
-            ->where("sales.owner_id", \Auth::user()->account_owner_id);
+            ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
+            ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
+            ->where('checkout_configs.company_id', hashids_decode(request('company')))
+            ->where('sales.owner_id', $account_owner_id);
 
         $contestations->when(request("date_type"), function ($query, $search) {
             $dateRange = FoxUtils::validateDateRange(request("date_range"));
@@ -195,9 +202,9 @@ class ContestationService
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-        $totalSaleApproved = Sale::where("payment_method", 1)
-            ->whereIn("status", [1, 4, 7, 24])
-            ->where("sales.owner_id", \Auth::user()->account_owner_id);
+        $totalSaleApproved = Sale::where('payment_method', 1)
+            ->whereIn('status', [1, 4, 7, 24])
+            ->where('sales.owner_id', \Auth::user()->getAccountOwnerId());
 
         $totalSaleApproved->whereBetween("sales.start_date", [
             $dateRange[0] . " 00:00:00",
@@ -408,5 +415,14 @@ class ContestationService
             Log::warning("DeleteTemporaryFiles - Error command ");
             report($e);
         }
+    }
+
+    public static function getprojectsWithContestations(){
+        return Sale::select('sales.project_id')
+            ->distinct()
+            ->leftjoin('sale_contestations','sale_contestations.sale_id','sales.id')
+            ->where('sales.owner_id',auth()->user()->getAccountOwnerId())
+            ->whereIn('sale_contestations.status',[1,2,3])
+            ->get();
     }
 }

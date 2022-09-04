@@ -5,8 +5,8 @@ namespace Modules\Core\Services;
 use Exception;
 use Carbon\Carbon;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\PixExpiredEvent;
 
 /**
@@ -46,11 +46,7 @@ class PixService
                     ]);
                 }
 
-                SaleLog::create([
-                    "status" => "canceled",
-                    "status_enum" => 5,
-                    "sale_id" => $sale->id,
-                ]);
+                SaleService::createSaleLog($sale->id, "canceled");
 
                 $pix = $sale->pixCharges->where("status", "ATIVA")->first();
 
@@ -59,7 +55,9 @@ class PixService
                     $pix->update(["status" => "EXPIRED"]);
                 }
 
-                event(new PixExpiredEvent($sale));
+                if (!$sale->api_flag && $sale->owner_id > User::DEMO_ID) {
+                    event(new PixExpiredEvent($sale));
+                }
             }
         } catch (Exception $e) {
             report($e);

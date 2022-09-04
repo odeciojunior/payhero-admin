@@ -69,7 +69,7 @@ class LoginController extends Controller
     {
         $this->validateLogin($request);
 
-        if (str_contains($request->email, "@cloudfox.net")) {
+        if (foxutils()->isProduction() && str_contains($request->email, "@cloudfox.net")) {
             return response()
                 ->redirectTo("/")
                 ->withErrors(["accountErrors" => "Nome de usuário ou senha é inválido!"]);

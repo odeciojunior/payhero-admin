@@ -1,5 +1,21 @@
+getCompaniesAndProjects().done( function (data){
+    $('.site-navbar .sirius-select-container').addClass('disabled');
+});
+
 $(document).ready(function () {
+
+    var companiesAndProjects = ''
+
     loadingOnScreen();
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        $('.company_name').val( companiesAndProjects.company_default_fullname );
+        $('.company_id').val( companiesAndProjects.company_default );
+        $('.page').show()
+        loadingOnScreenRemove();
+    });
+
     $.ajax({
         url: "/api/projects/create",
         dataType: "json",
@@ -74,8 +90,11 @@ $(document).ready(function () {
         if ($("#name").val().length === 0) {
             alertCustom("error", "É obrigatório preencher o campo Nome!");
             return true;
-        } else if ($("#company option:selected").val().length === 0) {
-            alertCustom("error", "É obrigatório selecionar uma empresa!");
+        // } else if ($("#company option:selected").val().length === 0) {
+        //     alertCustom('error', 'É obrigatório selecionar uma empresa!');
+        //     return true;
+        } else if ($("#company").val().length === 0) {
+            alertCustom('error', 'É obrigatório selecionar uma empresa!');
             return true;
         } else {
             return false;
@@ -85,11 +104,15 @@ $(document).ready(function () {
     let btnSave = $("#btn-save");
     btnSave.on("click", () => {
         if (verifyFields()) {
+            console.log('formData errrrr');
             return false;
         } else {
             btnSave.prop("disabled", true);
             loadingOnScreen();
-            let formData = new FormData(document.querySelector("#form-create-project"));
+            let formData = new FormData(document.querySelector('#form-create-project'));
+            console.log('formData');
+            console.log(formData);
+            //return;
             $.ajax({
                 method: "post",
                 url: "/api/projects",
@@ -109,9 +132,9 @@ $(document).ready(function () {
                 },
                 success: (response) => {
                     loadingOnScreenRemove();
-                    alertCustom("success", "Loja salvo com sucesso!");
-                    window.location = "/projects";
-                },
+                    alertCustom('success', 'Loja salva com sucesso!');
+                    window.location = "/projects"
+                }
             });
             return false;
         }

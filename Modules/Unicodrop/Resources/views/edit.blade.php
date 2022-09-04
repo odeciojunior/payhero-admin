@@ -11,10 +11,7 @@
             <div class="col-12">
                 <div class='form-group'>
                     <label for="company">Lojas</label>
-                    <select class="sirius-select"
-                            id="select_projects_edit"
-                            name="project_id"
-                            disabled> </select>
+                    <select id="select_projects_edit" name="project_id" disabled> </select>
                 </div>
             </div>
         </div>

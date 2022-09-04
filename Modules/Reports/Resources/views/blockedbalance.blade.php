@@ -63,8 +63,10 @@
 
     <!-- Page -->
     <div class="page mb-0">
-        <div style="display: none"
-             class="page-header container inner-header">
+
+        @include('layouts.company-select',['version'=>'mobile'])
+
+        <div style="display: none" class="page-header container inner-header">
             @can('report_sales')
                 <header class="top-system">
                     <a href="{!! route('reports.finances') !!}"
@@ -143,15 +145,7 @@
                         <div class="row">
 
                             <div class="col-sm-6 col-md-3">
-                                <label for="company">Empresa</label>
-                                <select name='select_company'
-                                        id="company"
-                                        class="sirius-select">
-                                    <option value="">Todas as empresas</option>
-                                </select>
-                            </div>
 
-                            <div class="col-sm-6 col-md-3">
                                 <label for="projeto">Lojas</label>
                                 <select name='select_project'
                                         id="project"
@@ -182,21 +176,19 @@
                                     <option value="4">PIX</option>
                                 </select>
                             </div>
+
+                            <div class="col-sm-6 col-md-3">
+                                <label for="status">Status</label>
+                                <select name='sale_status' id="status" class="sirius-select">
+                                    <option value="">Todos status</option>
+                                    <option value="1">Aprovado</option>
+                                    <option value="24">Em disputa</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="collapse"
-                             id="bt_collapse">
+                        <div class="collapse" id="bt_collapse">
                             <div class="row mt-15">
-                                <div class="col-sm-6 col-md-3">
-                                    <label for="status">Status</label>
-                                    <select name='sale_status'
-                                            id="status"
-                                            class="sirius-select">
-                                        <option value="">Todos status</option>
-                                        <option value="1">Aprovado</option>
-                                        <option value="24">Em disputa</option>
-                                    </select>
-                                </div>
 
                                 <div class="col-sm-6 col-md-3">
                                     <label for="transaction">Transação</label>
@@ -223,9 +215,6 @@
                                            data-mask="000.000.000-00">
                                 </div>
 
-                            </div>
-
-                            <div class="row">
                                 <div class="col-sm-6 col-md-3">
                                     <label for="reason">Motivo</label>
                                     <select name="reason"
@@ -235,7 +224,9 @@
                                         {{-- loaded via javascript --}}
                                     </select>
                                 </div>
+                            </div>
 
+                            <div class="row">
                                 <div class="col-sm-6 col-md-3">
                                     <label for="date_type">Data</label>
                                     <select name='date_type'
@@ -297,29 +288,29 @@
                 <!-- Resumo -->
                 <div class="fixhalf"></div>
                 <!-- <div class='container col-sm-12 d-lg-block'>
-                            <div class='row'>
-                                <div class="col-md-4 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h5 class="font-size-14 gray-600">Quantidade de vendas</h5>
-                                        <h4 id="total_sales" class="font-size-30 bold"></h4>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h5 class="font-size-14 gray-600">Saldo retido</h5>
-                                        <h4 id="commission_blocked"></h4>
-                                    </div>
-                                    <div class="s-border-right yellow"></div>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h5 class="font-size-14 gray-600">Valor Total </h5>
-                                        <h4 id="total"></h4>
-                                    </div>
-                                    <div class="s-border-right red"></div>
-                                </div>
+                    <div class='row'>
+                        <div class="col-md-4 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h5 class="font-size-14 gray-600">Quantidade de vendas</h5>
+                                <h4 id="total_sales" class="font-size-30 bold number"></h4>
                             </div>
-                        </div> -->
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h5 class="font-size-14 gray-600">Saldo retido</h5>
+                                <h4 id="commission_blocked" class='number'></h4>
+                            </div>
+                            <div class="s-border-right yellow"></div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 card">
+                            <div class="card-body">
+                                <h5 class="font-size-14 gray-600">Valor Total </h5>
+                                <h4 id="total" class='number'></h4>
+                            </div>
+                            <div class="s-border-right red"></div>
+                        </div>
+                    </div>
+                </div> -->
                 {{-- <div class="card shadow p-20" style='display:block;'>
                     <div class="row justify-content-center">
                         <div class="col-md-4">

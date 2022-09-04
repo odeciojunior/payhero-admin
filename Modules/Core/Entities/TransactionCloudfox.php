@@ -2,11 +2,12 @@
 
 namespace Modules\Core\Entities;
 
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TransactionPresenter;
+use Spatie\Activitylog\LogOptions;
 
 /**
  * @property integer $id
@@ -77,6 +78,14 @@ class TransactionCloudfox extends Model
         "gateway_released_at",
         "gateway_transferred_at",
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
+    }
 
     public function company()
     {

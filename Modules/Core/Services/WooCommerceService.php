@@ -220,6 +220,9 @@ class WooCommerceService
 
             if ($productExists->price != $_product->price) {
                 $productExists->price = $_product->price;
+                if($_product->on_sale && $_product->sale_price){
+                    $productExists->price = $_product->sale_price;
+                }
                 $newValues = true;
             }
 

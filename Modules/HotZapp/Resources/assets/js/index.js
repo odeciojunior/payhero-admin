@@ -1,58 +1,93 @@
 $(document).ready(function () {
-    index();
-    function index() {
-        loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "/api/apps/hotzapp",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                $("#content").html("");
-                if (isEmpty(response.projects)) {
-                    $("#project-empty").show();
-                    $("#integration-actions").hide();
-                } else {
-                    $("#project_id").html("");
-                    let projects = response.projects;
-                    for (let i = 0; i < projects.length; i++) {
-                        $("#project_id").append(
-                            '<option value="' + projects[i].id + '">' + projects[i].name + "</option>"
-                        );
-                    }
-                    if (isEmpty(response.integrations)) {
-                        $("#no-integration-found").show();
+
+    $('.company-navbar').change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $('#integration-actions').hide();
+        $("#no-integration-found").hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1){
+            getCompaniesAndProjects().done(function(data2){
+                companiesAndProjects = data2
+                index('n')
+            });
+        });
+    });
+
+    var companiesAndProjects = ''
+
+    getCompaniesAndProjects().done( function (data){
+        companiesAndProjects = data
+        index();
+    });
+
+    function index(loading='y') {
+        if(loading=='y')
+            loadingOnScreen();
+        else{
+            $("#content").html("");
+            loadOnAny('#content');
+        }
+
+        $hasProjects=false;
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                if(project.status == 1)
+                    $hasProjects=true;
+            });
+        }
+
+        if(!$hasProjects){
+            $('#integration-actions').hide();
+            $("#no-integration-found").hide();
+            //$('#project-integrated').hide();
+            $('#project-empty').show();
+            loadingOnScreenRemove();
+            loadOnAny('#content',true);
+        }
+        else{
+            $.ajax({
+                method: "GET",
+                url: "/api/apps/hotzapp?company="+ $('.company-navbar').val(),
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    loadOnAny('#content',true);
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    //$("#content").html("");
+                    if (isEmpty(response.projects)) {
+                        $("#project-empty").show();
+                        $("#integration-actions").hide();
                     } else {
                         $("#content").html("");
-                        let integrations = response.integrations;
-                        for (let i = 0; i < integrations.length; i++) {
-                            renderIntegration(integrations[i]);
+                        $("#project_id").html("");
+                        fillSelectProject(companiesAndProjects,'#project_id')
+                        if (isEmpty(response.integrations)) {
+                            $("#no-integration-found").show();
+                        } else {
+                            $("#content").html("");
+                            let integrations = response.integrations;
+                            for (let i = 0; i < integrations.length; i++) {
+                                renderIntegration(integrations[i]);
+                            }
+                            $("#no-integration-found").hide();
                         }
-                        $("#no-integration-found").hide();
+                        $("#project-empty").hide();
+                        $("#integration-actions").show();
                     }
-                    $("#project-empty").hide();
-                    $("#integration-actions").show();
-                }
-                loadingOnScreenRemove();
-            },
-        });
-    }
-
-    //checkbox
-    $(".check").on("click", function () {
-        if ($(this).is(":checked")) {
-            $(this).val(1);
-        } else {
-            $(this).val(0);
+                    if(loading=='y')
+                        loadingOnScreenRemove();
+                    loadOnAny('#content',true);
+                },
+            });
         }
-    });
+    }
 
     //reset the intergation modal
     function clearForm() {
@@ -99,6 +134,15 @@ $(document).ready(function () {
         );
     }
 
+    //checkbox
+    $(".check").on("click", function () {
+        if ($(this).is(":checked")) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
+
     //create
     $("#btn-add-integration").on("click", function () {
         $(".modal-title").html("Adicionar nova Integração com HotZapp");
@@ -132,8 +176,8 @@ $(document).ready(function () {
             error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: (response) => {
-                $("#select_projects_edit").val(response.data.project_id);
+            success: (response) => { console.log(response)
+                fillSelectProject(companiesAndProjects,'#select_projects_edit',response.data.project_id)
                 $("#integration_id").val(response.data.id);
                 $("#link_edit").val(response.data.link);
 
@@ -215,6 +259,7 @@ $(document).ready(function () {
             },
         });
     });
+
     // load delete modal
     $(document).on("click", ".delete-integration", function (e) {
         e.stopPropagation();
@@ -222,25 +267,29 @@ $(document).ready(function () {
         $("#modal-delete-integration .btn-delete").attr("project", project);
         $("#modal-delete-integration").modal("show");
     });
+
     //destroy
     $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
-        e.stopPropagation();
-        var project = $(this).attr("project");
-        $.ajax({
-            method: "DELETE",
-            url: "/api/apps/hotzapp/" + project,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                index();
-                alertCustom("success", response.message);
-            },
-        });
-    });
+            e.stopPropagation();
+            var project = $(this).attr("project");
+            $.ajax({
+                method: "DELETE",
+                url: "/api/apps/hotzapp/" + project,
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index();
+                    alertCustom("success", response.message);
+                },
+            });
+        }
+    );
 });
