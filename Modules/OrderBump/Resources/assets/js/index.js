@@ -1,6 +1,59 @@
 $(() => {
     let projectId = $(window.location.pathname.split("/")).get(-1);
 
+
+    $('.value-mask').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    function formatDouble(number) {
+        return number.replace('.','').replace(',','.')
+    }
+    function formatMoney(number) {
+        return (Math.round(number * 100) / 100).toFixed(2).replace('.',',');
+    }
+    //store type
+    $('#ob_type_value').click(function () {
+        $('#ob_percent_opt').hide()
+        $('#ob_money_opt').show()
+        $('#ob_money_opt input').focus()
+        $('#store-discount-order-bump').val(formatDouble($('#ob_money_opt input').val()))
+    })
+
+    $('#ob_type_percent').click(function () {
+        $('#ob_money_opt').hide()
+        $('#ob_percent_opt').show()
+        $('#ob_percent_opt input').focus()
+        $('#store-discount-order-bump').val($('#ob_percent_opt input').val())
+    })
+    $('#ob_money_opt input').change(function () {
+        $('#store-discount-order-bump').val(formatDouble($('#ob_money_opt input').val()))
+        // .replace('.','').replace(',','.')
+    })
+    $('#ob_percent_opt input').change(function () {
+        $('#store-discount-order-bump').val($('#ob_percent_opt input').val())
+    })
+
+    //update type
+    $('#obu_type_value').click(function () {
+        $('#obu_percent_opt').hide()
+        $('#obu_money_opt').show()
+        $('#obu_money_opt input').focus()
+        $('#update-discount-order-bump').val(formatDouble($('#obu_money_opt input').val()))
+    })
+
+    $('#obu_type_percent').click(function () {
+        $('#obu_money_opt').hide()
+        $('#obu_percent_opt').show()
+        $('#obu_percent_opt input').focus()
+        $('#update-discount-order-bump').val($('#obu_percent_opt input').val())
+    })
+    $('#obu_money_opt input').change(function () {
+        $('#update-discount-order-bump').val(formatDouble($('#obu_money_opt input').val()))
+        // .replace('.','').replace(',','.')
+    })
+    $('#obu_percent_opt input').change(function () {
+        $('#update-discount-order-bump').val($('#obu_percent_opt input').val())
+    })
+
+
     function index() {
         loadOnTable("#table-order-bump tbody", "#table-order-bump");
 
@@ -110,7 +163,14 @@ $(() => {
                     .map((plan) => plan.name + (plan.description ? ` - ${plan.description}` : ""))
                     .join(" / ");
                 $("#order-bump-show-table .order-bump-description").html(rule.description);
-                $("#order-bump-show-table .order-bump-discount").html(rule.discount + "%");
+
+                if(rule.type == 1){
+                    $("#order-bump-show-table .order-bump-discount").html(formatMoney(rule.discount));
+                    $("#order-bump-show-table .order-bump-discount").prepend('R$')
+                }else{
+                    $("#order-bump-show-table .order-bump-discount").html(rule.discount);
+                    $("#order-bump-show-table .order-bump-discount").append('%')
+                }
                 $("#order-bump-show-table .order-bump-apply-shipping").html(applyOnShipping);
                 $("#order-bump-show-table .order-bump-apply-plans").html(applyOnPlans);
                 $("#order-bump-show-table .order-bump-offer-plans").html(offerPlans);
@@ -142,8 +202,15 @@ $(() => {
                 let offerPlansInput = $("#update-offer-plans-order-bump");
 
                 $("#update-description-order-bump").val(rule.description);
-                $("#update-discount-order-bump").val(rule.discount);
 
+                if(rule.type == 1){
+                    $("#obu_type_value").trigger('click');
+                    $("#obu_money_opt input").val(formatMoney(rule.discount));
+                }else{
+                    $("#obu_percent_opt input").val(rule.discount);
+                    $("#obu_type_percent").trigger('click');
+                }
+                $("#update-discount-order-bump").val(rule.discount);
                 $("#update-active-flag-order-bump")
                     .val(rule.active_flag)
                     .prop("checked", rule.active_flag === 1);
@@ -224,7 +291,7 @@ $(() => {
             success: (resp) => {
                 alertCustom("success", resp.message);
                 $("#modal-store-order-bump").modal("hide");
-                $("#store-description-order-bump, #store-discount-order-bump").val("");
+                $("#store-description-order-bump, #store-discount-order-bump, #ob_money_opt input, #ob_percent_opt input").val("");
                 $(
                     "#store-apply-on-shipping-order-bump, #store-apply-on-plans-order-bump, #store-offer-plans-order-bump"
                 )

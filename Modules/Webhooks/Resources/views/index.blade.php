@@ -16,7 +16,7 @@
                             alt="Webhooks">
                         <span style="line-height:40px">Webhooks</span>
                     </h1>
-                    <p id="text-info" style="margin-bottom:0">Faça uma integração via webhook para sua loja.</p>
+                    <p id="text-info" style="margin-bottom:0">Configure webhooks para integrar com outros sistemas.</p>
                 </div>
                 <div>
                     <button type="button" class="btn btn-floating btn-primary store-webhook"
@@ -34,7 +34,7 @@
                     <img src="build/global/img/image-empty-state.svg" width="260px" style="margin-bottom:32px" />
                     <h1 class="m-0" style="color:#636363;font-weight:normal;font-size:24px;line-height:30px">Você ainda
                         não cadastrou nenhum webhook!</h1>
-                    <p class="m-0">Faça uma integração via webhook para sua loja.</p>
+                    <p class="m-0">Configure webhooks para integrar com outros sistemas.</p>
                     <button style="margin:34px auto 0;box-shadow:none" type="button"
                         class="btn btn-floating btn-primary store-webhook">
                         <i class="o-add-1" aria-hidden="true"></i>
@@ -42,7 +42,21 @@
                 </div>
             </div>
 
-            <div class="card shadow" id="card-table-webhook" data-plugin="matchHeight" style="display:none;">
+            <div class="mb-30" id="content-script" style="display:none">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-8"></div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-4 text-right">
+                        <a href="https://docs.cloudfox.net/" target="_blank"
+                            class="font-weight-bold d-flex justify-content-end align-items-center"
+                            style="line-height: 46px;">
+                            <span>Acesse a documentação da API</span>
+                            <span class="o-arrow-right-1 ml-15" style="color: #2E85EC;" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow" id="card-table-webhook" data-plugin="matchHeight" style="display:none">
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
                         <thead>
@@ -64,41 +78,45 @@
                 {{-- js pagination carrega --}}
             </ul>
 
-            <div class="modal fade modal-new-layout" id="modal-webhook" role="dialog" tabindex="-1">
+            <div class="modal fade modal-new-layout" id="modal-webhook" data-backdrop="static" role="dialog"
+                tabindex="-1">
                 <div id="mainModalBody" class="modal-dialog modal-dialog-centered modal-simple">
-                    <div id="modal-create-webhook" class="modal-content">
-                        <div class="modal-header simple-border-bottom">
-                            <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span
-                                    class="ml-15">Cadastrar Webhook</span></h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <i class="material-icons md-22">close</i>
-                            </button>
-                        </div>
-                        <div id="modal-reverse-body" class="modal-body">
-                            <div class="row">
-                                <div class="form-group col-12">
-                                    <label for="description">Nome</label>
-                                    <input name="description" type="text" class="form-control form-control-lg"
-                                        id="description" placeholder="Digite um nome para seu webhook">
+                    <div class="modal-content">
+                        <div id="modal-loader">
+                            <div class="modal-header simple-border-bottom">
+                                <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span
+                                        class="ml-15">Cadastrar Webhook</span></h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i class="material-icons md-22">close</i>
+                                </button>
+                            </div>
+                            <div id="modal-reverse-body" class="modal-body">
+                                <div class="row">
+                                    <div class="form-group col-12">
+                                        <label for="description">Descrição</label>
+                                        <input name="description" type="text" class="form-control form-control-lg"
+                                            id="description" placeholder="Digite uma descrição para seu webhook">
+                                    </div>
+                                </div>
+                                <div class="row companies-container">
+                                    <div class="form-group col-sm-12 col-md">
+                                        <label for="empresa">Empresa</label>
+                                        <input type="text" disabled="" class="form-control company_name">
+                                    </div>
+                                </div>
+                                <div class="row url-container">
+                                    <div class="form-group col-sm-12 col-md">
+                                        <label for="url">URL para receber os webhooks</label>
+                                        <input name="url" type="text" class="form-control form-control-lg"
+                                            id="url" placeholder="Digite uma URL válida">
+                                        <small class="text-muted">Digite uma URL válida</small>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row companies-container">
-                                <div class="form-group col-sm-12 col-md">
-                                    <label for="empresa">Empresa</label>
-                                    <input type="text" disabled="" class="company_name">
-                                </div>
+                            <div class="modal-footer">
+                                <button id="btn-save-webhook" type="button"
+                                    class="btn btn-lg btn-primary">Cadastrar</button>
                             </div>
-                            <div class="row url-container">
-                                <div class="form-group col-sm-12 col-md">
-                                    <label for="url">URL</label>
-                                    <input name="url" type="text" class="form-control form-control-lg" id="url"
-                                        placeholder="Digite uma URL válida">
-                                    <small class="text-muted">Digite uma URL válida</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="btn-save-webhook" type="button" class="btn btn-lg btn-primary">Cadastrar</button>
                         </div>
                     </div>
                 </div>
@@ -107,49 +125,52 @@
         </div>
     </div>
 
-    <div class="modal fade modal-new-layout" id="modal-edit-webhook" role="dialog" tabindex="-1">
+    <div class="modal fade modal-new-layout" id="modal-edit-webhook" data-backdrop="static" role="dialog"
+        tabindex="-1">
         <div id="mainModalBody" class="modal-dialog modal-dialog-centered modal-simple">
-            <div id="modal-create-webhook" class="modal-content">
-                <div class="modal-header simple-border-bottom">
-                    <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span
-                            class="ml-15">Editar Webhook</span></h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="material-icons md-22">close</i>
-                    </button>
-                </div>
-                <div id="modal-reverse-body" class="modal-body">
-                    <div class="row">
-                        <div class="form-group col-12">
-                            <label for="description">Nome</label>
-                            <input name="description" type="text" class="form-control form-control-lg"
-                                id="description_edit" placeholder="Digite um nome para seu webhook">
+            <div class="modal-content">
+                <div id="modal-loader">
+                    <div class="modal-header simple-border-bottom">
+                        <h4 class="modal-title bold text-center" style="width: 100%;" id="modal-title-plan"><span
+                                class="ml-15">Editar Webhook</span></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="material-icons md-22">close</i>
+                        </button>
+                    </div>
+                    <div id="modal-reverse-body" class="modal-body">
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="description">Descrição</label>
+                                <input name="description" type="text" class="form-control form-control-lg"
+                                    id="description_edit" placeholder="Digite uma descrição para seu webhook">
+                            </div>
+                        </div>
+                        <div class="row companies-container">
+                            <div class="form-group col-sm-12 col-md">
+                                <label for="empresa">Empresa</label>
+                                <input type="text" disabled="" class="form-control company_name">
+                            </div>
+                        </div>
+                        <div class="row url-container">
+                            <div class="form-group col-sm-12 col-md">
+                                <label for="url">URL para receber os webhooks</label>
+                                <input name="url" type="text" class="form-control form-control-lg" id="url_edit"
+                                    placeholder="Digite uma URL válida">
+                                <small class="text-muted">Digite uma URL válida</small>
+                            </div>
                         </div>
                     </div>
-                    <div class="row companies-container">
-                        <div class="form-group col-sm-12 col-md">
-                            <label for="empresa">Empresa</label>
-                            <input type="text" disabled="" class="company_name">
-                        </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="webhook_id" name="webhook_id">
+                        <button id="btn-edit-webhook" type="button" class="btn btn-lg btn-primary">Atualizar</button>
                     </div>
-                    <div class="row url-container">
-                        <div class="form-group col-sm-12 col-md">
-                            <label for="url">URL</label>
-                            <input name="url" type="text" class="form-control form-control-lg" id="url_edit"
-                                placeholder="Digite uma URL válida">
-                            <small class="text-muted">Digite uma URL válida</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" id="webhook_id" name="webhook_id">
-                    <button id="btn-edit-webhook" type="button" class="btn btn-lg btn-primary">Atualizar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade example-modal-lg modal-new-layout" id="modal-delete-webhook" aria-hidden="true"
-        aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+    <div class="modal fade example-modal-lg modal-new-layout" id="modal-delete-webhook" data-backdrop="static"
+        aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">

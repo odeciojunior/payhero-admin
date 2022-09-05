@@ -56,7 +56,8 @@
           href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
           color="#5bbad5">
     <!-- Stylesheets -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Inter">
     <link rel="stylesheet"
           href="{{ mix('build/layouts/master/master.min.css') }}">
     @stack('css')
@@ -87,7 +88,7 @@
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
     <!-- Google Tag Manager (noscript) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TDM6SV5"
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KDD46QX"
                 height="0"
                 width="0"
                 style="display:none;visibility:hidden"></iframe>
@@ -187,8 +188,7 @@
             <!-- End of cloudfoxhelp Zendesk Widget script -->
 
             <script type="text/javascript">
-                function zendeskAuthentication()
-                {
+                function zendeskAuthentication() {
                     $.ajax({
                         method: 'GET',
                         url: '/api/core/zendesk-token',
@@ -196,22 +196,20 @@
                             'Authorization': $('meta[name="access-token"]').attr('content'),
                             'Accept': 'application/json',
                         },
-                        error: function () {
+                        error: function() {
                             //
                         },
-                        success: function (response) {
-                            zE('messenger', 'loginUser', function (callback) {
-                                    callback(response);
-                                }
-                            );
+                        success: function(response) {
+                            zE('messenger', 'loginUser', function(callback) {
+                                callback(response);
+                            });
                         }
                     });
 
                     return null;
                 }
 
-                zendeskAuthentication();
-
+                // zendeskAuthentication();
             </script>
         @endif
     @endif

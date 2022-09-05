@@ -308,8 +308,7 @@
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
         @if (auth()->user()->hasAnyPermission(['reports']))
             <li class="site-menu-item has-sub">
-                <a href="{{route('reports.resume')}}"
-                   id="reports-link">
+                <a href="{{ route('reports.resume') }}" id="reports-link">
                     <span class="bg-menu">
                         <img src="{{ mix('build/global/img/svg/relatorios.svg') }}" alt="Relatórios">
                     </span>
@@ -340,7 +339,8 @@
                 </a>
             </li>
         @endcan
-        @if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @if (auth()->user()->hasRole('account_owner') ||
+            auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="api-sirius-link">
                     <span class="bg-menu">
@@ -376,5 +376,5 @@
                 </a>
             </li>
         @endcan
-</ul>
+    </ul>
 </div>

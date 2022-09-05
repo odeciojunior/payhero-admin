@@ -56,8 +56,8 @@ class WebhookUpdateRequest extends FormRequest
             "user_id.exists" => "Utilize um usuário válido",
             "company_id.required" => "Selecione uma empresa",
             "company_id.exists" => "Selecione uma empresa válida",
-            "description.required" => "Digite um nome para seu webhook",
-            "description.string" => "Digite um nome válido para seu webhook",
+            "description.required" => "Digite uma descrição para seu webhook",
+            "description.string" => "Digite uma descrição para seu webhook",
             "url.required" => "Digite uma URL",
             "url.url" => "Digite uma URL válida",
         ];

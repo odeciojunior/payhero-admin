@@ -44,6 +44,8 @@ $('.company-navbar').change(function () {
     $("#select_projects").html('');
     sessionStorage.removeItem('info');
 
+    $(".back-list").trigger("click");
+
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
             if(!isEmpty(data2.company_default_projects)){
@@ -924,6 +926,7 @@ function updateReports() {
     $('input[name="daterange"]').attr("disabled", "disabled");
     $("#brazil-map-filter").addClass("disabled");
     $("#brazil-map-filter").find("input").attr("disabled", "disabled");
+    $(".back-list").trigger("click");
 
     Promise.all([
         loadResume(),

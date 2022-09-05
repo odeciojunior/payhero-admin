@@ -1,14 +1,12 @@
 $(document).ready(function () {
     $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        loadingOnScreen();
+        loadOnAny("#page-webhooks", false);
         updateCompanyDefault().done(function (data1) {
             getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2;
-                $(".company_name").val(
-                    companiesAndProjects.company_default_fullname
-                );
-                refreshWebhooks(1);
+                $(".company_name").val(companiesAndProjects.company_default_fullname);
+                refreshWebhooks(1, false);
             });
         });
     });
@@ -21,55 +19,49 @@ $(document).ready(function () {
         refreshWebhooks();
     });
 
-    function refreshWebhooks(page = 1) {
+    function refreshWebhooks(page = 1, reload = true) {
         $.ajax({
             method: "GET",
-            url:
-                "/api/webhooks?resume=true&page=" +
-                page +
-                "&company_id=" +
-                $(".company-navbar").val(),
+            url: "/api/webhooks?resume=true&page=" + page + "&company_id=" + $(".company-navbar").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             beforeSend: function () {
-                loadingOnScreen();
+                if (reload) {
+                    loadOnAny("#page-webhooks", false);
+                }
             },
             error: (response) => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
-                    $(".page-header")
-                        .find(".store-webhook")
-                        .css("display", "none");
-                    $("#content-error")
-                        .find(".store-webhook")
-                        .css("display", "block");
+                    $(".page-header").find(".store-webhook").css("display", "none");
+                    $("#content-error").find(".store-webhook").css("display", "block");
                     $("#content-error").css("display", "block");
+                    $("#content-script").css("display", "none");
                     $("#card-table-webhook").css("display", "none");
                     $("#card-webhook-data").css("display", "none");
                 } else {
-                    $(".page-header")
-                        .find(".store-webhook")
-                        .css("display", "block");
-                    $("#content-error")
-                        .find(".store-webhook")
-                        .css("display", "none");
+                    $(".page-header").find(".store-webhook").css("display", "block");
+                    $("#content-error").find(".store-webhook").css("display", "none");
                     $("#content-error").hide();
+                    $("#content-script").show();
                     updateWebhookTableData(response);
                     pagination(response, "webhooks");
                 }
             },
             complete: function () {
+                loadOnAny("#page-webhooks", true);
                 loadingOnScreenRemove();
             },
         });
     }
 
     function updateWebhookTableData(response) {
+        $("#content-script").css("display", "block");
         $("#card-table-webhook").css("display", "block");
         $("#card-webhook-data").css("display", "block");
         $("#table-body-webhook").html("");
@@ -78,19 +70,12 @@ $(document).ready(function () {
             dados = "";
             dados += "<tr>";
             dados += '<td class="" style="vertical-align: middle;">';
-            dados +=
-                '<p class="description mb-0 mr-1">' +
-                value.description +
-                "</p>";
-            dados +=
-                '<small class="text-muted">Criada em ' +
-                value.register_date +
-                "</small>";
+            dados += '<p class="description mb-0 mr-1">' + value.description + "</p>";
+            dados += '<small class="text-muted">Criada em ' + value.register_date + "</small>";
             dados += "</td>";
             dados += '<td class="" style="vertical-align: middle;">';
             dados += '<p class="description mb-0 mr-1">' + value.url + "</p>";
-            dados +=
-                '<small class="text-muted">' + value.company_name + "</small>";
+            dados += '<small class="text-muted">' + value.company_name + "</small>";
             dados += "</td>";
             dados += '<td class="text-center">';
             dados +=
@@ -133,6 +118,9 @@ $(document).ready(function () {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
+            beforeSend: function () {
+                loadOnAny("#modal-webhook #modal-loader", false);
+            },
             error: (response) => {
                 errorAjaxResponse(response);
             },
@@ -143,7 +131,7 @@ $(document).ready(function () {
                 refreshWebhooks();
             },
             complete: function () {
-                loadingOnScreenRemove();
+                loadOnAny("#modal-webhook #modal-loader", true);
             },
         });
     }
@@ -164,9 +152,7 @@ $(document).ready(function () {
             success: (response) => {
                 if (!isEmpty(response.data)) {
                     let webhook = response.data;
-                    $("#modal-edit-webhook #description_edit").val(
-                        webhook.description
-                    );
+                    $("#modal-edit-webhook #description_edit").val(webhook.description);
                     $("#modal-edit-webhook #url_edit").val(webhook.url);
                     $("#modal-edit-webhook #webhook_id").val(webhookId);
                     $("#modal-edit-webhook").modal("show");
@@ -197,6 +183,9 @@ $(document).ready(function () {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
+            beforeSend: function () {
+                loadOnAny("#modal-edit-webhook #modal-loader", false);
+            },
             error: (response) => {
                 errorAjaxResponse(response);
             },
@@ -207,7 +196,7 @@ $(document).ready(function () {
                 refreshWebhooks();
             },
             complete: function () {
-                loadingOnScreenRemove();
+                loadOnAny("#modal-edit-webhook #modal-loader", true);
             },
         });
     }
@@ -226,7 +215,7 @@ $(document).ready(function () {
         }
 
         if (isEmpty(description)) {
-            alertCustom("error", "Digite um nome para seu webhook");
+            alertCustom("error", "Digite uma descrição para seu webhook");
             return false;
         }
 
@@ -267,29 +256,22 @@ $(document).ready(function () {
                 clearForm();
                 refreshWebhooks();
             },
-            complete: function () {
-                loadingOnScreenRemove();
-            },
         });
     });
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
-            $("#primeira_pagina_" + model).hide();
-            $("#ultima_pagina_" + model).hide();
+            $("#first_page").hide();
+            $("#last_page").hide();
         } else {
             $("#pagination-" + model).html("");
 
-            var first_page =
-                "<button id='first_page' class='btn nav-btn'>1</button>";
+            var first_page = "<button id='first_page' class='btn nav-btn'>1</button>";
 
             $("#pagination-" + model).append(first_page);
 
             if (response.meta.current_page == "1") {
-                $("#first_page")
-                    .attr("disabled", true)
-                    .addClass("nav-btn")
-                    .addClass("active");
+                $("#first_page").attr("disabled", true).addClass("nav-btn").addClass("active");
             }
 
             $("#first_page").on("click", function () {
@@ -309,29 +291,18 @@ $(document).ready(function () {
                         "</button>"
                 );
 
-                $("#page_" + (response.meta.current_page - x)).on(
-                    "click",
-                    function () {
-                        refreshWebhooks($(this).html());
-                    }
-                );
+                $("#page_" + (response.meta.current_page - x)).on("click", function () {
+                    refreshWebhooks($(this).html());
+                });
             }
 
-            if (
-                response.meta.current_page != 1 &&
-                response.meta.current_page != response.meta.last_page
-            ) {
+            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
                 var current_page =
-                    "<button id='current_page' class='btn nav-btn active'>" +
-                    response.meta.current_page +
-                    "</button>";
+                    "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
                 $("#pagination-" + model).append(current_page);
 
-                $("#current_page")
-                    .attr("disabled", true)
-                    .addClass("nav-btn")
-                    .addClass("active");
+                $("#current_page").attr("disabled", true).addClass("nav-btn").addClass("active");
             }
             for (x = 1; x < 4; x++) {
                 if (response.meta.current_page + x >= response.meta.last_page) {
@@ -346,27 +317,18 @@ $(document).ready(function () {
                         "</button>"
                 );
 
-                $("#page_" + (response.meta.current_page + x)).on(
-                    "click",
-                    function () {
-                        refreshWebhooks($(this).html());
-                    }
-                );
+                $("#page_" + (response.meta.current_page + x)).on("click", function () {
+                    refreshWebhooks($(this).html());
+                });
             }
 
             if (response.meta.last_page != "1") {
-                var last_page =
-                    "<button id='last_page' class='btn nav-btn'>" +
-                    response.meta.last_page +
-                    "</button>";
+                var last_page = "<button id='last_page' class='btn nav-btn'>" + response.meta.last_page + "</button>";
 
                 $("#pagination-" + model).append(last_page);
 
                 if (response.meta.current_page == response.meta.last_page) {
-                    $("#last_page")
-                        .attr("disabled", true)
-                        .addClass("nav-btn")
-                        .addClass("active");
+                    $("#last_page").attr("disabled", true).addClass("nav-btn").addClass("active");
                 }
 
                 $("#last_page").on("click", function () {

@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Spatie\Health\Checks\Checks\CacheCheck;
 use Spatie\Health\Facades\Health;
+use Illuminate\Support\ServiceProvider;
+use Modules\Core\Services\CustomChecks\QueueSizeCheck;
 use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
 use Spatie\Health\Checks\Checks\DatabaseConnectionCountCheck;
@@ -12,7 +12,6 @@ use Spatie\Health\Checks\Checks\DatabaseTableSizeCheck;
 use Spatie\Health\Checks\Checks\DebugModeCheck;
 use Spatie\Health\Checks\Checks\EnvironmentCheck;
 use Spatie\Health\Checks\Checks\HorizonCheck;
-use Spatie\Health\Checks\Checks\PingCheck;
 use Spatie\Health\Checks\Checks\RedisCheck;
 use Spatie\Health\Checks\Checks\ScheduleCheck;
 
@@ -29,18 +28,19 @@ class HealthServiceProvider extends ServiceProvider
             DatabaseCheck::new()->name('Database check'),
             DatabaseCheck::new()->connectionName('demo')->name('Demo database check'),
             RedisCheck::new(),
-            //OptimizedAppCheck::new(),
             HorizonCheck::new(),
             DebugModeCheck::new(),
             DatabaseTableSizeCheck::new(),
             DatabaseConnectionCountCheck::new()->warnWhenMoreConnectionsThan(400)->failWhenMoreConnectionsThan(600),
-            CacheCheck::new(),
             EnvironmentCheck::new(),
             UsedDiskSpaceCheck::new(),
+            //OptimizedAppCheck::new(),
+            //CacheCheck::new(),
         ];
 
         if(env('APP_NAME') == 'Cloudfox-cron') {
             $checks[] = ScheduleCheck::new();
+            $checks[] = QueueSizeCheck::new()->maxSize(10000);
         }
 
         Health::checks($checks);

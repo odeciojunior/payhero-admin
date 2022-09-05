@@ -3,6 +3,8 @@
 namespace Modules\Webhooks\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\User;
 
 class WebhookIndexRequest extends FormRequest
 {
@@ -23,7 +25,10 @@ class WebhookIndexRequest extends FormRequest
      */
     public function validationData()
     {
-        $this->merge(["user_id" => auth()->user()->account_owner_id]);
+        $user = auth()->user();
+        $this->merge([
+            "user_id" => $user->company_default == Company::DEMO_ID ? User::DEMO_ID : $user->account_owner_id
+        ]);
         $this->merge(["company_id" => hashids_decode($this->company_id)]);
 
         return $this->all();
@@ -36,9 +41,10 @@ class WebhookIndexRequest extends FormRequest
      */
     public function rules()
     {
+        $connection = auth()->user()->company_default == Company::DEMO_ID ? 'demo':'mysql';
         return [
-            "user_id" => "required|exists:users,id",
-            "company_id" => "required|exists:companies,id",
+            "user_id" => "required|exists:{$connection}.users,id",
+            "company_id" => "required|exists:{$connection}.companies,id",
         ];
     }
 

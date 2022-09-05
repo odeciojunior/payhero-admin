@@ -31,8 +31,8 @@ class CreateWebhooksTable extends Migration
                 ->foreign("company_id")
                 ->references("id")
                 ->on("companies");
-            $table->string("description")->nullable();
-            $table->string("url")->nullable();
+            $table->string("description");
+            $table->string("url");
             $table->timestamps();
             $table->softDeletes();
         });

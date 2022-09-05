@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property integer $id
  * @property integer $user_id
  * @property integer $company_id
- * @property string $url
  * @property string $description
+ * @property string $url
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -37,8 +37,8 @@ class Webhook extends Model
     protected $fillable = [
         "user_id",
         "company_id",
-        "url",
         "description",
+        "url",
         "created_at",
         "updated_at",
         "deleted_at",
@@ -49,7 +49,7 @@ class Webhook extends Model
      */
     public function user()
     {
-        return $this->belongsTo("Modules\Core\Entities\User");
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -57,6 +57,6 @@ class Webhook extends Model
      */
     public function company()
     {
-        return $this->belongsTo("Modules\Core\Entities\Company");
+        return $this->belongsTo(Company::class);
     }
 }
