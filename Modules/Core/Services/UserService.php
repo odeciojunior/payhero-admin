@@ -394,10 +394,44 @@ class UserService
     public function getBureauUserData($cpf): BureauUserDataInterface
     {
         try {
+            if (FoxUtils::isEmpty($cpf)) {
+                throw new \InvalidArgumentException("Trying to query an Invalid CPF on BigId");
+            }
             return $this->bureauService->getUserData($cpf);
         } catch (\Exception $e) {
             report($e);
             throw $e;
+        }
+    }
+
+    public function updateUserDataFromBureau($cpf)
+    {
+        try {
+            /** @var User $user */
+            $user = User::whereDocument($cpf)->firstOrFail();
+            $bureauUserData = $this->getBureauUserData($cpf);
+            $user->bureau_result = json_encode($bureauUserData->getRawData());
+            $user->name = $bureauUserData->getName() ?: $user->name;
+            $user->date_birth = $bureauUserData->getBirthDate()
+                ? $bureauUserData->getBirthDate()->format("Y-m-d")
+                : $user->date_birth;
+            $user->mother_name = $bureauUserData->getMotherName() ?: $user->mother_name;
+            $user->bureau_check_count += 1;
+            $user->bureau_data_updated_at = now();
+            if ($bureauUserData->isAbleToCreateAccount()) {
+                $user->observation = str_replace("CPF não encontrado ou inválido ()", "", $user->observation);
+                $user->observation = FoxUtils::isEmpty($user->observation) ? null : $user->observation;
+            } else {
+                $user->observation = $bureauUserData->getIssues();
+                $user->observation .=
+                    ($user->observation ? " " : "") .
+                    ($user->bureau_check_count ?: 1) .
+                    "ª Tentativa de revalidação do CPF no bureau em " .
+                    Carbon::now()->format("d/m/Y à\s H:i:s");
+            }
+            $user->save();
+        } catch (\Exception $e) {
+            report($e);
         }
     }
 }

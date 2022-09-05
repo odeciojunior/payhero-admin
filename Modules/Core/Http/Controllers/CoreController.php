@@ -35,6 +35,10 @@ class CoreController extends Controller
             if (!empty($managerToSiriusLogin) && $managerToSiriusLogin->created_at->diffInMinutes() < 10) {
                 //Só consegue logar caso o token tenha menos de 10min
 
+                // login agora será pelo usuario logado no manager
+                // $this->assingPermissions($managerIdDecode, $userIdDecode);
+                // $user = auth()->loginUsingId($managerIdDecode);
+
                 $user = auth()->loginUsingId($userIdDecode);
                 $userModel = new User();
                 activity()
@@ -54,35 +58,29 @@ class CoreController extends Controller
                     Cookie::queue(Cookie::make("isManagerUser", true, time() + 60 * 60 * 24 * 1));
                 }
 
-                if (
-                    auth()
-                        ->user()
-                        ->can("dashboard")
-                ) {
+                if (auth()->user()->can("dashboard")) {
                     return response()->redirectTo("/dashboard");
-                } elseif (
-                    auth()
-                        ->user()
-                        ->can("sales")
-                ) {
-                    return response()->redirectTo("/sales");
-                } else {
-                    $permissions = auth()
-                        ->user()
-                        ->permissions->pluck("name");
-                    foreach ($permissions as $permission) {
-                        $route = explode("_", $permission);
-                        $redirect = $route["0"];
-                        if (count($route) > 1) {
-                            if ($route["0"] == "report") {
-                                $redirect = $route["0"] . "s/" . $route["1"];
-                            }
-                        }
-
-                        $redirect = $redirect === "attendance" ? "customer-service" : $redirect;
-                        return response()->redirectTo("/{$redirect}");
-                    }
                 }
+
+                if (auth()->user()->can("sales")) {
+                    return response()->redirectTo("/sales");
+                }
+
+                $permissions = auth()->user()->permissions->pluck("name");
+
+                foreach ($permissions as $permission) {
+                    $route = explode("_", $permission);
+                    $redirect = $route["0"];
+                    if (count($route) > 1) {
+                        if ($route["0"] == "report") {
+                            $redirect = $route["0"] . "s/" . $route["1"];
+                        }
+                    }
+
+                    $redirect = $redirect === "attendance" ? "customer-service" : $redirect;
+                    return response()->redirectTo("/{$redirect}");
+                }
+
             } else {
                 //throw new \Exception('Token Inválidos.');
                 return response()->json("Token Inválidos.", 400);
@@ -90,5 +88,42 @@ class CoreController extends Controller
         }
 
         return view("errors.404");
+    }
+
+    public function assingPermissions($managerIdDecode, $userIdDecode)
+    {
+        $userManager = User::find($managerIdDecode);
+        $user =  User::find($userIdDecode);
+
+        $userRoles = $user->getRoleNames();
+        foreach ($userRoles as $role)
+        {
+            $userManager->syncRoles([]);
+            if($role <> $userManager->role_default){
+                $userManager->syncRoles([$userManager->role_default,$role]);
+            }else{
+                $userManager->syncRoles([$userManager->role_default]);
+            }
+            break;
+        }
+
+        $newPermissions = $user->getAllPermissions()->pluck('name');
+        if($userManager->hasPermissionTo('login_sirius_by_manager')){
+            $newPermissions[] = 'login_sirius_by_manager';
+        }
+
+        if($userManager->hasPermissionTo('extract_reports')){
+            $newPermissions[] = 'extract_reports';
+        }
+
+        $userManager->syncPermissions([]);
+
+        $userManager->update([
+            'account_owner_id'=>$user->account_owner_id,
+            'company_default'=>$user->company_default??1
+        ]);
+
+        $userManager->syncPermissions($newPermissions);
+
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 
 class GenericCommand extends Command
@@ -11,5 +12,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
+
     }
+
 }

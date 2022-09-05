@@ -1276,6 +1276,15 @@ function verifyDocumentPending()
                     card_user_description =
                         "Seus dados biométricos foram coletados e aprovados.";
                     card_user_button = "";
+                }else if (response.data.user.status == "analazying") {
+                    card_user_status = "status-check redirect-to-accounts";
+                    card_user_icon =
+                        '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
+                    card_user_title =
+                        "Sua identidade foi validada";
+                    card_user_description =
+                        "Seus dados biométricos foram coletados e aprovados.";
+                    card_user_button = "";
                 }
 
                 $(".user-status").html(`
@@ -1326,30 +1335,36 @@ function verifyDocumentPending()
 }
 
 function setNewRegisterSavedItem(item, value) {
-    if (!localStorage.getItem("newRegisterData")) {
-        localStorage.setItem("newRegisterData", JSON.stringify({}));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (!localStorage.getItem("new-register-data-" + userId)) {
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify({}));
     }
 
     if (item) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         obj[item] = value;
 
-        localStorage.setItem("newRegisterData", JSON.stringify(obj));
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
 function removeNewRegisterSavedItem(item) {
-    if (localStorage.getItem("newRegisterData")) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (localStorage.getItem("new-register-data-" + userId)) {
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         delete obj[item];
 
-        localStorage.setItem("newRegisterData", JSON.stringify(obj));
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
 function setNewRegisterStep(step) {
     try {
-        localStorage.setItem("new-register-step", step);
+        var userId = $('meta[name="user-id"]').attr("content");
+
+        localStorage.setItem("new-register-step-" + userId, step);
     } catch (e) {
         newRegisterStepAux = step;
     }
@@ -1359,7 +1374,9 @@ function getNewRegisterStep() {
     let value;
 
     try {
-        value = localStorage.getItem("new-register-step");
+        var userId = $('meta[name="user-id"]').attr("content");
+
+        value = localStorage.getItem("new-register-step-" + userId);
     } catch (e) {
         value = newRegisterStepAux;
     }
@@ -1570,8 +1587,10 @@ function setInputRangeOnInput(target) {
 }
 
 function loadNewRegisterSavedData() {
-    if (localStorage.getItem("newRegisterData")) {
-        let obj = JSON.parse(localStorage.getItem("newRegisterData"));
+    var userId = $('meta[name="user-id"]').attr("content");
+
+    if (localStorage.getItem("new-register-data-" + userId)) {
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
 
         for (const prop in obj) {
             const element = $("#" + prop);
@@ -1698,7 +1717,9 @@ function saveNewRegisterData() {
                 '<button type="button" class="btn new-register-btn close-modal">Fechar</button>'
             );
 
-            localStorage.removeItem("newRegisterData");
+            var userId = $('meta[name="user-id"]').attr("content");
+
+            localStorage.removeItem("new-register-data-" + userId);
 
             loadingOnScreenRemove();
         },
@@ -2008,7 +2029,6 @@ function buildModalBonusBalance(bonusObject) {
     content = `
         <div class="bonus-balance-content">
             <img class="bonus-illustration-1" src="../../../../../../build/global/img/svg/bonus-illustration-1.svg" alt=""/>
-            <img class="bonus-illustration-2" src="../../../../../../build/global/img/svg/bonus-illustration-2.svg" alt=""/>
 
             <div class="bonus-text">
                 <div class="d-flex justify-content-between align-items-center">
@@ -2025,14 +2045,12 @@ function buildModalBonusBalance(bonusObject) {
 
 
                 <h3 class="bonus-title"><span id="bonus-username">${
-                    userName || "Olá!"
+                    (userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase()) || "Olá!"
                 }</span>, aqui está seu <b>desconto!</b></h3>
 
                 <p>
-                    Você tentou sua sorte e conseguiu <span id="total-bonus-balance" class="bold">${totalBalance}</span> em
-                    desconto nas taxas de suas vendas. Obrigado pela
-                    sua visita no nosso estande no Afiliados Brasil.
-                    Que esse seja o início de uma lucrativa parceria!
+                    Você ganhou <span id="total-bonus-balance" class="bold">${totalBalance}</span> em isenção de taxa sobre suas vendas. Você vai se impressionar com toda a tecnologia embarcada em sua
+                    conta, que seja o início de uma parceria lucrativa. Boas vendas!
                 </p>
 
 
