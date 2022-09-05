@@ -228,19 +228,19 @@ class CompanyService
                 ];
                 break;
 
-            case 'suspensa': // 'suspenso':
+            case 'suspensa':
                 $situationArray = [
-                    'situation' => '',
+                    'situation' => 'suspended',
                     'situation_enum' => 2
                 ];
                 break;
-            case 'inapta': // 'inapto':
+            case 'inapta':
                 $situationArray = [
                     'situation' => 'unfit',
                     'situation_enum' => 3
                 ];
                 break;
-            case 'baixada': // 'baixado':
+            case 'baixada':
                 $situationArray = [
                     'situation' => 'downloaded',
                     'situation_enum' => 4
