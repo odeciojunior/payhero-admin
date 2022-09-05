@@ -51,5 +51,3 @@ return new class extends Migration
         });
     }
 };
-
-//php artisan migrate --path=/database/migrations/2022_08_31_101718_add_column_bureau_check_count_to_users_table.php
