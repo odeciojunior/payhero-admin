@@ -17,6 +17,7 @@ class ProjectUpsellStoreRequest extends FormRequest
             "project_id" => "required",
             "description" => "required",
             "discount" => "nullable",
+            "type" => "nullable",
             "active_flag" => "nullable",
             "use_variants" => "nullable",
             "apply_on_shipping" => "required|array",
