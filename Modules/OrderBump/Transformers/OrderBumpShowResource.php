@@ -15,6 +15,7 @@ class OrderBumpShowResource extends JsonResource
             "active_flag" => $this->active_flag,
             "use_variants" => $this->use_variants,
             "discount" => $this->discount,
+            "type" => $this->type,
             "apply_on_shipping" => $this->getAttributes()["apply_on_shipping"]->map(function ($shipping) {
                 return [
                     "id" => $shipping->id === "all" ? "all" : Hashids::encode($shipping->id),
