@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\Core\Entities\User;
 
@@ -14,6 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
+        User::withTrashed()->find(571)->update([
+            "document" => "35470207001"
+        ]);
+
         $users = User::withTrashed();
 
         foreach( $users->cursor() as $user ){
