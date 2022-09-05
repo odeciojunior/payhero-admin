@@ -5,15 +5,16 @@ namespace Modules\Api\Transformers\V1;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SubsellerApiResource extends JsonResource
+class SubsellersApiResource extends JsonResource
 {
     public function toArray($request)
     {
         return [
             'id' => Hashids::encode($this->id),
             'name' => $this->name,
-            'document' => $this->document,
-            'email' => $this->email
+            'document' => $this->document ?? null,
+            'email' => $this->email,
+            'cellphone' => $this->cellphone
         ];
     }
 }
