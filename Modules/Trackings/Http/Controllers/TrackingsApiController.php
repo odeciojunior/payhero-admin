@@ -3,17 +3,11 @@
 namespace Modules\Trackings\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Trackings\Exports\TrackingsReportExport;
@@ -27,10 +21,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index(Request $request)
     {
         try {
@@ -54,17 +44,11 @@ class TrackingsApiController extends Controller
                 return response()->json(["message" => "Erro ao exibir códigos de rastreio"], 400);
             }
         } catch (Exception $e) {
-            Log::warning("Erro ao exibir códigos de rastreio (TrackingApiController - index)");
             report($e);
-
             return response()->json(["message" => "Erro ao exibir códigos de rastreio"], 400);
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse|TrackingShowResource
-     */
     public function show($id)
     {
         try {
@@ -117,18 +101,12 @@ class TrackingsApiController extends Controller
 
             return new TrackingShowResource($tracking);
         } catch (Exception $e) {
-            Log::warning("Erro ao exibir detalhes do código de rastreio (TrackingApiController - show)");
             report($e);
 
             return response()->json(["message" => "Erro ao exibir detalhes do código de rastreio"], 400);
         }
     }
 
-    /**
-     * @param $trackingCode
-     * @return JsonResponse|TrackingShowResource
-     * Rota pública acessada pelo arquivo tracking.php na pasta /public
-     */
     public function detail($trackingCode)
     {
         try {
@@ -178,17 +156,12 @@ class TrackingsApiController extends Controller
                 return response()->json(["message" => "Erro ao exibir detalhes do código de rastreio"], 400);
             }
         } catch (Exception $e) {
-            Log::warning("Erro ao exibir detalhes do código de rastreio (TrackingApiController - show)");
             report($e);
 
             return response()->json(["message" => "Erro ao exibir detalhes do código de rastreio"], 400);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function resume(Request $request)
     {
         try {
@@ -206,17 +179,12 @@ class TrackingsApiController extends Controller
                 return response()->json(["message" => "Erro ao exibir resumo dos rastreamentos"], 400);
             }
         } catch (Exception $e) {
-            Log::warning("Erro ao exibir resumo dos rastreamentos (TrackingApiController - resume)");
             report($e);
 
             return response()->json(["message" => "Erro ao exibir resumo dos rastreamentos"], 400);
         }
     }
 
-    /**
-     * @param TrackingStoreRequest $request
-     * @return JsonResponse
-     */
     public function store(TrackingStoreRequest $request)
     {
         try {
@@ -263,17 +231,12 @@ class TrackingsApiController extends Controller
                 );
             }
         } catch (Exception $e) {
-            Log::warning("Erro ao tentar alterar código de rastreio (TrackingApiController - store)");
             report($e);
 
             return response()->json(["message" => "Erro ao salvar código de rastreio"], 400);
         }
     }
 
-    /**
-     * @param $trackingId
-     * @return JsonResponse
-     */
     public function notifyClient($trackingId)
     {
         try {
@@ -291,18 +254,12 @@ class TrackingsApiController extends Controller
                 return response()->json(["message" => "Erro ao notificar cliente"], 400);
             }
         } catch (Exception $e) {
-            Log::warning("Erro ao notificar cliente (TrackingApiController - notifyClient)");
             report($e);
 
             return response()->json(["message" => "Erro ao notificar cliente"], 400);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @see https://docs.laravel-excel.com/3.1/exports/queued.html
-     */
     public function export(Request $request)
     {
         try {
@@ -322,17 +279,12 @@ class TrackingsApiController extends Controller
 
             return response()->json(["message" => "A exportação começou", "email" => $user->email]);
         } catch (Exception $e) {
-            Log::warning("Erro ao exportar códigos de rastreio (TrackingApiController - export)");
             report($e);
 
             return response()->json(["message" => "Erro ao exportar dos rastreamentos"], 400);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function import(Request $request)
     {
         try {
@@ -362,7 +314,6 @@ class TrackingsApiController extends Controller
 
             return response()->json(["message" => "Arquivo inválido"], 400);
         } catch (Exception $e) {
-            Log::warning("Erro ao importar códigos de rastreio (TrackingApiController - import)");
             report($e);
 
             return response()->json(["message" => "Erro ao importar arquivo"], 400);
