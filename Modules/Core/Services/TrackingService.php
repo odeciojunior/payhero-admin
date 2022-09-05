@@ -7,10 +7,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\ProductSaleApi;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
@@ -18,7 +16,6 @@ use Modules\Core\Entities\User;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\ReportanaTrackingEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingService
 {
@@ -286,7 +283,7 @@ class TrackingService
                 : $filters["transaction_status"];
         }
 
-        $productPlanSales = ProductPlanSale::join("sales as s", function ($join) use ($userId, $filters) {
+        $productPlanSales = ProductPlanSale::join("sales as s", function ($join) use ($userId, $filters, $companyId) {
             $join->on("s.id", "=", "products_plans_sales.sale_id")->whereNull("s.deleted_at");
 
             $saleStatus = [Sale::STATUS_APPROVED, Sale::STATUS_IN_DISPUTE];
@@ -313,9 +310,14 @@ class TrackingService
             if (!empty($projectsIds) && !in_array("", $projectsIds)) {
                 $join->whereIn("s.project_id", $projectsIds);
             }
-        })
-        ->join('checkout_configs','s.project_id','=','checkout_configs.project_id')
-        ->where('checkout_configs.company_id',$companyId);
+        });
+
+        $productPlanSales->leftJoin('transactions as t', function($q) use($companyId) {
+            $q->on('t.sale_id', 's.id')
+            ->where('t.company_id', $companyId);
+        });
+
+        $productPlanSales->whereNotNull('t.id');
 
         //filtro transactions
         if (!empty($filters["transaction_status"])) {
