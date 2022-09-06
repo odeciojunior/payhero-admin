@@ -209,7 +209,7 @@ class ReportMarketingService
                     $plan->photo = $plan->products()->first()->photo;
                 }
                 $plan->sales_amount = number_format($plan->sales_amount, 0, ".", ".");
-                $plan->value = foxutils()->formatMoney($plan->value);
+                $plan->value = foxutils()->formatMoney($showSalesApi?$plan->value/100:$plan->value);
             }
 
             return $data->toArray();
