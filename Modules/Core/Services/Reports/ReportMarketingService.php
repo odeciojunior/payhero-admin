@@ -204,7 +204,10 @@ class ReportMarketingService
             }
 
             foreach ($data as &$plan) {
-                $plan->photo = $plan->products()->first()->photo;
+                $plan->photo = "https://cloudfox-files.s3.amazonaws.com/produto.svg";
+                if(!$showSalesApi){
+                    $plan->photo = $plan->products()->first()->photo;
+                }
                 $plan->sales_amount = number_format($plan->sales_amount, 0, ".", ".");
                 $plan->value = foxutils()->formatMoney($plan->value);
             }
