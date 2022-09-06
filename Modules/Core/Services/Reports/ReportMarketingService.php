@@ -194,7 +194,7 @@ class ReportMarketingService
                         ->select(DB::raw('products_sales_api.name, products_sales_api.item_id, "" as description, "" as image, COUNT(*) as sales_amount, cast(sum(products_sales_api.price) as unsigned) as value'))
                         ->groupBy('products_sales_api.item_id')
                         ->groupBy('products_sales_api.name')
-                        ->orderByDesc('amount')
+                        ->orderBy('value', 'DESC')
                         ->limit(8)
                         ->get();
             }

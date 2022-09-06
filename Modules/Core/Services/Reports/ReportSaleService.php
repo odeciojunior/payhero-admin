@@ -988,7 +988,7 @@ class ReportSaleService
     }
 
     public function getRecurrence($filters)
-    {\Log::info(__FUNCTION__);
+    {
         $filters['company_id'] = Auth::user()->company_default;
 
         $cacheName = 'recurrency-' . json_encode($filters);
@@ -1015,7 +1015,7 @@ class ReportSaleService
             if(!$showSalesApi){
                 $sales->where('sales.project_id', $projectId);
             }
-            \Log::info(str_replace_array('?',$sales->getBindings(),$sales->toSql()));
+
             $sales =$sales->get();
 
             config()->set("database.connections.mysql.strict", true);
