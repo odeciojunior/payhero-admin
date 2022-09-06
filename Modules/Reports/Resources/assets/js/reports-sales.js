@@ -124,7 +124,7 @@ function getProjects(companies) {
                 });
             });
         });
-
+        $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
         $("#select_projects option:first").attr('selected','selected');
 
         if(sessionStorage.info) {

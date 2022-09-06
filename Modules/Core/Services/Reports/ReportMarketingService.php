@@ -7,6 +7,7 @@ use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\ProductSaleApi;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\BrazilStatesService;
 use Vinkla\Hashids\Facades\Hashids;
@@ -157,30 +158,46 @@ class ReportMarketingService
         $cacheName = 'frequent-sales-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
 
-            $data = Plan::select(DB::raw('plans.id, plans.name, plans.description, count(*) as sales_amount, cast(sum(plan_sale.plan_value) as unsigned) as value'))
-                    ->with('products')
-                    ->join('plans_sales as plan_sale', function ($join) {
-                        $join->on('plan_sale.plan_id', 'plans.id');
-                    })
-                    ->join('sales as sale', function ($join) {
-                        $join->on('plan_sale.sale_id', 'sale.id');
-                    })
-                    ->join('transactions as transaction', function ($join) {
-                        $join->on('transaction.sale_id', 'sale.id');
-                    })
-                    ->where('transaction.company_id',$filters['company_id'])
-                    ->where('sale.status', Sale::STATUS_APPROVED)
-                    ->whereIn('transaction.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                    ->whereBetween('sale.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                    ->where('sale.project_id', $projectId)
-                    ->where('transaction.user_id', auth()->user()->getAccountOwnerId())
-                    ->whereNull('invitation_id')
-                    ->groupBy('plans.id')
-                    ->orderBy('value', 'DESC')
-                    ->limit(10)
-                    ->get();
+            if(!$showSalesApi){
+                $data = Plan::select(DB::raw('plans.id, plans.name, plans.description, count(*) as sales_amount, cast(sum(plan_sale.plan_value) as unsigned) as value'))
+                        ->with('products')
+                        ->join('plans_sales as plan_sale', function ($join) {
+                            $join->on('plan_sale.plan_id', 'plans.id');
+                        })
+                        ->join('sales as sale', function ($join) {
+                            $join->on('plan_sale.sale_id', 'sale.id');
+                        })
+                        ->join('transactions as transaction', function ($join) {
+                            $join->on('transaction.sale_id', 'sale.id');
+                        })
+                        ->where('transaction.company_id',$filters['company_id'])
+                        ->where('sale.status', Sale::STATUS_APPROVED)
+                        ->whereIn('transaction.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                        ->whereBetween('sale.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                        ->where('sale.project_id', $projectId)
+                        ->where('transaction.user_id', auth()->user()->getAccountOwnerId())
+                        ->whereNull('invitation_id')
+                        ->groupBy('plans.id')
+                        ->orderBy('value', 'DESC')
+                        ->limit(10)
+                        ->get();
+            }else{
+                $data = ProductSaleApi::join('sales', 'products_sales_api.sale_id', 'sales.id')
+                        ->join('transactions as t', 't.sale_id', '=', 'sales.id')
+                        ->where('t.company_id',$filters['company_id'])
+                        ->where('sales.status', Sale::STATUS_APPROVED)
+                        ->whereIn('t.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                        ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                        ->select(DB::raw('products_sales_api.name, products_sales_api.item_id, "" as description, "" as image, COUNT(*) as sales_amount, cast(sum(products_sales_api.price) as unsigned) as value'))
+                        ->groupBy('products_sales_api.item_id')
+                        ->groupBy('products_sales_api.name')
+                        ->orderByDesc('amount')
+                        ->limit(8)
+                        ->get();
+            }
 
             if (count($data) == 0) {
                 return null;

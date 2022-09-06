@@ -94,6 +94,7 @@ function getProjects(companies) {
                 });
             });
         });
+        $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
         $("#select_projects option:first").attr('selected','selected');
 
         if(sessionStorage.info) {
@@ -276,6 +277,7 @@ function withdrawals() {
 
 function blockeds() {
     let blockedsHtml = "";
+    $("#card-blockeds").show();
     $("#card-blockeds .onPreLoad *").remove();
     $("#block-blockeds").prepend(skeLoad);
 
@@ -323,6 +325,8 @@ function blockeds() {
                 `;
 
                 $("#block-blockeds").html(blockedsHtml);
+            }else{
+                $("#card-blockeds").hide();
             }
         },
     });

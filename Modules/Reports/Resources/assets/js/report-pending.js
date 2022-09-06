@@ -382,6 +382,7 @@ $(document).ready(function () {
                     });
                 });
             });
+            $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
             $("#project option:first").attr('selected','selected');
 
             if(sessionStorage.info) {
