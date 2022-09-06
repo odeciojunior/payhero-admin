@@ -447,7 +447,7 @@ $(document).ready(function () {
         loadOnTable("#dados_tabela", "#tabela_vendas");
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
-                getProjects('company-navbar');
+                getProjects('company-navbar',data2);
             });
         });
     });

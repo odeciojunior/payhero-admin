@@ -15,16 +15,7 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            if(!isEmpty(data2.company_default_projects)){
-                showFiltersInReports(true);
-                getProjects(data2.companies);
-            }
-            else{
-                loadingOnScreenRemove();
-                $("#project-empty").show();
-                $("#project-not-empty").hide();
-                showFiltersInReports(false);
-            }
+            getProjects(data2);
         });
 	});
 });
@@ -71,16 +62,8 @@ $(function () {
 
     $("#select_projects").html('');
 
-    getCompaniesAndProjects().done( function (data2){
-        if(!isEmpty(data2.company_default_projects)){
-            showFiltersInReports(true);
-            getProjects(data2.companies);
-        }else{
-            loadingOnScreenRemove();
-            $("#project-empty").show();
-            $("#project-not-empty").hide();
-            showFiltersInReports(false);
-        }
+    getCompaniesAndProjects().done( function (data){
+        getProjects(data);
     });
 
 });
@@ -150,77 +133,64 @@ function changeCalendar() {
     dateRange = $('input[name="daterange"]').val();
 }
 
-function getProjects(companies)
+function getProjects(data)
 {
     loadingOnScreen();
-    $(".div-filters").hide();
-    $("#project-empty").hide();
-    $("#project-not-empty").show();
-    $("#export-excel > div >").show();
-
-    window.fillProjectsSelect()
-    .done(function(dataSales)
-    {
-        $(".div-filters").show();
-        $.each(companies, function (c, company) {
-            $.each(company.projects, function (i, project) {
-                $.each(dataSales.data, function (idx, project2) {
-                    if( project2.id == project.id ){
-                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-                    }
+    $.ajax({
+        method: "GET",
+        url: "/api/sales/projects-with-sales",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            console.log('erro')
+            console.log(response)
+            loadingOnScreenRemove();
+        },
+        success: function success(response) {
+            if(!isEmpty(response)){
+                $(".div-filters").hide();
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                $("#export-excel > div >").show();
+                $.each(response, function (c, project) {
+                    $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                 });
-            });
-        });
-        $("#select_projects option:first").attr('selected','selected');
-
-        if(sessionStorage.info) {
-            $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-            $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                if(sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                }
+                company = $("#select_projects").val();
+                updateReports();
+                $(".div-filters").show();
+                loadingOnScreenRemove();
+            }
+            else{
+                if(!isEmpty(data.company_default_projects)){
+                    $(".div-filters").hide();
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel > div >").show();
+                    $.each(data.company_default_projects, function (i, project) {
+                        $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
+                    });
+                    $("#select_projects option:first").attr('selected','selected');
+                    updateReports();
+                    $(".div-filters").show();
+                    loadingOnScreenRemove();
+                }
+                else{
+                    loadingOnScreenRemove();
+                    $(".div-filters").hide();
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            }
         }
-
-        company = $("#select_projects").val();
-        console.log(company);
-        updateReports();
-    });
-
+    })
     loadingOnScreenRemove();
-
-    // $.ajax({
-    //     method: "GET",
-    //     url: "/api/sales/projects-with-sales",
-    //     dataType: "json",
-    //     headers: {
-    //         Authorization: $('meta[name="access-token"]').attr("content"),
-    //         Accept: "application/json",
-    //     },
-    //     error: function error(response) {
-    //         console.log('erro')
-    //         console.log(response)
-    //     },
-    //     success: function success(response) {
-    //         return response;
-    //     }
-    // }).done(function(dataSales){
-    //     console.log('done');
-    //     console.log(data);
-    //     $.each(data, function (c, company) {
-    //         console.log('companies');
-    //         $.each(company.projects, function (i, project) {
-    //             console.log('adicionando '+project.id)
-    //             if( dataSales.includes(project.id) )
-    //                 $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-    //         });
-    //     });
-    //     console.log('vamos atualizar report');
-    //     if(sessionStorage.info) {
-    //         console.log('atualizando projetos');
-    //         $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-    //         $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-    //     }
-
-    //     company = $("#select_projects").val();
-    //     updateReports();
-    // });
 }
 
 function changeOrigin() {
