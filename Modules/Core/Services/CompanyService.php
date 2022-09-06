@@ -70,7 +70,7 @@ class CompanyService
 
     public static function getSubsellerId(Company $company)
     {
-        if (FoxUtils::isProduction()) {
+        if (foxutils()->isProduction()) {
             return $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
         }
         return $company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID);
@@ -79,12 +79,21 @@ class CompanyService
     public function getCompaniesUser($paginate = false)
     {
         try {
-            $companyModel = new Company();
-            $companies = $companyModel->with("user")->where("user_id", auth()->user()->account_owner_id);
+            $ownerId = auth()->user()->account_owner_id;
+            $companies = cache()->remember('companies-user-'.$ownerId, 60, function () use($ownerId,$paginate) {
+                $companiesQr =  Company::with("user")->where("user_id", $ownerId)->orderBy("order_priority");
+                if ($paginate) {
+                    return $companiesQr->paginate(10);
+                }
+                return $companiesQr->get();
+            });
+
             if ($paginate) {
-                return CompanyResource::collection($companies->orderBy("order_priority")->paginate(10));
+                return CompanyResource::collection($companies);
             }
-            return CompaniesSelectResource::collection($companies->orderBy("order_priority")->get());
+
+            return CompaniesSelectResource::collection($companies);
+
         } catch (Exception $e) {
             report($e);
             return [];
@@ -183,6 +192,74 @@ class CompanyService
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    public function getCompanyByApiCNPJ($cnpj)
+    {
+        try {
+            $cnpj = foxutils()->onlyNumbers($cnpj);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://www.receitaws.com.br/v1/cnpj/" . $cnpj);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+            $response = curl_exec($ch);
+            $err = curl_error($ch);
+            curl_close($ch);
+
+            if ($err) return false;
+
+            return json_decode($response, true);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getSituation($companySituation) {
+
+        $situation = strtolower(foxutils()->removeAccents(trim($companySituation)));
+        $situationArray = [];
+        switch ($situation) {
+            case 'ativa':
+                $situationArray = [
+                    'situation' => 'active',
+                    'situation_enum' => 1
+                ];
+                break;
+
+            case 'suspensa':
+                $situationArray = [
+                    'situation' => 'suspended',
+                    'situation_enum' => 2
+                ];
+                break;
+            case 'inapta':
+                $situationArray = [
+                    'situation' => 'unfit',
+                    'situation_enum' => 3
+                ];
+                break;
+            case 'baixada':
+                $situationArray = [
+                    'situation' => 'downloaded',
+                    'situation_enum' => 4
+                ];
+                break;
+            case 'invalido':
+                $situationArray = [
+                    'situation' => 'invalid',
+                    'situation_enum' => 5
+                ];
+                break;
+
+            default:
+                # code...'
+                break;
+        }
+
+        return $situationArray;
+
     }
 
     public function getCompanyByIdwallCNPJ($cnpj)

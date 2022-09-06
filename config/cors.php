@@ -20,7 +20,4 @@ return [
     'exposedHeaders' => [],
     'maxAge' => 0,
     'paths' => ['api/*'],
-
 ];
-
-

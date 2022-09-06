@@ -595,6 +595,7 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance, gatewayId) {
         return false;
     }
 
+    console.log('toTransfer:'+toTransfer);
     if (toTransfer > availableBalance) {
         alertCustom("error", "O valor requerido ultrapassa o limite disponivel");
         $("#withdrawal-value-" + gatewayId).val("");

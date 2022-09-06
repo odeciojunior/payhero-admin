@@ -970,6 +970,17 @@ mix.babel([
 ],'public/build/layouts/unicodrop/index.min.js')
 
 /**
+ * Modules/Webhooks/Resources/views/index.blade.php
+ */
+ mix.styles([
+    'resources/modules/global/css/new-dashboard.css',
+    'resources/modules/global/css/empty.css'
+],'public/build/layouts/webhooks/index.min.css')
+mix.babel([
+    'Modules/Webhooks/Resources/assets/js/index.js'
+],'public/build/layouts/webhooks/index.min.js')
+
+/**
  * Modules/Whatsapp2/Resources/views/index.blade.php
  */
  mix.styles([

@@ -3,22 +3,39 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\BlockReasonSale;
-use Modules\Core\Entities\Ticket;
-use Modules\Core\Entities\TicketAttachment;
-use Modules\Core\Entities\TicketMessage;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Services\TrackingService;
-use Vinkla\Hashids\Facades\Hashids;
 
 class GenericCommand extends Command
 {
-    protected $signature = "generic";
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = "generic {name?}";
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
     protected $description = "Command description";
 
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
     public function handle()
     {
-        $companyId = current(Hashids::decode('KN1nVZplmWZlM6B'));
-        dd($companyId);
     }
 }

@@ -3,7 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use App\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use App\Traits\PaginatableTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyPresenter;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -75,7 +76,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string|null $id_wall_date_update
  * @property string|null $transaction_tax
  * @property int $block_checkout
- //* @property int|null $annual_income
+ * @property int|null $annual_income
+ * @property json $situation
  * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read int|null $affiliates_count
@@ -114,6 +116,12 @@ class Company extends Model
     public const GATEWAY_TAX_30 = 4.9;
 
     public const DEMO_ID = 1;
+
+    public const SITUACTION_ACTIVE = 1;
+    public const SITUACTION_SUSPENDED = 2;
+    public const SITUACTION_UNFIT = 3;
+    public const SITUACTION_DOWNLOADED = 4;
+    public const SITUACTION_INVALID = 5;
 
     protected $presenter = CompanyPresenter::class;
     /**
@@ -168,45 +176,22 @@ class Company extends Model
         "transaction_tax",
         "block_checkout",
         "annual_income",
+        "situation",
         "created_at",
         "updated_at",
         "deleted_at"
     ];
 
-    /**
-     * @var bool
-     */
-    protected static $logFillable = true;
-    /**
-     * @var bool
-     */
-    protected static $logUnguarded = true;
-    /**
-     * Registra apenas os atributos alterados no log
-     * @var bool
-     */
-    protected static $logOnlyDirty = true;
-    /**
-     * Impede que armazene logs vazios
-     * @var bool
-     */
-    protected static $submitEmptyLogs = false;
+    protected $casts = [
+        "situation" => "array",
+    ];
 
-    public function tapActivity(Activity $activity, string $eventName)
+    public function getActivitylogOptions(): LogOptions
     {
-        switch ($eventName) {
-            case "deleted":
-                $activity->description = "Empresa {$this->fantasy_name} foi deletado.";
-                break;
-            case "updated":
-                $activity->description = "Empresa {$this->fantasy_name}  foi atualizado.";
-                break;
-            case "created":
-                $activity->description = "Empresa {$this->fantasy_name} foi criado.";
-                break;
-            default:
-                $activity->description = $eventName;
-        }
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->logFillable()
+            ->dontSubmitEmptyLogs();
     }
 
     public function user(): BelongsTo
