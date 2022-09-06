@@ -12,6 +12,7 @@ Route::group(
         );
 
         Route::get("/projects", "ProjectsApiController@index");
+
         Route::get("/projects/create", "ProjectsApiController@create");
         Route::get("/projects/{id}", "ProjectsApiController@show");
         Route::get("/projects/{id}/edit", "ProjectsApiController@edit");

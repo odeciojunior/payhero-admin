@@ -23,14 +23,19 @@ class ReportSaleService
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $dateFilter = (!empty($filters['status']) && $filters['status'] == 'approved') ? 'end_date' : 'start_date';
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
 
             $sales = Sale::select('sales.*')
                         ->join('transactions', 'transactions.sale_id', 'sales.id')
-                        ->where('project_id', current(Hashids::decode($filters['project_id'])))
                         ->where('transactions.company_id', $filters['company_id'])
                         ->where('owner_id', $ownerId)
-                        ->whereBetween($dateFilter, [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+                        ->whereBetween($dateFilter, [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                        ->where('api_flag', $showSalesApi);
 
+            if(!$showSalesApi){
+                $sales->where('sales.project_id', $projectId);
+            }
             if (!empty($filters["status"])) {
                 $salesModel = new Sale();
                 if ($filters["status"] === "others") {
@@ -50,20 +55,26 @@ class ReportSaleService
 
             if ($dateRange["0"] == $dateRange["1"]) {
                 return $this->getResumeSalesByHours($sales, $filters);
-            } elseif ($dateRange["0"] != $dateRange["1"]) {
+            }
+
+            if ($dateRange["0"] != $dateRange["1"]) {
                 $startDate = Carbon::createFromFormat("Y-m-d", $dateRange["0"], "America/Sao_Paulo");
                 $endDate = Carbon::createFromFormat("Y-m-d", $dateRange["1"], "America/Sao_Paulo");
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
                     return $this->getResumeSalesByDays($sales, $filters);
-                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                }
+                if ($diffInDays > 20 && $diffInDays <= 40) {
                     return $this->getResumeSalesByTwentyDays($sales, $filters);
-                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                }
+                if ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getResumeSalesByFortyDays($sales, $filters);
-                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                }
+                if ($diffInDays > 60 && $diffInDays <= 140) {
                     return $this->getResumeSalesByWeeks($sales, $filters);
-                } elseif ($diffInDays > 140) {
+                }
+                if ($diffInDays > 140) {
                     return $this->getResumeSalesByMonths($sales, $filters);
                 }
             }
@@ -467,20 +478,26 @@ class ReportSaleService
 
         $cacheName = 'payment-type-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $query = Sale::join('transactions', 'transactions.sale_id', 'sales.id')
                     ->where('transactions.user_id', $ownerId)
                     ->where('transactions.company_id', $filters['company_id'])
-                    ->where('project_id', $projectId)
                     ->where('sales.status', Sale::STATUS_APPROVED)
+                    ->where('sales.api_flag', $showSalesApi)
                     ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                     ->selectRaw('SUM(transactions.value / 100) as total')
                     ->selectRaw('SUM(IF(payment_method = 1, transactions.value / 100, 0)) as total_credit_card')
                     ->selectRaw('SUM(IF(payment_method = 2, transactions.value / 100, 0)) as total_boleto')
-                    ->selectRaw('SUM(IF(payment_method = 4, transactions.value / 100, 0)) as total_pix')
-                    ->first();
+                    ->selectRaw('SUM(IF(payment_method = 4, transactions.value / 100, 0)) as total_pix');
+
+            if(!$showSalesApi){
+                $query->where('sales.project_id', $projectId);
+            }
+
+            $query = $query->first();
 
             $total = $query->total;
 

@@ -166,11 +166,14 @@ function getProjects(companies)
             $.each(company.projects, function (i, project) {
                 $.each(dataSales.data, function (idx, project2) {
                     if( project2.id == project.id ){
-                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
+                        $("#select_projects").append($("<option>", {value: project.id,text: project.name}));
                     }
                 });
             });
         });
+
+        $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: "Integração por API"}));
+
         $("#select_projects option:first").attr('selected','selected');
 
         if(sessionStorage.info) {

@@ -28,13 +28,18 @@ class ReportFinanceService
         $cacheName = 'comissions-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
 
             $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
                             ->where('user_id', $ownerId)
                             ->where('company_id', $filters['company_id'])
-                            ->where('sales.project_id', $projectId)
-                            ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                            ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $transactions->where('sales.project_id', $projectId);
+            }
+
+            $transactions->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
                             ->whereNull('transactions.invitation_id')
                             ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ])
                             ->whereNull('invitation_id');
@@ -514,8 +519,8 @@ class ReportFinanceService
 
         $cacheName = 'pendings-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
-            $projectId = hashids_decode($filters['project_id']);
-            $companyId = hashids_decode($filters['company_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $date["startDate"] = $dateRange[0];
             $date["endDate"] = $dateRange[1];
@@ -525,7 +530,10 @@ class ReportFinanceService
                             ->where('company_id', $filters['company_id'])
                             ->join('sales', 'sales.id', 'transactions.sale_id')
                             ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
-                            ->where('sales.project_id', $projectId);
+                            ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $transactions->where('sales.project_id', $projectId);
+            }
 
             if ($transactions->count() == 0) {
                 return null;
@@ -978,15 +986,19 @@ class ReportFinanceService
 
         $cacheName = 'cashback-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
             $companyId = hashids_decode($filters['company_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $cashbacks = Cashback::with('sale')
                         ->join('sales', 'sales.id', 'cashbacks.sale_id')
                         ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
-                        ->where('sales.project_id', $projectId)
-                        ->where('company_id', $companyId);
+                        ->where('company_id', $companyId)
+                        ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $cashbacks->where('sales.project_id', $projectId);
+            }
 
             $date["startDate"] = $dateRange[0];
             $date["endDate"] = $dateRange[1];

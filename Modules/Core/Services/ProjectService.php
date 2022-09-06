@@ -2,10 +2,10 @@
 
 namespace Modules\Core\Services;
 
-use DB;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\Plan;
@@ -16,10 +16,15 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\ApiToken;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\User;
 use Modules\Core\Exceptions\Services\ServiceException;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
+use PhpParser\Node\Stmt\Foreach_;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class ProjectService
@@ -427,10 +432,28 @@ class ProjectService
                 }
             }
             return ProjectsSelectResource::collection($projects);
-        } else {
-            $projects = $projects->with('domains')->get();
-            return ProjectsResource::collection($projects);
         }
+
+        $projects = $projects->with('domains')->get();
+        return ProjectsResource::collection($projects);
+    }
+
+    public function getUserProjectsAndTokens(string $pagination, array $status, $affiliate = false, $companyId = '')
+    {
+        $projects = $this->getUserProjects($pagination, $status, $affiliate, $companyId);
+        $userId = auth()->user()->company_default == Company::DEMO_ID ? User::DEMO_ID :  auth()->user()->account_owner_id;
+        $tokensQr = DB::table('api_tokens')->select('id','description as name')->where('user_id',$userId)->whereNull('deleted_at');
+        if(!empty($companyId)){
+            $tokensQr->where('company_id',$companyId);
+        }
+
+        $tokens = $tokensQr->get();
+
+        foreach($tokens as $item)
+        {
+            $item->id = 'TOKEN-'.Hashids::encode($item->id);
+        }
+        return ['data'=>$projects, 'tokens'=>$tokens];
     }
 
     public function createUpsellConfig($projectId)
