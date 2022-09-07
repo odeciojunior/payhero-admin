@@ -53,7 +53,7 @@ class SubsellersApiController extends Controller
         }
     }
 
-    public function listSubsellers()
+    public function getSubsellers()
     {
         try {
             $subseller_owner_id = request()->user_id;

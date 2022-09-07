@@ -53,7 +53,7 @@ class CompaniesApiController extends Controller
         }
     }
 
-    public function listCompanies()
+    public function getCompanies()
     {
         try {
             $subseller_owner_id = request()->user_id;

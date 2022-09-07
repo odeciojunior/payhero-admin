@@ -1,8 +1,9 @@
 <?php
 
-namespace Modules\Api\Http\Requests;
+namespace Modules\Api\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Api\Validators\V1\SalesRule;
 
 class SalesApiRequest extends FormRequest
 {
@@ -11,11 +12,19 @@ class SalesApiRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function getSalesRules()
     {
-        return [
-            //
-        ];
+        return SalesRule::getSalesRules();
+    }
+
+    /**
+     * Get the validation messages that apply to the request.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return SalesRule::messages();
     }
 
     /**

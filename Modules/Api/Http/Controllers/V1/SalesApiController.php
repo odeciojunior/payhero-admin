@@ -6,8 +6,11 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Modules\Api\Http\Requests\V1\SalesApiRequest;
 use Modules\Api\Transformers\V1\SalesApiResource;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\Api\SaleApiService;
 use Modules\Sales\Transformers\TransactionResource;
@@ -15,22 +18,53 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class SalesApiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $page = request()->input("page");
-            if (!empty($page) && (!is_numeric($page) || $page < 0)) {
-                return response()->json(["message" => "Erro ao listar venda(s)"], 400);
+            $data = $request->all();
+            $verifyRequest = new SalesApiRequest();
+            $validator = Validator::make(
+                $data,
+                $verifyRequest->getSalesRules(),
+                $verifyRequest->messages()
+            );
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toArray());
             }
 
-            $subsellers = User::where("subseller_owner_id", request()->user_id)->pluck("id")->toArray();
-
-            array_push($subsellers, request()->user_id);
-
             $saleModel = new Sale();
-            $sales = $saleModel
-                ->whereIn("owner_id", $subsellers)
-                ->whereIn("status", [
+            $transactionModel = new Transaction();
+            $transactions = $transactionModel->join("sales", "sales.id", "transactions.sale_id");
+
+            if (!empty($data["transaction"])) {
+                $transaction_id = current(Hashids::connection('sale_id')->decode($data["transaction"]));
+
+                $transactions->where("sales.id", $transaction_id);
+            }
+
+            if (!empty($data["company"])) {
+                $companies = Hashids::decode($data["company"]);
+            } else {
+                $companies = Company::where("user_id", request()->user_id)->pluck("id")->toArray();
+            }
+
+            $transactions->whereIn("transactions.company_id", $companies);
+
+            if (!empty($data["user"])) {
+                $user_id = current(Hashids::decode($data["user"]));
+                $subsellers = User::where("subseller_owner_id", request()->user_id)->where("id", $user_id)->pluck("id")->toArray();
+            } else {
+                $subsellers = User::where("subseller_owner_id", request()->user_id)->pluck("id")->toArray();
+                array_push($subsellers, request()->user_id);
+            }
+
+            $transactions->whereIn("sales.owner_id", $subsellers);
+
+            if (!empty($data["status"])) {
+                $transactions->where("sales.status", $saleModel->present()->getStatus($data["status"]));
+            } else {
+                $transactions->whereIn("sales.status", [
                     Sale::STATUS_APPROVED,
                     Sale::STATUS_PENDING,
                     Sale::STATUS_CHARGEBACK,
@@ -39,45 +73,25 @@ class SalesApiController extends Controller
                     Sale::STATUS_IN_REVIEW,
                     Sale::STATUS_CANCELED_ANTIFRAUD,
                     Sale::STATUS_IN_DISPUTE,
-                ])
-                ->orderBy("id", "desc")
-                ->simplePaginate(10);
+                ]);
+            }
 
-            return SalesApiResource::collection($sales);
+            if (!empty($data['date_type']) && !empty($data['date_range'])) {
+                $dateType = $data["date_type"];
+                $dateRange = foxutils()->validateDateRange($data["date_range"]);
+
+                $transactions->whereBetween("sales.".$dateType, [
+                    $dateRange[0] . " 00:00:00",
+                    $dateRange[1] . " 23:59:59",
+                ]);
+            }
+
+            $query = $transactions->orderByDesc("sales.start_date")->simplePaginate(10);
+
+            return SalesApiResource::collection($query);
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao carregar vendas"], 400);
-        }
-    }
-
-    public function showSales($id)
-    {
-        try {
-            $idDecode = current(Hashids::connection('sale_id')->decode($id));
-
-            $subsellers = User::where("subseller_owner_id", request()->user_id)->pluck("id")->toArray();
-            array_push($subsellers, request()->user_id);
-
-            $saleModel = new Sale();
-            $sales = $saleModel
-                ->whereIn("owner_id", $subsellers)
-                ->whereIn("status", [
-                    Sale::STATUS_APPROVED,
-                    Sale::STATUS_PENDING,
-                    Sale::STATUS_CHARGEBACK,
-                    Sale::STATUS_REFUNDED,
-                    Sale::STATUS_PARTIAL_REFUNDED,
-                    Sale::STATUS_IN_REVIEW,
-                    Sale::STATUS_CANCELED_ANTIFRAUD,
-                    Sale::STATUS_IN_DISPUTE,
-                ])
-                ->where("id", $idDecode)
-                ->first();
-
-            return new SalesApiResource($sales);
-        } catch (Exception $e) {
-            report($e);
-            return response()->json(["message" => "Erro ao carregar venda"], 400);
         }
     }
 }
