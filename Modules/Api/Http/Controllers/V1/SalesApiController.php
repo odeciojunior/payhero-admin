@@ -13,7 +13,9 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\Api\SaleApiService;
+use Modules\Core\Services\SaleService;
 use Modules\Sales\Transformers\TransactionResource;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SalesApiController extends Controller
@@ -23,11 +25,7 @@ class SalesApiController extends Controller
         try {
             $data = $request->all();
             $verifyRequest = new SalesApiRequest();
-            $validator = Validator::make(
-                $data,
-                $verifyRequest->getSalesRules(),
-                $verifyRequest->messages()
-            );
+            $validator = Validator::make($data, $verifyRequest->getSalesRules(), $verifyRequest->messages());
 
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toArray());
@@ -38,7 +36,7 @@ class SalesApiController extends Controller
             $transactions = $transactionModel->join("sales", "sales.id", "transactions.sale_id");
 
             if (!empty($data["transaction"])) {
-                $transaction_id = current(Hashids::connection('sale_id')->decode($data["transaction"]));
+                $transaction_id = current(Hashids::connection("sale_id")->decode($data["transaction"]));
 
                 $transactions->where("sales.id", $transaction_id);
             }
@@ -46,16 +44,23 @@ class SalesApiController extends Controller
             if (!empty($data["company"])) {
                 $companies = Hashids::decode($data["company"]);
             } else {
-                $companies = Company::where("user_id", request()->user_id)->pluck("id")->toArray();
+                $companies = Company::where("user_id", request()->user_id)
+                    ->pluck("id")
+                    ->toArray();
             }
 
             $transactions->whereIn("transactions.company_id", $companies);
 
             if (!empty($data["user"])) {
                 $user_id = current(Hashids::decode($data["user"]));
-                $subsellers = User::where("subseller_owner_id", request()->user_id)->where("id", $user_id)->pluck("id")->toArray();
+                $subsellers = User::where("subseller_owner_id", request()->user_id)
+                    ->where("id", $user_id)
+                    ->pluck("id")
+                    ->toArray();
             } else {
-                $subsellers = User::where("subseller_owner_id", request()->user_id)->pluck("id")->toArray();
+                $subsellers = User::where("subseller_owner_id", request()->user_id)
+                    ->pluck("id")
+                    ->toArray();
                 array_push($subsellers, request()->user_id);
             }
 
@@ -76,11 +81,11 @@ class SalesApiController extends Controller
                 ]);
             }
 
-            if (!empty($data['date_type']) && !empty($data['date_range'])) {
+            if (!empty($data["date_type"]) && !empty($data["date_range"])) {
                 $dateType = $data["date_type"];
                 $dateRange = foxutils()->validateDateRange($data["date_range"]);
 
-                $transactions->whereBetween("sales.".$dateType, [
+                $transactions->whereBetween("sales." . $dateType, [
                     $dateRange[0] . " 00:00:00",
                     $dateRange[1] . " 23:59:59",
                 ]);
@@ -92,6 +97,37 @@ class SalesApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao carregar vendas"], 400);
+        }
+    }
+
+    public function refundSales(Request $request)
+    {
+        try {
+            $saleId = current(Hashids::connection("sale_id")->decode($request->id));
+
+            $saleModel = new Sale();
+            $sale = $saleModel->where(["id" => $saleId, "owner_id" => $request->user_id])->first();
+
+            if (empty($sale)) {
+                return response()->json(["message" => "Venda não encontrada"], 400);
+            }
+
+            activity()
+                ->on($saleModel)
+                ->tap(function (Activity $activity) use ($saleId) {
+                    $activity->log_name = "estorno";
+                    $activity->subject_id = $saleId;
+                })
+                ->log("Tentativa de estorno via API da transação: #" . $request->id);
+
+            $saleService = new SaleService();
+            $data = $saleService->refund($sale, $request->refund_observation);
+            $status = $data["status"] == "success" ? 200 : 400;
+
+            return response()->json(["message" => $data["message"]], $status);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(["message" => "Erro ao tentar estornar venda"], 400);
         }
     }
 }
