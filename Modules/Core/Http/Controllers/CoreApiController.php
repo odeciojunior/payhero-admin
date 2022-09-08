@@ -292,11 +292,16 @@ class CoreApiController extends Controller
                         $companyDefault->fantasy_name,
                         20
                     ) ?? '';
+
+                $hasApiIntegration = DB::table('api_tokens')->where('user_id',auth()->user()->id)
+                                    ->where('company_id',$companyDefault->id)
+                                    ->where('integration_type_enum',4)->exists();
+
                 $return = array(
                     'company_default'=>Hashids::encode($user->company_default),
                     'company_default_name'=>$company_default_name,
                     'company_default_fullname'=>$companyDefault->fantasy_name,
-                    'has_api_integration'=>DB::table('api_tokens')->where('user_id',auth()->user()->id)->where('company_id',$companyDefault->id)->exists()
+                    'has_api_integration'=>$hasApiIntegration
                 );
             }
 
