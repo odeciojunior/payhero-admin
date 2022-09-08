@@ -11,16 +11,7 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data){
-            // if(!isEmpty(data2.company_default_projects)){
-            //     showFiltersInReports(true);
-                getProjects(data,'company-navbar');
-            // }
-            // else{
-            //     loadingOnScreenRemove();
-            //     $("#project-empty").show();
-            //     $("#project-not-empty").hide();
-            //     showFiltersInReports(false);
-            // }
+            getProjects(data,'company-navbar');
         });
 	});
 });
@@ -57,16 +48,7 @@ $(function() {
     }
 
     getCompaniesAndProjects().done( function (data){
-        // if(!isEmpty(data2.company_default_projects)){
-        //     showFiltersInReports(true);
-            getProjects(data);
-        // }
-        // else{
-        //     loadingOnScreenRemove();
-        //     $("#project-empty").show();
-        //     $("#project-not-empty").hide();
-        //     showFiltersInReports(false);
-        // }
+        getProjects(data);
     });
 });
 
@@ -74,8 +56,6 @@ let resumeUrl = "/api/reports/resume";
 let financesResumeUrl = "/api/reports/finances";
 
 function getProjects(data, origin='') {
-
-
     loadingOnScreen();
     $.ajax({
         method: "GET",
@@ -100,6 +80,7 @@ function getProjects(data, origin='') {
                     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                 });
                 $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                $("#select_projects option:first").attr('selected','selected');
                 if(sessionStorage.info) {
                     $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
                     $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
@@ -118,6 +99,7 @@ function getProjects(data, origin='') {
                     // $.each(data.company_default_projects, function (i, project) {
                     //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                     // });
+                    $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     $("#select_projects option:first").attr('selected','selected');
                     updateReports();
                     $(".div-filters").show();
@@ -133,40 +115,6 @@ function getProjects(data, origin='') {
         }
     })
     loadingOnScreenRemove();
-
-
-
-    // $(".div-filters").hide();
-    // $("#project-empty").hide();
-    // $("#project-not-empty").show();
-    // $("#export-excel > div >").show();
-
-    // window.fillProjectsSelect()
-    // .done(function(dataSales)
-    // {
-    //     $(".div-filters").show();
-    //     $.each(companies, function (c, company) {
-    //         $.each(company.projects, function (i, project) {
-    //             $.each(dataSales.data, function (idx, project2) {
-    //                 if( project2.id == project.id ){
-    //                     $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-    //                 }
-    //             });
-    //         });
-    //     });
-    //     $("#select_projects option:first").attr('selected','selected');
-
-    //     if(sessionStorage.info) {
-    //         $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-    //         $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-    //     }
-
-    //     company = $("#select_projects").val();
-
-    //     updateReports();
-    // });
-
-    // loadingOnScreenRemove();
 }
 
 function distribution() {

@@ -1004,7 +1004,7 @@ class SaleService
 
             if (!empty($filters["project"])) {
                 $showSalesApi = $filters['project']=='API-TOKEN';
-                $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
+                $projectId = $showSalesApi ? null : hashids_decode($filters['project']);
 
                 $transactions->where('sales.api_flag', $showSalesApi);
 
@@ -1269,7 +1269,7 @@ class SaleService
             // Projeto
             if (!empty($filters["project"])) {
                 $showSalesApi = $filters['project']=='API-TOKEN';
-                $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
+                $projectId = $showSalesApi ? null : hashids_decode($filters['project']);
 
                 $transactions->whereHas("sale", function ($querySale) use ($projectId,$showSalesApi) {
 

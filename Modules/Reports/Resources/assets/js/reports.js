@@ -161,6 +161,7 @@ function getProjects(data, origin='')
                     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                 });
                 $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                $("#select_projects option:first").attr('selected','selected');
                 if(sessionStorage.info) {
                     $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
                     $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
@@ -180,6 +181,7 @@ function getProjects(data, origin='')
                     // $.each(data.company_default_projects, function (i, project) {
                     //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                     // });
+                    $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     $("#select_projects option:first").attr('selected','selected');
                     updateReports();
                     $(".div-filters").show();
