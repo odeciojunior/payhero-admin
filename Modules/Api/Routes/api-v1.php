@@ -31,4 +31,7 @@ Route::group(["middleware" => "authApiV1"], function () {
     // SALES
     Route::get("sales", "V1\SalesApiController@getSales");
     Route::post("sales/refund/{id}", "V1\SalesApiController@refundSales");
+
+    // WITHDRAWALS
+    Route::post("withdrawals", "V1\WithdrawalsApiController@storeWithdrawals");
 });
