@@ -1,3 +1,4 @@
+var has_api_integration = false;
 $('.company-navbar').change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
     $("#projeto").find('option').not(':first').remove();
@@ -109,7 +110,8 @@ $(document).ready(function () {
                     $.each(response, function (c, project) {
                         $("#projeto").append($("<option>", {value: project.project_id,text: project.name,}));
                     });
-                    $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                    if(data.has_api_integration)
+                        $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     $("#projeto option:first").attr('selected','selected');
                     if(sessionStorage.info) {
                         $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
@@ -129,6 +131,8 @@ $(document).ready(function () {
                         // $.each(data.company_default_projects, function (i, project) {
                         //     $("#projeto").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
+                        if(data.has_api_integration)
+                            $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                         $("#projeto option:first").attr('selected','selected');
                         window.atualizar();
                         $(".div-filters").show();

@@ -1,6 +1,7 @@
 var currentPage = null;
 //var atualizar = null;
 let hasSale = false;
+var has_api_integration = false;
 
 $('.company-navbar').change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
@@ -161,7 +162,7 @@ function atualizar(link = null) {
 
 function getFilters(urlParams = false) {
     let data = {
-        company: $("#company").val(),
+        company: $(".company-navbar").val(),
         project: $("#project").val(),
         client: $("#client").val(),
         customer_document: $("#customer_document").val(),
@@ -368,7 +369,8 @@ $(document).ready(function () {
                     $.each(response, function (c, project) {
                         $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                     });
-                    $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                    if(data.has_api_integration)
+                        $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     $("#project option:first").attr('selected','selected');
                     if(sessionStorage.info) {
                         $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
@@ -388,6 +390,8 @@ $(document).ready(function () {
                         // $.each(data.company_default_projects, function (i, project) {
                         //     $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
+                        if(data.has_api_integration)
+                            $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                         $("#project option:first").attr('selected','selected');
                         getAcquirer();
                         $(".div-filters").show();

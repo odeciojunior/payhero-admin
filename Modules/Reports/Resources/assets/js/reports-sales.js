@@ -1,3 +1,4 @@
+var has_api_integration = false;
 $(function () {
     loadingOnScreen();
     exportReports();
@@ -110,7 +111,8 @@ function getProjects(data, origin='') {
                 $.each(response, function (c, project) {
                     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                 });
-                $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                if(data.has_api_integration)
+                    $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                 $("#select_projects option:first").attr('selected','selected');
                 if(sessionStorage.info) {
                     $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
@@ -131,7 +133,8 @@ function getProjects(data, origin='') {
                     // $.each(data.company_default_projects, function (i, project) {
                     //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                     // });
-                    $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                    if(data.has_api_integration)
+                        $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     $("#select_projects option:first").attr('selected','selected');
                     updateReports();
                     changeSaleStatus();

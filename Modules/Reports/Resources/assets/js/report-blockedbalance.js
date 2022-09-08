@@ -1,4 +1,5 @@
 var currentPage = null;
+var has_api_integration = false;
 //var atualizar = null;
 
 $(function () {
@@ -498,7 +499,8 @@ $(document).ready(function () {
                     $.each(response, function (c, project) {
                         $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                     });
-                    $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                    if(data.has_api_integration)
+                        $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     $("#project option:first").attr('selected','selected');
                     if(sessionStorage.info) {
                         $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
@@ -518,7 +520,8 @@ $(document).ready(function () {
                         // $.each(data.company_default_projects, function (i, project) {
                         //     $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
-                        $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                        if(data.has_api_integration)
+                            $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                         $("#project option:first").attr('selected','selected');
                         atualizar();
                         $(".div-filters").show();
