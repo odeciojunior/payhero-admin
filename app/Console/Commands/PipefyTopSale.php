@@ -42,9 +42,13 @@ class PipefyTopSale extends Command
     {
 
 
+
+
+
+
         $pipefyService = new PipefyService();
-        $pipefyService->createCardUser(User::find(19));
-        dd("qqq");
+        $pipefyService->updateCardLabel(User::find(6906),[PipefyService::LABEL_SALES_BETWEEN_500k_1M, PipefyService::LABEL_TOP_SALE, "307597210"]);
+        dd("qqq =>aaa");
         $labelArray = [PipefyService::LABEL_TOP_SALE];
         $start  = Carbon::now()->subDays(120);
         $end    = Carbon::now();
