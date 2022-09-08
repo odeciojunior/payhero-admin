@@ -91,6 +91,10 @@ class ProjectsApiController extends Controller
                     $companyId = hashids_decode($request->input('company'));
                 }
 
+                if($request->tokens){
+                    return $projectService->getUserProjectsAndTokens($pagination, $projectStatus, $affiliation, $companyId);
+                }
+
                 return $projectService->getUserProjects($pagination, $projectStatus, $affiliation, $companyId);
 
             }

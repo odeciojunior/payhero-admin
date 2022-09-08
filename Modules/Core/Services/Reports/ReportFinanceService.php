@@ -29,12 +29,18 @@ class ReportFinanceService
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $showSalesApi = $filters['project_id']=='API-TOKEN';
-            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : $showSalesApi ? null : hashids_decode($filters['project_id']);
 
             $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
                             ->where('user_id', $ownerId)
                             ->where('company_id', $filters['company_id'])
-                            ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                            ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $transactions->where('sales.project_id', $projectId);
+            }
+
+            $transactions->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
                             ->whereNull('transactions.invitation_id')
                             ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ])
                             ->whereNull('invitation_id')
