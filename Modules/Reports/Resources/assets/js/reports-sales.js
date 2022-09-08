@@ -1,3 +1,4 @@
+var has_api_integration = false;
 $(function () {
     loadingOnScreen();
     exportReports();
@@ -11,17 +12,8 @@ $(function () {
         $('input[name=daterange]').val(info.calendar);
     }
 
-    getCompaniesAndProjects().done( function (data2){
-        if(!isEmpty(data2.company_default_projects)){
-            showFiltersInReports(true);
-            getProjects(data2.companies);
-        }
-        else{
-            loadingOnScreenRemove();
-            $("#project-empty").show();
-            $("#project-not-empty").hide();
-            showFiltersInReports(false);
-        }
+    getCompaniesAndProjects().done( function (data){
+            getProjects(data);
     });
 });
 
@@ -47,16 +39,7 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            if(!isEmpty(data2.company_default_projects)){
-                showFiltersInReports(true);
-                getProjects(data2.companies);
-            }
-            else{
-                loadingOnScreenRemove();
-                $("#project-empty").show();
-                $("#project-not-empty").hide();
-                showFiltersInReports(false);
-            }
+            getProjects(data2,'company-navbar');
         });
 	});
 });
@@ -103,41 +86,70 @@ function changeSaleStatus() {
 	});
 }
 
-function getProjects(companies) {
+function getProjects(data, origin='') {
 
     loadingOnScreen();
-    $(".div-filters").hide();
-    $("#project-empty").hide();
-    $("#project-not-empty").show();
-    $("#export-excel > div >").show();
-
-    window.fillProjectsSelect()
-    .done(function(dataSales)
-    {
-        $(".div-filters").show();
-        $.each(companies, function (c, company) {
-            $.each(company.projects, function (i, project) {
-                $.each(dataSales.data, function (idx, project2) {
-                    if( project2.id == project.id ){
-                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-                    }
+    $.ajax({
+        method: "GET",
+        url: "/api/sales/projects-with-sales",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            console.log('erro')
+            console.log(response)
+            loadingOnScreenRemove();
+        },
+        success: function success(response) {
+            if(!isEmpty(response)){
+                $(".div-filters").hide();
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                $("#export-excel > div >").show();
+                $.each(response, function (c, project) {
+                    $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                 });
-            });
-        });
-
-        $("#select_projects option:first").attr('selected','selected');
-
-        if(sessionStorage.info) {
-            $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-            $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                if(data.has_api_integration)
+                    $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                $("#select_projects option:first").attr('selected','selected');
+                if(sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                    $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                }
+                company = $("#select_projects").val();
+                updateReports();
+                changeSaleStatus();
+                $(".div-filters").show();
+                loadingOnScreenRemove();
+            }
+            else{
+                if(!isEmpty(data.company_default_projects)){
+                    $(".div-filters").hide();
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel > div >").show();
+                    // $.each(data.company_default_projects, function (i, project) {
+                    //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
+                    // });
+                    if(data.has_api_integration)
+                        $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                    $("#select_projects option:first").attr('selected','selected');
+                    updateReports();
+                    changeSaleStatus();
+                    $(".div-filters").show();
+                    loadingOnScreenRemove();
+                }
+                else{
+                    loadingOnScreenRemove();
+                    $(".div-filters").hide();
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            }
         }
-
-        company = $("#select_projects").val();
-        updateReports();
-
-        changeSaleStatus();
-    });
-
+    })
     loadingOnScreenRemove();
 }
 

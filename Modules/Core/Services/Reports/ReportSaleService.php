@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductSaleApi;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
@@ -546,21 +547,36 @@ class ReportSaleService
 
         $cacheName = 'products-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $products = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
-            ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
-            ->join('transactions as t', 't.sale_id', '=', 'sales.id')
-            ->where('t.company_id',$filters['company_id'])
-            ->where('sales.status', Sale::STATUS_APPROVED)
-            ->where('sales.project_id', $projectId)
-            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->select(DB::raw('products.name, products.description, products.photo as image, COUNT(*) as amount'))
-            ->groupBy('products.id')
-            ->orderByDesc('amount')
-            ->limit(8)
-            ->get();
+            if(!$showSalesApi){
+                $products = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
+                ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
+                ->join('transactions as t', 't.sale_id', '=', 'sales.id')
+                ->where('t.company_id',$filters['company_id'])
+                ->where('sales.status', Sale::STATUS_APPROVED)
+                ->where('sales.project_id', $projectId)
+                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                ->select(DB::raw('products.name, products.description, products.photo as image, COUNT(*) as amount'))
+                ->groupBy('products.id')
+                ->orderByDesc('amount')
+                ->limit(8)
+                ->get();
+            }else{
+                $products = ProductSaleApi::join('sales', 'products_sales_api.sale_id', 'sales.id')
+                ->join('transactions as t', 't.sale_id', '=', 'sales.id')
+                ->where('t.company_id',$filters['company_id'])
+                ->where('sales.status', Sale::STATUS_APPROVED)
+                ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                ->select(DB::raw('products_sales_api.name, products_sales_api.item_id, "" as description, "" as image, COUNT(*) as amount'))
+                ->groupBy('products_sales_api.item_id')
+                ->groupBy('products_sales_api.name')
+                ->orderByDesc('amount')
+                ->limit(8)
+                ->get();
+            }
 
             if (count($products) == 0) {
                 return [
@@ -611,39 +627,54 @@ class ReportSaleService
         $cacheName = 'sales-balance-resume-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
 
             $salesApproved = Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                             ->where('t.company_id',$filters['company_id'])
                             ->whereBetween('sales.end_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                             ->where('sales.owner_id', $ownerId)
-                            ->where('sales.project_id', $projectId)
                             ->where('sales.status', Sale::STATUS_APPROVED)
-                            ->count();
+                            ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesApproved->where('sales.project_id', $projectId);
+            }
+            $salesApproved = $salesApproved->count();
 
             $salesAverageTicket =   Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                                     ->where('t.company_id',$filters['company_id'])
                                     ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                                    ->where('sales.project_id', $projectId)
                                     ->where('sales.status', Sale::STATUS_APPROVED)
-                                    ->avg('sales.original_total_paid_value');
+                                    ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesAverageTicket->where('sales.project_id', $projectId);
+            }
+            $salesAverageTicket = $salesAverageTicket->avg('sales.original_total_paid_value');
 
             $salesComission =   Transaction::join('sales', 'sales.id', 'transactions.sale_id')
                                 ->where('user_id', $ownerId)
                                 ->where('company_id',$filters['company_id'])
-                                ->where('project_id', $projectId)
                                 ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                                 ->whereNull('invitation_id')
                                 ->where('sales.status', Sale::STATUS_APPROVED)
                                 ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                                ->sum('transactions.value');
+                                ->where('sales.api_flag', $showSalesApi);
+
+            if(!$showSalesApi){
+                $salesComission->where('sales.project_id', $projectId);
+            }
+            $salesComission = $salesComission->sum('transactions.value');
 
             $salesChargeback =  Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                                 ->where('t.company_id',$filters['company_id'])
                                 ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                                ->where('sales.project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_CHARGEBACK)
-                                ->sum('sales.original_total_paid_value');
+                                ->where('sales.api_flag', $showSalesApi);
+
+            if(!$showSalesApi){
+                $salesChargeback->where('sales.project_id', $projectId);
+            }
+            $salesChargeback = $salesChargeback->sum('sales.original_total_paid_value');
 
             return [
                 "transactions" => number_format($salesApproved, 0, ".", "."),
@@ -663,55 +694,74 @@ class ReportSaleService
         $cacheName = 'sales-distribuition-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
 
             $salesApprovedSum = Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                                 ->where('t.company_id',$filters['company_id'])
                                 ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                                 ->where('owner_id', $ownerId)
-                                ->where('project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_APPROVED)
-                                ->count();
+                                ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesApprovedSum->where('sales.project_id', $projectId);
+            }
+            $salesApprovedSum = $salesApprovedSum->count();
+
 
             $salesPendingSum =  Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                                 ->where('t.company_id',$filters['company_id'])
                                 ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                ->where('project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_PENDING)
-                                ->count();
+                                ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesPendingSum->where('sales.project_id', $projectId);
+            }
+            $salesPendingSum = $salesPendingSum->count();
 
             $salesCanceledSum = Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                                 ->where('t.company_id',$filters['company_id'])
                                 ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                ->where('project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_CANCELED)
-                                ->count();
+                                ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesCanceledSum->where('sales.project_id', $projectId);
+            }
+            $salesCanceledSum = $salesCanceledSum->count();
 
             $salesRefusedSum =  Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                                 ->where('t.company_id',$filters['company_id'])
                                 ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                ->where('project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_REFUSED)
-                                ->count();
+                                ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesRefusedSum->where('sales.project_id', $projectId);
+            }
+            $salesRefusedSum = $salesRefusedSum->count();
 
             $salesRefundedSum = Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                                 ->where('t.company_id',$filters['company_id'])
                                 ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                ->where('project_id', $projectId)
                                 ->where('sales.status', Sale::STATUS_REFUNDED)
-                                ->count();
+                                ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesRefundedSum->where('sales.project_id', $projectId);
+            }
+            $salesRefundedSum = $salesRefundedSum->count();
 
             $salesChargebackSum =   Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                                     ->where('t.company_id',$filters['company_id'])
                                     ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                    ->where('project_id', $projectId)
                                     ->where('sales.status', Sale::STATUS_CHARGEBACK)
-                                    ->count();
+                                    ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesChargebackSum->where('sales.project_id', $projectId);
+            }
+            $salesChargebackSum = $salesChargebackSum->count();
 
             $salesOtherSum = Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                             ->where('t.company_id',$filters['company_id'])
                             ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                            ->where('project_id', $projectId)
                             ->whereNotIn('sales.status', [
                                 Sale::STATUS_APPROVED,
                                 Sale::STATUS_PENDING,
@@ -720,7 +770,11 @@ class ReportSaleService
                                 Sale::STATUS_REFUNDED,
                                 Sale::STATUS_CHARGEBACK
                             ])
-                            ->count();
+                            ->where('sales.api_flag', $showSalesApi);
+            if(!$showSalesApi){
+                $salesOtherSum->where('sales.project_id', $projectId);
+            }
+            $salesOtherSum = $salesOtherSum->count();
 
             $total = ($salesApprovedSum + $salesPendingSum + $salesCanceledSum + $salesRefusedSum + $salesRefundedSum + $salesChargebackSum + $salesOtherSum);
 
@@ -879,11 +933,11 @@ class ReportSaleService
         $cacheName = 'conversion-'. json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
 
             $query =    Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                         ->where('t.company_id',$filters['company_id'])
-                        ->where('project_id', $projectId)
                         ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                         ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 1 THEN 1 ELSE 0 END) AS total_credit_card'))
                         ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 1 and sales.status = 1 THEN 1 ELSE 0 END) AS total_credit_card_approved'))
@@ -891,7 +945,12 @@ class ReportSaleService
                         ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 2 and sales.status = 1 THEN 1 ELSE 0 END) AS total_boleto_approved'))
                         ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 THEN 1 ELSE 0 END) AS total_pix'))
                         ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 and sales.status = 1 THEN 1 ELSE 0 END) AS total_pix_approved'))
-                        ->first();
+                        ->where('sales.api_flag', $showSalesApi);
+
+            if(!$showSalesApi){
+                $query->where('sales.project_id', $projectId);
+            }
+            $query = $query->first();
 
             if ($query->total_credit_card == 0 && $query->total_boleto == 0 && $query->total_pix == 0) {
                 return null;
@@ -939,7 +998,8 @@ class ReportSaleService
 
         $cacheName = 'recurrency-' . json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
-            $projectId = hashids_decode($filters['project_id']);
+            $showSalesApi = $filters['project_id']=='API-TOKEN';
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
 
             date_default_timezone_set("America/Sao_Paulo");
             config()->set("database.connections.mysql.strict", false);
@@ -953,10 +1013,15 @@ class ReportSaleService
                     ])->join('transactions as t', 't.sale_id', '=', 'sales.id')
                     ->where('t.company_id',$filters['company_id'])
                     ->where('sales.start_date', '>', now()->subMonths(6)->startOfMonth())
-                    ->where('sales.project_id', $projectId)
+                    ->where('sales.api_flag', $showSalesApi)
                     ->having('sales_count', '>', 1)
-                    ->groupBy('year', 'month')
-                    ->get();
+                    ->groupBy('year', 'month');
+
+            if(!$showSalesApi){
+                $sales->where('sales.project_id', $projectId);
+            }
+
+            $sales =$sales->get();
 
             config()->set("database.connections.mysql.strict", true);
             DB::reconnect();

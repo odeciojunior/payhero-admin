@@ -30,23 +30,6 @@ class AddSituationToCompanies extends Migration
 
         // Company records with default values
         Company::query()->update(['situation' => json_encode($data)]);
-
-
-        // Schema::table('companies', function (Blueprint $table) {
-        //     $table->string('situation', 10)->default('active')->after("annual_income");
-        //     $table->integer('situation_enum')->default(1)->after("situation");
-        //     $table->dateTime("date_check_situation")->default(DB::raw('CURRENT_TIMESTAMP'))->after("situation_enum");
-
-        // });
-
-        // $subThreeDays = Carbon::now()
-        //         ->subDays(7)
-        //         ->format("Y-m-d H:i:s");
-        //     foreach (Company::cursor() as $company) {
-        //         $company->update([
-        //                 'date_check_situation' => $subThreeDays,
-        //             ]);
-        //     }
     }
 
     /**

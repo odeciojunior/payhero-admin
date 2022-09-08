@@ -447,7 +447,7 @@ $(document).ready(function () {
         loadOnTable("#dados_tabela", "#tabela_vendas");
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
-                getProjects('company-navbar',data2);
+                getProjects(data2,'company-navbar');
             });
         });
     });
@@ -618,7 +618,7 @@ $(document).ready(function () {
 
     // FIM - COMPORTAMENTOS DA JANELA
     getCompaniesAndProjects().done( function (data){
-        getProjects('',data);
+        getProjects(data);
     });
 
     function loadData() {
@@ -677,7 +677,7 @@ $(document).ready(function () {
     });
 
     // Obtem o os campos dos filtros
-    function getProjects(origin='',data) {
+    function getProjects(data, origin='') {
         if(origin=='')
             loadingOnScreen();
 
@@ -713,9 +713,9 @@ $(document).ready(function () {
                         $("#project-empty").hide();
                         $("#project-not-empty").show();
                         $("#export-excel > div >").show();
-                        $.each(data.company_default_projects, function (i, project) {
-                            $("#projeto").append($("<option>", {value: project.project_id,text: project.name,}));
-                        });
+                        // $.each(data.company_default_projects, function (i, project) {
+                        //     $("#projeto").append($("<option>", {value: project.project_id,text: project.name,}));
+                        // });
                         $("#projeto option:first").attr('selected','selected');
                         atualizar();
                         if(origin=='')

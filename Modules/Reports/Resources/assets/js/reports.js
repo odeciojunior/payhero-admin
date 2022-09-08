@@ -1,3 +1,5 @@
+var has_api_integration = false;
+
 $('.company-navbar').change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
 
@@ -15,7 +17,7 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            getProjects(data2);
+            getProjects(data2,'company-navbar');
         });
 	});
 });
