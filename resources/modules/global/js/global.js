@@ -2074,7 +2074,6 @@ function buildModalBonusBalance(bonusObject) {
     content = `
         <div class="bonus-balance-content">
             <img class="bonus-illustration-1" src="../../../../../../build/global/img/svg/bonus-illustration-1.svg" alt=""/>
-            <img class="bonus-illustration-2" src="../../../../../../build/global/img/svg/bonus-illustration-2.svg" alt=""/>
 
             <div class="bonus-text">
                 <div class="d-flex justify-content-between align-items-center">
@@ -2091,14 +2090,12 @@ function buildModalBonusBalance(bonusObject) {
 
 
                 <h3 class="bonus-title"><span id="bonus-username">${
-                    userName || "Olá!"
+                    (userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase()) || "Olá!"
                 }</span>, aqui está seu <b>desconto!</b></h3>
 
                 <p>
-                    Você tentou sua sorte e conseguiu <span id="total-bonus-balance" class="bold">${totalBalance}</span> em
-                    desconto nas taxas de suas vendas. Obrigado pela
-                    sua visita no nosso estande no Afiliados Brasil.
-                    Que esse seja o início de uma lucrativa parceria!
+                    Você ganhou <span id="total-bonus-balance" class="bold">${totalBalance}</span> em isenção de taxa sobre suas vendas. Você vai se impressionar com toda a tecnologia embarcada em sua
+                    conta, que seja o início de uma parceria lucrativa. Boas vendas!
                 </p>
 
 

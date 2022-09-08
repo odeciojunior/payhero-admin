@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property int $project_id
  * @property string $description
- * @property int $discount
+ * @property double $discount
+ * @property int $type
  * @property string $apply_on_shipping
  * @property boolean $use_variants
  * @property string $apply_on_plans
@@ -24,6 +25,7 @@ class OrderBumpRule extends Model
         "project_id",
         "description",
         "discount",
+        "type",
         "apply_on_shipping",
         "use_variants",
         "apply_on_plans",

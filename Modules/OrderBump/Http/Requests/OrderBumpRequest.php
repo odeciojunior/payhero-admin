@@ -13,6 +13,7 @@ class OrderBumpRequest extends FormRequest
             "project_id" => "required",
             "description" => "required",
             "discount" => "required",
+            "type" => "int",
             "active_flag" => "boolean",
             "apply_on_shipping" => "array",
             "use_variants" => "boolean",

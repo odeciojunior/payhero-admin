@@ -127,7 +127,42 @@
                                    placeholder="Digite a descrição">
                         </div>
                     </div>
-                    <div class="form-group mb-10">
+
+                    <div class="form-group row mb-10 mt-20">
+
+                        <div class="col-6" style="padding-left: 25px">
+
+                            <input name="type" value="1" class="discount_radio " type="radio" id="ob_type_value" checked="">
+                            <label for="ob_type_value">
+                                Valor em R$
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input name="type" value="0" class="discount_radio " type="radio" id="ob_type_percent">
+                            <label for="ob_type_percent">Porcentagem</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Desconto de</label>
+
+                        <div id="ob_money_opt" class="input-group input-group-lg mb-3" >
+                            <div class="input-group-prepend">
+                                <span style="border-color: #e0e7ee; background-color: #fafafa" class="input-group-text" id="basic-addon1">R$</span>
+                            </div>
+                            <input  maxlength="9" name="discount_value" id="ob_discount_value" type="text" class=" input-pad form-control value-mask" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                        </div>
+
+                        <div id="ob_percent_opt" class="input-group-lg input-group mb-3" style="display: none;">
+
+                            <input  maxlength="2" data-mask="0#" name="percent_value" id="ob_percent_value" style="" type="text" class=" input-dad form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" autocomplete="off">
+                            <div class="input-group-append">
+                                <span style="border-color: #e0e7ee; background-color: #fafafa" class="input-group-text" id="basic-addon1">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group mb-10" style="display: none;">
                         <label for="link">Desconto</label>
                         <div class="input-group">
                             <input type="text"
@@ -135,8 +170,7 @@
                                    name="discount"
                                    id="store-discount-order-bump"
                                    placeholder="Digite o valor do desconto"
-                                   maxlength="2"
-                                   data-mask="0#">
+                                   >
                             <div class="input-group-append">
                                 <span class="input-group-text">%</span>
                             </div>
@@ -237,7 +271,42 @@
                                    placeholder="Digite a descrição">
                         </div>
                     </div>
-                    <div class="form-group mb-10">
+
+
+                    <div class="form-group row mb-10 mt-20">
+
+                        <div class="col-6" style="padding-left: 25px">
+
+                            <input name="type" value="1" class="discount_radio " type="radio" id="obu_type_value" checked="">
+                            <label for="obu_type_value">
+                                Valor em R$
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input name="type" value="0" class="discount_radio " type="radio" id="obu_type_percent">
+                            <label for="obu_type_percent">Porcentagem</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Desconto de</label>
+
+                        <div id="obu_money_opt" class="input-group input-group-lg mb-3" >
+                            <div class="input-group-prepend">
+                                <span style="border-color: #e0e7ee; background-color: #fafafa" class="input-group-text" id="basic-addon1">R$</span>
+                            </div>
+                            <input  maxlength="9" name="discount_value" id="obu_discount_value" type="text" class=" input-pad form-control value-mask" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                        </div>
+
+                        <div id="obu_percent_opt" class="input-group-lg input-group mb-3" style="display: none;">
+
+                            <input  maxlength="2" data-mask="0#" name="percent_value" id="obu_percent_value" style="" type="text" class=" input-dad form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" autocomplete="off">
+                            <div class="input-group-append">
+                                <span style="border-color: #e0e7ee; background-color: #fafafa" class="input-group-text" id="basic-addon1">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-10" style="display: none">
                         <label for="link">Desconto</label>
                         <div class="input-group">
                             <input type="text"

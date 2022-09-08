@@ -30,7 +30,7 @@ class ProjectUpsellRuleApiController extends Controller
             if ($projectId) {
                 $projectUpsell = $projectUpsellModel->where("project_id", $projectId);
 
-                return ProjectsUpsellResource::collection($projectUpsell->paginate(5));
+                return ProjectsUpsellResource::collection($projectUpsell->orderByDesc("id")->paginate(5));
             } else {
                 return response()->json(
                     [
@@ -89,6 +89,7 @@ class ProjectUpsellRuleApiController extends Controller
                 "project_id" => $projectId,
                 "description" => $data["description"],
                 "discount" => !empty($data["discount"]) ? $data["discount"] : 0,
+                "type" => $data["type"],
                 "active_flag" => !empty($data["active_flag"]) ? $data["active_flag"] : 0,
                 "use_variants" => !empty($data["use_variants"]) ? $data["use_variants"] : 0,
                 "apply_on_shipping" => json_encode($applyShippingArray),
@@ -186,6 +187,7 @@ class ProjectUpsellRuleApiController extends Controller
 
             $upsellUpdated = $upsell->update([
                 "description" => $data["description"],
+                "type" => $data["type"],
                 "discount" => !empty($data["discount"]) ? $data["discount"] : 0,
                 "active_flag" => !empty($data["active_flag"]) ? $data["active_flag"] : 0,
                 "use_variants" => !empty($data["use_variants"]) ? $data["use_variants"] : 0,
