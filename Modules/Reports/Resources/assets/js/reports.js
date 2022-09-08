@@ -15,7 +15,7 @@ $('.company-navbar').change(function () {
 
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
-            getProjects(data2);
+            getProjects(data2,'company-navbar');
         });
 	});
 });
@@ -133,9 +133,10 @@ function changeCalendar() {
     dateRange = $('input[name="daterange"]').val();
 }
 
-function getProjects(data)
+function getProjects(data, origin='')
 {
-    loadingOnScreen();
+    if(origin=='')
+        loadingOnScreen();
     $.ajax({
         method: "GET",
         url: "/api/sales/projects-with-sales",
@@ -147,7 +148,8 @@ function getProjects(data)
         error: function error(response) {
             console.log('erro')
             console.log(response)
-            loadingOnScreenRemove();
+            if(origin=='')
+                loadingOnScreenRemove();
         },
         success: function success(response) {
             if(!isEmpty(response)){
@@ -165,7 +167,8 @@ function getProjects(data)
                 company = $("#select_projects").val();
                 updateReports();
                 $(".div-filters").show();
-                loadingOnScreenRemove();
+                if(origin=='')
+                    loadingOnScreenRemove();
             }
             else{
                 if(!isEmpty(data.company_default_projects)){
@@ -173,16 +176,18 @@ function getProjects(data)
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     $("#export-excel > div >").show();
-                    $.each(data.company_default_projects, function (i, project) {
-                        $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
-                    });
+                    // $.each(data.company_default_projects, function (i, project) {
+                    //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
+                    // });
                     $("#select_projects option:first").attr('selected','selected');
                     updateReports();
                     $(".div-filters").show();
-                    loadingOnScreenRemove();
+                    if(origin=='')
+                        loadingOnScreenRemove();
                 }
                 else{
-                    loadingOnScreenRemove();
+                    if(origin=='')
+                        loadingOnScreenRemove();
                     $(".div-filters").hide();
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
