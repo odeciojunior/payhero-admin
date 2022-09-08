@@ -4,17 +4,10 @@
     "/build/layouts/activecampaign/show.min.css": "/build/layouts/activecampaign/show.min.css?id=945bd2280d9c2ec00ade0ac2820d970f",
     "/build/layouts/activecampaign/show.min.js": "/build/layouts/activecampaign/show.min.js?id=9b5bca539e2ab889c51e7625172984fc",
     "/build/layouts/affiliates/index.min.js": "/build/layouts/affiliates/index.min.js?id=bc736b81fc5aa493f152b3e4305ec5ef",
-<<<<<<< HEAD
     "/build/layouts/affiliates/projectaffiliates.min.css": "/build/layouts/affiliates/projectaffiliates.min.css?id=c4083e8e82121d04d166e78358f7d8bd",
     "/build/layouts/affiliates/projectaffiliates.min.js": "/build/layouts/affiliates/projectaffiliates.min.js?id=475942f0219b9e0bc2778be4b2ef42a3",
     "/build/layouts/affiliates/master.min.css": "/build/layouts/affiliates/master.min.css?id=9c9e3439d43a5bd5e3df614c7636ba70",
-    "/build/layouts/affiliates/master.min.js": "/build/layouts/affiliates/master.min.js?id=6549b9acbf5bf9131a127f79e2fa47b3",
-=======
-    "/build/layouts/affiliates/projectaffiliates.min.css": "/build/layouts/affiliates/projectaffiliates.min.css?id=56db8c089b19b32e0a7f0a75d0745199",
-    "/build/layouts/affiliates/projectaffiliates.min.js": "/build/layouts/affiliates/projectaffiliates.min.js?id=bcb84f49d68db81167912903b9b34cfa",
-    "/build/layouts/affiliates/master.min.css": "/build/layouts/affiliates/master.min.css?id=483519bf4d1593fd32651e41f9f1bd83",
-    "/build/layouts/affiliates/master.min.js": "/build/layouts/affiliates/master.min.js?id=d4ee882ec4da095ccdd3f6693e80ae69",
->>>>>>> master
+    "/build/layouts/affiliates/master.min.js": "/build/layouts/affiliates/master.min.js?id=4ff982d689a8479110d84f86aa1c2901",
     "/build/layouts/affiliates/master2.min.js": "/build/layouts/affiliates/master2.min.js?id=888cc773bb281a8e4d0f0172121a3dea",
     "/build/layouts/affiliates/border-anim-h.gif": "/build/layouts/affiliates/border-anim-h.gif?id=288586cd1783fb968e1ed69e031c077b",
     "/build/layouts/affiliates/border-anim-v.gif": "/build/layouts/affiliates/border-anim-v.gif?id=f0de8166e020b04f4c9e5062a5f29974",
@@ -89,15 +82,9 @@
     "/build/layouts/finances/withdrawal-custom.min.js": "/build/layouts/finances/withdrawal-custom.min.js?id=c12275eba10ec0651bbc2ecd1a3d21d4",
     "/build/layouts/finances/withdrawal-default.min.js": "/build/layouts/finances/withdrawal-default.min.js?id=b4011dde3fc5a69ba56bff540f38bd62",
     "/build/layouts/finances/detail.min.js": "/build/layouts/finances/detail.min.js?id=0b3f00968d4e63f7c4124776c797e585",
-<<<<<<< HEAD
     "/build/layouts/finances/index.min.css": "/build/layouts/finances/index.min.css?id=9ba51fdaefbf02a7f927ecc6eb909e2b",
     "/build/layouts/finances/index.min.js": "/build/layouts/finances/index.min.js?id=75750104ee86823893f6df1f3195af14",
-    "/build/layouts/finances/multi.min.css": "/build/layouts/finances/multi.min.css?id=bd6adf666b5cc1d338db6c0b2f24a335",
-=======
-    "/build/layouts/finances/index.min.css": "/build/layouts/finances/index.min.css?id=a0776f44207c39806de5e94494c1e327",
-    "/build/layouts/finances/index.min.js": "/build/layouts/finances/index.min.js?id=5e5dfeba0c24117babd49633a2e6a61f",
-    "/build/layouts/finances/multi.min.css": "/build/layouts/finances/multi.min.css?id=842655a4968f522f3aa8ccf288a60606",
->>>>>>> master
+    "/build/layouts/finances/multi.min.css": "/build/layouts/finances/multi.min.css?id=7e29e09375aa0c4d2dfa458bc797dc28",
     "/build/layouts/finances/multi.min.js": "/build/layouts/finances/multi.min.js?id=5793daba5d9441f00986909a88c0cae6",
     "/build/layouts/hotbillet/index.min.css": "/build/layouts/hotbillet/index.min.css?id=11e9f48574bb49bc6533a9b49f73a3e3",
     "/build/layouts/hotbillet/index2.min.css": "/build/layouts/hotbillet/index2.min.css?id=af8878ab32abe2c0abf3af54f070552a",
@@ -144,11 +131,7 @@
     "/build/layouts/projects/raty.svg": "/build/layouts/projects/raty.svg?id=0b1a91645b8dc78dc3dc7ee4827f3c3d",
     "/build/layouts/projects/project.min.css": "/build/layouts/projects/project.min.css?id=876d66dc8d7edb69f72e4e1d419a2ca5",
     "/build/layouts/projects/ckeditor.js": "/build/layouts/projects/ckeditor.js?id=49a096ecdb09de5173a8d475ed9c7a79",
-<<<<<<< HEAD
-    "/build/layouts/projects/project.min.js": "/build/layouts/projects/project.min.js?id=2530555800261f88a29edefc90afa370",
-=======
-    "/build/layouts/projects/project.min.js": "/build/layouts/projects/project.min.js?id=6c548058adb5b912762055e2176852a6",
->>>>>>> master
+    "/build/layouts/projects/project.min.js": "/build/layouts/projects/project.min.js?id=a5e6a40513e04966d59813553652f5be",
     "/build/layouts/projects/index.min.css": "/build/layouts/projects/index.min.css?id=ad4cc8c5bb35857d93c77082d1e14126",
     "/build/layouts/projects/index.min.js": "/build/layouts/projects/index.min.js?id=6b5a5f24c2b63a4b67839d3d437de374",
     "/build/layouts/projects/create-store-modal.min.css": "/build/layouts/projects/create-store-modal.min.css?id=b586cd2f7c81bf66af342d471a8defa2",
@@ -170,15 +153,9 @@
     "/build/layouts/reportana/index.min.js": "/build/layouts/reportana/index.min.js?id=f0deb7ce26e9cdace292e0b1bfd3c7af",
     "/build/layouts/reports/details.min.css": "/build/layouts/reports/details.min.css?id=2360694f08285382d240c20706aa75e0",
     "/build/layouts/reports/blockedbalance.min.css": "/build/layouts/reports/blockedbalance.min.css?id=d09a977a7bdb89a7fa5122c51a3c1e01",
-<<<<<<< HEAD
-    "/build/layouts/reports/blockedbalance.min.js": "/build/layouts/reports/blockedbalance.min.js?id=fcfb2dbfaf58b9d963c9766e05ea3094",
-    "/build/layouts/reports/coupons.min.css": "/build/layouts/reports/coupons.min.css?id=2cfe37192bd763a9c8a5a603aae1a382",
-    "/build/layouts/reports/coupons.min.js": "/build/layouts/reports/coupons.min.js?id=84ab459ca67b26e22353080ee984dce5",
-=======
     "/build/layouts/reports/blockedbalance.min.js": "/build/layouts/reports/blockedbalance.min.js?id=b4930aa6ee7056bee86c6f85685d050e",
-    "/build/layouts/reports/coupons.min.css": "/build/layouts/reports/coupons.min.css?id=162b1190012e655716b3e9a632eff719",
+    "/build/layouts/reports/coupons.min.css": "/build/layouts/reports/coupons.min.css?id=2cfe37192bd763a9c8a5a603aae1a382",
     "/build/layouts/reports/coupons.min.js": "/build/layouts/reports/coupons.min.js?id=8292d155845aab9346d0503ddeaea6f3",
->>>>>>> master
     "/build/layouts/reports/index.min.css": "/build/layouts/reports/index.min.css?id=f0c080127962259404e065c6a29c73b7",
     "/build/layouts/reports/index.min.js": "/build/layouts/reports/index.min.js?id=e56eaa163903cb7f51bc4c9c34b686b6",
     "/build/layouts/reports/sales.min.js": "/build/layouts/reports/sales.min.js?id=fb159d775e709f36815b11cfb0361339",
@@ -232,13 +209,8 @@
     "/build/layouts/master/sirius-font.ttf": "/build/layouts/master/sirius-font.ttf?id=5dfa5a07c31443df7fa2c29bac2d0a78",
     "/build/layouts/master/sirius-font.woff": "/build/layouts/master/sirius-font.woff?id=136bf0fe67cce4a27966d24b548d7323",
     "/build/layouts/master/sirius-font.woff2": "/build/layouts/master/sirius-font.woff2?id=5a2a00359ce017c2fddd3ac992fa2b64",
-<<<<<<< HEAD
     "/build/layouts/master/master.min.css": "/build/layouts/master/master.min.css?id=3fdbfdeaea6b2253fdb9803377941323",
-    "/build/layouts/master/plugins.min.js": "/build/layouts/master/plugins.min.js?id=d70316b11e85e83c0f47167a13d4b3bd",
-=======
-    "/build/layouts/master/master.min.css": "/build/layouts/master/master.min.css?id=fd4517a22eb6732067c390e74653c344",
-    "/build/layouts/master/plugins.min.js": "/build/layouts/master/plugins.min.js?id=e389d7ab3f2bae070ad2741fbd7f80d1",
->>>>>>> master
+    "/build/layouts/master/plugins.min.js": "/build/layouts/master/plugins.min.js?id=dfa85320cab8cd058993f58c5a0613c1",
     "/build/layouts/master/production.min.js": "/build/layouts/master/production.min.js?id=33a0222bf06c2e47d5a94c8c32e5140a",
     "/build/layouts/master/master.min.js": "/build/layouts/master/master.min.js?id=888cc773bb281a8e4d0f0172121a3dea",
     "/build/layouts/master/sentry-bundle.min.js": "/build/layouts/master/sentry-bundle.min.js?id=5d4a6a8523016db604c17e8aa07e60e3",
