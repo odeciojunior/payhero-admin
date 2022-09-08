@@ -68,6 +68,7 @@ class ProjectsUpsellResource extends JsonResource
             "id" => Hashids::encode($this->id),
             "description" => Str::limit($this->description, 20),
             "discount" => $this->discount,
+            "type" => $this->type,
             "active_flag" => $this->active_flag,
             "use_variants" => $this->use_variants,
             "apply_on_shipping" => $this->apply_on_shipping->map(function ($shipping) {

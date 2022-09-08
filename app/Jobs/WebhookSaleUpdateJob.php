@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Webhook;
 use Modules\Core\Services\WebhookService;
@@ -48,27 +49,22 @@ class WebhookSaleUpdateJob implements ShouldQueue
     public function handle()
     {
         try {
-            $checkout = $this->sale->checkout;
+            if ($this->sale->project_id) {
+                $userProject = UserProject::where("project_id", $this->sale->project_id)->first();
+                $companyId = $userProject->company_id ?? null;
+            } else {
+                $transaction = $this->sale->transactions
+                    ->where("type", Transaction::TYPE_PRODUCER)
+                    ->where("user_id", $this->sale->owner_id)
+                    ->first();
+                $companyId = $transaction->company_id ?? null;
+            }
 
-            if (empty($checkout)) {
+            if (empty($companyId)) {
                 return;
             }
 
-            $checkout->load("project");
-
-            $userProject = UserProject::where(
-                "project_id",
-                $checkout->project_id
-            )->first();
-
-            if (empty($userProject)) {
-                return;
-            }
-
-            $webhook = Webhook::where(
-                "company_id",
-                $userProject->company_id
-            )->first();
+            $webhook = Webhook::where("company_id", $companyId)->first();
 
             if (!empty($webhook)) {
                 $service = new WebhookService($webhook);

@@ -166,6 +166,7 @@ $(document).ready(function () {
                     });
                 });
             });
+            $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
             $("#projeto option:first").attr('selected','selected');
 
             if(sessionStorage.info) {
