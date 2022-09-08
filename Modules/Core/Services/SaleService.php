@@ -1558,17 +1558,13 @@ class SaleService
         $company_id = auth()->user()->company_default;
         $user_id = auth()->user()->getAccountOwnerId();
 
-        $projects = Transaction::select('sales.project_id','projects.name')
+        $projects =  Sale::select('sales.project_id', 'projects.name')
             ->distinct()
-            ->leftJoin('sales','sales.id','=','transactions.sale_id')
-            ->leftJoin('projects','projects.id','=','sales.project_id')
-            ->leftJoin('affiliates','affiliates.id','=','sales.affiliate_id')
-            ->where('transactions.user_id',$user_id)
-            ->where('transactions.company_id',$company_id)
-            ->where(function($query) use($user_id){
-                $query->where('sales.owner_id',$user_id)
-                ->orWhere('affiliates.user_id',$user_id);
-            })
+            ->leftJoin('projects', 'projects.id','=', 'sales.project_id')
+            ->leftJoin('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->where('transactions.user_id', $user_id)
+            ->where('transactions.company_id', $company_id)
+            ->whereNull('transactions.invitation_id')
             ->where(function($query){
                 if(auth()->user()->deleted_project_filter)
                     $query->whereIn('projects.status', [1,2]);

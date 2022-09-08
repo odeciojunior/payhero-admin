@@ -447,7 +447,7 @@ $(document).ready(function () {
         loadOnTable("#dados_tabela", "#tabela_vendas");
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
-                getProjects('company-navbar');
+                getProjects('company-navbar',data2);
             });
         });
     });
@@ -617,8 +617,8 @@ $(document).ready(function () {
     );
 
     // FIM - COMPORTAMENTOS DA JANELA
-    getCompaniesAndProjects().done( function (){
-        getProjects();
+    getCompaniesAndProjects().done( function (data){
+        getProjects('',data);
     });
 
     function loadData() {
@@ -677,7 +677,7 @@ $(document).ready(function () {
     });
 
     // Obtem o os campos dos filtros
-    function getProjects(origin='') {
+    function getProjects(origin='',data) {
         if(origin=='')
             loadingOnScreen();
 
@@ -709,10 +709,24 @@ $(document).ready(function () {
                         loadingOnScreenRemove();
                 }
                 else{
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                    if(origin=='')
-                        loadingOnScreenRemove();
+                    if(!isEmpty(data.company_default_projects)){
+                        $("#project-empty").hide();
+                        $("#project-not-empty").show();
+                        $("#export-excel > div >").show();
+                        $.each(data.company_default_projects, function (i, project) {
+                            $("#projeto").append($("<option>", {value: project.project_id,text: project.name,}));
+                        });
+                        $("#projeto option:first").attr('selected','selected');
+                        atualizar();
+                        if(origin=='')
+                            loadingOnScreenRemove();
+                    }
+                    else{
+                        if(origin=='')
+                            loadingOnScreenRemove();
+                        $("#project-empty").show();
+                        $("#project-not-empty").hide();
+                    }
                 }
             }
         });
