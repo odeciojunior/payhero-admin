@@ -2053,6 +2053,16 @@ tbody td{
     background: #68aafa;
     color: #ffffff;
 }
+.pagination-sm .btn:hover{
+    border-radius: 4px;
+    background: #68aafa;
+    color: #ffffff;
+}
+.nav-btn:hover{
+    border-radius: 4px;
+    background: #68aafa;
+    color: #ffffff;
+}
 
 .page-project .pagination-sm .nav-btn.active {
     background-color: #4990e7 !important;

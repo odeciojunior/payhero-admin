@@ -805,6 +805,9 @@ function isMobile() {
 
 function pagination(response, model, callback) {
     let paginationContainer = "#pagination-" + model;
+    
+    $(paginationContainer).children().attr("disabled","disabled");
+
     $(paginationContainer).html("");
 
     let currentPage = response.meta.current_page;
@@ -857,12 +860,9 @@ function pagination(response, model, callback) {
                 </button>
             `);
     
-            $(paginationContainer + " .page_" + (currentPage - x)).on(
-                "click",
-                function () {
-                    callback("?page=" + $(this).html());
-                }
-            );
+            $(paginationContainer + " .page_" + (currentPage - x)).on("click",function () {
+                callback("?page=" + $(this).html());
+            });
         }
     }
 

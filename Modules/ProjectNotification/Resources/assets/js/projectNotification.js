@@ -256,6 +256,7 @@ $(function () {
         }
 
         loadOnTable("#data-table-sms", "#tabela-sms");
+        $("#pagination-project-notification").children().attr("disabled","disabled");
 
         $("#tab_sms-panel").find(".no-gutters").css("display", "none");
         $("#tabela-sms").find("thead").css("display", "none");

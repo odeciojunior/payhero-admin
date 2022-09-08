@@ -550,6 +550,7 @@ $(() => {
         }
 
         loadOnTable("#dados_tabela", "#tabela_trackings");
+        $("#pagination-trackings").children().attr("disabled","disabled");
         $.ajax({
             method: "GET",
             url: link,

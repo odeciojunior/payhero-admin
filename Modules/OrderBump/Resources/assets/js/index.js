@@ -3,6 +3,7 @@ $(() => {
 
     function index() {
         loadOnTable("#table-order-bump tbody", "#table-order-bump");
+        $("#pagination-invites").children().attr("disabled","disabled");
 
         let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         link = "/api/orderbump" + (link || "");

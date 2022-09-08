@@ -58,6 +58,7 @@ $(function () {
         }
 
         loadOnTable("#data-table-pixel", "#table-pixel");
+        $("#pagination-pixels").children().attr("disabled","disabled");
 
         $("#pagination-pixels").html("");
         $("#tab_pixels-panel").find(".no-gutters").css("display", "none");

@@ -65,6 +65,7 @@ $(function () {
         $("#table-pixel").find("thead").css("display", "none");
 
         loadOnTable("#data-table-pixel", "#table-pixel");
+        $("#pagination-pixels").children().attr("disabled","disabled");
 
         $.ajax({
             method: "GET",

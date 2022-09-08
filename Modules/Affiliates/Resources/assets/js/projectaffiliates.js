@@ -140,6 +140,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#body-table-affiliates", ".table-affiliate");
+        $("#pagination-affiliates").children().attr("disabled","disabled");
 
         $.ajax({
             method: "GET",
@@ -431,10 +432,8 @@ $(document).ready(function () {
             link = "/api/affiliates/getaffiliaterequests" + link + "&project=" + project + "&name=" + name + "&company=" + $('.company-navbar').val();
         }
 
-        loadOnTable(
-            "#body-table-affiliate-requests",
-            ".table-affiliate-request"
-        );
+        loadOnTable("#body-table-affiliate-requests", ".table-affiliate-request");
+        $("#pagination-affiliates-request").children().attr("disabled","disabled");
 
         $.ajax({
             method: "GET",

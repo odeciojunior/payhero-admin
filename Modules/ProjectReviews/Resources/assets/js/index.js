@@ -114,6 +114,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#data-table-reviews", "#table-reviews");
+        $("#pagination-review").children().attr("disabled","disabled");
 
         $("#tab_project_reviews").find(".no-gutters").css("display", "none");
         $("#table-reviews").find("thead").css("display", "none");

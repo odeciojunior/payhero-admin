@@ -147,20 +147,20 @@ jQuery(function () {
         pageCurrent = link;
         let existFilters = () => {
             if (localStorage.getItem("filtersApplied") != null) {
-                let getFilters = JSON.parse(
-                    localStorage.getItem("filtersApplied")
-                );
+                let getFilters = JSON.parse(localStorage.getItem("filtersApplied"));
                 return getFilters;
             } else {
                 return null;
             }
         };
+
         if (link != null) {
             let getPage = {
                 atualPage: pageCurrent,
             };
             localStorage.setItem("page", JSON.stringify(getPage));
         }
+
         if (localStorage.getItem("page") != null) {
             let parsePage = JSON.parse(localStorage.getItem("page"));
             if (existFilters() != null && existFilters().getName != "") {
@@ -175,6 +175,7 @@ jQuery(function () {
         }
         link = pageCurrent;
         loadOnAny(".page-content");
+        
         let type =
             existFilters() != null
                 ? existFilters().getTypeProducts

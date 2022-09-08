@@ -243,6 +243,7 @@ $(document).ready(function () {
      */
     function updateSalesRecovery(link = null) {
         loadOnTable("#table_data", "#carrinhoAbandonado");
+        $("#pagination-salesRecovery").children().attr("disabled","disabled");
 
         // Formata a url
         link = urlDataFormatted(link);

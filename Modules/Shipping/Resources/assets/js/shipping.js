@@ -487,6 +487,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#dados-tabela-frete", "#tabela_fretes");
+        $("#pagination-shippings").children().attr("disabled","disabled");
 
         $("#tab-fretes-panel").find(".no-gutters").css("display", "none");
         $("#tabela-fretes").find("thead").css("display", "none");

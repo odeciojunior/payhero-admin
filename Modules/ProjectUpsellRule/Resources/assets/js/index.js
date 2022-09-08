@@ -30,6 +30,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#data-table-upsell", "#table-upsell");
+        $("#pagination-upsell").children().attr("disabled","disabled");
 
         $("#tab_upsell-panel").find(".no-gutters").css("display", "none");
         $("#table-upsell").find("thead").css("display", "none");

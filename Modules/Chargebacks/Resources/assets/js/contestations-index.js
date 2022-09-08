@@ -273,7 +273,7 @@ $(document).ready(function () {
 
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
-
+        $("#pagination").children().attr("disabled","disabled");
         if (link == null) {
             link = "/api/contestations/getcontestations?" + getFilters();
         } else {

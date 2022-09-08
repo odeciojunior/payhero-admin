@@ -3650,6 +3650,7 @@ $(function () {
         pageCurrent = link;
 
         loadOnTable("#data-table-plan", "#table-plans");
+        $("#pagination-plans").children().attr("disabled","disabled");
         if (link == null) {
             link = "/api/project/" + projectId + "/plans";
         } else {

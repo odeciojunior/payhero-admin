@@ -287,6 +287,8 @@ function atualizarCoupon() {
     
 
     loadOnTable('#data-table-coupon', '#tabela-coupom');
+    $("#pagination-coupons").children().attr("disabled","disabled");
+    
     $.ajax({
         method: "GET",
         data:{name:$('#search-name').val()},

@@ -202,6 +202,7 @@ $(document).ready(function () {
 
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
+        
 
         if (link == null) {
             link = "/chargebacks/getchargebacks?" + getFilters();

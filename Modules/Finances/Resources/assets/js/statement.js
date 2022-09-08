@@ -38,6 +38,8 @@ window.updateTransfersTable = function (link = null) {
     $("#table-transfers-body").html("");
 
     loadOnTable("#table-transfers-body", "#transfersTable");
+    $("#pagination-transfers").children().attr("disabled","disabled");
+
     if (link == null) {
         link = "/api/transfers";
     } else {

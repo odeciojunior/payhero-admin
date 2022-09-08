@@ -13,6 +13,9 @@ window.loadWithdrawalsTable = function (link = null) {
 
     $("#withdrawals-table-data").html("");
     loadOnTable("#withdrawals-table-data", "#transfersTable");
+    $("#pagination-withdrawals").children().attr("disabled","disabled");
+
+    
     if (link == null) {
         link = "/api/withdrawals";
     } else {

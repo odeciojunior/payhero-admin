@@ -29,6 +29,8 @@ function atualizar(link = null) {
 
     let updateResume = true;
     loadOnTable("#dados_tabela", "#tabela_vendas");
+    $("#pagination-sales").children().attr("disabled","disabled");
+
 
     if (link == null) {
         link = "/api/sales?" + getFilters(true).substr(1);
