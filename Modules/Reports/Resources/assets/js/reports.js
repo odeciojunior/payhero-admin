@@ -160,6 +160,7 @@ function getProjects(data, origin='')
                 $.each(response, function (c, project) {
                     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                 });
+                $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                 if(sessionStorage.info) {
                     $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
                     $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);

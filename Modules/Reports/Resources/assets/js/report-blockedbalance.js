@@ -514,6 +514,7 @@ $(document).ready(function () {
                     $.each(response, function (c, project) {
                         $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                     });
+                    $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     if(sessionStorage.info) {
                         $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
                         $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
@@ -532,6 +533,7 @@ $(document).ready(function () {
                         // $.each(data.company_default_projects, function (i, project) {
                         //     $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
+                        $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                         $("#project option:first").attr('selected','selected');
                         atualizar();
                         $(".div-filters").show();

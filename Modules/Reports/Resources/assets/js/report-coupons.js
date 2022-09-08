@@ -174,9 +174,73 @@ $(document).ready(function () {
                     $.each(response, function (c, project) {
                         $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                     });
+                    $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     if(sessionStorage.info) {
                         $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
                         $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+                    }
+                    company = $("#select_projects").val();
+                    window.atualizar();
+                    $(".div-filters").show();
+                    loadingOnScreenRemove();
+                }
+                else{
+                    if(!isEmpty(data.company_default_projects)){
+                        $(".div-filters").hide();
+                        $("#project-empty").hide();
+                        $("#project-not-empty").show();
+                        $("#export-excel > div >").show();
+                        // $.each(data.company_default_projects, function (i, project) {
+                        //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
+                        // });
+                        $("#select_projects option:first").attr('selected','selected');
+                        window.atualizar();
+                        $(".div-filters").show();
+                        loadingOnScreenRemove();
+                    }
+                    else{
+                        loadingOnScreenRemove();
+                        $(".div-filters").hide();
+                        $("#project-empty").show();
+                        $("#project-not-empty").hide();
+                    }
+                }
+            }
+        })
+        loadingOnScreenRemove();
+
+
+        // $("#project-empty").hide();
+        // $("#project-not-empty").show();
+        // $("#export-excel").show()
+        // window.fillProjectsSelect()
+        // .done(function(dataSales)
+        // {console.log(dataSales);
+        //     $(".div-filters").show();
+        //     $.each(companies, function (c, company) {
+        //         $.each(company.projects, function (i, project) {
+        //             $.each(dataSales.data, function (idx, project2) {
+        //                 if( project2.id == project.id ){
+        //                     $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
+        //                 }
+        //             });
+        //         });
+        //     });
+        //     $("#projeto option:first").attr('selected','selected');
+
+        //     if(sessionStorage.info) {
+        //         $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
+        //         $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
+        //     }
+
+        //     company = $("#projeto").val();
+
+        //     window.atualizar();
+        // });
+
+            if(sessionStorage.info) {
+                $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
+                $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
                     }
                     company = $("#select_projects").val();
                     window.atualizar();

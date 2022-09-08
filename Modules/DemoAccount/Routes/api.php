@@ -447,5 +447,12 @@ Route::group([
         }
     );
 
+    Route::group([], function() {
+        Route::get('/mobile/balances', 'DashboardApiDemoController@getValues');
+        Route::get('/mobile/sales', 'MobileDemoController@sales');
+        Route::get('/mobile/withdrawals', 'WithdrawalsApiDemoController@index');
+        Route::get('/mobile/statements-resume', 'MobileDemoController@statementsResume');
+    });
+
     Route::get('/not-authorized','DemoAccountController@notAuthorized')->name('demo.not_authorized');
 });
