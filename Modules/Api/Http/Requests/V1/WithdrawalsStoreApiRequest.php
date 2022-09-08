@@ -4,7 +4,7 @@ namespace Modules\Api\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WithdrawalsApiRequest extends FormRequest
+class WithdrawalsStoreApiRequest extends FormRequest
 {
     /**
      * Get data to be validated from the request.
@@ -37,6 +37,7 @@ class WithdrawalsApiRequest extends FormRequest
             "user_id" => "required|exists:users,id",
             "company_id" => "required|exists:companies,id",
             "gateway_id" => "required|exists:gateways,id",
+            "withdrawal_value" => "required",
         ];
     }
 
@@ -49,6 +50,7 @@ class WithdrawalsApiRequest extends FormRequest
             "company_id.exists" => "Empresa não encontrada",
             "gateway_id.required" => "Gateway não informado",
             "gateway_id.exists" => "Gateway não encontrado",
+            "withdrawal_value.required" => "Valor para saque não informado",
         ];
     }
 

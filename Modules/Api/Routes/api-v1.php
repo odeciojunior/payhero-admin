@@ -34,4 +34,6 @@ Route::group(["middleware" => "authApiV1"], function () {
 
     // WITHDRAWALS
     Route::post("withdrawals", "V1\WithdrawalsApiController@storeWithdrawals");
+    Route::get("withdrawals", "V1\WithdrawalsApiController@getWithdrawals");
+    Route::get("withdrawals-resume", "V1\WithdrawalsApiController@getResumeWithdrawals");
 });

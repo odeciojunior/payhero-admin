@@ -4,7 +4,7 @@ namespace Modules\Api\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WithdrawalsApiRequest extends FormRequest
+class WithdrawalsResumeApiRequest extends FormRequest
 {
     /**
      * Get data to be validated from the request.
@@ -17,10 +17,6 @@ class WithdrawalsApiRequest extends FormRequest
 
         if ($this->company_id) {
             $this->merge(["company_id" => hashids_decode($this->company_id)]);
-        }
-
-        if ($this->gateway_id) {
-            $this->merge(["gateway_id" => hashids_decode($this->gateway_id)]);
         }
 
         return $this->all();
@@ -36,7 +32,6 @@ class WithdrawalsApiRequest extends FormRequest
         return [
             "user_id" => "required|exists:users,id",
             "company_id" => "required|exists:companies,id",
-            "gateway_id" => "required|exists:gateways,id",
         ];
     }
 
@@ -47,8 +42,6 @@ class WithdrawalsApiRequest extends FormRequest
             "user_id.exists" => "Usuário não encontrado",
             "company_id.required" => "Empresa não informada",
             "company_id.exists" => "Empresa não encontrada",
-            "gateway_id.required" => "Gateway não informado",
-            "gateway_id.exists" => "Gateway não encontrado",
         ];
     }
 

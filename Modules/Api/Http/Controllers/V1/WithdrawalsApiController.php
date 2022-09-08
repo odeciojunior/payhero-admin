@@ -3,10 +3,13 @@
 namespace Modules\Api\Http\Controllers\V1;
 
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Modules\Api\Http\Requests\V1\WithdrawalsApiRequest;
+use Modules\Api\Http\Requests\V1\WithdrawalsResumeApiRequest;
+use Modules\Api\Http\Requests\V1\WithdrawalsStoreApiRequest;
+use Modules\Api\Transformers\V1\WithdrawalsApiResource;
+use Modules\Api\Transformers\V1\WithdrawalsResumeApiResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\User;
@@ -17,7 +20,34 @@ use Spatie\Activitylog\Models\Activity;
 
 class WithdrawalsApiController extends Controller
 {
-    public function storeWithdrawals(WithdrawalsApiRequest $request)
+    public function getWithdrawals(WithdrawalsApiRequest $request)
+    {
+        try {
+            $withdrawals = Withdrawal::where([
+                "company_id" => $request->company_id,
+                "gateway_id" => $request->gateway_id,
+            ])->latest();
+
+            return WithdrawalsApiResource::collection($withdrawals->simplePaginate(10));
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(["message" => "Erro ao carregar saques"], 400);
+        }
+    }
+
+    public function getResumeWithdrawals(WithdrawalsResumeApiRequest $request)
+    {
+        try {
+            $withdrawals = Withdrawal::where("company_id", $request->company_id)->latest();
+
+            return WithdrawalsResumeApiResource::collection($withdrawals->simplePaginate(10));
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(["message" => "Erro ao carregar histórico de saques"], 400);
+        }
+    }
+
+    public function storeWithdrawals(WithdrawalsStoreApiRequest $request)
     {
         try {
             $settings = settings()
