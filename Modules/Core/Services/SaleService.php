@@ -456,7 +456,7 @@ class SaleService
             }
         }
 
-        if ($userTransaction->transaction_tax > 0) {
+        if (!empty($userTransaction) && $userTransaction->transaction_tax > 0) {
             $transactionTax = foxutils()->onlyNumbers(
                 $userTransaction->transaction_tax
             );
