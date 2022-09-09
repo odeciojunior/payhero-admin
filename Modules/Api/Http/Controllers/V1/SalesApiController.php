@@ -32,7 +32,7 @@ class SalesApiController extends Controller
             return SalesApiResource::collection($sales->simplePaginate(10));
         } catch (Exception $e) {
             report($e);
-            return response()->json(["message" => "Erro ao carregar vendas"], 400);
+            return response()->json(["message" => "Erro ao listar vendas"], 400);
         }
     }
 
