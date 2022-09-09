@@ -17,22 +17,22 @@ class SalesApiService
         $transactionModel = new Transaction();
         $transactions = $transactionModel->join("sales", "sales.id", "transactions.sale_id");
 
-        if (!empty($data["transaction"])) {
-            $transaction_id = current(Hashids::connection('sale_id')->decode($data["transaction"]));
+        if (!empty($data["transaction_id"])) {
+            $transaction_id = current(Hashids::connection('sale_id')->decode($data["transaction_id"]));
 
             $transactions->where("sales.id", $transaction_id);
         }
 
-        if (!empty($data["company"])) {
-            $companies = Hashids::decode($data["company"]);
+        if (!empty($data["company_id"])) {
+            $companies = Hashids::decode($data["company_id"]);
         } else {
             $companies = Company::where("user_id", request()->user_id)->pluck("id")->toArray();
         }
 
         $transactions->whereIn("transactions.company_id", $companies);
 
-        if (!empty($data["user"])) {
-            $user_id = current(Hashids::decode($data["user"]));
+        if (!empty($data["subseller_id"])) {
+            $user_id = current(Hashids::decode($data["subseller_id"]));
             $subsellers = User::where("subseller_owner_id", request()->user_id)->where("id", $user_id)->pluck("id")->toArray();
         } else {
             $subsellers = User::where("subseller_owner_id", request()->user_id)->pluck("id")->toArray();
