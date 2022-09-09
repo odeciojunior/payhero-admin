@@ -361,9 +361,12 @@ class SaleService
         //$totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         $totalToCalcTaxReal = $total + $cashbackValue;
 
-        if ($userTransaction->tax > 0) {
-            if ($userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX) {
-                $totalTaxPercentage = (int) ($totalToCalcTaxReal * ($userTransaction->tax / 100));
+        if (!empty($userTransaction) && $userTransaction->tax > 0) {
+            if (
+                $userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX
+            ) {
+                $totalTaxPercentage =
+                    (int) ($totalToCalcTaxReal * ($userTransaction->tax / 100));
                 $totalTax += $totalTaxPercentage;
             } else {
                 $totalTaxPercentage = foxutils()->onlyNumbers($userTransaction->tax);
@@ -371,8 +374,10 @@ class SaleService
             }
         }
 
-        if ($userTransaction->transaction_tax > 0) {
-            $transactionTax = foxutils()->onlyNumbers($userTransaction->transaction_tax);
+        if (!empty($userTransaction) && $userTransaction->transaction_tax > 0) {
+            $transactionTax = foxutils()->onlyNumbers(
+                $userTransaction->transaction_tax
+            );
             $totalTax += $transactionTax;
         }
 
@@ -827,8 +832,16 @@ class SaleService
             }
 
             if (!empty($filters["project"])) {
-                $projectId = hashids_decode($filters["project"]);
-                $transactions->where("sales.project_id", $projectId);
+                $showSalesApi = $filters["project"] == "API-TOKEN";
+                $projectId = $showSalesApi
+                    ? null
+                    : hashids_decode($filters["project_id"]);
+
+                $transactions->where("sales.api_flag", $showSalesApi);
+
+                if (!$showSalesApi) {
+                    $transactions->where("sales.project_id", $projectId);
+                }
             }
 
             if (!empty($filters["transaction"])) {
@@ -898,7 +911,6 @@ class SaleService
         $cacheName = "pending-resume-" . json_encode($filters);
         return cache()->remember($cacheName, 120, function () use ($filters) {
             $transactions = $this->getSalesPendingBalance($filters);
-            \Log::info(str_replace_array("?", $transactions->getBindings(), $transactions->toSql()));
             $transactionStatus = implode(",", [Transaction::STATUS_PAID]);
 
             $resume = $transactions
@@ -1021,9 +1033,20 @@ class SaleService
 
             // Projeto
             if (!empty($filters["project"])) {
-                $projectId = hashids_decode($filters["project"]);
-                $transactions->whereHas("sale", function ($querySale) use ($projectId) {
-                    $querySale->where("sales.project_id", $projectId);
+                $showSalesApi = $filters["project"] == "API-TOKEN";
+                $projectId = $showSalesApi
+                    ? null
+                    : hashids_decode($filters["project"]);
+
+                $transactions->whereHas("sale", function ($querySale) use (
+                    $projectId,
+                    $showSalesApi
+                ) {
+                    if (!$showSalesApi) {
+                        $querySale->where("sales.project_id", $projectId);
+                        return;
+                    }
+                    $querySale->where("sales.api_flag", $showSalesApi);
                 });
             }
 
@@ -1073,7 +1096,13 @@ class SaleService
             if (!empty($filters["is_security_reserve"]) && $filters["is_security_reserve"] == true) {
                 $transactions->where("is_security_reserve", true);
             }
-
+            \Log::info(
+                str_replace_array(
+                    "?",
+                    $transactions->getBindings(),
+                    $transactions->toSql()
+                )
+            );
             // Filtros - FIM
             return $transactions;
         } catch (Exception $e) {

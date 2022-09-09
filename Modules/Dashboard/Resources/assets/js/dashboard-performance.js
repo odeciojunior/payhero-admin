@@ -221,7 +221,10 @@ $(document).ready(function () {
             elementTask.css({ "margin-top": "20px" }).show();
 
             if (tasks.length > 3) {
-                elementTask.css({ "margin-top": "0" }).asScrollable();
+                elementTask.css({ "margin-top": "0" });
+                setTimeout(() => {
+                    elementTask.asScrollable();
+                }, 1500);
                 $("#achievements").css({ "margin-bottom": "20px" });
             }
         } else {
