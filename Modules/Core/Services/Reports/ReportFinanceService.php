@@ -29,8 +29,7 @@ class ReportFinanceService
         return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $showSalesApi = $filters['project_id']=='API-TOKEN';
-            $showSalesApi = $filters['project_id']=='API-TOKEN';
-            $projectId = $showSalesApi ? null : $showSalesApi ? null : hashids_decode($filters['project_id']);
+            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
 
             $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
                             ->where('user_id', $ownerId)
