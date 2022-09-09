@@ -441,7 +441,7 @@ class SaleService
         //$totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         $totalToCalcTaxReal = $total + $cashbackValue;
 
-        if ($userTransaction->tax > 0) {
+        if (!empty($userTransaction) && $userTransaction->tax > 0) {
             if (
                 $userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX
             ) {
@@ -1003,13 +1003,15 @@ class SaleService
             }
 
             if (!empty($filters["project"])) {
-                $showSalesApi = $filters['project']=='API-TOKEN';
-                $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
+                $showSalesApi = $filters["project"] == "API-TOKEN";
+                $projectId = $showSalesApi
+                    ? null
+                    : hashids_decode($filters["project_id"]);
 
-                $transactions->where('sales.api_flag', $showSalesApi);
+                $transactions->where("sales.api_flag", $showSalesApi);
 
-                if(!$showSalesApi){
-                    $transactions->where('sales.project_id', $projectId);
+                if (!$showSalesApi) {
+                    $transactions->where("sales.project_id", $projectId);
                 }
             }
 
@@ -1268,16 +1270,20 @@ class SaleService
 
             // Projeto
             if (!empty($filters["project"])) {
-                $showSalesApi = $filters['project']=='API-TOKEN';
-                $projectId = $showSalesApi ? null : hashids_decode($filters['project']);
+                $showSalesApi = $filters["project"] == "API-TOKEN";
+                $projectId = $showSalesApi
+                    ? null
+                    : hashids_decode($filters["project"]);
 
-                $transactions->whereHas("sale", function ($querySale) use ($projectId,$showSalesApi) {
-
-                    if(!$showSalesApi){
-                        $querySale->where('sales.project_id', $projectId);
+                $transactions->whereHas("sale", function ($querySale) use (
+                    $projectId,
+                    $showSalesApi
+                ) {
+                    if (!$showSalesApi) {
+                        $querySale->where("sales.project_id", $projectId);
                         return;
                     }
-                    $querySale->where('sales.api_flag', $showSalesApi);
+                    $querySale->where("sales.api_flag", $showSalesApi);
                 });
             }
 
@@ -1348,7 +1354,13 @@ class SaleService
             ) {
                 $transactions->where("is_security_reserve", true);
             }
-\Log::info(str_replace_array('?',$transactions->getBindings(),$transactions->toSql()));
+            \Log::info(
+                str_replace_array(
+                    "?",
+                    $transactions->getBindings(),
+                    $transactions->toSql()
+                )
+            );
             // Filtros - FIM
             return $transactions;
         } catch (Exception $e) {
