@@ -49,6 +49,7 @@ class ApiTokenResource extends JsonResource
             "revoked" => $revoked,
             "register_date" => $this->getFormatDate($this->resource->created_at),
             "description" => $this->resource->description,
+            "integration_type_enum" => $this->resource->integration_type_enum,
             "integration_type" => $this->resource->present()->getIntegrationType(),
             "scopes" => $this->resource->scopes,
         ];

@@ -5,6 +5,7 @@ namespace Modules\Core\Presenters;
 use Laracasts\Presenter\Presenter;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtilsService;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class SalePresenter
@@ -263,6 +264,50 @@ class SalePresenter extends Presenter
 
             return null;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getProductsData()
+    {
+        $productsSale = [];
+        foreach ($this->plansSales as $planSale) {
+            foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
+                $saleProduct = $productPlan->product()->first();
+
+                $product = [];
+                $product["id"] = Hashids::encode($saleProduct->id);
+                $product["name"] = $saleProduct->name;
+                $product["description"] = $saleProduct->description;
+                $product["amount"] = $productPlan->amount * $planSale->amount;
+                $product["photo"] = $saleProduct->photo;
+                $product["created_at"] = $saleProduct->created_at->format("d/m/Y H:i:s");
+                $productsSale[] = $product;
+            }
+        }
+
+        return $productsSale;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProductsApiData()
+    {
+        $productsApi = [];
+        foreach ($this->productsSaleApi as $productSale) {
+            $product = [];
+            $product["id"] = $productSale->item_id;
+            $product["name"] = $productSale->name;
+            $product["price"] = $productSale->price;
+            $product["quantity"] = $productSale->quantity;
+            $product["product_type"] = $productSale->product_type;
+
+            $productsApi[] = $product;
+        }
+
+        return $productsApi;
     }
 
     /**

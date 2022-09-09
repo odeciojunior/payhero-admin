@@ -283,7 +283,7 @@ class CoreApiController extends Controller
             if($user->company_default > Company::DEMO_ID)
             {
                 $companyDefault = cache()->remember('company-default-'.$user->company_default, 60, function () use($user) {
-                    return Company::select('company_type','fantasy_name')
+                    return Company::select('id','company_type','fantasy_name')
                     ->where('id', $user->company_default)
                     ->first();
                 });
