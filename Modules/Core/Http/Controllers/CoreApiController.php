@@ -295,7 +295,7 @@ class CoreApiController extends Controller
 
                 $hasApiIntegration = DB::table('api_tokens')->where('user_id',auth()->user()->id)
                                     ->where('company_id',$companyDefault->id)
-                                    ->where('integration_type_enum',4)->exists();
+                                    ->whereIn('integration_type_enum',[4,5])->exists();
 
                 $return = array(
                     'company_default'=>Hashids::encode($user->company_default),
