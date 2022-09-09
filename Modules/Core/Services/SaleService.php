@@ -832,8 +832,10 @@ class SaleService
             }
 
             if (!empty($filters["project"])) {
-                $showSalesApi = $filters['project']=='API-TOKEN';
-                $projectId = $showSalesApi ? null : hashids_decode($filters['project']);
+                $showSalesApi = $filters["project"] == "API-TOKEN";
+                $projectId = $showSalesApi
+                    ? null
+                    : hashids_decode($filters["project"]);
 
                 $transactions->where("sales.api_flag", $showSalesApi);
 

@@ -165,6 +165,7 @@ class User extends Authenticable
         "invites_amount",
         "account_owner_id",
         "subseller_owner_id",
+        "logged_id",
         "deleted_project_filter",
         "id_wall_result",
         "bureau_result",

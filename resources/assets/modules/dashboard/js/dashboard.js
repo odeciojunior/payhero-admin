@@ -17,7 +17,7 @@ $(document).ready(function () {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             data: {
-                company: $('.company-navbar').val(),
+                company_id: $('.company-navbar').val(),
             },
             error: function () {
                 //
