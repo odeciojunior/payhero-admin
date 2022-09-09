@@ -48,8 +48,6 @@ class SubsellersApiService
         $document = preg_replace('/[^0-9]/', '', $user['document']);
         $files = $data['file_to_uploads'];
         foreach($files as $file) {
-            dd($file);
-
             $documentRename = $file['type'].'.'.$file['file']->extension();
 
             dd($documentRename);
@@ -78,10 +76,7 @@ class SubsellersApiService
         }
 
         return [
-            'message' => 'Arquivo enviado com sucesso.',
-            'path' => $urlPath,
-            'fileName' => $document->getClientOriginalName(),
-            'fileType' => $document->extension(),
+            'message' => 'Arquivos enviados com sucesso.'
         ];
     }
 }

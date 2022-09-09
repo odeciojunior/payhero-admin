@@ -101,9 +101,7 @@ class SubsellersApiController extends Controller
 
             $document = SubsellersApiService::uploadDocuments($id, $requestData);
 
-            return response()->json([
-                'data' => $document
-            ], 200);
+            return response()->json($document, 200);
         } catch(Exception $exception) {
             report($exception);
 

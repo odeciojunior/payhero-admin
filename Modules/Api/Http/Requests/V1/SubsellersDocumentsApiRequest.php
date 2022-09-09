@@ -16,16 +16,14 @@ class SubsellersDocumentsApiRequest extends FormRequest
         // required|max:10240|mimes:jpeg,jpg,png,pdf
 
         return [
-            'file_to_uploads' => 'required|array',
             'file_to_uploads.*.type' => 'required|in:USUARIO_DOCUMENTO,USUARIO_RESIDENCIA',
-            'file_to_uploads.*.file' => 'required|max:10240|mimes:jpeg,jpg,png,pdf'
+            'file_to_uploads.*.file' => 'required|max:10240'
         ];
     }
 
     public function messages()
     {
         return [
-            'file_to_uploads.required' => 'Arquivos para upload precisa ser um array.',
             'file_to_uploads.*.type.required' => 'Precisamos saber o tipo do documento.',
             'file_to_uploads.*.type.in' => 'Tipo de documento inválido.',
             'file_to_uploads.*.file.required' => 'Precisamos do arquivo para continuar.',
