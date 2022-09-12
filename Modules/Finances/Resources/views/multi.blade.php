@@ -44,12 +44,22 @@
 
                     </div> --}}
                     <div class="col-sm-12 order-1 order-md-2 p-0 px-md-15">
-                        <p class="mt-10 mb-0">
+                        <p class="mt-10 mb-0 d-flex align-items-center">
                             <span class="badge badge-primary d-none d-md-inline-block">NOVO!</span>
                             <span class="new-title">Uma nova central para você controlar seus extratos em diferentes
                                 adquirentes.</span>
                         </p>
                     </div>
+
+                    <div class="alert alert-warning alert-dismissible fade show"
+                    id='blocked-unico'
+                    role="alert"
+                    style='display:none;'
+                    >
+                            <p>Saque suspenso! <strong><a href="#">Clique aqui</a></strong> para cadastrar sua biometria e fortalecer a segurança da sua conta.</p>
+                    </div>
+
+
                     <div class="col-9 col-md-6 order-3 p-0 px-md-15"
                          id="container-available">
                         <p class="m-0 color-default"

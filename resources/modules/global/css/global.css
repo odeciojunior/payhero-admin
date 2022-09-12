@@ -3319,3 +3319,15 @@ tbody td{
     background: #555;
 }
 
+.alert-warning {
+    background: rgba(255, 153, 0, 0.08);
+    /* Orange */
+
+    border: 1px solid #FF9900;
+    border-radius: 8px;
+}
+
+.alert-warning a {
+    text-decoration: underline;
+    color: #856404 !important;
+}
