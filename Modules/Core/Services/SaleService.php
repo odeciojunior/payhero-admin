@@ -1270,6 +1270,7 @@ class SaleService
             ->distinct()
             ->leftJoin('projects', 'projects.id','=', 'sales.project_id')
             ->leftJoin('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->where('sales.gateway_status','!=','canceled')
             ->where('transactions.user_id', $user_id)
             ->where('transactions.company_id', $company_id)
             ->whereNull('transactions.invitation_id')
