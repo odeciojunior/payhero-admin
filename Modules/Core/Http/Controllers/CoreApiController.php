@@ -17,6 +17,7 @@ use Modules\Core\Events\UserRegistrationFinishedEvent;
 use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\UserService;
 use Modules\Core\Entities\BonusBalance;
@@ -255,13 +256,14 @@ class CoreApiController extends Controller
             $return = [
                 'company_default'=>Hashids::encode(Company::DEMO_ID),
                 'company_default_name'=>'Empresa Demo',
-                'company_default_fullname'=>'Empresa Demo'
+                'company_default_fullname'=>'Empresa Demo',
+                'has_api_integration'=>false
             ];
 
             if($user->company_default > Company::DEMO_ID)
             {
                 $companyDefault = cache()->remember('company-default-'.$user->company_default, 60, function () use($user) {
-                    return Company::select('company_type','fantasy_name')
+                    return Company::select('id','company_type','fantasy_name')
                     ->where('id', $user->company_default)
                     ->first();
                 });
@@ -270,10 +272,16 @@ class CoreApiController extends Controller
                         $companyDefault->fantasy_name,
                         20
                     ) ?? '';
+
+                $hasApiIntegration = DB::table('api_tokens')->where('user_id',auth()->user()->id)
+                                    ->where('company_id',$companyDefault->id)
+                                    ->whereIn('integration_type_enum',[4,5])->exists();
+
                 $return = array(
                     'company_default'=>Hashids::encode($user->company_default),
                     'company_default_name'=>$company_default_name,
-                    'company_default_fullname'=>$companyDefault->fantasy_name
+                    'company_default_fullname'=>$companyDefault->fantasy_name,
+                    'has_api_integration'=>$hasApiIntegration
                 );
             }
 

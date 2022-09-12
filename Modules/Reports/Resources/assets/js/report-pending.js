@@ -1,6 +1,7 @@
 var currentPage = null;
 //var atualizar = null;
 let hasSale = false;
+var has_api_integration = false;
 
 $('.company-navbar').change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
@@ -27,6 +28,7 @@ $('.company-navbar').change(function () {
         getCompaniesAndProjects().done(function(data2){
             if(!isEmpty(data2.company_default_projects)){
                 showFiltersInReports(true);
+                has_api_integration = data2.has_api_integration;
                 getProjects(data2.companies);
             }
             else{
@@ -170,7 +172,7 @@ function atualizar(link = null) {
 
 function getFilters(urlParams = false) {
     let data = {
-        company: $("#company").val(),
+        company: $(".company-navbar").val(),
         project: $("#project").val(),
         client: $("#client").val(),
         customer_document: $("#customer_document").val(),
@@ -290,6 +292,7 @@ $(document).ready(function () {
     getCompaniesAndProjects().done( function (data2){
         if(!isEmpty(data2.company_default_projects)){
             showFiltersInReports(true);
+            has_api_integration = data2.has_api_integration;
             getProjects(data2.companies);
         }
         else{
@@ -373,6 +376,7 @@ $(document).ready(function () {
         .done(function(dataSales)
         {
             $(".div-filters").show();
+            var api_integration = false;
             $.each(companies, function (c, company) {
                 $.each(company.projects, function (i, project) {
                     $.each(dataSales.data, function (idx, project2) {
@@ -382,7 +386,9 @@ $(document).ready(function () {
                     });
                 });
             });
-            $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+            if(has_api_integration){
+                $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+            }
             $("#project option:first").attr('selected','selected');
 
             if(sessionStorage.info) {

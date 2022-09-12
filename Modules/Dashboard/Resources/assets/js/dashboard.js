@@ -272,7 +272,7 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             data: {
-                company: $('.company-navbar').val()
+                company_id: $('.company-navbar').val()
             },
             error: function error(response) {
                 loadOnAnyEllipsis(".text-money, .update-text, .text-circle", true);

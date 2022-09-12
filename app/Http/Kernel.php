@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AuthApiV1;
 use App\Http\Middleware\Broadcast;
 use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\EncryptCookies;
@@ -95,6 +96,7 @@ class Kernel extends HttpKernel
         "scope" => CheckForAnyScope::class,
         "InternalApiAuth" => InternalApiAuth::class,
         "IsCloudFoxAccount" => IsCloudFoxAccount::class,
-        "demo_account"=>DemoAccount::class
+        "demo_account"=>DemoAccount::class,
+        "authApiV1" => AuthApiV1::class,
     ];
 }

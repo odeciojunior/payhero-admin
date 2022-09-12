@@ -77,7 +77,6 @@
                         <thead>
                             <tr>
                                 <td class="table-title">Descrição</td>
-                                <td class="table-title text-center">Tipo</td>
                                 <td class="table-title">Token</td>
                                 <td class="table-title"></td>
                             </tr>
@@ -108,35 +107,15 @@
                         <div id="modal-reverse-body" class="modal-body">
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <label for="description">Nome da integração</label>
+                                    <label for="description">Descrição</label>
                                     <input name="description" type="text" class="form-control form-control-lg"
-                                        id="description" placeholder="Dê um nome para sua integração">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-12">
-                                    <label for="token_type_enum">Tipo de Integração</label>
-                                    <div id="enum-list">
-                                        <select name="token_type_enum" id="select-enum-list" class="sirius-select">
-                                            <option value="3">Integração Externa</option>
-                                            <option value="4" selected>Checkout API</option>
-                                        </select>
-                                    </div>
+                                        id="description" placeholder="Digite uma descrição para sua integração">
                                 </div>
                             </div>
                             <div class="row companies-container">
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="empresa">Empresa</label>
-                                    <input type="text" disabled="" class="company_name">
-                                </div>
-                            </div>
-                            <div class="row postback-container">
-                                <div class="form-group col-sm-12 col-md">
-                                    <label for="postback">Postback</label>
-                                    <input name="postback" type="text" class="form-control form-control-lg"
-                                        id="postback" placeholder="Insira a URL de postback">
-                                    <small class="text-muted">Insira uma URL válida para receber as notificações referentes
-                                        a integração</small>
+                                    <input type="text" disabled="" class="form-control form-control-lg company_name">
                                 </div>
                             </div>
                         </div>
