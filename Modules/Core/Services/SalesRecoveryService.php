@@ -86,10 +86,14 @@ class SalesRecoveryService
                 $join->on('sales.checkout_id', '=', 'checkout.id');
             })->leftJoin('customers as customer', function ($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
-            })->leftJoin('checkout_configs as checkout_config', function ($join) {
-                $join->on('sales.project_id', '=', 'checkout_config.project_id');
+            // })->leftJoin('checkout_configs as checkout_config', function ($join) {
+            //     $join->on('sales.project_id', '=', 'checkout_config.project_id');
+            // })
+            // ->where('checkout_config.company_id', $company_id)
+            })->leftJoin('transactions as transaction', function ($join) {
+                $join->on('sales.id', '=', 'transaction.sale_id');
             })
-            ->where('checkout_config.company_id', $company_id)
+            ->where('transaction.company_id', $company_id)
             ->whereIn('sales.status', $status)
             ->where('sales.payment_method', $paymentMethod)
             ->with([
@@ -155,7 +159,9 @@ class SalesRecoveryService
             }
         }
 
-        return $salesExpired->orderBy("sales.id", "desc")->paginate(10);
+        $salesExpired = $salesExpired->orderBy("sales.id", "desc");
+        Log::info(str_replace_array('?',$salesExpired->getBindings(),$salesExpired->toSql()));
+        return $salesExpired->paginate(10);
     }
 
     /**
