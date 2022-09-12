@@ -151,6 +151,42 @@ class UserPresenter extends Presenter
             return "";
         }
     }
+
+    /**
+     * @param $status
+     * @return int|string
+     */
+    public function getBiometryStatus($status)
+    {
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return "pending";
+                case 2:
+                    return "in_process";
+                case 3:
+                    return "approved";
+                case 4:
+                    return "refused";
+            }
+
+            return "";
+        } else {
+            switch ($status) {
+                case "pending":
+                    return 1;
+                case "in_process":
+                    return 2;
+                case "approved":
+                    return 3;
+                case "refused":
+                    return 4;
+            }
+
+            return "";
+        }
+    }
+
     /**
      * @param $type
      * @return int|string

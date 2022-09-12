@@ -37,7 +37,6 @@ class CoreApiController extends Controller
     public function verifyAccount($id)
     {
         try {
-            $userService = new UserService();
 
             $companyModel = new Company();
             $companyService = new CompanyService();
@@ -47,28 +46,9 @@ class CoreApiController extends Controller
             $userInformations = UserInformation::where("document", $user->document)->exists();
 
             $userStatus = null;
-            $userAddressDocument = $user->present()->getAddressDocumentStatus($user->address_document_status);
-            $userPersonaltDocument = $user->present()->getPersonalDocumentStatus($user->personal_document_status);
-            $userRedirect = null;
-            if ($userService->haveAnyDocumentPending()) {
-                $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
-                $userRedirect = "/personal-info";
-            }
+            $userAddressDocumentStatus = $user->present()->getAddressDocumentStatus($user->address_document_status);
 
-            if ($userService->haveAnyDocumentAnalyzing()) {
-                $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_ANALYZING);
-                $userRedirect = "/personal-info";
-            }
-
-            if ($userService->haveAnyDocumentApproved()) {
-                $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_APPROVED);
-                $userRedirect = "/personal-info";
-            }
-
-            if ($userService->haveAnyDocumentRefused()) {
-                $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_REFUSED);
-                $userRedirect = "/personal-info";
-            }
+            $userBiometryStatus = $user->present()->getBiometryStatus($user->biometry_status);
 
             $companyStatus = null;
             $companyAddressDocument = null;
@@ -142,13 +122,13 @@ class CoreApiController extends Controller
                             "type" => $user->present()->getAccountType($user->id, $user->account_owner_id),
                         ],
                         "user" => [
-                            "status" => $userStatus,
-                            "address_document" => $userAddressDocument,
-                            "personal_document" => $userPersonaltDocument,
+                            "address_document_status" => $userAddressDocumentStatus,
+                            "biometry_status" => $userBiometryStatus,
                             "document" => $user->document,
                             "email" => $user->email,
                             "informations" => $userInformations,
-                            "link" => $userRedirect,
+                            "link_address" => "/personal-info",
+                            "link_biometry" => "/personal-info",
                         ],
                         "company" => [
                             "status" => $companyStatus,
