@@ -375,14 +375,16 @@ class SalesApiController extends Controller
                     $plans = Plan::
                         where('name', 'like', '%' . $data['search'] . '%')
                         ->whereIn('project_id', $projectIds)
+                        ->orderby('name')
                         ->limit(30)
                         ->get();
 
                 } else {
                     $plans = Plan::
                         whereIn('project_id', $projectIds)
-                        ->limit(30)
-                        ->get();
+                        ->orderby('name')
+                        ->limit(30);
+                        $plans = $plans->get();
 
                 }
                 return PlansSelectResource::collection($plans);
