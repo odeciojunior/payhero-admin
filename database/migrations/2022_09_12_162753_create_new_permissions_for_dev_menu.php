@@ -20,24 +20,24 @@ return new class extends Migration
     {
 
         $output = new ConsoleOutput();
-        // $progress = new ProgressBar($output, 2);
-        // $output->writeln("\nCriando novas permissões");
-        // $progress->start();
+        $progress = new ProgressBar($output, 2);
+        $output->writeln("\nCriando novas permissões");
+        $progress->start();
 
-        // Permission::create([
-        //     'name'=>'dev',
-        //     'title'=>'Dev',
-        //     'guard_name'=>'web'
-        // ]);
-        // $progress->advance();
+        Permission::create([
+            'name'=>'dev',
+            'title'=>'Dev',
+            'guard_name'=>'web'
+        ]);
+        $progress->advance();
 
-        // Permission::create([
-        //     'name'=>'dev_manage',
-        //     'title'=>'Dev - Gerenciar',
-        //     'guard_name'=>'web'
-        // ]);
-        // $progress->advance();
-        // $progress->finish();
+        Permission::create([
+            'name'=>'dev_manage',
+            'title'=>'Dev - Gerenciar',
+            'guard_name'=>'web'
+        ]);
+        $progress->advance();
+        $progress->finish();
 
         $output->writeln("\nAtribuindo novas permissões");
 
