@@ -125,6 +125,11 @@ class User extends Authenticable
 
     public const DEMO_ID = 1;
 
+    public const BIOMETRY_STATUS_PENDING = 1;
+    public const BIOMETRY_STATUS_IN_PROCESS = 2;
+    public const BIOMETRY_STATUS_APPROVED = 3;
+    public const BIOMETRY_STATUS_REFUSED = 4;
+
     protected $presenter = UserPresenter::class;
 
     protected $guard_name = 'web';
@@ -194,6 +199,7 @@ class User extends Authenticable
         "mkt_information",
         "company_default",
         "block_attendance_balance",
+        "biometry_status",
         "created_at",
         "updated_at",
         "deleted_at",

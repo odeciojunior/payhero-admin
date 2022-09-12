@@ -33,7 +33,10 @@
                             <div class="user-informations-status">
                                 <!-- JS load -->
                             </div>
-                            <div class="user-status">
+                            <div class="user-biometry-status">
+                                <!-- JS load -->
+                            </div>
+                            <div class="user-address-status">
                                 <!-- JS load -->
                             </div>
                             <div class="company-status">
