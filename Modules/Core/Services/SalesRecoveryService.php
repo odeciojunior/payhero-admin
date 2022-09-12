@@ -159,9 +159,7 @@ class SalesRecoveryService
             }
         }
 
-        $salesExpired = $salesExpired->orderBy("sales.id", "desc");
-        Log::info(str_replace_array('?',$salesExpired->getBindings(),$salesExpired->toSql()));
-        return $salesExpired->paginate(10);
+        return $salesExpired->orderBy("sales.id", "desc")->paginate(10);
     }
 
     /**
