@@ -347,8 +347,9 @@ class SalesApiController extends Controller
         try {
             $data = $request->all();
 
-            if (is_array($data["project_id"])) {
-                $projectIds = [];
+            $projectIds = [];
+            if (!empty($data["project_id"])) {
+            //if (is_array($data["project_id"])) {
                 if(!empty($data['project_id'][0])){
                     foreach($data['project_id'] as $project){
                         if(!empty($project)){
@@ -386,17 +387,19 @@ class SalesApiController extends Controller
                 }
                 return PlansSelectResource::collection($plans);
             } else {
-                $userProjects = UserProject::
-                     where('user_id', $userId)
-                     ->pluck('project_id');
+                // $userProjects = UserProject::
+                //      where('user_id', $userId)
+                //      ->pluck('project_id');
 
-                if(!$user->deleted_project_filter){
-                    $userProjects = UserProject::
-                        join('projects','projects.id','=','users_projects.project_id')
-                        ->where('projects.status', '!=', 2)
-                        ->where('users_projects.user_id', $userId)
-                        ->pluck('users_projects.project_id');
-                }
+                // if(!$user->deleted_project_filter){
+                //     $userProjects = UserProject::
+                //         join('projects','projects.id','=','users_projects.project_id')
+                //         ->where('projects.status', '!=', 2)
+                //         ->where('users_projects.user_id', $userId)
+                //         ->pluck('users_projects.project_id');
+                // }
+
+                $userProjects = SaleService::getProjectsWithSales();
 
                 if (!empty($data['search'])) {
                     $plans = Plan::
