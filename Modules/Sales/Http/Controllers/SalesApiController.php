@@ -370,7 +370,6 @@ class SalesApiController extends Controller
             $plans = null;
 
             if (current($projectIds)) {
-
                 if (!empty($data['search'])) {
                     $plans = Plan::
                         where('name', 'like', '%' . $data['search'] . '%')
@@ -389,17 +388,6 @@ class SalesApiController extends Controller
                 }
                 return PlansSelectResource::collection($plans);
             } else {
-                // $userProjects = UserProject::
-                //      where('user_id', $userId)
-                //      ->pluck('project_id');
-
-                // if(!$user->deleted_project_filter){
-                //     $userProjects = UserProject::
-                //         join('projects','projects.id','=','users_projects.project_id')
-                //         ->where('projects.status', '!=', 2)
-                //         ->where('users_projects.user_id', $userId)
-                //         ->pluck('users_projects.project_id');
-                // }
 
                 $userProjects = SaleService::getProjectsWithSales();
 
@@ -407,12 +395,13 @@ class SalesApiController extends Controller
                     $plans = Plan::
                         where('name', 'like', '%' . $data['search'] . '%')
                         ->whereIn("project_id", $userProjects)
+                        ->orderby('name')
                         ->limit(30)
                         ->get();
-
                 } else {
                     $plans = Plan::
                         whereIn("project_id", $userProjects)
+                        ->orderby('name')
                         ->limit(30)
                         ->get();
                 }

@@ -515,9 +515,10 @@ class SalesRecoveryApiController extends Controller
         try {
             $data = $request->all();
 
-            if (is_array($data["project_id"])) {
-                $projectIds = [];
-                if(!empty($data['project_id'][0]) && $data['project_id'][0]!='all'){
+            $projectIds = [];
+            if (!empty($data["project_id"])) {
+            //if (is_array($data["project_id"])) {
+                if(!empty($data['project_id'][0])){ // && $data['project_id'][0]!='all'
                     foreach($data['project_id'] as $project){
                         if(!empty($project)){
                             array_push($projectIds, hashids_decode($project));
@@ -542,40 +543,35 @@ class SalesRecoveryApiController extends Controller
                     $plans = Plan::
                         where('name', 'like', '%' . $data['search'] . '%')
                         ->whereIn('project_id', $projectIds)
+                        ->orderby('name')
                         ->limit(30)
                         ->get();
 
                 } else {
                     $plans = Plan::
                         whereIn('project_id', $projectIds)
+                        ->orderby('name')
                         ->limit(30)
                         ->get();
 
                 }
                 return PlansSelectResource::collection($plans);
             } else {
-                $userProjects = UserProject::
-                     where('user_id', $userId)
-                     ->pluck('project_id');
 
-                if(!$user->deleted_project_filter){
-                    $userProjects = UserProject::
-                        join('projects','projects.id','=','users_projects.project_id')
-                        ->where('projects.status', '!=', 2)
-                        ->where('users_projects.user_id', $userId)
-                        ->pluck('users_projects.project_id');
-                }
+                $userProjects = SalesRecoveryService::getProjectsWithRecovery();
 
                 if (!empty($data['search'])) {
                     $plans = Plan::
                         where('name', 'like', '%' . $data['search'] . '%')
                         ->whereIn("project_id", $userProjects)
+                        ->orderby('name')
                         ->limit(30)
                         ->get();
 
                 } else {
                     $plans = Plan::
                         whereIn("project_id", $userProjects)
+                        ->orderby('name')
                         ->limit(30)
                         ->get();
                 }
