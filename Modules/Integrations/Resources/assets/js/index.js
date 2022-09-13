@@ -134,7 +134,7 @@ $(document).ready(function () {
         $("#card-table-integrate").css("display", "block");
         $("#table-body-integrates").html("");
 
-        if (response.data.length > 0 && response.data.findIndex((e) => e.integration_type == "checkout_api") != -1) {
+        if (response.data.length > 0 && (response.data.findIndex((e) => e.integration_type_enum == "4") != -1 || response.data.findIndex((e) => e.integration_type_enum == "5") != -1)) {
             $("#content-script").show();
             $("#input-url-antifraud").val(response.data[0].antifraud_url);
         } else {
