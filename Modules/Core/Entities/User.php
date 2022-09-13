@@ -49,6 +49,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $last_login
  * @property int $invites_amount
  * @property int|null $account_owner_id
+ * @property int|null $subseller_owner_id
  * @property int $deleted_project_filter
  * @property mixed|null $id_wall_result
  * @property mixed|null $bureau_result
@@ -172,6 +173,7 @@ class User extends Authenticable
         "last_login",
         "invites_amount",
         "account_owner_id",
+        "subseller_owner_id",
         "deleted_project_filter",
         "id_wall_result",
         "bureau_result",

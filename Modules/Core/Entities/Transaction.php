@@ -65,7 +65,6 @@ class Transaction extends Model
     const TYPE_PARTNER = 5;
     const TYPE_CONVERTAX = 6;
     const TYPE_REFUNDED = 7;
-//    const TYPE_CASHBACK = 8;
     const TYPE_CLOUDFOX_PROCESSING = 8;
 
     const TYPE_PERCENTAGE_TAX = 1;
