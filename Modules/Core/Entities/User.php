@@ -123,6 +123,13 @@ class User extends Authenticable
     public const DOCUMENT_STATUS_APPROVED = 3;
     public const DOCUMENT_STATUS_REFUSED = 4;
 
+    public const LEVEL_1 = 1;
+    public const LEVEL_2 = 2;
+    public const LEVEL_3 = 3;
+    public const LEVEL_4 = 4;
+    public const LEVEL_5 = 5;
+    public const LEVEL_6 = 6;
+
     public const CELLPHONE_VERIFIED = 1;
     public const EMAIL_VERIFIED = 1;
 
@@ -195,7 +202,7 @@ class User extends Authenticable
         "total_commission_value",
         "show_old_finances",
         "mkt_information",
-        "pipefy_card",
+        "pipefy_card_id",
         "company_default",
         "block_attendance_balance",
         "created_at",

@@ -12,7 +12,7 @@ class PipefyService
     const LABEL_FIT_TO_SELL                 = 307544031; // Conta apta a vender
     const LABEL_SOLD                        = 307597204; // Começou a vender
     const LABEL_WITHOUT_SELLING             = 307597205; // 30 dias sem vender
-    const LABEL_SALES_UNDER_100k            = 307597206; // De R$0,00 a R$100.000,00
+    const LABEL_SALES_BETWEEN_0_100k        = 307597206; // De R$0,00 a R$100.000,00
     const LABEL_SALES_BETWEEN_100k_1M       = 307597207; // De R$100.000,00 a R$1.000.000,00
     const LABEL_SALES_BETWEEN_1M_10M        = 307597208; // De R$1.000.000,00 a R$10.000.000,00
     const LABEL_SALES_BETWEEN_10M_25M       = 307597209; // De R$10.000.000,00 a R$25.000.000,00
@@ -20,6 +20,11 @@ class PipefyService
     const LABEL_SALES_BETWEEN_25M_50M       = 307597211; // De R$25.000.000,00 a R$50.000.000,00
     const LABEL_SALES_OVER_50M              = 307597212; // Maior que R$50.000.000,00
     const LABEL_TOP_SALE                    = 307552829;
+
+
+    const PHASE_REFUSED_DOCUMENT        = 316725791; //Coluna Documento recusado
+    const PHASE_ACTIVE                  = 316725793; //Coluna cadastro finalizados e ativos
+    const PHASE_ACTIVE_AND_SELLING      = 316725790; //Coluna cadastro ativo e vendedno
 
 
     public static $FIELDS_API_USER = [
@@ -36,10 +41,8 @@ class PipefyService
         "como_conheceu_a_cloudfox" => "cloudfox_referer" ,
         "qual_seu_nicho_de_atua_o" => "nice" ,
         "qual_e_commerce_voc_usa_hoje" => "ecommerce" ,
-        //"tem_site_de_vendas" => "website_url" ,
-        //"utiliza_gateway_de_pagamento" => "gateway" ,
         "qual_seu_faturamento_m_dio_mensal" => "monthly_income" ,
-//        "range_de_faturamento" => "" , esse campo é preenchido pelo comercial???
+//        "range_de_faturamento" => "" , implemntar uma rotina para preencher esse campo
     ];
 
     const  FIELD_REGISTERED_TORES = "lojas_cadastradas";
@@ -74,7 +77,7 @@ class PipefyService
 
     public function createCardUser(User $user)
     {
-        if (empty($user->pipefy_card)){
+        if (empty($user->pipefy_card_id)){
 
             $title = 'CPF: '.$user->document.' Nome: '.$user->name;
             $fieldsApi = '';
@@ -90,10 +93,7 @@ class PipefyService
             $pipefyCard = json_decode($response->getBody());
 
             if (!empty($pipefyCard->data->createCard->card->id)) {
-                $pipefyCardArray = [
-                    'pipefy_card_id' => $pipefyCard->data->createCard->card->id,
-                ];
-                $user->pipefy_card = json_encode($pipefyCardArray);
+                $user->pipefy_card_id = $pipefyCard->data->createCard->card->id;
                 $user->save();
             }
 
@@ -110,14 +110,12 @@ class PipefyService
                 $fieldsApi .= '{fieldId: \\"'.$api.'\\", value: \\"'.$user->$field.'\\"} ';
             }
         }
-
-//        $pipefyCardId = $user->pipefy_card_id;
-        $pipefyCardId = 573666192;
+        $pipefyCardId = $user->pipefy_card_id;
 
         $graphql = 'mutation {updateFieldsValues(  input: { nodeId: '.$pipefyCardId.', values:[ '.$fieldsApi.' ]  }),{ success } }';
         $response = $this->request($graphql);
 
-        return true;
+        return $response;
     }
 
     public function updateCardUserinformations(User $user)
@@ -150,8 +148,7 @@ class PipefyService
             }
         }
 
-//        $pipefyCardId = $user->pipefy_card_id;
-        $pipefyCardId = 574412788;
+        $pipefyCardId = $user->pipefy_card_id;
 
         $graphql = 'mutation {updateFieldsValues(  input: { nodeId: '.$pipefyCardId.', values:[ '.$fieldsApi.' ]  }),{ success userErrors{ message }} }';
         $response = $this->request($graphql);
@@ -162,7 +159,7 @@ class PipefyService
 
     public function updateCardLabel(User $user, array $labels)
     {
-        $pipefyCardId = 574419411;
+        $pipefyCardId = $user->pipefy_card_id;
 
         $graphqlLabels = '{ card(id: '.$pipefyCardId.'){ labels{ id } } }';
         $response = $this->request($graphqlLabels);
@@ -179,58 +176,22 @@ class PipefyService
         }
         $data .= "]";
 
-//        $pipefyCardId = $pipefyData->pipefy_card_id;
-
-
         $graphql = 'mutation { updateCard( input: { id: '.$pipefyCardId.', label_ids: '.$data.' }, ),{  card { id title  }} }';
         $response = $this->request($graphql);
         $pipefyCard = json_decode($response->getBody());
 
-        if (!empty($pipefyCard->data->updateCard->card->id)) {
-            $pipefyCardArray = [
-                'pipefy_card_id' => $pipefyCard->data->updateCard->card->id,
-                'labels' => $labels
-            ];
-            $user->pipefy_card = json_encode($pipefyCardArray);
-            $user->save();
-        }
-
-
-        return true;
+        return $pipefyCard;
     }
 
-/*
-    public function updateCardLabel(User $user, array $labels)
+    public function moveCardToPhase(User $user, $phase)
     {
-        return false;// Faz o update sem manter o historico
-        $pipefyData = json_decode($user->pipefy_card);
-        $pipefyLabels = array_merge($pipefyData->labels,$labels);
-        $labels = array_unique($pipefyLabels);
-
-        $data = "[";
-        foreach ($labels as $label){
-            $data .= '\\"'.$label.'\\", ';
-        }
-        $data .= "]";
-
-//        $pipefyCardId = $pipefyData->pipefy_card_id;
-        $pipefyCardId = 568589818;
-
-        $graphql = 'mutation { updateCard( input: { id: '.$pipefyCardId.', label_ids: '.$data.' }, ),{  card { id title  }} }';
+        $pipefyCardId = $user->pipefy_card_id;
+        $graphql = 'mutation { moveCardToPhase(  input: { card_id: '.$pipefyCardId.', destination_phase_id:'.$phase.'  }),{ card { id current_phase{ name } } } }';
         $response = $this->request($graphql);
         $pipefyCard = json_decode($response->getBody());
 
-        if (!empty($pipefyCard->data->updateCard->card->id)) {
-            $pipefyCardArray = [
-                'pipefy_card_id' => $pipefyCard->data->updateCard->card->id,
-                'labels' => $labels
-            ];
-            $user->pipefy_card = json_encode($pipefyCardArray);
-            $user->save();
-        }
-
         return true;
     }
-*/
+
 
 }
