@@ -3,6 +3,7 @@ namespace Modules\Core\Services\Pipefy;
 use GuzzleHttp\Client;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserInformation;
+use Modules\Core\Services\FoxUtils;
 
 class PipefyService
 {
@@ -51,9 +52,11 @@ class PipefyService
 
     public function __construct()
     {
-//        $this->idBoard = '302406140';
-        $this->idBoard = '302680894';
-
+        if (FoxUtils::isProduction()){
+            $this->idBoard = '302406140';
+        }else{
+            $this->idBoard = '302680894';
+        }
     }
 
     public function request($graphQL)
