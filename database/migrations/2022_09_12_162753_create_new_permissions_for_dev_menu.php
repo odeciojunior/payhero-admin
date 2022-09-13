@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\Core\Entities\User;
 use Spatie\Permission\Models\Permission;
@@ -24,14 +25,14 @@ return new class extends Migration
         $output->writeln("\nCriando novas permissões");
         $progress->start();
 
-        Permission::create([
+        $permission1 = Permission::create([
             'name'=>'dev',
             'title'=>'Dev',
             'guard_name'=>'web'
         ]);
         $progress->advance();
 
-        Permission::create([
+        $permission2 = Permission::create([
             'name'=>'dev_manage',
             'title'=>'Dev - Gerenciar',
             'guard_name'=>'web'
@@ -47,13 +48,13 @@ return new class extends Migration
 
         foreach ($roles as $role)
         {
-            $role->givePermissionTo('dev');
-            $role->givePermissionTo('dev_manage');
+            DB::statement("INSERT INTO role_has_permissions VALUES($permission1->id, $role->id);");
+            DB::statement("INSERT INTO role_has_permissions VALUES($permission2->id, $role->id);");
 
             $users = User::role($role->name)->get();
             foreach ($users as $user) {
-                $user->givePermissionTo('dev');
-                $user->givePermissionTo('dev_manage');
+                DB::statement("INSERT INTO model_has_permissions VALUES($permission1->id,'Modules\\Core\\Entities\\User',$user->id);");
+                DB::statement("INSERT INTO model_has_permissions VALUES($permission2->id,'Modules\\Core\\Entities\\User',$user->id);");
             }
             $progress->advance();
         }
