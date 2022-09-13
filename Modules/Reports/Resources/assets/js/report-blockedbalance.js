@@ -523,6 +523,8 @@ $(document).ready(function () {
                         if(data.has_api_integration)
                             $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                         $("#project option:first").attr('selected','selected');
+                        if( $('#select_projects option').length == 0 )
+                            $('#select_projects').next().css('display','none')
                         atualizar();
                         $(".div-filters").show();
                         loadingOnScreenRemove();

@@ -501,6 +501,8 @@ function getProjects(data, origin='')
                     //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
                     // });
                     $("#select_projects option:first").attr('selected','selected');
+                    if( $('#select_projects option').length == 0 )
+                        $('#select_projects').next().css('display','none')
                     updateReports();
                     $(".div-filters").show();
                     loadingOnScreenRemove();
