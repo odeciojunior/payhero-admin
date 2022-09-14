@@ -177,7 +177,7 @@ class SalesApiController extends Controller
                     ->on($saleModel)
                     ->tap(function (Activity $activity) use ($saleId) {
                         $activity->log_name = "visualization";
-                        $activity->subject_id = current(hashids_decode($saleId, "sale_id"));
+                        $activity->subject_id = hashids_decode($saleId, "sale_id");
                     })
                     ->log("Gerou nova ordem no shopify para transação: #" . $saleId);
                 if (!foxutils()->isEmpty($shopifyIntegration)) {
