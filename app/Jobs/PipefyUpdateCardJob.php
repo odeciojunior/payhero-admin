@@ -34,6 +34,14 @@ class PipefyUpdateCardJob implements ShouldQueue
      */
     public function handle()
     {
-        (new PipefyService())->updateCardUserinformations($this->user);
+        try {
+
+            (new PipefyService())->updateCardUserinformations($this->user);
+
+        } catch( Exception $e){
+            report($e);
+            return false;
+        }
+
     }
 }

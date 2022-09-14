@@ -10,22 +10,22 @@ class PipefyService
 
     private $idBoard;
 
-    const LABEL_FIT_TO_SELL                 = 307544031; // Conta apta a vender
-    const LABEL_SOLD                        = 307597204; // Começou a vender
-    const LABEL_WITHOUT_SELLING             = 307597205; // 30 dias sem vender
-    const LABEL_SALES_BETWEEN_0_100k        = 307597206; // De R$0,00 a R$100.000,00
-    const LABEL_SALES_BETWEEN_100k_1M       = 307597207; // De R$100.000,00 a R$1.000.000,00
-    const LABEL_SALES_BETWEEN_1M_10M        = 307597208; // De R$1.000.000,00 a R$10.000.000,00
-    const LABEL_SALES_BETWEEN_10M_25M       = 307597209; // De R$10.000.000,00 a R$25.000.000,00
-    const LABEL_SALES_BETWEEN_500k_1M       = 307597210; // De R$500.000,00 a R$999.999,99
-    const LABEL_SALES_BETWEEN_25M_50M       = 307597211; // De R$25.000.000,00 a R$50.000.000,00
-    const LABEL_SALES_OVER_50M              = 307597212; // Maior que R$50.000.000,00
+    const LABEL_FIT_TO_SELL                 = 307002686; // Conta apta a vender
+    const LABEL_SOLD                        = 307002687; // Começou a vender
+    const LABEL_WITHOUT_SELLING             = 307553134; // 30 dias sem vender
+    const LABEL_SALES_BETWEEN_0_100k        = 307586178; // De R$0,00 a R$100.000,00
+    const LABEL_SALES_BETWEEN_100k_1M       = 307586180; // De R$100.000,00 a R$1.000.000,00
+    const LABEL_SALES_BETWEEN_1M_10M        = 307586185; // De R$1.000.000,00 a R$10.000.000,00
+    const LABEL_SALES_BETWEEN_10M_25M       = 307586186; // De R$10.000.000,00 a R$25.000.000,00
+    const LABEL_SALES_BETWEEN_500k_1M       = 307586187; // De R$500.000,00 a R$999.999,99
+    const LABEL_SALES_BETWEEN_25M_50M       = 307586193; // De R$25.000.000,00 a R$50.000.000,00
+    const LABEL_SALES_OVER_50M              = 307588157; // Maior que R$50.000.000,00
     const LABEL_TOP_SALE                    = 307552829;
 
 
-    const PHASE_REFUSED_DOCUMENT        = 316725791; //Coluna Documento recusado
-    const PHASE_ACTIVE                  = 316725793; //Coluna cadastro finalizados e ativos
-    const PHASE_ACTIVE_AND_SELLING      = 316725790; //Coluna cadastro ativo e vendedno
+    const PHASE_REFUSED_DOCUMENT        = 315203355; //Coluna Documento recusado
+    const PHASE_ACTIVE                  = 315322780; //Coluna cadastro finalizados e ativos
+    const PHASE_ACTIVE_AND_SELLING      = 315203350; //Coluna cadastro ativo e vendedno
 
 
     public static $FIELDS_API_USER = [
@@ -55,7 +55,7 @@ class PipefyService
         if (FoxUtils::isProduction()){
             $this->idBoard = '302406140';
         }else{
-            $this->idBoard = '302680894';
+            $this->idBoard = '302695654';
         }
     }
 
@@ -74,7 +74,7 @@ class PipefyService
 
             return $response;
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            report($e->getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ class PipefyService
             $response = $this->request($graphql);
 
             $pipefyCard = json_decode($response->getBody());
-
+//            dd($pipefyCard);
             if (!empty($pipefyCard->data->createCard->card->id)) {
                 $user->pipefy_card_id = $pipefyCard->data->createCard->card->id;
                 $user->save();
@@ -156,7 +156,7 @@ class PipefyService
         $graphql = 'mutation {updateFieldsValues(  input: { nodeId: '.$pipefyCardId.', values:[ '.$fieldsApi.' ]  }),{ success userErrors{ message }} }';
         $response = $this->request($graphql);
         $pipefyCard = json_decode($response->getBody());
-        //dd($pipefyCard);
+//        dd($pipefyCard);
         return true;
     }
 
@@ -192,7 +192,7 @@ class PipefyService
         $graphql = 'mutation { moveCardToPhase(  input: { card_id: '.$pipefyCardId.', destination_phase_id:'.$phase.'  }),{ card { id current_phase{ name } } } }';
         $response = $this->request($graphql);
         $pipefyCard = json_decode($response->getBody());
-
+//        dd($pipefyCard);
         return true;
     }
 

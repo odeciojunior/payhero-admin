@@ -36,6 +36,14 @@ class PipefyMoveCardPhaseJob implements ShouldQueue
      */
     public function handle()
     {
-        (new PipefyService())->moveCardToPhase($this->user, $this->phase);
+        try {
+
+            (new PipefyService())->moveCardToPhase($this->user, $this->phase);
+
+        }catch( Exception $e){
+            report($e);
+            return false;
+        }
+
     }
 }

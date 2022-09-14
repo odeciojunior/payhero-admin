@@ -36,6 +36,11 @@ class PipefyUpdateLabelCardJob implements ShouldQueue
      */
     public function handle()
     {
-        (new PipefyService())->updateCardLabel($this->user, $this->labels);
+        try {
+            (new PipefyService())->updateCardLabel($this->user, $this->labels);
+        } catch( Exception $e){
+            report($e);
+            return false;
+        }
     }
 }
