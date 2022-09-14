@@ -40,11 +40,6 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        $users = DB::select("SELECT ");
-        foreach ($users as $user) {
-            \Log::info($user->id);
-            DB::statement("INSERT INTO model_has_permissions VALUES(31,'Modules\\Core\\Entities\\User',$user->id);");
-            DB::statement("INSERT INTO model_has_permissions VALUES(32,'Modules\\Core\\Entities\\User',$user->id);");
-        }
+
     }
 }
