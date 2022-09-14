@@ -20,7 +20,44 @@
                            placeholder="Digite a descrição">
                 </div>
             </div>
-            <div class="form-group col-12 mb-10">
+
+            <div class="form-group col-12 mb-10 mt-20">
+                <div class="row">
+
+                    <div class="col-6" style="padding-left: 25px">
+
+                        <input name="type" value="1" class="discount_radio " type="radio" id="usu_type_value" checked="">
+                        <label for="usu_type_value">
+                            Valor em R$
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <input name="type" value="0" class="discount_radio " type="radio" id="usu_type_percent">
+                        <label for="usu_type_percent">Porcentagem</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-12" >
+                <label>Desconto de</label>
+
+                <div id="usu_money_opt" class="input-group input-group-lg mb-3" >
+                    <div class="input-group-prepend">
+                        <span style="border-color: #e0e7ee; background-color: #fafafa" class="input-group-text" id="basic-addon1">R$</span>
+                    </div>
+                    <input  maxlength="9" name="discount_value" id="usu_discount_value" type="text" class=" input-pad form-control value-mask" >
+                </div>
+
+                <div id="usu_percent_opt" class="input-group-lg input-group mb-3" style="display: none;">
+
+                    <input  maxlength="2" data-mask="0#" name="percent_value" id="usu_percent_value" style="" type="text" class=" input-dad form-control" placeholder="" aria-label="" aria-describedby="basic-addon1" autocomplete="off">
+                    <div class="input-group-append">
+                        <span style="border-color: #e0e7ee; background-color: #fafafa" class="input-group-text" id="basic-addon1">%</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- hide --}}
+            <div class="form-group col-12 mb-10" style="display: none">
                 <label for="link">Desconto</label>
                 <div class="input-group">
                     <input type="text"

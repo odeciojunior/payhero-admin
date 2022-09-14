@@ -58,12 +58,8 @@ class WebhookService
         try {
             $data = [
                 "tracking_id" => hashids_encode($tracking->id),
-                "tracking_status" => $tracking
-                    ->present()
-                    ->getTrackingStatusEnum($tracking->tracking_status_enum),
-                "system_status" => $tracking
-                    ->present()
-                    ->getSystemStatusEnum($tracking->system_status_enum),
+                "tracking_status" => $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum),
+                "system_status" => $tracking->present()->getSystemStatusEnum($tracking->system_status_enum),
                 "updated_at" => $tracking->updated_at->format("Y-m-d H:i:s"),
             ];
 
@@ -117,9 +113,7 @@ class WebhookService
                 "company_id" => $this->webhook->company_id,
                 "url" => $this->webhook->url,
                 "sent_data" => json_encode($data),
-                "response" => !json_decode($response)
-                    ? json_encode($response)
-                    : $response,
+                "response" => !json_decode($response) ? json_encode($response) : $response,
             ]);
         } catch (Exception $e) {
             report($e);

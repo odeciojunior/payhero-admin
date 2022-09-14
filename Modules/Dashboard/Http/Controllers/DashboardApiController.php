@@ -53,7 +53,7 @@ class DashboardApiController extends Controller
     public function getValues(Request $request)
     {
         try {
-            $companyId = !empty($request->company) ? hashids_decode($request->company): auth()->user()->company_default;
+            $companyId = !empty($request->company_id) ? hashids_decode($request->company_id): auth()->user()->company_default;
             $company = Company::find($companyId);
 
             if (empty($company)) {
