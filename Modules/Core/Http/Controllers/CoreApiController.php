@@ -293,7 +293,11 @@ class CoreApiController extends Controller
                         20
                     ) ?? '';
 
-                $hasApiIntegration = DB::table('api_tokens')->where('user_id',auth()->user()->id)
+                $user_id = auth()->user()->id;
+                if(auth()->user()->is_cloudfox)
+                    $user_id = auth()->user()->logged_id;
+
+                $hasApiIntegration = DB::table('api_tokens')->where('user_id', $user_id)
                                     ->where('company_id',$companyDefault->id)
                                     ->whereIn('integration_type_enum',[4,5])->exists();
 

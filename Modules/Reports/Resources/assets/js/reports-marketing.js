@@ -473,7 +473,7 @@ function getProjects(data, origin='')
             loadingOnScreenRemove();
         },
         success: function success(response) {
-            if(!isEmpty(response)){
+            if(!isEmpty(response) || data.has_api_integration){
                 $(".div-filters").hide();
                 $("#project-empty").hide();
                 $("#project-not-empty").show();
@@ -489,6 +489,8 @@ function getProjects(data, origin='')
                 company = $("#select_projects").val();
                 updateReports();
                 $(".div-filters").show();
+                if( $('#select_projects option').length == 0 )
+                    $('#select_projects').next().css('display','none')
                 loadingOnScreenRemove();
             }
             else{

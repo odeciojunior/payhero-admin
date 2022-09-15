@@ -361,7 +361,7 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
             },
             success: function success(response) {
-                if(!isEmpty(response)){
+                if(!isEmpty(response) || data.has_api_integration){
                     $(".div-filters").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();

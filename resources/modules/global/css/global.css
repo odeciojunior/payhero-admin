@@ -2241,6 +2241,35 @@ tbody td{
     font-weight: 600;
 }
 
+.alert-demo-account .new-register-open-modal{
+    background-color: #2E85EC;
+    color: white;
+    border-radius:0;
+    text-align:center;
+    width:100%;
+    display:block
+}
+
+.alert-pendings{
+    background-color: #F7F8FB;
+    border:1px #E7EAEE solid;
+    border-radius:6px;
+    padding: 2px;
+}
+
+.alert-pendings-box-1{
+    color: #222222;
+    padding-top:6px;
+    padding-right:6px;
+}
+
+.alert-pendings-box-2{
+    background-color:#2E85EC;
+    color:white;
+    border-radius:4px;
+    padding: 6px 10px;
+}
+
 .new-register-page-open-modal-container {
     display: none;
     margin-left: 65px;

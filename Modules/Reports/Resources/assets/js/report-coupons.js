@@ -102,7 +102,7 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
             },
             success: function success(response) {
-                if(!isEmpty(response)){
+                if(!isEmpty(response) || data.has_api_integration){
                     $(".div-filters").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
@@ -110,8 +110,8 @@ $(document).ready(function () {
                     $.each(response, function (c, project) {
                         $("#projeto").append($("<option>", {value: project.project_id,text: project.name,}));
                     });
-                    if(data.has_api_integration)
-                        $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+                    // if(data.has_api_integration)
+                    //     $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
                     $("#projeto option:first").attr('selected','selected');
                     if(sessionStorage.info) {
                         $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
@@ -120,6 +120,8 @@ $(document).ready(function () {
                     company = $("#projeto").val();
                     window.atualizar();
                     $(".div-filters").show();
+                    if( $('#select_projects option').length == 0 )
+                        $('#select_projects').next().css('display','none')
                     loadingOnScreenRemove();
                 }
                 else{

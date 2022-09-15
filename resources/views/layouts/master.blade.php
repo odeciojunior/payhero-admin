@@ -38,8 +38,13 @@
           content="Bearer {{ auth()->check()? auth()->user()->createToken('Laravel Password Grant Client', ['admin'])->accessToken: '' }}">
     <meta name="current-url"
           content="{{ env('APP_URL') }}">
+        @php
+            $user_id = auth()->user()->id;
+            if(auth()->user()->is_cloudfox)
+                $user_id = auth()->user()->logged_id;
+        @endphp
     <meta name="user-id"
-          content="{{ hashids_encode(auth()->user()->id) }}">
+          content="{{ hashids_encode($user_id) }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon"
           sizes="180x180"
@@ -132,9 +137,13 @@
         $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
     @endphp
 
-    {{-- @if (!auth()->user()->account_is_approved)
-        @include('utils.new-register-link')
-    @endif --}}
+    <div class="alert-demo-account" style="display:none">
+        <div class="row new-register-open-modal no-gutters">
+            <img src="/build/global/img/alert-demo-left.png" class="mr-20">
+            Esta é uma conta demonstrativa
+            <img src="/build/global/img/alert-demo-rigth.png" class="ml-20">
+        </div>
+    </div>
 
     @yield('content')
 
