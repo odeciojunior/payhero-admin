@@ -127,8 +127,8 @@ class PipefyService
         $fieldsApi = '';
         foreach (self::$FIELD_API_USER_INFORMATIONS as $api =>$field){
             if ($api == 'nome'){
-                if (!empty($userInformations->monthly_income)){
-                    $valueMonthlyIncome = number_format(FoxUtils::floatFormat($userInformations->monthly_income),"2",",",".");
+                if (!empty($userInformations->monthly_income) && $userInformations->monthly_income > 0){
+                    $valueMonthlyIncome = number_format($userInformations->monthly_income,"0",",",".");
                     $fieldsApi .= '{fieldId: \\"'.$api.'\\", value: \\"'.$valueMonthlyIncome." - ".$user->$field.'\\"} ';
                 }
             }elseif (!empty($userInformations->$field) && $api != 'qual_e_commerce_voc_usa_hoje' && $api != 'como_conheceu_a_cloudfox'){
