@@ -98,14 +98,21 @@ class SaleService
             if (!empty($filters["project"])) {
                 $projectIds = [];
                 $projects = explode(",", $filters["project"]);
+                $tokens = [];
 
                 foreach ($projects as $project) {
+                    if(str_contains($project,'TOKEN')){
+                        array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
+                        continue;
+                    }
+
                     array_push($projectIds, hashids_decode($project));
                 }
 
                 //$projectId = hashids_decode($filters["project"]);
-                $transactions->whereHas("sale", function ($querySale) use ($projectIds) {
-                    $querySale->whereIn("project_id", $projectIds);
+                $transactions->whereHas("sale", function ($querySale) use ($projectIds,$tokens) {
+                    $querySale->whereIn("project_id", $projectIds)
+                    ->orWhereIn('api_token_id',$tokens);
                 });
             }
 
@@ -249,7 +256,7 @@ class SaleService
                 })
                 ->selectRaw("transactions.*, sales.start_date")
                 ->orderByDesc("sales.start_date");
-
+\Log::info(str_replace_array('?',$transactions->getBindings(),$transactions->toSql()));
             return $transactions;
         } catch (Exception $e) {
             report($e);
@@ -485,9 +492,10 @@ class SaleService
                 $products = $productService->getProductsBySale($saleId);
 
                 return ProductsSaleResource::collection($products);
-            } else {
-                return null;
             }
+
+            return null;
+
         } catch (Exception $ex) {
             Log::warning("Erro ao buscar produtos - SaleService - getProducts");
             report($ex);
@@ -1262,26 +1270,44 @@ class SaleService
         );
     }
 
-    public static function getProjectsWithSales(){
-        $company_id = auth()->user()->company_default;
-        $user_id = auth()->user()->getAccountOwnerId();
+    public static function getProjectsWithSales()
+    {
+        $companyId = auth()->user()->company_default;
+        $userId = auth()->user()->getAccountOwnerId();
 
-        $projects =  Sale::select('sales.project_id', 'projects.name')
+        return DB::table('sales')->select('sales.project_id', 'projects.name',DB::Raw("'' as prefix"))
             ->distinct()
             ->leftJoin('projects', 'projects.id','=', 'sales.project_id')
             ->leftJoin('transactions', 'transactions.sale_id', '=', 'sales.id')
             ->where('sales.gateway_status','!=','canceled')
-            ->where('transactions.user_id', $user_id)
-            ->where('transactions.company_id', $company_id)
+            ->where('transactions.user_id', $userId)
+            ->where('transactions.company_id', $companyId)
             ->whereNull('transactions.invitation_id')
             ->where(function($query){
                 if(auth()->user()->deleted_project_filter)
                     $query->whereIn('projects.status', [1,2]);
                 else
                     $query->where('projects.status',1);
-            });
-        $projects = $projects->get();
-        return $projects;
+            })->get();
+    }
+
+    public static function getProjectsWithSalesAndTokens()
+    {
+        $companyId = auth()->user()->company_default;
+        $userId = auth()->user()->getAccountOwnerId();
+
+        $projects =  self::getProjectsWithSales();
+
+        $tokens = DB::table('sales')->select('api.id as project_id','api.description as name',DB::Raw("'TOKEN-' as prefix"))
+        ->distinct()
+        ->join('api_tokens as api', 'api.id','=', 'sales.api_token_id')
+        ->where('api.user_id',$userId)
+        ->whereNull('api.deleted_at')
+        ->where('api.company_id',$companyId)
+        ->where('sales.gateway_status','!=','canceled')
+        ->get();
+
+        return $projects->merge($tokens);
     }
 
     public function refund(Sale $sale, $refundObservation = null)

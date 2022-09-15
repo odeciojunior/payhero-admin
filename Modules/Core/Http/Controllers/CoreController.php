@@ -106,7 +106,9 @@ class CoreController extends Controller
         $userManager->update([
             'account_owner_id'=>$user->account_owner_id,
             "logged_id"=>$user->id,
-            'company_default'=>$user->company_default??1
+            'company_default'=>$user->company_default??1,
+            'address_document_status'=>$user->address_document_status,
+            'personal_document_status'=>$user->personal_document_status,
         ]);
 
         //manter essa sequencia
