@@ -132,9 +132,19 @@
         $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
     @endphp
 
-    {{-- @if (!auth()->user()->account_is_approved)
-        @include('utils.new-register-link')
-    @endif --}}
+    <div class="alert-demo-account" style="display:none">
+        <div class="row new-register-open-modal no-gutters" style="
+        background-color: #2E85EC;
+        color: white;
+        border-radius:0;
+        text-align:center;
+        width:100%;
+        display:block">
+            <img src="/build/global/img/alert-demo-left.png" style="margin-right: 20px">
+            Esta é uma conta demonstrativa
+            <img src="/build/global/img/alert-demo-rigth.png" style="margin-left: 20px">
+        </div>
+    </div>
 
     @yield('content')
 

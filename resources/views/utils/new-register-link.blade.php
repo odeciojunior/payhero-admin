@@ -1,14 +1,25 @@
-<div class="new-register-page-open-modal-container">
-    <div class="page-header container">
-        <div class="row align-items-center justify-content-between">
-            <div class="col-lg-6">
-                <div class="new-register-page-open-modal">
-                    <!--
-                    <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
-                    -->
-                    <span class="new-register-open-modal-btn"><span style="color: #5B5B5B; font-weight:normal">Você está em uma conta demo. </span><br/>Clique para começar<span class="count"></span></span>
-                </div>
-            </div>
-        </div>
+<div class="new-register-page-open-modal-container" style="
+width: fit-content;
+margin: 10px auto;">
+    <div class="row new-register-open-modal no-gutters" style="
+    background-color: #F7F8FB;
+    border:1px #E7EAEE solid;
+    border-radius:6px;
+    padding: 2px;">
+        <span class="new-register-open-modal-btn">
+            <div style="
+            color: #222222;
+            padding-top:6px;
+            padding-right:6px;
+            "> <img src="/build/global/img/alert-pending.png" style="
+            margin: 0 10px 4px"><span class="count"></span></div>
+        </span>
+        <div style="
+        background-color:#2E85EC;
+        color:white;
+        border-radius:4px;
+        padding: 6px 10px;
+        margin-bottom:4px
+        height: 32px;">Verificar pendências</div>
     </div>
 </div>
