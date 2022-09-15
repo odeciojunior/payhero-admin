@@ -38,8 +38,13 @@
           content="Bearer {{ auth()->check()? auth()->user()->createToken('Laravel Password Grant Client', ['admin'])->accessToken: '' }}">
     <meta name="current-url"
           content="{{ env('APP_URL') }}">
+        @php
+            $user_id = auth()->user()->id;
+            if(auth()->user()->is_cloudfox)
+                $user_id = auth()->user()->logged_id;
+        @endphp
     <meta name="user-id"
-          content="{{ hashids_encode(auth()->user()->id) }}">
+          content="{{ hashids_encode($user_id) }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon"
           sizes="180x180"
