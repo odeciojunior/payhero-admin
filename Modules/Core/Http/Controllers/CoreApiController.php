@@ -297,15 +297,11 @@ class CoreApiController extends Controller
                 if(auth()->user()->is_cloudfox)
                     $user_id = auth()->user()->logged_id;
 
-                $hasApiIntegration = DB::table('api_tokens')->where('user_id', $user_id)
-                                    ->where('company_id',$companyDefault->id)
-                                    ->whereIn('integration_type_enum',[4,5])->exists();
-
                 $return = array(
                     'company_default'=>Hashids::encode($user->company_default),
                     'company_default_name'=>$company_default_name,
                     'company_default_fullname'=>$companyDefault->fantasy_name,
-                    'has_api_integration'=>$hasApiIntegration
+                    'has_api_integration'=>false
                 );
             }
 

@@ -1302,6 +1302,7 @@ class SaleService
         ->distinct()
         ->join('api_tokens as api', 'api.id','=', 'sales.api_token_id')
         ->where('api.user_id',$userId)
+        ->whereIn('api.integration_type_enum',[4,5])
         ->whereNull('api.deleted_at')
         ->where('api.company_id',$companyId)
         ->where('sales.gateway_status','!=','canceled')
