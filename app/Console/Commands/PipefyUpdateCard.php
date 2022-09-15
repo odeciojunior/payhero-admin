@@ -34,7 +34,7 @@ class PipefyUpdateCard extends Command
     public function handle()
     {
         $this->updateCardInformation();
-        $this->checkDocumentUser();
+        //$this->checkDocumentUser();
     }
 
     public function createCardTest()
@@ -42,7 +42,7 @@ class PipefyUpdateCard extends Command
         if (!FoxUtils::isProduction()){
             $pipefyService = new PipefyService();
             $usersNews = User::where("total_commission_value", ">","20000000")
-                ->orderBy('created_at',"DESC")->limit(15)->get();
+                ->orderBy('created_at',"DESC")->limit(20)->get();
             foreach ($usersNews as $teste ){
                 $pipefyService->createCardUser($teste);
             }
