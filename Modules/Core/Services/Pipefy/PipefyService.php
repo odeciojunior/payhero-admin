@@ -22,7 +22,6 @@ class PipefyService
     const LABEL_SALES_OVER_50M              = 307588157; // Maior que R$50.000.000,00
     const LABEL_TOP_SALE                    = 307552829;
 
-
     const PHASE_REFUSED_DOCUMENT        = 315203355; //Coluna Documento recusado
     const PHASE_ACTIVE                  = 315322780; //Coluna cadastro finalizados e ativos
     const PHASE_ACTIVE_AND_SELLING      = 315203350; //Coluna cadastro ativo e vendedno
@@ -37,6 +36,7 @@ class PipefyService
     ];
 
     public static $FIELD_API_USER_INFORMATIONS = [
+        "nome" => "name" ,
         "qual_gateway_voc_utiliza_hoje" => "gateway" ,
         "qual_o_seu_site_de_vendas" => "website_url" ,
         "como_conheceu_a_cloudfox" => "cloudfox_referer" ,
@@ -55,7 +55,7 @@ class PipefyService
         if (FoxUtils::isProduction()){
             $this->idBoard = '302406140';
         }else{
-            $this->idBoard = '302695654';
+            $this->idBoard = '302698601';
         }
     }
 
@@ -126,7 +126,12 @@ class PipefyService
         $userInformations = $user->userInformations()->first();
         $fieldsApi = '';
         foreach (self::$FIELD_API_USER_INFORMATIONS as $api =>$field){
-            if (!empty($userInformations->$field) && $api != 'qual_e_commerce_voc_usa_hoje' && $api != 'como_conheceu_a_cloudfox'){
+            if ($api == 'nome'){
+                if (!empty($userInformations->monthly_income)){
+                    $valueMonthlyIncome = number_format(FoxUtils::floatFormat($userInformations->monthly_income),"2",",",".");
+                    $fieldsApi .= '{fieldId: \\"'.$api.'\\", value: \\"'.$valueMonthlyIncome." - ".$user->$field.'\\"} ';
+                }
+            }elseif (!empty($userInformations->$field) && $api != 'qual_e_commerce_voc_usa_hoje' && $api != 'como_conheceu_a_cloudfox'){
                 $fieldsApi .= '{fieldId: \\"'.$api.'\\", value: \\"'.$userInformations->$field.'\\"} ';
             }elseif (!empty($userInformations->$field) && $api == 'qual_e_commerce_voc_usa_hoje'){
                 $options = json_decode($userInformations->$field);
