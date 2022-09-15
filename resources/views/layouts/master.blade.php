@@ -133,16 +133,10 @@
     @endphp
 
     <div class="alert-demo-account" style="display:none">
-        <div class="row new-register-open-modal no-gutters" style="
-        background-color: #2E85EC;
-        color: white;
-        border-radius:0;
-        text-align:center;
-        width:100%;
-        display:block">
-            <img src="/build/global/img/alert-demo-left.png" style="margin-right: 20px">
+        <div class="row new-register-open-modal no-gutters">
+            <img src="/build/global/img/alert-demo-left.png" class="mr-20">
             Esta é uma conta demonstrativa
-            <img src="/build/global/img/alert-demo-rigth.png" style="margin-left: 20px">
+            <img src="/build/global/img/alert-demo-rigth.png" class="ml-20">
         </div>
     </div>
 
