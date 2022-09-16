@@ -53,7 +53,7 @@ class DashboardApiController extends Controller
     public function getValues(Request $request)
     {
         try {
-            $companyId = !empty($request->company) ? hashids_decode($request->company): auth()->user()->company_default;
+            $companyId = !empty($request->company_id) ? hashids_decode($request->company_id): auth()->user()->company_default;
             $company = Company::find($companyId);
 
             if (empty($company)) {
@@ -80,7 +80,6 @@ class DashboardApiController extends Controller
                 "blocked_balance_total" => number_format($blockedBalance / 100, 2, ",", "."),
                 "total_balance" => number_format($totalBalance / 100, 2, ",", "."),
                 "today_balance" => number_format($todayBalance / 100, 2, ",", "."),
-                "currency" => 'R$',
             ]);
         } catch (Exception $e) {
             report($e);

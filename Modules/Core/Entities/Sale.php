@@ -213,6 +213,7 @@ class Sale extends Model
         "dolar_quotation",
         "first_confirmation",
         "api_flag",
+        "api_token_id",
         "installment_tax_value",
         "attempts",
         "created_at",

@@ -1266,12 +1266,13 @@ $(() => {
                 $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
                 $("#refund-observation-transaction").val("");
-                atualizar(currentPage);
-                $(".btn-confirm-refund-transaction").prop("disabled", false);
 
                 if(window.location.pathname.includes('finances')){
                     $('#bt_filtro').trigger('click');
                 }
+
+                atualizar(currentPage);
+                $(".btn-confirm-refund-transaction").prop("disabled", false);
             },
         });
     }

@@ -52,6 +52,7 @@ class ApiToken extends Model
     const INTEGRATION_TYPE_PERSONAL = 2;
     const INTEGRATION_TYPE_EXTERNAL = 3;
     const INTEGRATION_TYPE_CHECKOUT_API = 4;
+    const INTEGRATION_TYPE_SPLIT_API = 5;
     /**
      * @var array
      */

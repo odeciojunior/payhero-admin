@@ -138,7 +138,7 @@ $(document).ready(function () {
         $("#card-table-integrate").css("display", "block");
         $("#table-body-integrates").html("");
 
-        if (response.data.length > 0 && response.data.findIndex((e) => e.integration_type == "checkout_api") != -1) {
+        if (response.data.length > 0 && (response.data.findIndex((e) => e.integration_type_enum == "4") != -1 || response.data.findIndex((e) => e.integration_type_enum == "5") != -1)) {
             $("#content-script").show();
             $("#input-url-antifraud").val(response.data[0].antifraud_url);
         } else {
@@ -152,18 +152,12 @@ $(document).ready(function () {
             dados += "<tr>";
 
             dados += '<td class="" style="vertical-align: middle;">';
-            dados += '<p class="description mb-0 mr-1">' + value.description + "</p>";
-            dados += '<small class="text-muted">Criada em ' + value.register_date + "</small>";
-            dados += "</td>";
-
-            dados += '<td class="text-center">';
-            dados +=
-                '<span class="badge badge-' +
-                integrationTypeEnumBadge[value.integration_type] +
-                ' text-center">' +
-                integrationTypeEnum[value.integration_type] +
-                "</span>";
-            dados += "</td>";
+                dados += '<p class="description m-0">' + value.description + '</p>';
+                if (value.integration_type_enum !== 5) {
+                    dados += '<div><small class="text-muted">' + integrationTypeEnum[value.integration_type] + '</small></div>';
+                }
+                dados += '<small class="text-muted">Criada em ' + value.register_date + '</small>';
+            dados += '</td>';
 
             dados += '<td style="vertical-align: middle;">';
             dados += '<div class="input-group input-group-lg">';
@@ -366,32 +360,24 @@ $(document).ready(function () {
             $("#btn-save-integration").unbind();
             $("#btn-save-integration").on("click", function () {
                 let description = $("#modal-integrate").find("input[name='description']").val();
-                let tokenTypeEnum = $("#select-enum-list").val();
-                let postback = $("#modal-integrate").find("input[name='postback']").val();
                 let companyHash = $('.company-navbar').val();
                 if (description == '') {
                     alertCustom('error', 'O campo Descrição é obrigatório');
-                } else if (!companyHash && tokenTypeEnum == 4) {
-                    alertCustom("error", "O campo Empresa é obrigatório para a integração Checkout API");
-                } else if (tokenTypeEnum == 4 && postback == "") {
-                    alertCustom("error", "O campo Postback é obrigatório para a integração Checkout API");
                 } else {
                     loadingOnScreen();
-                    storeIntegration(description, tokenTypeEnum, postback, companyHash);
+                    storeIntegration(description, companyHash);
                 }
             });
             $("#modal-integrate").modal("show");
         });
     }
 
-    function storeIntegration(description, tokenTypeEnum, postback, companyHash) {
+    function storeIntegration(description, companyHash) {
         $.ajax({
             method: "POST",
             url: "/api/integrations",
             data: {
                 description: description,
-                token_type_enum: tokenTypeEnum,
-                postback: postback,
                 company_id: companyHash,
             },
             dataType: "json",

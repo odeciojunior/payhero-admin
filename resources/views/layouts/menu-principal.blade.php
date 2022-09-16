@@ -339,8 +339,7 @@
                 </a>
             </li>
         @endcan
-        @if (auth()->user()->hasRole('account_owner') ||
-            auth()->user()->hasRole('admin'))
+        @can('dev')
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="api-sirius-link">
                     <span class="bg-menu">
