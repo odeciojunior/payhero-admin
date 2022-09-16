@@ -596,6 +596,7 @@ $(document).ready(function () {
         $(".account-chargeback").remove();
         $(".account-tracking").remove();
         $(".account-attendance").remove();
+        $(".empty-score").remove();
         $(".sirius-account-health-loading").removeClass("d-none");
     }
 

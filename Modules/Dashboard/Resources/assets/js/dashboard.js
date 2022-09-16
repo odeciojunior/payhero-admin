@@ -11,6 +11,7 @@ $(document).ready(function () {
         putSkeletonLoadingOnChart();
         $('#scoreLineToMonth').html('');
 
+
         window.putSkeletonLoadingOnAccountHealth();
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
@@ -586,11 +587,13 @@ $(document).ready(function () {
         $(".chart-data").hide();
         $(".chart-card > .loading-title").removeClass("d-none");
         $(".chart-card > .loading-content").removeClass("d-none");
+        $(".chart-card > .loading-content-inside").removeClass("d-none");
     }
 
     function removeSkeletonLoadingFromChart() {
         $(".chart-card > .loading-title").addClass("d-none");
         $(".chart-card > .loading-content").addClass("d-none");
+        $(".chart-card > .loading-content-inside").addClass("d-none");
         $(".chart-data").show();
     }
 

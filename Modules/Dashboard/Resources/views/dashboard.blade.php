@@ -124,6 +124,7 @@
                             <div class="card bg-white chart-card">
                                 <div class="skeleton-loading loading-title d-none"></div>
                                 <div class="skeleton-loading loading-content d-none"></div>
+                                <div class="skeleton-loading loading-content-inside d-none"></div>
                                 <div class="skeleton-loading loading-content d-none"></div>
 
                                 <div class="chart-data">
