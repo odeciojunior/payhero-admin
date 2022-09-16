@@ -159,6 +159,8 @@ class Kernel extends ConsoleKernel
         $schedule->command("verify:boleto2")->dailyAt("11:15");
         $schedule->command("verify:abandonedcarts2")->dailyAt("12:00");
 
+        $schedule->command("verify:coupons")->dailyAt("16:30");
+
         $schedule->command("demo:create-fake-ticket")->dailyAt("16:50");
         $schedule->command("demo:create-fake-contestation")->dailyAt("17:00");
 
@@ -176,7 +178,10 @@ class Kernel extends ConsoleKernel
         $schedule->command("getnet:check-withdrawals-liquidated")->dailyAt("23:30");
         $schedule->command("verify:promotional-tax")->dailyAt("23:45");
 
-        $schedule->command('check:company')->saturdays()->at('05:00');
+        $schedule
+            ->command("check:company")
+            ->saturdays()
+            ->at("05:00");
 
         $schedule->command("demo:create-fake-invite")->weekly();
         // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
