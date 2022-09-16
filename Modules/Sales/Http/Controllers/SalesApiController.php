@@ -460,15 +460,18 @@ class SalesApiController extends Controller
         }
     }
 
-    public function getProjectsWithSales(){
-        $projects = SaleService::getProjectsWithSales();
-        $projectsEncoded=[];
+    public function getProjectsWithSales()
+    {
+        $rows = [];
+        $projects = SaleService::getProjectsWithSalesAndTokens();
         foreach($projects as $item){
-            $projectsEncoded[] = array(
-                'project_id'=>Hashids::encode($item->project_id),
-                'name'=>$item->name);
+            $rows[] = [
+                'project_id'=>($item->prefix??'').Hashids::encode($item->project_id),
+                'name'=>$item->name
+            ];
         }
-        return $projectsEncoded;
+
+        return $rows;
     }
 
 }

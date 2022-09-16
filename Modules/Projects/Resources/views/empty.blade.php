@@ -34,7 +34,8 @@
     @else
         @if (Request::is('projects'))
             @if (auth()->user()->address_document_status == 3 && auth()->user()->personal_document_status == 3)
-                <button type="button"
+                <button type="button" id="new-store-button" data-toggle="modal" data-target="#new-store-modal"
+                        data-placement="bottom" title="Adicionar Loja"
                         class="new-register-open-modal-btn btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white"
                         style="position: relative;">
                     <i class="o-add-1"

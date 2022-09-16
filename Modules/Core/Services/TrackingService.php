@@ -301,14 +301,22 @@ class TrackingService
             }
 
             $projects = explode(",", $filters["project"]);
-            $projectsIds = collect($projects)
-                ->map(function ($project) {
-                    return hashids_decode($project);
-                })
-                ->toArray();
 
-            if (!empty($projectsIds) && !in_array("", $projectsIds)) {
-                $join->whereIn("s.project_id", $projectsIds);
+            $tokens = [];
+            $projectIds = [];
+            foreach ($projects as $project) {
+                if(str_contains($project,'TOKEN')){
+                    array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
+                    continue;
+                }
+                array_push($projectIds, hashids_decode($project));
+            }
+
+            if(count($projectIds) > 0 || count($tokens) > 0){
+                $join->where(function ($querySale) use ($projectIds,$tokens) {
+                    $querySale->whereIn("s.project_id", $projectIds)
+                    ->orWhereIn('s.api_token_id',$tokens);
+                });
             }
         });
 

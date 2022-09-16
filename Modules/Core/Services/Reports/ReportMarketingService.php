@@ -158,8 +158,8 @@ class ReportMarketingService
         $cacheName = 'frequent-sales-'.json_encode($filters);
         return cache()->remember($cacheName, 300, function() use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $showSalesApi = $filters['project_id']=='API-TOKEN';
-            $projectId = $showSalesApi ? null : hashids_decode($filters['project_id']);
+            $showSalesApi = str_contains($filters['project_id'],'TOKEN');
+            $projectId = hashids_decode(str_replace('TOKEN-','',$filters['project_id']));
 
             if(!$showSalesApi){
                 $data = Plan::select(DB::raw('plans.id, plans.name, plans.description, count(*) as sales_amount, cast(sum(plan_sale.plan_value) as unsigned) as value'))
@@ -190,6 +190,7 @@ class ReportMarketingService
                         ->where('t.company_id',$filters['company_id'])
                         ->where('sales.status', Sale::STATUS_APPROVED)
                         ->whereIn('t.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+                        ->where('sales.api_token_id',$projectId)
                         ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                         ->select(DB::raw('products_sales_api.name, products_sales_api.item_id, "" as description, "" as image, COUNT(*) as sales_amount, cast(sum(products_sales_api.price) as unsigned) as value'))
                         ->groupBy('products_sales_api.item_id')

@@ -142,14 +142,21 @@
                                     ? \Auth::user()->photo
                                     : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}"
                                     onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'"
-                                    alt="">
+                                    alt="" title="">
                                 <i></i>
                             </span>
                         </a>
 
                         <!-- BOTOES DE OPCAO DOS USUARIO -->
                         <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
-
+                            @if(auth()->user()->is_cloudfox)
+                            <a class="dropdown-item disabled" disabled>
+                                <img height="24" width="24"
+                                    src="{{ mix('build/global/img/icon-info.svg') }}" />
+                                    {{auth()->user()->name}}
+                            </a>
+                            <div class="dropdown-divider" role="presentation"></div>
+                            @endif
                             <!-- BOTAO DE CONFIGURACOES -->
                             @if (foxutils()->isHomolog())
                                 <div data-toggle="tooltip" data-placement="left"
