@@ -15,8 +15,7 @@
         @include('dashboard::achievement-details')
         @include('dashboard::onboarding.presentation')
         @include('dashboard::pix.pix')
-        <div style="display: none"
-             class="page-header container mb-15 mb-sm-0">
+        <div class="page-header container mb-15 mb-sm-0">
 
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-lg-6 mb-25">
@@ -26,8 +25,7 @@
 
         </div>
         <div id="project-not-empty"
-             class="page-content container"
-             style="display:none">
+             class="page-content container">
             <!-- Saldos -->
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
@@ -163,8 +161,8 @@
 
                             <div class="card pb-15 bg-white w-full performance-card">
                                 <div class="performance-loading d-none">
+                                    <div class="skeleton-loading title"></div>
                                     <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start ">
-                                        <div class="skeleton-loading title"></div>
                                         <div class="level-icon-container row">
                                             <div class="skeleton-loading col level-image"></div>
                                             <div class="col">

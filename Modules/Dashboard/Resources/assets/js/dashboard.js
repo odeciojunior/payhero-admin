@@ -51,14 +51,12 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                // loadingOnChartRemove("#chart-loading");
                 removeSkeletonLoadingFromChart();
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 setTimeout(() => {
-                    // loadingOnChartRemove("#chart-loading");
                     removeSkeletonLoadingFromChart();
                     getChart(response);
                 }, 2000);
@@ -207,7 +205,6 @@ $(document).ready(function () {
                 Accept: "appliation/json",
             },
             error: function error(response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -220,7 +217,6 @@ $(document).ready(function () {
                 } else {
                     $(".content-error").show();
                     $("#company-select, .page-content").hide();
-                    loadingOnScreenRemove();
                 }
             },
         });
@@ -267,7 +263,11 @@ $(document).ready(function () {
     }
 
     function getProjects() {
-        loadingOnScreen();
+
+        window.putSkeletonLoadingOnPerformance();
+        window.putSkeletonLoadingOnAccountHealth();
+        putSkeletonLoadingOnBalanceCards();
+        putSkeletonLoadingOnChart();
 
         $.ajax({
             method: "GET",
