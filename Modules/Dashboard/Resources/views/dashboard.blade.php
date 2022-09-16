@@ -209,9 +209,9 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-4 skeleton-loading score-detail"></div>
-                                        <div class="col-4 skeleton-loading score-detail"></div>
-                                        <div class="col-4 skeleton-loading score-detail"></div>
+                                        <div class="col skeleton-loading score-detail"></div>
+                                        <div class="col skeleton-loading score-detail"></div>
+                                        <div class="col skeleton-loading score-detail"></div>
                                     </div>
                                 </div>
                             </div>
