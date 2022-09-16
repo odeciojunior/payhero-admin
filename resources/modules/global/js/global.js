@@ -2382,6 +2382,14 @@ function getCompaniesAndProjects() {
                     data.company_default_projects = company.projects
                 }
             });
+
+            if(company_default == 'v2RmA83EbZPVpYB'){
+                $('.alert-demo-account').fadeIn()
+            }
+            else{
+                $('.alert-demo-account').fadeOut()
+            }
+
             if (!isEmpty(companies)) {
                 //$('.company_name').val( company_default_name );
                 $('.company_id').val( company_default );

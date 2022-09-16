@@ -80,7 +80,6 @@ class DashboardApiController extends Controller
                 "blocked_balance_total" => number_format($blockedBalance / 100, 2, ",", "."),
                 "total_balance" => number_format($totalBalance / 100, 2, ",", "."),
                 "today_balance" => number_format($todayBalance / 100, 2, ",", "."),
-                "currency" => 'R$',
             ]);
         } catch (Exception $e) {
             report($e);

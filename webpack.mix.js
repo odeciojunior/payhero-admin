@@ -308,6 +308,7 @@ mix.babel([
  * Modules/Dashboard/Resources/views/dashboard.blade
  */
 mix.styles([
+    'Modules/Dashboard/Resources/assets/css/skeleton-loading.css',
     'resources/modules/global/css/new-dashboard.css',
     'Modules/Dashboard/Resources/assets/css/chartist.min.css',
     'Modules/Dashboard/Resources/assets/css/chartist-plugin-tooltip.min.css',
