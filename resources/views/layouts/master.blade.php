@@ -138,15 +138,7 @@
     @endphp
 
     <div class="alert-demo-account" style="display:none">
-        <div class="row new-register-open-modal no-gutters">
-            <img src="/build/global/img/alert-demo-left.png" class="mr-20">
-            Esta é uma conta demonstrativa
-            <img src="/build/global/img/alert-demo-rigth.png" class="ml-20">
-        </div>
-    </div>
-
-    <div class="alert-demo-account" style="display:none">
-        <div class="row new-register-open-modal no-gutters">
+        <div class="row no-gutters">
             <img src="/build/global/img/alert-demo-left.png" class="mr-20">
             Esta é uma conta demonstrativa
             <img src="/build/global/img/alert-demo-rigth.png" class="ml-20">

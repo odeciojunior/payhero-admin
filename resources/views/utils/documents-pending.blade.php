@@ -17,8 +17,17 @@
                                 </svg>
                             </div>
                         </div>
+                        @php
+                        $user = auth()->user();
+                        $name = $user->name;
+                        if($user->is_cloudfox && $user->logged_id){
+                            $userModel = new \Modules\Core\Entities\User();
+                            $query = $userModel::select('name')->where('id',$user->logged_id)->get();
+                            $name = $query[0]->name;
+                        }
+                        @endphp
                         <div class="new-register-overlay-title">Bem vindo,
-                            <strong>{{ explode(' ', trim(auth()->user()->name))[0] }}</strong>
+                            <strong>{{ explode(' ', trim($name))[0] }}</strong>
                         </div>
                     </div>
                     <div class="new-register-overlay-subtitle">
