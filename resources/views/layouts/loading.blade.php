@@ -1,5 +1,6 @@
 <script>
-    $(document).ready(function () {
-        loadOnAnyPage('.page');
-    });
+    // $(document).ready(function () {
+    //     loadOnAnyPage('.page');
+    // });
+
 </script>
