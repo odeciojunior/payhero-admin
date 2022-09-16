@@ -256,7 +256,7 @@ class SaleService
                 })
                 ->selectRaw("transactions.*, sales.start_date")
                 ->orderByDesc("sales.start_date");
-\Log::info(str_replace_array('?',$transactions->getBindings(),$transactions->toSql()));
+
             return $transactions;
         } catch (Exception $e) {
             report($e);

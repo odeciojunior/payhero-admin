@@ -243,8 +243,10 @@ class SalesRecoveryApiController extends Controller
             $projectIds = [];
             $projects = explode(",", $data["project"]);
 
+            $fromApi = false;
             foreach ($projects as $project) {
-                array_push($projectIds, current(Hashids::decode($project)));
+                $fromApi = str_contains($project,'TOKEN');
+                array_push($projectIds, ($fromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
             }
         }
 
@@ -448,8 +450,10 @@ class SalesRecoveryApiController extends Controller
             $projectIds = [];
             $projects = explode(",", $data["project"]);
 
+            $fromApi = false;
             foreach ($projects as $project) {
-                array_push($projectIds, current(Hashids::decode($project)));
+                $fromApi = str_contains($project,'TOKEN');
+                array_push($projectIds, ($fromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
             }
         }
 

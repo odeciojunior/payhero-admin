@@ -301,7 +301,7 @@ $(() => {
                         //     $("#project-select").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
                         $("#projeto option:first").attr('selected','selected');
-                        atualizar();
+                        window.loadData();
                         if(origin=='')
                             loadingOnScreenRemove();
                     }

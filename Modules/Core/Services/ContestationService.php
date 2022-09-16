@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Affiliate;
@@ -153,8 +154,9 @@ class ContestationService
         });
 
         $contestations->when(request("project"), function ($query, $search) {
-            $projectId = current(Hashids::decode($search));
-            return $query->where("sales.project_id", $projectId);
+            $byApi = str_contains($search,'TOKEN');
+            $projectId = current(Hashids::decode(str_replace('TOKEN_','',$search)));
+            return $query->where($byApi ? "sales.api_token_id" : "sales.project_id", $projectId);
         });
 
         $contestations->when(request("customer"), function ($query, $search) {
@@ -417,12 +419,29 @@ class ContestationService
         }
     }
 
-    public static function getprojectsWithContestations(){
-        return Sale::select('sales.project_id')
+    public static function getprojectsWithContestations()
+    {
+        $companyId = auth()->user()->company_default;
+        $userId = auth()->user()->getAccountOwnerId();
+
+        $sales = Sale::select('sales.project_id',DB::Raw("'' as prefix"))
             ->distinct()
             ->leftjoin('sale_contestations','sale_contestations.sale_id','sales.id')
             ->where('sales.owner_id',auth()->user()->getAccountOwnerId())
             ->whereIn('sale_contestations.status',[1,2,3])
             ->get();
+
+        $tokens = DB::table('sales')->select('api.id as project_id',DB::Raw("'TOKEN-' as prefix"))
+            ->distinct()
+            ->join('sale_contestations','sale_contestations.sale_id','sales.id')
+            ->join('api_tokens as api', 'api.id','=', 'sales.api_token_id')
+            ->where('api.user_id',$userId)
+            ->whereIn('api.integration_type_enum',[4,5])
+            ->whereNull('api.deleted_at')
+            ->where('api.company_id',$companyId)
+            ->whereIn('sale_contestations.status',[1,2,3])
+            ->get();
+
+        return $sales->merge($tokens);
     }
 }
