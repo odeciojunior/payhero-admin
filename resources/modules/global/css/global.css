@@ -2062,6 +2062,7 @@ tbody td{
     border-radius: 4px;
     background: #68aafa;
     color: #ffffff;
+    height: 36px;
 }
 
 .page-project .pagination-sm .nav-btn.active {
