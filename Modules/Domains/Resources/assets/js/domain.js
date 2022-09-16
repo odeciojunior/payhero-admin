@@ -180,7 +180,9 @@ $(document).ready(function () {
                         });
                     });
                 });
+
             },
+            
         });
     }
 
@@ -640,7 +642,6 @@ $(document).ready(function () {
 
     function pagination(response) {
         $("#pagination").html("");
-
         var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         if (response.meta.last_page == "1") {

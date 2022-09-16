@@ -337,29 +337,24 @@
                 <!-- Tabela -->
                 <div class="fixhalf"></div>
                 <div class="col-lg-12 p-0 pb-10">
-                    <div class="card shadow"
-                         style="min-height: 300px">
+                    <div class="card shadow">
                         <div class="page-invoice-table table-responsive">
-                            <table id="tabela_vendas"
-                                   class="table-vendas table table-striped unify"
-                                   style="">
+                            <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                                 <thead>
                                     <tr>
-                                        <td class="table-title display-sm-none display-m-none  display-lg-none">Transação
-                                        </td>
-                                        <td class="table-title">Loja</td>
-                                        <td class="table-title">Descrição</td>
-                                        <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                        <td class="table-title">Forma</td>
-                                        <td class="table-title text-center">Status</td>
-                                        <td class="table-title display-sm-none display-m-none">Data</td>
-                                        <td class="table-title display-sm-none">Pagamento</td>
-                                        <td class="table-title">Comissão</td>
-                                        <td class="table-title">Motivo</td>
+                                        <td class="display-sm-none display-m-none  display-lg-none">Transação</td>
+                                        <td class="">Loja</td>
+                                        <td class="">Descrição</td>
+                                        <td class=" display-sm-none display-m-none display-lg-none">Cliente</td>
+                                        <td class="">Forma</td>
+                                        <td class=" text-center">Status</td>
+                                        <td class=" display-sm-none display-m-none">Data</td>
+                                        <td class=" display-sm-none">Pagamento</td>
+                                        <td class="">Comissão</td>
+                                        <td class="">Motivo</td>
                                     </tr>
                                 </thead>
-                                <tbody id="dados_tabela"
-                                       img-empty="{!! mix('build/global/img/vendas.svg') !!}">
+                                <tbody id="dados_tabela" img-empty="{!! mix('build/global/img/vendas.svg') !!}">
                                     {{-- js carrega... --}}
                                 </tbody>
                             </table>
@@ -367,9 +362,7 @@
                     </div>
 
                     <div class="row justify-content-center justify-content-md-end pb-50">
-                        <ul id="pagination-sales"
-                            class="pagination-sm margin-chat-pagination pl-5 pr-md-15 mb-20 pagination"
-                            style="position:relative;float:right">
+                        <ul id="pagination-sales" class="pagination-sm margin-chat-pagination mb-20 pagination-style" style="position:relative;float:right">
                             {{-- js carrega... --}}
                         </ul>
                     </div>

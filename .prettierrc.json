@@ -1,13 +1,9 @@
 {
-    "tabWidth": 4,
-    "printWidth": 120,
-    "bracketSameLine": true,
-    "overrides": [
-        {
-            "files": ["*.blade.php"],
-            "options": {
-                "parser": "blade"
-            }
-        }
-    ]
+"editor.formatOnSave": true,
+ "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.prettierPath": "/home/jean/.nvm/versions/node/v18.1.0/lib/node_modules/prettier/index.js",
+  "prettier.documentSelectors": [
+    "{**/*,*}.{js,ts,jsx,tsx,html,css,scss,php,blade.php}"
+  ]
+
 }

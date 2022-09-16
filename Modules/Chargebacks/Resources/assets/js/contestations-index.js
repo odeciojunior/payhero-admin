@@ -136,15 +136,17 @@ $(document).ready(function () {
         $("#pagination").html("");
 
         if (response.meta.total <= response.meta.per_page) {
+            $("#pagination").css({"background":"#f4f4f4"})
             return;
         }
 
-        var primeira_pagina =
-            "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         $("#pagination").append(primeira_pagina);
 
         if (response.meta.current_page == "1") {
+            $("#pagination").css({"background":"#ffffff"})
+
             $("#primeira_pagina").attr("disabled", true);
             $("#primeira_pagina").addClass("nav-btn");
             $("#primeira_pagina").addClass("active");
@@ -190,6 +192,7 @@ $(document).ready(function () {
             $("#pagina_atual").addClass("nav-btn");
             $("#pagina_atual").addClass("active");
         }
+
         for (x = 1; x < 4; x++) {
             if (response.meta.current_page + x >= response.meta.last_page) {
                 continue;

@@ -172,22 +172,19 @@
                                        style="width:100%;margin: auto;">
                                     <thead>
                                         <tr>
-                                            <td class="table-title">Cupom</td>
-                                            <td class="table-title">Loja</td>
-                                            <td class="table-title">Utilizados</td>
+                                            <td class="">Cupom</td>
+                                            <td class="">Loja</td>
+                                            <td class="">Utilizados</td>
                                         </tr>
                                     </thead>
-                                    <tbody id="body-table-coupons"
-                                           img-empty="{!! mix('build/global/img/geral-1.svg') !!}">
+                                    <tbody id="body-table-coupons" img-empty="{!! mix('build/global/img/geral-1.svg') !!}">
                                         {{-- js carrega... --}}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center justify-content-md-end">
-                            <ul id="pagination-coupons"
-                                class="pagination-sm text-right margin-chat-pagination"
-                                style="position:relative;float:right">
+                            <ul id="pagination-coupons" class="pagination-sm text-right margin-chat-pagination" style="position:relative;float:right">
                                 {{-- js carrega... --}}
                             </ul>
                         </div>

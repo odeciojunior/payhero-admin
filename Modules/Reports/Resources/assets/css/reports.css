@@ -2759,24 +2759,35 @@ h4.number {
     }
 }
 
-.table-vendas thead td,
-.table-coupons thead td {
-    background-color: #fefefe !important;
-    border-bottom: 1px solid #ededed !important;
-    color: #15034c !important;
-    font-size: 16px !important;
+.table thead > tr > td, .table thead > tr > th {
+    background-color: #FAFAFA;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    color: #15034C;
 }
-.table-vendas tbody td,
-.table-coupons tbody td {
-    color: #5d5d5d !important;
+.table thead > tr > td:first-child {
+    padding: 22px 18px 22px 32px;
 }
-
-.table-striped > tbody > tr:nth-child(2n + 2) > td,
-.table-striped > tbody > tr:nth-child(2n + 2) > th {
-    background-color: #fbfbfb !important;
+.table tbody > tr > td:first-child{
+    padding-left: 32px;
 }
-.table-coupons > tbody > tr:nth-child(2n + 2) > td {
-    border-radius: 0 !important;
+.table tbody > tr > td {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    
+}
+.table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 16px !important;
+}
+.table tbody tr:last-child td:last-child {
+    border-radius: 0 0 16px 0 !important;
+}
+.badge{
+    min-width: 120px;
 }
 
 .pagination .nav-btn.active {
@@ -3122,12 +3133,6 @@ h4.number {
     align-items: center;
 }
 
-.table-coupons.table thead > tr > td:first-child,
-.table-coupons.table tbody > tr > td:first-child {
-    padding-left: 18px !important;
-    padding-right: 18px !important;
-}
-
 .big-card-origin {
     height: 540px;
 }
@@ -3158,20 +3163,6 @@ h4.number {
         margin-right: 12px;
         display: inline;
     }
-}
-
-.table-vendas tbody td {
-    color: #636363 !important;
-}
-
-.table-vendas tbody td:nth-child(1) {
-    text-transform: unset;
-}
-.table-vendas tbody td:nth-child(2) {
-    color: #999 !important;
-}
-.table-vendas tbody td:nth-child(3) {
-    font-weight: 700;
 }
 
 #body-table-pending .ske-load,

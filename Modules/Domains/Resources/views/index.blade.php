@@ -1,56 +1,52 @@
 <!-- Page -->
-<div class="card card-body"
-     style="margin-bottom: 25px; padding-bottom: 0;">
-    <div class='row no-gutters mb-20'>
-        <div class="top-holder text-right mb-0"
-             style="width: 100%;">
-            <div class='d-flex align-items-center'>
-                <div class='col-md-5'>
-                    <div class="d-flex align-items-center">
-                        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline"
-                           data-toggle="modal"
-                           data-target="#modal-detalhes-dominio"
-                           style="border-color: #76838f;">
-                            <span class="o-info-1"
-                                  style="font-size: 24px;"></span>
-                        </a>
-                        <span class="link-button-dependent blue-50 pointer"
-                              data-toggle="modal"
-                              data-target="#modal-detalhes-dominio"
-                              style='margin-left:5px'>Como configurar o domínio?</span>
-                    </div>
-                </div>
-                <div class='col-md-7'>
-                    <div class="d-flex justify-content-end">
-                        <div class="btn-holder add-domain d-flex align-items-center pointer">
-                            <span class="link-button-dependent blue">Adicionar </span>
-                            <a class="ml-10 rounded-add pointer"
-                               style="display: inline-flex;">
-                                <img src="/build/global/img/icon-add.svg"
-                                     style="width: 18px;">
+<div class="card card-body">
+    <div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+        <div class='row no-gutters mb-20'>
+            <div class="top-holder text-right mb-0" style="width: 100%;">
+                <div class='d-flex align-items-center'>
+                    <div class='col-md-5'>
+                        <div class="d-flex align-items-center">
+                            <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-dominio" style="border-color: #76838f;">
+                                <span class="o-info-1" style="font-size: 24px;"></span>
                             </a>
+                            <span class="link-button-dependent blue-50 pointer"
+                                data-toggle="modal"
+                                data-target="#modal-detalhes-dominio"
+                                style='margin-left:5px'>Como configurar o domínio?</span>
+                        </div>
+                    </div>
+                    <div class='col-md-7'>
+                        <div class="d-flex justify-content-end">
+                            <div class="btn-holder add-domain d-flex align-items-center pointer">
+                                <span class="link-button-dependent blue">Adicionar </span>
+                                <a class="ml-10 rounded-add pointer"
+                                style="display: inline-flex;">
+                                    <img src="/build/global/img/icon-add.svg"
+                                        style="width: 18px;">
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="card shadow" style="margin: 0 -1.429rem;">
-        <div>
-            <div class='page-invoice-table table-responsive'>
-                <table id='tabela-dominios' class='table table-striped table-dominios unify mb-0' style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <td class='text-center'>Nome</td>
-                            <td class='text-center'>Status</td>
-                            <td class='options-column-width text-center'></td>
-                        </tr>
-                    </thead>
-                    <tbody id='domain-table-body'
-                           class='min-row-height'>
-                        {{-- js carregando dados --}}
-                    </tbody>
-                </table>
+        <div class="card shadow" style="margin: 0 -1.429rem;">
+            <div>
+                <div class='page-invoice-table table-responsive'>
+                    <table id='tabela-dominios' class='table table-striped table-dominios unify mb-0' style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <td class='text-center'>Nome</td>
+                                <td class='text-center'>Status</td>
+                                <td class='options-column-width text-center'></td>
+                            </tr>
+                        </thead>
+                        <tbody id='domain-table-body'
+                            class='min-row-height'>
+                            {{-- js carregando dados --}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

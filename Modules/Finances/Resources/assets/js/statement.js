@@ -105,6 +105,8 @@ window.updateTransfersTable = function (link = null) {
             }
 
             if (response.data == "") {
+
+                $("#pagination-transfers").css({"background" : "#f4f4f4"})
                 $("#table-transfers-body").html(`
                     <tr class='text-center bg-transparent'>
                         <td style='height: 300px; border-radius: 16px !important' colspan='11' >
@@ -167,6 +169,8 @@ window.updateTransfersTable = function (link = null) {
                     }
                     data += "</tr>";
                 });
+                $("#pagination-transfers").css({"background" : "#ffffff"})
+
 
                 $("#table-transfers-body").html(data);
 
@@ -176,18 +180,22 @@ window.updateTransfersTable = function (link = null) {
     });
 
     function paginationTransfersTable(response) {
+
         $("#pagination-transfers").html("");
         let primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
         $("#pagination-transfers").append(primeira_pagina);
+
         if (response.meta.current_page == "1") {
             $("#primeira_pagina").attr("disabled", true);
             $("#primeira_pagina").addClass("nav-btn");
             $("#primeira_pagina").addClass("active");
         }
+
         $("#primeira_pagina").unbind("click");
         $("#primeira_pagina").on("click", function () {
             updateTransfersTable("?page=1");
         });
+
         for (x = 3; x > 0; x--) {
             if (response.meta.current_page - x <= 1) {
                 continue;
@@ -203,12 +211,14 @@ window.updateTransfersTable = function (link = null) {
                 updateTransfersTable("?page=" + $(this).html());
             });
         }
+
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
             let pagina_atual =
                 "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
             $("#pagination-transfers").append(pagina_atual);
             $("#pagina_atual").attr("disabled", true).addClass("nav-btn").addClass("active");
         }
+
         for (x = 1; x < 4; x++) {
             if (response.meta.current_page + x >= response.meta.last_page) {
                 continue;
@@ -224,9 +234,10 @@ window.updateTransfersTable = function (link = null) {
                 updateTransfersTable("?page=" + $(this).html());
             });
         }
+        
         if (response.meta.last_page != "1") {
             let ultima_pagina =
-                "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+                "<button id='ultima_pagina' class='btn nav-btn mr-0'>" + response.meta.last_page + "</button>";
             $("#pagination-transfers").append(ultima_pagina);
             if (response.meta.current_page == response.meta.last_page) {
                 $("#ultima_pagina").attr("disabled", true);
@@ -301,6 +312,7 @@ window.updateAccountStatementData = function () {
 
             if (isEmpty(items)) {
                 loadOnAnyEllipsis("#nav-statement #available-in-period-statement", true);
+                $("#pagination-transfers").css({"background" : "#f4f4f4"})
                 $("#export-excel").addClass("d-none");
                 $("#table-statement-body").html(`
                     <tr class='text-center bg-transparent'>

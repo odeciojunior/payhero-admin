@@ -22,6 +22,7 @@ $(document).ready(function () {
     });
 
     function onlyData(){
+
         $("#content-error").css('display','none');
         $("#content-script").css('display','none');
         $("#card-table-integrate").css('display','none');
@@ -72,7 +73,7 @@ $(document).ready(function () {
         personal: 'default',
         external: 'success',
         checkout_api: 'primary'
-    };
+    }; 
     let status = {
         active: 'Ativo',
         inactive: 'Inativo',
@@ -100,6 +101,8 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
+                    pagination(response, 'integrates');
+
                     $(".page-header").find('.store-integrate').css('display', 'none');
                     $("#content-error").find('.store-integrate').css('display', 'block');
 
@@ -126,6 +129,7 @@ $(document).ready(function () {
 
     // Atualiza tabela de dados com a lista de integrações
     function updateIntegrationTableData(response) {
+
         $("#content-script").css("display", "block");
         $("#card-table-integrate").css("display", "block");
         $("#card-integration-data").css("display", "block");
@@ -434,6 +438,7 @@ $(document).ready(function () {
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
+            $("#pagination-integrates").css({"background":"#f4f4f4"})
             $("#primeira_pagina_" + model).hide();
             $("#ultima_pagina_" + model).hide();
         } else {

@@ -577,6 +577,7 @@ $(() => {
                         Nenhum rastreamento encontrado
                       </td>
                     </tr>`);
+                    pagination(response, "trackings", index);
                     return;
                 }
 

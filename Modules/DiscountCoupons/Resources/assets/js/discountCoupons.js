@@ -305,6 +305,7 @@ function atualizarCoupon() {
             $("#data-table-coupon").html('');
             
             if (response.data == '' && !$('#search-name').val()) {
+                pagination(response, 'coupons', atualizarCoupon);
                 $("#data-table-coupon").html(noDiscountsFound);
                 $('.add-desconto').on('click',function(){
                     $('#add-coupon').trigger('click')

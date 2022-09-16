@@ -133,25 +133,15 @@ window.atualizar = function (link = null) {
                     let start_date = "";
                     if (value.start_date) {
                         start_date = value.start_date.split(/\s/g); //data inicial
-                        start_date =
-                            "<strong class='bold-mobile'>" +
-                            start_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            start_date[1] +
-                            " </small>";
+                        start_date = start_date[0] + " <br> <small class='gray'>" + start_date[1] + " </small>";
                     }
                     let end_date = "";
                     if (value.end_date) {
                         end_date = value.end_date.split(/\s/g); //data final
-                        end_date =
-                            "<strong class='bold-mobile'>" +
-                            end_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            end_date[1] +
-                            " </small>";
+                        end_date = end_date[0] + " <br> <small class='gray'>" + end_date[1] + " </small>";
                     }
                     dados = `  <tr>
-                                <td class='display-sm-none display-m-none display-lg-none text-center text-left font-size-14'>
+                                <td class='display-sm-none display-m-none display-lg-none text-center text-left'>
                                     ${value.sale_code}
                                     ${
                                         value.upsell
@@ -159,10 +149,10 @@ window.atualizar = function (link = null) {
                                             : ""
                                     }
                                 </td>
-                                <td class="text-left font-size-14">${
+                                <td class="text-left">${
                                     value.project
                                 }</td>
-                                <td class="text-left font-size-14">${
+                                <td class="text-left">${
                                     value.product
                                 }${
                         value.affiliate != null &&
@@ -170,7 +160,7 @@ window.atualizar = function (link = null) {
                             ? `<br><small>(Afiliado: ${value.affiliate})</small>`
                             : ""
                     }</td>
-                                <td class='display-sm-none display-m-none display-lg-none text-left font-size-14'>${
+                                <td class='display-sm-none display-m-none display-lg-none text-left'>${
                                     value.client
                                 }</td>
                                 <td>
@@ -205,12 +195,12 @@ window.atualizar = function (link = null) {
                                            }
                                     </div>
                                 </td>
-                                <td class='display-sm-none text-left font-size-14 display-m-none'>${start_date}</td>
-                                <td class='display-sm-none text-left font-size-14'>${end_date}</td>
-                                <td style='white-space: nowrap' class="text-left font-size-14"><b>${
+                                <td class='display-sm-none text-left display-m-none'>${start_date}</td>
+                                <td class='display-sm-none text-left'>${end_date}</td>
+                                <td style='white-space: nowrap' class="text-left"><b>${
                                     value.total_paid
                                 }</b></td>
-                                <td class="text-left font-size-14">
+                                <td class="text-left">
                                     ${value.reason_blocked}
                                 </td>
                             </tr>`;

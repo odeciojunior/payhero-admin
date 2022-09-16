@@ -1670,7 +1670,7 @@ input[type="checkbox"], input[type="radio"] {
     padding: 10px 24px;
     font-size: 14px;
     line-height: 14px;
-    min-width: 94px;
+    min-width: 125px;
 }
 .page-project .table .badge-success {
     background-color: #1BE4A8;

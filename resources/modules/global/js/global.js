@@ -804,129 +804,149 @@ function isMobile() {
 }
 
 function pagination(response, model, callback) {
-    let paginationContainer = "#pagination-" + model;
-    
-    $(paginationContainer).children().attr("disabled","disabled");
 
+    let paginationContainer = "#pagination-" + model;
+
+    $(paginationContainer).children().attr("disabled","disabled");
     $(paginationContainer).html("");
 
     let currentPage = response.meta.current_page;
     let lastPage = response.meta.last_page;
 
     if (lastPage === 1) {
+        $(paginationContainer).css({"background":"#f4f4f4"})
         return false;
     }
 
     let first_page = `<button class='btn nav-btn first_page'>1</button>`;
-
     $(paginationContainer).append(first_page);
 
     if (currentPage === 1) {
+        $(paginationContainer).css({"background":"#ffffff"})
         $(paginationContainer + " .first_page")
-            .attr("disabled", true)
-            .addClass("nav-btn")
-            .addClass("active");
+        .attr("disabled", true)
+        .addClass("nav-btn")
+        .addClass("active");
     }
 
     $(paginationContainer + " .first_page").on("click", function () {
         callback("?page=1");
     });
 
-    // 2 anteriores paginas
-    for (let x = 3; x > 0; x--) {
-        if (currentPage - x <= 1) {
-            continue;
+    if(isMobile()){
+        for (let x = 2; x > 0; x--) {
+            if (currentPage - x <= 1) {
+                continue;
+            }
+            if( x >= 1){
+                $(paginationContainer).append(`
+                    <button class='btn nav-btn page_${currentPage - x}'>
+                        ${currentPage - x}
+                    </button>
+                `);
+
+                $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
+                        callback("?page=" + $(this).html());
+                    }
+                );
+            }
         }
 
-        if( x <= 1 && isMobile()){
-            $(paginationContainer).append(`
-                <button class='btn nav-btn page_${currentPage - x}'>
-                    ${currentPage - x}
-                </button>
-            `);
-    
-            $(paginationContainer + " .page_" + (currentPage - x)).on(
-                "click",
-                function () {
-                    callback("?page=" + $(this).html());
-                }
-            );
-        }
-
-        if( x <= 1 && !isMobile()){
-            $(paginationContainer).append(`
-                <button class='btn nav-btn page_${currentPage - x}'>
-                    ${currentPage - x}
-                </button>
-            `);
-    
-            $(paginationContainer + " .page_" + (currentPage - x)).on("click",function () {
-                callback("?page=" + $(this).html());
-            });
-        }
-    }
-
-    if (currentPage !== 1 && currentPage !== lastPage) {
-        var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
-
-        $(paginationContainer).append(current_page);
-
-        $(paginationContainer + " .current_page")
+        if (currentPage !== 1 && currentPage !== lastPage) {
+            var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
+            $(paginationContainer).append(current_page);
+            $(paginationContainer + " .current_page")
             .attr("disabled", true)
             .addClass("nav-btn")
             .addClass("active");
-    }
-    
-    // 2 ultimas paginas
-    for (let x = 1; x < 2; x++) {
-        if (currentPage + x >= lastPage) {
-            continue;
         }
 
-        if(x >= 1 && isMobile()){
-            $(paginationContainer).append(
-                `<button class='btn nav-btn page_${currentPage + x}'>
-                    ${currentPage + x}
-                </button>`
-            );
-    
-            $(paginationContainer + " .page_" + (currentPage + x)).on("click",function () {
-                    callback("?page=" + $(this).html());
-                }
-            );
+        for (let x = 1; x < 3; x++) {
+            if (currentPage + x >= lastPage) {
+                continue;
+            }
+
+            if(x >= 1){
+                $(paginationContainer).append(
+                    `<button class='btn nav-btn page_${currentPage + x}'>
+                        ${currentPage + x}
+                    </button>`
+                );
+
+                $(paginationContainer + " .page_" + (currentPage + x)).on("click",function () {
+                        callback("?page=" + $(this).html());
+                    }
+                );
+            }
         }
-        
-        if(x >= 1 && !isMobile()){
-            $(paginationContainer).append(
-                `<button class='btn nav-btn page_${currentPage + x}'>
-                    ${currentPage + x}
-                </button>`
-            );
-    
-            $(paginationContainer + " .page_" + (currentPage + x)).on("click",function () {
+    }
+
+    if(!isMobile()){
+        for (let x = 3; x > 0; x--) {
+            if (currentPage - x <= 1) {
+                continue;
+            }
+
+            if( x >= 1 ){
+                $(paginationContainer).append(`
+                    <button class='btn nav-btn page_${currentPage - x}'>
+                        ${currentPage - x}
+                    </button>
+                `);
+
+                $(paginationContainer + " .page_" + (currentPage - x)).on("click",function () {
                     callback("?page=" + $(this).html());
-                }
-            );
+                });
+            }
+        }
+
+        if (currentPage !== 1 && currentPage !== lastPage) {
+            var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
+
+            $(paginationContainer).append(current_page);
+
+            $(paginationContainer + " .current_page")
+            .attr("disabled", true)
+            .addClass("nav-btn")
+            .addClass("active");
+        }
+
+        for (let x = 1; x < 4; x++) {
+            if (currentPage + x >= lastPage) {
+                continue;
+            }
+            if(x >= 1 ){
+                $(paginationContainer).append(
+                    `<button class='btn nav-btn page_${currentPage + x}'>
+                        ${currentPage + x}
+                    </button>`
+                );
+
+                $(paginationContainer + " .page_" + (currentPage + x)).on("click",function () {
+                        callback("?page=" + $(this).html());
+                    }
+                );
+            }
         }
     }
 
     if (lastPage !== 1) {
-        var last_page = `<button class='btn nav-btn last_page'>${lastPage}</button>`;
+        var last_page = `<button class='btn nav-btn last_page mr-0'>${lastPage}</button>`;
 
         $(paginationContainer).append(last_page);
 
         if (currentPage === lastPage) {
             $(paginationContainer + " .last_page")
-                .attr("disabled", true)
-                .addClass("nav-btn")
-                .addClass("active");
+            .attr("disabled", true)
+            .addClass("nav-btn")
+            .addClass("active");
         }
 
         $(paginationContainer + " .last_page").on("click", function () {
             callback("?page=" + lastPage);
         });
     }
-    
+
     $("table").addClass("table-striped");
 }
 

@@ -83,6 +83,7 @@ window.loadWithdrawalsTable = function (link = null) {
         success: (response) => {
             $("#withdrawals-table-data").html("");
             if (response.data === "" || response.data === undefined || response.data.length === 0) {
+                $("#pagination-withdrawals").css({"background":"#f4f4f4"})
                 const emptyImage = $("#withdrawals-table-data").attr("img-empty");
                 $("#withdrawals-table-data").html(
                     `<tr style='border-radius: 16px;'>

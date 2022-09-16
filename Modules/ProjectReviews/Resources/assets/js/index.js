@@ -178,7 +178,7 @@ $(document).ready(function () {
                             </td>
                             <td class='text-center'>${
                                 value.active_flag
-                                    ? `<span class="badge badge-success text-left">Ativo</span>`
+                                    ? `<span class="badge badge-success">Ativo</span>`
                                     : `<span class="badge badge-danger">Desativado</span>`
                             }</td>
                             <td style='text-align:center'>
@@ -415,7 +415,7 @@ $(document).ready(function () {
                 $(".review-status").html(
                     `${
                         review.active_flag
-                            ? `<span class="badge badge-success text-left">Ativo</span>`
+                            ? `<span class="badge badge-success">Ativo</span>`
                             : `<span class="badge badge-danger">Desativado</span>`
                     }`
                 );

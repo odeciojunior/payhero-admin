@@ -105,6 +105,8 @@ $(document).ready(function () {
                 let dataTable = $("#data-table-upsell");
                 dataTable.html("");
                 if (response.data == "") {
+
+                    pagination(response, "upsell", loadUpsell);
                     $(".div-config").hide();
                     $("#data-table-upsell").html(`
                         <tr class='text-center'>
@@ -122,6 +124,7 @@ $(document).ready(function () {
                         </tr>
                     `);
                     $("#table-upsell").addClass("table-striped");
+
                 } else {
                     $("#tab_upsell-panel").find(".no-gutters").css("display", "flex");
                     $("#table-upsell").find("thead").css("display", "contents");

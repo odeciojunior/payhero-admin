@@ -360,17 +360,13 @@
                 <div class="tab-content">
                     <div class="tab-content">
                         <!-- Painel de Dominios -->
-                        <div id="tab_domains"
-                             class="tab-pane active"
-                             role="tabpanel">
-                            <div class="card card-body">
+                        <div id="tab_domains" class="tab-pane active" role="tabpanel">
+                            <div>
                                 @include('domains::index')
                             </div>
                         </div>
                         <!-- Painel de Editor de Checkout -->
-                        <div class="tab-pane"
-                             id="tab_checkout-panel"
-                             role="tabpanel">
+                        <div class="tab-pane" id="tab_checkout-panel" role="tabpanel">
                             <div>
                                 @include('checkouteditor::index')
                             </div>

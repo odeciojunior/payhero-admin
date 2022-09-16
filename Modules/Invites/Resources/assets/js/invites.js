@@ -81,6 +81,7 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
+                    pagination(response, "invites");
                     $("#content-error").show();
                 } else {
                     $("#content-error").hide();
@@ -606,6 +607,7 @@ $(document).ready(function () {
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
+            $("#pagination-invites").css({"background":"#f4f4f4"})
             $("#pagination-" + model).html("");
             $("#primeira_pagina_" + model).hide();
             $("#ultima_pagina_" + model).hide();

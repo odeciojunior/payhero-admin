@@ -101,23 +101,13 @@ function atualizar(link = null) {
                     let start_date = "";
                     if (value.start_date) {
                         start_date = value.start_date.split(/\s/g); //data inicial
-                        start_date =
-                            "<strong class='bold-mobile'>" +
-                            start_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            start_date[1] +
-                            " </small>";
+                        start_date = start_date[0] + "<br> <small class='gray" + start_date[1] + " </small>";
                     }
 
                     let end_date = "";
                     if (value.end_date) {
                         end_date = value.end_date.split(/\s/g); //data final
-                        end_date =
-                            "<strong class='bold-mobile'>" +
-                            end_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            end_date[1] +
-                            " </small>";
+                        end_date = end_date[0] + " <br> <small class='gray font-size-12'>" + end_date[1] + " </small>";
                     }
                     let is_security_reserve = "";
                     if (value.is_security_reserve) {
@@ -131,16 +121,17 @@ function atualizar(link = null) {
                                     ${value.sale_code}
                                     ${is_security_reserve}
                                 </td>
-                                <td class="text-left font-size-14">${value.project}</td>
-                                <td class="text-left font-size-14">${value.client}</td>
+                                <td class="text-left">${value.project}</td>
+                                <td class="text-left">${value.client}</td>
                                 <td class="display-sm-none display-m-none display-lg-none">
                                     <img src='/build/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
                                 </td>
-                                <td class="display-sm-none display-m-none display-lg-none text-left font-size-14">${start_date}</td>
-                                <td class="text-left font-size-14">${end_date}</td>
+                                <td class="display-sm-none display-m-none display-lg-none text-left">${start_date}</td>
+                                <td class="text-left">${end_date}</td>
                                 <td><b class="font-md-size-20">${value.total_paid}</b></td>
                                 <td>
-                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span class="o-eye-1"></span></button></a>
+                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span>
+                                    <img src="/build/global/img/icon-eye.svg"></span></button></a>
                                 </td>
                             </tr>`;
 
@@ -560,23 +551,13 @@ $(document).ready(function () {
                         let start_date = "";
                         if (value.start_date) {
                             start_date = value.start_date.split(/\s/g); //data inicial
-                            start_date =
-                                "<strong class='bold-mobile'>" +
-                                start_date[0] +
-                                " </strong> <br> <small class='gray font-size-12'>" +
-                                start_date[1] +
-                                " </small>";
+                            start_date = start_date[0] + " <br> <small class='gray'>" + start_date[1] + " </small>";
                         }
 
                         let end_date = "";
                         if (value.end_date) {
                             end_date = value.end_date.split(/\s/g); //data final
-                            end_date =
-                                "<strong class='bold-mobile'>" +
-                                end_date[0] +
-                                " </strong> <br> <small class='gray font-size-12'>" +
-                                end_date[1] +
-                                " </small>";
+                            end_date = end_date[0] + " <br> <small class='gray font-size-12'>" + end_date[1] + " </small>";
                         }
                         let is_security_reserve = "";
                         if (value.is_security_reserve) {
@@ -586,20 +567,22 @@ $(document).ready(function () {
                         }
 
                         dados = `  <tr>
-                                    <td class="text-center">
+                                    <td class="">
                                         ${value.sale_code}
                                         ${is_security_reserve}
                                     </td>
-                                    <td class="text-left font-size-14">${value.project}</td>
-                                    <td class="text-left font-size-14">${value.client}</td>
+                                    <td class="text-left">${value.project}</td>
+                                    <td class="text-left">${value.client}</td>
                                     <td class="display-sm-none display-m-none display-lg-none">
                                         <img src='/build/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
                                     </td>
-                                    <td class="display-sm-none display-m-none display-lg-none text-left font-size-14">${start_date}</td>
-                                    <td class="text-left font-size-14">${end_date}</td>
+                                    <td class="display-sm-none display-m-none display-lg-none text-left">${start_date}</td>
+                                    <td class="text-left">${end_date}</td>
                                     <td><b class="font-md-size-20">${value.total_paid}</b></td>
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span class="o-eye-1"></span></button></a>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span>
+                                        <img src="/build/global/img/icon-eye.svg">
+                                    </span></button></a>
                                     </td>
                                 </tr>`;
 

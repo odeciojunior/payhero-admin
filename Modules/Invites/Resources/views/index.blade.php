@@ -7,7 +7,8 @@
         <style>
             .badge {
                 color: white;
-                padding: 5px 15px;
+                font-size: 14px;
+                padding: 10px 24px;
                 border-radius: 16px;
                 font-weight: 700;
             }
@@ -115,7 +116,7 @@
             </div>
         <div class="page-content container" id='page-invites'>
 
-            <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none; padding-bottom: 5px'>
+            <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none;'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify" id="table_invites">
                         <thead class="text-center">

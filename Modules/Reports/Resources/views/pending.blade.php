@@ -4,8 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet"
-              href="{!! mix('build/layouts/reports/pending.min.css') !!}">
+        <link rel="stylesheet" href="{!! mix('build/layouts/reports/pending.min.css') !!}">
         <style>
             @media only screen and (min-width: 768px) {
                 .col-md-4.card {
@@ -291,35 +290,31 @@
 
                     <!-- Tabela -->
                     <div class="col-lg-12">
-                        <div class="card shadow"
-                             style="min-height: 300px">
+                        <div class="card shadow">
                             <div class="page-invoice-table table-responsive">
                                 <table class="table-vendas table unify table-striped pending">
                                     <thead>
                                         <tr>
-                                            <td class="table-title">Transação</td>
-                                            <td class="table-title">Loja</td>
-                                            <td class="table-title">Cliente</td>
-                                            <td class="table-title display-sm-none display-m-none display-lg-none">Forma
+                                            <td class="">Transação</td>
+                                            <td class="">Loja</td>
+                                            <td class="">Cliente</td>
+                                            <td class="display-sm-none display-m-none display-lg-none">Forma
                                             </td>
-                                            <td class="table-title display-sm-none display-m-none display-lg-none">Data
+                                            <td class="display-sm-none display-m-none display-lg-none">Data
                                             </td>
-                                            <td class="table-title">Pagamento</td>
-                                            <td class="table-title">Comissão</td>
-                                            <td class="table-title"></td>
+                                            <td class="">Pagamento</td>
+                                            <td class="">Comissão</td>
+                                            <td class=""></td>
                                         </tr>
                                     </thead>
-                                    <tbody id="body-table-pending"
-                                           img-empty="{!! mix('build/global/img/vendas.svg') !!}">
+                                    <tbody id="body-table-pending" img-empty="{!! mix('build/global/img/vendas.svg') !!}">
                                         {{-- js carrega... --}}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="row justify-content-center justify-content-md-end pb-50">
-                            <ul id="pagination-pending"
-                                class="pl-5 pr-md-15 mb-20 pagination"
-                                style="position:relative;float:right">
+                            <ul id="pagination-pending" class="mb-20 pagination-style" style="position:relative;float:right">
                                 {{-- js carrega... --}}
                             </ul>
                         </div>
