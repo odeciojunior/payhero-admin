@@ -39,6 +39,7 @@ xdebug-*/
 .phpstorm.meta.php
 _ide_helper_models.php
 
+
 ### MySQL ###
 dump.sql
 mysql-apt-config*.deb
