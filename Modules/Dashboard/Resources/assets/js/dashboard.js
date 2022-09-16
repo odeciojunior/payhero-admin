@@ -294,7 +294,7 @@ $(document).ready(function () {
             loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
+            url: '/api/projects?select=true&company='+ $('.company-navbar').val()+'&tokens=true',
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
