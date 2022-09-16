@@ -1,47 +1,44 @@
 $(document).ready(function () {
 
-    $('.company-navbar').change(function () {
+    $('.company-navbar').on("change", function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $('.sirius-performance > .card').html('');
-        $('.sirius-account > .card').html('');
+        $(".performance-card > .performance-data").html("");
         $('.sirius-cashback > .card').html('');
-        $('#cashback-container #cashback-container-money').text("")
-        loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
-            styles: {
-                container: {
-                    minHeight: '30px',
-                    width: '30px',
-                    height: 'auto',
-                    margin: 'auto'
-                },
-                loader: {
-                    width: '30px',
-                    height: '30px',
-                    borderWidth: '6px'
-                },
-
-            }
-        });
-        loadingOnAccountsHealth('.sirius-performance > .card','20px');
-        loadingOnAccountsHealth('.sirius-account > .card','12px');
+        $('#cashback-container #cashback-container-money').text("");
+        putSkeletonLoadingOnBalanceCards();
+        window.putSkeletonLoadingOnPerformance();
         $(".sirius-cashback > .card").addClass("d-none");
-        loadingOnChart('#chart-loading');
-        $('#scoreLineToMonth').html('')
+        putSkeletonLoadingOnChart();
+        $('#scoreLineToMonth').html('');
+
+
+        window.putSkeletonLoadingOnAccountHealth();
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){
-                if( $("#project-empty").css('display')!='none' ){
-                    $("#project-empty").hide();
+                if(!isEmpty(data2.company_default_projects)){
+                    if( $("#project-empty").css('display')!='none' ){
+                        $("#project-empty").hide();
+                        $("#project-not-empty").show();
+                        window.getDataDashboard();
+                    }
+                    else{
+                        window.updateValues();
+                        window.updateChart();
+                        window.updatePerformance();
+                        window.updateAccountHealth('80px');
+                    }
                 }
-                getProjects('company-navbar')
+                else{
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
             });
         });
     });
 
-    let userAccepted = true;
-
     window.updateChart = function() {
         $('#scoreLineToMonth').html('')
-        loadingOnChart('#chart-loading');
+        putSkeletonLoadingOnChart();
 
         $.ajax({
             method: "GET",
@@ -55,13 +52,13 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnChartRemove("#chart-loading");
+                removeSkeletonLoadingFromChart();
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 setTimeout(() => {
-                    loadingOnChartRemove("#chart-loading");
+                    removeSkeletonLoadingFromChart();
                     getChart(response);
                 }, 2000);
             },
@@ -209,7 +206,6 @@ $(document).ready(function () {
                 Accept: "appliation/json",
             },
             error: function error(response) {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -222,7 +218,6 @@ $(document).ready(function () {
                 } else {
                     $(".content-error").show();
                     $("#company-select, .page-content").hide();
-                    loadingOnScreenRemove();
                 }
             },
         });
@@ -230,26 +225,7 @@ $(document).ready(function () {
 
     window.updateValues = function() {
 
-        loadOnAnyEllipsis('.text-money, .update-text, .text-circle', false, {
-            styles: {
-                container: {
-                    minHeight: "30px",
-                    width: "30px",
-                    height: "auto",
-                    margin: "auto",
-                },
-                loader: {
-                    width: "30px",
-                    height: "30px",
-                    borderWidth: "6px",
-                },
-            },
-        });
-
-        loadingOnChart("#chart-loading");
-
-        $(".circle strong").addClass("loaded");
-
+        putSkeletonLoadingOnBalanceCards();
         $.ajax({
             method: "POST",
             url: "/api/dashboard/getvalues",
@@ -262,13 +238,11 @@ $(document).ready(function () {
                 company_id: $('.company-navbar').val()
             },
             error: function error(response) {
-                loadOnAnyEllipsis(".text-money, .update-text, .text-circle", true);
-                loadingOnScreenRemove();
-
+                removeSkeletonLoadingFromBalanceCards();
+                removeSkeletonLoadingFromChart();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                $(".moeda").html(data.currency);
                 $("#pending_money").html(data.pending_balance);
                 $("#available_money").html(data.available_balance);
                 $("#total_money").html(data.total_balance);
@@ -284,14 +258,18 @@ $(document).ready(function () {
 
                 $("#info-total-balance").attr("title", title).tooltip({ placement: "bottom" });
 
-                loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
+                removeSkeletonLoadingFromBalanceCards();
             }
         });
     }
 
-    function getProjects(origin='') {
-        if(!origin)
-            loadingOnScreen();
+    function getProjects() {
+
+        window.putSkeletonLoadingOnPerformance();
+        window.putSkeletonLoadingOnAccountHealth();
+        putSkeletonLoadingOnBalanceCards();
+        putSkeletonLoadingOnChart();
+
         $.ajax({
             method: "GET",
             url: '/api/projects?select=true&company='+ $('.company-navbar').val()+'&tokens=true',
@@ -314,7 +292,7 @@ $(document).ready(function () {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
-                if(!origin)
+                //if(!origin)
                     loadingOnScreenRemove();
             },
         });
@@ -488,78 +466,6 @@ $(document).ready(function () {
         });
     }
 
-    function verifyOnboarding() {
-        $.ajax({
-            method: "GET",
-            url: "/api/dashboard/verify-onboarding",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            success: function success(response) {
-                if (response.read === false) {
-                    loadingOnChart("#loader-onboarding");
-                    let modalOnboarding = $("#modal-content-onboarding");
-
-                    modalOnboarding.slick({
-                        slidesToShow: 1,
-                        mobileFirst: true,
-                        infinite: false,
-                        arrows: false,
-                        adaptiveHeight: true,
-                    });
-
-                    $(window).on("resize", () => {
-                        loadingOnChart("#loader-onboarding");
-                        modalOnboarding.slick("refresh");
-
-                        setTimeout(() => {
-                            loadingOnChartRemove("#loader-onboarding");
-                        }, 1000);
-                    });
-
-                    $("#modal-onboarding")
-                        .on("shown.bs.modal", function () {
-                            modalOnboarding.slick("refresh");
-                            $("#user-name").html(response.name);
-                            $(`#modal-onboarding`).unbind("click");
-                        })
-                        .modal("show");
-                    setTimeout(() => {
-                        loadingOnChartRemove("#loader-onboarding");
-                    }, 1000);
-                    $(
-                        "#onboarding-next-presentation, #onboarding-next-gamification, #onboarding-next-account-health"
-                    ).click(() => {
-                        modalOnboarding.slick("slickNext");
-                    });
-
-                    $("#onboarding-finish").click(() => {
-                        $.ajax({
-                            method: "PUT",
-                            url: "/api/dashboard/update-onboarding/" + response.onboarding,
-                            dataType: "json",
-                            headers: {
-                                Authorization: $('meta[name="access-token"]').attr("content"),
-                                Accept: "application/json",
-                            },
-                            error: function error() {
-                                $("#modal-onboarding").modal("hide");
-                            },
-                            success: function success() {
-                                $("#modal-onboarding").modal("hide");
-                                verifyAchievements();
-                            },
-                        });
-                    });
-                } else {
-                    verifyAchievements();
-                }
-            },
-        });
-    }
-
     function verifyPixOnboarding() {
         $.ajax({
             method: "GET",
@@ -665,4 +571,33 @@ $(document).ready(function () {
     getCompaniesAndProjects().done( function (data){
         getProjects();
     });
+
+    function putSkeletonLoadingOnBalanceCards() {
+        $(".balances-card > .balance-card-data").hide();
+        $(".balances-card > .loading-title").removeClass("d-none");
+        $(".balances-card > .loading-content").removeClass("d-none");
+    }
+
+    function removeSkeletonLoadingFromBalanceCards() {
+        $(".balances-card > .loading-title").addClass("d-none");
+        $(".balances-card > .loading-content").addClass("d-none");
+        $(".balances-card > .balance-card-data").show();
+    }
+
+    function putSkeletonLoadingOnChart() {
+        $(".chart-data").hide();
+        $(".chart-card > .loading-title").removeClass("d-none");
+        $(".chart-card > .loading-content").removeClass("d-none");
+        $(".chart-card > .loading-content-inside").removeClass("d-none");
+    }
+
+    function removeSkeletonLoadingFromChart() {
+        $(".chart-card > .loading-title").addClass("d-none");
+        $(".chart-card > .loading-content").addClass("d-none");
+        $(".chart-card > .loading-content-inside").addClass("d-none");
+        $(".chart-data").show();
+    }
+
+
+
 });

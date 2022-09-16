@@ -523,9 +523,11 @@ class SalesRecoveryApiController extends Controller
             if (!empty($data["project_id"])) {
             //if (is_array($data["project_id"])) {
                 if(!empty($data['project_id'][0])){ // && $data['project_id'][0]!='all'
+                    $fromApi = false;
                     foreach($data['project_id'] as $project){
                         if(!empty($project)){
-                            array_push($projectIds, hashids_decode($project));
+                            $fromApi = str_contains($project,'TOKEN');
+                            array_push($projectIds, ($fromApi?'TOKEN-':'').hashids_decode(str_replace('TOKEN-','',$project)));
                         }
                     };
                 }

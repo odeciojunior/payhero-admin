@@ -66,11 +66,9 @@ $(document).ready(function () {
     }
 
     function nextCard() {
-        //setTimeout(function(){loadingOnAccountsHealthRemove('.sirius-account > .card  .sirius-loading '); }, 500);
 
         $(".sirius-account .card-indicators > .active").on("click", function () {
-            $(".sirius-account > .card").html("");
-            loadingOnAccountsHealth(".sirius-account > .card");
+            putSkeletonLoadingOnAccountHealth();
             let card = $(this).data("slide-to");
             switch (card) {
                 case 1:
@@ -91,7 +89,7 @@ $(document).ready(function () {
     }
 
     window.updateAccountHealth = function (margin='150px') {
-        //loadingOnAccountsHealth('.sirius-account > .card',margin);
+        putSkeletonLoadingOnAccountHealth();
 
         $.ajax({
             method: "GET",
@@ -105,17 +103,17 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
+                removeSkeletonLoadingFromAccountHealth();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
                 if (!data.account_score) {
                     updateEmptyScore();
                 } else {
-                    loadingOnAccountsHealth(".sirius-account > .card",'13px');
+                    putSkeletonLoadingOnAccountHealth();
                     let item = `
                             <div
-                                class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-health">
+                                class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-health account-attendance">
                                 <div class="font-size-14 gray-600 mr-auto">
                                     <span class="ml-0">Saúde da Conta</span>
                                 </div>
@@ -182,12 +180,14 @@ $(document).ready(function () {
                             </div>
                     `;
 
+
                     $(".sirius-account > .card").append(item);
 
                     setTimeout(() => {
                         updateGauge(data.account_score);
-                    }, 3000);
+                    }, 100);
 
+                    removeSkeletonLoadingFromAccountHealth();
                     nextCard();
                 }
 
@@ -198,7 +198,7 @@ $(document).ready(function () {
 
     function updateEmptyScore() {
 
-        loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
+        removeSkeletonLoadingFromAccountHealth();
 
         let item = `
                     <div
@@ -285,13 +285,12 @@ $(document).ready(function () {
         gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
         gauge.animationSpeed = 64; // set animation speed (32 is default value)
         gauge.set(account_score); // set actual value
-
-        loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
+        removeSkeletonLoadingFromAccountHealth();
     }
 
     function updateChargeback() {
 
-        loadingOnAccountsHealth(".sirius-account > .card",'12px');
+        putSkeletonLoadingOnAccountHealth();
 
         $.ajax({
             method: "GET",
@@ -305,11 +304,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
+                removeSkeletonLoadingFromAccountHealth();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any");
+                removeSkeletonLoadingFromAccountHealth();
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-chargeback">
@@ -428,7 +427,7 @@ $(document).ready(function () {
     }
 
     function updateAttendance() {
-        loadingOnAccountsHealth(".sirius-account > .card","12px");
+        putSkeletonLoadingOnAccountHealth();
 
         $.ajax({
             method: "GET",
@@ -442,11 +441,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
+                removeSkeletonLoadingFromAccountHealth();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
+                removeSkeletonLoadingFromAccountHealth();
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-attendance">
@@ -511,7 +510,7 @@ $(document).ready(function () {
     }
 
     function updateTracking() {
-        loadingOnAccountsHealth(".sirius-account > .card",'12px');
+        putSkeletonLoadingOnAccountHealth();
 
         $.ajax({
             method: "GET",
@@ -525,11 +524,11 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
+                removeSkeletonLoadingFromAccountHealth();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadingOnAccountsHealthRemove(".sirius-account > .card  .block-loader-any ");
+                removeSkeletonLoadingFromAccountHealth();
                 let item = `
                         <div
                             class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 account-tracking">
@@ -590,5 +589,18 @@ $(document).ready(function () {
                 nextCard();
             },
         });
+    }
+
+    window.putSkeletonLoadingOnAccountHealth = function() {
+        $(".account-health").remove();
+        $(".account-chargeback").remove();
+        $(".account-tracking").remove();
+        $(".account-attendance").remove();
+        $(".empty-score").remove();
+        $(".sirius-account-health-loading").removeClass("d-none");
+    }
+
+    window.removeSkeletonLoadingFromAccountHealth = function() {
+        $(".sirius-account-health-loading").addClass("d-none");
     }
 });
