@@ -39,7 +39,7 @@ $(document).ready(function () {
 
     window.onresize = changeNewRegisterLayoutOnWindowResize;
 
-    $(".new-register-open-modal-btn").on("click", function () {
+    $(".new-register-open-modal-btn").parent().on("click", function () {
         $(".new-register-navbar-open-modal-container").fadeOut("slow");
 
         setStepContainer();
@@ -1086,7 +1086,7 @@ function verifyDocumentPending()
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
                     $('.new-register-page-open-modal-container').hide();
-                    $('.new-register-navbar-open-modal-container').fadeOut();
+                    $('.new-register-navbar-open-modal-container').hide();
 
                     setStepContainer();
 
@@ -1502,7 +1502,7 @@ function changeNewRegisterLayoutOnWindowResize() {
         $('.new-register-page-open-modal-container').fadeOut();
         $('.new-register-navbar-open-modal-container').fadeIn();
     } else {
-        $('.new-register-navbar-open-modal-container').fadeOut();
+        $('.new-register-navbar-open-modal-container').hide();
         $('.new-register-page-open-modal-container').fadeIn();
     }
 }

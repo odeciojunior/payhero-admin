@@ -57,9 +57,16 @@
             @php
                 $userModel = new \Modules\Core\Entities\User();
                 $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+
+                $user = auth()->user();
+                $account_is_approved = $user->account_is_approved;
+                if($user->is_cloudfox && $user->logged_id){
+                    $query = $userModel::select('account_is_approved')->where('id',$user->logged_id)->get();
+                    $account_is_approved = $query[0]->account_is_approved ?? false;
+                }
             @endphp
 
-            @if (!auth()->user()->account_is_approved && $account_type === 'admin')
+            @if (!$account_is_approved && $account_type === 'admin')
                 <div class="new-register-navbar-open-modal-container">
                     <div class="row new-register-open-modal no-gutters alert-pendings">
                         <span class="new-register-open-modal-btn">
