@@ -180,22 +180,25 @@ class SalesApiController extends Controller
                         $activity->subject_id = hashids_decode($saleId, "sale_id");
                     })
                     ->log("Gerou nova ordem no shopify para transação: #" . $saleId);
+
                 if (!foxutils()->isEmpty($shopifyIntegration)) {
                     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
                     $result = $shopifyService->newOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
                 }
+
                 if ($result["status"] == "success") {
                     return response()->json(["message" => $result["message"]], Response::HTTP_OK);
-                } else {
-                    return response()->json(["message" => $result["message"]], Response::HTTP_BAD_REQUEST);
                 }
-            } else {
-                return response()->json(
-                    ["message" => "Funcionalidade habilitada somente em produção =)"],
-                    Response::HTTP_OK
-                );
+
+                return response()->json(["message" => $result["message"]], Response::HTTP_BAD_REQUEST);
             }
+
+            return response()->json(
+                ["message" => "Funcionalidade habilitada somente em produção =)"],
+                Response::HTTP_OK
+            );
+
         } catch (Exception $e) {
             $message = ShopifyErrors::FormatErrors($e->getMessage());
             if (empty($message)) {
@@ -264,27 +267,29 @@ class SalesApiController extends Controller
                             }
 
                             return response()->json(["message" => "Ordem criada com sucesso!"], Response::HTTP_OK);
-                        } else {
-                            return response()->json(
-                                ["message" => "Erro ao tentar criar a ordem!"],
-                                Response::HTTP_BAD_REQUEST
-                            );
                         }
-                    } else {
+
                         return response()->json(
-                            ["message" => "Requisição não encontrada!"],
+                            ["message" => "Erro ao tentar criar a ordem!"],
                             Response::HTTP_BAD_REQUEST
                         );
                     }
+
+                    return response()->json(
+                        ["message" => "Requisição não encontrada!"],
+                        Response::HTTP_BAD_REQUEST
+                    );
+
                 } else {
                     return response()->json(["message" => "Integração não encontrada"], Response::HTTP_BAD_REQUEST);
                 }
-            } else {
-                return response()->json(
-                    ["message" => "Funcionalidade habilitada somente em produção =)"],
-                    Response::HTTP_OK
-                );
             }
+
+            return response()->json(
+                ["message" => "Funcionalidade habilitada somente em produção =)"],
+                Response::HTTP_OK
+            );
+
         } catch (Exception $e) {
             report($e);
             $message = "Erro ao tentar gerar ordem no Woocommerce.";
@@ -330,12 +335,12 @@ class SalesApiController extends Controller
                     $saleRefundHistory->refund_observation = $data["value"];
                     $saleRefundHistory->save();
                     return response()->json(["message" => "Causa do estorno alterado com successo!"]);
-                } else {
-                    return response()->json(["message" => "Venda não encontrada!"], 400);
                 }
-            } else {
-                return response()->json(["message" => "Os dados informados são inválidos!"], 400);
+                return response()->json(["message" => "Venda não encontrada!"], 400);
             }
+
+            return response()->json(["message" => "Os dados informados são inválidos!"], 400);
+
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao alterar causa do estorno!"], 400);
@@ -421,7 +426,8 @@ class SalesApiController extends Controller
     public function setValueObservation(Request $request, $id)
     {
         try {
-            if (!empty($id)) {
+            if (!empty($id))
+            {
                 $saleModel = new Sale();
                 activity()
                     ->on($saleModel)
@@ -434,6 +440,7 @@ class SalesApiController extends Controller
                 $sale->update([
                     "observation" => $request->input("observation"),
                 ]);
+
                 return response()->json(
                     [
                         "message" => "Observaçao atualizada com sucesso!",
@@ -441,14 +448,15 @@ class SalesApiController extends Controller
                     ],
                     200
                 );
-            } else {
-                return response()->json(
-                    [
-                        "message" => "Erro ao atualizar observaçao!",
-                    ],
-                    400
-                );
             }
+
+            return response()->json(
+                [
+                    "message" => "Erro ao atualizar observaçao!",
+                ],
+                400
+            );
+
         } catch (Exception $e) {
             report($e);
             return response()->json(

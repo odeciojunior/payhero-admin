@@ -44,11 +44,32 @@ class TicketsApiController extends Controller
                     $query->where('type_enum', TicketMessage::TYPE_FROM_ADMIN);
                 }
             ])->join('sales', 'tickets.sale_id', '=', 'sales.id')
-                ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
                 ->join('customers', 'sales.customer_id', '=', 'customers.id');
 
-            if ($data->project) {
-                $ticketsQuery->where("sales.project_id", hashids_decode($data->project));
+            if($data->project)
+            {
+                if(str_contains($data->project,'TOKEN')){
+                    $ticketsQuery->join('api_tokens as api', 'sales.api_token_id','=','api.id')
+                    ->where('api.company_id', hashids_decode($data->company))
+                    ->where("sales.api_token_id", hashids_decode(str_replace('TOKEN-','',$data->project)));
+                }else{
+                    $ticketsQuery->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
+                    ->where('checkout_configs.company_id', hashids_decode($data->company))
+                    ->where("sales.project_id", hashids_decode(str_replace('TOKEN-','',$data->project)));
+                }
+            }else{
+
+                $ticketsQuery->leftJoin('api_tokens as api', 'sales.api_token_id','=','api.id')
+                ->leftJoin('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
+                ->where(function($query) use($data){
+                    $query->where(function($qr2) use($data){
+                        $qr2->where("sales.api_token_id", hashids_decode(str_replace('TOKEN-','',$data->project)))
+                        ->where('api.company_id', hashids_decode($data->company));
+                    })->orWhere(function($qr2) use($data){
+                        $qr2->where("sales.project_id", hashids_decode(str_replace('TOKEN-','',$data->project)))
+                        ->where('checkout_configs.company_id', hashids_decode($data->company));
+                    });
+                });
             }
 
             if ($data->plan) {
@@ -112,7 +133,6 @@ class TicketsApiController extends Controller
 
             $tickets = $ticketsQuery
                 ->where('sales.owner_id', $userId)
-                ->where('checkout_configs.company_id', hashids_decode($data->company))
                 ->orderByDesc('tickets.id')
                 ->paginate(5);
             return TicketResource::collection($tickets);

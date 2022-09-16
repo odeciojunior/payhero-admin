@@ -133,20 +133,27 @@ class SalesRecoveryService
             });
         }
 
+        $tokensIds = [];
         if (!empty($projectIds) && !in_array("all", $projectIds)) {
-            $salesExpired->whereIn("sales.project_id", $projectIds);
+            foreach ($projectIds as $key=>$projectId) {
+                if(str_contains($projectId,'TOKEN')){
+                    $tokensIds[] = str_replace('TOKEN-','',$projectId);
+                    unset($projectIds[$key]);
+                }
+            }
         } else {
-            $userProjects = $userProjectsModel->where([
+            $projectIds = $userProjectsModel->where([
                 ['user_id', auth()->user()->getAccountOwnerId()],
                 [
-                    'type_enum',
-                    $userProjectsModel->present()
-                    ->getTypeEnum('producer'),
+                    'type_enum',UserProject::TYPE_PRODUCER_ENUM,
                 ],
             ])->pluck('project_id')->toArray();
-
-            $salesExpired->whereIn("sales.project_id", $userProjects);
         }
+
+        $salesExpired->where(function($qr) use($projectIds,$tokensIds){
+            $qr->whereIn("sales.project_id", $projectIds)
+            ->orWhere("sales.api_token_id",$tokensIds);
+        });
 
         if (!empty($dateStart) && !empty($dateEnd)) {
             $salesExpired->whereBetween("sales.created_at", [$dateStart, $dateEnd]);
