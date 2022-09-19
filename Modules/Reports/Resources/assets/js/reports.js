@@ -78,7 +78,6 @@ let origin = 'src';
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        console.log('ops change propject');
         $.ajaxQ.abortAll();
 
         if (company !== $(this).val()) {
@@ -98,7 +97,7 @@ function changeCalendar() {
 
     dateRange = sessionStorage.getItem('info') ? JSON.parse(sessionStorage.getItem('info')).calendar : `${startDate}-${endDate}`;
 
-    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+    $('input[name="daterange"]').attr('value', dateRange);
     $('input[name="daterange"]').dateRangePicker({
         setValue: function (s) {
             if (s) {
@@ -296,12 +295,15 @@ function getCashback() {
                     <div class="new-graph-cashback graph"></div>
                 `;
                 $("#block-cash").html(cashHtml);
-                $(".new-graph-cashback").width($("#block-cash").width());
 
                 $(".new-graph-cashback").html(`<canvas id="graph-cashback"></canvas>`);
                 let labels = [...chart.labels];
                 let series = [...chart.values];
-                newGraphCashback(series, labels);
+
+                setTimeout(() => {
+                    $(".new-graph-cashback").width($("#block-cash").width());
+                    newGraphCashback(series, labels);
+                }, $("#block-cash").width()==0?2000:0);
 
                 $(window).on("resize", function () {
                     $(".new-graph-cashback").width($("#block-cash").width());
@@ -363,11 +365,15 @@ function getPending() {
                         <div class="new-graph-pending graph"></div>
                     `;
                     $("#block-pending").html(pendHtml);
-                    $(".new-graph-pending").width($("#block-pending").width());
                     $(".new-graph-pending").html("<canvas id=graph-pending></canvas>");
                     let labels = [...chart.labels];
                     let series = [...chart.values];
-                    newGraphPending(series, labels);
+
+                    setTimeout(() => {
+                        $(".new-graph-pending").width($("#block-pending").width());
+                        newGraphPending(series, labels);
+                    }, $("#block-pending").width()==0?2000:0);
+
                     $(window).on("resize", function () {
                         $(".new-graph-pending").width($("#block-pending").width());
                     });
@@ -431,11 +437,14 @@ function getCommission() {
                     <div class="new-graph graph"></div>
                 `;
                 $("#block-comission").html(comissionhtml);
-                $(".new-graph").width($("#block-comission").width());
                 $(".new-graph").html("<canvas id=comission-graph></canvas>");
                 let labels = [...chart.labels];
                 let series = [...chart.values];
-                graphComission(series, labels);
+
+                setTimeout(() => {
+                    $(".new-graph").width($("#block-comission").width());
+                    graphComission(series, labels);
+                }, $("#block-comission").width()==0?2000:0);
 
                 $(window).on("resize", function () {
                     $(".new-graph").width($("#block-comission").width());
@@ -495,11 +504,14 @@ function getSales() {
                     <div class="new-graph-sell graph"></div>
                 `;
                 $("#block-sales").html(salesHtml);
-                $(".new-graph-sell").width($("#block-sales").width());
                 $(".new-graph-sell").html("<canvas id=graph-sell></canvas>");
                 let labels = [...chart.labels];
                 let series = [...chart.values];
-                newGraphSell(series, labels);
+
+                setTimeout(() => {
+                    $(".new-graph-sell").width($("#block-sales").width());
+                    newGraphSell(series, labels);
+                }, $("#block-sales").width()==0?2000:0);
 
                 $(window).on("resize", function () {
                     $(".new-graph-sell").width($("#block-sales").width());
