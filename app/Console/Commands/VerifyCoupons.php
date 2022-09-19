@@ -30,6 +30,7 @@ class VerifyCoupons extends Command
     {
         DiscountCoupon::where("status", 1)
             ->where("expires", "<=", now())
+            ->whereNotNull("expires")
             ->update([
                 "status" => 0,
             ]);
