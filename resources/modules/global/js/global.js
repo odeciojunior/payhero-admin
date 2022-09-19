@@ -1321,7 +1321,9 @@ function verifyDocumentPending()
                                 ? " itens pendentes"
                                 : " item pendente") +
                             ")"
-                    );
+                    ).promise().done(function(){
+                        $('.alert-pendings').css('display','inline-flex')
+                    });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
 
