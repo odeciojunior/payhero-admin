@@ -292,7 +292,7 @@ $(document).ready(function () {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
-                if(!origin)
+                //if(!origin)
                     loadingOnScreenRemove();
             },
         });

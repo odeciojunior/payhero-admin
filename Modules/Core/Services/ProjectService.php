@@ -425,12 +425,12 @@ class ProjectService
 
         if ($pagination) {
             $projects = $projects->get();
-            if(count($projects) == 0) {
-                $apiSale = Sale::where('owner_id', $userId)->exists();
-                if(!empty($apiSale)) {
-                    return response()->json(['data' => 'api sales']);
-                }
-            }
+            // if(count($projects) == 0) {
+            //     $apiSale = Sale::where('owner_id', $userId)->exists();
+            //     if(!empty($apiSale)) {
+            //         return response()->json(['data' => 'api sales']);
+            //     }
+            // }
             return ProjectsSelectResource::collection($projects);
         }
 
