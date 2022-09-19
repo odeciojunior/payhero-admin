@@ -426,7 +426,9 @@ class ContestationService
 
         $sales = Sale::select('sales.project_id',DB::Raw("'' as prefix"))
             ->distinct()
-            ->leftjoin('sale_contestations','sale_contestations.sale_id','sales.id')
+            ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->join('sale_contestations','sale_contestations.sale_id','sales.id')
+            ->where('transactions.company_id', $companyId)
             ->where('sales.owner_id',auth()->user()->getAccountOwnerId())
             ->whereIn('sale_contestations.status',[1,2,3])
             ->get();

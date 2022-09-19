@@ -330,16 +330,14 @@ class ProjectsApiController extends Controller
                     if ($projectService->delete($projectId)) {
                         //projeto removido
                         return response()->json("success", 200);
-                    } else {
-                        //erro ao remover projeto
-                        return response()->json("error", 400);
                     }
-                } else {
-                    return response()->json("Projeto não encontrado", 400);
+                    //erro ao remover projeto
+                    return response()->json("error", 400);
                 }
-            } else {
-                return response()->json("Sem permissão para remover projeto", 403);
+                return response()->json("Projeto não encontrado", 400);
             }
+            return response()->json("Sem permissão para remover projeto", 403);
+
         } catch (Exception $e) {
             report($e);
 
@@ -620,9 +618,9 @@ class ProjectsApiController extends Controller
 
             if ($updated) {
                 return response()->json(["message" => "Configuração atualizada com sucesso"], 200);
-            } else {
-                return response()->json(["message" => "Erro ao atualizar configuração"], 400);
             }
+            return response()->json(["message" => "Erro ao atualizar configuração"], 400);
+
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao atualizar configuração"], 400);
