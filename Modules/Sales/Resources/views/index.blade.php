@@ -307,7 +307,7 @@
                                     <tr>
                                         <td>Transação</td>
                                         <td>Descrição</td>
-                                        <td>Cliente</td>
+                                        <td class="display-sm-none display-m-none display-lg-none">Cliente</td>
                                         <td class="text-center">Forma</td>
                                         <td class="text-center">Status</td>
                                         <td class="text-nowrap">Iniciada em</td>
@@ -318,7 +318,7 @@
                                     </tr>
 
                                 </thead>
-                                
+
                                 <tbody id="dados_tabela" img-empty="{!! mix('build/global/img/vendas.svg') !!}">
                                     {{-- js carrega... --}}
                                 </tbody>
@@ -328,7 +328,7 @@
                         </div>
 
                     </div>
-                    
+
                 </div>
                 <div class="row justify-content-center justify-content-md-end pr-md-15 pb-50">
                     <ul id="pagination-sales" class="pagination-sm margin-chat-pagination pagination-style"style="position:relative;float:right">

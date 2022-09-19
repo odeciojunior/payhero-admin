@@ -2,16 +2,16 @@ var currentPage = null;
 var exportFormat = null;
 
 function searchIsLocked(elementButton) {
-    return elementButton.attr('block_search');
+    return elementButton.attr("block_search");
 }
 
 function lockSearch(elementButton) {
-    elementButton.attr('block_search', 'true');
+    elementButton.attr("block_search", "true");
     //set layout do button block
 }
 
 function unlockSearch(elementButton) {
-    elementButton.attr('block_search', 'false');
+    elementButton.attr("block_search", "false");
     //layout do button block
 }
 
@@ -29,8 +29,7 @@ function atualizar(link = null) {
 
     let updateResume = true;
     loadOnTable("#dados_tabela", "#tabela_vendas");
-    $("#pagination-sales").children().attr("disabled","disabled");
-
+    $("#pagination-sales").children().attr("disabled", "disabled");
 
     if (link == null) {
         link = "/api/sales?" + getFilters(true).substr(1);
@@ -80,15 +79,14 @@ function atualizar(link = null) {
                     if (value.start_date) {
                         start_date = value.start_date.split(/\s/g); //data inicial
 
-                        start_date =`
+                        start_date = `
                             <span>
                                 ${start_date[0]}
                             </span>
                             <br>
                             <small>
                                 ${start_date[1]}
-                            </small>`
-                        ;
+                            </small>`;
                     }
 
                     let end_date = "";
@@ -96,15 +94,14 @@ function atualizar(link = null) {
                     if (value.end_date) {
                         end_date = value.end_date.split(/\s/g); //data final
 
-                        end_date =`
+                        end_date = `
                             <span>
                                 ${end_date[0]}
                             </span>
                             <br>
                             <small>
                                 ${end_date[1]}
-                            </small>`
-                        ;
+                            </small>`;
                     }
 
                     let tableClass = "";
@@ -116,14 +113,12 @@ function atualizar(link = null) {
                         value.date_before_five_minutes_ago
                     ) {
                         tableClass = "table-warning-roll";
-
                     } else {
                         tableClass = "";
                     }
 
                     if (value.woocommerce_retry_order != null) {
                         tableClass = "table-warning-roll";
-
                     } else {
                         tableClass = "";
                     }
@@ -138,8 +133,7 @@ function atualizar(link = null) {
                         observation = `
                             <a data-toggle="tooltip" title="${value.observation}" role="button" class="sale_observation" venda="${value.id}">
                                 <span style="color: #44a44b" class="o-info-help-1"></span>
-                            </a>`
-                        ;
+                            </a>`;
                     }
 
                     let cupomCode = "";
@@ -152,8 +146,7 @@ function atualizar(link = null) {
                         cupomCode = `
                             <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}" role="button" style='margin-left: 5px;'>
                                 <img width="25px" src="/build/global/img/icons-cupom.svg">
-                            </a>`
-                        ;
+                            </a>`;
                     }
 
                     let upsell = "";
@@ -162,8 +155,7 @@ function atualizar(link = null) {
                         upsell = `
                             <a data-toggle="tooltip" title="Upsell" role="button" style='margin-left: 5px;'>
                                 <img width="20px" src="/build/global/img/icon-upsell.svg">
-                            </a>`
-                        ;
+                            </a>`;
                     }
 
                     let has_order_bump = "";
@@ -171,8 +163,7 @@ function atualizar(link = null) {
                         has_order_bump = `
                             <a data-toggle="tooltip" title="Order Bump" role="button" style='margin-left: 5px;'>
                                     <img width="20px" src="/build/global/img/order-bump.svg">
-                            </a>`
-                        ;
+                            </a>`;
                     }
 
                     let cashback = "";
@@ -181,20 +172,23 @@ function atualizar(link = null) {
                         cashbackIcon = `
                             <a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
                                 <span style="color: #5EE2A1; font-size: 26px; -webkit-text-stroke: 2px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
-                            </a>`
-                        ;
+                            </a>`;
 
                         cashback = `<b style="color: #5EE2A1;">${value.total_paid}</b>`;
+                    }
+
+                    if (value.status_translate === "Cancelado Antifraude") {
+                        value.status_translate = "Cancelado <br> Antifraude";
                     }
 
                     dados = `
                         <tr class='${tableClass}'>
                             <td class='text-center'>
-                            
+
                                 <br class="d-sm-none"/>
                                 ${value.sale_code}
                                 <br>
-                                
+
                                 <div class="d-flex flex-row align-items-center justify-content-center">
                                     ${cashbackIcon}
                                     ${upsell}
@@ -202,26 +196,25 @@ function atualizar(link = null) {
                                     ${cupomCode}
                                 </div>
                             </td>
-                            
+
                             <td>
                                 <span>${value.product}</span>
-                                
-                                ${value.affiliate != null && value.user_sale_type == "producer"
-                                    ?`
+
+                                ${
+                                    value.affiliate != null &&
+                                    value.user_sale_type == "producer"
+                                        ? `
                                         <br>
 
                                         <small class="gray font-size-12">
                                             (Afiliado: ${value.affiliate})
                                         </small>`
-
-                                    : ""
+                                        : ""
                                 }
                                 <br>
 
                                 <small class="gray font-size-12">
-                                    ${
-                                    value.project
-                                }
+                                    ${value.project}
                                 </small>
                             </td>
 
@@ -230,16 +223,33 @@ function atualizar(link = null) {
                             </td>
 
                             <td>
-                                <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 55px; height: 36px;'>
+                                <img src='/build/global/img/cartoes/${
+                                    value.brand
+                                }.png'  style='width: 55px; height: 36px;'>
                             </td>
 
                             <td class='text-center'>
-                                <span class="status-sale badge badge-${statusArray[value.status]}
-                                ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""}"
-                                ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
+                                <span class="status-sale badge badge-${
+                                    statusArray[value.status]
+                                }
+                                ${
+                                    value.status_translate === "Pendente" &&
+                                    value.brand != "pix"
+                                        ? "boleto-pending"
+                                        : ""
+                                }"
+                                ${
+                                    value.status_translate === "Pendente"
+                                        ? 'status="' +
+                                          value.status_translate +
+                                          '" sale="' +
+                                          value.id_default +
+                                          '"'
+                                        : ""
+                                }>
 
                                     ${value.status_translate}
-                                        
+
                                 </span>
 
                             </td>
@@ -253,20 +263,25 @@ function atualizar(link = null) {
                             </td>
 
                             <td class="text-center text-md-right text-nowrap commission-fweight">
-                                ${cashback ? cashback : `${value.total_paid}<br>`}
+                                ${
+                                    cashback
+                                        ? cashback
+                                        : `${value.total_paid}<br>`
+                                }
                             </td>
-                            
+
                             <td style="text-align: center">
                                 ${observation}
-                                <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
+                                <a role='button' class='detalhes_venda pointer' venda='${
+                                    value.id
+                                }'>
                                     <span>
                                         <img src="/build/global/img/icon-eye.svg">
                                     </span>
                                 </a>
                             </td>
 
-                        </tr>`
-                    ;
+                        </tr>`;
 
                     $(function () {
                         $('[data-toggle="tooltip"]').tooltip({
@@ -325,7 +340,7 @@ function getFilters(urlParams = false) {
         cashback: $("#cashback").val(),
         plan: $("#plan").val(),
         coupon: $("#cupom").val(),
-        company: $('.company-navbar').val(),
+        company: $(".company-navbar").val(),
         value:
             parseInt(
                 $("#valor")
@@ -451,11 +466,11 @@ function hoverBilletPending() {
     }
 }
 
-$('.company-navbar').change(function () {
+$(".company-navbar").change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
-    $("#projeto").find('option').not(':first').remove();
-    $("#plan").find('option').not(':first').remove();
-    $('#plan').data('select2').results.clear();
+    $("#projeto").find("option").not(":first").remove();
+    $("#plan").find("option").not(":first").remove();
+    $("#plan").data("select2").results.clear();
     $("#projeto").val($("#projeto option:first").val());
     $("#plan").val($("#plan option:first").val());
     loadOnAny(".number", false, {
@@ -472,24 +487,22 @@ $('.company-navbar').change(function () {
         },
     });
     loadOnTable("#dados_tabela", "#tabela_vendas");
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            if(!isEmpty(data2.company_default_projects)){
+    updateCompanyDefault().done(function (data1) {
+        getCompaniesAndProjects().done(function (data2) {
+            if (!isEmpty(data2.company_default_projects)) {
                 $("#project-empty").hide();
                 $("#project-not-empty").show();
-                window.fillProjectsSelect(data2.companies)
+                window.fillProjectsSelect(data2.companies);
                 atualizar();
-            }
-            else{
+            } else {
                 $("#project-empty").show();
                 $("#project-not-empty").hide();
             }
         });
-	});
+    });
 });
 
 $(document).ready(function () {
-
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
     $(".applySelect2").select2({
         //dropdownParent : $('#bt_collapse'),
@@ -654,7 +667,7 @@ $(document).ready(function () {
         }
     );
 
-    window.fillProjectsSelect = function(data){
+    window.fillProjectsSelect = function (data) {
         $.ajax({
             method: "GET",
             url: "/api/sales/projects-with-sales",
@@ -664,41 +677,45 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                console.log('erro')
-                console.log(response)
+                console.log("erro");
+                console.log(response);
             },
             success: function success(response) {
                 return response;
-            }
-        }).done(function(dataSales){
+            },
+        }).done(function (dataSales) {
             $.each(data, function (c, company) {
                 //if( data2.company_default == company.id){
-                    $.each(company.projects, function (i, project) {
-                        if( dataSales.includes(project.id) )
-                            $("#projeto").append($("<option>", {value: project.id,text: project.name,}));
-                    });
+                $.each(company.projects, function (i, project) {
+                    if (dataSales.includes(project.id))
+                        $("#projeto").append(
+                            $("<option>", {
+                                value: project.id,
+                                text: project.name,
+                            })
+                        );
+                });
                 //}
             });
         });
-    }
+    };
 
     // FIM - COMPORTAMENTOS DA JANELA
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getProjects(data);
     });
 
     function loadData() {
-        elementButton = $('#bt_filtro');
-        if (searchIsLocked(elementButton) != 'true') {
+        elementButton = $("#bt_filtro");
+        if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr('block_search'));
+            console.log(elementButton.attr("block_search"));
             atualizar();
         }
     }
 
-
     function searchIsLocked(elementButton) {
-        return elementButton.attr('block_search');
+        return elementButton.attr("block_search");
     }
 
     //Carrega o modal para regerar boleto
@@ -746,16 +763,15 @@ $(document).ready(function () {
     function getProjects(data) {
         loadingOnScreen();
 
-        if(!isEmpty(data.company_default_projects)){
+        if (!isEmpty(data.company_default_projects)) {
             $("#project-empty").hide();
             $("#project-not-empty").show();
             $("#export-excel > div >").show();
-            window.fillProjectsSelect(data.companies)
-            $("#projeto option:first").attr('selected','selected');
+            window.fillProjectsSelect(data.companies);
+            $("#projeto option:first").attr("selected", "selected");
             atualizar();
             loadingOnScreenRemove();
-        }
-        else{
+        } else {
             $("#project-not-empty").hide();
             $("#project-empty").show();
             loadingOnScreenRemove();
@@ -968,7 +984,7 @@ $(document).ready(function () {
     $("#projeto").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
-        $('#plan').data('select2').results.clear();
+        $("#plan").data("select2").results.clear();
     });
 
     $("#plan").select2({
@@ -1049,6 +1065,5 @@ $(document).ready(function () {
         }
     });
 
-    $('.company_name').val( $('.company-navbar').find('option:selected').text() );
-
+    $(".company_name").val($(".company-navbar").find("option:selected").text());
 });

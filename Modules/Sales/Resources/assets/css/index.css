@@ -22,21 +22,20 @@
     border-color: transparent transparent #8f9ca2 transparent !important;
 }
 .badge {
-    font-family: 'Inter';
+    font-family: "Inter";
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
     border-radius: 16px;
     padding: 8px 20px;
     color: white;
-    min-width: 190px !important;
 }
 .badge.badge-success {
-    background-color: #41DC8F;
+    background-color: #41dc8f;
 }
 
 .badge.badge-danger {
-    background-color: #E81414;
+    background-color: #e81414;
 }
 
 .status-sale {
@@ -45,7 +44,7 @@
 /* and */
 
 /* especific font-weight to commission */
-.commission-fweight{
+.commission-fweight {
     font-weight: 600 !important;
 }
 
@@ -64,7 +63,9 @@
 }
 
 /* CONFIGURATIONS THE INTERN CONTENT*/
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
     height: 32px;
     border: none !important;
     padding-top: 5px !important;

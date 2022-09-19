@@ -67,15 +67,19 @@ $(document).ready(function () {
         }
     });
 
-    $(".init-operation-container").on("click", ".extra-informations-user", function () {
-        $("#new-register-first-page").hide();
+    $(".init-operation-container").on(
+        "click",
+        ".extra-informations-user",
+        function () {
+            $("#new-register-first-page").hide();
 
-        $(".modal-top-btn").hide();
+            $(".modal-top-btn").hide();
 
-        setStepButton(getNewRegisterStep());
+            setStepButton(getNewRegisterStep());
 
-        $("#new-register-steps-container").show();
-    });
+            $("#new-register-steps-container").show();
+        }
+    );
 
     $("#new-register-step-container input[type=text]").on("input", function () {
         setStepButton(getNewRegisterStep());
@@ -457,22 +461,26 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    loadOnAnyPage('.page');
-    $('body').css('overflow-y', 'hidden');
-    $('.new-register-page-open-modal-container').hide();
+    loadOnAnyPage(".page");
+    $("body").css("overflow-y", "hidden");
+    $(".new-register-page-open-modal-container").hide();
 }
 
 function loadingOnChart(target) {
-    $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading bg-white">
+    $(target)
+        .fadeIn()
+        .append(
+            `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading bg-white">
         <span class="loader-any" style="margin-top: 150px"></span>
         </div>`
         );
 }
 
-function loadingOnAccountsHealth(target,margin='80px') {
-    $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px; position: absolute;width: 100%;height: 100%;" class="d-flex justify-content-center align-items-center align-self-center bg-white block-loader-any"
+function loadingOnAccountsHealth(target, margin = "80px") {
+    $(target)
+        .fadeIn()
+        .append(
+            `<div style="z-index: 100; border-radius: 16px; position: absolute;width: 100%;height: 100%;" class="d-flex justify-content-center align-items-center align-self-center bg-white block-loader-any"
         style="background-color: #f4f4f4;
         position: fixed;
         width: 100%;
@@ -480,7 +488,9 @@ function loadingOnAccountsHealth(target,margin='80px') {
         top: 0;
         left: 0;
         ">
-            <span class="loader-any" style="margin-top: `+margin+`"></span>
+            <span class="loader-any" style="margin-top: ` +
+                margin +
+                `"></span>
         </div>`
         );
 }
@@ -555,11 +565,11 @@ function heightAnimate(element, height) {
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        loadOnAnyPage('.page',true);
-        $('body').css('overflow-y', 'unset')
-    }, 2000)
-    $('.page-header').fadeIn();
-    $('#btn-modal').fadeIn();
+        loadOnAnyPage(".page", true);
+        $("body").css("overflow-y", "unset");
+    }, 2000);
+    $(".page-header").fadeIn();
+    $("#btn-modal").fadeIn();
 }
 
 function loadOnNotification(whereToLoad) {
@@ -698,21 +708,24 @@ function loadOnAny(target, remove = false, options = {}) {
 function loadOnAnyPage(target, remove = false, options = {}) {
     //cleanup
     target = $(target);
-    target.parent()
-        .find('.loader-any-container-page')
-        .remove();
+    target.parent().find(".loader-any-container-page").remove();
 
     if (!remove) {
-
         //create elements
         let container = $('<div class="loader-any-container-page"></div>');
         let loader = $('<span class="loader-any-page"></span>');
 
         //apply styles or use default
         options.styles = options.styles ? options.styles : {};
-        options.styles.container = options.styles.container ? options.styles.container : {};
-        options.styles.container.minWidth = options.styles.container.minWidth ? options.styles.container.minWidth : $(target).css('width');
-        options.styles.container.minHeight = options.styles.container.minHeight ? options.styles.container.minHeight : $(window.top).height() * 0.7; //70% of visible window area
+        options.styles.container = options.styles.container
+            ? options.styles.container
+            : {};
+        options.styles.container.minWidth = options.styles.container.minWidth
+            ? options.styles.container.minWidth
+            : $(target).css("width");
+        options.styles.container.minHeight = options.styles.container.minHeight
+            ? options.styles.container.minHeight
+            : $(window.top).height() * 0.7; //70% of visible window area
         container.css(options.styles.container);
         if (options.styles.loader) {
             loader.css(options.styles.loader);
@@ -721,7 +734,7 @@ function loadOnAnyPage(target, remove = false, options = {}) {
         //add message load
         if (options.message) {
             container.append(`<p class='mb-30'>${options.message}</p>`);
-            container.addClass('d-flex').addClass('flex-column');
+            container.addClass("d-flex").addClass("flex-column");
         }
 
         //add loader to container
@@ -736,9 +749,10 @@ function loadOnAnyPage(target, remove = false, options = {}) {
         }
     } else {
         // show target again with fix to Bootstrap tabs
-        if (!target.hasClass('tab-pane') ||
-            (target.hasClass('tab-pane') &&
-                target.hasClass('active'))) {
+        if (
+            !target.hasClass("tab-pane") ||
+            (target.hasClass("tab-pane") && target.hasClass("active"))
+        ) {
             $(target).fadeIn();
         }
     }
@@ -796,25 +810,25 @@ $(
 ).attr("overflow", "hidden");
 
 function isMobile() {
-    var width = window.innerWidth
-    || document.documentElement.clientWidth
-    || document.body.clientWidth;
+    var width =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
 
     return width < 500;
 }
 
 function pagination(response, model, callback) {
-
     let paginationContainer = "#pagination-" + model;
 
-    $(paginationContainer).children().attr("disabled","disabled");
+    $(paginationContainer).children().attr("disabled", "disabled");
     $(paginationContainer).html("");
 
     let currentPage = response.meta.current_page;
     let lastPage = response.meta.last_page;
 
     if (lastPage === 1) {
-        $(paginationContainer).css({"background":"#f4f4f4"})
+        $(paginationContainer).css({ background: "#f4f4f4" });
         return false;
     }
 
@@ -822,30 +836,32 @@ function pagination(response, model, callback) {
     $(paginationContainer).append(first_page);
 
     if (currentPage === 1) {
-        $(paginationContainer).css({"background":"#ffffff"})
+        $(paginationContainer).css({ background: "#ffffff" });
         $(paginationContainer + " .first_page")
-        .attr("disabled", true)
-        .addClass("nav-btn")
-        .addClass("active");
+            .attr("disabled", true)
+            .addClass("nav-btn")
+            .addClass("active");
     }
 
     $(paginationContainer + " .first_page").on("click", function () {
         callback("?page=1");
     });
 
-    if(isMobile()){
+    if (isMobile()) {
         for (let x = 2; x > 0; x--) {
             if (currentPage - x <= 1) {
                 continue;
             }
-            if( x >= 1){
+            if (x >= 1) {
                 $(paginationContainer).append(`
                     <button class='btn nav-btn page_${currentPage - x}'>
                         ${currentPage - x}
                     </button>
                 `);
 
-                $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
+                $(paginationContainer + " .page_" + (currentPage - x)).on(
+                    "click",
+                    function () {
                         callback("?page=" + $(this).html());
                     }
                 );
@@ -856,9 +872,9 @@ function pagination(response, model, callback) {
             var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
             $(paginationContainer).append(current_page);
             $(paginationContainer + " .current_page")
-            .attr("disabled", true)
-            .addClass("nav-btn")
-            .addClass("active");
+                .attr("disabled", true)
+                .addClass("nav-btn")
+                .addClass("active");
         }
 
         for (let x = 1; x < 3; x++) {
@@ -866,14 +882,16 @@ function pagination(response, model, callback) {
                 continue;
             }
 
-            if(x >= 1){
+            if (x >= 1) {
                 $(paginationContainer).append(
                     `<button class='btn nav-btn page_${currentPage + x}'>
                         ${currentPage + x}
                     </button>`
                 );
 
-                $(paginationContainer + " .page_" + (currentPage + x)).on("click",function () {
+                $(paginationContainer + " .page_" + (currentPage + x)).on(
+                    "click",
+                    function () {
                         callback("?page=" + $(this).html());
                     }
                 );
@@ -881,22 +899,25 @@ function pagination(response, model, callback) {
         }
     }
 
-    if(!isMobile()){
+    if (!isMobile()) {
         for (let x = 3; x > 0; x--) {
             if (currentPage - x <= 1) {
                 continue;
             }
 
-            if( x >= 1 ){
+            if (x >= 1) {
                 $(paginationContainer).append(`
                     <button class='btn nav-btn page_${currentPage - x}'>
                         ${currentPage - x}
                     </button>
                 `);
 
-                $(paginationContainer + " .page_" + (currentPage - x)).on("click",function () {
-                    callback("?page=" + $(this).html());
-                });
+                $(paginationContainer + " .page_" + (currentPage - x)).on(
+                    "click",
+                    function () {
+                        callback("?page=" + $(this).html());
+                    }
+                );
             }
         }
 
@@ -906,23 +927,25 @@ function pagination(response, model, callback) {
             $(paginationContainer).append(current_page);
 
             $(paginationContainer + " .current_page")
-            .attr("disabled", true)
-            .addClass("nav-btn")
-            .addClass("active");
+                .attr("disabled", true)
+                .addClass("nav-btn")
+                .addClass("active");
         }
 
         for (let x = 1; x < 4; x++) {
             if (currentPage + x >= lastPage) {
                 continue;
             }
-            if(x >= 1 ){
+            if (x >= 1) {
                 $(paginationContainer).append(
                     `<button class='btn nav-btn page_${currentPage + x}'>
                         ${currentPage + x}
                     </button>`
                 );
 
-                $(paginationContainer + " .page_" + (currentPage + x)).on("click",function () {
+                $(paginationContainer + " .page_" + (currentPage + x)).on(
+                    "click",
+                    function () {
                         callback("?page=" + $(this).html());
                     }
                 );
@@ -937,9 +960,9 @@ function pagination(response, model, callback) {
 
         if (currentPage === lastPage) {
             $(paginationContainer + " .last_page")
-            .attr("disabled", true)
-            .addClass("nav-btn")
-            .addClass("active");
+                .attr("disabled", true)
+                .addClass("nav-btn")
+                .addClass("active");
         }
 
         $(paginationContainer + " .last_page").on("click", function () {
@@ -1117,8 +1140,7 @@ $(".top-alert-close").on("click", function () {
 
 sessionStorage.removeItem("documentsPending");
 
-function verifyDocumentPending()
-{
+function verifyDocumentPending() {
     changeNewRegisterLayoutOnWindowResize();
     var count = 0;
 
@@ -1142,8 +1164,8 @@ function verifyDocumentPending()
             if (response.data.account.status !== "approved") {
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
-                    $('.new-register-page-open-modal-container').hide();
-                    $('.new-register-navbar-open-modal-container').fadeOut();
+                    $(".new-register-page-open-modal-container").hide();
+                    $(".new-register-navbar-open-modal-container").fadeOut();
 
                     setStepContainer();
 
@@ -1407,10 +1429,15 @@ function setNewRegisterSavedItem(item, value) {
     }
 
     if (item) {
-        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
+        let obj = JSON.parse(
+            localStorage.getItem("new-register-data-" + userId)
+        );
         obj[item] = value;
 
-        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
+        localStorage.setItem(
+            "new-register-data-" + userId,
+            JSON.stringify(obj)
+        );
     }
 }
 
@@ -1418,10 +1445,15 @@ function removeNewRegisterSavedItem(item) {
     var userId = $('meta[name="user-id"]').attr("content");
 
     if (localStorage.getItem("new-register-data-" + userId)) {
-        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
+        let obj = JSON.parse(
+            localStorage.getItem("new-register-data-" + userId)
+        );
         delete obj[item];
 
-        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
+        localStorage.setItem(
+            "new-register-data-" + userId,
+            JSON.stringify(obj)
+        );
     }
 }
 
@@ -1556,11 +1588,11 @@ function changeNewRegisterLayoutOnWindowResize() {
     }
 
     if (window.innerWidth >= 847) {
-        $('.new-register-page-open-modal-container').fadeOut();
-        $('.new-register-navbar-open-modal-container').fadeIn();
+        $(".new-register-page-open-modal-container").fadeOut();
+        $(".new-register-navbar-open-modal-container").fadeIn();
     } else {
-        $('.new-register-navbar-open-modal-container').fadeOut();
-        $('.new-register-page-open-modal-container').fadeIn();
+        $(".new-register-navbar-open-modal-container").fadeOut();
+        $(".new-register-page-open-modal-container").fadeIn();
     }
 }
 
@@ -1655,7 +1687,9 @@ function loadNewRegisterSavedData() {
     var userId = $('meta[name="user-id"]').attr("content");
 
     if (localStorage.getItem("new-register-data-" + userId)) {
-        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
+        let obj = JSON.parse(
+            localStorage.getItem("new-register-data-" + userId)
+        );
 
         for (const prop in obj) {
             const element = $("#" + prop);
@@ -1847,7 +1881,9 @@ $.fn.shake = function () {
 
 function initSiriusSelect(target) {
     let $target = $(target);
-    let classes = Array.from(target[0].classList).filter(e => (e !== 'sirius-select' && e !== 'company-navbar')).join(' ');
+    let classes = Array.from(target[0].classList)
+        .filter((e) => e !== "sirius-select" && e !== "company-navbar")
+        .join(" ");
     $target.removeClass(classes);
     if ($target.is(":disabled")) classes += " disabled";
     $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
@@ -1897,17 +1933,19 @@ $(document).ready(function () {
     var bodyEl = $("body");
     var menuBarToggle = $('[data-toggle="menubar"]');
     var toggle = $('[data-toggle="menubar"].nav-link');
-    menuBarToggle.off().on('click', function () {
-        bodyEl.toggleClass('site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide');
-        menuBarToggle.toggleClass('hided')
-        if (toggle.hasClass('hided')) {
-            $('#logoIconSirius').fadeOut().addClass('d-none');
-            $('#logoSirius').fadeIn().removeClass('d-none');
-            $('.hamburger-desk').css('margin-left','240px');
+    menuBarToggle.off().on("click", function () {
+        bodyEl.toggleClass(
+            "site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide"
+        );
+        menuBarToggle.toggleClass("hided");
+        if (toggle.hasClass("hided")) {
+            $("#logoIconSirius").fadeOut().addClass("d-none");
+            $("#logoSirius").fadeIn().removeClass("d-none");
+            $(".hamburger-desk").css("margin-left", "240px");
         } else {
-            $('#logoIconSirius').fadeIn().removeClass('d-none');
-            $('#logoSirius').fadeOut().addClass('d-none');
-            $('.hamburger-desk').css('margin-left','70px');
+            $("#logoIconSirius").fadeIn().removeClass("d-none");
+            $("#logoSirius").fadeOut().addClass("d-none");
+            $(".hamburger-desk").css("margin-left", "70px");
         }
     });
 
@@ -2049,7 +2087,7 @@ function onlyNumbers(string) {
     if (string == undefined) {
         return 0;
     }
-    return (string.includes('-') ? -1:1) * string .replace(/\D/g, '');
+    return (string.includes("-") ? -1 : 1) * string.replace(/\D/g, "");
 }
 
 function removeMoneyCurrency(string) {
@@ -2110,7 +2148,8 @@ function buildModalBonusBalance(bonusObject) {
 
 
                 <h3 class="bonus-title"><span id="bonus-username">${
-                    (userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase()) || "Olá!"
+                    userName.charAt(0).toUpperCase() +
+                        userName.slice(1).toLowerCase() || "Olá!"
                 }</span>, aqui está seu <b>desconto!</b></h3>
 
                 <p>
@@ -2417,90 +2456,112 @@ function getCompaniesAndProjects() {
         url: `/api/core/usercompanies`,
         dataType: "json",
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'appliation/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "appliation/json",
         },
         error: function error(response) {
             errorAjaxResponse(response);
         },
         success: function success(data) {
             data.companies.push({
-                "id":"v2RmA83EbZPVpYB",
-                "name":"Empresa Demo",
-                "company_document_status": "approved",
-                "active_flag": 1,
-                "projects": [{
-                    "id" : "v2RmA83EbZPVpYB",
-                    "name": "Loja Demonstrativa Cloudfox",
-                    "order_p":1,
-                    "status":1
-                }]
+                id: "v2RmA83EbZPVpYB",
+                name: "Empresa Demo",
+                company_document_status: "approved",
+                active_flag: 1,
+                projects: [
+                    {
+                        id: "v2RmA83EbZPVpYB",
+                        name: "Loja Demonstrativa Cloudfox",
+                        order_p: 1,
+                        status: 1,
+                    },
+                ],
             });
 
             companies = data.companies;
             company_default = data.company_default;
             company_default_name = data.company_default_name;
             $.each(companies, function (c, company) {
-                if( data.company_default == company.id){
-                    data.company_default_projects = company.projects
+                if (data.company_default == company.id) {
+                    data.company_default_projects = company.projects;
                 }
             });
 
-            if(company_default == 'v2RmA83EbZPVpYB'){
-                $('.alert-demo-account').fadeIn()
-            }
-            else{
-                $('.alert-demo-account').fadeOut()
+            if (company_default == "v2RmA83EbZPVpYB") {
+                $(".alert-demo-account").fadeIn();
+            } else {
+                $(".alert-demo-account").fadeOut();
             }
 
             if (!isEmpty(companies)) {
                 //$('.company_name').val( company_default_name );
-                $('.company_id').val( company_default );
-                $('.company-navbar').html('');
+                $(".company_id").val(company_default);
+                $(".company-navbar").html("");
 
                 for (let i = 0; i < companies.length; i++) {
                     if (company_default === companies[i].id)
-                        itemSelected = 'selected="selected" style="font-weight:bold"'
-                    else
-                        itemSelected = ''
+                        itemSelected =
+                            'selected="selected" style="font-weight:bold"';
+                    else itemSelected = "";
 
-                    if (companies[i].active_flag == false || companies[i].company_document_status != "approved")
+                    if (
+                        companies[i].active_flag == false ||
+                        companies[i].company_document_status != "approved"
+                    )
                         itemDisabled = 'disabled="disabled"';
-                    else
-                        itemDisabled = '';
+                    else itemDisabled = "";
 
-                    if (companies[i].company_type == '1') {
-                        $('.company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa Física</option>')
+                    if (companies[i].company_type == "1") {
+                        $(".company-navbar").append(
+                            '<option value="' +
+                                companies[i].id +
+                                '" ' +
+                                itemSelected +
+                                " " +
+                                itemDisabled +
+                                ">Pessoa Física</option>"
+                        );
                     } else {
-                        if(companies[i].name.length>20)
-                            companyName = companies[i].name.substring(0,20)+'...';
-                        else
-                            companyName = companies[i].name;
-                        $('.company-navbar').append('<option value="' + companies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + companyName + '</option>')
+                        if (companies[i].name.length > 20)
+                            companyName =
+                                companies[i].name.substring(0, 20) + "...";
+                        else companyName = companies[i].name;
+                        $(".company-navbar").append(
+                            '<option value="' +
+                                companies[i].id +
+                                '" ' +
+                                itemSelected +
+                                " " +
+                                itemDisabled +
+                                ">" +
+                                companyName +
+                                "</option>"
+                        );
                     }
                 }
-                $('#company-select').addClass('d-sm-flex').css('display','block');
+                $("#company-select")
+                    .addClass("d-sm-flex")
+                    .css("display", "block");
                 return data;
-
             } else {
                 //$(".content-error").show();
-                $('#company-select, .page-content').hide();
+                $("#company-select, .page-content").hide();
                 loadingOnScreenRemove();
             }
-        }
+        },
     });
-    return ajax
+    return ajax;
 }
 
 function updateCompanyDefault() {
-    var company_id = $('.company-navbar').val()
+    var company_id = $(".company-navbar").val();
     var ajax = $.ajax({
-        method: 'POST',
-        url: '/api/core/company-default',
-        data:{company_id:company_id},
+        method: "POST",
+        url: "/api/core/company-default",
+        data: { company_id: company_id },
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: function error(response) {
             errorAjaxResponse(response);
@@ -2513,33 +2574,40 @@ function updateCompanyDefault() {
     return ajax;
 }
 
-function verifyIfCompanyIsDefault(companyId){
-    $('.company-navbar').val( companyId )
-    if( $('.company-navbar').find('option:selected').css('font-weight')=='700' ){
-        $('.sirius-select-options').css('display','none');
+function verifyIfCompanyIsDefault(companyId) {
+    $(".company-navbar").val(companyId);
+    if (
+        $(".company-navbar").find("option:selected").css("font-weight") == "700"
+    ) {
+        $(".sirius-select-options").css("display", "none");
         return true;
     }
     return false;
 }
 
-function fillSelectProject(companiesAndProjects,selectorName,value=''){
-    $.each(companiesAndProjects.company_default_projects, function (i, project) {
-        if(project.status===1){
-            $(selectorName).append($("<option>", {value: project.id ,text: project.name}));
+function fillSelectProject(companiesAndProjects, selectorName, value = "") {
+    $.each(
+        companiesAndProjects.company_default_projects,
+        function (i, project) {
+            if (project.status === 1) {
+                $(selectorName).append(
+                    $("<option>", { value: project.id, text: project.name })
+                );
+            }
         }
-    });
-    if(!isEmpty(value)){
-        $(selectorName).val(value)
+    );
+    if (!isEmpty(value)) {
+        $(selectorName).val(value);
     }
 }
-function showFiltersInReports(show){
-    if(show){
-        $('#box-projects').show();
-        $('.date-report').show();
+function showFiltersInReports(show) {
+    if (show) {
+        $("#box-projects").show();
+        $(".date-report").show();
         return;
     }
-    $('#box-projects').hide();
-    $('.date-report').hide();
+    $("#box-projects").hide();
+    $(".date-report").hide();
 }
 
 // Returns the status of the filtering button
@@ -2556,3 +2624,4 @@ function lockSearch(elementButton) {
 function unlockSearch(elementButton) {
     elementButton.attr("block_search", "false");
 }
+const teste = "teste do teste";

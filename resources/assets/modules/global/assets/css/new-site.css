@@ -377,7 +377,11 @@ h3 {
 
 .add-btn.added {
     background: transparent;
-    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), rgb(81, 236, 195));
+    background-image: linear-gradient(
+        to right,
+        rgba(63, 218, 88, 1),
+        rgb(81, 236, 195)
+    );
     color: white;
 }
 
@@ -773,7 +777,11 @@ h3 {
     border: none;
     outline: 1px solid #2bb2ff;
     font-weight: normal;
-    background-image: linear-gradient(82deg, rgba(48, 210, 74, 1), rgb(10, 166, 71));
+    background-image: linear-gradient(
+        82deg,
+        rgba(48, 210, 74, 1),
+        rgb(10, 166, 71)
+    );
 }
 
 .btn-simple,
@@ -799,7 +807,11 @@ h3 {
     border: none;
     outline: 1px solid #2bb2ff;
     font-weight: normal;
-    background-image: linear-gradient(to right, rgb(88, 73, 226), rgb(81, 196, 236));
+    background-image: linear-gradient(
+        to right,
+        rgb(88, 73, 226),
+        rgb(81, 196, 236)
+    );
 }
 
 .simple-border-bottom {

@@ -8,7 +8,9 @@
 }
 
 /* CONFIGURATIONS THE INTERN CONTENT*/
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
     height: 32px;
     border: none !important;
     padding-top: 5px !important;
@@ -279,19 +281,19 @@ input#date_updated {
     color: #ffcd1b; /*postado em amarelo #ffcd1b*/
 }
 .onDelivery {
-    color: #2E85EC;  /*Saiu para entrega azul escuro #2E85EC*/
+    color: #2e85ec; /*Saiu para entrega azul escuro #2E85EC*/
 }
 .delivered {
-    color: #41DC8F;
+    color: #41dc8f;
 }
 .inTransit {
     color: #00b1ff; /*em trasito azul claro #00b1ff*/
 }
 .withProblem {
-    color: #E81414;
+    color: #e81414;
 }
 .withoutInfo {
-    color: #EBEBEB;
+    color: #ebebeb;
 }
 
 /* ======== CORES DO STATUS NA TABELA ======== */
@@ -300,23 +302,23 @@ input#date_updated {
     color: white;
 }
 .statusOnDelivery {
-    background-color: #2E85EC;  /*Saiu para entrega azul escuro #2E85EC*/
+    background-color: #2e85ec; /*Saiu para entrega azul escuro #2E85EC*/
     color: white;
 }
 .statusDelivered {
-    background-color: #41DC8F;
+    background-color: #41dc8f;
     color: white;
 }
 .statusInTransit {
-    background-color: #00b1ff;  /*em trasito azul claro #00b1ff*/
+    background-color: #00b1ff; /*em trasito azul claro #00b1ff*/
     color: white;
 }
 .statusProblem {
-    background-color: #E81414;
+    background-color: #e81414;
     color: white;
 }
 .statusWithoutInfo {
-    background-color: #EBEBEB;
+    background-color: #ebebeb;
     color: #999999 !important;
 }
 
@@ -391,7 +393,7 @@ a.tracking-edit.pointer {
     border-radius: 5px !important;
     padding: 7px 0px 0px 7px;
     min-width: 37px;
-    background: #EBEBEB;
+    background: #ebebeb;
 }
 span.text-right.o-edit-1 {
     border-radius: 5px !important;
@@ -469,4 +471,7 @@ td.table-title {
 .labels {
     margin-top: 9px;
     margin-bottom: 9px;
+}
+.nav-btn {
+    height: 36px;
 }
