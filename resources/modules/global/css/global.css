@@ -2261,6 +2261,7 @@ tbody td{
     border-radius:6px;
     padding: 2px;
     font-family: 'Inter';
+    display:none;
 }
 
 .alert-pendings-box-1{
@@ -2284,9 +2285,21 @@ tbody td{
     margin-left: 65px;
     transition: all .25s;
 }
+.new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
+    margin: 0 10px 4px
+}
 @media screen and (max-width: 767px) {
+    .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
+        margin: 0 4px 4px
+    }
     .new-register-page-open-modal-container {
         margin-left: 0;
+    }
+    .alert-demo-account .row img:first-child{
+        margin-right: 10px !important;
+    }
+    .alert-demo-account .row img:nth-child(2){
+        margin-left: 10px !important;
     }
 }
 
