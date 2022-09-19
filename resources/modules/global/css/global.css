@@ -2240,6 +2240,7 @@ tbody td{
     color: #2e85ec;
     cursor: pointer;
     font-weight: 600;
+    margin: auto;
 }
 
 .alert-demo-account .row{
@@ -2275,6 +2276,7 @@ tbody td{
     border-radius:4px;
     padding: 6px 10px;
     font-size: 15px;
+    margin: auto;
 }
 
 .new-register-page-open-modal-container {
