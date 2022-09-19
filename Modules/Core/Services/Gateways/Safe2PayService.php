@@ -102,13 +102,12 @@ class Safe2PayService implements Statement
 
         if ($sale->payment_method == Sale::BILLET_PAYMENT) {
             return $availableBalance >= (int) foxutils()->onlyNumbers($sale->total_paid_value);
-        } else {
-            $accountOwnerId = auth()->user()->account_owner_id ?? $sale->owner_id;
-            $transaction = Transaction::where("sale_id", $sale->id)
-                ->where("user_id", $accountOwnerId)
-                ->first();
-            return $availableBalance >= $transaction->value;
         }
+        $accountOwnerId = auth()->user()->account_owner_id ?? $sale->owner_id;
+        $transaction = Transaction::where("sale_id", $sale->id)
+            ->where("user_id", $accountOwnerId)
+            ->first();
+        return $availableBalance >= $transaction->value;
     }
 
     public function getWithdrawals(): JsonResource
@@ -130,11 +129,7 @@ class Safe2PayService implements Statement
         $pendingBalance = $this->getPendingBalance();
         (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
 
-        if ($value > $availableBalance) {
-            return false;
-        }
-
-        return true;
+        return $value <= $availableBalance;
     }
 
     public function existsBankAccountApproved()
@@ -518,18 +513,12 @@ class Safe2PayService implements Statement
         switch ($sale->payment_method) {
             case Sale::CREDIT_CARD_PAYMENT:
                 return true;
-                break;
 
             case Sale::BILLET_PAYMENT:
                 return false;
-                break;
 
             case Sale::PIX_PAYMENT:
                 return Carbon::now()->diffInDays($sale->end_date) < 90;
-                break;
-            default:
-                # code...
-                break;
         }
 
         return false;
