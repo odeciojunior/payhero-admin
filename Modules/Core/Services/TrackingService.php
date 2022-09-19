@@ -302,6 +302,13 @@ class TrackingService
 
             $projects = explode(",", $filters["project"]);
 
+            if(empty($projects) || $projects[0]==''){
+                $projectsWithSalesAndTokens = SaleService::getProjectsWithSalesAndTokens();
+                foreach ($projectsWithSalesAndTokens as $k=>$v) {
+                    $projects[$k] = hashids_encode($v->project_id);
+                }
+            }
+
             $tokens = [];
             $projectIds = [];
             foreach ($projects as $project) {
