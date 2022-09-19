@@ -39,6 +39,14 @@ $(document).ready(function () {
 
     window.onresize = changeNewRegisterLayoutOnWindowResize;
 
+    $(".alert-demo-account").on("click", function () {
+        $(".alert-demo-account-overlay").fadeIn();
+    });
+
+    $(".alert-demo-account-close-modal, .alert-demo-account-close-modal-x").on("click", function () {
+        $(".alert-demo-account-overlay").fadeOut(400);
+    });
+
     $(".new-register-open-modal-btn").parent().on("click", function () {
         $(".new-register-navbar-open-modal-container").fadeOut("slow");
 

@@ -151,6 +151,8 @@
         @include('utils.documents-pending')
     @endif
 
+    @include('utils.alert-demo-account')
+
     <!-- Plugins -->
     <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
     <script>
