@@ -2290,8 +2290,13 @@ tbody td{
 }
 @media screen and (max-width: 767px) {
     .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
-        margin: 0 4px 4px
+        margin: 0 2px 4px
     }
+
+    .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1{
+        padding-right: 2px;
+    }
+
     .new-register-page-open-modal-container {
         margin-left: 0;
     }
