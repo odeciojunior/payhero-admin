@@ -2266,6 +2266,7 @@ tbody td{
     color: #222222;
     padding-top:6px;
     padding-right:6px;
+    font-size: 15px;
 }
 
 .alert-pendings-box-2{
@@ -2273,6 +2274,7 @@ tbody td{
     color:white;
     border-radius:4px;
     padding: 6px 10px;
+    font-size: 15px;
 }
 
 .new-register-page-open-modal-container {
