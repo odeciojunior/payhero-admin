@@ -26,11 +26,10 @@ class ProjectAffiliateResource extends JsonResource
         $userId = auth()->user()->account_owner_id;
 
         //verifica se é o dono do projeto
-        $userProject = $this->usersProjects[0];
-        if ($userProject->user_id == $userId) {
+        $producer = false;
+        $userProject = $this->usersProjects[0]??null;
+        if ($userProject && $userProject->user_id == $userId) {
             $producer = true;
-        } else {
-            $producer = false;
         }
 
         //verifica se é o projeto tem afiliação automatica

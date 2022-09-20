@@ -271,14 +271,15 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
+            url: '/api/projects?select=true&company='+ $('.company-navbar').val()+'&tokens=true',
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadingOnScreenRemove();
+                if(!origin)
+                    loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -290,8 +291,8 @@ $(document).ready(function () {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
-
-                loadingOnScreenRemove();
+                //if(!origin)
+                    loadingOnScreenRemove();
             },
         });
     }

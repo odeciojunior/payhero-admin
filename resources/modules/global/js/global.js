@@ -39,13 +39,30 @@ $(document).ready(function () {
 
     window.onresize = changeNewRegisterLayoutOnWindowResize;
 
-    $(".new-register-open-modal-btn").on("click", function () {
-        $(".new-register-navbar-open-modal-container").fadeOut("slow");
-
-        setStepContainer();
-
-        $(".new-register-overlay").fadeIn();
+    $(".alert-demo-account").on("click", function () {
+        $(".alert-demo-account-overlay").fadeIn();
     });
+
+    $(".alert-demo-account-close-modal, .alert-demo-account-close-modal-x").on(
+        "click",
+        function () {
+            $(".alert-demo-account-overlay").fadeOut(400);
+        }
+    );
+
+    $(".new-register-open-modal-btn")
+        .parent()
+        .on("click", function () {
+            if ($(".alert-demo-account-overlay").css("display") == "block") {
+                $(".alert-demo-account-overlay").hide();
+            }
+
+            $(".new-register-navbar-open-modal-container").fadeOut("slow");
+
+            setStepContainer();
+
+            $(".new-register-overlay").fadeIn();
+        });
 
     $(".close-modal").on("click", function () {
         $(".new-register-overlay").fadeOut(400, function () {
@@ -1165,7 +1182,7 @@ function verifyDocumentPending() {
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
                     $(".new-register-page-open-modal-container").hide();
-                    $(".new-register-navbar-open-modal-container").fadeOut();
+                    $(".new-register-navbar-open-modal-container").hide();
 
                     setStepContainer();
 
@@ -1400,7 +1417,11 @@ function verifyDocumentPending() {
                                 ? " itens pendentes"
                                 : " item pendente") +
                             ")"
-                    );
+                    )
+                    .promise()
+                    .done(function () {
+                        $(".alert-pendings").css("display", "inline-flex");
+                    });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
 
@@ -1591,7 +1612,7 @@ function changeNewRegisterLayoutOnWindowResize() {
         $(".new-register-page-open-modal-container").fadeOut();
         $(".new-register-navbar-open-modal-container").fadeIn();
     } else {
-        $(".new-register-navbar-open-modal-container").fadeOut();
+        $(".new-register-navbar-open-modal-container").hide();
         $(".new-register-page-open-modal-container").fadeIn();
     }
 }
@@ -2494,7 +2515,6 @@ function getCompaniesAndProjects() {
             }
 
             if (!isEmpty(companies)) {
-                //$('.company_name').val( company_default_name );
                 $(".company_id").val(company_default);
                 $(".company-navbar").html("");
 
@@ -2575,6 +2595,9 @@ function updateCompanyDefault() {
 }
 
 function verifyIfCompanyIsDefault(companyId) {
+    if ($(".alert-demo-account-overlay").css("display") == "block") {
+        $(".alert-demo-account-overlay").fadeOut();
+    }
     $(".company-navbar").val(companyId);
     if (
         $(".company-navbar").find("option:selected").css("font-weight") == "700"
@@ -2589,7 +2612,7 @@ function fillSelectProject(companiesAndProjects, selectorName, value = "") {
     $.each(
         companiesAndProjects.company_default_projects,
         function (i, project) {
-            if (project.status === 1) {
+            if (project.status === "1") {
                 $(selectorName).append(
                     $("<option>", { value: project.id, text: project.name })
                 );

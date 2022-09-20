@@ -147,8 +147,9 @@ class AffiliatesApiController extends Controller
         $projectId = current(Hashids::decode($id));
         if ($projectId) {
             $project = $projectModel->with("usersProjects.user")->find($projectId);
-
-            return new ProjectAffiliateResource($project);
+            if(!empty($project)){
+                return new ProjectAffiliateResource($project);
+            }
         }
 
         return response()->json(

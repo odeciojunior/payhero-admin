@@ -12,61 +12,36 @@ $(document).ready(function () {
         loadOnTable("#table_data", "#carrinhoAbandonado");
         updateCompanyDefault().done(function(data){
             getCompaniesAndProjects().done(function(data2){
-                if(!isEmpty(data2.company_default_projects)){
-                    $('#export-excel').show();
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    fillProjectsSelect(data2.companies)
-                    updateSalesRecovery();
-                }
-                else{
-                    $('#export-excel').hide();
-                    $("#project-empty").show();
-                    $("#project-not-empty").hide();
-                }
+                    getProjects(data2, 'company-navbar')
             });
         });
     });
 
     function fillProjectsSelect(data){
-        $.ajax({
-            method: "GET",
-            url: "/api/recovery/projects-with-recovery",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                console.log('erro')
-                console.log(response)
-            },
-            success: function success(response) {
-                return response;
-            }
-        }).done(function(dataSales){
-            $.each(data, function (c, company) {
-                //if( data2.company_default == company.id){
-                    $.each(company.projects, function (i, project) {
-                        if( dataSales.includes(project.id) )
-                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
-                    });
-                //}
-            });
-        });
+        if(data.company_default == 'v2RmA83EbZPVpYB')
+            $("#project").append($("<option>", {value: 'v2RmA83EbZPVpYB', text: 'Loja Demonstrativa Cloudfox'}));
+        else {
+            projects = allProjects(data)
+            for (let i = 0; i < projects.length; i++)
+                $("#project").append($("<option>", {value: projects[i].id, text: projects[i].name,}));
+        }
     }
 
-    getCompaniesAndProjects().done( function (data){console.log(data)
-        if(!isEmpty(data.company_default_projects)){
-            getProjects(data);
-        }
-        else{
-            $('#export-excel').hide()
-            $("#project-empty").show();
-            $("#project-not-empty").hide();
-            loadingOnScreenRemove();
-        }
+    function allProjects(data){
+        projects = [];
+        for (let i = 0; i < data.companies.length; i++) {
+            company = data.companies[i];
+            if(company.active_flag==true && company.company_document_status=='approved' && company.id!='v2RmA83EbZPVpYB'){
+                $.each(company.projects, function (i, project) {
+                    projects.push({id: project.id, name: project.name});
+                });
+            }
+        };
+        return projects;
+    }
 
+    getCompaniesAndProjects().done( function (data){
+        getProjects(data);
     });
 
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
@@ -178,18 +153,29 @@ $(document).ready(function () {
     /**
      * Busca os lojas para montar o select
      */
-    function getProjects(data) {
-        loadingOnScreen();
+    function getProjects(data,origin='') {
+        if(origin=='')
+            loadingOnScreen();
 
-        $("#project-empty").hide();
-        $("#project-not-empty").show();
-        $("#export-excel").show();
-        fillProjectsSelect(data.companies)
-        $("#project").val($("#project option:first").val());
-        $("#plan").val($("#plan option:first").val());
-        updateSalesRecovery();
+        projects = allProjects(data)
 
-        loadingOnScreenRemove();
+        if(data.company_default!='v2RmA83EbZPVpYB' && projects.length == 0){
+            $('#export-excel').hide()
+            $("#project-empty").show();
+            $("#project-not-empty").hide();
+        }
+        else{
+            $("#project-empty").hide();
+            $("#project-not-empty").show();
+            $("#export-excel").show();
+            fillProjectsSelect(data)
+            $("#project").val($("#project option:first").val());
+            $("#plan").val($("#plan option:first").val());
+            updateSalesRecovery();
+        }
+
+        if(origin=='')
+            loadingOnScreenRemove();
     }
 
     /**
@@ -259,7 +245,7 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {console.log(response)
+            success: function success(response) {
                 const BOLETO_TYPE = '5'
 
                 $("#table_data").html("");
@@ -361,7 +347,6 @@ $(document).ready(function () {
         elementButton = $("#bt_filtro");
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr("block_search"));
             updateSalesRecovery();
         }
     }
@@ -871,7 +856,7 @@ $(document).ready(function () {
                 };
             },
             method: "GET",
-            url: "/api/sales/user-plans",
+            url: "/api/recovery/user-plans",
             delay: 300,
             dataType: "json",
             headers: {

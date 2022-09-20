@@ -22,14 +22,43 @@ const statusEnum = {
 //ICONES DO STATUS //
 const systemStatus = {
     1: "",
-    2: `<i data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias"><img src="build/global/img/alert-icon-code.svg"/></i>`,
-    3: `<i data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora"><img src="build/global/img/alert-icon-code.svg"/></i>`,
-    4: `<i data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda"><img src="build/global/img/alert-icon-code.svg"/></i>`,
-    5: `<i data-toggle="tooltip" data-container=".page" title="Já existe uma venda com esse código de rastreio cadastrado"><img src="build/global/img/alert-icon-code.svg"/></i>`,
+    2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
+    3: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`,
+    4: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`,
+    5: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="Já existe uma venda com esse código de rastreio cadastrado">report_problem</i>`,
     "": "",
 };
 
 $(() => {
+    $(".company-navbar").change(function () {
+        if (verifyIfCompanyIsDefault($(this).val())) return;
+        $("#project-select").find("option").not(":first").remove();
+        $("#project-select").val($("#project-select option:first").val());
+        loadOnTable("#dados_tabela", "#tabela_trackings");
+        let loadingSelector =
+            "#percentual-posted, #percentual-dispatched, #percentual-out, #percentual-exception, #percentual-unknown, #percentual-delivered, #graphic-loading";
+        let loadingSettings = {
+            styles: {
+                container: {
+                    height: "36px",
+                    minHeight: "0px",
+                    justifyContent: "center",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "3px",
+                },
+            },
+        };
+        window.showLoading(loadOnAny, loadingSelector, loadingSettings);
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                getProjects(data2, "company-navbar");
+            });
+        });
+    });
+
     $(".applySelect2").select2({
         width: "100%",
         multiple: true,
@@ -114,7 +143,7 @@ $(() => {
         $(this).hide();
     });
 
-    $('#bt_filter').on('click', function () {
+    $("#bt_filter").on("click", function () {
         window.loadData();
     });
 
@@ -194,26 +223,26 @@ $(() => {
         //layout do button block
     }
 
-    window.loadData = function() {
-        elementButton = $('#bt_filter');
-        if (searchIsLocked(elementButton) != 'true') {
+    window.loadData = function () {
+        elementButton = $("#bt_filter");
+        if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
             //console.log(elementButton.attr('block_search'));
             index();
             getResume();
         }
-    }
+    };
 
     function getFilters(urlParams = false) {
         let data = {
-            'tracking_code': $('#tracking_code').val(),
-            'status': $('#status').val(),
-            'project': $('#project-select').val(),
-            'date_updated': $('#date_updated').val(),
-            'sale': $('#sale').val().replace('#', ''),
-            'transaction_status': $("#status_commission").val(),
-            'problem': $('#tracking_problem').prop('checked') ? 1 : 0,
-            'company': $('.company-navbar').val(),
+            tracking_code: $("#tracking_code").val(),
+            status: $("#status").val(),
+            project: $("#project-select").val(),
+            date_updated: $("#date_updated").val(),
+            sale: $("#sale").val().replace("#", ""),
+            transaction_status: $("#status_commission").val(),
+            problem: $("#tracking_problem").prop("checked") ? 1 : 0,
+            company: $(".company-navbar").val(),
         };
         if (urlParams) {
             let params = "";
@@ -226,7 +255,16 @@ $(() => {
         }
     }
 
-    window.fillProjectsSelect = function(data){
+    getCompaniesAndProjects().done(function (data) {
+        getProjects(data);
+    });
+
+    /**
+     * List Projects
+     */
+    function getProjects(data, origin = "") {
+        if (origin == "") loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: "/api/sales/projects-with-sales",
@@ -236,85 +274,48 @@ $(() => {
                 Accept: "application/json",
             },
             error: function error(response) {
-                console.log('erro')
-                console.log(response)
+                console.log("erro");
+                console.log(response);
+                if (origin == "") loadingOnScreen();
             },
             success: function success(response) {
-                return response;
-            }
-        }).done(function(dataSales){
-            $.each(data, function (c, company) {
-                //if( data2.company_default == company.id){
-                    $.each(company.projects, function (i, project) {
-                        if( dataSales.includes(project.id) )
-                            $("#project-select").append($("<option>", {value: project.id,text: project.name,}));
+                if (!isEmpty(response)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel").show();
+                    $.each(response, function (i, project) {
+                        $("#project-select").append(
+                            $("<option>", {
+                                value: project.project_id,
+                                text: project.name,
+                            })
+                        );
                     });
-                //}
-            });
+                    $("#project-select option:first").attr(
+                        "selected",
+                        "selected"
+                    );
+                    window.loadData();
+                    if (origin == "") loadingOnScreenRemove();
+                } else {
+                    if (!isEmpty(data.company_default_projects)) {
+                        $("#project-empty").hide();
+                        $("#project-not-empty").show();
+                        $("#export-excel").show();
+                        // $.each(data.company_default_projects, function (i, project) {
+                        //     $("#project-select").append($("<option>", {value: project.project_id,text: project.name,}));
+                        // });
+                        $("#projeto option:first").attr("selected", "selected");
+                        window.loadData();
+                        if (origin == "") loadingOnScreenRemove();
+                    } else {
+                        if (origin == "") loadingOnScreenRemove();
+                        $("#project-empty").show();
+                        $("#project-not-empty").hide();
+                    }
+                }
+            },
         });
-    }
-
-    getCompaniesAndProjects().done( function (data){
-        if(!isEmpty(data.company_default_projects)){
-            getProjects(data);
-        }
-        else{
-            $('#export-excel').hide()
-            $("#project-empty").show();
-            $("#project-not-empty").hide();
-            loadingOnScreenRemove();
-        }
-    });
-
-    /**
-     * List Projects
-     */
-    function getProjects(data) {
-        loadingOnScreen();
-        $("#project-empty").hide();
-        $("#project-not-empty").show();
-        $("#export-excel").show();
-        window.fillProjectsSelect(data.companies)
-        window.loadData();
-        loadingOnScreenRemove();
-
-        // $.ajax({
-        //     method: 'GET',
-        //     url: '/api/projects?select=true&affiliate=false&company='+ $('.company-navbar').val(),
-        //     dataType: 'json',
-        //     headers: {
-        //         'Authorization': $('meta[name="access-token"]').attr('content'),
-        //         'Accept': 'application/json',
-        //     },
-        //     error: response => {
-        //         errorAjaxResponse(response);
-        //         loadingOnScreenRemove();
-        //     },
-        //     success: response => {
-        //         if (!isEmpty(response.data)) {
-        //             $("#project-empty").hide();
-        //             $("#project-not-empty").show();
-        //             $("#export-excel").show()
-
-        //             if (response.data != "api sales") {
-        //                 $.each(response.data, function (i, project) {
-        //                     $("#project-select").append($("<option>", {
-            //                         value: project.id,
-            //                         text: project.name,
-        //                         }));
-        //                 });
-        //             }
-
-        //             window.loadData();
-        //         } else {
-        //             $("#export-excel").hide();
-        //             $("#project-not-empty").hide();
-        //             $("#project-empty").show();
-        //         }
-
-        //         loadingOnScreenRemove();
-        //     }
-        // });
     }
 
     //CARD RESUMO DE ENTREGAS E GRAFICO
@@ -382,13 +383,17 @@ $(() => {
         });
     }
 
-    window.showLoading = function(loadOnAny, loadingSelector, loadingSettings) {
+    window.showLoading = function (
+        loadOnAny,
+        loadingSelector,
+        loadingSettings
+    ) {
         loadOnAny(loadingSelector, false, loadingSettings);
         $("#graphic-loading")
             .append($(".loader-any-container")[6])
             .show()
             .css("z-index", "2");
-    }
+    };
 
     //GERANDO DADOS DO CARD E DO GRAFICO
     function getResume() {
@@ -550,7 +555,7 @@ $(() => {
         }
 
         loadOnTable("#dados_tabela", "#tabela_trackings");
-        $("#pagination-trackings").children().attr("disabled","disabled");
+        $("#pagination-trackings").children().attr("disabled", "disabled");
         $.ajax({
             method: "GET",
             url: link,
