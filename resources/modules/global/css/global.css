@@ -2279,6 +2279,10 @@ tbody td{
     border-radius: 10px;
     padding: 40px;
     text-align: center;
+    margin: 0;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 .alert-demo-account-close-modal-x{
@@ -2295,6 +2299,7 @@ tbody td{
     font-size: 18px;
     line-height: 20px;
     color: #3D4456;
+    width: 100%;
 }
 
 .alert-demo-account-overlay-box{

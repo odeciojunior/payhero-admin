@@ -43,6 +43,10 @@ $(document).ready(function () {
     $(".new-register-open-modal-btn")
         .parent()
         .on("click", function () {
+            if ( $('.alert-demo-account-overlay').css('display')=='block' ){
+                $(".alert-demo-account-overlay").hide();
+            }
+
             $(".new-register-navbar-open-modal-container").fadeOut("slow");
 
             setStepContainer();
@@ -2263,6 +2267,9 @@ function updateCompanyDefault() {
 }
 
 function verifyIfCompanyIsDefault(companyId) {
+    if ( $('.alert-demo-account-overlay').css('display')=='block' ){
+        $(".alert-demo-account-overlay").fadeOut();
+    }
     $(".company-navbar").val(companyId);
     if ($(".company-navbar").find("option:selected").css("font-weight") == "700") {
         $(".sirius-select-options").css("display", "none");
