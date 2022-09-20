@@ -11,7 +11,6 @@ $(document).ready(function () {
         putSkeletonLoadingOnChart();
         $('#scoreLineToMonth').html('');
 
-
         window.putSkeletonLoadingOnAccountHealth();
         updateCompanyDefault().done(function(data1){
             getCompaniesAndProjects().done(function(data2){

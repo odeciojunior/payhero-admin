@@ -84,7 +84,7 @@ function atualizar(link = null) {
                                 ${start_date[0]}
                             </span>
                             <br>
-                            <small>
+                            <small class="subdescription">
                                 ${start_date[1]}
                             </small>`;
                     }
@@ -99,7 +99,7 @@ function atualizar(link = null) {
                                 ${end_date[0]}
                             </span>
                             <br>
-                            <small>
+                            <small class="subdescription">
                                 ${end_date[1]}
                             </small>`;
                     }
@@ -162,7 +162,7 @@ function atualizar(link = null) {
                     if (value.has_order_bump) {
                         has_order_bump = `
                             <a data-toggle="tooltip" title="Order Bump" role="button" style='margin-left: 5px;'>
-                                    <img width="20px" src="/build/global/img/order-bump.svg">
+                                <img width="20px" src="/build/global/img/order-bump.svg">
                             </a>`;
                     }
 
@@ -206,14 +206,14 @@ function atualizar(link = null) {
                                         ? `
                                         <br>
 
-                                        <small class="gray font-size-12">
+                                        <small class="subdescription font-size-12">
                                             (Afiliado: ${value.affiliate})
                                         </small>`
                                         : ""
                                 }
                                 <br>
 
-                                <small class="gray font-size-12">
+                                <small class="subdescription font-size-12">
                                     ${value.project}
                                 </small>
                             </td>
@@ -254,11 +254,11 @@ function atualizar(link = null) {
 
                             </td>
 
-                            <td class='display-sm-none display-m-none text-left font-size-14'>
+                            <td class='display-sm-none display-m-none text-left'>
                                 ${start_date}
                             </td>
 
-                            <td class='display-sm-none text-left font-size-14'>
+                            <td class='display-sm-none text-left'>
                                 ${end_date}
                             </td>
 
