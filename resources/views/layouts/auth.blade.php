@@ -15,7 +15,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch"
           href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap"
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,700,800&display=swap"
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
@@ -69,7 +69,7 @@
 </div> --}}
     <style>
         body {
-            font-family: 'Muli', sans-serif;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             background: url(https://sirius.cloudfox.net/modules/global/adminremark/assets/images/gradient-bg.png) bottom left no-repeat;
         }

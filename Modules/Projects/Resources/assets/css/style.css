@@ -218,18 +218,18 @@
 }
 
 .s-title {
-    font: normal normal bold 24px Muli;
+    font: normal normal bold 24px Inter;
     line-height: unset;
     color: #707070;
 }
 
 .s-title-description {
-    font: normal normal bold 14px Muli;
+    font: normal normal bold 14px Inter;
 }
 
 .s-description {
     color: #959595;
-    font: normal normal normal 14px Muli;
+    font: normal normal normal 14px Inter;
 }
 
 .s-data-project {
@@ -237,7 +237,7 @@
 }
 
 .s-data-project-values {
-    font: normal normal bold 16px Muli;
+    font: normal normal bold 16px Inter;
 }
 
 .nav-tabs .nav-link {

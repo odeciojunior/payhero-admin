@@ -24,11 +24,11 @@ h4,
 h5,
 h6,
 p {
-    font-family: "Muli", sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .card {
-    font-family: "Muli", sans-serif;
+    font-family: "Inter", sans-serif;
     border-radius: 5px !important;
     box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
 }
@@ -46,7 +46,7 @@ p {
 
 .details-text {
     opacity: 0.5;
-    font-family: Muli;
+    font-family: Inter;
     font-size: 12px;
     font-weight: 600;
     font-style: normal;
@@ -112,7 +112,7 @@ input,
     padding: 8px 15px;
     color: #707070;
     font-size: 16px;
-    font-family: "Muli", sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .form-sub {
@@ -141,7 +141,7 @@ label,
 
 select,
 .select-pad {
-    font-family: "Muli", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     width: 100%;
     height: auto;
@@ -164,7 +164,7 @@ select:hover {
 
 input[type="date"],
 date-pad {
-    font-family: "Muli", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
     width: 100%;
     height: auto;
@@ -181,7 +181,7 @@ input[type="radio"] {
 }
 
 .site-menubar {
-    font-family: "Muli", sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .footer-nav-link {
@@ -817,7 +817,7 @@ h3 {
     border-radius: 6px;
     padding: 8px 15px;
     font-size: 16px;
-    font-family: "Muli", sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 #custom-addon {

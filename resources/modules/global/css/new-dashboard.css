@@ -1,21 +1,18 @@
 body {
-    font: 400 16px 'Muli', sans-serif !important;
+    font: 400 16px "Inter", sans-serif !important;
 }
 
 .page.dashboard .card-desc {
     margin-left: 0px;
 }
 
-
 .green {
-    fill: #5EE2A1;
+    fill: #5ee2a1;
 }
-
 
 .card-header svg {
     float: left;
     position: relative;
-
 }
 
 .moeda {
@@ -31,7 +28,6 @@ body {
     margin-bottom: 25px;
 }
 
-
 .card-p {
     font-size: 12px;
     font-weight: normal;
@@ -42,9 +38,8 @@ body {
     color: black;
 }
 
-
 .page.dashboard .text-money {
-    font-family: Muli;
+    font-family: "Inter";
     font-size: 20px;
     color: black;
     font-weight: 700;
@@ -56,9 +51,9 @@ body {
 }
 
 .page.dashboard .card {
-    font-family: 'Muli', sans-serif;
+    font-family: "Inter", sans-serif;
     border-radius: 8px !important;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
+    background: #ffffff 0% 0% no-repeat padding-box;
     opacity: 1;
 }
 
@@ -80,7 +75,7 @@ body {
 
 /*bottom*/
 .page.dashboard .card .card-bottom.green {
-    background-color: #5EE2A1;
+    background-color: #5ee2a1;
 }
 
 .page.dashboard .card .card-bottom.blue {
@@ -88,21 +83,21 @@ body {
 }
 
 .page.dashboard .card .card-bottom.orange {
-    background-color: #FFB400;
+    background-color: #ffb400;
 }
 
 .page.dashboard .card .card-bottom.red {
-    background-color: #F41C1C;
+    background-color: #f41c1c;
 }
 
 .page.dashboard .card .card-bottom.orangered {
-    background-color: #5D2FEA;
+    background-color: #5d2fea;
 }
 
 /*bottom*/
 
 .page.dashboard .bg-blue {
-    background-color: var(--color-blue)
+    background-color: var(--color-blue);
 }
 
 .page.dashboard .card-text {
@@ -112,16 +107,16 @@ body {
 }
 
 .page.dashboard .card-text .text-money {
-    font-size: 32px
+    font-size: 32px;
 }
 
 .page.dashboard .text-money small {
     font-size: 12px;
-    color: gray
+    color: gray;
 }
 
 .page.dashboard .card-text .loader-any-container {
-    width: 100% !important;;
+    width: 100% !important;
 }
 
 .page.dashboard .performance-card .text-money {
@@ -129,7 +124,7 @@ body {
 }
 
 .page.dashboard table,
-.page.dashboard .table-striped > tbody > tr:nth-child(2n+1) > td,
+.page.dashboard .table-striped > tbody > tr:nth-child(2n + 1) > td,
 .page.dashboard table tr {
     background: #fff !important;
 }
@@ -175,11 +170,11 @@ body {
 }
 
 .card-left.green {
-    background-image: linear-gradient(to top, rgba(63, 218, 88, 1), #51ECC3);
+    background-image: linear-gradient(to top, rgba(63, 218, 88, 1), #51ecc3);
 }
 
 .card-left.purple {
-    background-image: linear-gradient(to top, #8E2DE2, #4A00E0);
+    background-image: linear-gradient(to top, #8e2de2, #4a00e0);
 }
 
 .card-left.red {
@@ -192,7 +187,7 @@ body {
 
 .card-left > .card-header:first-child {
     border-radius: 0;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
 }
 /*rgb(0, 229, 255)*/
 /*left*/
@@ -210,11 +205,11 @@ body {
 }
 
 .card-top.green {
-    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ECC3);
+    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);
 }
 
 .card-top.purple {
-    background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
+    background-image: linear-gradient(to right, #8e2de2, #4a00e0);
 }
 
 .card-top.red {
@@ -230,7 +225,7 @@ body {
 }
 
 .green-gradient {
-    background: -webkit-linear-gradient(rgba(63, 218, 88, 1), #51ECC3);
+    background: -webkit-linear-gradient(rgba(63, 218, 88, 1), #51ecc3);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -311,29 +306,29 @@ body {
 
 #releases-div::-webkit-scrollbar {
     width: 5px;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
 }
 
 #releases-div::-webkit-scrollbar-thumb {
-    background-color: #FFA040;
+    background-color: #ffa040;
 }
 
 .progress {
-    background-color: #E5E5E5;
+    background-color: #e5e5e5;
     margin-bottom: 5px;
     height: 4px;
 }
 
 .progress-bar {
-    background: linear-gradient(to right, #3FDA58, #51ECC3);
+    background: linear-gradient(to right, #3fda58, #51ecc3);
 }
 
 .progress-bar.bg-warning {
-    background: linear-gradient(to right, #FAD961, #F76B1C);
+    background: linear-gradient(to right, #fad961, #f76b1c);
 }
 
 .progress-bar.bg-danger {
-    background: linear-gradient(to right, #F76B1C, #FF6161);
+    background: linear-gradient(to right, #f76b1c, #ff6161);
 }
 
 .not-hover,
@@ -342,7 +337,7 @@ body {
 }
 
 .mini-card {
-    box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, .1);
+    box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
     border-radius: 0.25rem;
     padding: 15px;
 }
@@ -360,8 +355,6 @@ body {
     border-radius: 8px;
 }
 
-
-
 .cashback-container-icon {
     font-size: 19px;
     font-weight: 300;
@@ -371,14 +364,14 @@ body {
 }
 
 .cashback-container-icon:hover {
-    color: #6FE5AB;
+    color: #6fe5ab;
 }
 
 #cashback-container-money {
     margin-right: 10px;
-    font-family: Muli;
+    font-family: "Inter";
     font-size: 32px;
-    color: #6FE5AB;
+    color: #6fe5ab;
     font-weight: 700;
     font-style: normal;
     font-stretch: normal;
@@ -387,44 +380,43 @@ body {
     display: block;
 }
 
-
-
 /*CSS Account Health */
 
-@media(max-width: 1080px) {
+@media (max-width: 1080px) {
     html {
         font-size: 93.75%;
     }
 }
 
-@media(max-width: 720px) {
+@media (max-width: 720px) {
     html {
         font-size: 87.5%;
     }
 }
 
-
-body, input, textarea, button {
+body,
+input,
+textarea,
+button {
     font-size: 16px;
     font-weight: 400;
 }
 
 .mt-15 {
-    margin-top: 15px;  /*0.94rem;*/
+    margin-top: 15px; /*0.94rem;*/
 }
-
 
 .mb-10 {
-    margin-bottom: 10px;  /*0.63rem;*/
+    margin-bottom: 10px; /*0.63rem;*/
 }
-
 
 /*.page.dashboard .performance-card .card-header, .page.dashboard .sirius-account .card-header {*/
 /*    font-size: 14px; !*0.88rem;*!*/
 /*    line-height: 0.88rem;*/
 /*}*/
 
-.page.dashboard .performance-card .title-performance, .page.dashboard .sirius-account .title-performance {
+.page.dashboard .performance-card .title-performance,
+.page.dashboard .sirius-account .title-performance {
     text-align: left;
     font-size: 14px; /*0.88rem;*/
     letter-spacing: 0px;
@@ -438,7 +430,7 @@ body, input, textarea, button {
 .page.dashboard .card-indicators > li {
     width: 11px;
     height: 11px;
-    background: #EDEDED 0% 0% no-repeat padding-box;
+    background: #ededed 0% 0% no-repeat padding-box;
     border-radius: 100%;
     margin-left: 5px;
 }
@@ -448,30 +440,29 @@ body, input, textarea, button {
 }
 
 .page.dashboard .card-indicators > i {
-    width:20px;
+    width: 20px;
     font-size: 20px;
     line-height: 14px;
-    color: #C8C8C8;
+    color: #c8c8c8;
     margin-left: 5px;
     cursor: not-allowed;
-    background: #FCFCFC 0% 0% no-repeat padding-box;
+    background: #fcfcfc 0% 0% no-repeat padding-box;
     border-radius: 100%;
     text-align: center;
 }
 
 .page.dashboard .card-indicators > i:hover {
-    color: #C8C8C8;
+    color: #c8c8c8;
 }
 
 .page.dashboard .card-indicators > i.active {
     color: #000000;
     cursor: pointer;
-    background: #F8F8F8 0% 0% no-repeat padding-box;
+    background: #f8f8f8 0% 0% no-repeat padding-box;
 }
 
 .page.dashboard .card-indicators > i.active:hover {
     color: #000000;
-
 }
 
 .page.dashboard .card-indicators > i.control-prev::before {
@@ -492,13 +483,12 @@ body, input, textarea, button {
     min-height: 1px;
     height: 1px;
     width: 100%;
-    background-color: #DBDBDB;
-
+    background-color: #dbdbdb;
 }
 
 .page.dashboard .hr-vertical {
     height: 100%;
     min-width: 1px;
     width: 1px;
-    background-color: #DBDBDB;
+    background-color: #dbdbdb;
 }

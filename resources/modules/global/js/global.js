@@ -43,7 +43,7 @@ $(document).ready(function () {
     $(".new-register-open-modal-btn")
         .parent()
         .on("click", function () {
-            if ( $('.alert-demo-account-overlay').css('display')=='block' ){
+            if ($(".alert-demo-account-overlay").css("display") == "block") {
                 $(".alert-demo-account-overlay").hide();
             }
 
@@ -2267,7 +2267,7 @@ function updateCompanyDefault() {
 }
 
 function verifyIfCompanyIsDefault(companyId) {
-    if ( $('.alert-demo-account-overlay').css('display')=='block' ){
+    if ($(".alert-demo-account-overlay").css("display") == "block") {
         $(".alert-demo-account-overlay").fadeOut();
     }
     $(".company-navbar").val(companyId);

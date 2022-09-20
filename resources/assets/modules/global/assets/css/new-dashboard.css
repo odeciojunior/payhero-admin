@@ -1,5 +1,5 @@
 body {
-    font-family: "Muli", sans-serif !important;
+    font-family: "Inter", sans-serif !important;
 }
 
 .card-desc {
@@ -38,7 +38,7 @@ body {
 }
 
 .text-money {
-    font-family: Muli;
+    font-family: Inter;
     font-size: 32px;
     color: black;
     font-weight: 700;
