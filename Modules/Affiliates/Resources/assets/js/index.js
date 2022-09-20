@@ -130,7 +130,7 @@ $(document).ready(function () {
             success: (response) => {
                 countCompanies = response.companies.length;
                 $(response.companies).each(function (index, company) {
-                    if (companyIsApproved(company)) {
+                    if (companyIsApproved(company) && company.active_flag) {
                         countCompanyApproved++;
                         $("#companies").append(`
                             <option value='${company.id}'>

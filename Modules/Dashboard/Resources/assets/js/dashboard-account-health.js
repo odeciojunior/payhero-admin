@@ -185,7 +185,7 @@ $(document).ready(function () {
 
                     setTimeout(() => {
                         updateGauge(data.account_score);
-                    }, 100);
+                    }, 1000);
 
                     removeSkeletonLoadingFromAccountHealth();
                     nextCard();

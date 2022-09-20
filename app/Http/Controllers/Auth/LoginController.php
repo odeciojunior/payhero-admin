@@ -78,6 +78,11 @@ class LoginController extends Controller
         $userModel = new User();
 
         $user = $userModel->where("email", $request->email)->first();
+        if ($user->is_cloudfox) {
+            return response()
+                ->redirectTo("/")
+                ->withErrors(["accountErrors" => "Nome de usuário ou senha é inválido!"]);
+        }
 
         if (!empty($user) && $user->status == User::STATUS_ACCOUNT_BLOCKED) {
             activity()
@@ -204,7 +209,8 @@ class LoginController extends Controller
             return response()->json("Nenhum usuário autenticado", Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $userId = hashids_encode($user->id, "login");
+        $userId = hashids_encode($user->is_cloudfox && $user->logged_id ? $user->logged_id : $user->id, "login");
+
         $expiration = hashids_encode(
             Carbon::now()
                 ->addMinute()
@@ -235,37 +241,33 @@ class LoginController extends Controller
                 throw new Exception("Usuário não existe");
             }
 
-            auth()->loginUsingId($user->id);
-
-            if (
-                auth()
-                    ->user()
-                    ->can("dashboard")
-            ) {
-                return response()->redirectTo("/dashboard");
-            } elseif (
-                auth()
-                    ->user()
-                    ->can("sales")
-            ) {
-                return response()->redirectTo("/sales");
-            } else {
-                $permissions = auth()
-                    ->user()
-                    ->permissions->pluck("name");
-                foreach ($permissions as $permission) {
-                    $route = explode("_", $permission);
-                    $redirect = $route["0"];
-                    if (count($route) > 1) {
-                        if ($route["0"] == "report") {
-                            $redirect = $route["0"] . "s/" . $route["1"];
-                        }
-                    }
-
-                    $redirect = $redirect === "attendance" ? "customer-service" : $redirect;
-                    return response()->redirectTo("/{$redirect}");
-                }
+            $userLogged =  auth()->user();
+            if(empty($userLogged)){
+                auth()->loginUsingId($user->id);
             }
+
+            if (auth()->user()->can("dashboard")) {
+                return response()->redirectTo("/dashboard");
+            }
+            if (auth()->user()->can("sales")) {
+                return response()->redirectTo("/sales");
+            }
+
+            $permissions = auth()->user()->permissions->pluck("name");
+
+            foreach ($permissions as $permission) {
+                $route = explode("_", $permission);
+                $redirect = $route["0"];
+                if (count($route) > 1) {
+                    if ($route["0"] == "report") {
+                        $redirect = $route["0"] . "s/" . $route["1"];
+                    }
+                }
+
+                $redirect = $redirect === "attendance" ? "customer-service" : $redirect;
+                return response()->redirectTo("/{$redirect}");
+            }
+
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Não foi possivel autenticar o usuário.",
@@ -280,32 +282,25 @@ class LoginController extends Controller
      */
     protected function redirectTo()
     {
-        if (
-            auth()
-                ->user()
-                ->can("dashboard")
-        ) {
+        if (auth()->user()->can("dashboard")) {
             return "/dashboard";
-        } elseif (
-            auth()
-                ->user()
-                ->can("sales")
-        ) {
-            return "/sales";
-        } else {
-            $permissions = auth()
-                ->user()
-                ->permissions->pluck("name");
-            foreach ($permissions as $permission) {
-                $route = explode("_", $permission);
-                $redirect = $route["0"];
-                if (count($route) > 1) {
-                    if ($route["0"] == "report") {
-                        $redirect = $route["0"] . "s/" . $route["1"];
-                    }
-                }
-                return "/{$redirect}";
-            }
         }
+        if(auth()->user()->can("sales")) {
+            return "/sales";
+        }
+
+        $permissions = auth()->user()->permissions->pluck("name");
+
+        foreach ($permissions as $permission) {
+            $route = explode("_", $permission);
+            $redirect = $route["0"];
+            if (count($route) > 1) {
+                if ($route["0"] == "report") {
+                    $redirect = $route["0"] . "s/" . $route["1"];
+                }
+            }
+            return "/{$redirect}";
+        }
+
     }
 }

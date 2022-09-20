@@ -5,6 +5,7 @@ namespace Modules\CheckoutEditor\Transformers;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\User;
 
 class CheckoutConfigResource extends JsonResource
 {
@@ -13,6 +14,10 @@ class CheckoutConfigResource extends JsonResource
         /**
          *  nova regra de negocio: bank_document_status, não é mais necessario estar aprovado para vender
          */
+        $user = User::select('id','account_is_approved')
+        ->where('id',auth()->user()->getAccountOwnerId())
+        ->first();
+
         $companies = Company::select([
             'id',
             'fantasy_name as name',
@@ -22,17 +27,17 @@ class CheckoutConfigResource extends JsonResource
             'capture_transaction_enabled',
             'address_document_status',
             'contract_document_status'
-        ])->where('user_id', auth()->user()->getAccountOwnerId())
+        ])->where('user_id', $user->id)
             ->where('active_flag', true)
             ->get()
-            ->map(function ($company) {
+            ->map(function ($company) use($user){
                 if ($company->type === Company::PHYSICAL_PERSON) {
                     $status = "approved";
                     $status = "approved";
                 } else {
                     $status =
                         $company->address_document_status === 3 && $company->contract_document_status === 3
-                        && auth()->user()->account_is_approved
+                        && $user->account_is_approved
                             ? "approved"
                             : "pending";
                 }
@@ -41,7 +46,7 @@ class CheckoutConfigResource extends JsonResource
                     "id" => hashids_encode($company->id),
                     "name" => $company->type == Company::PHYSICAL_PERSON ? "Pessoa física" : $company->name,
                     "document" => foxutils()->getDocument($company->document),
-                    "active_flag" => $company->active_flag && auth()->user()->account_is_approved,
+                    "active_flag" => $company->active_flag && $user->account_is_approved,
                     "capture_transaction_enabled" => $company->capture_transaction_enabled,
                     "status" => $status,
                 ];
