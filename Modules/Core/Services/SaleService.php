@@ -109,7 +109,6 @@ class SaleService
                     array_push($projectIds, hashids_decode($project));
                 }
 
-                //$projectId = hashids_decode($filters["project"]);
                 $transactions->whereHas("sale", function ($querySale) use ($projectIds,$tokens) {
                     $querySale->whereIn("project_id", $projectIds)
                     ->orWhereIn('api_token_id',$tokens);
@@ -1104,13 +1103,7 @@ class SaleService
             if (!empty($filters["is_security_reserve"]) && $filters["is_security_reserve"] == true) {
                 $transactions->where("is_security_reserve", true);
             }
-            \Log::info(
-                str_replace_array(
-                    "?",
-                    $transactions->getBindings(),
-                    $transactions->toSql()
-                )
-            );
+
             // Filtros - FIM
             return $transactions;
         } catch (Exception $e) {

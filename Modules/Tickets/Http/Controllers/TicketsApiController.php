@@ -130,7 +130,7 @@ class TicketsApiController extends Controller
                     $query->where("customers.name", "like", "%$value%")->orWhere("customers.document", $value);
                 });
             }
-\Log::info(str_replace_array('?',$ticketsQuery->getBindings(),$ticketsQuery->toSql()));
+
             $tickets = $ticketsQuery
                 ->where('sales.owner_id', $userId)
                 ->orderByDesc('tickets.id')

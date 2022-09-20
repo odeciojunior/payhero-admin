@@ -87,14 +87,15 @@ class AffiliatesApiController extends Controller
                             ],
                             200
                         );
-                    } else {
-                        return response()->json(
-                            [
-                                "message" => "Ocorreu um erro ao criar afiliação!",
-                            ],
-                            400
-                        );
                     }
+
+                    return response()->json(
+                        [
+                            "message" => "Ocorreu um erro ao criar afiliação!",
+                        ],
+                        400
+                    );
+
                 } else {
                     $affiliateRequestModel = new AffiliateRequest();
                     $affiliateRequest = $affiliateRequestModel->create([
@@ -113,23 +114,22 @@ class AffiliatesApiController extends Controller
                             ],
                             200
                         );
-                    } else {
-                        return response()->json(
-                            [
-                                "message" => "Ocorreu um erro ao solicitar afiliação!",
-                            ],
-                            400
-                        );
                     }
+                    return response()->json(
+                        [
+                            "message" => "Ocorreu um erro ao solicitar afiliação!",
+                        ],
+                        400
+                    );
                 }
-            } else {
-                return response()->json(
-                    [
-                        "message" => "Ocorreu um erro ao criar a afiliação",
-                    ],
-                    400
-                );
             }
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao criar a afiliação",
+                ],
+                400
+            );
+
         } catch (Exception $e) {
             Log::warning("Erro ao criar a afiliação (AffiliatesApiController - store)");
             report($e);
@@ -370,14 +370,14 @@ class AffiliatesApiController extends Controller
                             ],
                             200
                         );
-                    } else {
-                        return response()->json(
-                            [
-                                "message" => "Ocorreu um erro ao criar afiliação!",
-                            ],
-                            400
-                        );
                     }
+                    return response()->json(
+                        [
+                            "message" => "Ocorreu um erro ao criar afiliação!",
+                        ],
+                        400
+                    );
+
                 } elseif (in_array($status, [2, 4])) {
                     $update = $affiliateRequest->update(["status" => $status]);
                     if ($update) {
