@@ -243,10 +243,10 @@ class SalesRecoveryApiController extends Controller
             $projectIds = [];
             $projects = explode(",", $data["project"]);
 
-            $fromApi = false;
+            $showFromApi = false;
             foreach ($projects as $project) {
-                $fromApi = str_contains($project,'TOKEN');
-                array_push($projectIds, ($fromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
+                $showFromApi = str_starts_with($project,'TOKEN');
+                array_push($projectIds, ($showFromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
             }
         }
 
@@ -450,10 +450,10 @@ class SalesRecoveryApiController extends Controller
             $projectIds = [];
             $projects = explode(",", $data["project"]);
 
-            $fromApi = false;
+            $showFromApi = false;
             foreach ($projects as $project) {
-                $fromApi = str_contains($project,'TOKEN');
-                array_push($projectIds, ($fromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
+                $showFromApi = str_starts_with($project,'TOKEN');
+                array_push($projectIds, ($showFromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
             }
         }
 
@@ -523,11 +523,11 @@ class SalesRecoveryApiController extends Controller
             if (!empty($data["project_id"])) {
             //if (is_array($data["project_id"])) {
                 if(!empty($data['project_id'][0])){ // && $data['project_id'][0]!='all'
-                    $fromApi = false;
+                    $showFromApi = false;
                     foreach($data['project_id'] as $project){
                         if(!empty($project)){
-                            $fromApi = str_contains($project,'TOKEN');
-                            array_push($projectIds, ($fromApi?'TOKEN-':'').hashids_decode(str_replace('TOKEN-','',$project)));
+                            $showFromApi = str_starts_with($project,'TOKEN');
+                            array_push($projectIds, ($showFromApi?'TOKEN-':'').hashids_decode(str_replace('TOKEN-','',$project)));
                         }
                     };
                 }

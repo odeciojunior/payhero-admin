@@ -136,7 +136,7 @@ class SalesRecoveryService
         $tokensIds = [];
         if (!empty($projectIds) && !in_array("all", $projectIds)) {
             foreach ($projectIds as $key=>$projectId) {
-                if(str_contains($projectId,'TOKEN')){
+                if(str_starts_with($projectId,'TOKEN')){
                     $tokensIds[] = str_replace('TOKEN-','',$projectId);
                     unset($projectIds[$key]);
                 }

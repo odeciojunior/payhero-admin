@@ -48,7 +48,7 @@ class TicketsApiController extends Controller
 
             if($data->project)
             {
-                if(str_contains($data->project,'TOKEN')){
+                if(str_starts_with($data->project,'TOKEN')){
                     $ticketsQuery->join('api_tokens as api', 'sales.api_token_id','=','api.id')
                     ->where('api.company_id', hashids_decode($data->company))
                     ->where("sales.api_token_id", hashids_decode(str_replace('TOKEN-','',$data->project)));

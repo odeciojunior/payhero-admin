@@ -154,9 +154,9 @@ class ContestationService
         });
 
         $contestations->when(request("project"), function ($query, $search) {
-            $byApi = str_contains($search,'TOKEN');
+            $showFromApi = str_starts_with($search,'TOKEN');
             $projectId = current(Hashids::decode(str_replace('TOKEN_','',$search)));
-            return $query->where($byApi ? "sales.api_token_id" : "sales.project_id", $projectId);
+            return $query->where($showFromApi ? "sales.api_token_id" : "sales.project_id", $projectId);
         });
 
         $contestations->when(request("customer"), function ($query, $search) {

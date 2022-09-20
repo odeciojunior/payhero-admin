@@ -312,7 +312,7 @@ class TrackingService
             $tokens = [];
             $projectIds = [];
             foreach ($projects as $project) {
-                if(str_contains($project,'TOKEN')){
+                if(str_starts_with($project,'TOKEN')){
                     array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
                     continue;
                 }
