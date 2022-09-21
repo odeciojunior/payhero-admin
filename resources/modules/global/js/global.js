@@ -2280,7 +2280,7 @@ function verifyIfCompanyIsDefault(companyId) {
 
 function fillSelectProject(companiesAndProjects, selectorName, value = "") {
     $.each(companiesAndProjects.company_default_projects, function (i, project) {
-        if (project.status === "1") {
+        if (parseInt(project.status) === 1) {
             $(selectorName).append($("<option>", { value: project.id, text: project.name }));
         }
     });
