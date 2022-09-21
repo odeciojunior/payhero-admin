@@ -121,9 +121,9 @@ class PipefyUpdateCard extends Command
     {
         $pipefyService = new PipefyService();
 
-        $users = User::whereNotNull("users.pipefy_card_id")->get();
+        $users = User::whereNotNull("users.pipefy_card_id");
 
-        foreach ($users as $user) {
+        foreach ($users->cursor() as $user) {
             if ($user->total_commission_value > 0) {
                 if ($user->total_commission_value < 10000000) {
                     $pipefyService->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_0_100k]);
