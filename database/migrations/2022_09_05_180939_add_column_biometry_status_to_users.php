@@ -17,9 +17,6 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->integer('biometry_status')->default(1)->after('role_default');
         });
-
-        // User set status unico to approved
-        User::query()->update(['biometry_status' => 3]);
     }
 
     /**

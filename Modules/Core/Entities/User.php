@@ -434,4 +434,12 @@ class User extends Authenticable
     {
         return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;
     }
+
+    /**
+     * @return HasMany
+     */
+    public function userBiometryResults()
+    {
+        return $this->hasMany(UserBiometryResult::class);
+    }
 }

@@ -152,18 +152,17 @@ class UserPresenter extends Presenter
         }
     }
 
-    /**
-     * @param $status
+/**
      * @return int|string
      */
-    public function getBiometryStatus($status)
+    public function getBiometryStatus()
     {
-        if (is_numeric($status)) {
-            switch ($status) {
+        if (is_numeric($this->biometry_status)) {
+            switch ($this->biometry_status) {
                 case 1:
                     return "pending";
                 case 2:
-                    return "in_process";
+                    return "analyzing";
                 case 3:
                     return "approved";
                 case 4:
@@ -172,10 +171,10 @@ class UserPresenter extends Presenter
 
             return "";
         } else {
-            switch ($status) {
+            switch ($this->biometry_status) {
                 case "pending":
                     return 1;
-                case "in_process":
+                case "analyzing":
                     return 2;
                 case "approved":
                     return 3;

@@ -54,12 +54,7 @@
     <div class="row no-gutters">
         <div style="margin:auto 100px auto auto">
             <!-- CONVITE PARA INICIAR -->
-            @php
-                $userModel = new \Modules\Core\Entities\User();
-                $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
-            @endphp
-
-            @if (!auth()->user()->account_is_approved && $account_type === 'admin')
+            @if (!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id)
                 <div class="new-register-navbar-open-modal-container">
                     <div class="row new-register-open-modal no-gutters">
                         Você está em uma conta demonstrativa. <span class="new-register-open-modal-btn">Clique para

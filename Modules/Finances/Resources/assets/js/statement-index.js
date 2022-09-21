@@ -103,6 +103,7 @@ $(window).on("load", function () {
                     window.gatewayCode = window.location.href.split('/')[4];
                     getGateway(window.gatewayCode);
                     checkBlockedWithdrawal();
+                    checkUserBiometry();
                     updateBalances();
                     loadStatementTable();
                     $("#nav-statement").css('display', '');
@@ -263,6 +264,7 @@ $(window).on("load", function () {
     function getCompanies() {
         loadingOnScreen();
         checkBlockedWithdrawal();
+        checkUserBiometry();
         updateBalances();
         loadStatementTable();
         $("#nav-statement").css('display', '');
@@ -291,7 +293,7 @@ $(window).on("load", function () {
 
     $(".withdrawal-value").maskMoney({ thousands: ".", decimal: ",", allowZero: true });
 
-    //Verifica se o saque está liberado
+    //Check if the withdrawal is released
     function checkBlockedWithdrawal() {
         $.ajax({
             url: "/api/withdrawals/checkallowed",
@@ -316,6 +318,32 @@ $(window).on("load", function () {
         });
     }
 
+    //Checks if biometrics have been performed
+    function checkUserBiometry() {
 
+        $.ajax({
+            method: "GET",
+            dataType: "json",
+            url:
+                "/api/core/verify-biometry/" +
+                $('meta[name="user-id"]').attr("content"),
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                if (response.check_user_biometry == false) {
+                    $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
+                    $("#buser-biometry").hide();
+                } else {
+                    $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
+                    $("#user-biometry").show();
+                }
+            },
+        });
+    }
 
 });

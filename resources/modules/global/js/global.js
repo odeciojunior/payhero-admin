@@ -1078,9 +1078,6 @@ function verifyDocumentPending()
             errorAjaxResponse(response);
         },
         success: (response) => {
-            if (response.data.account.type === "collaborator") {
-                return;
-            }
 
             if (response.data.account.status !== "approved") {
                 let verifyAccount = localStorage.getItem("verifyAccount");
