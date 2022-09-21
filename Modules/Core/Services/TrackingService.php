@@ -424,8 +424,6 @@ class TrackingService
                 $where->whereNotNull("p.id")->orWhereNotNull("psa.id");
             });
 
-        \Log::info(builder2sql($productPlanSales));
-
         return $productPlanSales;
     }
 
