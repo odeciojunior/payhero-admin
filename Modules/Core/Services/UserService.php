@@ -57,8 +57,7 @@ class UserService
         $user = User::find(auth()->user()->account_owner_id);
 
         if (
-            $user->address_document_status == UserDocument::STATUS_PENDING ||
-            $user->biometry_status == User::BIOMETRY_STATUS_PENDING
+            $user->address_document_status == UserDocument::STATUS_PENDING 
         ) {
             return true;
         }

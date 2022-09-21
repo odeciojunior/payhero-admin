@@ -7,10 +7,6 @@
                 <span aria-hidden="true">×</span>
             </button>
         </div>
-        <div class="alert alert-warning alert-dismissible fade show" id='user-biometry' role="alert" style='display:block;'>
-            Saque suspenso! <strong class="redirect-to-accounts pointer" data-url-value="/personal-info">Clique aqui</strong>
-            para cadastrar sua biometria e fortalecer a segurança da sua conta.
-        </div>
         <h5 class="title-pad bold"> Nova transferência </h5>
         <p class="sub-pad">Faça um saque para sua conta bancária</p>
     </div>

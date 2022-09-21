@@ -47,7 +47,7 @@ class CoreApiController extends Controller
             $userInformations = UserInformation::where("document", $user->document)->exists();
 
             $userStatus = null;
-            //$userBiometryStatus = $user->present()->getBiometryStatus($user->biometry_status);
+            $userBiometryStatus = $user->present()->getBiometryStatus($user->biometry_status);
 
             if ($userService->haveAnyDocumentPending()) {
                 $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
