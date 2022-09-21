@@ -300,23 +300,19 @@ class TrackingService
                 $join->where("s.id", $saleId);
             }
 
-            $projects = explode(",", $filters["project"]);
-
-            if(empty($projects) || $projects[0]==''){
-                $projectsWithSalesAndTokens = SaleService::getProjectsWithSalesAndTokens();
-                foreach ($projectsWithSalesAndTokens as $k=>$v) {
-                    $projects[$k] = hashids_encode($v->project_id);
-                }
-            }
+            $projects = $filters['project'] ? explode(",", $filters["project"]):null;
 
             $tokens = [];
             $projectIds = [];
-            foreach ($projects as $project) {
-                if(str_starts_with($project,'TOKEN')){
-                    array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
-                    continue;
+
+            if(!empty($projects)){
+                foreach ($projects as $project) {
+                    if(str_starts_with($project,'TOKEN')){
+                        array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
+                        continue;
+                    }
+                    array_push($projectIds, hashids_decode($project));
                 }
-                array_push($projectIds, hashids_decode($project));
             }
 
             if(count($projectIds) > 0 || count($tokens) > 0){
@@ -428,7 +424,7 @@ class TrackingService
                 $where->whereNotNull("p.id")->orWhereNotNull("psa.id");
             });
 
-        $sql = builder2sql($productPlanSales);
+        \Log::info(builder2sql($productPlanSales));
 
         return $productPlanSales;
     }
