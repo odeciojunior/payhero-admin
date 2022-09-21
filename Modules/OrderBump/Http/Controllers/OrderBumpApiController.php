@@ -55,10 +55,11 @@ class OrderBumpApiController extends Controller
 
             $selectPlans = ["id", "name", "description"];
             if ($rule->use_variants) {
-                $rawVariants = DB::raw(
-                    "(select count(distinct p.shopify_variant_id) from plans p where p.shopify_id = plans.shopify_id and p.shopify_id is not null and p.deleted_at is null) as variants"
+                $selectPlans[] = DB::raw(
+                    "concat((select count(distinct p.shopify_variant_id) from plans p where p.shopify_id = plans.shopify_id and p.shopify_id is not null and p.deleted_at is null), ' variantes') as description"
                 );
-                $selectPlans[] = $rawVariants;
+            } else {
+                $selectPlans[] = "description";
             }
 
             if ($rule->apply_on_shipping[0] === "all") {
@@ -81,7 +82,6 @@ class OrderBumpApiController extends Controller
                         "id" => "all",
                         "name" => "Qualquer " . ($rule->use_variants ? "plano" : "produto"),
                         "description" => "",
-                        "variants" => 0,
                     ]
                 );
             } else {
