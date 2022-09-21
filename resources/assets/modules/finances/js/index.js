@@ -26,7 +26,7 @@ $(document).ready(function () {
         $(".price").append("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
 
         $.ajax({
-            url: "/finances/getbalances/" + $('.company-navbar').val(),
+            url: "/finances/getbalances/" + $(".company-navbar").val(),
             type: "GET",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -58,7 +58,6 @@ $(document).ready(function () {
                 $("#div-available-money").on("click", function () {
                     $(".withdrawal-value").val(response.available_balance);
                 });
-                //$.getScript('modules/withdrawals/js/index.min.js')
                 $.getScript("build/layouts/finances/withdrawal-index.min.js");
                 $("#table-withdrawals-body").html("");
             },
@@ -80,7 +79,7 @@ $(document).ready(function () {
             alertCustom("error", "Valor do saque inválido!");
         } else {
             $.ajax({
-                url: "/withdrawals/getaccountinformation/" + $('.company-navbar').val(),
+                url: "/withdrawals/getaccountinformation/" + $(".company-navbar").val(),
                 type: "GET",
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -106,7 +105,7 @@ $(document).ready(function () {
                             '<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>'
                         );
                     } else if (response.data.documents_status == "pending") {
-                        let companie = $('.company-navbar').val();
+                        let companie = $(".company-navbar").val();
                         let route = "/companies/" + companie + "/edit";
                         $("#modal-withdrawal").modal("show");
                         $("#modal-withdrawal-title").text("Oooppsssss!");
@@ -162,7 +161,7 @@ $(document).ready(function () {
                                 url: "/withdrawals",
                                 type: "POST",
                                 data: {
-                                    company_id: $('.company-navbar').val(),
+                                    company_id: $(".company-navbar").val(),
                                     withdrawal_value: $("#custom-input-addon").val(),
                                 },
                                 headers: {
