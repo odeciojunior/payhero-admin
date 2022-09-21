@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\User;
+use Spatie\Permission\Models\Role;
 
 class GenericCommand extends Command
 {
@@ -37,5 +40,6 @@ class GenericCommand extends Command
      */
     public function handle()
     {
+
     }
 }

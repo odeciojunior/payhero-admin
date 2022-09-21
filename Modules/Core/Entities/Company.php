@@ -116,6 +116,7 @@ class Company extends Model
     public const GATEWAY_TAX_30 = 4.9;
 
     public const DEMO_ID = 1;
+    public const DEMO_HASH_ID = 'v2RmA83EbZPVpYB';
 
     public const SITUACTION_ACTIVE = 1;
     public const SITUACTION_SUSPENDED = 2;

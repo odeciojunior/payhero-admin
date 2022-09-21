@@ -1,4 +1,5 @@
 var currentPage = null;
+var has_api_integration = false;
 //var atualizar = null;
 
 $(function () {
@@ -49,6 +50,7 @@ $('.company-navbar').change(function () {
     updateCompanyDefault().done(function(data1){
         getCompaniesAndProjects().done(function(data2){
             if(!isEmpty(data2.company_default_projects)){
+                has_api_integration = data2.has_api_integration;
                 window.getProjects(data2.companies);
             }
             else{
@@ -437,6 +439,7 @@ $(document).ready(function () {
     getCompaniesAndProjects().done( function (data2){
         if(!isEmpty(data2.company_default_projects)){
             showFiltersInReports(true);
+            has_api_integration = data2.has_api_integration;
             window.getProjects(data2.companies);
         }
         else{
@@ -507,6 +510,9 @@ $(document).ready(function () {
                     });
                 });
             });
+            if(has_api_integration){
+                $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
+            }
             $("#project option:first").attr('selected','selected');
 
             company = $("#project").val();

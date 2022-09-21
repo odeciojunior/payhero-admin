@@ -364,6 +364,13 @@ body {
 .btn-outline-success:hover {
     background: #1BE4A8;
 }
+
+.btn-request-withdrawal.disabled {
+    color: #636363;
+    border: 1px solid #636363;
+    pointer-events: none;
+}
+
 .o-angle-down-1 {
     color: #636363;
     font-size: 30px;
@@ -512,12 +519,6 @@ span.font-size-16 {
 hr{
     margin: 0;
 }
-/* .menu-active span:first-child {
-    padding: 11px 10px 10px 15px;
-}
-.menu-active span:first-child {
-    padding: 11px 10px 10px 15px;
-} */
 #container-withdraw .row.mx-0:nth-child(even), #skeleton-withdrawal2 {
     background-color: #F6F7F9;
 }

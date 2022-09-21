@@ -56,7 +56,8 @@
           href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
           color="#5bbad5">
     <!-- Stylesheets -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Inter">
     <link rel="stylesheet"
           href="{{ mix('build/layouts/master/master.min.css') }}">
     @stack('css')
@@ -87,7 +88,7 @@
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
     <!-- Google Tag Manager (noscript) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TDM6SV5"
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KDD46QX"
                 height="0"
                 width="0"
                 style="display:none;visibility:hidden"></iframe>
@@ -129,6 +130,14 @@
     {{-- @if (!auth()->user()->account_is_approved)
         @include('utils.new-register-link')
     @endif --}}
+
+    <div class="alert-demo-account" style="display:none">
+        <div class="row new-register-open-modal no-gutters">
+            <img src="/build/global/img/alert-demo-left.png" class="mr-20">
+            Esta é uma conta demonstrativa
+            <img src="/build/global/img/alert-demo-rigth.png" class="ml-20">
+        </div>
+    </div>
 
     @yield('content')
 
@@ -182,8 +191,7 @@
             <!-- End of cloudfoxhelp Zendesk Widget script -->
 
             <script type="text/javascript">
-                function zendeskAuthentication()
-                {
+                function zendeskAuthentication() {
                     $.ajax({
                         method: 'GET',
                         url: '/api/core/zendesk-token',
@@ -191,14 +199,13 @@
                             'Authorization': $('meta[name="access-token"]').attr('content'),
                             'Accept': 'application/json',
                         },
-                        error: function () {
+                        error: function() {
                             //
                         },
-                        success: function (response) {
-                            zE('messenger', 'loginUser', function (callback) {
-                                    callback(response);
-                                }
-                            );
+                        success: function(response) {
+                            zE('messenger', 'loginUser', function(callback) {
+                                callback(response);
+                            });
                         }
                     });
 
@@ -206,7 +213,6 @@
                 }
 
                 // zendeskAuthentication();
-
             </script>
         @endif
     @endif

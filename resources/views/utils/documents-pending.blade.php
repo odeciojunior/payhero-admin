@@ -36,9 +36,6 @@
                             <div class="user-biometry-status">
                                 <!-- JS load -->
                             </div>
-                            <div class="user-address-status">
-                                <!-- JS load -->
-                            </div>
                             <div class="company-status">
                                 <!-- JS load -->
                             </div>

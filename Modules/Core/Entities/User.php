@@ -49,6 +49,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $last_login
  * @property int $invites_amount
  * @property int|null $account_owner_id
+ * @property int|null $subseller_owner_id
  * @property int $deleted_project_filter
  * @property mixed|null $id_wall_result
  * @property mixed|null $bureau_result
@@ -115,10 +116,20 @@ class User extends Authenticable
     public const STATUS_ACCOUNT_FROZEN = 4;
     public const STATUS_ACCOUNT_EXCLUDED = 5;
 
+    public const ACCOUNT_IS_APPROVED = true;
+    public const ACCOUNT_NOT_APPROVED = false;
+
     public const DOCUMENT_STATUS_PENDING = 1;
     public const DOCUMENT_STATUS_ANALYZING = 2;
     public const DOCUMENT_STATUS_APPROVED = 3;
     public const DOCUMENT_STATUS_REFUSED = 4;
+
+    public const LEVEL_1 = 1;
+    public const LEVEL_2 = 2;
+    public const LEVEL_3 = 3;
+    public const LEVEL_4 = 4;
+    public const LEVEL_5 = 5;
+    public const LEVEL_6 = 6;
 
     public const CELLPHONE_VERIFIED = 1;
     public const EMAIL_VERIFIED = 1;
@@ -167,6 +178,7 @@ class User extends Authenticable
         "last_login",
         "invites_amount",
         "account_owner_id",
+        "subseller_owner_id",
         "deleted_project_filter",
         "id_wall_result",
         "bureau_result",
@@ -197,6 +209,7 @@ class User extends Authenticable
         "total_commission_value",
         "show_old_finances",
         "mkt_information",
+        "pipefy_card_id",
         "company_default",
         "block_attendance_balance",
         "biometry_status",

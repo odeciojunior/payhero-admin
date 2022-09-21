@@ -52,6 +52,9 @@ class ApiTokenPresenter extends Presenter
             //Checkout API
             ApiToken::TOKEN_SCOPE_SALE,
         ],
+        5 => [
+            ApiToken::TOKEN_SCOPE_ADMIN,
+        ]
     ];
 
     /**

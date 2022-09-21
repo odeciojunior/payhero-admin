@@ -1238,28 +1238,39 @@ function verifyDocumentPending()
                 var card_user_biometry_button = "";
                 var card_user_biometry_link = response.data.user.biometry_status;
 
-                if ((response.data.user.biometry_status == "pending") || (response.data.user.biometry_status == "analazying")) {
+                response.data.user.biometry_status = "approved";
+
+                if (response.data.user.biometry_status === "pending" || response.data.user.biometry_status === "") {
                     count += 1;
 
                     card_user_biometry_status = "redirect-to-accounts";
                     card_user_biometry_icon =
                         '<svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 0.5C1.84315 0.5 0.5 1.84315 0.5 3.5V18.5C0.5 20.1569 1.84315 21.5 3.5 21.5H12.5C14.1569 21.5 15.5 20.1569 15.5 18.5V7.12132C15.5 6.52458 15.2629 5.95229 14.841 5.53033L10.4697 1.15901C10.0477 0.737053 9.47542 0.5 8.87868 0.5H3.5ZM2 3.5C2 2.67157 2.67157 2 3.5 2H8V5.75C8 6.99264 9.00736 8 10.25 8H14V18.5C14 19.3284 13.3284 20 12.5 20H3.5C2.67157 20 2 19.3284 2 18.5V3.5ZM13.6893 6.5H10.25C9.83579 6.5 9.5 6.16421 9.5 5.75V2.31066L13.6893 6.5Z" fill="#5B5B5B"/></svg>';
-                    card_user_biometry_title = "Valide sua identidade pending";
+                    card_user_biometry_title = "Valide sua identidade";
                     card_user_biometry_description =
                         "Para reforçarmos a segurança, coletaremos seus dados. Acesse as configurações e realize a biometria.";
                     card_user_biometry_button =
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                     card_user_biometry_link +
                         '">Ir para configurações</button>';
-                } else if (response.data.user.biometry_status == "refused") {
+                } else if (response.data.user.biometry_status === "analazying") {
+                    count += 1;
+
+                    card_user_biometry_status = "status-warning redirect-to-accounts";
+                    card_user_biometry_icon =
+                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
+                    card_user_biometry_title = "Estamos analisando sua identidade";
+                    card_user_biometry_description =
+                        "O processo de revisão dos dados biométricos e seu comprovante de residência leva um tempinho. Em breve retornaremos!";
+                }else if (response.data.user.biometry_status == "refused") {
                     count += 1;
 
                     card_user_biometry_status = "status-error";
                     card_user_biometry_icon =
                         '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.5C5.30558 1.5 1.5 5.30558 1.5 10C1.5 14.6944 5.30558 18.5 10 18.5C14.6944 18.5 18.5 14.6944 18.5 10C18.5 5.30558 14.6944 1.5 10 1.5ZM13.4462 6.39705L13.5303 6.46967C13.7966 6.73594 13.8208 7.1526 13.6029 7.44621L13.5303 7.53033L11.061 10L13.5303 12.4697C13.7966 12.7359 13.8208 13.1526 13.6029 13.4462L13.5303 13.5303C13.2641 13.7966 12.8474 13.8208 12.5538 13.6029L12.4697 13.5303L10 11.061L7.53033 13.5303C7.26406 13.7966 6.8474 13.8208 6.55379 13.6029L6.46967 13.5303C6.2034 13.2641 6.1792 12.8474 6.39705 12.5538L6.46967 12.4697L8.939 10L6.46967 7.53033C6.2034 7.26406 6.1792 6.8474 6.39705 6.55379L6.46967 6.46967C6.73594 6.2034 7.1526 6.1792 7.44621 6.39705L7.53033 6.46967L10 8.939L12.4697 6.46967C12.7359 6.2034 13.1526 6.1792 13.4462 6.39705Z" fill="white"/></svg>';
-                    card_user_biometry_title = "Seus dados foram recusados refused";
+                    card_user_biometry_title = "Seus dados foram recusados";
                     card_user_biometry_description =
-                        "Acesse as configurações da sua conta e realize a biometria. Tente novamente.";
+                        "Acesse as configurações da sua conta e realize a biometria ou envie seu comprovante de residência novamente.";
                     card_user_biometry_button =
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                         card_user_biometry_link +
@@ -1269,7 +1280,7 @@ function verifyDocumentPending()
                     card_user_biometry_icon =
                         '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
                     card_user_biometry_title =
-                        "Sua identidade foi validada approved";
+                        "Sua identidade foi validada";
                     card_user_biometry_description =
                         "Seus dados biométricos foram coletados e aprovados.";
                     card_user_biometry_button = "";
@@ -1291,75 +1302,6 @@ function verifyDocumentPending()
                         </div>
                     </div>
                 `);
-
-
-                var card_user_address_status = "";
-                var card_user_address_icon = "";
-                var card_user_address_title = "";
-                var card_user_address_description = "";
-                var card_user_address_button = "";
-                var card_user_address_link = response.data.user.link_address;
-
-                if (response.data.user.address_document_status == "pending") {
-                    count += 1;
-
-                    card_user_address_status = "redirect-to-accounts";
-                    card_user_address_icon =
-                        '<svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 0.5C1.84315 0.5 0.5 1.84315 0.5 3.5V18.5C0.5 20.1569 1.84315 21.5 3.5 21.5H12.5C14.1569 21.5 15.5 20.1569 15.5 18.5V7.12132C15.5 6.52458 15.2629 5.95229 14.841 5.53033L10.4697 1.15901C10.0477 0.737053 9.47542 0.5 8.87868 0.5H3.5ZM2 3.5C2 2.67157 2.67157 2 3.5 2H8V5.75C8 6.99264 9.00736 8 10.25 8H14V18.5C14 19.3284 13.3284 20 12.5 20H3.5C2.67157 20 2 19.3284 2 18.5V3.5ZM13.6893 6.5H10.25C9.83579 6.5 9.5 6.16421 9.5 5.75V2.31066L13.6893 6.5Z" fill="#5B5B5B"/></svg>';
-                    card_user_address_title = "Envie sue residência";
-                    card_user_address_description =
-                        "Precisamos do um comprovante de residência.";
-                    card_user_address_button = "";
-                } else if (response.data.user.address_document_status == "analyzing") {
-                    count += 1;
-
-                    card_user_address_status = "status-warning redirect-to-accounts";
-                    card_user_address_icon =
-                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
-                    card_user_address_title = "Estamos analisando comprovante de residência";
-                    card_user_address_description =
-                        "Esse processo de revisão leva um tempinho. Mas em breve retornaremos.";
-                } else if (response.data.user.address_document_status == "refused") {
-                    count += 1;
-
-                    card_user_address_status = "status-error";
-                    card_user_address_icon =
-                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.5C5.30558 1.5 1.5 5.30558 1.5 10C1.5 14.6944 5.30558 18.5 10 18.5C14.6944 18.5 18.5 14.6944 18.5 10C18.5 5.30558 14.6944 1.5 10 1.5ZM13.4462 6.39705L13.5303 6.46967C13.7966 6.73594 13.8208 7.1526 13.6029 7.44621L13.5303 7.53033L11.061 10L13.5303 12.4697C13.7966 12.7359 13.8208 13.1526 13.6029 13.4462L13.5303 13.5303C13.2641 13.7966 12.8474 13.8208 12.5538 13.6029L12.4697 13.5303L10 11.061L7.53033 13.5303C7.26406 13.7966 6.8474 13.8208 6.55379 13.6029L6.46967 13.5303C6.2034 13.2641 6.1792 12.8474 6.39705 12.5538L6.46967 12.4697L8.939 10L6.46967 7.53033C6.2034 7.26406 6.1792 6.8474 6.39705 6.55379L6.46967 6.46967C6.73594 6.2034 7.1526 6.1792 7.44621 6.39705L7.53033 6.46967L10 8.939L12.4697 6.46967C12.7359 6.2034 13.1526 6.1792 13.4462 6.39705Z" fill="white"/></svg>';
-                    card_user_address_title = "Tivemos um problema com o seu documento";
-                    card_user_address_description =
-                        "Seu comprovante de residência foi reprovados após a análise.";
-                    card_user_address_button =
-                        '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                        card_user_address_link +
-                        '">Regularizar documento</button>';
-                } else if (response.data.user.address_document_status == "approved") {
-                    card_user_address_status = "status-check redirect-to-accounts";
-                    card_user_address_icon =
-                        '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
-                    card_user_address_title =
-                        "Seu comprovante de residência foi recebida e aprovado";
-                    card_user_address_description =
-                        "Se você já aprovou uma empresa com a gente, agora é só vender!";
-                    card_user_address_button = "";
-                }
-
-                $(".user-address-status").html(`
-                    <div class="card ${card_user_address_status}" data-url-value="${card_user_address_link}">
-                        <div class="d-flex">
-                            <div>
-                                <div class="icon d-flex align-items-center">
-                                    ${card_user_address_icon}
-                                </div>
-                            </div>
-                            <div class="content">
-                                <h1 class="title">${card_user_address_title}</h1>
-                                <p class="description">${card_user_address_description}</p>
-                                ${card_user_address_button}
-                            </div>
-                        </div>
-                    </div>
-                `);
-
 
                 $(".new-register-open-modal-btn")
                     .find(".count")
@@ -2437,6 +2379,14 @@ function getCompaniesAndProjects() {
                     data.company_default_projects = company.projects
                 }
             });
+
+            if(company_default == 'v2RmA83EbZPVpYB'){
+                $('.alert-demo-account').fadeIn()
+            }
+            else{
+                $('.alert-demo-account').fadeOut()
+            }
+
             if (!isEmpty(companies)) {
                 //$('.company_name').val( company_default_name );
                 $('.company_id').val( company_default );

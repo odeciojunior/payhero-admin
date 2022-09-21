@@ -2,10 +2,12 @@
 
 namespace Modules\UserInformations\Http\Controllers;
 
+use App\Jobs\PipefyUpdateCardJob;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\UserInformation;
+use Modules\Core\Services\FoxUtils;
 use Modules\UserInformations\Http\Requests\UserInformationsRequest;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,6 +28,10 @@ class UserInformationsApiController extends Controller
                 $user->email = $data["email"];
                 $user = $this->setData($user, $data);
                 $user->save();
+
+                if (FoxUtils::isProduction()){
+                    PipefyUpdateCardJob::dispatch($user);
+                }
 
                 return response()->json(
                     [

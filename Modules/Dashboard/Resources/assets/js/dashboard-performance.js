@@ -69,9 +69,9 @@ $(document).ready(function () {
     };
 
     function nextPerformance(data) {
-        loadingOnAccountsHealthRemove('.sirius-performance > .card .block-loader-any');
+        removeSkeletonLoadingFromPerformance();
         $(".sirius-performance .card-indicators > .active").on("click", function () {
-            $('.sirius-performance > .card').html('');
+            $('.performance-data').html('');
             let card = $(this).data('slide-to')
             switch (card) {
                 case 1:
@@ -90,7 +90,7 @@ $(document).ready(function () {
 
     window.updatePerformance = function () {
 
-        loadingOnAccountsHealth('.sirius-performance > .card','20px');
+        putSkeletonLoadingOnPerformance();
 
         $.ajax({
             method: "GET",
@@ -104,11 +104,11 @@ $(document).ready(function () {
                 company: $('.company-navbar').val(),
             },
             error: function error(response) {
-                loadingOnAccountsHealthRemove('.sirius-performance > .card');
+                removeSkeletonLoadingFromPerformance();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                //loadingOnAccountsHealthRemove('.sirius-performance > .card');
+                removeSkeletonLoadingFromPerformance();
                 updatePerformanceCard1(data);
                 if (data.money_cashback !== "0,00") {
                     updateCashback(data.money_cashback);
@@ -170,7 +170,7 @@ $(document).ready(function () {
 
         `;
 
-        $(".sirius-performance > .card").append(item);
+        $(".performance-card > .performance-data").append(item);
 
         UpdateAchievements(data.achievements);
 
@@ -221,7 +221,10 @@ $(document).ready(function () {
             elementTask.css({ "margin-top": "20px" }).show();
 
             if (tasks.length > 3) {
-                elementTask.css({ "margin-top": "0" }).asScrollable();
+                elementTask.css({ "margin-top": "0" });
+                setTimeout(() => {
+                    elementTask.asScrollable();
+                }, 1500);
                 $("#achievements").css({ "margin-bottom": "20px" });
             }
         } else {
@@ -257,6 +260,7 @@ $(document).ready(function () {
     }
 
     function updateCashback(money) {
+        $(".sirius-cashback > .card").html("");
         $(".sirius-cashback > .card").append(`
         <div class="card-header d-flex justify-content-between align-items-center bg-white mt-10 pb-0 ">
             <div class="font-size-14 gray-600 mr-auto">
@@ -340,7 +344,7 @@ $(document).ready(function () {
 
         `;
 
-        $(".sirius-performance > .card").append(item);
+        $(".performance-data").append(item);
 
         $.each(levelInfo, function (index, value) {
             if (data.level == index) {
@@ -420,8 +424,6 @@ $(document).ready(function () {
     }
 
     function updatePerformanceCard3(data) {
-        let currentLevel = levelInfo[data.level];
-
         let item = `
                 <div class="card-header pb-5 mt-10 d-flex justify-content-between align-items-center bg-white">
                     <div class="mr-auto">
@@ -443,7 +445,7 @@ $(document).ready(function () {
                 <div class="list-linear-gradient-bottom"></div>
         `;
 
-        $(".sirius-performance > .card").append(item);
+        $(".performance-data").append(item);
 
         updateAchievementsCard(data.achievements);
 
@@ -495,4 +497,13 @@ $(document).ready(function () {
 
         return item;
     }
+
+    window.putSkeletonLoadingOnPerformance = function() {
+        $(".performance-card > .performance-loading").removeClass("d-none");
+    }
+
+    window.removeSkeletonLoadingFromPerformance = function() {
+        $(".performance-card > .performance-loading").addClass("d-none");
+    }
+
 });
