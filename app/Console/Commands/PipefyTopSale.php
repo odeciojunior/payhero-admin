@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\Pipefy\PipefyService;
+use function Composer\Autoload\includeFile;
 
 class PipefyTopSale extends Command
 {
@@ -32,7 +33,7 @@ class PipefyTopSale extends Command
     public function handle()
     {
         try {
-            $date = Carbon::today()->subDays(60);
+            $date = Carbon::today()->subDays(30);
 
             $transactionModel = new Transaction();
             $transactionPresent = $transactionModel->present();
@@ -43,14 +44,15 @@ class PipefyTopSale extends Command
                     $transactionPresent->getStatusEnum("transfered"),
                 ])
                 ->whereNotNull("users.pipefy_card_id")
-                ->where("users.created_at", ">", $date)
+                ->where("transactions.created_at", ">", $date)
                 ->groupBy("companies.user_id")
                 ->selectRaw("companies.user_id, SUM(transactions.value) as value");
 
             foreach ($transactions->cursor() as $transaction) {
+                $user = User::where("id", $transaction->user_id)->first();
                 if ($transaction->value >= 10000000) {
-                    $user = User::where("id", $transaction->user_id)->first();
-                    (new PipefyService())->updateCardLabel($user, PipefyService::LABEL_SALES_BETWEEN_100k_1M);
+                    (new PipefyService())->moveCardToPhase($user, PipefyService::PHASE_ACTIVE_AND_SELLING);
+                    (new PipefyService())->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_100k_1M]);
                 }
             }
         } catch (\Exception $e) {

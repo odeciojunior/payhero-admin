@@ -27,6 +27,10 @@ class PipefyService
 
     const FIELD_REGISTERED_TORES = "lojas_cadastradas"; //Coluna cadastro ativo e vendedno
     const FIELD_REGISTERED_COMPANIES = "empresas_cadastradas";
+
+    const PIPE_MANAGER_100K = 302667969;
+    const PIPE_MANAGER_RETAIL = 302668239;
+
     public static $FIELDS_API_USER = [
         "nome" => "name",
         "email" => "email",
@@ -95,9 +99,13 @@ class PipefyService
         }
     }
 
-    public function createCardUser(User $user)
+    public function createCardUser(User $user, $pipefyPipe = null)
     {
         if (empty($user->pipefy_card_id)) {
+            $pipefyCardDataLocal = empty($user->pipefy_card_data) ? [] : json_decode($user->pipefy_card_data, true);
+
+            $pipefyCardDataLocal["pipe_id"] = empty($pipefyPipe) ? $this->idBoard : $pipefyPipe;
+
             $title = "CPF: " . $user->document . " Nome: " . $user->name;
             $fieldsApi = "";
             foreach (self::$FIELDS_API_USER as $api => $field) {
@@ -105,9 +113,11 @@ class PipefyService
                     $fieldsApi .= '{field_id: \\"' . $api . '\\", field_value: \\"' . $user->$field . '\\"} ';
                 }
             }
+            $pipefyPipe = empty($pipefyPipe) ? $this->idBoard : $pipefyPipe;
+
             $graphql =
                 "mutation { createCard( input: { pipe_id: " .
-                $this->idBoard .
+                $pipefyPipe .
                 ', title: \\"' .
                 $title .
                 '\\", fields_attributes: [ ' .
@@ -118,11 +128,12 @@ class PipefyService
 
             if (!empty($response->getBody())) {
                 $pipefyCard = json_decode($response->getBody());
-                //            dd($pipefyCard);
+                //                dd($pipefyCard);
                 if (isset($pipefyCard->errors)) {
                     return false;
                 } else {
                     $user->pipefy_card_id = $pipefyCard->data->createCard->card->id;
+                    $user->pipefy_card_data = json_encode($pipefyCardDataLocal);
                     $user->save();
                     return true;
                 }
@@ -200,10 +211,11 @@ class PipefyService
         }
     }
 
-    public function updateCardLabel(User $user, array $labels)
+    public function updateCardLabel(User $user, array $labels, $pipefyPipe = null)
     {
         $pipefyCardId = $user->pipefy_card_id;
         $pipefyCardDataLocal = empty($user->pipefy_card_data) ? [] : json_decode($user->pipefy_card_data, true);
+        $pipefyCardDataLocal["pipe_id"] = empty($pipefyPipe) ? $this->idBoard : $pipefyPipe;
         $status = false;
         foreach ($labels as $label) {
             if (!empty($pipefyCardDataLocal["labels"])) {
@@ -239,16 +251,17 @@ class PipefyService
                 ", label_ids: " .
                 $data .
                 " }, ),{  card { id title  }} }";
+
             $response = $this->request($graphql);
             if (!empty($response->getBody())) {
                 $pipefyCard = json_decode($response->getBody());
                 if (isset($pipefyCard->errors)) {
                     return false;
                 } elseif (!empty($pipefyCard->data->updateCard->card->id)) {
+                    $dataLocal = ["labels" => $labels];
+                    $dataLocal = array_merge($dataLocal, ["pipe" => $pipefyCardDataLocal["pipe_id"]]);
                     if (!empty($pipefyCardDataLocal["phase"])) {
-                        $dataLocal = array_merge(["labels" => $labels], ["phase" => $pipefyCardDataLocal["phase"]]);
-                    } else {
-                        $dataLocal = ["labels" => $labels];
+                        $dataLocal = array_merge($dataLocal, ["phase" => $pipefyCardDataLocal["phase"]]);
                     }
 
                     $user->pipefy_card_data = json_encode($dataLocal);
@@ -262,13 +275,13 @@ class PipefyService
         return true;
     }
 
-    public function moveCardToPhase(User $user, $phase)
+    public function moveCardToPhase(User $user, $phase, $pipefyPipe = null)
     {
         $pipefyCardId = $user->pipefy_card_id;
-        $pipefyCardDataLocal = empty($user->pipefy_card_data) ? [] : json_decode($user->pipefy_card_data);
-
+        $pipefyCardDataLocal = empty($user->pipefy_card_data) ? [] : json_decode($user->pipefy_card_data, true);
+        $pipefyCardDataLocal["pipe_id"] = empty($pipefyPipe) ? $this->idBoard : $pipefyPipe;
         if (empty($pipefyCardDataLocal->phase)) {
-            $pipefyPhase = ["phase" => $phase];
+            $pipefyPhase = ["pipe_id" => $pipefyCardDataLocal["pipe_id"], "phase" => $phase];
             $graphql =
                 "mutation { moveCardToPhase(  input: { card_id: " .
                 $pipefyCardId .
@@ -276,7 +289,7 @@ class PipefyService
                 $phase .
                 "  }),{ card { id current_phase{ name } } } }";
         } elseif ($pipefyCardDataLocal->phase != $phase) {
-            $pipefyPhase = ["phase" => $phase];
+            $pipefyPhase = ["pipe_id" => $pipefyCardDataLocal["pipe_id"], "phase" => $phase];
             $graphql =
                 "mutation { moveCardToPhase(  input: { card_id: " .
                 $pipefyCardId .
@@ -301,6 +314,21 @@ class PipefyService
         }
 
         return true;
+    }
+
+    public function deleteCard(User $user)
+    {
+        if (!empty($user->pipefy_card_id)) {
+            $graphql = "mutation{   deleteCard(input: {id: {$user->pipefy_card_id} }){success} }";
+            $response = $this->request($graphql);
+            if (!empty($response->getBody())) {
+                $pipefyCard = json_decode($response->getBody());
+
+                $user->pipefy_card_id = null;
+                $user->pipefy_card_data = null;
+                $user->save();
+            }
+        }
     }
 
     public function updateAssignee(User $user)

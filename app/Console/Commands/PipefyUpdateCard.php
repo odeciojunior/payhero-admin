@@ -165,7 +165,7 @@ class PipefyUpdateCard extends Command
             $pipefyService = new PipefyService();
             $usersNews = User::where("total_commission_value", ">", "20000000")
                 ->orderBy("created_at", "DESC")
-                ->limit(5)
+                ->limit(7)
                 ->get();
             foreach ($usersNews as $teste) {
                 $pipefyService->createCardUser($teste);
