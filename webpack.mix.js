@@ -1094,16 +1094,16 @@ mix.styles(
     [
         "resources/modules/global/adminremark/assets/css/bootstrap.min.css",
         "resources/modules/global/adminremark/assets/css/new-login.css",
-        "resources/modules/global/assets/css/sweetalert2.min.css",
-        "resources/modules/global/assets/css/loading.css",
+        "resources/modules/global/css/sweetalert2.min.css",
+        "resources/modules/global/css/loading.css",
     ],
     "public/build/layouts/auth/auth.min.css"
 );
 mix.babel(
     [
         "resources/modules/global/adminremark/global/vendor/breakpoints/breakpoints.js",
-        "resources/modules/global/assets/js/sweetalert2.all.min.js",
-        "resources/modules/global/assets/js/global.js",
+        "resources/modules/global/js-extra/sweetalert2.all.min.js",
+        "resources/modules/global/js/global.js",
     ],
     "public/build/layouts/auth/auth.min.js"
 );
