@@ -133,7 +133,9 @@ class PixelsApiController extends Controller
                             $applyPlanArray[] = [
                                 "id" => Hashids::encode($plan->id),
                                 "name" => $plan->name,
-                                "description" => $plan->variants ? $plan->variants . " variantes" : $plan->description,
+                                "description" => !empty($plan->variants)
+                                    ? $plan->variants . " variantes"
+                                    : $plan->description,
                             ];
                         }
                     }
