@@ -22,32 +22,39 @@ $(document).ready(function () {
         else
             loadOnAny('#content');
 
-        $.ajax({
-            method: "GET",
-            url: "/api/apps/hotbillet?company="+ $('.company-navbar').val(),
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                loadOnAny('#content',true)
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                $("#content").html("");
-                if (isEmpty(response.projects)) {
-                    $("#project-empty").show();
-                    $("#integration-actions").hide();
-                } else {
-                    $("#select_projects_edit").html("");
-                    $("#select_projects_create").html("");
-                    let projects = response.projects;
-                    for (let i = 0; i < projects.length; i++) {
-                        $("#select_projects_edit").append(`<option value="${projects[i].id}">${projects[i].name}</option>`);
-                        $("#select_projects_create").append(`<option value="${projects[i].id}">${projects[i].name}</option>`);
-                    }
+        $hasProjects=false;
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                if(project.status == 1)
+                    $hasProjects=true;
+            });
+        }
+
+        if(!$hasProjects){
+            $('#integration-actions').hide();
+            $("#no-integration-found").hide();
+            $('#project-empty').show();
+            loadingOnScreenRemove();
+            loadOnAny('#content',true);
+        }
+        else{
+
+            $.ajax({
+                method: "GET",
+                url: "/api/apps/hotbillet?company="+ $('.company-navbar').val(),
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    loadOnAny('#content',true)
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    $("#select_projects_create, #select_projects_edit").html("");
+                    fillSelectProject(companiesAndProjects,'#select_projects_create, #select_projects_edit')
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
                     } else {
@@ -60,11 +67,12 @@ $(document).ready(function () {
                     }
                     $("#project-empty").hide();
                     $("#integration-actions").show();
-                }
-                loadOnAny('#content',true)
-                loadingOnScreenRemove();
-            },
-        });
+                    if(loading=='y')
+                        loadOnAny('#content',true)
+                    loadingOnScreenRemove();
+                },
+            });
+        }
     }
 
     getCompaniesAndProjects().done( function (data){

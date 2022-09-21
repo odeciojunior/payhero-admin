@@ -12,14 +12,17 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Modules\Checkouts\Transformers\CheckoutIndexResource;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SalesRecoveryService;
+use Modules\Plans\Transformers\PlansSelectResource;
 use Modules\Sales\Exports\Reports\AbandonedCartReportExport;
 use Modules\Sales\Exports\Reports\BilletExpiredReportExport;
 use Modules\Sales\Exports\Reports\CardRefusedReportExport;
@@ -240,8 +243,10 @@ class SalesRecoveryApiController extends Controller
             $projectIds = [];
             $projects = explode(",", $data["project"]);
 
+            $showFromApi = false;
             foreach ($projects as $project) {
-                array_push($projectIds, current(Hashids::decode($project)));
+                $showFromApi = str_starts_with($project,'TOKEN');
+                array_push($projectIds, ($showFromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
             }
         }
 
@@ -445,8 +450,10 @@ class SalesRecoveryApiController extends Controller
             $projectIds = [];
             $projects = explode(",", $data["project"]);
 
+            $showFromApi = false;
             foreach ($projects as $project) {
-                array_push($projectIds, current(Hashids::decode($project)));
+                $showFromApi = str_starts_with($project,'TOKEN');
+                array_push($projectIds, ($showFromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
             }
         }
 
@@ -505,5 +512,85 @@ class SalesRecoveryApiController extends Controller
             $projectsEncoded[]= Hashids::encode($item->project_id);
         }
         return $projectsEncoded;
+    }
+
+    public function getPlans(Request $request)
+    {
+        try {
+            $data = $request->all();
+
+            $projectIds = [];
+            if (!empty($data["project_id"])) {
+            //if (is_array($data["project_id"])) {
+                if(!empty($data['project_id'][0])){ // && $data['project_id'][0]!='all'
+                    $showFromApi = false;
+                    foreach($data['project_id'] as $project){
+                        if(!empty($project)){
+                            $showFromApi = str_starts_with($project,'TOKEN');
+                            array_push($projectIds, ($showFromApi?'TOKEN-':'').hashids_decode(str_replace('TOKEN-','',$project)));
+                        }
+                    };
+                }
+                else{
+                    $projects = SalesRecoveryService::getProjectsWithRecovery();
+                    foreach($projects as $item){
+                        array_push($projectIds, $item->project_id);
+                    }
+                }
+            }
+
+            $user = auth()->user();
+            $userId = $user->getAccountOwnerId();
+            $plans = null;
+
+            if (current($projectIds)) {
+
+                if (!empty($data['search'])) {
+                    $plans = Plan::
+                        where('name', 'like', '%' . $data['search'] . '%')
+                        ->whereIn('project_id', $projectIds)
+                        ->orderby('name')
+                        ->limit(30)
+                        ->get();
+
+                } else {
+                    $plans = Plan::
+                        whereIn('project_id', $projectIds)
+                        ->orderby('name')
+                        ->limit(30)
+                        ->get();
+
+                }
+                return PlansSelectResource::collection($plans);
+            } else {
+
+                $userProjects = SalesRecoveryService::getProjectsWithRecovery();
+
+                if (!empty($data['search'])) {
+                    $plans = Plan::
+                        where('name', 'like', '%' . $data['search'] . '%')
+                        ->whereIn("project_id", $userProjects)
+                        ->orderby('name')
+                        ->limit(30)
+                        ->get();
+
+                } else {
+                    $plans = Plan::
+                        whereIn("project_id", $userProjects)
+                        ->orderby('name')
+                        ->limit(30)
+                        ->get();
+                }
+                return PlansSelectResource::collection($plans);
+            }
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro, ao buscar dados dos planos",
+                ],
+                400
+            );
+        }
     }
 }

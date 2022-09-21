@@ -81,14 +81,14 @@ class ShippingResource extends JsonResource
                 return [
                     "id" => $plan->id === "all" ? "all" : Hashids::encode($plan->id),
                     "name" => $plan->name,
-                    "description" => $plan->variants ? $plan->variants . " variantes" : $plan->description,
+                    "description" => !empty($plan->variants) ? $plan->variants . " variantes" : $plan->description,
                 ];
             }),
             "not_apply_on_plans" => $this->not_apply_on_plans->map(function ($plan) {
                 return [
                     "id" => $plan->id === "all" ? "all" : Hashids::encode($plan->id),
                     "name" => $plan->name,
-                    "description" => $plan->variants ? $plan->variants . " variantes" : $plan->description,
+                    "description" => !empty($plan->variants) ? $plan->variants . " variantes" : $plan->description,
                 ];
             }),
         ];

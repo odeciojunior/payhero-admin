@@ -1,14 +1,10 @@
-<div class="new-register-page-open-modal-container">
-    <div class="page-header container">
-        <div class="row align-items-center justify-content-between">
-            <div class="col-lg-6">
-                <div class="new-register-page-open-modal">
-                    <!--
-                    <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
-                    -->
-                    <span class="new-register-open-modal-btn"><span style="color: #5B5B5B; font-weight:normal">Você está em uma conta demo. </span><br/>Clique para começar<span class="count"></span></span>
-                </div>
-            </div>
-        </div>
+<div class="new-register-page-open-modal-container" style="
+width: fit-content;
+margin: 20px auto 10px;">
+    <div class="row new-register-open-modal no-gutters alert-pendings">
+        <span class="new-register-open-modal-btn">
+            <div class="alert-pendings-box-1"> <img src="/build/global/img/alert-pending.png"><span class="count"></span></div>
+        </span>
+        <div class="alert-pendings-box-2">Verificar pendências</div>
     </div>
 </div>

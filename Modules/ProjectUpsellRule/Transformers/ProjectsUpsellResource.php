@@ -82,14 +82,14 @@ class ProjectsUpsellResource extends JsonResource
                 return [
                     "id" => $plan->id === "all" ? "all" : Hashids::encode($plan->id),
                     "name" => $plan->name,
-                    "description" => $plan->variants ? $plan->variants . " variantes" : $plan->description,
+                    "description" => !empty($plan->variants) ? $plan->variants . " variantes" : $plan->description,
                 ];
             }),
             "offer_on_plans" => $this->offer_on_plans->map(function ($plan) {
                 return [
                     "id" => Hashids::encode($plan->id),
                     "name" => $plan->name,
-                    "description" => $plan->variants ? $plan->variants . " variantes" : $plan->description,
+                    "description" => !empty($plan->variants) ? $plan->variants . " variantes" : $plan->description,
                 ];
             }),
         ];

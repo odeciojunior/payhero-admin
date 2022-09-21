@@ -30,8 +30,8 @@ class AuthServiceProvider extends ServiceProvider
         $expireAt = now()->addDays(1);
         Passport::personalAccessTokensExpireIn($expireAt);
 
-        Gate::after(function ($user, $ability) {
-            return $user->hasRole("admin") ? true : null;
-        });
+        // Gate::after(function ($user, $ability) {
+        //     return $user->hasRole("admin") ? true : null;
+        // });
     }
 }

@@ -265,7 +265,6 @@ $(document).ready(function () {
         elementButton = $("#bt_filtro");
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr("block_search"));
             atualizar();
             getTotalValues();
         }
@@ -561,43 +560,6 @@ $(document).ready(function () {
         atualizar();
         loadingOnScreenRemove();
 
-        // $.ajax({
-        //     method: "GET",
-        //     url: "/api/projects?select=true&company="+ $('.company-navbar').val(),
-        //     dataType: "json",
-        //     headers: {
-        //         Authorization: $('meta[name="access-token"]').attr("content"),
-        //         Accept: "application/json",
-        //     },
-        //     error: function error(response) {
-        //         loadingOnScreenRemove();
-        //         errorAjaxResponse(response);
-        //     },
-        //     success: function success(response) {
-        //         if (!isEmpty(response.data)) {
-        //             $("#project-empty").hide();
-        //             $("#project-not-empty").show();
-        //             // $("#export-excel").show();
-
-        //             $.each(response.data, function (i, project) {
-        //                 $("#project").append(
-        //                     $("<option>", {
-        //                         value: project.id,
-        //                         text: project.name,
-        //                     })
-        //                 );
-        //             });
-
-        //             window.atualizar();
-        //         } else {
-        //             // $("#export-excel").hide();
-        //             $("#project-not-empty").hide();
-        //             $("#project-empty").show();
-        //         }
-
-        //         loadingOnScreenRemove();
-        //     },
-        // });
     }
 
     $("#bt_filtro").on("click", function (event) {
