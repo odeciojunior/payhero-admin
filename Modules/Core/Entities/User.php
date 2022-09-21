@@ -138,7 +138,7 @@ class User extends Authenticable
 
     protected $presenter = UserPresenter::class;
 
-    protected $guard_name = 'web';
+    protected $guard_name = "web";
 
     /**
      * @var array
@@ -205,6 +205,7 @@ class User extends Authenticable
         "show_old_finances",
         "mkt_information",
         "pipefy_card_id",
+        "pipefy_card_data",
         "company_default",
         "block_attendance_balance",
         "created_at",
@@ -353,12 +354,7 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany(
-            Project::class,
-            "users_projects",
-            "user_id",
-            "project_id"
-        );
+        return $this->belongsToMany(Project::class, "users_projects", "user_id", "project_id");
     }
 
     /**
@@ -414,12 +410,7 @@ class User extends Authenticable
      */
     public function tasks()
     {
-        return $this->belongsToMany(
-            Task::class,
-            "tasks_users",
-            "user_id",
-            "task_id"
-        );
+        return $this->belongsToMany(Task::class, "tasks_users", "user_id", "task_id");
     }
 
     /**
@@ -428,8 +419,8 @@ class User extends Authenticable
     public function benefits()
     {
         return $this->hasMany(UserBenefit::class)
-            ->join('benefits', 'benefits.id', '=', 'user_benefits.benefit_id')
-            ->select('user_benefits.*', 'benefits.name', 'benefits.description', 'benefits.level');
+            ->join("benefits", "benefits.id", "=", "user_benefits.benefit_id")
+            ->select("user_benefits.*", "benefits.name", "benefits.description", "benefits.level");
     }
 
     public function getAccountOwnerId()
