@@ -64,9 +64,10 @@ class CheckoutApiController extends Controller
                 $checkout = $checkoutModel->find($id);
 
                 return new CheckoutResource($checkout);
-            } else {
-                return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
             }
+
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
+
         } catch (Exception $e) {
             Log::warning("Erro ao buscar dados recuperação de vendas (CheckoutApiController - index)");
             report($e);

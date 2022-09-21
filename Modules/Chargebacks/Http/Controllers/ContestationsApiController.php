@@ -211,7 +211,7 @@ class ContestationsApiController extends Controller
         $projects = ContestationService::getProjectsWithContestations();
         $projectsEncoded=[];
         foreach($projects as $item){
-            $projectsEncoded[]= Hashids::encode($item->project_id);
+            $projectsEncoded[]= ($item->prefix??'').Hashids::encode($item->project_id);
         }
         return $projectsEncoded;
     }

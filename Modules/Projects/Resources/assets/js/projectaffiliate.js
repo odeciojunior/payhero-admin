@@ -23,6 +23,10 @@ $(() => {
 
     // FIM - COMPORTAMENTOS DA TELA
 
+    getCompaniesAndProjects().done( function (data){
+        $('.site-navbar .sirius-select-container').addClass('disabled');
+    });
+
     show();
 
     //carrega detalhes do loja

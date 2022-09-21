@@ -40,7 +40,6 @@ $(document).ready(function () {
         if(!$hasProjects){
             $('#integration-actions').hide();
             $("#no-integration-found").hide();
-            //$('#project-integrated').hide();
             $('#project-empty').show();
             loadingOnScreenRemove();
             loadOnAny('#content',true);

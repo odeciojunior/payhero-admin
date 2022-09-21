@@ -36,10 +36,9 @@ class CoreController extends Controller
                 //Só consegue logar caso o token tenha menos de 10min
 
                 // login agora será pelo usuario logado no manager
-                // $this->assingPermissions($managerIdDecode, $userIdDecode);
-                // $user = auth()->loginUsingId($managerIdDecode);
+                $this->assingPermissions($managerIdDecode, $userIdDecode);
+                $user = auth()->loginUsingId($managerIdDecode);
 
-                $user = auth()->loginUsingId($userIdDecode);
                 $userModel = new User();
                 activity()
                     ->on($userModel)
@@ -98,32 +97,22 @@ class CoreController extends Controller
         $userRoles = $user->getRoleNames();
         foreach ($userRoles as $role)
         {
-            $userManager->syncRoles([]);
-            if($role <> $userManager->role_default){
-                $userManager->syncRoles([$userManager->role_default,$role]);
-            }else{
-                $userManager->syncRoles([$userManager->role_default]);
-            }
+            $userManager->syncGuardRoles('web',[$role]);
             break;
         }
 
-        $newPermissions = $user->getAllPermissions()->pluck('name');
-        if($userManager->hasPermissionTo('login_sirius_by_manager')){
-            $newPermissions[] = 'login_sirius_by_manager';
-        }
-
-        if($userManager->hasPermissionTo('extract_reports')){
-            $newPermissions[] = 'extract_reports';
-        }
-
-        $userManager->syncPermissions([]);
+        $newPermissions = $user->getGuardAllPermissions()->pluck('name');
 
         $userManager->update([
             'account_owner_id'=>$user->account_owner_id,
-            'company_default'=>$user->company_default??1
+            "logged_id"=>$user->id,
+            'company_default'=>$user->company_default??1,
+            'address_document_status'=>$user->address_document_status,
+            'personal_document_status'=>$user->personal_document_status,
         ]);
 
-        $userManager->syncPermissions($newPermissions);
+        //manter essa sequencia
+        $userManager->syncGuardPermissions('web',$newPermissions);
 
     }
 }

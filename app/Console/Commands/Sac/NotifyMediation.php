@@ -83,7 +83,7 @@ class NotifyMediation extends Command
                     } else {
                         $smsService->sendSms(
                             $customer->telephone,
-                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.cloudfox.net e solicite mediação."
+                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://ajuda.cloudfox.net e solicite mediação."
                         );
                     }
 
