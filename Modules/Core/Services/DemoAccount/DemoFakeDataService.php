@@ -44,7 +44,7 @@ class DemoFakeDataService
                 ->where('sales.status',Sale::STATUS_APPROVED)
                 ->inRandomOrder()
                 ->limit(1)
-                ->get();        
+                ->get();
 
         $blockStatus = BlockReasonSale::STATUS_BLOCKED;
         $blockObs = 'Em disputa';
@@ -54,17 +54,17 @@ class DemoFakeDataService
                 case SaleContestation::STATUS_IN_PROGRESS:
                     $blockStatus = BlockReasonSale::STATUS_BLOCKED;
                     $blockObs = 'Em disputa';
-                break;                
+                break;
                 case SaleContestation::STATUS_WIN:
                     $blockStatus = BlockReasonSale::STATUS_UNLOCKED;
                     $blockObs = 'Em disputa';
-                break;                
+                break;
             }
 
             BlockReasonSale::create([
                 'sale_id'=>$sale->id,
                 'blocked_reason_id'=>BlockReason::IN_DISPUTE,
-                'status'=>$blockStatus,    
+                'status'=>$blockStatus,
                 'observation'=>$blockObs
             ]);
         }
@@ -76,20 +76,23 @@ class DemoFakeDataService
         if($contestationCount % 20 == 0)
         {
             $saleContestation = SaleContestation::where('status','=',SaleContestation::STATUS_IN_PROGRESS)->orderBy('id','DESC')->first();
-           
+            if(empty($saleContestation))  {
+                return ;
+            }
+
             $sale = Sale::find($saleContestation->sale_id);
 
             $refundTransactions = $sale->transactions;
-        
+
             $saleService = new SaleService();
-            
+
             $cashbackValue = !empty($sale->cashback->value) ? $sale->cashback->value:0;
             $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
-            
+
             $safe2payBalance = 0;
 
-            foreach ($refundTransactions as $refundTransaction) 
-            {            
+            foreach ($refundTransactions as $refundTransaction)
+            {
                 $company = $refundTransaction->company;
                 if (!empty($company))
                 {
@@ -99,9 +102,9 @@ class DemoFakeDataService
                     if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
                         $refundValue += $saleTax;
                     }
-    
+
                     if ($refundTransaction->status_enum <> Transaction::STATUS_TRANSFERRED)
-                    {                        
+                    {
                         $safe2payBalance += $refundTransaction->value;
                         Transfer::create(
                             [
@@ -114,12 +117,12 @@ class DemoFakeDataService
                                 'gateway_id' => Gateway::SAFE2PAY_PRODUCTION_ID
                             ]
                         );
-    
+
                         $company->update([
                             'safe2pay_balance' => $safe2payBalance
                         ]);
-                    } 
-                        
+                    }
+
                     Transfer::create([
                         'transaction_id' => $refundTransaction->id,
                         'user_id' => $refundTransaction->user_id,
@@ -131,14 +134,14 @@ class DemoFakeDataService
                         'reason' => 'chargedback',
                         'is_refunded_tax' => 0
                     ]);
-            
+
                     $company->update([
                         'safe2pay_balance' => $safe2payBalance - $refundValue
                     ]);
                 }
-                
+
                 $refundTransaction->status = 'chargedback';
-                $refundTransaction->status_enum = Transaction::STATUS_CHARGEBACK;                
+                $refundTransaction->status_enum = Transaction::STATUS_CHARGEBACK;
                 $refundTransaction->save();
             }
 
@@ -148,16 +151,16 @@ class DemoFakeDataService
                     'gateway_status' => 'CHARGEBACK',
                 ]
             );
-            
+
             $saleContestation->update([
                 'status'=>SaleContestation::STATUS_LOST
-            ]);            
+            ]);
 
             $blockSale = BlockReasonSale::where('sale_id',$sale->id)->first();
             if(!empty($blockSale)){
                 $blockSale->update([
                     'status'=>BlockReasonSale::STATUS_UNLOCKED
-                ]); 
+                ]);
             }
         }
     }
@@ -171,8 +174,8 @@ class DemoFakeDataService
                 ->where('sales.status',Sale::STATUS_APPROVED)
                 ->inRandomOrder()
                 ->limit(1)
-                ->get(); 
-                
+                ->get();
+
         foreach($sales as $sale){
             Ticket::factory()
             ->for($sale)
@@ -203,7 +206,7 @@ class DemoFakeDataService
     }
 
     public function createInvitation()
-    {        
+    {
         $user =  User::factory()->count(1)->create()->first();
 
         $user->update([
