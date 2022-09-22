@@ -4,7 +4,7 @@
         <div class="modal-header simple-border-bottom mb-10">
             <h4 class="col-12 modal-title text-center"
                 id="modal-title"
-                style="color:#787878; font: normal normal bold 22px Muli;">
+                style="color:#787878; font: normal normal bold 22px Inter;">
                 Novo pixel
             </h4>
             <a id="modal-button-close"
@@ -26,7 +26,7 @@
                              data-value="google_analytics"
                              alt="logo analytics">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">Google Analytics</div>
+                             style="font: normal normal normal 11px Inter;">Google Analytics</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
@@ -34,7 +34,7 @@
                              data-value="google_analytics_four"
                              alt="logo analytics four">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
+                             style="font: normal normal normal 11px Inter;">Google Analytics 4</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads"
@@ -42,7 +42,7 @@
                              data-value="google_adwords"
                              alt="logo google adwords">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">Google Ads</div>
+                             style="font: normal normal normal 11px Inter;">Google Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
@@ -50,7 +50,7 @@
                              data-value="facebook"
                              alt="logo facebook">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">Facebook</div>
+                             style="font: normal normal normal 11px Inter;">Facebook</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
@@ -58,7 +58,7 @@
                              data-value="outbrain"
                              alt="logo outbrain">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">Outbrain</div>
+                             style="font: normal normal normal 11px Inter;">Outbrain</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola"
@@ -66,7 +66,7 @@
                              data-value="taboola"
                              alt="logo taboola">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">Taboola</div>
+                             style="font: normal normal normal 11px Inter;">Taboola</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest"
@@ -74,7 +74,7 @@
                              data-value="pinterest"
                              alt="logo pinterest">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">Pinterest</div>
+                             style="font: normal normal normal 11px Inter;">Pinterest</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads"
@@ -82,7 +82,7 @@
                              data-value="uol_ads"
                              alt="logo uol ads">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">UOL Ads</div>
+                             style="font: normal normal normal 11px Inter;">UOL Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok"
@@ -90,7 +90,7 @@
                              data-value="tiktok"
                              alt="logo uol ads">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">TikTok</div>
+                             style="font: normal normal normal 11px Inter;">TikTok</div>
                     </div>
                 </div>
                 <div class="row text-center">
@@ -100,7 +100,7 @@
                              data-value="kwai"
                              alt="logo kwai ads">
                         <div class="mt-10"
-                             style="font: normal normal normal 11px Muli;">Kwai</div>
+                             style="font: normal normal normal 11px Inter;">Kwai</div>
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
                  style="border-left: 1px solid #70707040; border-right: 1px solid #70707040">
                 <h4 class="col-12 modal-title text-center"
                     id="modal-title"
-                    style="color:#787878; font: normal normal bold 22px Muli;">
+                    style="color:#787878; font: normal normal bold 22px Inter;">
                     Cadastrar pixel
                 </h4>
             </div>
@@ -140,7 +140,7 @@
                         <span class='slider round'></span>
                     </label>
                     <label for="boleto"
-                           style="font: normal normal bold 16px Muli;color: #41DC8F;margin-bottom: 0;">Ativo</label>
+                           style="font: normal normal bold 16px Inter;color: #41DC8F;margin-bottom: 0;">Ativo</label>
                 </div>
             </div>
 
@@ -284,12 +284,14 @@
                                     </div>
                                     {{-- INPUT PERCENTAGE PIX VALUE --}}
                                     <div class="form-group col-3">
-                                        <label for="percentage-pix-value" class="font-text">% PIX</label>
+                                        <label for="percentage-pix-value"
+                                               class="font-text">% PIX</label>
                                         <input name="value_percentage_purchase_pix"
                                                id="percentage-pix-pixel"
                                                type="text"
                                                class="form-control"
-                                               placeholder="100" maxlength='3'>
+                                               placeholder="100"
+                                               maxlength='3'>
                                     </div>
 
                                     {{-- INPUT SELECT PLANS --}}

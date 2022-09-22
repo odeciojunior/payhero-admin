@@ -7,7 +7,7 @@
             <div class="mdtpad simple-border-bottom">
                 <span class=" "
                       id="modal-title"
-                      style="color:#636363; font: normal normal bold 22px Muli;">
+                      style="color:#636363; font: normal normal bold 22px Inter;">
                     Novo cupom de desconto
                 </span>
 

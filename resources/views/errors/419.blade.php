@@ -11,7 +11,7 @@
 
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap"
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,700,800&display=swap"
           rel="stylesheet">
 
 </head>
@@ -33,7 +33,7 @@
 
 <style>
     .page-holder {
-        font-family: 'Muli', sans-serif;
+        font-family: 'Inter', sans-serif;
         color: black;
         width: 100%;
         min-height: 100vh;

@@ -7,7 +7,7 @@ body {
 body {
     scroll-behavior: smooth;
     background-color: #f1f4f5;
-    font-family: "Muli", sans-serif !important;
+    font-family: "Inter", sans-serif !important;
 }
 
 .popover {
@@ -549,7 +549,11 @@ a.label {
 }
 
 .card {
+<<<<<<< HEAD
     font-family: "Muli", sans-serif;
+=======
+    font-family: "Inter", sans-serif;
+>>>>>>> master
     border-radius: 16px;
 }
 
@@ -687,7 +691,11 @@ a.label {
 .s-btn {
     background-color: #ffffff;
     border: 2px solid #2626264d;
+<<<<<<< HEAD
     font: normal normal bold 24px/30px Muli;
+=======
+    font: normal normal bold 24px/30px Inter;
+>>>>>>> master
     padding: 15px 40px;
     color: #8a8a8a;
 }
@@ -1750,7 +1758,11 @@ input[type="radio"] {
 }
 .page-project .table .table-title {
     color: #15034c !important;
+<<<<<<< HEAD
     font: 16px "Muli" !important;
+=======
+    font: 16px "Inter" !important;
+>>>>>>> master
 }
 
 .top-holder .input-group .form-control {
@@ -2282,6 +2294,10 @@ tbody td {
     font-weight: 600;
     margin: auto;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 .alert-demo-account .row {
     background-color: #2e85ec;
     color: white;
@@ -2406,24 +2422,24 @@ tbody td {
     transition: all 0.25s;
 }
 .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
-    margin: 0 10px 4px
+    margin: 0 10px 4px;
 }
 @media screen and (max-width: 767px) {
     .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
-        margin: 0 0 4px
+        margin: 0 0 4px;
     }
 
-    .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1{
+    .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 {
         padding-right: 0;
     }
 
     .new-register-page-open-modal-container {
         margin-left: 0;
     }
-    .alert-demo-account .row img:first-child{
+    .alert-demo-account .row img:first-child {
         margin-right: 10px !important;
     }
-    .alert-demo-account .row img:nth-child(2){
+    .alert-demo-account .row img:nth-child(2) {
         margin-left: 10px !important;
     }
 }
@@ -3078,8 +3094,8 @@ tbody td {
     display: none;
     background-color: #fff;
 }
-.new-register-navbar-open-modal-container{
-    display:none
+.new-register-navbar-open-modal-container {
+    display: none;
 }
 @media (max-width: 768px) {
     .new-register-navbar-open-modal-container {

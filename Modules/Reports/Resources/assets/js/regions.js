@@ -63,7 +63,7 @@ function barGraph() {
                         padding: 0,
                         stepSize: 100,
                         font: {
-                            family: "Muli",
+                            family: "Inter",
                             size: 12,
                         },
                         color: "#636363",
