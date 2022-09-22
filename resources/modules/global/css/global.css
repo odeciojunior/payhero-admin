@@ -3538,3 +3538,13 @@ tbody td {
     text-decoration: underline;
     color: #856404 !important;
 }
+
+
+.alert-danger {
+    background: #f8d7da;
+    /* Orange */
+
+    border: 1px solid #d63c4c;
+    border-radius: 8px;
+}
+

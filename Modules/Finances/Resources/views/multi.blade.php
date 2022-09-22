@@ -46,16 +46,18 @@
                     </p>
                 </div>
 
-                <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal' role="alert" style='display:none;'>
-                    <strong class="redirect-to-accounts pointer" data-url-value="/personal-info">Clique aqui</strong> Entre em contato com o suporte para mais
-                    informações.
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
+                <div class="col-12 d-flex flex-column">
+                    <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal' role="alert" style='display:none;'>
+                        <strong class="redirect-to-accounts pointer" data-url-value="/personal-info">Clique aqui</strong> Entre em contato com o suporte para mais
+                        informações.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
 
-                <div class="alert alert-warning alert-dismissible fade show" id='blocked-unico' role="alert" style='display:none;'>
-                    <p>Saque suspenso! <strong><a href="#">Clique aqui</a></strong> para cadastrar sua biometria e fortalecer a segurança da sua conta.</p>
+                    <div class="alert alert-warning alert-dismissible fade show" id='blocked-unico' role="alert" style='display:none;'>
+                        <p>Saque suspenso! <strong><a href="#">Clique aqui</a></strong> para cadastrar sua biometria e fortalecer a segurança da sua conta.</p>
+                    </div>
                 </div>
 
 
