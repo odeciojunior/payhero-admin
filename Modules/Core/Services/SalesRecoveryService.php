@@ -365,11 +365,11 @@ class SalesRecoveryService
 
         if($sale->payment_method === Sale::PIX_PAYMENT)
         {
-            $link.='/pix/' . Hashids::connection('sale_id')->encode($this->id);
+            $link.='/pix/' . Hashids::connection('sale_id')->encode($sale->id);
             goto jump;
         }
 
-        $link.= '/recovery/' . Hashids::encode($this->checkout_id);
+        $link.= '/recovery/' . Hashids::encode($checkout->id);
 
         jump:
 
