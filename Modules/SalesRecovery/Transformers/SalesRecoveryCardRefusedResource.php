@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
@@ -25,37 +27,37 @@ class SalesRecoveryCardRefusedResource extends JsonResource
         $project = $this->project;
         $domain = $project->domains->where("status", (new Domain())->present()->getStatus("approved"))->first();
 
+        $status = "Expirado";
+        $type = "expired";
         if ($this->payment_method == 1 || $this->payment_method == 3) {
             $status = "Recusado";
             $type = "cart_refundend";
-        } else {
-            $status = "Expirado";
-            $type = "expired";
         }
 
-        if ($this->payment_method === Sale::PIX_PAYMENT) {
-            if (FoxUtils::isProduction()) {
-                $link = !empty($domain)
-                    ? "https://checkout." . $domain->name . "/pix/" . Hashids::connection("sale_id")->encode($this->id)
-                    : "Domínio não configurado";
-            } else {
-                $link =
-                    env("CHECKOUT_URL", "http://dev.checkout.com.br") .
-                    "/pix/" .
-                    Hashids::connection("sale_id")->encode($this->id);
-            }
-        } else {
-            if (FoxUtils::isProduction()) {
-                $link = !empty($domain)
-                    ? "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($this->checkout_id)
-                    : "Domínio não configurado";
-            } else {
-                $link =
-                    env("CHECKOUT_URL", "http://dev.checkout.com.br") .
-                    "/recovery/" .
-                    Hashids::encode($this->checkout_id);
-            }
+        $link = isset($domain) ? 'https://checkout.' . $domain->name : '';
+        if(!foxutils()->isProduction()) {
+            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br');
         }
+
+        $user = Auth::user();
+        if($user->company_default==Company::DEMO_ID){
+            $link = "https://demo.cloudfox.net";
+        }
+
+        if(empty($link)){
+            $link = 'Domínio removido';
+            goto jump;
+        }
+
+        if($this->payment_method === Sale::PIX_PAYMENT)
+        {
+            $link.='/pix/' . Hashids::connection('sale_id')->encode($this->id);
+            goto jump;
+        }
+
+        $link.= '/recovery/' . Hashids::encode($this->checkout_id);
+
+        jump:
 
         $emailStatus = "Email inválido";
         if (FoxUtils::validateEmail($customer->email)) {

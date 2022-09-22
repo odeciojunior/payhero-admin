@@ -215,10 +215,9 @@ class SalesRecoveryService
         $delivery["zip_code"] = $log->zip_code;
         $delivery["state"] = $log->state;
 
+        $status = "Recuperado";
         if ($checkout->status == "abandoned cart") {
             $status = "Não recuperado";
-        } else {
-            $status = "Recuperado";
         }
 
         $checkout->browser = $checkout->browser == "null" || $checkout->browser == null ? "" : $checkout->browser;
@@ -232,13 +231,24 @@ class SalesRecoveryService
 
         $domain = $domainModel->where([["status", 3], ["project_id", $checkout->project_id]])->first();
 
-        if (foxutils()->isProduction()) {
-            $link = isset($domain)
-                ? "https://checkout." . $domain->name . "/recovery/" . hashids_encode($checkout->id)
-                : "Domínio removido";
-        } else {
-            $link = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/recovery/" . hashids_encode($checkout->id);
+        $link = isset($domain) ? 'https://checkout.' . $domain->name : '';
+        if(!foxutils()->isProduction()) {
+            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br');
         }
+
+        $user = Auth::user();
+        if($user->company_default==Company::DEMO_ID){
+            $link = "https://demo.cloudfox.net";
+        }
+
+        if(empty($link)){
+            $link = 'Domínio removido';
+            goto jump;
+        }
+
+        $link.= '/recovery/' . Hashids::encode($checkout->id);
+
+        jump:
 
         $checkout->id = "";
         $log->id = "";
@@ -302,7 +312,7 @@ class SalesRecoveryService
 
         $checkout->is_mobile = $checkout->is_mobile == 1 ? "Dispositivo: Celular" : "Dispositivo: Computador";
 
-        if ($sale->payment_method == 2) {
+        if ($sale->payment_method == Sale::PAYMENT_TYPE_BANK_SLIP) {
             $customer->error = "Não pago até a data do vencimento";
         } else {
             $log = $logModel
@@ -313,6 +323,9 @@ class SalesRecoveryService
 
             if (empty($log->error)) {
                 $customer->error = "Saldo insuficiente!";
+                if($sale->payment_method == Sale::PAYMENT_TYPE_PIX){
+                    $customer->error = "Expirado!";
+                }
             } elseif ($log->error == "CARTÃO RECUSADO !") {
                 $customer->error = $log->error . " (saldo insuficiente)";
             } else {
@@ -335,26 +348,9 @@ class SalesRecoveryService
             ->where("status", $domainModel->present()->getStatus("approved"))
             ->first();
 
-        // if (!empty($domain)) {
-        //    $link = "https://checkout." . $domain->name . "/recovery/" . hashids_encode($checkout->id);
-        // }else {
-        //    $link = 'Domínio removido';
-        // }
-
-        $link = '';
-        if($sale->payment_method === Sale::PIX_PAYMENT) {
-            if(foxutils()->isProduction()) {
-                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/pix/' . hashids_encode($sale->id, 'sale_id') : 'Domínio removido';
-            } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . hashids_encode($sale->id, 'sale_id');
-            }
-
-        }else {
-            if(foxutils()->isProduction()) {
-                $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . hashids_encode($checkout->id) : 'Domínio removido';
-            } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/recovery/' . hashids_encode($checkout->id);
-            }
+        $link = isset($domain) ? 'https://checkout.' . $domain->name : '';
+        if(!foxutils()->isProduction()) {
+            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br');
         }
 
         $user = Auth::user();
@@ -362,18 +358,20 @@ class SalesRecoveryService
             $link = "https://demo.cloudfox.net";
         }
 
-        if(!empty($link))
-        {
-            if($sale->payment_method === Sale::PIX_PAYMENT)
-            {
-                $link.='/pix/' . Hashids::connection('sale_id')->encode($sale->id);
-            }else {
-                $link.= '/recovery/' . Hashids::encode($checkout->id);
-            }
-
-        }else{
+        if(empty($link)){
             $link = 'Domínio removido';
+            goto jump;
         }
+
+        if($this->payment_method === Sale::PIX_PAYMENT)
+        {
+            $link.='/pix/' . Hashids::connection('sale_id')->encode($this->id);
+            goto jump;
+        }
+
+        $link.= '/recovery/' . Hashids::encode($this->checkout_id);
+
+        jump:
 
         $products = $saleService->getProducts($checkout->sale_id);
 
