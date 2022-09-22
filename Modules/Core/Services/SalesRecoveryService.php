@@ -363,7 +363,7 @@ class SalesRecoveryService
             goto jump;
         }
 
-        if($this->payment_method === Sale::PIX_PAYMENT)
+        if($sale->payment_method === Sale::PIX_PAYMENT)
         {
             $link.='/pix/' . Hashids::connection('sale_id')->encode($this->id);
             goto jump;
