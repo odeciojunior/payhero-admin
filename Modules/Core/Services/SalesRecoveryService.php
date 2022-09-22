@@ -86,10 +86,14 @@ class SalesRecoveryService
                 $join->on('sales.checkout_id', '=', 'checkout.id');
             })->leftJoin('customers as customer', function ($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
-            })->leftJoin('checkout_configs as checkout_config', function ($join) {
-                $join->on('sales.project_id', '=', 'checkout_config.project_id');
+            // })->leftJoin('checkout_configs as checkout_config', function ($join) {
+            //     $join->on('sales.project_id', '=', 'checkout_config.project_id');
+            // })
+            // ->where('checkout_config.company_id', $company_id)
+            })->leftJoin('transactions as transaction', function ($join) {
+                $join->on('sales.id', '=', 'transaction.sale_id');
             })
-            ->where('checkout_config.company_id', $company_id)
+            ->where('transaction.company_id', $company_id)
             ->whereIn('sales.status', $status)
             ->where('sales.payment_method', $paymentMethod)
             ->with([
@@ -129,20 +133,27 @@ class SalesRecoveryService
             });
         }
 
+        $tokensIds = [];
         if (!empty($projectIds) && !in_array("all", $projectIds)) {
-            $salesExpired->whereIn("sales.project_id", $projectIds);
+            foreach ($projectIds as $key=>$projectId) {
+                if(str_starts_with($projectId,'TOKEN')){
+                    $tokensIds[] = str_replace('TOKEN-','',$projectId);
+                    unset($projectIds[$key]);
+                }
+            }
         } else {
-            $userProjects = $userProjectsModel->where([
+            $projectIds = $userProjectsModel->where([
                 ['user_id', auth()->user()->getAccountOwnerId()],
                 [
-                    'type_enum',
-                    $userProjectsModel->present()
-                    ->getTypeEnum('producer'),
+                    'type_enum',UserProject::TYPE_PRODUCER_ENUM,
                 ],
             ])->pluck('project_id')->toArray();
-
-            $salesExpired->whereIn("sales.project_id", $userProjects);
         }
+
+        $salesExpired->where(function($qr) use($projectIds,$tokensIds){
+            $qr->whereIn("sales.project_id", $projectIds)
+            ->orWhere("sales.api_token_id",$tokensIds);
+        });
 
         if (!empty($dateStart) && !empty($dateEnd)) {
             $salesExpired->whereBetween("sales.created_at", [$dateStart, $dateEnd]);
@@ -391,8 +402,13 @@ class SalesRecoveryService
         $s = Checkout::select('checkouts.project_id')
             ->distinct()
             ->leftjoin('checkout_configs','checkout_configs.project_id','checkouts.project_id')
-            ->join('companies','companies.id','checkout_configs.company_id')
-            ->where('companies.user_id',auth()->user()->getAccountOwnerId())
+            ->leftjoin('companies','companies.id','checkout_configs.company_id')
+            ->leftjoin('affiliates','affiliates.id','checkouts.affiliate_id')
+            ->where(function($query) {
+                $query
+                ->where('affiliates.user_id', auth()->user()->getAccountOwnerId())
+                ->orWhere('companies.user_id',auth()->user()->getAccountOwnerId());
+            })
             ->where('checkouts.status_enum',2)
             ->union($first)
             ->get();

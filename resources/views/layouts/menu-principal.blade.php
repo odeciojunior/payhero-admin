@@ -54,11 +54,26 @@
     <div class="row no-gutters">
         <div style="margin:auto 100px auto auto">
             <!-- CONVITE PARA INICIAR -->
-            @if (!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id)
+            @php
+                $userModel = new \Modules\Core\Entities\User();
+                $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
+
+                $user = auth()->user();
+                $account_is_approved = $user->account_is_approved;
+                if($user->is_cloudfox && $user->logged_id){
+                    $query = $userModel::select('account_is_approved')->where('id',$user->logged_id)->get();
+                    $account_is_approved = $query[0]->account_is_approved ?? false;
+                }
+            @endphp
+
+            @if (!$account_is_approved && $account_type === 'admin')
                 <div class="new-register-navbar-open-modal-container">
-                    <div class="row new-register-open-modal no-gutters">
-                        Você está em uma conta demonstrativa. <span class="new-register-open-modal-btn">Clique para
-                            começar<span class="count"></span></span>
+                    <div class="row new-register-open-modal no-gutters alert-pendings">
+                        <span class="new-register-open-modal-btn">
+                            <div class="alert-pendings-box-1"> <img src="/build/global/img/alert-pending.png" style="
+                            margin: 0 10px 4px"><span class="count"></span></div>
+                        </span>
+                        <div class="alert-pendings-box-2">Verificar pendências</div>
                     </div>
                 </div>
             @endif
@@ -127,14 +142,21 @@
                                     ? \Auth::user()->photo
                                     : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}"
                                     onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'"
-                                    alt="">
+                                    alt="" title="">
                                 <i></i>
                             </span>
                         </a>
 
                         <!-- BOTOES DE OPCAO DOS USUARIO -->
                         <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
-
+                            @if(auth()->user()->is_cloudfox)
+                            <a class="dropdown-item disabled" disabled>
+                                <img height="24" width="24"
+                                    src="{{ mix('build/global/img/icon-info.svg') }}" />
+                                    {{auth()->user()->name}}
+                            </a>
+                            <div class="dropdown-divider" role="presentation"></div>
+                            @endif
                             <!-- BOTAO DE CONFIGURACOES -->
                             @if (foxutils()->isHomolog())
                                 <div data-toggle="tooltip" data-placement="left"
@@ -268,7 +290,7 @@
                     <span class="site-menu-title">Produtos</span>
                 </a>
             </li>
-        @endcan
+        @endif
         <!-- hasanyrole('account_owner|admin|attendance') -->
         @can('attendance')
             <li class="site-menu-item has-sub">

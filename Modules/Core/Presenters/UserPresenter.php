@@ -239,6 +239,9 @@ class UserPresenter extends Presenter
 
     public function getAccountType($user_id, $account_owner_id)
     {
+        if(auth()->user()->is_cloudfox)
+            $user_id = auth()->user()->logged_id;
+
         if ($user_id !== $account_owner_id) {
             return "collaborator";
         }

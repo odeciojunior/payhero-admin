@@ -134,15 +134,8 @@ class ConvertaXApiController extends Controller
                         ],
                         200
                     );
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Ocorreu um erro ao realizar a integração",
-                        ],
-                        400
-                    );
                 }
-            } else {
+
                 return response()->json(
                     [
                         "message" => "Ocorreu um erro ao realizar a integração",
@@ -150,6 +143,14 @@ class ConvertaXApiController extends Controller
                     400
                 );
             }
+
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao realizar a integração",
+                ],
+                400
+            );
+
         } catch (Exception $e) {
             Log::warning("Erro ao realizar integração  ConvertaXController - store");
             report($e);
@@ -244,15 +245,8 @@ class ConvertaXApiController extends Controller
                         ],
                         200
                     );
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Ocorreu um erro ao atualizar a integração",
-                        ],
-                        400
-                    );
                 }
-            } else {
+
                 return response()->json(
                     [
                         "message" => "Ocorreu um erro ao atualizar a integração",
@@ -260,6 +254,14 @@ class ConvertaXApiController extends Controller
                     400
                 );
             }
+
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao atualizar a integração",
+                ],
+                400
+            );
+
         } catch (Exception $e) {
             Log::warning("Erro ao tentar atualizar integração com convertaX (ConvertaXController - update)");
             report($e);

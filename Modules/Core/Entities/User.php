@@ -20,6 +20,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Collection as SupportCollection;
 
 /**
  * Modules\Core\Entities\User
@@ -179,6 +180,7 @@ class User extends Authenticable
         "invites_amount",
         "account_owner_id",
         "subseller_owner_id",
+        "logged_id",
         "deleted_project_filter",
         "id_wall_result",
         "bureau_result",
@@ -211,6 +213,8 @@ class User extends Authenticable
         "mkt_information",
         "pipefy_card_id",
         "company_default",
+        "role_default",
+        "is_cloudfox",
         "block_attendance_balance",
         "biometry_status",
         "created_at",
@@ -454,5 +458,38 @@ class User extends Authenticable
     public function userBiometryResults()
     {
         return $this->hasMany(UserBiometryResult::class);
+    }
+
+    public function getRoleNames($guard='web'):SupportCollection
+    {
+        return $this->roles()->where('guard_name',$guard)->get()->pluck('name');
+    }
+
+    public function syncGuardRoles($guard='web',...$newRoles)
+    {
+        $roles = $this->roles()->where('guard_name',$guard)->get();
+        foreach ($roles as $role) {
+            $this->removeRole($role);
+        }
+
+        return $this->assignRole($newRoles);
+    }
+
+    public function getGuardAllPermissions($guard='web'){
+        return $this->permissions()->where('guard_name',$guard)->get();
+    }
+
+    public function syncGuardPermissions($guard,...$newPermissions)
+    {
+        $permissions = $this->permissions()->where('guard_name',$guard)->get();
+
+        foreach ($permissions as $permission) {
+            $this->revokePermissionTo($permission);
+        }
+
+        foreach ($newPermissions as $permissions) {
+            $this->givePermissionTo($permissions);
+        }
+        return true;
     }
 }

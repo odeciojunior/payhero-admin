@@ -25,6 +25,9 @@ class UserService
         $userModel = new User();
         if (empty($userId)) {
             $user = auth()->user();
+            if($user->is_cloudfox && $user->logged_id){
+                $user = User::find($user->account_owner_id);
+            }
         } else {
             $user = User::find($userId);
         }

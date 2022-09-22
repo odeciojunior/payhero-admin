@@ -2273,21 +2273,131 @@ tbody td {
     border-radius: 6px;
     padding: 12px;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .new-register-open-modal-btn {
     color: #2e85ec;
     cursor: pointer;
     font-weight: 600;
+    margin: auto;
 }
-
-.alert-demo-account .new-register-open-modal {
+.alert-demo-account .row {
     background-color: #2e85ec;
     color: white;
     border-radius: 0;
     text-align: center;
     width: 100%;
     display: block;
+    gap: 10px;
+    padding: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.alert-demo-account-overlay {
+    background: #f1f4f5;
+    position: fixed;
+    display: none;
+    top: 4.286rem;
+    left: 65px;
+    right: 0;
+    bottom: 0;
+    z-index: 1100;
+    padding: 40px 48px 48px;
+    margin-bottom: 0;
+    overflow-y: auto;
+}
+
+.alert-demo-account-overlay-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 450px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    margin: 0;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.alert-demo-account-close-modal-x {
+    text-align: right;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.alert-demo-account-overlay-title {
+    text-align: center;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 20px;
+    color: #3d4456;
+    width: 100%;
+}
+
+.alert-demo-account-overlay-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    width: 64px;
+    height: 64px;
+    background: rgba(89, 191, 117, 0.05);
+    border-radius: 30px;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+.alert-demo-account-overlay-body {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+
+.alert-demo-account-close-modal {
+    background: #f4f6fb;
+    border-radius: 4px;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 17px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.alert-pendings {
+    background-color: #f7f8fb;
+    border: 1px #e7eaee solid;
+    border-radius: 6px;
+    padding: 2px;
+    font-family: "Inter";
+    display: none;
+}
+
+.alert-pendings-box-1 {
+    color: #222222;
+    padding-top: 4px;
+    padding-right: 6px;
+    font-size: 15px;
+}
+
+.alert-pendings-box-2 {
+    background-color: #2e85ec;
+    color: white;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 15px;
+    margin: auto;
 }
 
 .new-register-page-open-modal-container {
@@ -2295,9 +2405,26 @@ tbody td {
     margin-left: 65px;
     transition: all 0.25s;
 }
+.new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
+    margin: 0 10px 4px
+}
 @media screen and (max-width: 767px) {
+    .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
+        margin: 0 0 4px
+    }
+
+    .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1{
+        padding-right: 0;
+    }
+
     .new-register-page-open-modal-container {
         margin-left: 0;
+    }
+    .alert-demo-account .row img:first-child{
+        margin-right: 10px !important;
+    }
+    .alert-demo-account .row img:nth-child(2){
+        margin-left: 10px !important;
     }
 }
 
@@ -2353,6 +2480,15 @@ tbody td {
     }
 
     .new-register-overlay-container {
+        width: 90%;
+        padding: 0px 16px;
+    }
+
+    .alert-demo-account-overlay {
+        left: 0;
+    }
+
+    .alert-demo-account-overlay-container {
         width: 90%;
         padding: 0px 16px;
     }
@@ -2942,8 +3078,8 @@ tbody td {
     display: none;
     background-color: #fff;
 }
-.new-register-navbar-open-modal-container {
-    display: block;
+.new-register-navbar-open-modal-container{
+    display:none
 }
 @media (max-width: 768px) {
     .new-register-navbar-open-modal-container {

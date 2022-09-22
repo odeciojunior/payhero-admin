@@ -26,33 +26,47 @@ class ShippingResource extends JsonResource
 
         $selectPlans = ["id", "name", "description"];
         if ($this->use_variants) {
-            $rawVariants = DB::raw(
-                "(select count(distinct p.shopify_variant_id) from plans p where p.shopify_id = plans.shopify_id and p.shopify_id is not null and p.deleted_at is null) as variants"
+            $selectPlans[] = DB::raw(
+                "concat((select count(distinct p.shopify_variant_id) from plans p where p.shopify_id = plans.shopify_id and p.shopify_id is not null and p.deleted_at is null), ' variantes') as description"
             );
-            $selectPlans[] = $rawVariants;
+        } else {
+            $selectPlans[] = "description";
         }
 
         if ($this->apply_on_plans[0] === "all") {
-            $this->apply_on_plans = collect()->push(
-                (object) [
-                    "id" => "all",
-                    "name" => "Qualquer " . ($this->use_variants ? "plano" : "produto"),
-                    "description" => "",
-                    "variants" => 0,
-                ]
-            );
+            $this->apply_on_plans = collect()->push([
+                "id" => "all",
+                "name" => "Qualquer " . ($this->use_variants ? "plano" : "produto"),
+                "description" => "",
+            ]);
         } else {
             $this->apply_on_plans = Plan::select($selectPlans)
                 ->whereIn("id", $this->apply_on_plans)
-                ->get();
+                ->get()
+                ->map(function ($plan) {
+                    return [
+                        "id" => $plan->id === "all" ? "all" : Hashids::encode($plan->id),
+                        "name" => $plan->name,
+                        "description" => $plan->description,
+                    ];
+                });
         }
 
         $this->not_apply_on_plans = Plan::select($selectPlans)
             ->whereIn("id", $this->not_apply_on_plans)
-            ->get();
+            ->get()
+            ->map(function ($plan) {
+                return [
+                    "id" => $plan->id === "all" ? "all" : Hashids::encode($plan->id),
+                    "name" => $plan->name,
+                    "description" => $plan->description,
+                ];
+            });
+
         if ($this->regions_values) {
             $this->value = "Por região";
         }
+
         return [
             "id_code" => Hashids::encode($this->id),
             "shipping_id" => Hashids::encode($this->id),
@@ -77,20 +91,8 @@ class ShippingResource extends JsonResource
                 "definitions.enum.shipping.pre_selected." . $this->present()->getPreSelectedStatus($this->pre_selected)
             ),
             "use_variants" => $this->use_variants,
-            "apply_on_plans" => $this->apply_on_plans->map(function ($plan) {
-                return [
-                    "id" => $plan->id === "all" ? "all" : Hashids::encode($plan->id),
-                    "name" => $plan->name,
-                    "description" => $plan->variants ? $plan->variants . " variantes" : $plan->description,
-                ];
-            }),
-            "not_apply_on_plans" => $this->not_apply_on_plans->map(function ($plan) {
-                return [
-                    "id" => $plan->id === "all" ? "all" : Hashids::encode($plan->id),
-                    "name" => $plan->name,
-                    "description" => $plan->variants ? $plan->variants . " variantes" : $plan->description,
-                ];
-            }),
+            "apply_on_plans" => $this->apply_on_plans,
+            "not_apply_on_plans" => $this->not_apply_on_plans,
         ];
     }
 }

@@ -40,9 +40,10 @@ class TrackingsApiController extends Controller
                 $trackings = $trackingService->getPaginatedTrackings($data);
 
                 return TrackingResource::collection($trackings);
-            } else {
-                return response()->json(["message" => "Erro ao exibir códigos de rastreio"], 400);
             }
+
+            return response()->json(["message" => "Erro ao exibir códigos de rastreio"], 400);
+
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao exibir códigos de rastreio"], 400);
@@ -152,9 +153,10 @@ class TrackingsApiController extends Controller
                 ];
 
                 return response()->json(["data" => $trackingArray]);
-            } else {
-                return response()->json(["message" => "Erro ao exibir detalhes do código de rastreio"], 400);
             }
+
+            return response()->json(["message" => "Erro ao exibir detalhes do código de rastreio"], 400);
+
         } catch (Exception $e) {
             report($e);
 
@@ -175,9 +177,10 @@ class TrackingsApiController extends Controller
                 return response()->json([
                     "data" => $resume,
                 ]);
-            } else {
-                return response()->json(["message" => "Erro ao exibir resumo dos rastreamentos"], 400);
             }
+
+            return response()->json(["message" => "Erro ao exibir resumo dos rastreamentos"], 400);
+
         } catch (Exception $e) {
             report($e);
 
@@ -214,22 +217,24 @@ class TrackingsApiController extends Controller
                         ],
                         200
                     );
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Erro ao salvar código de rastreio",
-                        ],
-                        400
-                    );
                 }
-            } else {
+
                 return response()->json(
                     [
                         "message" => "Erro ao salvar código de rastreio",
                     ],
                     400
                 );
+
             }
+
+            return response()->json(
+                [
+                    "message" => "Erro ao salvar código de rastreio",
+                ],
+                400
+            );
+
         } catch (Exception $e) {
             report($e);
 
@@ -247,12 +252,13 @@ class TrackingsApiController extends Controller
                     event(new TrackingCodeUpdatedEvent($trackingId));
 
                     return response()->json(["message" => "Notificação enviada com sucesso"]);
-                } else {
-                    return response()->json(["message" => "Erro ao notificar cliente"], 400);
                 }
-            } else {
+
                 return response()->json(["message" => "Erro ao notificar cliente"], 400);
             }
+
+            return response()->json(["message" => "Erro ao notificar cliente"], 400);
+
         } catch (Exception $e) {
             report($e);
 
@@ -307,9 +313,9 @@ class TrackingsApiController extends Controller
                     return response()->json([
                         "message" => "A importação começou! Você receberá uma notificação quando tudo estiver pronto!",
                     ]);
-                } else {
-                    return response()->json(["message" => "Formato de arquivo inválido!"], 400);
                 }
+
+                return response()->json(["message" => "Formato de arquivo inválido!"], 400);
             }
 
             return response()->json(["message" => "Arquivo inválido"], 400);
