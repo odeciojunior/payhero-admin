@@ -12,7 +12,7 @@
             <div class="mdtpad simple-border-bottom ">
                 <span class="  "
                       id="modal-title"
-                      style="color:#636363; font: normal normal bold 22px Muli; ">
+                      style="color:#636363; font: normal normal bold 22px Inter; ">
                     Detalhes de desconto progressivo
                 </span>
                 <a id="modal-button-close-2"
@@ -366,23 +366,23 @@
                             <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>
                             <span class="title">Nome do produto mui </span>
                             <span class="description">Descrição do produto muito longo muito longo muito longo </span>
-                            
+
                             <svg class="selected_check" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="9.5" cy="10" r="9.5" fill="#2E85EC"/>
                                 <path d="M13.5574 6.75215C13.7772 6.99573 13.7772 7.39066 13.5574 7.63424L8.49072 13.2479C8.27087 13.4915 7.91442 13.4915 7.69457 13.2479L5.44272 10.7529C5.22287 10.5093 5.22287 10.1144 5.44272 9.87083C5.66257 9.62725 6.01902 9.62725 6.23887 9.87083L8.09265 11.9247L12.7612 6.75215C12.9811 6.50856 13.3375 6.50856 13.5574 6.75215Z" fill="white"/>
                                 </svg>
-                                
+
                             <svg class="empty_check " style="display: none" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="9.5" cy="10" r="9" stroke="#9B9B9B"/>
                                 </svg>
-                                
+
                         </div> --}}
 
                         {{-- <div class="item" >
                             <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>
                             <span class="title">Nome do produto</span>
                             <span class="description">Descrição do produto</span>
-                            <svg class="selected_check " style="display: none" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9.5" fill="#2E85EC"/>                            <path d="M13.5574 6.75215C13.7772 6.99573 13.7772 7.39066 13.5574 7.63424L8.49072 13.2479C8.27087 13.4915 7.91442 13.4915 7.69457 13.2479L5.44272 10.7529C5.22287 10.5093 5.22287 10.1144 5.44272 9.87083C5.66257 9.62725 6.01902 9.62725 6.23887 9.87083L8.09265 11.9247L12.7612 6.75215C12.9811 6.50856 13.3375 6.50856 13.5574 6.75215Z" fill="white"/>                            </svg>    
+                            <svg class="selected_check " style="display: none" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9.5" fill="#2E85EC"/>                            <path d="M13.5574 6.75215C13.7772 6.99573 13.7772 7.39066 13.5574 7.63424L8.49072 13.2479C8.27087 13.4915 7.91442 13.4915 7.69457 13.2479L5.44272 10.7529C5.22287 10.5093 5.22287 10.1144 5.44272 9.87083C5.66257 9.62725 6.01902 9.62725 6.23887 9.87083L8.09265 11.9247L12.7612 6.75215C12.9811 6.50856 13.3375 6.50856 13.5574 6.75215Z" fill="white"/>                            </svg>
                             <svg class="empty_check " width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9" stroke="#9B9B9B"/>                            </svg>
                         </div> --}}
 
@@ -695,7 +695,7 @@
                                 <label id="edit_status_label"
                                        for="edit_status"
                                        class="pointer"
-                                       style="font: normal normal bold 16px Muli;color: #8B8B8B;margin-bottom: 0;">Desconto
+                                       style="font: normal normal bold 16px Inter;color: #8B8B8B;margin-bottom: 0;">Desconto
                                     ativo</label>
                                 <input type="hidden"
                                        name="set_status"

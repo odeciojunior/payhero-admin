@@ -27,7 +27,7 @@
     }
 
     .font-text {
-        font: normal normal normal 16px Muli;
+        font: normal normal normal 16px Inter;
     }
 
     /*.switch-holder {*/

@@ -212,6 +212,7 @@ class User extends Authenticable
         "role_default",
         "is_cloudfox",
         "block_attendance_balance",
+        "utm_srcs",
         "created_at",
         "updated_at",
         "deleted_at",
@@ -437,14 +438,19 @@ class User extends Authenticable
         return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;
     }
 
-    public function getRoleNames($guard='web'):SupportCollection
+    public function getRoleNames($guard = "web"): SupportCollection
     {
-        return $this->roles()->where('guard_name',$guard)->get()->pluck('name');
+        return $this->roles()
+            ->where("guard_name", $guard)
+            ->get()
+            ->pluck("name");
     }
 
-    public function syncGuardRoles($guard='web',...$newRoles)
+    public function syncGuardRoles($guard = "web", ...$newRoles)
     {
-        $roles = $this->roles()->where('guard_name',$guard)->get();
+        $roles = $this->roles()
+            ->where("guard_name", $guard)
+            ->get();
         foreach ($roles as $role) {
             $this->removeRole($role);
         }
@@ -452,13 +458,18 @@ class User extends Authenticable
         return $this->assignRole($newRoles);
     }
 
-    public function getGuardAllPermissions($guard='web'){
-        return $this->permissions()->where('guard_name',$guard)->get();
+    public function getGuardAllPermissions($guard = "web")
+    {
+        return $this->permissions()
+            ->where("guard_name", $guard)
+            ->get();
     }
 
-    public function syncGuardPermissions($guard,...$newPermissions)
+    public function syncGuardPermissions($guard, ...$newPermissions)
     {
-        $permissions = $this->permissions()->where('guard_name',$guard)->get();
+        $permissions = $this->permissions()
+            ->where("guard_name", $guard)
+            ->get();
 
         foreach ($permissions as $permission) {
             $this->revokePermissionTo($permission);

@@ -14,9 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property integer $webhook_id
  * @property integer $user_id
  * @property integer $company_id
+ * @property integer $sale_id
  * @property string $url
  * @property json $sent_data
  * @property json $response
+ * @property integer $response_status
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -41,9 +43,11 @@ class WebhookLog extends Model
         "webhook_id",
         "user_id",
         "company_id",
+        "sale_id",
         "url",
         "sent_data",
         "response",
+        "response_status",
         "created_at",
         "updated_at",
         "deleted_at",
