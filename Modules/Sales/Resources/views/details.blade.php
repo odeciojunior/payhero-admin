@@ -552,9 +552,9 @@
                             <table class='table table-striped mb-10'>
                                 <thead>
                                     <tr>
-                                        <th>Produto</th>
+                                        <th class="table-detail">Produto</th>
                                         <th>Rastreio</th>
-                                        <th>Status</th>
+                                        <th class="text-center">Status</th>
                                         <th>Postagem</th>
                                     </tr>
                                 </thead>

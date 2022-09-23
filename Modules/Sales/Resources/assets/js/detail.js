@@ -1224,18 +1224,22 @@ $(() => {
             if (!value.photo) {
                 value.photo = photo;
             }
-            div += `<div class="row justify-content-between mb-15">
-                        <div class="col-lg-2">
-                            <img src='${value.photo}' onerror=this.src='/build/global/img/produto.png' width='50px' height='50px' style='border-radius: 6px;'>
-                        </div>
-                        <div class="col-md-5 col-lg-6">
-                            <h4 class="table-title m-0">${value.name}</h4>
-                            <small>${value.description}</small>
-                        </div>
-                        <div class="col-md-3 col-lg-2 text-right">
-                            <p class="sm-text text-muted">${value.amount}x</p>
-                        </div>
-                    </div>`;
+            div += `
+                <div class="row justify-content-between mb-15">
+                    <div class="col-lg-2">
+                        <img src='${value.photo}' onerror=this.src='/build/global/img/produto.png' width='50px' height='50px' style='border-radius: 6px;'>
+                    </div>
+
+                    <div class="col-md-5 col-lg-6">
+                        <h4 class="table-title m-0">${value.name}</h4>
+                        <small>${value.description}</small>
+                    </div>
+
+                    <div class="col-md-3 col-lg-2 text-right">
+                        <p class="sm-text text-muted">${value.amount}x</p>
+                    </div>
+                </div>`
+            ;
 
             if (
                 typeof value.custom_products != "undefined" &&
@@ -1327,6 +1331,49 @@ $(() => {
 
             $("#table-product").html(div);
 
+            let status
+            switch (sale.status) {
+                case 1:
+                    status = "<span class='ml-2 badge badge-success'>Aprovada</span>"
+                    break;
+                case 2:
+                    status = "<span class='ml-2 badge badge-pendente'>Pendente</span>"
+                    break;
+                case 3:
+                    status = "<span class='ml-2 badge badge-danger'>Recusada</span>"
+                    break;
+                case 4:
+                    status = "<span class='ml-2 badge badge-danger'>Chargeback</span>"
+                    break;
+                case 6:
+                    status = "<span class='ml-2 badge badge-primary'>Em análise</span>"
+                    break;
+                case 7:
+                    status = "<span class='ml-2 badge badge-danger'>Estornado</span>"
+                    break;
+                case 8:
+                    status = "<span class='ml-2 badge badge-danger'>Estorno Parcial</span>"
+                    break;
+                case 20:
+                    status = "<span class='ml-2 badge badge-antifraude'>Revisão Antifraude</span>"
+                    break;
+                case 21:
+                    status = "<span class='ml-2 badge badge-danger'>Cancelado Antifraude</span>"
+                    break;
+                case 22:
+                    status = "<span class='ml-2 badge badge-danger'>Estornado</span>"
+                    break;
+                case 23:
+                    status = "<span class='ml-2 badge badge-warning'>Recuperado</span>"
+                    break;
+                case 24:
+                    status = "<span class='ml-2 badge badge-antifraude'>Em disputa</span>"
+                    break;
+                default:
+                    status = "<span class='ml-2 badge badge-primary'>" + sale.status + "</span>"
+                    break;
+            }
+
             //Tabela de produtos Tracking Code
             if (
                 (value.sale_status == 1 || value.sale_status == 4) &&
@@ -1334,21 +1381,29 @@ $(() => {
             ) {
                 let data = `
                     <tr>
-                        <td>
-                            <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
-                            <span class='small ellipsis'>${value.name}</span>
+                        <td class="d-flex align-items-center">
+
+                            <img src='${value.photo}'  width='35px;' style='border-radius:6px;'>
+
+                            <span class='ml-3 small ellipsis font-weight-bold font-size-14'>
+                                ${value.name}
+                            </span>
+                        </td>
+
+                        <td class="pl-2">
+                            <span class="small font-size-16">
+                                ${value.tracking_code}
+                            </span>
                         </td>
 
                         <td>
-                            <span class="small font-weight-bold">${value.tracking_code}</span>
+                            ${status}
                         </td>
 
                         <td>
-                            <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
-                        </td>
-
-                        <td>
-                            <span class='small'>${value.tracking_created_at}</span>
+                            <span class='small font-size-16'>
+                                ${value.tracking_created_at}
+                            </span>
                         </td>
 
                     </tr>`
@@ -1356,6 +1411,7 @@ $(() => {
 
                 $("#div_tracking_code").css("display", "block");
                 $("#data-tracking-products").append(data);
+
             } else {
                 $("#div_tracking_code").css("display", "none");
             }

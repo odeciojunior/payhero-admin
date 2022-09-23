@@ -298,6 +298,19 @@ li.select2-selection__choice {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 .table thead > tr > td, .table thead > tr > th{
     border-top: none !important;
+}
+
+.table thead > tr > td:first-child, .table thead > tr > th:first-child {
+    -webkit-border-radius: 4px 0 0 0 !important;
+}
+
+.table thead > tr > td:first-child, .table thead > tr > th:last-child {
+    -webkit-border-radius: 0px 4px 0px 0px !important;
+}
+
+.table-detail{
+    padding-left: 32px !important;
 }
