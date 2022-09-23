@@ -628,8 +628,8 @@ $(() => {
                                 </td>`
                             }
 
-                            <td class="col-sm-4">
-                                <span style="max-width: 330px; display:block; margin: 0px 0px 0px 0px;">
+                            <td class="">
+                                <span>
                                     ${tracking.product.amount}x ${
                         tracking.product.name
                     } ${
@@ -640,9 +640,9 @@ $(() => {
                                 </span>
                             </td>
 
-                            <td class="col-sm-1">${tracking.approved_date}</td>
+                            <td class="">${tracking.approved_date}</td>
 
-                            <td class="text-center col-sm-2">
+                            <td class="text-center">
                                 <span class="badge ${
                                     statusEnum[tracking.tracking_status_enum]
                                 }">

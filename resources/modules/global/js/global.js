@@ -836,6 +836,7 @@ function isMobile() {
 }
 
 function pagination(response, model, callback) {
+    $(paginationContainer).hide();
     let paginationContainer = "#pagination-" + model;
 
     $(paginationContainer).children().attr("disabled", "disabled");
@@ -855,9 +856,9 @@ function pagination(response, model, callback) {
     if (currentPage === 1) {
         $(paginationContainer).css({ background: "#ffffff" });
         $(paginationContainer + " .first_page")
-            .attr("disabled", true)
-            .addClass("nav-btn")
-            .addClass("active");
+        .attr("disabled", true)
+        .addClass("nav-btn")
+        .addClass("active");
     }
 
     $(paginationContainer + " .first_page").on("click", function () {
@@ -865,7 +866,7 @@ function pagination(response, model, callback) {
     });
 
     if (isMobile()) {
-        for (let x = 2; x > 0; x--) {
+        for (let x = 1; x > 0; x--) {
             if (currentPage - x <= 1) {
                 continue;
             }
@@ -894,7 +895,7 @@ function pagination(response, model, callback) {
                 .addClass("active");
         }
 
-        for (let x = 1; x < 3; x++) {
+        for (let x = 1; x < 2; x++) {
             if (currentPage + x >= lastPage) {
                 continue;
             }
@@ -988,6 +989,7 @@ function pagination(response, model, callback) {
     }
 
     $("table").addClass("table-striped");
+    $(paginationContainer).show();
 }
 
 function copyToClipboard(elem) {

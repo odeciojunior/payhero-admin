@@ -25,6 +25,8 @@ function loadData() {
 }
 
 function atualizar(link = null) {
+    $("#container-pagination").hide()
+
     currentPage = link;
 
     let updateResume = true;
@@ -198,19 +200,11 @@ function atualizar(link = null) {
                             </td>
 
                             <td>
-                                <span>${value.product}</span>
+                                <span>
+                                    ${value.product}
+                                </span>
 
-                                ${
-                                    value.affiliate != null &&
-                                    value.user_sale_type == "producer"
-                                        ? `
-                                        <br>
-
-                                        <small class="subdescription font-size-12">
-                                            (Afiliado: ${value.affiliate})
-                                        </small>`
-                                        : ""
-                                }
+                                ${value.affiliate != null && value.user_sale_type == "producer" ? ` <br> <small class="subdescription font-size-12"> (Afiliado: ${value.affiliate}) </small>` : ""}
                                 <br>
 
                                 <small class="subdescription font-size-12">
@@ -223,33 +217,14 @@ function atualizar(link = null) {
                             </td>
 
                             <td>
-                                <img src='/build/global/img/cartoes/${
-                                    value.brand
-                                }.png'  style='width: 55px; height: 36px;'>
+                                <img src='/build/global/img/cartoes/${ value.brand }.png'  style='width: 55px; height: 36px;'>
                             </td>
 
                             <td class='text-center'>
-                                <span class="status-sale badge badge-${
-                                    statusArray[value.status]
-                                }
-                                ${
-                                    value.status_translate === "Pendente" &&
-                                    value.brand != "pix"
-                                        ? "boleto-pending"
-                                        : ""
-                                }"
-                                ${
-                                    value.status_translate === "Pendente"
-                                        ? 'status="' +
-                                          value.status_translate +
-                                          '" sale="' +
-                                          value.id_default +
-                                          '"'
-                                        : ""
-                                }>
-
+                                <span class="status-sale badge badge-${statusArray[value.status]}
+                                ${ value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : "" }"
+                                ${ value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : "" }>
                                     ${value.status_translate}
-
                                 </span>
 
                             </td>
@@ -262,19 +237,13 @@ function atualizar(link = null) {
                                 ${end_date}
                             </td>
 
-                            <td class="text-center text-md-right text-nowrap commission-fweight">
-                                ${
-                                    cashback
-                                        ? cashback
-                                        : `${value.total_paid}<br>`
-                                }
+                            <td class="text-center text-md-right text-nowrap commission-fweight ${value.status_translate === "Aprovado" ? "approved-value" : ""}" >
+                                ${ cashback ? cashback : `${value.total_paid}<br>` }
                             </td>
 
                             <td style="text-align: center">
                                 ${observation}
-                                <a role='button' class='detalhes_venda pointer' venda='${
-                                    value.id
-                                }'>
+                                <a role='button' class='detalhes_venda pointer' venda='${ value.id }'>
                                     <span>
                                         <img src="/build/global/img/icon-eye.svg">
                                     </span>
@@ -296,6 +265,7 @@ function atualizar(link = null) {
                     moment(new Date()).add(3, "days").format("YYYY-MM-DD")
                 );
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
+                $("#container-pagination").show();
             } else {
                 $("#dados_tabela").html(
                     "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
@@ -596,6 +566,10 @@ $(document).ready(function () {
         //atualizar();
         loadData();
     });
+
+    $("#bt_filtro").on("click", function(){
+        console.log("CLICOU!!")
+    })
 
     let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");

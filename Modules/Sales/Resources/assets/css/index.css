@@ -33,9 +33,12 @@
 .badge.badge-success {
     background-color: #41dc8f;
 }
+.approved-value{
+    color: #41dc8f !important;
+}
 
 .badge.badge-danger {
-    background-color: #e81414;
+    background-color: #ebebeb;
 }
 
 .status-sale {
@@ -280,4 +283,21 @@ li.select2-selection__choice {
 .subdescription {
     color: #999999;
     font-size: 12px;
+}
+
+.table td:nth-child(2) {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table td:nth-child(3) {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.table thead > tr > td, .table thead > tr > th{
+    border-top: none !important;
 }

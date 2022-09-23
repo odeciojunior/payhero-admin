@@ -475,3 +475,9 @@ td.table-title {
 .nav-btn {
     height: 36px;
 }
+.table td:nth-child(2) span {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

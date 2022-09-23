@@ -1,46 +1,59 @@
 var exportFormat = null;
 
 $(document).ready(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $("#project").find('option').not(':first').remove();
-        $("#plan").find('option').not(':first').remove();
+        $("#project").find("option").not(":first").remove();
+        $("#plan").find("option").not(":first").remove();
         $("#project").val($("#project option:first").val());
         $("#plan").val($("#plan option:first").val());
-        $('#plan').data('select2').results.clear();
+        $("#plan").data("select2").results.clear();
         loadOnTable("#table_data", "#carrinhoAbandonado");
-        updateCompanyDefault().done(function(data){
-            getCompaniesAndProjects().done(function(data2){
-                    getProjects(data2, 'company-navbar')
+        updateCompanyDefault().done(function (data) {
+            getCompaniesAndProjects().done(function (data2) {
+                getProjects(data2, "company-navbar");
             });
         });
     });
 
-    function fillProjectsSelect(data){
-        if(data.company_default == 'v2RmA83EbZPVpYB')
-            $("#project").append($("<option>", {value: 'v2RmA83EbZPVpYB', text: 'Loja Demonstrativa Cloudfox'}));
+    function fillProjectsSelect(data) {
+        if (data.company_default == "v2RmA83EbZPVpYB")
+            $("#project").append(
+                $("<option>", {
+                    value: "v2RmA83EbZPVpYB",
+                    text: "Loja Demonstrativa Cloudfox",
+                })
+            );
         else {
-            projects = allProjects(data)
+            projects = allProjects(data);
             for (let i = 0; i < projects.length; i++)
-                $("#project").append($("<option>", {value: projects[i].id, text: projects[i].name,}));
+                $("#project").append(
+                    $("<option>", {
+                        value: projects[i].id,
+                        text: projects[i].name,
+                    })
+                );
         }
     }
 
-    function allProjects(data){
+    function allProjects(data) {
         projects = [];
         for (let i = 0; i < data.companies.length; i++) {
             company = data.companies[i];
-            if(company.active_flag==true && company.company_document_status=='approved' && company.id!='v2RmA83EbZPVpYB'){
+            if (
+                company.active_flag == true &&
+                company.company_document_status == "approved" &&
+                company.id != "v2RmA83EbZPVpYB"
+            ) {
                 $.each(company.projects, function (i, project) {
-                    projects.push({id: project.id, name: project.name});
+                    projects.push({ id: project.id, name: project.name });
                 });
             }
-        };
+        }
         return projects;
     }
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getProjects(data);
     });
 
@@ -153,29 +166,26 @@ $(document).ready(function () {
     /**
      * Busca os lojas para montar o select
      */
-    function getProjects(data,origin='') {
-        if(origin=='')
-            loadingOnScreen();
+    function getProjects(data, origin = "") {
+        if (origin == "") loadingOnScreen();
 
-        projects = allProjects(data)
+        projects = allProjects(data);
 
-        if(data.company_default!='v2RmA83EbZPVpYB' && projects.length == 0){
-            $('#export-excel').hide()
+        if (data.company_default != "v2RmA83EbZPVpYB" && projects.length == 0) {
+            $("#export-excel").hide();
             $("#project-empty").show();
             $("#project-not-empty").hide();
-        }
-        else{
+        } else {
             $("#project-empty").hide();
             $("#project-not-empty").show();
             $("#export-excel").show();
-            fillProjectsSelect(data)
+            fillProjectsSelect(data);
             $("#project").val($("#project option:first").val());
             $("#plan").val($("#plan option:first").val());
             updateSalesRecovery();
         }
 
-        if(origin=='')
-            loadingOnScreenRemove();
+        if (origin == "") loadingOnScreenRemove();
     }
 
     /**
@@ -207,7 +217,7 @@ $(document).ready(function () {
 
             &plan=${$("#plan").val()}`;
         }
-        url += "&company="+ $('.company-navbar').val();
+        url += "&company=" + $(".company-navbar").val();
 
         let recoveryTypeSelected = $("#recovery_type option:selected").val();
         if (recoveryTypeSelected == 1) {
@@ -229,7 +239,7 @@ $(document).ready(function () {
      */
     function updateSalesRecovery(link = null) {
         loadOnTable("#table_data", "#carrinhoAbandonado");
-        $("#pagination-salesRecovery").children().attr("disabled","disabled");
+        $("#pagination-salesRecovery").children().attr("disabled", "disabled");
 
         // Formata a url
         link = urlDataFormatted(link);
@@ -246,7 +256,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                const BOLETO_TYPE = '5'
+                const BOLETO_TYPE = "5";
 
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
@@ -284,7 +294,9 @@ $(document).ready(function () {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
-                                    $(this).css("cursor", "pointer").text("Regerar");
+                                    $(this)
+                                        .css("cursor", "pointer")
+                                        .text("Regerar");
                                     $(this).css("background", "#3D4456");
                                 },
                                 function () {
@@ -413,7 +425,12 @@ $(document).ready(function () {
             "<td class='display-sm-none display-m-none display-lg-none'>" +
             value.date +
             "</td>";
-        data += "<td>" + value.project + "</td>";
+        data +=
+            "<td> <span data-toggle='tooltip' data-placement='top' title='" +
+            value.project +
+            "'>" +
+            value.project +
+            "</span> </td>";
         data +=
             "<td class='display-sm-none display-m-none'>" +
             value.client +
@@ -455,6 +472,10 @@ $(document).ready(function () {
             "' ><span> <img src='/build/global/img/icon-eye.svg'> </span></button></td>";
         data += "</tr>";
 
+        $('[data-toggle="tooltip"]').tooltip({
+            container: "#carrinhoAbandonado",
+        });
+
         return data;
     }
 
@@ -470,7 +491,12 @@ $(document).ready(function () {
             "<td class='display-sm-none display-m-none display-lg-none'>" +
             value.start_date +
             "</td>";
-        data += "<td>" + value.project + "</td>";
+        data +=
+            "<td> <span data-toggle='tooltip' data-placement='top' title='" +
+            value.project +
+            "'>" +
+            value.project +
+            "</span> </td>";
         data +=
             "<td class='display-sm-none display-m-none'>" +
             value.client +
@@ -509,6 +535,10 @@ $(document).ready(function () {
             value.id_default +
             "' ><span class=''><img src='/build/global/img/icon-eye.svg'/></span></button></td>";
         data += "</tr>";
+
+        $('[data-toggle="tooltip"]').tooltip({
+            container: "#carrinhoAbandonado",
+        });
 
         return data;
     }
@@ -833,7 +863,7 @@ $(document).ready(function () {
     $("#project").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
-        $('#plan').data('select2').results.clear();
+        $("#plan").data("select2").results.clear();
     });
 
     //Search plan
@@ -852,7 +882,7 @@ $(document).ready(function () {
                     list: "plan",
                     search: params.term,
                     project_id: $("#project").val(),
-                    company: $(".company-navbar").val()
+                    company: $(".company-navbar").val(),
                 };
             },
             method: "GET",

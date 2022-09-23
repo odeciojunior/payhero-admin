@@ -570,6 +570,7 @@ $(() => {
             $("#discount-prog-data").show();
         } else {
             $("#discount-prog-data").hide();
+
             $("#discount-prog-title").hide();
         }
 
@@ -1014,23 +1015,30 @@ $(() => {
                       invoice.pdf +
                       "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
                     : "";
-                let data = `<tr>
-                                <td>
-                                    ${invoice.date_sent}
-                                </td>
-                                <td>
-                                    ${status}
-                                </td>
-                                <td>
-                                    ${invoice.return_http_code}
-                                </td>
-                                <td>
-                                    ${return_message}
-                                </td>
-                                <td>
-                                    ${link}
-                                </td>
-                            </tr>`;
+                let data = `
+                    <tr>
+                        <td>
+                            ${invoice.date_sent}
+                        </td>
+
+                        <td>
+                            ${status}
+                        </td>
+
+                        <td>
+                            ${invoice.return_http_code}
+                        </td>
+
+                        <td>
+                            ${return_message}
+                        </td>
+
+                        <td>
+                            ${link}
+                        </td>
+
+                    </tr>`
+                ;
                 $("#data-notazz-invoices").append(data);
             }
 
@@ -1324,21 +1332,28 @@ $(() => {
                 (value.sale_status == 1 || value.sale_status == 4) &&
                 sale.delivery_id != ""
             ) {
-                let data = `<tr>
-                                <td>
-                                    <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
-                                    <span class='small ellipsis'>${value.name}</span>
-                                </td>
-                                <td>
-                                    <span class="small font-weight-bold">${value.tracking_code}</span>
-                                </td>
-                                <td>
-                                    <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
-                                </td>
-                                <td>
-                                    <span class='small'>${value.tracking_created_at}</span>
-                                </td>
-                            </tr>`;
+                let data = `
+                    <tr>
+                        <td>
+                            <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
+                            <span class='small ellipsis'>${value.name}</span>
+                        </td>
+
+                        <td>
+                            <span class="small font-weight-bold">${value.tracking_code}</span>
+                        </td>
+
+                        <td>
+                            <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
+                        </td>
+
+                        <td>
+                            <span class='small'>${value.tracking_created_at}</span>
+                        </td>
+
+                    </tr>`
+                ;
+
                 $("#div_tracking_code").css("display", "block");
                 $("#data-tracking-products").append(data);
             } else {
