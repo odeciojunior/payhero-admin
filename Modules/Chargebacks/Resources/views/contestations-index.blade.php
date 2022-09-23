@@ -14,7 +14,7 @@
             .select2-selection__rendered {
                 color: #707070 !important;
                 font-size: 16px !important;
-                font-family: 'Muli', sans-serif;
+                font-family: 'Inter', sans-serif;
                 line-height: 43px !important;
                 padding-left: 14px !important;
                 padding-right: 38px !important;
@@ -45,12 +45,16 @@
     @endpush
 
     <!-- Page -->
-    <div class="page" style="margin-bottom: 0 !important;">
+    <div class="page"
+         style="margin-bottom: 0 !important;">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
-        <div style="display: none" class="page-header container pt-35" id="page_header">
-            <div class="row align-items-center justify-content-between" style="min-height:50px">
+        <div style="display: none"
+             class="page-header container pt-35"
+             id="page_header">
+            <div class="row align-items-center justify-content-between"
+                 style="min-height:50px">
                 <div class="col-md-6">
                     <h1 class="page-title">Contestações</h1>
                 </div>
@@ -306,7 +310,7 @@
 
     <!-- @push('scripts')
         <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
-                        <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
+                                <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
     @endpush -->
 
     @push('scriptsView')

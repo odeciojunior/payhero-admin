@@ -7,7 +7,11 @@ body {
 body {
     scroll-behavior: smooth;
     background-color: #f1f4f5;
+<<<<<<< HEAD
     font-family: "Muli", sans-serif !important;
+=======
+    font-family: "Inter", sans-serif !important;
+>>>>>>> master
 }
 
 .popover {
@@ -537,19 +541,31 @@ a.label {
     background: transparent;
     color: #888;
     border-radius: 11px;
+<<<<<<< HEAD
+=======
+    border: 1px solid #d2d2d2;
+>>>>>>> master
     font-weight: 700;
 }
 
 .nav-btn.active {
     background-color: #2e85ec !important;
     border: 1px solid #2e85ec;
+<<<<<<< HEAD
     border-radius: 4px;
+=======
+    border-radius: 11px;
+>>>>>>> master
     opacity: 1 !important;
     color: white !important;
 }
 
 .card {
+<<<<<<< HEAD
     font-family: "Muli", sans-serif;
+=======
+    font-family: "Inter", sans-serif;
+>>>>>>> master
     border-radius: 16px;
 }
 
@@ -569,6 +585,10 @@ a.label {
 
 .table thead > tr > td,
 .table thead > tr > th {
+<<<<<<< HEAD
+=======
+    background-color: #fff !important;
+>>>>>>> master
     border-top: 1px solid #f7f7f7 !important;
     border-bottom: 1px solid #f7f7f7 !important;
     /* padding: 20px 0 20px 20px !important; */
@@ -686,7 +706,11 @@ a.label {
 .s-btn {
     background-color: #ffffff;
     border: 2px solid #2626264d;
+<<<<<<< HEAD
     font: normal normal bold 24px/30px Muli;
+=======
+    font: normal normal bold 24px/30px Inter;
+>>>>>>> master
     padding: 15px 40px;
     color: #8a8a8a;
 }
@@ -1736,12 +1760,16 @@ input[type="radio"] {
 }
 
 .ph-item::before {
+<<<<<<< HEAD
     background: linear-gradient(
             90deg,
             hsla(0, 0%, 100%, 0) 55%,
             hsla(0, 0%, 100%, 0.35) 65%,
             hsla(0, 0%, 100%, 0) 75%
         )
+=======
+    background: linear-gradient(90deg, hsla(0, 0%, 100%, 0) 55%, hsla(0, 0%, 100%, 0.35) 65%, hsla(0, 0%, 100%, 0) 75%)
+>>>>>>> master
         100% 100%;
 }
 
@@ -1772,7 +1800,11 @@ input[type="radio"] {
 }
 .page-project .table .table-title {
     color: #15034c !important;
+<<<<<<< HEAD
     font: 16px "Muli" !important;
+=======
+    font: 16px "Inter" !important;
+>>>>>>> master
 }
 
 .top-holder .input-group .form-control {
@@ -1806,12 +1838,15 @@ input[type="radio"] {
 }
 .page-project .tab-pane .link-button-dependent.blue {
     color: #2e85ec;
+<<<<<<< HEAD
 }
 
 .pagination-style {
     padding: 8px;
     border-radius: 4px;
     background-color: #ffffff;
+=======
+>>>>>>> master
 }
 
 .pagination-sm .btn {
@@ -2103,7 +2138,12 @@ tbody td {
 
 .page-project .pagination-sm .nav-btn {
     color: #3d4456;
+<<<<<<< HEAD
     background: #ffffff;
+=======
+    background: #ffffff !important;
+    border: 1px solid #ebebeb !important;
+>>>>>>> master
     border-radius: 8px;
     margin-right: 10px;
     min-width: 40px;
@@ -2129,11 +2169,18 @@ tbody td {
 }
 
 .page-project .pagination-sm .nav-btn.active {
+<<<<<<< HEAD
     background-color: #4990e7 !important;
 
     border-radius: 4px;
     opacity: 1 !important;
     color: white !important;
+=======
+    border-radius: 8px;
+    color: #2e85ec !important;
+    background: #ffffff !important;
+    border: 1px solid #2e85ec !important;
+>>>>>>> master
 }
 
 .page-project .table > tbody > tr:nth-child(2n + 2) > td,
@@ -2237,6 +2284,10 @@ tbody td {
 }
 .page-project .table td,
 .page-project .table {
+<<<<<<< HEAD
+=======
+    color: #5d5d5d;
+>>>>>>> master
     line-height: 1;
 }
 #stage4 .box-product:hover {
@@ -2450,6 +2501,7 @@ tbody td {
     margin-left: 65px;
     transition: all 0.25s;
 }
+<<<<<<< HEAD
 .new-register-page-open-modal-container
     .row
     .new-register-open-modal-btn
@@ -2470,6 +2522,17 @@ tbody td {
         .row
         .new-register-open-modal-btn
         .alert-pendings-box-1 {
+=======
+.new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
+    margin: 0 10px 4px;
+}
+@media screen and (max-width: 767px) {
+    .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 img {
+        margin: 0 0 4px;
+    }
+
+    .new-register-page-open-modal-container .row .new-register-open-modal-btn .alert-pendings-box-1 {
+>>>>>>> master
         padding-right: 0;
     }
 
@@ -3480,8 +3543,12 @@ tbody td {
     linear-gradient(#000 0 0) bottom right/70% 20%,
     radial-gradient(circle closest-side,#000 90%,#0000) bottom left/25% 25%; */
     -webkit-mask-repeat: no-repeat;
+<<<<<<< HEAD
     background: linear-gradient(90deg, #ececec 40%, #fffa, #ececec 60%)
         right/300% 100%;
+=======
+    background: linear-gradient(90deg, #ececec 40%, #fffa, #ececec 60%) right/300% 100%;
+>>>>>>> master
     animation: skeleton 1s linear infinite;
 }
 .skeleton-circle {

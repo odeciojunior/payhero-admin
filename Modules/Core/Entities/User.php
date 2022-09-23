@@ -139,7 +139,7 @@ class User extends Authenticable
 
     protected $presenter = UserPresenter::class;
 
-    protected $guard_name = 'web';
+    protected $guard_name = "web";
 
     /**
      * @var array
@@ -207,10 +207,12 @@ class User extends Authenticable
         "show_old_finances",
         "mkt_information",
         "pipefy_card_id",
+        "pipefy_card_data",
         "company_default",
         "role_default",
         "is_cloudfox",
         "block_attendance_balance",
+        "utm_srcs",
         "created_at",
         "updated_at",
         "deleted_at",
@@ -357,12 +359,7 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany(
-            Project::class,
-            "users_projects",
-            "user_id",
-            "project_id"
-        );
+        return $this->belongsToMany(Project::class, "users_projects", "user_id", "project_id");
     }
 
     /**
@@ -418,12 +415,7 @@ class User extends Authenticable
      */
     public function tasks()
     {
-        return $this->belongsToMany(
-            Task::class,
-            "tasks_users",
-            "user_id",
-            "task_id"
-        );
+        return $this->belongsToMany(Task::class, "tasks_users", "user_id", "task_id");
     }
 
     /**
@@ -432,8 +424,8 @@ class User extends Authenticable
     public function benefits()
     {
         return $this->hasMany(UserBenefit::class)
-            ->join('benefits', 'benefits.id', '=', 'user_benefits.benefit_id')
-            ->select('user_benefits.*', 'benefits.name', 'benefits.description', 'benefits.level');
+            ->join("benefits", "benefits.id", "=", "user_benefits.benefit_id")
+            ->select("user_benefits.*", "benefits.name", "benefits.description", "benefits.level");
     }
 
     public function getAccountOwnerId()
@@ -446,14 +438,19 @@ class User extends Authenticable
         return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;
     }
 
-    public function getRoleNames($guard='web'):SupportCollection
+    public function getRoleNames($guard = "web"): SupportCollection
     {
-        return $this->roles()->where('guard_name',$guard)->get()->pluck('name');
+        return $this->roles()
+            ->where("guard_name", $guard)
+            ->get()
+            ->pluck("name");
     }
 
-    public function syncGuardRoles($guard='web',...$newRoles)
+    public function syncGuardRoles($guard = "web", ...$newRoles)
     {
-        $roles = $this->roles()->where('guard_name',$guard)->get();
+        $roles = $this->roles()
+            ->where("guard_name", $guard)
+            ->get();
         foreach ($roles as $role) {
             $this->removeRole($role);
         }
@@ -461,13 +458,18 @@ class User extends Authenticable
         return $this->assignRole($newRoles);
     }
 
-    public function getGuardAllPermissions($guard='web'){
-        return $this->permissions()->where('guard_name',$guard)->get();
+    public function getGuardAllPermissions($guard = "web")
+    {
+        return $this->permissions()
+            ->where("guard_name", $guard)
+            ->get();
     }
 
-    public function syncGuardPermissions($guard,...$newPermissions)
+    public function syncGuardPermissions($guard, ...$newPermissions)
     {
-        $permissions = $this->permissions()->where('guard_name',$guard)->get();
+        $permissions = $this->permissions()
+            ->where("guard_name", $guard)
+            ->get();
 
         foreach ($permissions as $permission) {
             $this->revokePermissionTo($permission);

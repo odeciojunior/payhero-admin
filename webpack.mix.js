@@ -3,14 +3,8 @@ let mix = require("laravel-mix");
 /**
  * Modules/ActiveCampaign/Resources/views/index.blade.php
  */
-mix.styles(
-    ["resources/modules/global/css/empty.css"],
-    "public/build/layouts/activecampaign/index.min.css"
-);
-mix.babel(
-    ["Modules/ActiveCampaign/Resources/assets/js/index.js"],
-    "public/build/layouts/activecampaign/index.min.js"
-);
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/activecampaign/index.min.css");
+mix.babel(["Modules/ActiveCampaign/Resources/assets/js/index.js"], "public/build/layouts/activecampaign/index.min.js");
 
 /**
  * Modules/ActiveCampaign/Resources/views/show.blade.php
@@ -35,18 +29,12 @@ mix.babel(
 /**
  * Modules/Affiliates/Resources/views/index.blade.php
  */
-mix.babel(
-    ["Modules/Affiliates/Resources/assets/js/index.js"],
-    "public/build/layouts/affiliates/index.min.js"
-);
+mix.babel(["Modules/Affiliates/Resources/assets/js/index.js"], "public/build/layouts/affiliates/index.min.js");
 
 /**
  * Modules/Affiliates/Resources/views/projectaffiliates.blade.php
  */
-mix.styles(
-    ["resources/modules/global/css/table.css"],
-    "public/build/layouts/affiliates/projectaffiliates.min.css"
-);
+mix.styles(["resources/modules/global/css/table.css"], "public/build/layouts/affiliates/projectaffiliates.min.css");
 mix.babel(
     ["Modules/Affiliates/Resources/assets/js/projectaffiliates.js"],
     "public/build/layouts/affiliates/projectaffiliates.min.js"
@@ -72,8 +60,7 @@ mix.styles(
         "resources/modules/global/adminremark/global/fonts/font-awesome/font-awesome.css",
         "resources/modules/global/css/newFonts.css",
         "resources/modules/global/css/new-dashboard.css",
-        "resources/assets/fonts-googleapis-muli-400-700-800.css",
-        "resources/assets/fonts-googleapis-material-icons.css",
+        "resources/modules/fonts-googleapis-material-icons.css",
         "resources/modules/global/css/materialdesignicons.min.css",
         "resources/modules/global/css/new-site.css",
         "resources/modules/global/css/finances.css",
@@ -137,37 +124,22 @@ mix.copy(
 /**
  * Modules/Apps/Resources/views/index.blade.php
  */
-mix.styles(
-    ["Modules/Apps/Resources/assets/css/index.css"],
-    "public/build/layouts/apps/index.min.css"
-);
+mix.styles(["Modules/Apps/Resources/assets/css/index.css"], "public/build/layouts/apps/index.min.css");
 mix.babel(
-    [
-        "Modules/Apps/Resources/assets/js/index.js",
-        "resources/modules/global/js-extra/moment.min.js",
-    ],
+    ["Modules/Apps/Resources/assets/js/index.js", "resources/modules/global/js-extra/moment.min.js"],
     "public/build/layouts/apps/index.min.js"
 );
 
-mix.copy(
-    "Modules/Apps/Resources/assets/imgs",
-    "public/build/layouts/apps/imgs"
-);
+mix.copy("Modules/Apps/Resources/assets/imgs", "public/build/layouts/apps/imgs");
 
 /**
  * Modules/AstronMembers/Resources/views/index.blade.php
  */
 mix.styles(
-    [
-        "Modules/ConvertaX/Resources/assets/css/index.css",
-        "resources/modules/global/css/empty.css",
-    ],
+    ["Modules/ConvertaX/Resources/assets/css/index.css", "resources/modules/global/css/empty.css"],
     "public/build/layouts/astronmembers/index.min.css"
 );
-mix.babel(
-    ["Modules/AstronMembers/Resources/assets/js/index.js"],
-    "public/build/layouts/astronmembers/index.min.js"
-);
+mix.babel(["Modules/AstronMembers/Resources/assets/js/index.js"], "public/build/layouts/astronmembers/index.min.js");
 
 /**
  * Modules/NotificacoesInteligentes/Resources/views/index.blade.php
@@ -246,10 +218,7 @@ mix.babel(
     "public/build/layouts/chargebacks/contestations-index.min.js"
 );
 
-mix.copy(
-    "Modules/Chargebacks/Resources/assets/svg",
-    "public/build/layouts/chargebacks/svg"
-);
+mix.copy("Modules/Chargebacks/Resources/assets/svg", "public/build/layouts/chargebacks/svg");
 
 /**
  * Modules/CheckoutEditor/Resources/views/index.blade.php
@@ -285,34 +254,19 @@ mix.babel(
     ],
     "public/build/layouts/checkouteditor/index.min.js"
 );
-mix.copy(
-    "Modules/CheckoutEditor/Resources/assets/img",
-    "public/build/layouts/checkouteditor/img"
-);
-mix.copy(
-    "Modules/CheckoutEditor/Resources/assets/img/banner",
-    "public/build/layouts/checkouteditor/img/banner"
-);
-mix.copy(
-    "Modules/CheckoutEditor/Resources/assets/img/svg",
-    "public/build/layouts/checkouteditor/img/svg"
-);
+mix.copy("Modules/CheckoutEditor/Resources/assets/img", "public/build/layouts/checkouteditor/img");
+mix.copy("Modules/CheckoutEditor/Resources/assets/img/banner", "public/build/layouts/checkouteditor/img/banner");
+mix.copy("Modules/CheckoutEditor/Resources/assets/img/svg", "public/build/layouts/checkouteditor/img/svg");
 mix.copy(
     "Modules/CheckoutEditor/Resources/assets/img/svg/credit-card-icons",
     "public/build/layouts/checkouteditor/img/svg/credit-card-icons"
 );
-mix.copy(
-    "Modules/CheckoutEditor/Resources/assets/files",
-    "public/build/layouts/checkouteditor/files"
-);
+mix.copy("Modules/CheckoutEditor/Resources/assets/files", "public/build/layouts/checkouteditor/files");
 
 /**
  * Modules/ConvertaX/Resources/views/include.blade.php
  */
-mix.styles(
-    ["resources/modules/global/css/empty.css"],
-    "public/build/layouts/convertax/include.min.css"
-);
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/convertax/include.min.css");
 
 /**
  * Modules/ConvertaX/Resources/views/index.blade.php
@@ -325,10 +279,7 @@ mix.styles(
     ],
     "public/build/layouts/convertax/index.min.css"
 );
-mix.babel(
-    ["Modules/ConvertaX/Resources/assets/js/index.js"],
-    "public/build/layouts/convertax/index.min.js"
-);
+mix.babel(["Modules/ConvertaX/Resources/assets/js/index.js"], "public/build/layouts/convertax/index.min.js");
 
 /**
  * Modules/Dashboard/Resources/views/onboarding/presentation.blade.php
@@ -341,26 +292,16 @@ mix.styles(
     ],
     "public/build/layouts/dashboard/onboarding-details.min.css"
 );
-mix.babel(
-    ["resources/cdn/slick.min.js"],
-    "public/build/layouts/dashboard/onboarding-details.min.js"
-);
+mix.babel(["resources/cdn/slick.min.js"], "public/build/layouts/dashboard/onboarding-details.min.js");
 
 /**
  * Modules/Dashboard/Resources/views/pix/pix.blade.php
  */
 mix.styles(
-    [
-        "resources/cdn/slick.css",
-        "resources/cdn/slick-theme.css",
-        "Modules/Dashboard/Resources/assets/css/pix.css",
-    ],
+    ["resources/cdn/slick.css", "resources/cdn/slick-theme.css", "Modules/Dashboard/Resources/assets/css/pix.css"],
     "public/build/layouts/dashboard/pix.min.css"
 );
-mix.babel(
-    ["resources/cdn/slick.min.js"],
-    "public/build/layouts/dashboard/pix.min.js"
-);
+mix.babel(["resources/cdn/slick.min.js"], "public/build/layouts/dashboard/pix.min.js");
 
 /**
  * Modules/Dashboard/Resources/views/achievement-details.blade.php
@@ -373,16 +314,9 @@ mix.styles(
 /**
  * Modules/Dashboard/Resources/views/app.blade.php
  */
-mix.styles(
-    ["resources/cdn/bootstrap.min.css"],
-    "public/build/layouts/dashboard/app.min.css"
-);
+mix.styles(["resources/cdn/bootstrap.min.css"], "public/build/layouts/dashboard/app.min.css");
 mix.babel(
-    [
-        "resources/cdn/jquery-3.3.1.slim.min.js",
-        "resources/cdn/popper.min.js",
-        "resources/cdn/bootstrap.min.js",
-    ],
+    ["resources/cdn/jquery-3.3.1.slim.min.js", "resources/cdn/popper.min.js", "resources/cdn/bootstrap.min.js"],
     "public/build/layouts/dashboard/app.min.js"
 );
 
@@ -431,10 +365,7 @@ mix.babel(
 /**
  * Modules/Finances/Resources/views/components/details.blade.php
  */
-mix.babel(
-    ["Modules/Finances/Resources/assets/js/detail.js"],
-    "public/build/layouts/finances/detail.min.js"
-);
+mix.babel(["Modules/Finances/Resources/assets/js/detail.js"], "public/build/layouts/finances/detail.min.js");
 
 /**
  * Modules/Finances/Resources/views/index.blade.php
@@ -493,35 +424,20 @@ mix.babel(
  * Modules/HotBillet/Resources/views/index.blade.php
  */
 mix.styles(
-    [
-        "Modules/ConvertaX/Resources/assets/css/index.css",
-        "resources/modules/global/css/empty.css",
-    ],
+    ["Modules/ConvertaX/Resources/assets/css/index.css", "resources/modules/global/css/empty.css"],
     "public/build/layouts/hotbillet/index.min.css"
 );
-mix.styles(
-    ["resources/modules/global/css/empty.css"],
-    "public/build/layouts/hotbillet/index2.min.css"
-);
-mix.babel(
-    ["Modules/HotBillet/Resources/assets/js/index.js"],
-    "public/build/layouts/hotbillet/index.min.js"
-);
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/hotbillet/index2.min.css");
+mix.babel(["Modules/HotBillet/Resources/assets/js/index.js"], "public/build/layouts/hotbillet/index.min.js");
 
 /**
  * Modules/HotZapp/Resources/views/index.blade.php
  */
 mix.styles(
-    [
-        "Modules/ConvertaX/Resources/assets/css/index.css",
-        "resources/modules/global/css/empty.css",
-    ],
+    ["Modules/ConvertaX/Resources/assets/css/index.css", "resources/modules/global/css/empty.css"],
     "public/build/layouts/hotzapp/index.min.css"
 );
-mix.babel(
-    ["Modules/HotZapp/Resources/assets/js/index.js"],
-    "public/build/layouts/hotzapp/index.min.js"
-);
+mix.babel(["Modules/HotZapp/Resources/assets/js/index.js"], "public/build/layouts/hotzapp/index.min.js");
 
 /**
  * Modules/Integrations/Resources/views/index.blade.php
@@ -534,10 +450,7 @@ mix.styles(
     ],
     "public/build/layouts/integrations/index.min.css"
 );
-mix.babel(
-    ["Modules/Integrations/Resources/assets/js/index.js"],
-    "public/build/layouts/integrations/index.min.js"
-);
+mix.babel(["Modules/Integrations/Resources/assets/js/index.js"], "public/build/layouts/integrations/index.min.js");
 
 /**
  * Modules/Invites/Resources/views/index.blade.php
@@ -550,22 +463,13 @@ mix.styles(
     ],
     "public/build/layouts/invites/index.min.css"
 );
-mix.babel(
-    ["Modules/Invites/Resources/assets/js/invites.js"],
-    "public/build/layouts/invites/index.min.js"
-);
+mix.babel(["Modules/Invites/Resources/assets/js/invites.js"], "public/build/layouts/invites/index.min.js");
 
 /**
  * Modules/Melhorenvio/Resources/views/index.blade.php
  */
-mix.styles(
-    ["Modules/Melhorenvio/Resources/assets/css/index.css"],
-    "public/build/layouts/melhorenvio/index.min.css"
-);
-mix.babel(
-    ["Modules/Melhorenvio/Resources/assets/js/index.js"],
-    "public/build/layouts/melhorenvio/index.min.js"
-);
+mix.styles(["Modules/Melhorenvio/Resources/assets/css/index.css"], "public/build/layouts/melhorenvio/index.min.css");
+mix.babel(["Modules/Melhorenvio/Resources/assets/js/index.js"], "public/build/layouts/melhorenvio/index.min.js");
 
 /**
  * Modules/Melhorenvio/Resources/views/tutorial.blade.php
@@ -575,42 +479,27 @@ mix.styles(
     "public/build/layouts/melhorenvio/tutorial.min.css"
 );
 
-mix.copy(
-    "Modules/Melhorenvio/Resources/assets/img",
-    "public/build/layouts/melhorenvio/img"
-);
+mix.copy("Modules/Melhorenvio/Resources/assets/img", "public/build/layouts/melhorenvio/img");
 
 /**
  * Modules/Notazz/Resources/views/details.blade.php
  */
-mix.babel(
-    ["Modules/Notazz/Resources/assets/js/detail.js"],
-    "public/build/layouts/notazz/details.min.js"
-);
+mix.babel(["Modules/Notazz/Resources/assets/js/detail.js"], "public/build/layouts/notazz/details.min.js");
 
 /**
  * Modules/Notazz/Resources/views/include.blade.php
  */
-mix.styles(
-    ["resources/modules/global/css/empty.css"],
-    "public/build/layouts/notazz/include.min.css"
-);
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/notazz/include.min.css");
 
 /**
  * Modules/Notazz/Resources/views/index.blade.php
  */
 mix.styles(
-    [
-        "Modules/Notazz/Resources/assets/css/index.css",
-        "resources/modules/global/css/empty.css",
-    ],
+    ["Modules/Notazz/Resources/assets/css/index.css", "resources/modules/global/css/empty.css"],
     "public/build/layouts/notazz/index.min.css"
 );
 mix.babel(
-    [
-        "Modules/Notazz/Resources/assets/js/index.js",
-        "resources/modules/global/js-extra/moment.min.js",
-    ],
+    ["Modules/Notazz/Resources/assets/js/index.js", "resources/modules/global/js-extra/moment.min.js"],
     "public/build/layouts/notazz/index.min.js"
 );
 
@@ -640,31 +529,19 @@ mix.babel(
 /**
  * Modules/Pixels/Resources/views/edit.blade.php
  */
-mix.styles(
-    ["Modules/Pixels/Resources/assets/css/pixel-edit.css"],
-    "public/build/layouts/pixels/edit.min.css"
-);
+mix.styles(["Modules/Pixels/Resources/assets/css/pixel-edit.css"], "public/build/layouts/pixels/edit.min.css");
 
 /**
  * Modules/Products/Resources/views/index.blade.php
  */
-mix.styles(
-    ["resources/modules/global/css/empty.css"],
-    "public/build/layouts/products/index.min.css"
-);
-mix.babel(
-    ["Modules/Products/Resources/assets/js/index.js"],
-    "public/build/layouts/products/index.min.js"
-);
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/products/index.min.css");
+mix.babel(["Modules/Products/Resources/assets/js/index.js"], "public/build/layouts/products/index.min.js");
 
 /**
  * Modules/Products/Resources/views/create-digital.blade.php
  * Modules/Products/Resources/views/create-physical.blade.php
  */
-mix.copy(
-    ["resources/modules/global/adminremark/global/vendor/dropify/!(*.css)"],
-    "public/build/layouts/products"
-);
+mix.copy(["resources/modules/global/adminremark/global/vendor/dropify/!(*.css)"], "public/build/layouts/products");
 mix.styles(
     [
         "resources/modules/global/adminremark/global/vendor/dropify/dropify.css",
@@ -708,10 +585,7 @@ mix.babel(
     ],
     "public/build/layouts/products/edit.min.js"
 );
-mix.styles(
-    ["Modules/Products/Resources/assets/css/products.css"],
-    "public/build/layouts/products/index.min.css"
-);
+mix.styles(["Modules/Products/Resources/assets/css/products.css"], "public/build/layouts/products/index.min.css");
 
 /**
  * Modules/Projects/Resources/views/projectaffiliate.blade.php
@@ -737,10 +611,7 @@ mix.babel(
 /**
  * Modules/Projects/Resources/views/project.blade.php
  */
-mix.copy(
-    "resources/assets/svg/raty.svg",
-    "public/build/layouts/projects/raty.svg"
-);
+mix.copy("resources/modules/svg/raty.svg", "public/build/layouts/projects/raty.svg");
 mix.styles(
     [
         "resources/cdn/select2.min.css",
@@ -754,10 +625,7 @@ mix.styles(
     ],
     "public/build/layouts/projects/project.min.css"
 );
-mix.copy(
-    "resources/cdn/ckeditor.js",
-    "public/build/layouts/projects/ckeditor.js"
-);
+mix.copy("resources/cdn/ckeditor.js", "public/build/layouts/projects/ckeditor.js");
 mix.babel(
     [
         "resources/cdn/pt-br.js",
@@ -801,10 +669,7 @@ mix.styles(
     "public/build/layouts/projects/index.min.css"
 );
 mix.babel(
-    [
-        "resources/cdn/jquery-ui.min.js",
-        "Modules/Projects/Resources/assets/js/index.js",
-    ],
+    ["resources/cdn/jquery-ui.min.js", "Modules/Projects/Resources/assets/js/index.js"],
     "public/build/layouts/projects/index.min.js"
 );
 
@@ -819,34 +684,22 @@ mix.styles(
 /**
  * Modules/Projects/Resources/views/empty.blade.php
  */
-mix.styles(
-    ["resources/modules/global/css/empty.css"],
-    "public/build/layouts/projects/empty.min.css"
-);
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/projects/empty.min.css");
 
 /**
  * Modules/Projects/Resources/views/empty-company.blade.php
  */
-mix.styles(
-    ["resources/modules/global/css/empty.css"],
-    "public/build/layouts/projects/empty-company.min.css"
-);
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/projects/empty-company.min.css");
 
 /**
  * Modules/Projects/Resources/views/edit.blade.php
  */
-mix.styles(
-    ["Modules/Projects/Resources/assets/css/edit.css"],
-    "public/build/layouts/projects/edit.min.css"
-);
+mix.styles(["Modules/Projects/Resources/assets/css/edit.css"], "public/build/layouts/projects/edit.min.css");
 
 /**
  * Modules/Projects/Resources/views/create.blade.php
  */
-mix.copy(
-    ["resources/modules/global/adminremark/global/vendor/dropify/!(*.css)"],
-    "public/build/layouts/projects"
-);
+mix.copy(["resources/modules/global/adminremark/global/vendor/dropify/!(*.css)"], "public/build/layouts/projects");
 mix.styles(
     [
         "resources/modules/global/css/empty.css",
@@ -864,10 +717,7 @@ mix.babel(
     "public/build/layouts/projects/create.min.js"
 );
 
-mix.copy(
-    "Modules/Projects/Resources/assets/img",
-    "public/build/layouts/projects/img"
-);
+mix.copy("Modules/Projects/Resources/assets/img", "public/build/layouts/projects/img");
 
 /**
  * Modules/ProjectUpsellConfig/Resources/views/previewupsellconfig.blade.php
@@ -881,24 +731,15 @@ mix.styles(
  * Modules/Reportana/Resources/views/index.blade.php
  */
 mix.styles(
-    [
-        "resources/modules/digitalmanager/css/index.css",
-        "resources/modules/global/css/empty.css",
-    ],
+    ["resources/modules/digitalmanager/css/index.css", "resources/modules/global/css/empty.css"],
     "public/build/layouts/reportana/index.min.css"
 );
-mix.babel(
-    ["Modules/Reportana/Resources/assets/js/index.js"],
-    "public/build/layouts/reportana/index.min.js"
-);
+mix.babel(["Modules/Reportana/Resources/assets/js/index.js"], "public/build/layouts/reportana/index.min.js");
 
 /**
  * Modules/Reports/Resources/views/layouts/details.blade.php
  */
-mix.styles(
-    ["Modules/Sales/Resources/assets/css/index.css"],
-    "public/build/layouts/reports/details.min.css"
-);
+mix.styles(["Modules/Sales/Resources/assets/css/index.css"], "public/build/layouts/reports/details.min.css");
 
 /**
  * Modules/Reports/Resources/views/blockedbalance.blade.php
@@ -963,7 +804,6 @@ mix.babel(
     [
         "Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js",
         "Modules/Reports/Resources/assets/js/moment.min.js",
-        // 'resources/modules/global/js/daterangepicker.min.js',
         "resources/modules/global/jquery-daterangepicker/daterangepicker.js",
         "Modules/Reports/Resources/assets/js/chartist.min.js",
         "Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js",
@@ -981,12 +821,10 @@ mix.babel(
     [
         "Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js",
         "Modules/Reports/Resources/assets/js/moment.min.js",
-        // 'resources/modules/global/js/daterangepicker.min.js',
         "resources/modules/global/jquery-daterangepicker/daterangepicker.js",
         "Modules/Reports/Resources/assets/js/chartist.min.js",
         "Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js",
         "Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js",
-        // 'Modules/Reports/Resources/assets/js/reports.js',
         "Modules/Reports/Resources/assets/js/reports-sales.js",
     ],
     "public/build/layouts/reports/sales.min.js"
@@ -999,7 +837,6 @@ mix.babel(
     [
         "Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js",
         "Modules/Reports/Resources/assets/js/moment.min.js",
-        // 'resources/modules/global/js/daterangepicker.min.js',
         "resources/modules/global/jquery-daterangepicker/daterangepicker.js",
         "Modules/Reports/Resources/assets/js/chartist.min.js",
         "Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js",
@@ -1042,7 +879,6 @@ mix.babel(
     [
         "Modules/Reports/Resources/assets/js/moment.min.js",
         "resources/modules/global/jquery-daterangepicker/daterangepicker.js",
-        // 'Modules/Reports/Resources/assets/js/reports.js',
         "Modules/Reports/Resources/assets/js/report-pending.js",
     ],
     "public/build/layouts/reports/pending.min.js"
@@ -1073,14 +909,8 @@ mix.babel(
 /**
  * Modules/Sales/Resources/views/details.blade.php
  */
-mix.styles(
-    ["Modules/Sales/Resources/assets/css/index.css"],
-    "public/build/layouts/sales/details.min.css"
-);
-mix.babel(
-    ["Modules/Sales/Resources/assets/js/detail.js"],
-    "public/build/layouts/sales/details.min.js"
-);
+mix.styles(["Modules/Sales/Resources/assets/css/index.css"], "public/build/layouts/sales/details.min.css");
+mix.babel(["Modules/Sales/Resources/assets/js/detail.js"], "public/build/layouts/sales/details.min.js");
 
 /**
  * Modules/Sales/Resources/views/index.blade.php
@@ -1161,18 +991,12 @@ mix.babel(
 /**
  * Modules/Shipping/Resources/views/create.blade.php
  */
-mix.styles(
-    ["Modules/Shipping/Resources/assets/css/create.css"],
-    "public/build/layouts/shipping/create.min.css"
-);
+mix.styles(["Modules/Shipping/Resources/assets/css/create.css"], "public/build/layouts/shipping/create.min.css");
 
 /**
  * Modules/Shipping/Resources/views/edit.blade.php
  */
-mix.styles(
-    ["Modules/Shipping/Resources/assets/css/edit.css"],
-    "public/build/layouts/shipping/edit.min.css"
-);
+mix.styles(["Modules/Shipping/Resources/assets/css/edit.css"], "public/build/layouts/shipping/edit.min.css");
 
 /**
  * Modules/Shopify/Resources/views/index.blade.php
@@ -1185,22 +1009,13 @@ mix.styles(
     ],
     "public/build/layouts/shopify/index.min.css"
 );
-mix.babel(
-    ["Modules/Shopify/Resources/assets/js/index.js"],
-    "public/build/layouts/shopify/index.min.js"
-);
+mix.babel(["Modules/Shopify/Resources/assets/js/index.js"], "public/build/layouts/shopify/index.min.js");
 
 /**
  * Modules/Smartfunnel/Resources/views/index.blade.php
  */
-mix.styles(
-    ["resources/modules/digitalmanager/css/index.css"],
-    "public/build/layouts/smartfunnel/index.min.css"
-);
-mix.babel(
-    ["Modules/Smartfunnel/Resources/assets/js/index.js"],
-    "public/build/layouts/smartfunnel/index.min.js"
-);
+mix.styles(["resources/modules/digitalmanager/css/index.css"], "public/build/layouts/smartfunnel/index.min.css");
+mix.babel(["Modules/Smartfunnel/Resources/assets/js/index.js"], "public/build/layouts/smartfunnel/index.min.js");
 
 /**
  * Modules/Trackings/Resources/views/index.blade.php
@@ -1226,64 +1041,34 @@ mix.babel(
     ],
     "public/build/layouts/trackings/index.min.js"
 );
-mix.copy(
-    "Modules/Trackings/Resources/assets/svg",
-    "public/build/layouts/trackings/svg"
-);
+mix.copy("Modules/Trackings/Resources/assets/svg", "public/build/layouts/trackings/svg");
 /**
  * Modules/Unicodrop/Resources/views/index.blade.php
  */
-mix.styles(
-    ["resources/modules/digitalmanager/css/index.css"],
-    "public/build/layouts/unicodrop/index.min.css"
-);
-mix.babel(
-    ["Modules/Unicodrop/Resources/assets/js/index.js"],
-    "public/build/layouts/unicodrop/index.min.js"
-);
+mix.styles(["resources/modules/digitalmanager/css/index.css"], "public/build/layouts/unicodrop/index.min.css");
+mix.babel(["Modules/Unicodrop/Resources/assets/js/index.js"], "public/build/layouts/unicodrop/index.min.js");
 
 /**
  * Modules/Webhooks/Resources/views/index.blade.php
  */
 mix.styles(
-    [
-        "resources/modules/global/css/new-dashboard.css",
-        "resources/modules/global/css/empty.css",
-    ],
+    ["resources/modules/global/css/new-dashboard.css", "resources/modules/global/css/empty.css"],
     "public/build/layouts/webhooks/index.min.css"
 );
-mix.babel(
-    ["Modules/Webhooks/Resources/assets/js/index.js"],
-    "public/build/layouts/webhooks/index.min.js"
-);
+mix.babel(["Modules/Webhooks/Resources/assets/js/index.js"], "public/build/layouts/webhooks/index.min.js");
 
 /**
  * Modules/Whatsapp2/Resources/views/index.blade.php
  */
-mix.styles(
-    ["resources/modules/digitalmanager/css/index.css"],
-    "public/build/layouts/whatsapp2/index.min.css"
-);
-mix.babel(
-    ["Modules/Whatsapp2/Resources/assets/js/index.js"],
-    "public/build/layouts/whatsapp2/index.min.js"
-);
+mix.styles(["resources/modules/digitalmanager/css/index.css"], "public/build/layouts/whatsapp2/index.min.css");
+mix.babel(["Modules/Whatsapp2/Resources/assets/js/index.js"], "public/build/layouts/whatsapp2/index.min.js");
 
 /**
  * Modules/WooCommerce/Resources/views/index.blade.php
  */
-mix.styles(
-    ["resources/modules/global/css/empty.css"],
-    "public/build/layouts/wooCommerce/index.min.css"
-);
-mix.babel(
-    ["Modules/WooCommerce/Resources/assets/js/index.js"],
-    "public/build/layouts/wooCommerce/index.min.js"
-);
-mix.copy(
-    "Modules/WooCommerce/Resources/assets/plugins",
-    "public/build/layouts/woocommerce/plugins"
-);
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/wooCommerce/index.min.css");
+mix.babel(["Modules/WooCommerce/Resources/assets/js/index.js"], "public/build/layouts/wooCommerce/index.min.js");
+mix.copy("Modules/WooCommerce/Resources/assets/plugins", "public/build/layouts/woocommerce/plugins");
 /**
  * resources/assets/modules/finances/js/index.js
  */
@@ -1295,19 +1080,32 @@ mix.babel(
 /**
  * resources/views/layouts/master.blade
  */
+mix.copy(["resources/modules/global/adminremark/global/fonts/web-icons/!(*.css)"], "public/build/layouts/master");
+mix.copy(["resources/modules/global/adminremark/global/fonts/font-awesome/!(*.css)"], "public/build/layouts/master");
 mix.copy(
-    ["resources/modules/global/adminremark/global/fonts/web-icons/!(*.css)"],
+    ["resources/modules/global/adminremark/global/fonts/orion-icons/!(*.css|*.html)"],
     "public/build/layouts/master"
 );
-mix.copy(
-    ["resources/modules/global/adminremark/global/fonts/font-awesome/!(*.css)"],
-    "public/build/layouts/master"
-);
-mix.copy(
+
+/**
+ * resources/views/layouts/auth.blade.php
+ */
+mix.styles(
     [
-        "resources/modules/global/adminremark/global/fonts/orion-icons/!(*.css|*.html)",
+        "resources/modules/global/adminremark/assets/css/bootstrap.min.css",
+        "resources/modules/global/adminremark/assets/css/new-login.css",
+        "resources/modules/global/css/sweetalert2.min.css",
+        "resources/modules/global/css/loading.css",
     ],
-    "public/build/layouts/master"
+    "public/build/layouts/auth/auth.min.css"
+);
+mix.babel(
+    [
+        "resources/modules/global/adminremark/global/vendor/breakpoints/breakpoints.js",
+        "resources/modules/global/js-extra/sweetalert2.all.min.js",
+        "resources/modules/global/js/global.js",
+    ],
+    "public/build/layouts/auth/auth.min.js"
 );
 
 mix.styles(
@@ -1331,9 +1129,8 @@ mix.styles(
         "resources/modules/global/adminremark/global/fonts/web-icons/web-icons.css",
         "resources/modules/global/adminremark/global/fonts/font-awesome/font-awesome.css",
         "resources/modules/global/css/newFonts.css",
-        "resources/assets/fonts-googleapis-muli-400-700-800.css",
         // Icons
-        "resources/assets/fonts-googleapis-material-icons.css",
+        "resources/modules/fonts-googleapis-material-icons.css",
         "resources/modules/global/css/materialdesignicons.min.css",
         "resources/modules/global/adminremark/global/fonts/orion-icons/iconfont.css",
         // New CSS
@@ -1378,10 +1175,7 @@ mix.babel(
     "public/build/layouts/master/plugins.min.js"
 );
 mix.babel(
-    [
-        "resources/modules/global/js-extra/pusher.min.js",
-        "resources/modules/global/js/notifications.js",
-    ],
+    ["resources/modules/global/js-extra/pusher.min.js", "resources/modules/global/js/notifications.js"],
     "public/build/layouts/master/production.min.js"
 );
 mix.babel(
@@ -1391,10 +1185,7 @@ mix.babel(
     ],
     "public/build/layouts/master/master.min.js"
 );
-mix.copy(
-    "resources/modules/global/js-extra/sentry-bundle.min.js",
-    "public/build/layouts/master/sentry-bundle.min.js"
-);
+mix.copy("resources/modules/global/js-extra/sentry-bundle.min.js", "public/build/layouts/master/sentry-bundle.min.js");
 
 mix.copy(
     "resources/modules/global/jquery-imgareaselect/css/border-anim-h.gif",
@@ -1404,71 +1195,32 @@ mix.copy(
     "resources/modules/global/jquery-imgareaselect/css/border-anim-v.gif",
     "public/build/layouts/master/border-anim-v.gif"
 );
-mix.copy(
-    "resources/modules/global/jquery-imgareaselect/css/border-h.gif",
-    "public/build/layouts/master/border-h.gif"
-);
-mix.copy(
-    "resources/modules/global/jquery-imgareaselect/css/border-v.gif",
-    "public/build/layouts/master/border-v.gif"
-);
+mix.copy("resources/modules/global/jquery-imgareaselect/css/border-h.gif", "public/build/layouts/master/border-h.gif");
+mix.copy("resources/modules/global/jquery-imgareaselect/css/border-v.gif", "public/build/layouts/master/border-v.gif");
 
 /**
  * assets genericos
  */
 
-mix.copy(
-    "resources/modules/global/adminremark/assets/images",
-    "public/build/global/adminremark/assets/images"
-);
+mix.copy("resources/modules/global/adminremark/assets/images", "public/build/global/adminremark/assets/images");
 
 // global / css / font
 mix.copy("resources/modules/global/css/font", "public/build/global/css/font");
 
 // global / img
 mix.copy("resources/modules/global/img", "public/build/global/img");
-mix.copy(
-    "resources/modules/global/img/adquirintes",
-    "public/build/global/img/adquirintes"
-);
-mix.copy(
-    "resources/modules/global/img/cartoes",
-    "public/build/global/img/cartoes"
-);
-mix.copy(
-    "resources/modules/global/img/custom-product",
-    "public/build/global/img/custom-product"
-);
-mix.copy(
-    "resources/modules/global/img/icon-red",
-    "public/build/global/img/icon-red"
-);
+mix.copy("resources/modules/global/img/adquirintes", "public/build/global/img/adquirintes");
+mix.copy("resources/modules/global/img/cartoes", "public/build/global/img/cartoes");
+mix.copy("resources/modules/global/img/custom-product", "public/build/global/img/custom-product");
+mix.copy("resources/modules/global/img/icon-red", "public/build/global/img/icon-red");
 mix.copy("resources/modules/global/img/logos", "public/build/global/img/logos");
-mix.copy(
-    "resources/modules/global/img/logos/2021",
-    "public/build/global/img/logos/2021"
-);
-mix.copy(
-    "resources/modules/global/img/logos/2021/favicon",
-    "public/build/global/img/logos/2021/favicon"
-);
-mix.copy(
-    "resources/modules/global/img/logos/2021/svg",
-    "public/build/global/img/logos/2021/svg"
-);
-mix.copy(
-    "resources/modules/global/img/onboarding",
-    "public/build/global/img/onboarding"
-);
+mix.copy("resources/modules/global/img/logos/2021", "public/build/global/img/logos/2021");
+mix.copy("resources/modules/global/img/logos/2021/favicon", "public/build/global/img/logos/2021/favicon");
+mix.copy("resources/modules/global/img/logos/2021/svg", "public/build/global/img/logos/2021/svg");
+mix.copy("resources/modules/global/img/onboarding", "public/build/global/img/onboarding");
 mix.copy("resources/modules/global/img/pix", "public/build/global/img/pix");
-mix.copy(
-    "resources/modules/global/img/projects",
-    "public/build/global/img/projects"
-);
-mix.copy(
-    "resources/modules/global/img/reports",
-    "public/build/global/img/reports"
-);
+mix.copy("resources/modules/global/img/projects", "public/build/global/img/projects");
+mix.copy("resources/modules/global/img/reports", "public/build/global/img/reports");
 mix.copy("resources/modules/global/img/svg", "public/build/global/img/svg");
 
 if (mix.inProduction()) {

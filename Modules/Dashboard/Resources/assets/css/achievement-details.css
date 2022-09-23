@@ -60,7 +60,7 @@
 }
 
 .achievement-details-style #description {
-    font: normal normal bold 16px Muli;
+    font: normal normal bold 16px Inter;
 
     margin-bottom: 0.5rem;
 }
@@ -68,7 +68,7 @@
 .achievement-details-style #description-achievement {
     color: #ababab;
 
-    font: normal normal normal 12px Muli;
+    font: normal normal normal 12px Inter;
     text-transform: uppercase;
 }
 
@@ -82,25 +82,25 @@
 }
 
 .achievement-details-style #name {
-    font: normal normal bold 25px Muli;
+    font: normal normal bold 25px Inter;
     color: #2e85ec;
 
     margin-bottom: 2rem;
 }
 
 .achievement-details-style #name-title {
-    font: normal normal bold 25px Muli;
+    font: normal normal bold 25px Inter;
     color: #2e85ec;
 }
 
 .achievement-details-style #storytelling {
-    font: normal normal normal 14px Muli;
+    font: normal normal normal 14px Inter;
     color: #919191;
 }
 
 .achievement-details-style #benefits-title {
     color: #707070;
-    font: normal normal normal 16px Muli;
+    font: normal normal normal 16px Inter;
 
     margin-bottom: 0.5rem;
 }
@@ -122,7 +122,7 @@
 
 .achievement-details-style #benefits-data {
     color: #5e5e5e;
-    font: normal normal bold 14px Muli;
+    font: normal normal bold 14px Inter;
 }
 
 .achievement-details-style [id*="reward-check-data-"] {
@@ -134,7 +134,7 @@
     padding: 15px;
     border-radius: 5px;
 
-    font: normal normal bold 20px Muli;
+    font: normal normal bold 20px Inter;
 }
 
 body.blurred {
@@ -154,7 +154,7 @@ body.blurred .page {
 
 #title-achievement {
     color: #707070;
-    font: normal normal normal 16px Muli;
+    font: normal normal normal 16px Inter;
 }
 
 @media (max-width: 767px) {

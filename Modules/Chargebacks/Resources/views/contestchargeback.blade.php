@@ -56,7 +56,7 @@
         }
 
         .card {
-            font-family: 'Muli', sans-serif;
+            font-family: 'Inter', sans-serif;
             border-radius: 5px !important;
             box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
             padding: 5px 20px;

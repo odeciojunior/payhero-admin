@@ -122,15 +122,8 @@ class AstronMembersApiController extends Controller
                         ],
                         200
                     );
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Ocorreu um erro ao realizar a integração",
-                        ],
-                        400
-                    );
                 }
-            } else {
+
                 return response()->json(
                     [
                         "message" => "Ocorreu um erro ao realizar a integração",
@@ -138,6 +131,14 @@ class AstronMembersApiController extends Controller
                     400
                 );
             }
+
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao realizar a integração",
+                ],
+                400
+            );
+
         } catch (Exception $e) {
             Log::warning("Erro ao realizar integração  AstronMembersController - store");
             report($e);
@@ -169,15 +170,8 @@ class AstronMembersApiController extends Controller
 
                 if ($integration) {
                     return response()->json(["projects" => $projects, "integration" => $integration]);
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
-                        ],
-                        400
-                    );
                 }
-            } else {
+
                 return response()->json(
                     [
                         "message" => "Ocorreu um erro, tente novamente mais tarde!",
@@ -185,6 +179,14 @@ class AstronMembersApiController extends Controller
                     400
                 );
             }
+
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                ],
+                400
+            );
+
         } catch (Exception $e) {
             Log::warning(
                 "Erro ao tentar acessar tela editar Integração AstronMembers (AstronMembersController - edit)"

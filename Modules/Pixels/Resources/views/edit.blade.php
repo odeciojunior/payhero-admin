@@ -17,7 +17,7 @@
                  style="border-left: 1px solid #70707040; border-right: 1px solid #70707040">
                 <h4 class="col-12 modal-title text-center"
                     id="modal-title"
-                    style="color:#787878; font: normal normal bold 22px Muli;">
+                    style="color:#787878; font: normal normal bold 22px Inter;">
                     Editar Pixel
                 </h4>
             </div>
@@ -32,7 +32,7 @@
                         <span class='slider round'></span>
                     </label>
                     <label for="boleto"
-                           style="font: normal normal bold 16px Muli;color: #41DC8F;margin-bottom: 0;">Ativo</label>
+                           style="font: normal normal bold 16px Inter;color: #41DC8F;margin-bottom: 0;">Ativo</label>
                 </div>
             </div>
 

@@ -63,10 +63,10 @@ class TicketsApiController extends Controller
                 ->leftJoin('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
                 ->where(function($query) use($data){
                     $query->where(function($qr2) use($data){
-                        $qr2->where("sales.api_token_id", hashids_decode(str_replace('TOKEN-','',$data->project)))
+                        $qr2->whereNotNull("sales.api_token_id")
                         ->where('api.company_id', hashids_decode($data->company));
                     })->orWhere(function($qr2) use($data){
-                        $qr2->where("sales.project_id", hashids_decode(str_replace('TOKEN-','',$data->project)))
+                        $qr2->whereNotNull("sales.project_id")
                         ->where('checkout_configs.company_id', hashids_decode($data->company));
                     });
                 });

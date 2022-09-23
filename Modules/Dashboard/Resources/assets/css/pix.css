@@ -39,7 +39,7 @@
 
 .modal-pix-onboarding #title-onboarding-1 {
     color: #2e85ec;
-    font: normal normal bold 30px Muli;
+    font: normal normal bold 30px Inter;
 }
 
 .modal-pix-onboarding #description-onboarding-1 {
@@ -47,30 +47,30 @@
     margin-bottom: 2rem;
 
     color: #919191;
-    font: normal normal normal 17px Muli;
+    font: normal normal normal 17px Inter;
 }
 
 .modal-pix-onboarding .btn {
     padding: 10px 40px;
 
-    font: normal normal bold 17px Muli;
+    font: normal normal bold 17px Inter;
 }
 
 #title-onboarding-2 {
     color: #002f67;
-    font: normal normal 900 12px Muli;
+    font: normal normal 900 12px Inter;
 }
 
 #sub-title-onboarding-2 {
     color: #002f67;
-    font: normal normal bold 30px Muli;
+    font: normal normal bold 30px Inter;
 
     margin-bottom: 1rem;
 }
 
 #description-onboarding-2 {
     color: #919191;
-    font: normal normal normal 16px Muli;
+    font: normal normal normal 16px Inter;
 
     margin-bottom: 1rem;
 }
@@ -90,24 +90,24 @@
 
 .summary-title-primary {
     color: #002f67;
-    font: normal normal bold 30px Muli;
+    font: normal normal bold 30px Inter;
 }
 
 .summary-title {
     color: #2e85ec;
-    font: normal normal 900 14px Muli;
+    font: normal normal 900 14px Inter;
 }
 
 .summary-description {
     color: #919191;
-    font: normal normal normal 16px Muli;
+    font: normal normal normal 16px Inter;
 }
 
 .summary-badge {
     border-radius: 14px;
     padding: 2px 5px;
 
-    font: normal normal 900 9px Muli;
+    font: normal normal 900 9px Inter;
     color: #ffffff;
 }
 
@@ -128,7 +128,7 @@
     border-left: 1px solid #70707040;
     padding-left: 5px;
 
-    font: normal normal bold 20px/25px Muli;
+    font: normal normal bold 20px/25px Inter;
 }
 
 #modal-content-onboarding .slick-list {

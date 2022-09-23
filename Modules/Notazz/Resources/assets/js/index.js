@@ -27,14 +27,14 @@ $(document).ready(function () {
             loadOnAny("#content");
         }
 
-        $hasProjects = false;
+        var hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
             $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                if (project.status == 1) $hasProjects = true;
+                if (project.status == 1) hasProjects = true;
             });
         }
 
-        if (!$hasProjects) {
+        if (!hasProjects) {
             $("#integration-actions").hide();
             $("#no-integration-found").hide();
             $("#project-empty").show();

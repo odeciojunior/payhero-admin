@@ -6,7 +6,7 @@
         <div class="modal-header simple-border-bottom ">
             <h4 class="col-12 modal-title text-center"
                 id="modal-title"
-                style="color:#636363; font: normal normal bold 22px Muli;">
+                style="color:#636363; font: normal normal bold 22px Inter;">
                 Novo desconto
             </h4>
             <a id="modal-button-close-1"
@@ -94,7 +94,7 @@
                     </svg>
 
                     <div class="mt-10"
-                         style="font: normal normal normal 16px Muli;">Desconto progressivo</div>
+                         style="font: normal normal normal 16px Inter;">Desconto progressivo</div>
                 </div>
 
                 <div id="coupon"
@@ -147,7 +147,7 @@
                     </svg>
 
                     <div class="mt-10"
-                         style="font: normal normal normal 16px Muli;">Cupom de desconto</div>
+                         style="font: normal normal normal 16px Inter;">Cupom de desconto</div>
                 </div>
 
             </div>
