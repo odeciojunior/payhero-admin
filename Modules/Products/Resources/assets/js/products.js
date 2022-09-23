@@ -87,6 +87,16 @@ $(document).ready(function () {
                     $(".delete-product").attr("productname", response.data.product.name);
 
                     /**
+                     * Se não houver botao pra converter nem pra deletar exibe div vazia
+                     */
+                    if (
+                        (!response.data.product.shopify_variant_id || response.data.product.has_sales) &&
+                        response.data.product.shopify_variant_id
+                    ) {
+                        $("#empty-space").show();
+                    }
+
+                    /**
                      * Image
                      */
                     $("#product_photo").attr("src", response.data.product.photo);
