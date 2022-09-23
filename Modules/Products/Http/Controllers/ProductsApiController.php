@@ -275,6 +275,9 @@ class ProductsApiController extends Controller
                 $product->photo = Http::get($productUrl)->successful() ? $productUrl : "";
             }
 
+            $productService = new ProductService();
+            $product->hasSales = $productService->verifyIfProductHasSales(current(Hashids::decode($id)));
+
             return EditProductResource::make([
                 "product" => $product,
                 "categories" => $categories,
@@ -492,7 +495,15 @@ class ProductsApiController extends Controller
             $projectModel = new Project();
             $project = $projectModel->find($projectId);
 
-            $products->with('productsPlanSales')->with('productsPlans')->where('user_id', auth()->user()->getAccountOwnerId());
+            $products
+                ->with("productsPlanSales")
+                ->with("productsPlans")
+                ->where(
+                    "user_id",
+                    auth()
+                        ->user()
+                        ->getAccountOwnerId()
+                );
 
             if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
                 $products->where("project_id", $projectId);
