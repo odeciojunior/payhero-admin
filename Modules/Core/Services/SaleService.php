@@ -691,7 +691,7 @@ class SaleService
                     "value" => $refundValue,
                     "type" => "out",
                     "type_enum" => Transfer::TYPE_OUT,
-                    "reason" => $isBillet ? "Estorno de boleto #{$saleIdEncode}" : "Estorno de pix #{$saleIdEncode}",
+                    "reason" => "Estorno #{$saleIdEncode}",
                     "company_id" => $transaction->company->id,
                     "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID,
                 ]);
@@ -725,7 +725,7 @@ class SaleService
                 "value" => foxutils()->onlyNumbers($sale->total_paid_value),
                 "type_enum" => Transfer::TYPE_IN,
                 "type" => "in",
-                "reason" => $isBillet ? "Estorno de boleto #{$saleIdEncode}" : "Estorno de pix #{$saleIdEncode}",
+                "reason" => "Estorno #{$saleIdEncode}",
             ]);
 
             $sale->customer->update([
