@@ -22,34 +22,38 @@ $(document).ready(function () {
         else
             loadOnAny('#content');
 
-        $.ajax({
-            method: "GET",
-            url: "/api/apps/smartfunnel?company="+ $('.company-navbar').val(),
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                loadOnAny('#content',true);
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                $("#content").html("");
-                if (isEmpty(response.projects)) {
-                    $('#project-empty').show();
-                    $("#no-integration-found").hide();
-                    $('#integration-actions').hide();
-                } else {
-                    $("#project_id, #select_projects_edit").html("");
-                    let projects = response.projects;
+        $hasProjects=false;
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                if(project.status == 1)
+                    $hasProjects=true;
+            });
+        }
 
-                    for (let i = 0; i < projects.length; i++) {
-                        $("#project_id, #select_projects_edit").append(
-                            '<option value="' + projects[i].id + '">' + projects[i].name + "</option>"
-                        );
-                    }
+        if(!$hasProjects){
+            $('#integration-actions').hide();
+            $("#no-integration-found").hide();
+            $('#project-empty').show();
+            loadingOnScreenRemove();
+            loadOnAny('#content',true);
+        }
+        else{
+            $.ajax({
+                method: "GET",
+                url: "/api/apps/smartfunnel?company="+ $('.company-navbar').val(),
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    loadOnAny('#content',true);
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    $("#project_id, #select_projects_edit").html("");
+                    fillSelectProject(companiesAndProjects,'#project_id, #select_projects_edit')
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
                     } else {
@@ -62,11 +66,12 @@ $(document).ready(function () {
                     }
                     $("#project-empty").hide();
                     $("#integration-actions").show();
-                }
-                loadOnAny('#content',true);
-                loadingOnScreenRemove();
-            },
-        });
+                    if(loading=='y')
+                        loadOnAny('#content',true);
+                    loadingOnScreenRemove();
+                },
+            });
+        }
     }
 
     getCompaniesAndProjects().done( function (data){

@@ -26,7 +26,7 @@
           color="#5bbad5">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,600,700,800"
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700,800"
           rel="stylesheet">
 
     <!-- Styles -->
@@ -35,7 +35,7 @@
             margin: 0;
             box-sizing: border-box;
             background-color: #F4F4F4;
-            font-family: 'Muli', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             color: #404040;
         }

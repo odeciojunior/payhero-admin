@@ -24,5 +24,6 @@ Route::group(
         Route::post("recovery/export", "SalesRecoveryApiController@export");
 
         Route::get('recovery/projects-with-recovery', 'SalesRecoveryApiController@getProjectsWithRecovery');
+        Route::get("recovery/user-plans", "SalesRecoveryApiController@getPlans");
     }
 );

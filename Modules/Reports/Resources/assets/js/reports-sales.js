@@ -6,24 +6,13 @@ $(function () {
     changeCompany();
     changeCalendar();
 
-
-    if(sessionStorage.info) {
-        let info = JSON.parse(sessionStorage.getItem('info'));
-        $('input[name=daterange]').val(info.calendar);
+    if (sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem("info"));
+        $("input[name=daterange]").val(info.calendar);
     }
 
-    getCompaniesAndProjects().done( function (data2){
-        if(!isEmpty(data2.company_default_projects)){
-            showFiltersInReports(true);
-            has_api_integration = data2.has_api_integration;
-            getProjects(data2.companies);
-        }
-        else{
-            loadingOnScreenRemove();
-            $("#project-empty").show();
-            $("#project-not-empty").hide();
-            showFiltersInReports(false);
-        }
+    getCompaniesAndProjects().done(function (data) {
+        getProjects(data);
     });
 });
 
@@ -34,7 +23,7 @@ let company = "";
 let date = "";
 let sales_status = "";
 
-$('.company-navbar').change(function () {
+$(".company-navbar").change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
 
     loadingOnScreen();
@@ -44,27 +33,17 @@ $('.company-navbar').change(function () {
         "#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
     ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
 
-    $("#select_projects").html('');
-    sessionStorage.removeItem('info');
+    $("#select_projects").html("");
+    sessionStorage.removeItem("info");
 
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            if(!isEmpty(data2.company_default_projects)){
-                showFiltersInReports(true);
-                has_api_integration = data2.has_api_integration;
-                getProjects(data2.companies);
-            }
-            else{
-                loadingOnScreenRemove();
-                $("#project-empty").show();
-                $("#project-not-empty").hide();
-                showFiltersInReports(false);
-            }
+    updateCompanyDefault().done(function (data1) {
+        getCompaniesAndProjects().done(function (data2) {
+            getProjects(data2, "company-navbar");
         });
-	});
+    });
 });
 
-window.fillProjectsSelect = function(){
+window.fillProjectsSelect = function () {
     return $.ajax({
         method: "GET",
         url: "/api/projects?select=true",
@@ -74,75 +53,100 @@ window.fillProjectsSelect = function(){
             Accept: "application/json",
         },
         error: function error(response) {
-            console.log('erro')
-            console.log(response)
+            console.log("erro");
+            console.log(response);
         },
         success: function success(response) {
             return response;
-        }
+        },
     });
-}
+};
 
 function changeSaleStatus() {
-    $("#status-graph").on('change', function() {
+    $("#status-graph").on("change", function () {
         if (sales_status !== $(this).val()) {
             sales_status = $(this).val();
 
-            $('.sirius-select-container').addClass('disabled');
-            $('input[name="daterange"]').attr('disabled', 'disabled');
+            $(".sirius-select-container").addClass("disabled");
+            $('input[name="daterange"]').attr("disabled", "disabled");
 
-            Promise.all([
-                salesStatus($(this).find('option:selected').val())
-            ])
-            .then(() => {
-                $('.sirius-select-container').removeClass('disabled');
-                $('input[name="daterange"]').removeAttr('disabled', 'disabled');
-            })
-            .catch(() => {
-                $('.sirius-select-container').removeClass('disabled');
-                $('input[name="daterange"]').removeAttr('disabled', 'disabled');
-            });
+            Promise.all([salesStatus($(this).find("option:selected").val())])
+                .then(() => {
+                    $(".sirius-select-container").removeClass("disabled");
+                    $('input[name="daterange"]').removeAttr("disabled", "disabled");
+                })
+                .catch(() => {
+                    $(".sirius-select-container").removeClass("disabled");
+                    $('input[name="daterange"]').removeAttr("disabled", "disabled");
+                });
         }
-	});
+    });
 }
 
-function getProjects(companies) {
-
+function getProjects(data, origin = "") {
     loadingOnScreen();
-    $(".div-filters").hide();
-    $("#project-empty").hide();
-    $("#project-not-empty").show();
-    $("#export-excel > div >").show();
-
-    window.fillProjectsSelect()
-    .done(function(dataSales)
-    {
-        $(".div-filters").show();
-        $.each(companies, function (c, company) {
-            $.each(company.projects, function (i, project) {
-                $.each(dataSales.data, function (idx, project2) {
-                    if( project2.id == project.id ){
-                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-                    }
+    $.ajax({
+        method: "GET",
+        url: "/api/sales/projects-with-sales",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            console.log("erro");
+            console.log(response);
+            loadingOnScreenRemove();
+        },
+        success: function success(response) {
+            if (!isEmpty(response) || data.has_api_integration) {
+                $(".div-filters").hide();
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                $("#export-excel > div >").show();
+                $.each(response, function (c, project) {
+                    $("#select_projects").append($("<option>", { value: project.project_id, text: project.name }));
                 });
-            });
-        });
-        if(has_api_integration){
-            $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-        }
-        $("#select_projects option:first").attr('selected','selected');
-
-        if(sessionStorage.info) {
-            $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-            $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-        }
-
-        company = $("#select_projects").val();
-        updateReports();
-
-        changeSaleStatus();
+                if (data.has_api_integration)
+                    $("#select_projects").append($("<option>", { value: "API-TOKEN", text: "Vendas por API" }));
+                $("#select_projects option:first").attr("selected", "selected");
+                if (sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem("info")).company);
+                    $("#select_projects")
+                        .find("option:selected")
+                        .text(JSON.parse(sessionStorage.getItem("info")).companyName);
+                }
+                company = $("#select_projects").val();
+                updateReports();
+                changeSaleStatus();
+                $(".div-filters").show();
+                loadingOnScreenRemove();
+            } else {
+                if (!isEmpty(data.company_default_projects)) {
+                    $(".div-filters").hide();
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel > div >").show();
+                    // $.each(data.company_default_projects, function (i, project) {
+                    //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
+                    // });
+                    if (data.has_api_integration)
+                        $("#select_projects").append($("<option>", { value: "API-TOKEN", text: "Vendas por API" }));
+                    $("#select_projects option:first").attr("selected", "selected");
+                    if ($("#select_projects option").length == 0) $("#select_projects").next().css("display", "none");
+                    updateReports();
+                    changeSaleStatus();
+                    $(".div-filters").show();
+                    loadingOnScreenRemove();
+                } else {
+                    loadingOnScreenRemove();
+                    $(".div-filters").hide();
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            }
+        },
     });
-
     loadingOnScreenRemove();
 }
 
@@ -198,7 +202,7 @@ function barGraph(data, labels, total) {
                     color: "#E8EAEB",
                     font: {
                         size: "14",
-                        family: "'Muli'",
+                        family: "'Inter'",
                         weight: "normal",
                     },
                     padding: {
@@ -219,7 +223,7 @@ function barGraph(data, labels, total) {
                         color: "#747474",
                         align: "center",
                         font: {
-                            family: "Muli",
+                            family: "Inter",
                             size: 12,
                         },
                     },
@@ -235,7 +239,7 @@ function barGraph(data, labels, total) {
                         padding: 0,
                         stepSize: 10,
                         font: {
-                            family: "Muli",
+                            family: "Inter",
                             size: 14,
                         },
                         color: "#A2A3A5",
@@ -1660,7 +1664,7 @@ function newSellGraph(data, labels, variant = null) {
                     },
                     ticks: {
                         font: {
-                            family: "Muli",
+                            family: "Inter",
                             size: 12,
                         },
                         color: "#A2A3A5",
@@ -1675,7 +1679,7 @@ function newSellGraph(data, labels, variant = null) {
                     ticks: {
                         padding: 15,
                         font: {
-                            family: "Muli",
+                            family: "Inter",
                             size: 12,
                         },
                         color: "#A2A3A5",

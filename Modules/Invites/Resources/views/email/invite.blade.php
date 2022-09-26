@@ -7,12 +7,12 @@
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,600,700,800"
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700,800"
           rel="stylesheet">
 </head>
 
 <body
-      style="background-color: #f6f6f6;font-family: 'Muli', Arial, Helvetica, sans-serif;margin: 0;line-height: 135% !important;">
+      style="background-color: #f6f6f6;font-family: 'Inter', Arial, Helvetica, sans-serif;margin: 0;line-height: 135% !important;">
     <table style="width:600px; text-align:center"
            align="center"
            cellpadding="0"

@@ -389,7 +389,7 @@ class GetnetService implements Statement
             return response()->json($result->errors, 400);
         }
 
-        $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
+        $data = (new GetNetStatementService())->performWebStatement($result, $filters, 2000);
 
         return response()->json($data);
     }

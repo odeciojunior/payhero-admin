@@ -1,38 +1,29 @@
 var has_api_integration = false;
 
-$('.company-navbar').change(function () {
+$(".company-navbar").change(function () {
     if (verifyIfCompanyIsDefault($(this).val())) return;
 
     loadingOnScreen();
 
-	$("#select_projects").val($("#select_projects option:first").val());
+    $("#select_projects").val($("#select_projects option:first").val());
     $(`#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-dispute,
         #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,
         #credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert,
-        #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio`
-    ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
+        #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio`).html(
+        "<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>"
+    );
 
-    $("#select_projects").html('');
-    sessionStorage.removeItem('info');
+    $("#select_projects").html("");
+    sessionStorage.removeItem("info");
 
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            if(!isEmpty(data2.company_default_projects)){
-                showFiltersInReports(true);
-                has_api_integration = data2.has_api_integration;
-                getProjects(data2.companies);
-            }
-            else{
-                loadingOnScreenRemove();
-                $("#project-empty").show();
-                $("#project-not-empty").hide();
-                showFiltersInReports(false);
-            }
+    updateCompanyDefault().done(function (data1) {
+        getCompaniesAndProjects().done(function (data2) {
+            getProjects(data2, "company-navbar");
         });
-	});
+    });
 });
 
-window.fillProjectsSelect = function(){
+window.fillProjectsSelect = function () {
     return $.ajax({
         method: "GET",
         url: "/api/projects?select=true",
@@ -42,14 +33,14 @@ window.fillProjectsSelect = function(){
             Accept: "application/json",
         },
         error: function error(response) {
-            console.log('erro')
-            console.log(response)
+            console.log("erro");
+            console.log(response);
         },
         success: function success(response) {
             return response;
-        }
+        },
     });
-}
+};
 
 $(function () {
     loadingOnScreen();
@@ -68,36 +59,25 @@ $(function () {
     });
 
     if (sessionStorage.info) {
-        let info = JSON.parse(sessionStorage.getItem('info'));
-        $('input[name=daterange]').val(info.calendar);
+        let info = JSON.parse(sessionStorage.getItem("info"));
+        $("input[name=daterange]").val(info.calendar);
     }
 
-    $("#select_projects").html('');
+    $("#select_projects").html("");
 
-    getCompaniesAndProjects().done( function (data2){
-        if(!isEmpty(data2.company_default_projects)){
-            showFiltersInReports(true);
-            has_api_integration = data2.has_api_integration;
-            getProjects(data2.companies);
-        }else{
-            loadingOnScreenRemove();
-            $("#project-empty").show();
-            $("#project-not-empty").hide();
-            showFiltersInReports(false);
-        }
+    getCompaniesAndProjects().done(function (data) {
+        getProjects(data);
     });
-
 });
 
-let resumeUrl = '/api/reports/resume';
+let resumeUrl = "/api/reports/resume";
 
-let company = '';
-let dateRange = '';
-let origin = 'src';
+let company = "";
+let dateRange = "";
+let origin = "src";
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        console.log('ops change propject');
         $.ajaxQ.abortAll();
 
         if (company !== $(this).val()) {
@@ -110,32 +90,35 @@ function changeCompany() {
 }
 
 function changeCalendar() {
-    $('.onPreLoad *, .onPreLoadBig *').remove();
+    $(".onPreLoad *, .onPreLoadBig *").remove();
 
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
-    dateRange = sessionStorage.getItem('info') ? JSON.parse(sessionStorage.getItem('info')).calendar : `${startDate}-${endDate}`;
+    dateRange = sessionStorage.getItem("info")
+        ? JSON.parse(sessionStorage.getItem("info")).calendar
+        : `${startDate}-${endDate}`;
 
-    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-    $('input[name="daterange"]').dateRangePicker({
-        setValue: function (s) {
-            if (s) {
-                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
-                $(this).html(s).data('value', normalize);
-                $('input[name="daterange"]').attr('value', normalize);
-                $('input[name="daterange"]').val(normalize);
-            } else {
-                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
-            }
-        }
-    })
-        .on('datepicker-change', function () {
+    $('input[name="daterange"]').attr("value", dateRange);
+    $('input[name="daterange"]')
+        .dateRangePicker({
+            setValue: function (s) {
+                if (s) {
+                    let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                    $(this).html(s).data("value", normalize);
+                    $('input[name="daterange"]').attr("value", normalize);
+                    $('input[name="daterange"]').val(normalize);
+                } else {
+                    $('input[name="daterange"]').attr("value", `${startDate}-${endDate}`);
+                    $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+                }
+            },
+        })
+        .on("datepicker-change", function () {
             $.ajaxQ.abortAll();
 
-        if (dateRange !== $(this).val()) {
-            dateRange = $(this).val();
+            if (dateRange !== $(this).val()) {
+                dateRange = $(this).val();
 
                 updateStorage({ calendar: $(this).val() });
                 updateReports();
@@ -154,80 +137,69 @@ function changeCalendar() {
     dateRange = $('input[name="daterange"]').val();
 }
 
-function getProjects(companies)
-{
+function getProjects(data, origin = "") {
     loadingOnScreen();
-    $(".div-filters").hide();
-    $("#project-empty").hide();
-    $("#project-not-empty").show();
-    $("#export-excel > div >").show();
-
-    window.fillProjectsSelect()
-    .done(function(dataSales)
-    {
-        $(".div-filters").show();
-        $.each(companies, function (c, company) {
-            $.each(company.projects, function (i, project) {
-                $.each(dataSales.data, function (idx, project2) {
-                    if( project2.id == project.id ){
-                        $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-                    }
+    $.ajax({
+        method: "GET",
+        url: "/api/sales/projects-with-sales",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            console.log("erro");
+            console.log(response);
+            loadingOnScreenRemove();
+        },
+        success: function success(response) {
+            if (!isEmpty(response) || data.has_api_integration) {
+                $(".div-filters").hide();
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                $("#export-excel > div >").show();
+                $.each(response, function (c, project) {
+                    $("#select_projects").append($("<option>", { value: project.project_id, text: project.name }));
                 });
-            });
-        });
-        if(has_api_integration){
-            $("#select_projects").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-        }
-        $("#select_projects option:first").attr('selected','selected');
-
-        if(sessionStorage.info) {
-            $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-            $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-        }
-
-        company = $("#select_projects").val();
-        console.log(company);
-        updateReports();
+                if (data.has_api_integration)
+                    $("#select_projects").append($("<option>", { value: "API-TOKEN", text: "Vendas por API" }));
+                $("#select_projects option:first").attr("selected", "selected");
+                if (sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem("info")).company);
+                    $("#select_projects")
+                        .find("option:selected")
+                        .text(JSON.parse(sessionStorage.getItem("info")).companyName);
+                }
+                company = $("#select_projects").val();
+                updateReports();
+                $(".div-filters").show();
+                loadingOnScreenRemove();
+            } else {
+                if (!isEmpty(data.company_default_projects)) {
+                    $(".div-filters").hide();
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    $("#export-excel > div >").show();
+                    // $.each(data.company_default_projects, function (i, project) {
+                    //     $("#select_projects").append($("<option>", {value: project.project_id,text: project.name,}));
+                    // });
+                    if (data.has_api_integration)
+                        $("#select_projects").append($("<option>", { value: "API-TOKEN", text: "Vendas por API" }));
+                    $("#select_projects option:first").attr("selected", "selected");
+                    if ($("#select_projects option").length == 0) $("#select_projects").next().css("display", "none");
+                    updateReports();
+                    $(".div-filters").show();
+                    loadingOnScreenRemove();
+                } else {
+                    loadingOnScreenRemove();
+                    $(".div-filters").hide();
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+            }
+        },
     });
-
     loadingOnScreenRemove();
-
-    // $.ajax({
-    //     method: "GET",
-    //     url: "/api/sales/projects-with-sales",
-    //     dataType: "json",
-    //     headers: {
-    //         Authorization: $('meta[name="access-token"]').attr("content"),
-    //         Accept: "application/json",
-    //     },
-    //     error: function error(response) {
-    //         console.log('erro')
-    //         console.log(response)
-    //     },
-    //     success: function success(response) {
-    //         return response;
-    //     }
-    // }).done(function(dataSales){
-    //     console.log('done');
-    //     console.log(data);
-    //     $.each(data, function (c, company) {
-    //         console.log('companies');
-    //         $.each(company.projects, function (i, project) {
-    //             console.log('adicionando '+project.id)
-    //             if( dataSales.includes(project.id) )
-    //                 $("#select_projects").append($("<option>", {value: project.id,text: project.name,}));
-    //         });
-    //     });
-    //     console.log('vamos atualizar report');
-    //     if(sessionStorage.info) {
-    //         console.log('atualizando projetos');
-    //         $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-    //         $("#select_projects").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
-    //     }
-
-    //     company = $("#select_projects").val();
-    //     updateReports();
-    // });
 }
 
 function changeOrigin() {
@@ -245,10 +217,9 @@ function changeOrigin() {
     });
 }
 
-function updateReports()
-{
-    $('.sirius-select-container').addClass('disabled');
-    $('input[name="daterange"]').attr('disabled', 'disabled');
+function updateReports() {
+    $(".sirius-select-container").addClass("disabled");
+    $('input[name="daterange"]').attr("disabled", "disabled");
 
     Promise.all([
         getCommission(),
@@ -289,7 +260,9 @@ function getCashback() {
 
     return $.ajax({
         method: "GET",
-        url: `${resumeUrl}/cashbacks?company_id=${$(".company-navbar").val()}&project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
+        url: `${resumeUrl}/cashbacks?company_id=${$(".company-navbar").val()}&project_id=${$(
+            "#select_projects option:selected"
+        ).val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -322,12 +295,18 @@ function getCashback() {
                     <div class="new-graph-cashback graph"></div>
                 `;
                 $("#block-cash").html(cashHtml);
-                $(".new-graph-cashback").width($("#block-cash").width());
 
                 $(".new-graph-cashback").html(`<canvas id="graph-cashback"></canvas>`);
                 let labels = [...chart.labels];
                 let series = [...chart.values];
-                newGraphCashback(series, labels);
+
+                setTimeout(
+                    () => {
+                        $(".new-graph-cashback").width($("#block-cash").width());
+                        newGraphCashback(series, labels);
+                    },
+                    $("#block-cash").width() == 0 ? 2000 : 0
+                );
 
                 $(window).on("resize", function () {
                     $(".new-graph-cashback").width($("#block-cash").width());
@@ -357,7 +336,9 @@ function getPending() {
 
     return $.ajax({
         method: "GET",
-        url: `${resumeUrl}/pendings?company_id=${$(".company-navbar").val()}&project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
+        url: `${resumeUrl}/pendings?company_id=${$(".company-navbar").val()}&project_id=${$(
+            "#select_projects option:selected"
+        ).val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -389,11 +370,18 @@ function getPending() {
                         <div class="new-graph-pending graph"></div>
                     `;
                     $("#block-pending").html(pendHtml);
-                    $(".new-graph-pending").width($("#block-pending").width());
                     $(".new-graph-pending").html("<canvas id=graph-pending></canvas>");
                     let labels = [...chart.labels];
                     let series = [...chart.values];
-                    newGraphPending(series, labels);
+
+                    setTimeout(
+                        () => {
+                            $(".new-graph-pending").width($("#block-pending").width());
+                            newGraphPending(series, labels);
+                        },
+                        $("#block-pending").width() == 0 ? 2000 : 0
+                    );
+
                     $(window).on("resize", function () {
                         $(".new-graph-pending").width($("#block-pending").width());
                     });
@@ -425,7 +413,9 @@ function getCommission() {
 
     return $.ajax({
         method: "GET",
-        url: `${resumeUrl}/commissions?company_id=${$(".company-navbar").val()}&project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
+        url: `${resumeUrl}/commissions?company_id=${$(".company-navbar").val()}&project_id=${$(
+            "#select_projects option:selected"
+        ).val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -457,11 +447,17 @@ function getCommission() {
                     <div class="new-graph graph"></div>
                 `;
                 $("#block-comission").html(comissionhtml);
-                $(".new-graph").width($("#block-comission").width());
                 $(".new-graph").html("<canvas id=comission-graph></canvas>");
                 let labels = [...chart.labels];
                 let series = [...chart.values];
-                graphComission(series, labels);
+
+                setTimeout(
+                    () => {
+                        $(".new-graph").width($("#block-comission").width());
+                        graphComission(series, labels);
+                    },
+                    $("#block-comission").width() == 0 ? 2000 : 0
+                );
 
                 $(window).on("resize", function () {
                     $(".new-graph").width($("#block-comission").width());
@@ -490,7 +486,9 @@ function getSales() {
 
     return $.ajax({
         method: "GET",
-        url: `${resumeUrl}/sales?company_id=${$(".company-navbar").val()}&project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}&status=approved`,
+        url: `${resumeUrl}/sales?company_id=${$(".company-navbar").val()}&project_id=${$(
+            "#select_projects option:selected"
+        ).val()}&date_range=${dateRange}&status=approved`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -521,11 +519,17 @@ function getSales() {
                     <div class="new-graph-sell graph"></div>
                 `;
                 $("#block-sales").html(salesHtml);
-                $(".new-graph-sell").width($("#block-sales").width());
                 $(".new-graph-sell").html("<canvas id=graph-sell></canvas>");
                 let labels = [...chart.labels];
                 let series = [...chart.values];
-                newGraphSell(series, labels);
+
+                setTimeout(
+                    () => {
+                        $(".new-graph-sell").width($("#block-sales").width());
+                        newGraphSell(series, labels);
+                    },
+                    $("#block-sales").width() == 0 ? 2000 : 0
+                );
 
                 $(window).on("resize", function () {
                     $(".new-graph-sell").width($("#block-sales").width());
@@ -554,7 +558,9 @@ function getProducts() {
 
     return $.ajax({
         method: "GET",
-        url: `${resumeUrl}/products?company_id=${$(".company-navbar").val()}&project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
+        url: `${resumeUrl}/products?company_id=${$(".company-navbar").val()}&project_id=${$(
+            "#select_projects option:selected"
+        ).val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -644,7 +650,9 @@ function getCoupons() {
 
     return $.ajax({
         method: "GET",
-        url: `${resumeUrl}/coupons?company_id=${$(".company-navbar").val()}&project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
+        url: `${resumeUrl}/coupons?company_id=${$(".company-navbar").val()}&project_id=${$(
+            "#select_projects option:selected"
+        ).val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -774,7 +782,9 @@ function getTypePayments() {
 
     return $.ajax({
         method: "GET",
-        url: `${resumeUrl}/type-payments?company_id=${$(".company-navbar").val()}&project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
+        url: `${resumeUrl}/type-payments?company_id=${$(".company-navbar").val()}&project_id=${$(
+            "#select_projects option:selected"
+        ).val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -867,7 +877,9 @@ function getRegions() {
 
     return $.ajax({
         method: "GET",
-        url: `${resumeUrl}/regions?company_id=${$(".company-navbar").val()}&project_id=${$("#select_projects option:selected").val()}&date_range=${dateRange}`,
+        url: `${resumeUrl}/regions?company_id=${$(".company-navbar").val()}&project_id=${$(
+            "#select_projects option:selected"
+        ).val()}&date_range=${dateRange}`,
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -993,7 +1005,11 @@ function updateSalesByOrigin() {
 
     var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-    link = `${resumeUrl}/origins?company_id=${$(".company-navbar").val()}&paginate=false&limit=10&date_range=${dateRange}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
+    link = `${resumeUrl}/origins?company_id=${$(
+        ".company-navbar"
+    ).val()}&paginate=false&limit=10&date_range=${dateRange}&origin=${$("#origin").val()}&project_id=${$(
+        "#select_projects option:selected"
+    ).val()}`;
 
     $.ajax({
         url: link,
@@ -1621,7 +1637,7 @@ function graphRegions(labels, conversion, access) {
                         mirror: false,
                         stepSize: true,
                         font: {
-                            family: "Muli",
+                            family: "Inter",
                             size: 12,
                         },
                         color: "#2e85ec",

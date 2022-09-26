@@ -23,11 +23,11 @@ class AffiliatesController extends Controller
             ->where("id", $projectId)
             ->where("status", "!=", $projectModel->present()->getStatus("disabled"))
             ->first();
+
         if ($project) {
             return view("affiliates::index");
-        } else {
-            return view("errors.404");
         }
+        return view("errors.404");
     }
 
     /**

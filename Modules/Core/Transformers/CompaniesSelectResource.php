@@ -4,6 +4,7 @@ namespace Modules\Core\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\CheckoutConfig;
@@ -53,7 +54,7 @@ class CompaniesSelectResource extends JsonResource
         }
 
         // SEARCH AFFILIATED PROJECTS
-        $affiliates = Affiliate::select('affiliates.project_id as id', 'projects.name', 'users_projects.order_priority as order_p', 'projects.status')
+        $affiliates = Affiliate::select('affiliates.project_id as id', 'projects.name', 'users_projects.order_priority as order_p', 'projects.status',DB::Raw("'' as prefix"))
             ->join('projects','projects.id','=','affiliates.project_id')
             ->join('users_projects', 'users_projects.project_id', '=', 'projects.id')
             ->where('affiliates.company_id',$this->id);
@@ -68,7 +69,7 @@ class CompaniesSelectResource extends JsonResource
             ->orderBy('projects.id', 'DESC');
 
         // SEARCH OWN PROJECTS
-        $projects = CheckoutConfig::select('checkout_configs.project_id as id','projects.name', 'users_projects.order_priority as order_p', 'projects.status')
+        $projects = CheckoutConfig::select('checkout_configs.project_id as id','projects.name', 'users_projects.order_priority as order_p', 'projects.status',DB::Raw("'' as prefix"))
             ->join('projects','projects.id','=','checkout_configs.project_id')
             ->join('users_projects', 'users_projects.project_id', '=', 'projects.id')
             ->where('checkout_configs.company_id',$this->id);
@@ -78,19 +79,27 @@ class CompaniesSelectResource extends JsonResource
         else
             $projects = $projects->where('projects.status',1);
 
+        $tokens = DB::table('api_tokens')->select('id as project_id','description as name',DB::Raw("'1' as order_p"),DB::Raw("'1' as status"),DB::Raw("'TOKEN-' as prefix"))
+            ->where('user_id',$this->user->id)
+            ->whereIn('integration_type_enum',[4,5])
+            ->whereNull('deleted_at')
+            ->where('company_id',$this->id);
+
         $projects = $projects->orderBy('projects.status')
             ->orderBy('order_p')
             ->orderBy('projects.id', 'DESC')
             ->union($affiliates)
+            ->union($tokens)
             ->get()
             ->map(function ($project) {
                 return (object)[
-                    'id' => hashids_encode($project->id),
+                    'id' => $project->prefix.hashids_encode($project->id),
                     'name'=>$project->name,
                     'order_p'=>$project->order_p,
                     'status'=>$project->status,
                 ];
             });
+
 
         return [
             'id' => Hashids::encode($this->id),

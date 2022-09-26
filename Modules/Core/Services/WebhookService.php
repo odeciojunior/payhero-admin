@@ -41,7 +41,7 @@ class WebhookService
                 "updated_at" => $sale->updated_at->format("Y-m-d H:i:s"),
             ];
 
-            self::sendPost($data);
+            self::sendPost($data, $sale->id);
         } catch (Exception $e) {
             report($e);
         }
@@ -73,9 +73,10 @@ class WebhookService
      * Send a request to the URL configured in the webhook.
      *
      * @param $data
+     * @param $saleId
      * @return void
      */
-    private function sendPost($data)
+    private function sendPost($data, $saleId = null)
     {
         try {
             $curl = curl_init();
@@ -89,9 +90,10 @@ class WebhookService
             ]);
 
             $response = curl_exec($curl);
+            $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);
 
-            $this->storeWebhookLogs($data, $response);
+            $this->storeWebhookLogs($response, $status, $data, $saleId);
         } catch (Exception $e) {
             report($e);
         }
@@ -100,20 +102,24 @@ class WebhookService
     /**
      * Stores webhook send and return data.
      *
-     * @param $data
      * @param $response
+     * @param $status
+     * @param $data
+     * @param $saleId
      * @return void
      */
-    private function storeWebhookLogs($data, $response)
+    private function storeWebhookLogs($response, $status, $data, $saleId = null)
     {
         try {
             WebhookLog::create([
                 "webhook_id" => $this->webhook->id,
                 "user_id" => $this->webhook->user_id,
                 "company_id" => $this->webhook->company_id,
+                "sale_id" => $saleId,
                 "url" => $this->webhook->url,
                 "sent_data" => json_encode($data),
                 "response" => !json_decode($response) ? json_encode($response) : $response,
+                "response_status" => $status,
             ]);
         } catch (Exception $e) {
             report($e);

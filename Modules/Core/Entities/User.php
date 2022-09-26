@@ -20,6 +20,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Collection as SupportCollection;
 
 /**
  * Modules\Core\Entities\User
@@ -138,7 +139,7 @@ class User extends Authenticable
 
     protected $presenter = UserPresenter::class;
 
-    protected $guard_name = 'web';
+    protected $guard_name = "web";
 
     /**
      * @var array
@@ -174,6 +175,7 @@ class User extends Authenticable
         "invites_amount",
         "account_owner_id",
         "subseller_owner_id",
+        "logged_id",
         "deleted_project_filter",
         "id_wall_result",
         "bureau_result",
@@ -205,8 +207,12 @@ class User extends Authenticable
         "show_old_finances",
         "mkt_information",
         "pipefy_card_id",
+        "pipefy_card_data",
         "company_default",
+        "role_default",
+        "is_cloudfox",
         "block_attendance_balance",
+        "utm_srcs",
         "created_at",
         "updated_at",
         "deleted_at",
@@ -353,12 +359,7 @@ class User extends Authenticable
      */
     public function projects()
     {
-        return $this->belongsToMany(
-            Project::class,
-            "users_projects",
-            "user_id",
-            "project_id"
-        );
+        return $this->belongsToMany(Project::class, "users_projects", "user_id", "project_id");
     }
 
     /**
@@ -414,12 +415,7 @@ class User extends Authenticable
      */
     public function tasks()
     {
-        return $this->belongsToMany(
-            Task::class,
-            "tasks_users",
-            "user_id",
-            "task_id"
-        );
+        return $this->belongsToMany(Task::class, "tasks_users", "user_id", "task_id");
     }
 
     /**
@@ -428,8 +424,8 @@ class User extends Authenticable
     public function benefits()
     {
         return $this->hasMany(UserBenefit::class)
-            ->join('benefits', 'benefits.id', '=', 'user_benefits.benefit_id')
-            ->select('user_benefits.*', 'benefits.name', 'benefits.description', 'benefits.level');
+            ->join("benefits", "benefits.id", "=", "user_benefits.benefit_id")
+            ->select("user_benefits.*", "benefits.name", "benefits.description", "benefits.level");
     }
 
     public function getAccountOwnerId()
@@ -440,5 +436,48 @@ class User extends Authenticable
     public function getAccountIsApproved()
     {
         return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;
+    }
+
+    public function getRoleNames($guard = "web"): SupportCollection
+    {
+        return $this->roles()
+            ->where("guard_name", $guard)
+            ->get()
+            ->pluck("name");
+    }
+
+    public function syncGuardRoles($guard = "web", ...$newRoles)
+    {
+        $roles = $this->roles()
+            ->where("guard_name", $guard)
+            ->get();
+        foreach ($roles as $role) {
+            $this->removeRole($role);
+        }
+
+        return $this->assignRole($newRoles);
+    }
+
+    public function getGuardAllPermissions($guard = "web")
+    {
+        return $this->permissions()
+            ->where("guard_name", $guard)
+            ->get();
+    }
+
+    public function syncGuardPermissions($guard, ...$newPermissions)
+    {
+        $permissions = $this->permissions()
+            ->where("guard_name", $guard)
+            ->get();
+
+        foreach ($permissions as $permission) {
+            $this->revokePermissionTo($permission);
+        }
+
+        foreach ($newPermissions as $permissions) {
+            $this->givePermissionTo($permissions);
+        }
+        return true;
     }
 }
