@@ -433,7 +433,7 @@ class ActiveCampaignEventApiController extends Controller
             $activecampaignIntegrationModel = new ActivecampaignIntegration();
 
             $integration = $activecampaignIntegrationModel
-                ->where("user_id", auth()->id())
+                ->where("user_id", auth()->user()->account_owner_id)
                 ->with("events")
                 ->where("id", $id)
                 ->first();

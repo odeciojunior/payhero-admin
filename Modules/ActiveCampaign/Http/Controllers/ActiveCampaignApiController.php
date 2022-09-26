@@ -116,15 +116,7 @@ class ActiveCampaignApiController extends Controller
                 $activecampaignService->setAccess($data["api_url"], $data["api_key"], 1);
                 $listTest = $activecampaignService->getLists();
 
-                if (isset($listTest["lists"])) {
-                    $integrationCreated = $activecampaignIntegrationModel->create([
-                        "api_url" => $data["api_url"],
-                        "api_key" => $data["api_key"],
-                        "project_id" => $projectId,
-                        "user_id" => auth()->user()->id,
-                    ]);
-                    $activecampaignService->createCustomFieldsDefault($integrationCreated->id);
-                } else {
+                if (!empty($listTest["lists"])) {
                     return response()->json(
                         [
                             "message" => "Erro ao realizar a integração. API URL e/ou API Key inválido(s)",
@@ -133,6 +125,15 @@ class ActiveCampaignApiController extends Controller
                     );
                 }
 
+                $integrationCreated = $activecampaignIntegrationModel->create([
+                    "api_url" => $data["api_url"],
+                    "api_key" => $data["api_key"],
+                    "project_id" => $projectId,
+                    "user_id" => auth()->user()->account_owner_id,
+                ]);
+                $activecampaignService->createCustomFieldsDefault($integrationCreated->id);
+
+
                 if ($integrationCreated) {
                     return response()->json(
                         [
@@ -140,22 +141,24 @@ class ActiveCampaignApiController extends Controller
                         ],
                         200
                     );
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Ocorreu um erro ao realizar a integração",
-                        ],
-                        400
-                    );
                 }
-            } else {
+
                 return response()->json(
                     [
                         "message" => "Ocorreu um erro ao realizar a integração",
                     ],
                     400
                 );
+
             }
+
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao realizar a integração",
+                ],
+                400
+            );
+
         } catch (Exception $e) {
             Log::warning("Erro ao realizar integração ActiveCampaignController - store");
             report($e);
@@ -204,15 +207,8 @@ class ActiveCampaignApiController extends Controller
 
                 if ($integration) {
                     return response()->json(["projects" => $projects, "integration" => $integration]);
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
-                        ],
-                        400
-                    );
                 }
-            } else {
+
                 return response()->json(
                     [
                         "message" => "Ocorreu um erro, tente novamente mais tarde!",
@@ -220,6 +216,13 @@ class ActiveCampaignApiController extends Controller
                     400
                 );
             }
+
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                ],
+                400
+            );
         } catch (Exception $e) {
             Log::warning(
                 "Erro ao tentar acessar tela editar Integração ActiveCampaign (ActiveCampaignController - edit)"

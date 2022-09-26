@@ -207,6 +207,7 @@ class User extends Authenticable
         "show_old_finances",
         "mkt_information",
         "pipefy_card_id",
+        "pipefy_card_data",
         "company_default",
         "role_default",
         "is_cloudfox",

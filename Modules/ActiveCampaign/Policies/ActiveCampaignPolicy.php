@@ -15,11 +15,7 @@ class ActiveCampaignPolicy
      */
     public function edit(User $user, ActivecampaignIntegration $activeCampaignIntegration)
     {
-        if ($user->account_owner_id == $activeCampaignIntegration->user_id) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->account_owner_id == $activeCampaignIntegration->user_id;
     }
 
     /**
@@ -27,11 +23,7 @@ class ActiveCampaignPolicy
      */
     public function update(User $user, ActivecampaignIntegration $activeCampaignIntegration)
     {
-        if ($user->account_owner_id == $activeCampaignIntegration->user_id) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->account_owner_id == $activeCampaignIntegration->user_id;
     }
 
     /**
@@ -39,11 +31,7 @@ class ActiveCampaignPolicy
      */
     public function destroy(User $user, ActivecampaignIntegration $activeCampaignIntegration)
     {
-        if ($user->account_owner_id == $activeCampaignIntegration->user_id) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->account_owner_id == $activeCampaignIntegration->user_id;
     }
 
     /**
@@ -51,10 +39,6 @@ class ActiveCampaignPolicy
      */
     public function show(User $user, ActivecampaignIntegration $activeCampaignIntegration)
     {
-        if ($user->account_owner_id == $activeCampaignIntegration->user_id) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->account_owner_id == $activeCampaignIntegration->user_id;
     }
 }
