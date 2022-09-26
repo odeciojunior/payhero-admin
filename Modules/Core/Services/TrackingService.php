@@ -264,14 +264,19 @@ class TrackingService
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         if (!$userId) {
-            $userId = auth()->user()->getAccountOwnerId();
+            $userId = auth()
+                ->user()
+                ->getAccountOwnerId();
         }
 
         $companyId = Company::DEMO_ID;
-        if(!empty($filters['company'])){
-            $companyId = hashids_decode($filters['company']);
-        }else{
-            $companyId = DB::table('users')->select('company_default')->where('id',$userId)->first()->company_default;
+        if (!empty($filters["company"])) {
+            $companyId = hashids_decode($filters["company"]);
+        } else {
+            $companyId = DB::table("users")
+                ->select("company_default")
+                ->where("id", $userId)
+                ->first()->company_default;
         }
 
         $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
@@ -300,35 +305,33 @@ class TrackingService
                 $join->where("s.id", $saleId);
             }
 
-            $projects = $filters['project'] ? explode(",", $filters["project"]):null;
+            $projects = $filters["project"] ? explode(",", $filters["project"]) : null;
 
             $tokens = [];
             $projectIds = [];
 
-            if(!empty($projects)){
+            if (!empty($projects)) {
                 foreach ($projects as $project) {
-                    if(str_starts_with($project,'TOKEN')){
-                        array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
+                    if (str_starts_with($project, "TOKEN")) {
+                        array_push($tokens, hashids_decode(str_replace("TOKEN-", "", $project)));
                         continue;
                     }
                     array_push($projectIds, hashids_decode($project));
                 }
             }
 
-            if(count($projectIds) > 0 || count($tokens) > 0){
-                $join->where(function ($querySale) use ($projectIds,$tokens) {
-                    $querySale->whereIn("s.project_id", $projectIds)
-                    ->orWhereIn('s.api_token_id',$tokens);
+            if (count($projectIds) > 0 || count($tokens) > 0) {
+                $join->where(function ($querySale) use ($projectIds, $tokens) {
+                    $querySale->whereIn("s.project_id", $projectIds)->orWhereIn("s.api_token_id", $tokens);
                 });
             }
         });
 
-        $productPlanSales->leftJoin('transactions as t', function($q) use($companyId) {
-            $q->on('t.sale_id', 's.id')
-            ->where('t.company_id', $companyId);
+        $productPlanSales->leftJoin("transactions as t", function ($q) use ($companyId) {
+            $q->on("t.sale_id", "s.id")->where("t.company_id", $companyId);
         });
 
-        $productPlanSales->whereNotNull('t.id');
+        $productPlanSales->whereNotNull("t.id");
 
         //filtro transactions
         if (!empty($filters["transaction_status"])) {
@@ -369,11 +372,11 @@ class TrackingService
             });
         }
 
-        $productPlanSales->leftJoin("trackings as t2", function ($leftJoin) use ($filters) {
-            $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
+        $productPlanSales->join("trackings as t2", function ($q) use ($filters) {
+            $q->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
 
             if (!empty($filters["problem"]) && $filters["problem"] == 1) {
-                $leftJoin->whereIn("t2.system_status_enum", [
+                $q->whereIn("t2.system_status_enum", [
                     Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
                     Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
                     Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
@@ -382,7 +385,7 @@ class TrackingService
             }
 
             if (!empty($filters["tracking_code"])) {
-                $leftJoin->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
+                $q->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
             }
         });
 
