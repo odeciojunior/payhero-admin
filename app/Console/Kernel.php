@@ -147,7 +147,8 @@ class Kernel extends ConsoleKernel
         $schedule->command("update:currencyquotation")->dailyAt("07:20");
         $schedule->command("contestations:update")->dailyAt("07:20");
 
-        //$schedule->command("update:currencyquotation")->dailyAt("07:40");
+        $schedule->command("pipefy:first-sale")->dailyAt("07:35");
+        $schedule->command("pipefy:top-sale")->dailyAt("07:45");
 
         $schedule->command("email:notify-pending-document")->dailyAt("08:00");
         $schedule->command("notify:mediation")->dailyAt("08:30");
