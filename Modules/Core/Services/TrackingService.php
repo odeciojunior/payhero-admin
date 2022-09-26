@@ -335,8 +335,8 @@ class TrackingService
 
         //filtro transactions
         if (!empty($filters["transaction_status"])) {
-            $productPlanSales->join("transactions as t", function ($join) use ($filters) {
-                $join->on("t.sale_id", "=", "s.id")->whereNull("t.deleted_at");
+            $productPlanSales->join("transactions as tr", function ($join) use ($filters) {
+                $join->on("tr.sale_id", "=", "s.id")->whereNull("tr.deleted_at");
 
                 $transactionPresenter = (new Transaction())->present();
                 $filterTransaction = explode(",", $filters["transaction_status"]);
@@ -351,24 +351,24 @@ class TrackingService
                     $join
                         ->where(function ($where) use ($statusEnum) {
                             $where
-                                ->where("t.release_date", ">", "2020-05-25") //data que começou a bloquear
+                                ->where("tr.release_date", ">", "2020-05-25") //data que começou a bloquear
                                 ->orWhere("s.is_chargeback_recovered", true);
                         })
-                        ->where("t.release_date", "<=", Carbon::now()->format("Y-m-d"))
-                        ->where("t.tracking_required", true);
+                        ->where("tr.release_date", "<=", Carbon::now()->format("Y-m-d"))
+                        ->where("tr.tracking_required", true);
 
                     if (count($statusEnum) > 0) {
-                        $join->orWhereIn("t.status_enum", $statusEnum);
+                        $join->orWhereIn("tr.status_enum", $statusEnum);
                     }
                 } else {
-                    $join->whereIn("t.status_enum", $statusEnum);
+                    $join->whereIn("tr.status_enum", $statusEnum);
                 }
 
                 $join
-                    ->where("t.type", Transaction::TYPE_PRODUCER)
-                    ->whereNull("t.invitation_id")
-                    ->where("t.is_waiting_withdrawal", 0)
-                    ->whereNull("t.withdrawal_id");
+                    ->where("tr.type", Transaction::TYPE_PRODUCER)
+                    ->whereNull("tr.invitation_id")
+                    ->where("tr.is_waiting_withdrawal", 0)
+                    ->whereNull("tr.withdrawal_id");
             });
         }
 
