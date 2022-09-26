@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="alert alert-warning alert-dismissible fade show" id='blocked-unico' role="alert" style='display:none;'>
-                        <p>Saque suspenso! <strong><a href="#">Clique aqui</a></strong> para cadastrar sua biometria e fortalecer a segurança da sua conta.</p>
+                        <p>Saque suspenso! <strong class="redirect-to-accounts pointer text-decoration-underline" data-url-value="/personal-info">Clique aqui</strong> para cadastrar sua biometria e fortalecer a segurança da sua conta.</p>
                     </div>
                 </div>
 

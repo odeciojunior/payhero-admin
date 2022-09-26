@@ -3548,3 +3548,6 @@ tbody td {
     border-radius: 8px;
 }
 
+.text-decoration-underline {
+    text-decoration: underline;
+}
