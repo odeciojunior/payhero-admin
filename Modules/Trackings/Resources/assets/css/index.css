@@ -376,7 +376,7 @@ div.tracking-close.pointer {
     font-size: 25px;
     width: 36px;
     height: 38px;
-    padding: 2px 0px 0px 8px;
+    padding: 9px 0px 0px 8px;
     transition: 1s;
 }
 div.tracking-close.pointer:hover {
@@ -390,7 +390,7 @@ a.tracking-edit.pointer {
     border: 1px solid !important;
     border-color: #cecece !important;
     border-radius: 5px !important;
-    padding-top: 3px;
+    padding-top: 6px;
     min-width: 37px;
 }
 span.text-right.o-edit-1 {
@@ -402,6 +402,8 @@ span.text-right.o-edit-1 {
 /*  ======== BOTAO DE VISUALIZAR ======== */
 a.tracking-detail.pointer {
     color: #f1f1f1;
+    padding-top: 6px;
+    margin-right: 20px;
 }
 span.o-eye-1 {
     padding: 6px 5px 0px 5px !important;
