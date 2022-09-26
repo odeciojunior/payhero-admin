@@ -101,17 +101,16 @@ class SaleService
                 $tokens = [];
 
                 foreach ($projects as $project) {
-                    if(str_contains($project,'TOKEN')){
-                        array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
+                    if (str_contains($project, "TOKEN")) {
+                        array_push($tokens, hashids_decode(str_replace("TOKEN-", "", $project)));
                         continue;
                     }
 
                     array_push($projectIds, hashids_decode($project));
                 }
 
-                $transactions->whereHas("sale", function ($querySale) use ($projectIds,$tokens) {
-                    $querySale->whereIn("project_id", $projectIds)
-                    ->orWhereIn('api_token_id',$tokens);
+                $transactions->whereHas("sale", function ($querySale) use ($projectIds, $tokens) {
+                    $querySale->whereIn("project_id", $projectIds)->orWhereIn("api_token_id", $tokens);
                 });
             }
 
@@ -368,11 +367,8 @@ class SaleService
         $totalToCalcTaxReal = $total + $cashbackValue;
 
         if (!empty($userTransaction) && $userTransaction->tax > 0) {
-            if (
-                $userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX
-            ) {
-                $totalTaxPercentage =
-                    (int) ($totalToCalcTaxReal * ($userTransaction->tax / 100));
+            if ($userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX) {
+                $totalTaxPercentage = (int) ($totalToCalcTaxReal * ($userTransaction->tax / 100));
                 $totalTax += $totalTaxPercentage;
             } else {
                 $totalTaxPercentage = foxutils()->onlyNumbers($userTransaction->tax);
@@ -381,9 +377,7 @@ class SaleService
         }
 
         if (!empty($userTransaction) && $userTransaction->transaction_tax > 0) {
-            $transactionTax = foxutils()->onlyNumbers(
-                $userTransaction->transaction_tax
-            );
+            $transactionTax = foxutils()->onlyNumbers($userTransaction->transaction_tax);
             $totalTax += $transactionTax;
         }
 
@@ -494,7 +488,6 @@ class SaleService
             }
 
             return null;
-
         } catch (Exception $ex) {
             Log::warning("Erro ao buscar produtos - SaleService - getProducts");
             report($ex);
@@ -677,7 +670,7 @@ class SaleService
                         "type_enum" => Transfer::TYPE_IN,
                         "value" => $transaction->value,
                         "type" => "in",
-                        "gateway_id" => $sale->gateway_id,
+                        "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID,
                     ]);
 
                     $safe2payBalance += $transaction->value;
@@ -700,7 +693,7 @@ class SaleService
                     "type_enum" => Transfer::TYPE_OUT,
                     "reason" => $isBillet ? "Estorno de boleto #{$saleIdEncode}" : "Estorno de pix #{$saleIdEncode}",
                     "company_id" => $transaction->company->id,
-                    "gateway_id" => $sale->gateway_id,
+                    "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID,
                 ]);
 
                 $transaction->company->update([
@@ -840,9 +833,7 @@ class SaleService
 
             if (!empty($filters["project"])) {
                 $showSalesApi = $filters["project"] == "API-TOKEN";
-                $projectId = $showSalesApi
-                    ? null
-                    : hashids_decode($filters["project"]);
+                $projectId = $showSalesApi ? null : hashids_decode($filters["project"]);
 
                 $transactions->where("sales.api_flag", $showSalesApi);
 
@@ -1041,14 +1032,9 @@ class SaleService
             // Projeto
             if (!empty($filters["project"])) {
                 $showSalesApi = $filters["project"] == "API-TOKEN";
-                $projectId = $showSalesApi
-                    ? null
-                    : hashids_decode($filters["project"]);
+                $projectId = $showSalesApi ? null : hashids_decode($filters["project"]);
 
-                $transactions->whereHas("sale", function ($querySale) use (
-                    $projectId,
-                    $showSalesApi
-                ) {
+                $transactions->whereHas("sale", function ($querySale) use ($projectId, $showSalesApi) {
                     if (!$showSalesApi) {
                         $querySale->where("sales.project_id", $projectId);
                         return;
@@ -1266,40 +1252,48 @@ class SaleService
     public static function getProjectsWithSales()
     {
         $companyId = auth()->user()->company_default;
-        $userId = auth()->user()->getAccountOwnerId();
+        $userId = auth()
+            ->user()
+            ->getAccountOwnerId();
 
-        return DB::table('sales')->select('sales.project_id', 'projects.name',DB::Raw("'' as prefix"))
+        return DB::table("sales")
+            ->select("sales.project_id", "projects.name", DB::Raw("'' as prefix"))
             ->distinct()
-            ->leftJoin('projects', 'projects.id','=', 'sales.project_id')
-            ->leftJoin('transactions', 'transactions.sale_id', '=', 'sales.id')
-            ->where('sales.gateway_status','!=','canceled')
-            ->where('transactions.user_id', $userId)
-            ->where('transactions.company_id', $companyId)
-            ->whereNull('transactions.invitation_id')
-            ->where(function($query){
-                if(auth()->user()->deleted_project_filter)
-                    $query->whereIn('projects.status', [1,2]);
-                else
-                    $query->where('projects.status',1);
-            })->get();
+            ->leftJoin("projects", "projects.id", "=", "sales.project_id")
+            ->leftJoin("transactions", "transactions.sale_id", "=", "sales.id")
+            ->where("sales.gateway_status", "!=", "canceled")
+            ->where("transactions.user_id", $userId)
+            ->where("transactions.company_id", $companyId)
+            ->whereNull("transactions.invitation_id")
+            ->where(function ($query) {
+                if (auth()->user()->deleted_project_filter) {
+                    $query->whereIn("projects.status", [1, 2]);
+                } else {
+                    $query->where("projects.status", 1);
+                }
+            })
+            ->get();
     }
 
     public static function getProjectsWithSalesAndTokens()
     {
         $companyId = auth()->user()->company_default;
-        $userId = auth()->user()->getAccountOwnerId();
+        $userId = auth()
+            ->user()
+            ->getAccountOwnerId();
 
-        $projects =  self::getProjectsWithSales();
+        $projects = self::getProjectsWithSales();
 
-        $tokens = DB::table('sales')->select('api.id as project_id','api.description as name',DB::Raw("'TOKEN-' as prefix"))
-        ->distinct()
-        ->join('api_tokens as api', 'api.id','=', 'sales.api_token_id')
-        ->where('api.user_id',$userId)
-        ->whereIn('api.integration_type_enum',[4,5])
-        ->whereNull('api.deleted_at')
-        ->where('api.company_id',$companyId)
-        ->where('sales.gateway_status','!=','canceled')
-        ->get();
+        $tokens = DB::table("sales")
+            ->select("api.id as project_id", "api.description as name", DB::Raw("'TOKEN-' as prefix"))
+            ->distinct()
+            ->join("api_tokens as api", "api.id", "=", "sales.api_token_id")
+            ->where("api.user_id", $userId)
+            ->whereIn("api.integration_type_enum", [4, 5])
+            ->whereNull("api.deleted_at")
+            ->where("api.company_id", $companyId)
+            ->where("sales.gateway_status", "!=", "canceled")
+            ->get();
 
         return $projects->merge($tokens);
     }
