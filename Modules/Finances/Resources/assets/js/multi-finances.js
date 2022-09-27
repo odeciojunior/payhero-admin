@@ -1,21 +1,20 @@
-$(document).ready(function(){
-
+$(document).ready(function () {
     const statusWithdrawals = {
-        1: 'warning',
-        2: 'primary',
-        3: 'success',
-        4: 'danger',
-        5: 'primary',
-        6: 'primary',
-        7: 'danger',
+        1: "warning",
+        2: "primary",
+        3: "success",
+        4: "danger",
+        5: "primary",
+        6: "primary",
+        7: "danger",
         8: "primary",
         9: "partially-liquidating",
     };
 
-    const GETNET = 'w7YL9jZD6gp4qmv';
-    const GERENCIA_NET = 'oXlqv13043xbj4y';
+    const GETNET = "w7YL9jZD6gp4qmv";
+    const GERENCIA_NET = "oXlqv13043xbj4y";
 
-    $(document).on("change","#transfers_company_select", function () {
+    $(document).on("change", "#transfers_company_select", function () {
         resetSkeleton();
         updateStatements();
         updateWithdrawals();
@@ -79,8 +78,8 @@ $(document).ready(function(){
         window.location.href ='/finances/'+id;
     });
 
-    function getGatewayImg(nome){
-        let html='';
+    function getGatewayImg(nome) {
+        let html = "";
         switch (nome) {
             case "getnet":
                 html = `<svg width="76" height="17" viewBox="0 0 76 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,8 +171,8 @@ $(document).ready(function(){
         return html;
     }
 
-    window.updateStatements = function() {
-        let companyId = $('.company-navbar').val()
+    window.updateStatements = function () {
+        let companyId = $(".company-navbar").val();
         $.ajax({
             url: `/api/finances/get-statement-resumes?company_id=${companyId}`,
             type: "GET",
@@ -293,10 +292,10 @@ $(document).ready(function(){
                                 data.name
                             }">
                                             <div class="col-sm-12 mb-10 pb-10">
-                                                <a href="#" class="col-12 btn-outline-success btn font-weight-bold" id="request-withdrawal-${
+                                                <a href="#" disabled class="col-12 btn-outline-success btn font-weight-bold btn-request-withdrawal disabled" id="request-withdrawal-${
                                                     data.id
                                                 }" style="font-size:16px">Solicitar saque</a>
-                                                <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${
+                                                <a href="#" class="btn btn-saque btn-request-withdrawal font-weight-bold" id="new-withdrawal-${
                                                     data.name
                                                 }" style="display:none">Realizar Saque</a>
                                                 <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${
@@ -327,7 +326,7 @@ $(document).ready(function(){
                                     $("#container-withdrawal-" + data.name).fadeIn();
                                     $("#new-withdrawal-" + data.name).fadeIn();
                                     $("#cancel-withdrawal-" + data.name).fadeIn();
-                                }, 500)
+                                }, 500);
                             });
 
                             $(document).off("click", "#cancel-withdrawal-" + data.name);
@@ -363,6 +362,8 @@ $(document).ready(function(){
                             $("#title_available_money").html($titleAvailableBalance);
                             $(".total-available-balance").html(removeMoneyCurrency(data));
                         }
+
+                        checkBlockedWithdrawal();
                     });
 
                     if (emptyStates > 0) {
@@ -411,10 +412,10 @@ $(document).ready(function(){
                 }
             },
         });
-    }
+    };
 
-    window.updateWithdrawals = function() {
-        let companyId = $('.company-navbar').val()
+    window.updateWithdrawals = function () {
+        let companyId = $(".company-navbar").val();
 
         $.ajax({
             url: `/api/withdrawals/get-resume?company_id=${companyId}`,
@@ -435,14 +436,13 @@ $(document).ready(function(){
                     })
                     .addClass("px-10");
             },
-            success: function (response)
-            {
-                if(response.data.length){
-                    $('#empty-history').hide();
-                    $('.skeleton-withdrawal').hide();
-                    $('#container-withdraw').html('');
-                    $('#container-withdraw').show();
-                    $('.asScrollable').show();
+            success: function (response) {
+                if (response.data.length) {
+                    $("#empty-history").hide();
+                    $(".skeleton-withdrawal").hide();
+                    $("#container-withdraw").html("");
+                    $("#container-withdraw").show();
+                    $(".asScrollable").show();
 
                     let c = 1;
                     $.each(response.data, function (index, data) {
@@ -497,22 +497,21 @@ $(document).ready(function(){
                         c++;
                     });
 
-                    $('#container-withdraw').append(`
+                    $("#container-withdraw").append(`
                         <div style="height: 15px"></div>
                     `);
 
-                    if (response.data.length > 3){
-                        $('#container-withdraw').asScrollable();
-                        $('.asScrollable ').css('height','360px');
-                        $('.asScrollable-container').css('height','360px');
-                        $('#container-withdraw').css('width','92%');
+                    if (response.data.length > 3) {
+                        $("#container-withdraw").asScrollable();
+                        $(".asScrollable ").css("height", "360px");
+                        $(".asScrollable-container").css("height", "360px");
+                        $("#container-withdraw").css("width", "92%");
                     }
 
                     asScrollableTop();
                 } else {
                     $(".skeleton-withdrawal").hide();
                     $("#empty-history")
-
                         .css({
                             display: "flex",
                             "justify-content": "center",
@@ -524,6 +523,56 @@ $(document).ready(function(){
             },
         });
     };
+
+    //Verifica se o saque está liberado
+    function checkBlockedWithdrawal() {
+        $.ajax({
+            url: "/api/withdrawals/checkallowed",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+                $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
+            },
+            success: (response) => {
+                if (response.allowed && verifyAccountFrozen() == false) {
+                    $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
+                    $("#blocked-withdrawal").hide();
+                } else {
+                    $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
+                    $("#blocked-withdrawal").show();
+                }
+            },
+        });
+
+        $.ajax({
+            url:
+                "/api/core/verify-biometry/" +
+                $('meta[name="user-id"]').attr("content"),
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+                $(".btn-request-withdrawal").addClass("disabled");
+                $("#blocked-unico").fadeIn();
+            },
+            success: (response) => {
+                if (response.allowed && verifyAccountFrozen() == false) {
+                    $(".btn-request-withdrawal").remove("disabled");
+                    $("#blocked-unico").fadeOut();
+                } else {
+                    $(".btn-request-withdrawal").addClass("disabled");
+                    $("#blocked-unico").fadeIn();
+                }
+            },
+        });
+    }
 
     $("#eye-slash, #eye-no-slash").on("click", function () {
         let availableBalance = $(".total-available-balance");
@@ -543,66 +592,64 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on('click','#container-return',function(){
-        if($('#container-config').is(':visible')){
-            hiddenConfig()
+    $(document).on("click", "#container-return", function () {
+        if ($("#container-config").is(":visible")) {
+            hiddenConfig();
         }
     });
 
-    $(document).on('click','#btn-config-all',function(){
-        if($('#container-config').is(':hidden')){
-            showConfig()
-        }else{
-            hiddenConfig()
+    $(document).on("click", "#btn-config-all", function () {
+        if ($("#container-config").is(":hidden")) {
+            showConfig();
+        } else {
+            hiddenConfig();
         }
     });
 
-    function asScrollableTop()
-    {
-        if($('.asScrollable-container').hasClass)
-        {
-            $('.asScrollable-container').scroll(() => {
-                if ($('.list-linear-gradient-top').css('display') === 'none') {
-                    if ($('.asScrollable-container').scrollTop() > 90) {
-                        $('.list-linear-gradient-top').fadeIn()
+    function asScrollableTop() {
+        if ($(".asScrollable-container").hasClass) {
+            $(".asScrollable-container").scroll(() => {
+                if ($(".list-linear-gradient-top").css("display") === "none") {
+                    if ($(".asScrollable-container").scrollTop() > 90) {
+                        $(".list-linear-gradient-top").fadeIn();
                     }
                 }
 
-                if ($('.list-linear-gradient-top').css('display') === 'block') {
-                    if ($('.asScrollable-container').scrollTop() < 90) {
-                        $('.list-linear-gradient-top').fadeOut()
+                if ($(".list-linear-gradient-top").css("display") === "block") {
+                    if ($(".asScrollable-container").scrollTop() < 90) {
+                        $(".list-linear-gradient-top").fadeOut();
                     }
                 }
-            })
+            });
         }
     }
 
-    function hiddenConfig(){
-        $('#btn-config-all').removeClass('active-outline');
-        $('#container-config').hide();
-        $('#container-return').hide();
-        $('#container-gateways').show();
-        $('#container-available').show();
+    function hiddenConfig() {
+        $("#btn-config-all").removeClass("active-outline");
+        $("#container-config").hide();
+        $("#container-return").hide();
+        $("#container-gateways").show();
+        $("#container-available").show();
     }
-    function showConfig(){
-        $('#btn-config-all').addClass('active-outline');
-        $('#container-config').show();
-        $('#container-return').show();
-        $('#container-gateways').hide();
-        $('#container-available').hide();
+    function showConfig() {
+        $("#btn-config-all").addClass("active-outline");
+        $("#container-config").show();
+        $("#container-return").show();
+        $("#container-gateways").hide();
+        $("#container-available").hide();
     }
 
-    function resetSkeleton(){
-        $("#extract_company_select").val( $('.company-navbar').val() );
-        $('#gateway-skeleton').show();
-        $('#container-all-gateways').html('');
-        $('#val-skeleton').show();
-        $('#container_val').css('display','none');
-        $('.skeleton-withdrawal').show();
-        $('#container-withdraw').html('');
-        $('#empty-history').hide();
-        $('.asScrollable').hide();
-        $('.container-history').css('padding-top','28px');
+    function resetSkeleton() {
+        $("#extract_company_select").val($(".company-navbar").val());
+        $("#gateway-skeleton").show();
+        $("#container-all-gateways").html("");
+        $("#val-skeleton").show();
+        $("#container_val").css("display", "none");
+        $(".skeleton-withdrawal").show();
+        $("#container-withdraw").html("");
+        $("#empty-history").hide();
+        $(".asScrollable").hide();
+        $(".container-history").css("padding-top", "28px");
     }
 
     function createCarousel() {
@@ -636,7 +683,7 @@ $(document).ready(function(){
     }
 
     loadingOnScreen();
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         loadingOnScreenRemove();
         getProjects();
     });

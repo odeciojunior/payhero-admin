@@ -48,32 +48,26 @@ class CoreApiController extends Controller
             $userInformations = UserInformation::where("document", $user->document)->exists();
 
             $userStatus = null;
-            $userAddressDocument = $user->present()->getAddressDocumentStatus($user->address_document_status);
-            $userPersonaltDocument = $user->present()->getPersonalDocumentStatus($user->personal_document_status);
-            $userRedirect = null;
+            $userBiometryStatus = $user->present()->getBiometryStatus($user->biometry_status);
+
             if ($userService->haveAnyDocumentPending()) {
                 $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
-                $userRedirect = "/personal-info";
             }
 
             if ($userService->haveAnyDocumentAnalyzing()) {
                 $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_ANALYZING);
-                $userRedirect = "/personal-info";
             }
 
             if ($userService->haveAnyDocumentApproved()) {
                 $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_APPROVED);
-                $userRedirect = "/personal-info";
             }
 
             if ($userService->haveAnyDocumentRefused()) {
                 $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_REFUSED);
-                $userRedirect = "/personal-info";
             }
 
+
             $companyStatus = null;
-            $companyAddressDocument = null;
-            $companyContractDocument = null;
             $companyRedirect = null;
 
             $companies = Company::where("user_id", auth()->user()->account_owner_id)
@@ -87,48 +81,25 @@ class CoreApiController extends Controller
                 $companyApproved = $companyService->companyDocumentApproved();
                 if (!empty($companyApproved)) {
                     $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_APPROVED);
-                    $companyAddressDocument = $companyModel
-                        ->present()
-                        ->getAddressDocumentStatus($companyApproved->address_document_status);
-                    $companyContractDocument = $companyModel
-                        ->present()
-                        ->getContractDocumentStatus($companyApproved->contract_document_status);
                     $companyRedirect = "/companies";
                 } else {
+
                     $companyPending = $companyService->companyDocumentPending();
                     if (!empty($companyPending)) {
                         $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_PENDING);
-                        $companyAddressDocument = $companyModel
-                            ->present()
-                            ->getAddressDocumentStatus($companyPending->address_document_status);
-                        $companyContractDocument = $companyModel
-                            ->present()
-                            ->getContractDocumentStatus($companyPending->contract_document_status);
                         $companyRedirect = "/companies/company-detail/" . hashids_decode($companyPending->id);
                     }
 
                     $companyAnalyzing = $companyService->companyDocumentAnalyzing();
                     if (!empty($companyAnalyzing)) {
                         $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_ANALYZING);
-                        $companyAddressDocument = $companyModel
-                            ->present()
-                            ->getAddressDocumentStatus($companyAnalyzing->address_document_status);
-                        $companyContractDocument = $companyModel
-                            ->present()
-                            ->getContractDocumentStatus($companyAnalyzing->contract_document_status);
                         $companyRedirect = "/companies/company-detail/" . hashids_decode($companyAnalyzing->id);
                     }
 
                     $companyRefused = $companyService->companyDocumentRefused();
                     if (!empty($companyRefused)) {
                         $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_REFUSED);
-                        $companyAddressDocument = $companyModel
-                            ->present()
-                            ->getAddressDocumentStatus($companyRefused->address_document_status);
-                        $companyContractDocument = $companyModel
-                            ->present()
-                            ->getContractDocumentStatus($companyRefused->contract_document_status);
-                        $companyRedirect = "/companies/company-detail/" . hashids_decode($companyRefused->id);
+                        $companyRedirect = "/companies/company-detail/" . hashids_decode($companyAnalyzing->id);
                     }
                 }
             }
@@ -138,25 +109,11 @@ class CoreApiController extends Controller
             return response()->json(
                 [
                     "data" => [
-                        "account" => [
-                            "status" => $user->present()->getAccountStatus($user->account_is_approved),
-                            "type" => $user->present()->getAccountType($user->id, $user->account_owner_id),
-                        ],
-                        "user" => [
-                            "status" => $userStatus,
-                            "address_document" => $userAddressDocument,
-                            "personal_document" => $userPersonaltDocument,
-                            "document" => $user->document,
-                            "email" => $user->email,
-                            "informations" => $userInformations,
-                            "link" => $userRedirect,
-                        ],
-                        "company" => [
-                            "status" => $companyStatus,
-                            "address_document" => $companyAddressDocument,
-                            "contract_document" => $companyContractDocument,
-                            "link" => $companyRedirect,
-                        ],
+                        "informations_completed" => $userInformations,
+                        "user_status" => $userStatus,
+                        "company_status" => $companyStatus,
+                        "link_company" => $companyRedirect,
+
                     ],
                 ],
                 Response::HTTP_OK
@@ -274,50 +231,48 @@ class CoreApiController extends Controller
             $user = auth()->user();
 
             $return = [
-                'company_default'=>Hashids::encode(Company::DEMO_ID),
-                'company_default_name'=>'Empresa Demo',
-                'company_default_fullname'=>'Empresa Demo',
-                'has_api_integration'=>false
+                'company_default' => Hashids::encode(Company::DEMO_ID),
+                'company_default_name' => 'Empresa Demo',
+                'company_default_fullname' => 'Empresa Demo',
+                'has_api_integration' => false
             ];
 
-            if($user->company_default > Company::DEMO_ID)
-            {
-                $companyDefault = cache()->remember('company-default-'.$user->company_default, 60, function () use($user) {
-                    return Company::select('id','company_type','fantasy_name')
-                    ->where('id', $user->company_default)
-                    ->first();
+            if ($user->company_default > Company::DEMO_ID) {
+                $companyDefault = cache()->remember('company-default-' . $user->company_default, 60, function () use ($user) {
+                    return Company::select('id', 'company_type', 'fantasy_name')
+                        ->where('id', $user->company_default)
+                        ->first();
                 });
 
                 $company_default_name = $companyDefault->company_type == 1 ? 'Pessoa física' : Str::limit(
-                        $companyDefault->fantasy_name,
-                        20
-                    ) ?? '';
+                    $companyDefault->fantasy_name,
+                    20
+                ) ?? '';
 
                 $user_id = auth()->user()->id;
-                if(auth()->user()->is_cloudfox)
+                if (auth()->user()->is_cloudfox)
                     $user_id = auth()->user()->logged_id;
 
                 $return = array(
-                    'company_default'=>Hashids::encode($user->company_default),
-                    'company_default_name'=>$company_default_name,
-                    'company_default_fullname'=>$companyDefault->fantasy_name,
-                    'has_api_integration'=>false
+                    'company_default' => Hashids::encode($user->company_default),
+                    'company_default_name' => $company_default_name,
+                    'company_default_fullname' => $companyDefault->fantasy_name,
+                    'has_api_integration' => false
                 );
             }
 
-            $companies = cache()->remember('companies-'.$user->account_owner_id, 60, function () use($user) {
+            $companies = cache()->remember('companies-' . $user->account_owner_id, 60, function () use ($user) {
                 return Company::where('user_id', $user->account_owner_id)->get();
             });
 
 
             $return['companies'] = collect(CompaniesSelectResource::collection($companies))
-             ->sortBy('order_priority')
-             ->sortByDesc('active_flag')
-             ->sortByDesc('company_is_approved')
-             ->values()->all();
+                ->sortBy('order_priority')
+                ->sortByDesc('active_flag')
+                ->sortByDesc('company_is_approved')
+                ->values()->all();
 
             return $return;
-
         } catch (Exception $e) {
             report($e);
 
@@ -330,41 +285,40 @@ class CoreApiController extends Controller
         }
     }
 
-    public function updateCompanyDefault(Request $request){
+    public function updateCompanyDefault(Request $request)
+    {
 
-        if(empty($request->company_id)){
-            return response()->json(['message'=>'Informe a empresa selecionada'],400);
+        if (empty($request->company_id)) {
+            return response()->json(['message' => 'Informe a empresa selecionada'], 400);
         }
 
         $companyId = current(Hashids::decode($request->company_id));
-        if(empty($companyId)){
-            return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
+        if (empty($companyId)) {
+            return response()->json(['message' => 'Não foi possivel identificar a empresa'], 400);
         }
 
         $user = Auth::user();
-        if($user->company_default == $companyId){
+        if ($user->company_default == $companyId) {
             return; //response()->json(['message'=>'A empresa selecionada já é a default.'],400);
         }
 
-        if($companyId > 1){
-            $company = Company::where('user_id',$user->account_owner_id)->where('id',$companyId)->exists();
-            if(empty($company)){
-                return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
+        if ($companyId > 1) {
+            $company = Company::where('user_id', $user->account_owner_id)->where('id', $companyId)->exists();
+            if (empty($company)) {
+                return response()->json(['message' => 'Não foi possivel identificar a empresa'], 400);
             }
         }
 
-        try{
+        try {
 
             $user->company_default = $companyId;
             $user->save();
 
-            return response()->json(['message'=>'Empresa atualizada.']);
-
-        }catch(Exception $e){
+            return response()->json(['message' => 'Empresa atualizada.']);
+        } catch (Exception $e) {
             report($e);
-            return response()->json(['message'=>'Não foi possivel atualizar a empresa default.']);
+            return response()->json(['message' => 'Não foi possivel atualizar a empresa default.']);
         }
-
     }
 
     public function allowBlockBalance($companyId, $saleId)
@@ -472,11 +426,36 @@ class CoreApiController extends Controller
             'scope' => 'user',
             'name' => auth()->user()->name,
             'email' => auth()->user()->email,
-            'external_id' => ''. auth()->user()->id . '',
+            'external_id' => '' . auth()->user()->id . '',
             'iat' => time(),
         ];
         $token = JWT::encode($payload, 'v5D7n6jaGlc2nviUtU5eYOuG9MmtIuJ_t9K8KERl5PK6a46sWNH6q5_28jsGaTU1I4eStyGmzDOUntuhdHfoGg', 'HS256', 'app_630519303703d200f36b2a98');
 
         return response()->json($token);
+    }
+
+    public function verifyBiometry($id)
+    {
+        try {
+
+            $checkUserBiometry = User::find(hashids_decode($id))->biometry_status;
+
+            return response()->json(
+                [
+                    "data" => [
+                        "check_user_biometry" => $checkUserBiometry === User::BIOMETRY_STATUS_APPROVED,
+
+                    ],
+                ],
+                Response::HTTP_OK
+            );
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    "message" => $e->getMessage(),
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }

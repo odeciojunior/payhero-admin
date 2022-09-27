@@ -137,6 +137,11 @@ class User extends Authenticable
 
     public const DEMO_ID = 1;
 
+    public const BIOMETRY_STATUS_PENDING = 1;
+    public const BIOMETRY_STATUS_IN_PROCESS = 2;
+    public const BIOMETRY_STATUS_APPROVED = 3;
+    public const BIOMETRY_STATUS_REFUSED = 4;
+
     protected $presenter = UserPresenter::class;
 
     protected $guard_name = "web";
@@ -212,6 +217,7 @@ class User extends Authenticable
         "role_default",
         "is_cloudfox",
         "block_attendance_balance",
+        "biometry_status",
         "utm_srcs",
         "created_at",
         "updated_at",
@@ -438,6 +444,14 @@ class User extends Authenticable
         return $this->account_is_approved == Company::DEMO_ID ? true : $this->account_is_approved;
     }
 
+    /**
+     * @return HasMany
+     */
+    public function userBiometryResults()
+    {
+        return $this->hasMany(UserBiometryResult::class);
+    }
+    
     public function getRoleNames($guard = "web"): SupportCollection
     {
         return $this->roles()

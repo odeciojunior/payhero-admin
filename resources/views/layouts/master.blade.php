@@ -132,11 +132,6 @@
     <input type="hidden"
            id="accountStatus">
 
-    @php
-        $userModel = new \Modules\Core\Entities\User();
-        $account_type = $userModel->present()->getAccountType(auth()->user()->id, auth()->user()->account_owner_id);
-    @endphp
-
     <div class="alert-demo-account" style="display:none">
         <div class="row no-gutters">
             <img src="/build/global/img/alert-demo-left.png" class="mr-20">
@@ -147,17 +142,17 @@
 
     @yield('content')
 
-    @if (!auth()->user()->account_is_approved && $account_type === 'admin')
-        @include('utils.documents-pending')
-    @endif
-
     @include('utils.alert-demo-account')
-
+    
     <!-- Plugins -->
     <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
-    <script>
-        verifyDocumentPending();
-    </script>
+
+    @if (!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id)
+        @include('utils.documents-pending')
+        <script>
+            verifyDocumentPending();
+        </script>
+    @endif
 
     @stack('scripts')
     @stack('scriptsModal')

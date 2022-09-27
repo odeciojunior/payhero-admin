@@ -298,24 +298,24 @@ class WithdrawalsApiController
                 return response()->json(["message" => "Sem permissão para visualizar dados da conta"], 403);
             }
 
-            if ($userService->haveAnyDocumentPending()) {
-                return response()->json([
-                    "data" => [
-                        "user_pending" => true,
-                        "route" => env("ACCOUNT_FRONT_URL") . "/personal-info",
-                    ],
-                ]);
-            }
+            // if ($userService->haveAnyDocumentPending()) {
+            //     return response()->json([
+            //         "data" => [
+            //             "user_pending" => true,
+            //             "route" => env("ACCOUNT_FRONT_URL") . "/personal-info",
+            //         ],
+            //     ]);
+            // }
 
-            if (!$companyService->haveAnyDocumentPending()) {
-                return response()->json([
-                    "data" => [
-                        "company_pending" => true,
-                        "route" =>
-                            env("ACCOUNT_FRONT_URL") . "/companies/company-detail/" . \hashids()->encode($company->id),
-                    ],
-                ]);
-            }
+            // if (!$companyService->haveAnyDocumentPending()) {
+            //     return response()->json([
+            //         "data" => [
+            //             "company_pending" => true,
+            //             "route" =>
+            //                 env("ACCOUNT_FRONT_URL") . "/companies/company-detail/" . \hashids()->encode($company->id),
+            //         ],
+            //     ]);
+            // }
 
             return response()->json([
                 "message" => "Sem documentos pendentes",

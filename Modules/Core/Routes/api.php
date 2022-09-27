@@ -9,6 +9,8 @@ Route::group(
     function () {
         Route::get("/core/verify-account/{userID}", "CoreApiController@verifyAccount");
 
+        Route::get("/core/verify-biometry/{userID}", "CoreApiController@verifyBiometry");
+
         Route::get("/core/verifydocuments", "CoreApiController@verifyDocuments");
 
         Route::get("/core/usercompanies", "CoreApiController@getCompanies")

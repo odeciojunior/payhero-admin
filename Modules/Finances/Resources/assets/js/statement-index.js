@@ -72,12 +72,12 @@ $(window).on("load", function () {
         <rect width="146" height="40" fill="white"/>
         </clipPath>
         </defs>
-        </svg>`
-    }
+        </svg>`,
+    };
 
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $('.company_name').val( $('.company-navbar').first().find('option:selected').text() );
+        $(".company_name").val($(".company-navbar").first().find("option:selected").text());
         loadOnAny(".number", false, {
             styles: {
                 container: {
@@ -91,23 +91,22 @@ $(window).on("load", function () {
                 },
             },
         });
-        loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
-        $("#table-transfers-body").html('');
-        loadOnTable('#table-transfers-body', '#transfersTable');
-        $("#available-in-period").html('');
-        updateCompanyDefault().done( function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                if(!isEmpty(data2.company_default)){
+        loadOnTable("#withdrawals-table-data", "#withdrawalsTable");
+        $("#table-transfers-body").html("");
+        loadOnTable("#table-transfers-body", "#transfersTable");
+        $("#available-in-period").html("");
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                if (!isEmpty(data2.company_default)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    window.gatewayCode = window.location.href.split('/')[4];
+                    window.gatewayCode = window.location.href.split("/")[4];
                     getGateway(window.gatewayCode);
                     checkBlockedWithdrawal();
                     updateBalances();
                     loadStatementTable();
-                    $("#nav-statement").css('display', '');
-                }
-                else{
+                    $("#nav-statement").css("display", "");
+                } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                     loadingOnScreenRemove();
@@ -116,18 +115,18 @@ $(window).on("load", function () {
         });
     });
 
-    window.gatewayCode = window.location.href.split('/')[4];
-    getGateway(window.gatewayCode)
+    window.gatewayCode = window.location.href.split("/")[4];
+    getGateway(window.gatewayCode);
 
-    function getGateway(nome){
+    function getGateway(nome) {
         switch (nome) {
-            case 'NzJqoR32egVj5D6':
+            case "NzJqoR32egVj5D6":
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.asaas}
                                             </a>`);
                 break;
-            case 'w7YL9jZD6gp4qmv':
+            case "w7YL9jZD6gp4qmv":
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.getnet}
@@ -139,19 +138,19 @@ $(window).on("load", function () {
                 $("#pagination-transfers").hide();
                 $("#pagination-statement").show();
                 break;
-            case 'oXlqv13043xbj4y':
+            case "oXlqv13043xbj4y":
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.gerencianet}
                                             </a>`);
                 break;
-            case 'pM521rZJrZeaXoQ':
+            case "pM521rZJrZeaXoQ":
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.cielo}
                                             </a>`);
                 break;
-            case 'BeYEwR3AdgdKykA':
+            case "BeYEwR3AdgdKykA":
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.vega}
@@ -164,8 +163,8 @@ $(window).on("load", function () {
         }
     }
 
-    $('#date_range').daterangepicker({
-        startDate: moment().startOf('week'),
+    $("#date_range").daterangepicker({
+        startDate: moment().startOf("week"),
         endDate: moment(),
         opens: "center",
         maxDate: moment().endOf("day"),
@@ -265,17 +264,17 @@ $(window).on("load", function () {
         checkBlockedWithdrawal();
         updateBalances();
         loadStatementTable();
-        $("#nav-statement").css('display', '');
-        $("#nav-statement-tab").on('click', function () {
-            $("#nav-statement").css('display', '');
+        $("#nav-statement").css("display", "");
+        $("#nav-statement-tab").on("click", function () {
+            $("#nav-statement").css("display", "");
         });
-        $('.company_name').val( $('.company-navbar').first().find('option:selected').text() );
+        $(".company_name").val($(".company-navbar").first().find("option:selected").text());
         loadingOnScreenRemove();
     }
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getCompanies(data);
-    })
+    });
 
     $("#transaction").on("change paste keyup select", function () {
         let val = $(this).val();
@@ -291,7 +290,7 @@ $(window).on("load", function () {
 
     $(".withdrawal-value").maskMoney({ thousands: ".", decimal: ",", allowZero: true });
 
-    //Verifica se o saque está liberado
+    //Check if the withdrawal is released
     function checkBlockedWithdrawal() {
         $.ajax({
             url: "/api/withdrawals/checkallowed",
@@ -314,8 +313,31 @@ $(window).on("load", function () {
                 }
             },
         });
+
+        $.ajax({
+            url:
+                "/api/core/verify-biometry/" +
+                $('meta[name="user-id"]').attr("content"),
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+                $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
+                $(".btn-request-withdrawal").addClass("disabled");
+            },
+            success: (response) => {
+                if (response.allowed && verifyAccountFrozen() == false) {
+                    $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
+                    $("#blocked-unico").hide();
+                } else {
+                    $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
+                    $("#blocked-unico").show();
+                }
+            },
+        });
     }
-
-
 
 });
