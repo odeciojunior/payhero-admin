@@ -528,7 +528,7 @@ $(() => {
                             </a>
                         </div>`;
                     let dados = `
-                        <tr ${grayRow ? 'class="td-odd"' : ""}>
+                        <tr>
 
                             ${
                                 lastSale !== tracking.sale
