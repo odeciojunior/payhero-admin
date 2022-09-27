@@ -372,7 +372,7 @@ class TrackingService
             });
         }
 
-        $productPlanSales->join("trackings as t2", function ($q) use ($filters) {
+        $productPlanSales->leftJoin("trackings as t2", function ($q) use ($filters) {
             $q->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
 
             if (!empty($filters["problem"]) && $filters["problem"] == 1) {
