@@ -110,6 +110,7 @@ class CoreApiController extends Controller
                 [
                     "data" => [
                         "informations_completed" => $userInformations,
+                        "user_account" => $user->present()->getAccountStatus($user->account_is_approved),
                         "user_status" => $userStatus,
                         "company_status" => $companyStatus,
                         "link_company" => $companyRedirect,

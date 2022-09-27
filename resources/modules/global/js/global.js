@@ -1012,11 +1012,9 @@ function verifyDocumentPending()
             errorAjaxResponse(response);
         },
         success: (response) => {
-            if (response.data.account.type === "collaborator") {
-                return;
-            }
 
-            if (response.data.account.status !== "approved") {
+            if (response.data.user_account !== "approved") {
+
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
                     $('.new-register-page-open-modal-container').hide();
@@ -1040,7 +1038,7 @@ function verifyDocumentPending()
                 var card_user_info_description =
                     "Temos algumas perguntas para conhecer melhor você e seu negócio.";
 
-                if (!response.data.user.informations) {
+                if (!response.data.informations_completed) {
                     count += 1;
 
                     card_user_info_status = "extra-informations-user";
@@ -1073,9 +1071,9 @@ function verifyDocumentPending()
                 var card_company_title = "";
                 var card_company_description = "";
                 var card_company_button = "";
-                var card_company_link = response.data.company.link;
+                var card_company_link = response.data.link_company;
 
-                if (response.data.company.status == null) {
+                if (response.data.company_status == null) {
                     count += 1;
 
                     card_company_status = "redirect-to-accounts";
@@ -1086,7 +1084,7 @@ function verifyDocumentPending()
                         "Na Cloudfox você pode ter uma ou mais empresas.";
                     card_company_button = "";
                 } else {
-                    if (response.data.company.status == "pending") {
+                    if (response.company_status == "pending") {
                         count += 1;
 
                         card_company_status = "status-info";
@@ -1100,7 +1098,7 @@ function verifyDocumentPending()
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Enviar documentos</button>';
-                    } else if (response.data.company.status == "analyzing") {
+                    } else if (response.company_status == "analyzing") {
                         count += 1;
 
                         card_company_status =
@@ -1124,7 +1122,7 @@ function verifyDocumentPending()
                                 card_company_link +
                                 '">Enviar documentos</button>';
                         }
-                    } else if (response.data.company.status == "refused") {
+                    } else if (response.company_status == "refused") {
                         count += 1;
 
                         card_company_status = "status-error";
@@ -1138,7 +1136,7 @@ function verifyDocumentPending()
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Reenviar documentos</button>';
-                    } else if (response.data.company.status == "approved") {
+                    } else if (response.data.company_status == "approved") {
                         card_company_status =
                             "status-check redirect-to-accounts";
                         card_company_icon =
@@ -1173,11 +1171,10 @@ function verifyDocumentPending()
                 var card_user_biometry_title = "";
                 var card_user_biometry_description = "";
                 var card_user_biometry_button = "";
-                var card_user_biometry_link = response.data.user.biometry_status;
+                var card_user_biometry_link = "/personal-info";
 
-                response.data.user.biometry_status = "approved";
 
-                if (response.data.user.biometry_status === "pending" || response.data.user.biometry_status === "") {
+                if (response.data.user_status === "pending" || response.data.user_status === "") {
                     count += 1;
 
                     card_user_biometry_status = "redirect-to-accounts";
@@ -1190,7 +1187,7 @@ function verifyDocumentPending()
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                     card_user_biometry_link +
                         '">Ir para configurações</button>';
-                } else if (response.data.user.biometry_status === "analazying") {
+                } else if (response.data.user_status === "analazying") {
                     count += 1;
 
                     card_user_biometry_status = "status-warning redirect-to-accounts";
@@ -1199,7 +1196,7 @@ function verifyDocumentPending()
                     card_user_biometry_title = "Estamos analisando sua identidade";
                     card_user_biometry_description =
                         "O processo de revisão dos dados biométricos e seu comprovante de residência leva um tempinho. Em breve retornaremos!";
-                }else if (response.data.user.biometry_status == "refused") {
+                }else if (response.data.user_status == "refused") {
                     count += 1;
 
                     card_user_biometry_status = "status-error";
@@ -1212,7 +1209,7 @@ function verifyDocumentPending()
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                         card_user_biometry_link +
                         '">Ir para configurações</button>';
-                } else if (response.data.user.biometry_status == "approved") { //
+                } else if (response.data.user_status === "approved") { //
                     card_user_biometry_status = "status-check redirect-to-accounts";
                     card_user_biometry_icon =
                         '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
@@ -1249,7 +1246,9 @@ function verifyDocumentPending()
                                 ? " itens pendentes"
                                 : " item pendente") +
                             ")"
-                    );
+                    ).promise().done(function(){
+                        $('.alert-pendings').css('display','inline-flex')
+                    });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
 

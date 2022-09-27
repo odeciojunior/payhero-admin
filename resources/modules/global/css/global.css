@@ -549,11 +549,7 @@ a.label {
 }
 
 .card {
-<<<<<<< HEAD
     font-family: "Muli", sans-serif;
-=======
-    font-family: "Inter", sans-serif;
->>>>>>> master
     border-radius: 16px;
 }
 
@@ -691,11 +687,7 @@ a.label {
 .s-btn {
     background-color: #ffffff;
     border: 2px solid #2626264d;
-<<<<<<< HEAD
     font: normal normal bold 24px/30px Muli;
-=======
-    font: normal normal bold 24px/30px Inter;
->>>>>>> master
     padding: 15px 40px;
     color: #8a8a8a;
 }
@@ -1758,11 +1750,7 @@ input[type="radio"] {
 }
 .page-project .table .table-title {
     color: #15034c !important;
-<<<<<<< HEAD
     font: 16px "Muli" !important;
-=======
-    font: 16px "Inter" !important;
->>>>>>> master
 }
 
 .top-holder .input-group .form-control {

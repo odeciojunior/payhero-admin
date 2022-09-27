@@ -152,7 +152,7 @@ class UserPresenter extends Presenter
         }
     }
 
-/**
+    /**
      * @return int|string
      */
     public function getBiometryStatus()
@@ -220,13 +220,13 @@ class UserPresenter extends Presenter
     public function getDocumentTypeRegistered($document_type)
     {
         switch ($document_type) {
-            // USUARIO
+                // USUARIO
             case "USUARIO_DOCUMENTO":
                 return self::USUARIO_DOCUMENTO;
             case "USUARIO_RESIDENCIA":
                 return self::USUARIO_RESIDENCIA;
 
-            // EMPRESA
+                // EMPRESA
             case "EMPRESA_EXTRATO":
                 return self::EMPRESA_EXTRATO;
             case "EMPRESA_RESIDENCIA":
@@ -239,7 +239,7 @@ class UserPresenter extends Presenter
 
     public function getAccountType($user_id, $account_owner_id)
     {
-        if(auth()->user()->is_cloudfox)
+        if (auth()->user()->is_cloudfox)
             $user_id = auth()->user()->logged_id;
 
         if ($user_id !== $account_owner_id) {
