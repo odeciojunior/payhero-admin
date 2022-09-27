@@ -82,7 +82,7 @@
                                         ao carrinho de compras</a>
                                     <a class="dropdown-item"
                                        href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia
-                                        direto pro checkout</a>
+                                        direto para o checkout</a>
 
                                     <a class="dropdown-item"
                                        href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin-cloudfox-geteway.zip">
