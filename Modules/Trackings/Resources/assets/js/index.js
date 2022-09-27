@@ -736,7 +736,7 @@ $(() => {
                         </div>`;
                     $(buttons).insertBefore(saveClose);
 
-                    let statusBadge = btnSave.parent().parent().parent().find(".badge");
+                    let statusBadge = btnSave.parent().parent().parent().parent().find(".badge");
                     statusBadge
                         .removeClass(
                             "statusPosted statusOnDelivery statusDelivered statusInTransit statusProblem statusWithoutInfo"
