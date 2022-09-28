@@ -42,6 +42,7 @@ class EditProductResource extends JsonResource
             "type_enum" => $this->resource["product"]->type_enum,
             "digital_product_url" => $this->resource["product"]->digital_product_url ?? "",
             "url_expiration_time" => $urlExpirationTime,
+            "has_sales" => $this->resource["product"]->hasSales,
         ];
         $categories = [];
         foreach ($this->resource["categories"] as $category) {
