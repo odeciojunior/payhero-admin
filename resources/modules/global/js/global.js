@@ -1187,7 +1187,7 @@ function verifyDocumentPending()
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                     card_user_biometry_link +
                         '">Ir para configurações</button>';
-                } else if (response.data.user_status === "analazying") {
+                } else if (response.data.user_status === "analyzing") { analyzing
                     count += 1;
 
                     card_user_biometry_status = "status-warning redirect-to-accounts";
