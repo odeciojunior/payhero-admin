@@ -549,7 +549,7 @@ a.label {
 }
 
 .card {
-    font-family: "Inter", sans-serif;
+    font-family: "Muli", sans-serif;
     border-radius: 16px;
 }
 
@@ -687,7 +687,7 @@ a.label {
 .s-btn {
     background-color: #ffffff;
     border: 2px solid #2626264d;
-    font: normal normal bold 24px/30px Inter;
+    font: normal normal bold 24px/30px Muli;
     padding: 15px 40px;
     color: #8a8a8a;
 }
@@ -1750,7 +1750,7 @@ input[type="radio"] {
 }
 .page-project .table .table-title {
     color: #15034c !important;
-    font: 16px "Inter" !important;
+    font: 16px "Muli" !important;
 }
 
 .top-holder .input-group .form-control {
@@ -3509,4 +3509,30 @@ tbody td {
 /* Handle on hover */
 * ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.alert-warning {
+    background: rgba(255, 153, 0, 0.08);
+    /* Orange */
+
+    border: 1px solid #ff9900;
+    border-radius: 8px;
+}
+
+.alert-warning a {
+    text-decoration: underline;
+    color: #856404 !important;
+}
+
+
+.alert-danger {
+    background: #f8d7da;
+    /* Orange */
+
+    border: 1px solid #d63c4c;
+    border-radius: 8px;
+}
+
+.text-decoration-underline {
+    text-decoration: underline;
 }

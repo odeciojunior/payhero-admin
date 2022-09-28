@@ -25,7 +25,7 @@ class UserService
         $userModel = new User();
         if (empty($userId)) {
             $user = auth()->user();
-            if($user->is_cloudfox && $user->logged_id){
+            if ($user->is_cloudfox && $user->logged_id) {
                 $user = User::find($user->account_owner_id);
             }
         } else {
@@ -47,7 +47,7 @@ class UserService
 
         if (
             $user->address_document_status == UserDocument::STATUS_APPROVED &&
-            $user->personal_document_status == UserDocument::STATUS_APPROVED
+            $user->biometry_status == User::BIOMETRY_STATUS_APPROVED
         ) {
             return true;
         }
@@ -61,7 +61,7 @@ class UserService
 
         if (
             $user->address_document_status == UserDocument::STATUS_PENDING ||
-            $user->personal_document_status == UserDocument::STATUS_PENDING
+            $user->biometry_status == User::BIOMETRY_STATUS_PENDING
         ) {
             return true;
         }
@@ -75,7 +75,7 @@ class UserService
 
         if (
             $user->address_document_status == UserDocument::STATUS_ANALYZING ||
-            $user->personal_document_status == UserDocument::STATUS_ANALYZING
+            $user->biometry_status == User::BIOMETRY_STATUS_IN_PROCESS
         ) {
             return true;
         }
@@ -89,115 +89,12 @@ class UserService
 
         if (
             $user->address_document_status == UserDocument::STATUS_REFUSED ||
-            $user->personal_document_status == UserDocument::STATUS_REFUSED
+            $user->biometry_status == User::BIOMETRY_STATUS_REFUSED
         ) {
             return true;
         }
 
         return false;
-    }
-
-    public function documentStatus()
-    {
-        $userModel = new User();
-        $user = $userModel->find(auth()->user()->account_owner_id);
-        if (
-            $user->address_document_status == User::DOCUMENT_STATUS_APPROVED &&
-            $user->personal_document_status == User::DOCUMENT_STATUS_APPROVED
-        ) {
-            return [
-                "status" => "approved",
-                "address_document" => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
-                "personal_document" => $userModel->present()->getAddressDocumentStatus($user->personal_document_status),
-                "document" => $user->document,
-                "email" => $user->email,
-                "link" => "/personal-info",
-            ];
-        } else {
-            if (
-                $user->address_document_status == User::DOCUMENT_STATUS_PENDING ||
-                $user->personal_document_status == User::DOCUMENT_STATUS_PENDING
-            ) {
-                return [
-                    "status" => "pending",
-                    "address_document" => $userModel
-                        ->present()
-                        ->getAddressDocumentStatus($user->address_document_status),
-                    "personal_document" => $userModel
-                        ->present()
-                        ->getAddressDocumentStatus($user->personal_document_status),
-                    "document" => $user->document,
-                    "email" => $user->email,
-                    "link" => "/personal-info",
-                ];
-            }
-
-            if (
-                $user->address_document_status == User::DOCUMENT_STATUS_ANALYZING ||
-                $user->personal_document_status == User::DOCUMENT_STATUS_ANALYZING
-            ) {
-                return [
-                    "status" => "analyzing",
-                    "address_document" => $userModel
-                        ->present()
-                        ->getAddressDocumentStatus($user->address_document_status),
-                    "personal_document" => $userModel
-                        ->present()
-                        ->getAddressDocumentStatus($user->personal_document_status),
-                    "document" => $user->document,
-                    "email" => $user->email,
-                    "link" => "/personal-info",
-                ];
-            }
-
-            if (
-                $user->address_document_status == User::DOCUMENT_STATUS_REFUSED ||
-                $user->personal_document_status == User::DOCUMENT_STATUS_REFUSED
-            ) {
-                return [
-                    "status" => "refused",
-                    "address_document" => $userModel
-                        ->present()
-                        ->getAddressDocumentStatus($user->address_document_status),
-                    "personal_document" => $userModel
-                        ->present()
-                        ->getAddressDocumentStatus($user->personal_document_status),
-                    "document" => $user->document,
-                    "email" => $user->email,
-                    "link" => "/personal-info",
-                ];
-            }
-        }
-
-        return [
-            "status" => null,
-        ];
-    }
-
-    public function getRefusedDocuments()
-    {
-        $userModel = new User();
-        $userPresenter = $userModel->present();
-        $user = auth()->user();
-        $refusedDocuments = collect();
-        if (!empty($user)) {
-            foreach ($user->userDocuments as $document) {
-                if (!empty($document->refused_reason)) {
-                    $dataDocument = [
-                        "date" => $document->created_at->format("d/m/Y"),
-                        "type_translated" => __(
-                            "definitions.enum.user_document_type." .
-                                $userPresenter->getDocumentType($document->document_type_enum)
-                        ),
-                        "document_url" => $document->document_url,
-                        "refused_reason" => $document->refused_reason,
-                    ];
-                    $refusedDocuments->push(collect($dataDocument));
-                }
-            }
-        }
-
-        return $refusedDocuments;
     }
 
     public function verifyCpf($cpf): bool

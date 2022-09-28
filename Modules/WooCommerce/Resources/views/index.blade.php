@@ -26,7 +26,7 @@
     <!-- Page -->
     <div class="page">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
         <div style="display: none"
              class="page-header container">
@@ -82,7 +82,11 @@
                                         ao carrinho de compras</a>
                                     <a class="dropdown-item"
                                        href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia
-                                        direto pro checkout</a>
+                                        direto para o checkout</a>
+
+                                    <a class="dropdown-item"
+                                       href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin-cloudfox-geteway.zip">
+                                        Checkout API</a>
                                 </div>
                             </div>
 
