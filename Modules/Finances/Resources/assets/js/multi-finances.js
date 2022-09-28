@@ -563,11 +563,11 @@ $(document).ready(function () {
                 $("#blocked-unico").fadeIn();
             },
             success: (response) => {
-                if (response.allowed && verifyAccountFrozen() == false) {
-                    $(".btn-request-withdrawal").remove("disabled");
+                if (response.data.check_user_biometry == false) {
+                    $(".btn-request-withdrawal").prop("disabled", false).removeClass("disabled");
                     $("#blocked-unico").fadeOut();
                 } else {
-                    $(".btn-request-withdrawal").addClass("disabled");
+                    $(".btn-request-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-unico").fadeIn();
                 }
             },

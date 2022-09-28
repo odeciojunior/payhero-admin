@@ -329,7 +329,7 @@ $(window).on("load", function () {
                 $(".btn-request-withdrawal").addClass("disabled");
             },
             success: (response) => {
-                if (response.allowed && verifyAccountFrozen() == false) {
+                if (response.data.check_user_biometry == false) {
                     $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
                     $("#blocked-unico").hide();
                 } else {

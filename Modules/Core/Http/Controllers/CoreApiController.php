@@ -444,7 +444,15 @@ class CoreApiController extends Controller
             return response()->json(
                 [
                     "data" => [
-                        "check_user_biometry" => $checkUserBiometry === User::BIOMETRY_STATUS_APPROVED,
+                        "check_user_biometry" => $checkUserBiometry !== User::BIOMETRY_STATUS_APPROVED,
+                    ],
+                ],
+                Response::HTTP_OK
+            );
+            return response()->json(
+                [
+                    "data" => [
+                        "check_user_biometry" => $checkUserBiometry !== User::BIOMETRY_STATUS_APPROVED,
 
                     ],
                 ],
