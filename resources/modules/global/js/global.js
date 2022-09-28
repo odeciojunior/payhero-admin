@@ -1084,7 +1084,7 @@ function verifyDocumentPending()
                         "Na Cloudfox você pode ter uma ou mais empresas.";
                     card_company_button = "";
                 } else {
-                    if (response.company_status == "pending") {
+                    if (response.data.company_status == "pending") {
                         count += 1;
 
                         card_company_status = "status-info";
@@ -1098,7 +1098,7 @@ function verifyDocumentPending()
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Enviar documentos</button>';
-                    } else if (response.company_status == "analyzing") {
+                    } else if (response.data.company_status == "analyzing") {
                         count += 1;
 
                         card_company_status =
@@ -1109,20 +1109,10 @@ function verifyDocumentPending()
                             "Estamos analisando seus documentos da sua empresa";
                         card_company_description =
                             "Esse processo de revisão leva um tempinho. Mas em breve retornaremos.";
-                        if (
-                            response.data.company.address_document !==
-                                "pending" &&
-                            response.data.company.contract_document !==
-                                "pending"
-                        ) {
-                            card_company_button = "";
-                        } else {
-                            card_company_button =
-                                '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                                card_company_link +
-                                '">Enviar documentos</button>';
-                        }
-                    } else if (response.company_status == "refused") {
+
+                        card_company_button = "";
+
+                    } else if (response.data.company_status == "refused") {
                         count += 1;
 
                         card_company_status = "status-error";
@@ -1196,7 +1186,7 @@ function verifyDocumentPending()
                     card_user_biometry_title = "Estamos analisando sua identidade";
                     card_user_biometry_description =
                         "O processo de revisão dos dados biométricos e seu comprovante de residência leva um tempinho. Em breve retornaremos!";
-                }else if (response.data.user_status == "refused") {
+                } else if (response.data.user_status == "refused") {
                     count += 1;
 
                     card_user_biometry_status = "status-error";
