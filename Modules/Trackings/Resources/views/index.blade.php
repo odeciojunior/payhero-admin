@@ -282,14 +282,14 @@
                             </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0 form-icons">
                                 <label for="date_updated">Data de aprovação venda</label>
-                                <i style="right: 30px; margin-top: -9px;"
+                                <i style="right: 30px; margin-top: -11px;"
                                    class="form-control-icon form-control-icon-right o-agenda-1 font-size-25"></i>
                                 <input name='date_updated'
                                        id="date_updated"
                                        class="input-pad"
                                        placeholder="Clique para editar..."
                                        readonly
-                                       style="margin-bottom: 44px">
+                                       style="margin-bottom: 50px">
                             </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
                                 <label for="tracking_problem"
