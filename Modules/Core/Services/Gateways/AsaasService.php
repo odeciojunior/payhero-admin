@@ -56,39 +56,51 @@ class AsaasService implements Statement
 
     public function getPendingBalance(): int
     {
-        return Transaction::where("transactions.company_id", $this->company->id)
-            ->where("transactions.status_enum", Transaction::STATUS_PAID)
-            ->whereIn("transactions.gateway_id", $this->gatewayIds)
-            ->where("transactions.created_at", ">", "2021-09-20")
-            ->sum("transactions.value");
+        $cacheName = "balance-pending-asaas-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return Transaction::where("transactions.company_id", $this->company->id)
+                ->where("transactions.status_enum", Transaction::STATUS_PAID)
+                ->whereIn("transactions.gateway_id", $this->gatewayIds)
+                ->where("transactions.created_at", ">", "2021-09-20")
+                ->sum("transactions.value");
+        });
     }
 
     public function getPendingBalanceCount(): int
     {
-        return Transaction::where("transactions.company_id", $this->company->id)
-            ->where("transactions.status_enum", Transaction::STATUS_PAID)
-            ->whereIn("transactions.gateway_id", $this->gatewayIds)
-            ->where("transactions.created_at", ">", "2021-09-20")
-            ->count();
+        $cacheName = "balance-pending-count-asaas-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return Transaction::where("transactions.company_id", $this->company->id)
+                ->where("transactions.status_enum", Transaction::STATUS_PAID)
+                ->whereIn("transactions.gateway_id", $this->gatewayIds)
+                ->where("transactions.created_at", ">", "2021-09-20")
+                ->count();
+        });
     }
 
     public function getBlockedBalance(): int
     {
-        return Transaction::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->whereIn("status_enum", [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
-            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-            ->sum("value");
+        $cacheName = "balance-blocked-asaas-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return Transaction::where("company_id", $this->company->id)
+                ->whereIn("gateway_id", $this->gatewayIds)
+                ->whereIn("status_enum", [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
+                ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+                ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+                ->sum("value");
+        });
     }
 
     public function getBlockedBalanceCount(): int
     {
-        return Transaction::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-            ->count();
+        $cacheName = "balance-blocked-count-asaas-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return Transaction::where("company_id", $this->company->id)
+                ->whereIn("gateway_id", $this->gatewayIds)
+                ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+                ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+                ->count();
+        });
     }
 
     public function getPendingDebtBalance(): int
@@ -265,38 +277,41 @@ class AsaasService implements Statement
 
     public function getResume()
     {
-        $lastTransaction = Transaction::whereIn("gateway_id", $this->gatewayIds)
-            ->where("company_id", $this->company->id)
-            ->orderBy("id", "desc")
-            ->first();
+        $cacheName = "resume-asaas-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            $lastTransaction = Transaction::whereIn("gateway_id", $this->gatewayIds)
+                ->where("company_id", $this->company->id)
+                ->orderBy("id", "desc")
+                ->first();
 
-        if (empty($lastTransaction) && $this->company->asaas_balance == 0) {
-            return [];
-        }
-        $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format("d/m/Y") : "";
+            if (empty($lastTransaction) && $this->company->asaas_balance == 0) {
+                return [];
+            }
+            $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format("d/m/Y") : "";
 
-        $blockedBalance = $this->getBlockedBalance();
-        $blockedBalanceCount = $this->getBlockedBalanceCount();
-        $pendingBalance = $this->getPendingBalance();
-        $pendingBalanceCount = $this->getPendingBalanceCount();
-        $availableBalance = $this->getAvailableBalance();
-        $totalBalance = $availableBalance + $pendingBalance;
+            $blockedBalance = $this->getBlockedBalance();
+            $blockedBalanceCount = $this->getBlockedBalanceCount();
+            $pendingBalance = $this->getPendingBalance();
+            $pendingBalanceCount = $this->getPendingBalanceCount();
+            $availableBalance = $this->getAvailableBalance();
+            $totalBalance = $availableBalance + $pendingBalance;
 
-        (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
+            (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
-        return [
-            "name" => "Asaas",
-            "available_balance" => $availableBalance,
-            "pending_balance" => $pendingBalance,
-            "pending_balance_count" => $pendingBalanceCount,
-            "blocked_balance" => $blockedBalance,
-            "blocked_balance_count" => $blockedBalanceCount,
-            "total_balance" => $totalBalance,
-            "total_available" => $availableBalance,
-            "pending_debt_balance" => 0,
-            "last_transaction" => $lastTransactionDate,
-            "id" => "NzJqoR32egVj5D6",
-        ];
+            return [
+                "name" => "Asaas",
+                "available_balance" => $availableBalance,
+                "pending_balance" => $pendingBalance,
+                "pending_balance_count" => $pendingBalanceCount,
+                "blocked_balance" => $blockedBalance,
+                "blocked_balance_count" => $blockedBalanceCount,
+                "total_balance" => $totalBalance,
+                "total_available" => $availableBalance,
+                "pending_debt_balance" => 0,
+                "last_transaction" => $lastTransactionDate,
+                "id" => "NzJqoR32egVj5D6",
+            ];
+        });
     }
 
     public function getGatewayAvailable()
