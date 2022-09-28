@@ -25,7 +25,7 @@ class UserService
         $userModel = new User();
         if (empty($userId)) {
             $user = auth()->user();
-            if($user->is_cloudfox && $user->logged_id){
+            if ($user->is_cloudfox && $user->logged_id) {
                 $user = User::find($user->account_owner_id);
             }
         } else {
@@ -60,7 +60,8 @@ class UserService
         $user = User::find(auth()->user()->account_owner_id);
 
         if (
-            $user->address_document_status == UserDocument::STATUS_PENDING 
+            $user->address_document_status == UserDocument::STATUS_PENDING ||
+            $user->biometry_status == User::BIOMETRY_STATUS_PENDING
         ) {
             return true;
         }
