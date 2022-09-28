@@ -52,11 +52,6 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyFiveMinutes();
 
-        $schedule
-            ->command("biometrypostbacks:process")
-            ->withoutOverlapping()
-            ->everyFiveMinutes();
-
         $schedule->command("ethoca:proccess-postback")->everyTenMinutes();
         $schedule
             ->command("demo:create-fake-checkout")
