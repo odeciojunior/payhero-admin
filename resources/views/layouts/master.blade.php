@@ -115,13 +115,13 @@
     <!-- Plugins -->
     <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
 
-    @if (!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id)
+    @if (!auth()->user()->account_is_approved && ((auth()->user()->id == auth()->user()->account_owner_id) || auth()->user()->is_cloudfox))
     @include('utils.documents-pending')
     <script>
         verifyDocumentPending();
     </script>
     @endif
-    
+
     @stack('scripts')
     @stack('scriptsModal')
 
