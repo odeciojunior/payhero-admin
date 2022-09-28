@@ -101,8 +101,8 @@ class SaleService
                 $tokens = [];
 
                 foreach ($projects as $project) {
-                    if (str_contains($project, "TOKEN")) {
-                        array_push($tokens, hashids_decode(str_replace("TOKEN-", "", $project)));
+                    if (str_contains($project, 'TOKEN')) {
+                        array_push($tokens, hashids_decode(str_replace('TOKEN-', '', $project)));
                         continue;
                     }
 
@@ -110,7 +110,8 @@ class SaleService
                 }
 
                 $transactions->whereHas("sale", function ($querySale) use ($projectIds, $tokens) {
-                    $querySale->whereIn("project_id", $projectIds)->orWhereIn("api_token_id", $tokens);
+                    $querySale->whereIn("project_id", $projectIds)
+                        ->orWhereIn('api_token_id', $tokens);
                 });
             }
 
@@ -367,8 +368,11 @@ class SaleService
         $totalToCalcTaxReal = $total + $cashbackValue;
 
         if (!empty($userTransaction) && $userTransaction->tax > 0) {
-            if ($userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX) {
-                $totalTaxPercentage = (int) ($totalToCalcTaxReal * ($userTransaction->tax / 100));
+            if (
+                $userTransaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX
+            ) {
+                $totalTaxPercentage =
+                    (int) ($totalToCalcTaxReal * ($userTransaction->tax / 100));
                 $totalTax += $totalTaxPercentage;
             } else {
                 $totalTaxPercentage = foxutils()->onlyNumbers($userTransaction->tax);
@@ -377,7 +381,9 @@ class SaleService
         }
 
         if (!empty($userTransaction) && $userTransaction->transaction_tax > 0) {
-            $transactionTax = foxutils()->onlyNumbers($userTransaction->transaction_tax);
+            $transactionTax = foxutils()->onlyNumbers(
+                $userTransaction->transaction_tax
+            );
             $totalTax += $transactionTax;
         }
 
@@ -446,9 +452,9 @@ class SaleService
                 : 0,
             "tax_type" => $userTransaction->tax_type ?? 0,
             "checkout_tax" =>
-                foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0
-                    ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100)
-                    : null,
+            foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0
+                ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100)
+                : null,
             "totalTax" => foxutils()->formatMoney($totalTax / 100),
             "total" => foxutils()->formatMoney($total / 100),
             "subTotal" => foxutils()->formatMoney(intval($subTotal) / 100),
@@ -459,9 +465,9 @@ class SaleService
             "taxaDiscount" => foxutils()->formatMoney($totalTaxPercentage / 100),
             "taxaReal" => foxutils()->formatMoney($taxaReal / 100),
             "release_date" =>
-                $userTransaction->release_date != null
-                    ? $userTransaction->release_date->format("d/m/Y")
-                    : "Processando",
+            $userTransaction->release_date != null
+                ? $userTransaction->release_date->format("d/m/Y")
+                : "Processando",
             "has_withdrawal" => $userTransaction->withdrawal_id,
             "affiliate_comission" => $affiliateComission,
             "refund_value" => foxutils()->formatMoney(intval($sale->refund_value) / 100),
@@ -471,7 +477,7 @@ class SaleService
                 ? $sale->saleRefundHistory->first()->refund_observation
                 : null,
             "user_changed_observation" =>
-                $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
+            $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
             "company_name" => $companyName,
         ];
     }
@@ -587,9 +593,9 @@ class SaleService
         $foxValue = $sale->transactions->whereNull("company_id")->first()->value ?? 0;
         $inviteValue =
             $sale->transactions
-                ->whereNotNull("company_id")
-                ->where("type", 3)
-                ->first()->value ?? 0;
+            ->whereNotNull("company_id")
+            ->where("type", 3)
+            ->first()->value ?? 0;
 
         $saleTax = $foxValue + $cashbackValue + $inviteValue;
 
@@ -670,7 +676,7 @@ class SaleService
                         "type_enum" => Transfer::TYPE_IN,
                         "value" => $transaction->value,
                         "type" => "in",
-                        "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID,
+                        "gateway_id" => $sale->gateway_id,
                     ]);
 
                     $safe2payBalance += $transaction->value;
@@ -691,9 +697,9 @@ class SaleService
                     "value" => $refundValue,
                     "type" => "out",
                     "type_enum" => Transfer::TYPE_OUT,
-                    "reason" => "Estorno #{$saleIdEncode}",
+                    "reason" => $isBillet ? "Estorno de boleto #{$saleIdEncode}" : "Estorno de pix #{$saleIdEncode}",
                     "company_id" => $transaction->company->id,
-                    "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID,
+                    "gateway_id" => $sale->gateway_id,
                 ]);
 
                 $transaction->company->update([
@@ -725,7 +731,7 @@ class SaleService
                 "value" => foxutils()->onlyNumbers($sale->total_paid_value),
                 "type_enum" => Transfer::TYPE_IN,
                 "type" => "in",
-                "reason" => "Estorno #{$saleIdEncode}",
+                "reason" => $isBillet ? "Estorno de boleto #{$saleIdEncode}" : "Estorno de pix #{$saleIdEncode}",
             ]);
 
             $sale->customer->update([
@@ -833,7 +839,9 @@ class SaleService
 
             if (!empty($filters["project"])) {
                 $showSalesApi = $filters["project"] == "API-TOKEN";
-                $projectId = $showSalesApi ? null : hashids_decode($filters["project"]);
+                $projectId = $showSalesApi
+                    ? null
+                    : hashids_decode($filters["project"]);
 
                 $transactions->where("sales.api_flag", $showSalesApi);
 
@@ -1032,9 +1040,14 @@ class SaleService
             // Projeto
             if (!empty($filters["project"])) {
                 $showSalesApi = $filters["project"] == "API-TOKEN";
-                $projectId = $showSalesApi ? null : hashids_decode($filters["project"]);
+                $projectId = $showSalesApi
+                    ? null
+                    : hashids_decode($filters["project"]);
 
-                $transactions->whereHas("sale", function ($querySale) use ($projectId, $showSalesApi) {
+                $transactions->whereHas("sale", function ($querySale) use (
+                    $projectId,
+                    $showSalesApi
+                ) {
                     if (!$showSalesApi) {
                         $querySale->where("sales.project_id", $projectId);
                         return;
@@ -1252,47 +1265,39 @@ class SaleService
     public static function getProjectsWithSales()
     {
         $companyId = auth()->user()->company_default;
-        $userId = auth()
-            ->user()
-            ->getAccountOwnerId();
+        $userId = auth()->user()->getAccountOwnerId();
 
-        return DB::table("sales")
-            ->select("sales.project_id", "projects.name", DB::Raw("'' as prefix"))
+        return DB::table('sales')->select('sales.project_id', 'projects.name', DB::Raw("'' as prefix"))
             ->distinct()
-            ->leftJoin("projects", "projects.id", "=", "sales.project_id")
-            ->leftJoin("transactions", "transactions.sale_id", "=", "sales.id")
-            ->where("sales.gateway_status", "!=", "canceled")
-            ->where("transactions.user_id", $userId)
-            ->where("transactions.company_id", $companyId)
-            ->whereNull("transactions.invitation_id")
+            ->leftJoin('projects', 'projects.id', '=', 'sales.project_id')
+            ->leftJoin('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->where('sales.gateway_status', '!=', 'canceled')
+            ->where('transactions.user_id', $userId)
+            ->where('transactions.company_id', $companyId)
+            ->whereNull('transactions.invitation_id')
             ->where(function ($query) {
-                if (auth()->user()->deleted_project_filter) {
-                    $query->whereIn("projects.status", [1, 2]);
-                } else {
-                    $query->where("projects.status", 1);
-                }
-            })
-            ->get();
+                if (auth()->user()->deleted_project_filter)
+                    $query->whereIn('projects.status', [1, 2]);
+                else
+                    $query->where('projects.status', 1);
+            })->get();
     }
 
     public static function getProjectsWithSalesAndTokens()
     {
         $companyId = auth()->user()->company_default;
-        $userId = auth()
-            ->user()
-            ->getAccountOwnerId();
+        $userId = auth()->user()->getAccountOwnerId();
 
-        $projects = self::getProjectsWithSales();
+        $projects =  self::getProjectsWithSales();
 
-        $tokens = DB::table("sales")
-            ->select("api.id as project_id", "api.description as name", DB::Raw("'TOKEN-' as prefix"))
+        $tokens = DB::table('sales')->select('api.id as project_id', 'api.description as name', DB::Raw("'TOKEN-' as prefix"))
             ->distinct()
-            ->join("api_tokens as api", "api.id", "=", "sales.api_token_id")
-            ->where("api.user_id", $userId)
-            ->whereIn("api.integration_type_enum", [4, 5])
-            ->whereNull("api.deleted_at")
-            ->where("api.company_id", $companyId)
-            ->where("sales.gateway_status", "!=", "canceled")
+            ->join('api_tokens as api', 'api.id', '=', 'sales.api_token_id')
+            ->where('api.user_id', $userId)
+            ->whereIn('api.integration_type_enum', [4, 5])
+            ->whereNull('api.deleted_at')
+            ->where('api.company_id', $companyId)
+            ->where('sales.gateway_status', '!=', 'canceled')
             ->get();
 
         return $projects->merge($tokens);
