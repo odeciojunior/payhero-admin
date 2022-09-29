@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="alert-demo-account-overlay-body">
-                <div id="new-register-first-page">
+                <div id="new-register-first-page-banner">
                     <div class="init-operation-container">
                         <div class="body" style="margin:25px 0">
                             Você está visualizando dados fictícios de uma empresa demonstrativa.

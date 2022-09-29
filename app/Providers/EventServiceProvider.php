@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Listeners\IntegrationOrderCancelListener;
+use App\Observers\TransactionObserver;
+use App\Observers\TransferObserver;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
 use Modules\Core\Events\BilletExpiredEvent;
@@ -110,10 +114,7 @@ class EventServiceProvider extends ServiceProvider
             SaleRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
         ],
-        ManualRefundEvent::class => [
-            ManualRefundedSendEmailListener::class,
-            IntegrationOrderCancelListener::class,
-        ],
+        ManualRefundEvent::class => [ManualRefundedSendEmailListener::class, IntegrationOrderCancelListener::class],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
             NotifyUserShopifyIntegrationStoreListener::class,
@@ -128,64 +129,36 @@ class EventServiceProvider extends ServiceProvider
             BoletoPaidNotifyUser::class,
             BoletoPaidEmailNotifyUser::class,
         ],
-        TrackingsImportedEvent::class => [
-            NotifyTrackingsImportedListener::class,
-        ],
+        TrackingsImportedEvent::class => [NotifyTrackingsImportedListener::class],
         SalesExportedEvent::class => [NotifySalesExportedListener::class],
         ExtractExportedEvent::class => [NotifyExtractExportedListener::class],
-        TrackingsExportedEvent::class => [
-            NotifyTrackingsExportedListener::class,
-        ],
+        TrackingsExportedEvent::class => [NotifyTrackingsExportedListener::class],
         TrackingCodeUpdatedEvent::class => [
             TrackingCodeUpdatedSendEmailClientListener::class,
             TrackingCodeUpdatedActiveCampaignListener::class,
         ],
-        CheckSaleHasValidTrackingEvent::class => [
-            CheckSaleHasValidTrackingListener::class,
-        ],
+        CheckSaleHasValidTrackingEvent::class => [CheckSaleHasValidTrackingListener::class],
         ResetPasswordEvent::class => [ResetPasswordSendEmailListener::class],
-        ReleasedBalanceEvent::class => [
-            ReleasedBalanceNotifyUserListener::class,
-        ],
+        ReleasedBalanceEvent::class => [ReleasedBalanceNotifyUserListener::class],
         SaleApprovedEvent::class => [SetApprovedShopifyOrderListener::class],
-        WithdrawalRequestEvent::class => [
-            WithdrawalRequestSendEmailListener::class,
-        ],
+        WithdrawalRequestEvent::class => [WithdrawalRequestSendEmailListener::class],
         SendEmailEvent::class => [SendEmailListener::class],
-        SendEmailPendingDocumentEvent::class => [
-            SendEmailPedingDocumentoListener::class,
-        ],
+        SendEmailPendingDocumentEvent::class => [SendEmailPedingDocumentoListener::class],
         SendSmsEvent::class => [SendSmsListener::class],
         TicketMessageEvent::class => [TicketMessageSendEmailListener::class],
-        NotifyTicketMediationEvent::class => [
-            NotifyTicketMediationListener::class,
-        ],
+        NotifyTicketMediationEvent::class => [NotifyTicketMediationListener::class],
         NotifyTicketOpenEvent::class => [NotifyTicketOpenListener::class],
         NotifyTicketClosedEvent::class => [NotifyTicketClosedListener::class],
-        AffiliateRequestEvent::class => [
-            AffiliateRequestSendEmailListener::class,
-        ],
+        AffiliateRequestEvent::class => [AffiliateRequestSendEmailListener::class],
         AffiliateEvent::class => [AffiliateSendEmailListener::class],
-        EvaluateAffiliateRequestEvent::class => [
-            EvaluateAffiliateRequestSendEmailListener::class,
-        ],
+        EvaluateAffiliateRequestEvent::class => [EvaluateAffiliateRequestSendEmailListener::class],
         UserRegisteredEvent::class => [SendEmailRegisteredListener::class],
-        UserRegistrationFinishedEvent::class => [
-            UserDocumentBureauValidationListener::class,
-        ],
-        UpdateCompanyGetnetEvent::class => [
-            UpdateCompanyGetnetSendEmailListener::class,
-        ],
+        UserRegistrationFinishedEvent::class => [UserDocumentBureauValidationListener::class],
+        UpdateCompanyGetnetEvent::class => [UpdateCompanyGetnetSendEmailListener::class],
         FinancesExportedEvent::class => [NotifyFinancesExportedListener::class],
-        WithdrawalsExportedEvent::class => [
-            NotifyWithdrawalsExportedListener::class,
-        ],
-        NotifyUserLevelEvent::class => [
-            NotifyUserLevelSendEmailListener::class,
-        ],
-        NotifyUserAchievementEvent::class => [
-            NotifyUserAchievementSendEmailListener::class,
-        ],
+        WithdrawalsExportedEvent::class => [NotifyWithdrawalsExportedListener::class],
+        NotifyUserLevelEvent::class => [NotifyUserLevelSendEmailListener::class],
+        NotifyUserAchievementEvent::class => [NotifyUserAchievementSendEmailListener::class],
         PixExpiredEvent::class => [
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
@@ -195,9 +168,7 @@ class EventServiceProvider extends ServiceProvider
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
         ],
-        CheckTransactionReleasedEvent::class => [
-            CheckTransactionReleasedListener::class,
-        ],
+        CheckTransactionReleasedEvent::class => [CheckTransactionReleasedListener::class],
         NewChargebackEvent::class => [
             UpdateSaleChargebackListener::class,
             CreateChargebackDebitListener::class,
@@ -214,6 +185,8 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        //
+
+        Transaction::observe(TransactionObserver::class);
+        Transfer::observe(TransferObserver::class);
     }
 }
