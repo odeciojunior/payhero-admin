@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\UserInformation;
+use Modules\Core\Entities\User;
 use Modules\Core\Services\FoxUtils;
 use Modules\UserInformations\Http\Requests\UserInformationsRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,13 +20,14 @@ class UserInformationsApiController extends Controller
             $data = $request->all();
 
             $model = new UserInformation();
-            $exists = $model->where("document", $data["document"])->exists();
+            $user = User::find(auth()->user()->account_owner_id);
+            $exists = $model->where("document", $user->document)->exists();
 
             if ($exists) {
-                $user = $model->where("document", $data["document"])->first();
+                $user = $model->where("document", $user->document)->first();
                 $user->status = 0;
-                $user->document = $data["document"];
-                $user->email = $data["email"];
+                $user->document = $user->document;
+                $user->email = $user->email;
                 $user = $this->setData($user, $data);
                 $user->save();
 
@@ -42,8 +44,8 @@ class UserInformationsApiController extends Controller
             }
 
             $model->status = 0;
-            $model->document = $data["document"];
-            $model->email = $data["email"];
+            $model->document = $user->document;
+            $model->email = $user->email;
             $model = $this->setData($model, $data);
             $model->save();
 

@@ -56,37 +56,49 @@ class Safe2PayService implements Statement
 
     public function getPendingBalance(): int
     {
-        return Transaction::where("transactions.company_id", $this->company->id)
-            ->where("transactions.status_enum", Transaction::STATUS_PAID)
-            ->whereIn("transactions.gateway_id", $this->gatewayIds)
-            ->sum("transactions.value");
+        $cacheName = "balance-pending-vega-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return Transaction::where("transactions.company_id", $this->company->id)
+                ->where("transactions.status_enum", Transaction::STATUS_PAID)
+                ->whereIn("transactions.gateway_id", $this->gatewayIds)
+                ->sum("transactions.value");
+        });
     }
 
     public function getPendingBalanceCount(): int
     {
-        return Transaction::where("transactions.company_id", $this->company->id)
-            ->where("transactions.status_enum", Transaction::STATUS_PAID)
-            ->whereIn("transactions.gateway_id", $this->gatewayIds)
-            ->count();
+        $cacheName = "balance-pending-count-vega-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return Transaction::where("transactions.company_id", $this->company->id)
+                ->where("transactions.status_enum", Transaction::STATUS_PAID)
+                ->whereIn("transactions.gateway_id", $this->gatewayIds)
+                ->count();
+        });
     }
 
     public function getBlockedBalance(): int
     {
-        return Transaction::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->whereIn("status_enum", [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
-            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-            ->sum("value");
+        $cacheName = "balance-blocked-vega-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return Transaction::where("company_id", $this->company->id)
+                ->whereIn("gateway_id", $this->gatewayIds)
+                ->whereIn("status_enum", [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
+                ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+                ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+                ->sum("value");
+        });
     }
 
     public function getBlockedBalanceCount(): int
     {
-        return Transaction::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-            ->count();
+        $cacheName = "balance-blocked-count-vega-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return Transaction::where("company_id", $this->company->id)
+                ->whereIn("gateway_id", $this->gatewayIds)
+                ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+                ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+                ->count();
+        });
     }
 
     public function getPendingDebtBalance(): int
@@ -336,34 +348,37 @@ class Safe2PayService implements Statement
 
     public function getResume()
     {
-        $lastTransaction = Transaction::whereIn("gateway_id", $this->gatewayIds)
-            ->where("company_id", $this->company->id)
-            ->orderBy("id", "desc")
-            ->first();
-        $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format("d/m/Y") : "";
+        $cacheName = "resume-vega-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            $lastTransaction = Transaction::whereIn("gateway_id", $this->gatewayIds)
+                ->where("company_id", $this->company->id)
+                ->orderBy("id", "desc")
+                ->first();
+            $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format("d/m/Y") : "";
 
-        $blockedBalance = $this->getBlockedBalance();
-        $blockedBalanceCount = $this->getBlockedBalanceCount();
-        $pendingBalance = $this->getPendingBalance();
-        $pendingBalanceCount = $this->getPendingBalanceCount();
-        $availableBalance = $this->getAvailableBalance();
-        $totalBalance = $availableBalance + $pendingBalance;
+            $blockedBalance = $this->getBlockedBalance();
+            $blockedBalanceCount = $this->getBlockedBalanceCount();
+            $pendingBalance = $this->getPendingBalance();
+            $pendingBalanceCount = $this->getPendingBalanceCount();
+            $availableBalance = $this->getAvailableBalance();
+            $totalBalance = $availableBalance + $pendingBalance;
 
-        (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
+            (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
-        return [
-            "name" => "Vega",
-            "available_balance" => $availableBalance,
-            "pending_balance" => $pendingBalance,
-            "pending_balance_count" => $pendingBalanceCount,
-            "blocked_balance" => $blockedBalance,
-            "blocked_balance_count" => $blockedBalanceCount,
-            "total_balance" => $totalBalance,
-            "total_available" => $availableBalance,
-            "last_transaction" => $lastTransactionDate,
-            "pending_debt_balance" => 0,
-            "id" => "BeYEwR3AdgdKykA",
-        ];
+            return [
+                "name" => "Vega",
+                "available_balance" => $availableBalance,
+                "pending_balance" => $pendingBalance,
+                "pending_balance_count" => $pendingBalanceCount,
+                "blocked_balance" => $blockedBalance,
+                "blocked_balance_count" => $blockedBalanceCount,
+                "total_balance" => $totalBalance,
+                "total_available" => $availableBalance,
+                "last_transaction" => $lastTransactionDate,
+                "pending_debt_balance" => 0,
+                "id" => "BeYEwR3AdgdKykA",
+            ];
+        });
     }
 
     public function getGatewayAvailable()
