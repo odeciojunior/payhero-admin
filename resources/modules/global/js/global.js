@@ -67,6 +67,7 @@ $(document).ready(function () {
             });
 
             $("#new-register-first-page").fadeIn();
+
         } else {
             $(".new-register-overlay").fadeOut(400, function () {
                 changeNewRegisterLayoutOnWindowResize();
@@ -76,6 +77,8 @@ $(document).ready(function () {
 
     $(".init-operation-container").on("click", ".extra-informations-user", function () {
         $("#new-register-first-page").hide();
+
+
 
         $(".modal-top-btn").hide();
 
@@ -197,6 +200,7 @@ $(document).ready(function () {
 
         if (step === 1) {
             $("#new-register-first-page").show();
+
 
             $(".modal-top-btn").show();
 
@@ -994,13 +998,16 @@ $(".top-alert-close").on("click", function () {
 
 sessionStorage.removeItem("documentsPending");
 
-function verifyDocumentPending() {
+function verifyDocumentPending()
+{
     changeNewRegisterLayoutOnWindowResize();
     var count = 0;
 
     $.ajax({
         method: "GET",
-        url: "/api/core/verify-account/" + $('meta[name="user-id"]').attr("content"),
+        url:
+            "/api/core/verify-account/" +
+            $('meta[name="user-id"]').attr("content"),
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
@@ -1009,15 +1016,13 @@ function verifyDocumentPending() {
             errorAjaxResponse(response);
         },
         success: (response) => {
-            if (response.data.account.type === "collaborator") {
-                return;
-            }
 
-            if (response.data.account.status !== "approved") {
+            if (response.data.user_account !== "approved") {
+
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
-                    $(".new-register-page-open-modal-container").hide();
-                    $(".new-register-navbar-open-modal-container").hide();
+                    $('.new-register-page-open-modal-container').hide();
+                    $('.new-register-navbar-open-modal-container').fadeOut();
 
                     setStepContainer();
 
@@ -1026,14 +1031,18 @@ function verifyDocumentPending() {
                     changeNewRegisterLayoutOnWindowResize();
                 }
 
-                localStorage.setItem("verifyAccount", JSON.stringify(response.data));
+                localStorage.setItem(
+                    "verifyAccount",
+                    JSON.stringify(response.data)
+                );
 
                 var card_user_info_status = "";
                 var card_user_info_icon = "";
                 var card_user_info_title = "Nos conte sobre você";
-                var card_user_info_description = "Temos algumas perguntas para conhecer melhor você e seu negócio.";
+                var card_user_info_description =
+                    "Temos algumas perguntas para conhecer melhor você e seu negócio.";
 
-                if (!response.data.user.informations) {
+                if (!response.data.informations_completed) {
                     count += 1;
 
                     card_user_info_status = "extra-informations-user";
@@ -1066,69 +1075,70 @@ function verifyDocumentPending() {
                 var card_company_title = "";
                 var card_company_description = "";
                 var card_company_button = "";
-                var card_company_link = response.data.company.link;
+                var card_company_link = response.data.link_company;
 
-                if (response.data.company.status == null) {
+                if (response.data.company_status == null) {
                     count += 1;
 
                     card_company_status = "redirect-to-accounts";
                     card_company_icon =
                         '<svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 3.5C3.94772 3.5 3.5 3.94772 3.5 4.5C3.5 5.05228 3.94772 5.5 4.5 5.5C5.05229 5.5 5.5 5.05228 5.5 4.5C5.5 3.94772 5.05229 3.5 4.5 3.5ZM3.5 11.5C3.5 10.9477 3.94772 10.5 4.5 10.5C5.05229 10.5 5.5 10.9477 5.5 11.5C5.5 12.0523 5.05229 12.5 4.5 12.5C3.94772 12.5 3.5 12.0523 3.5 11.5ZM4.5 7C3.94772 7 3.5 7.44771 3.5 8C3.5 8.55229 3.94772 9 4.5 9C5.05229 9 5.5 8.55229 5.5 8C5.5 7.44771 5.05229 7 4.5 7ZM7 4.5C7 3.94772 7.44771 3.5 8 3.5C8.55229 3.5 9 3.94772 9 4.5C9 5.05228 8.55229 5.5 8 5.5C7.44771 5.5 7 5.05228 7 4.5ZM8 10.5C7.44771 10.5 7 10.9477 7 11.5C7 12.0523 7.44771 12.5 8 12.5C8.55229 12.5 9 12.0523 9 11.5C9 10.9477 8.55229 10.5 8 10.5ZM10.5 11.5C10.5 10.9477 10.9477 10.5 11.5 10.5C12.0523 10.5 12.5 10.9477 12.5 11.5C12.5 12.0523 12.0523 12.5 11.5 12.5C10.9477 12.5 10.5 12.0523 10.5 11.5ZM8 7C7.44771 7 7 7.44771 7 8C7 8.55229 7.44771 9 8 9C8.55229 9 9 8.55229 9 8C9 7.44771 8.55229 7 8 7ZM2.25 0C1.00736 0 0 1.00736 0 2.25V18.75C0 19.1642 0.335786 19.5 0.75 19.5H15.2528C15.667 19.5 16.0028 19.1642 16.0028 18.75V9.7493C16.0028 8.50666 14.9954 7.4993 13.7528 7.4993H12.5V2.25C12.5 1.00736 11.4926 0 10.25 0H2.25ZM1.5 2.25C1.5 1.83579 1.83579 1.5 2.25 1.5H10.25C10.6642 1.5 11 1.83579 11 2.25V8.2493C11 8.66352 11.3358 8.9993 11.75 8.9993H13.7528C14.167 8.9993 14.5028 9.33509 14.5028 9.7493V18H12.5V15.25C12.5 14.8358 12.1642 14.5 11.75 14.5H4.25C3.83579 14.5 3.5 14.8358 3.5 15.25V18H1.5V2.25ZM11 16V18H8.75V16H11ZM7.25 16V18H5V16H7.25Z" fill="#5B5B5B"/></svg>';
                     card_company_title = "Cadastre sua empresa";
-                    card_company_description = "Na Cloudfox você pode ter uma ou mais empresas.";
+                    card_company_description =
+                        "Na Cloudfox você pode ter uma ou mais empresas.";
                     card_company_button = "";
                 } else {
-                    if (response.data.company.status == "pending") {
+                    if (response.data.company_status == "pending") {
                         count += 1;
 
                         card_company_status = "status-info";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
-                        card_company_title = "Você cadastrou sua empresa, mas não recebemos nenhum documento";
+                        card_company_title =
+                            "Você cadastrou sua empresa, mas não recebemos nenhum documento";
                         card_company_description =
                             "Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.";
                         card_company_button =
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Enviar documentos</button>';
-                    } else if (response.data.company.status == "analyzing") {
+                    } else if (response.data.company_status == "analyzing") {
                         count += 1;
 
-                        card_company_status = "status-warning redirect-to-accounts";
+                        card_company_status =
+                            "status-warning redirect-to-accounts";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
-                        card_company_title = "Estamos analisando seus documentos da sua empresa";
+                        card_company_title =
+                            "Estamos analisando seus documentos da sua empresa";
                         card_company_description =
                             "Esse processo de revisão leva um tempinho. Mas em breve retornaremos.";
-                        if (
-                            response.data.company.address_document !== "pending" &&
-                            response.data.company.contract_document !== "pending"
-                        ) {
-                            card_company_button = "";
-                        } else {
-                            card_company_button =
-                                '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                                card_company_link +
-                                '">Enviar documentos</button>';
-                        }
-                    } else if (response.data.company.status == "refused") {
+
+                        card_company_button = "";
+
+                    } else if (response.data.company_status == "refused") {
                         count += 1;
 
                         card_company_status = "status-error";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.5C5.30558 1.5 1.5 5.30558 1.5 10C1.5 14.6944 5.30558 18.5 10 18.5C14.6944 18.5 18.5 14.6944 18.5 10C18.5 5.30558 14.6944 1.5 10 1.5ZM13.4462 6.39705L13.5303 6.46967C13.7966 6.73594 13.8208 7.1526 13.6029 7.44621L13.5303 7.53033L11.061 10L13.5303 12.4697C13.7966 12.7359 13.8208 13.1526 13.6029 13.4462L13.5303 13.5303C13.2641 13.7966 12.8474 13.8208 12.5538 13.6029L12.4697 13.5303L10 11.061L7.53033 13.5303C7.26406 13.7966 6.8474 13.8208 6.55379 13.6029L6.46967 13.5303C6.2034 13.2641 6.1792 12.8474 6.39705 12.5538L6.46967 12.4697L8.939 10L6.46967 7.53033C6.2034 7.26406 6.1792 6.8474 6.39705 6.55379L6.46967 6.46967C6.73594 6.2034 7.1526 6.1792 7.44621 6.39705L7.53033 6.46967L10 8.939L12.4697 6.46967C12.7359 6.2034 13.1526 6.1792 13.4462 6.39705Z" fill="white"/></svg>';
-                        card_company_title = "Tivemos problemas em verificar sua empresa";
-                        card_company_description = "Há um problema com seus documentos.";
+                        card_company_title =
+                            "Tivemos problemas em verificar sua empresa";
+                        card_company_description =
+                            "Há um problema com seus documentos.";
                         card_company_button =
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Reenviar documentos</button>';
-                    } else if (response.data.company.status == "approved") {
-                        card_company_status = "status-check redirect-to-accounts";
+                    } else if (response.data.company_status == "approved") {
+                        card_company_status =
+                            "status-check redirect-to-accounts";
                         card_company_icon =
                             '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
-                        card_company_title = "A documentação da sua empresa foi recebida e aprovada.";
-                        card_company_description = "Se você já aprovou seus documentos pessoais, agora é só vender!";
+                        card_company_title =
+                            "A documentação da sua empresa foi recebida e aprovada.";
+                        card_company_description =
+                            "Se você já aprovou seus documentos pessoais, agora é só vender!";
                         card_company_button = "";
                     }
                 }
@@ -1150,75 +1160,72 @@ function verifyDocumentPending() {
                     </div>
                 `);
 
-                var card_user_status = "";
-                var card_user_icon = "";
-                var card_user_title = "";
-                var card_user_description = "";
-                var card_user_button = "";
-                var card_user_link = response.data.user.link;
+                var card_user_biometry_status = "";
+                var card_user_biometry_icon = "";
+                var card_user_biometry_title = "";
+                var card_user_biometry_description = "";
+                var card_user_biometry_button = "";
+                var card_user_biometry_link = "/personal-info";
 
-                if (response.data.user.status == "pending") {
+
+                if (response.data.user_status === "pending" || response.data.user_status === "") {
                     count += 1;
 
-                    card_user_status = "redirect-to-accounts";
-                    card_user_icon =
+                    card_user_biometry_status = "redirect-to-accounts";
+                    card_user_biometry_icon =
                         '<svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 0.5C1.84315 0.5 0.5 1.84315 0.5 3.5V18.5C0.5 20.1569 1.84315 21.5 3.5 21.5H12.5C14.1569 21.5 15.5 20.1569 15.5 18.5V7.12132C15.5 6.52458 15.2629 5.95229 14.841 5.53033L10.4697 1.15901C10.0477 0.737053 9.47542 0.5 8.87868 0.5H3.5ZM2 3.5C2 2.67157 2.67157 2 3.5 2H8V5.75C8 6.99264 9.00736 8 10.25 8H14V18.5C14 19.3284 13.3284 20 12.5 20H3.5C2.67157 20 2 19.3284 2 18.5V3.5ZM13.6893 6.5H10.25C9.83579 6.5 9.5 6.16421 9.5 5.75V2.31066L13.6893 6.5Z" fill="#5B5B5B"/></svg>';
-                    card_user_title = "Envie sua documentação pessoal";
-                    card_user_description =
-                        "Precisamos do seu documento oficial com foto e um comprovante de residência.";
-                    card_user_button = "";
-                } else if (response.data.user.status == "analyzing") {
-                    count += 1;
-
-                    card_user_status = "status-warning redirect-to-accounts";
-                    card_user_icon =
-                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
-                    card_user_title = "Estamos analisando seus documentos";
-                    card_user_description = "Esse processo de revisão leva um tempinho. Mas em breve retornaremos.";
-                    if (
-                        response.data.user.address_document !== "pending" &&
-                        response.data.user.personal_document !== "pending"
-                    ) {
-                        card_user_button = "";
-                    } else {
-                        card_user_button =
-                            '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                            card_user_link +
-                            '">Enviar documentos</button>';
-                    }
-                } else if (response.data.user.status == "refused") {
-                    count += 1;
-
-                    card_user_status = "status-error";
-                    card_user_icon =
-                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.5C5.30558 1.5 1.5 5.30558 1.5 10C1.5 14.6944 5.30558 18.5 10 18.5C14.6944 18.5 18.5 14.6944 18.5 10C18.5 5.30558 14.6944 1.5 10 1.5ZM13.4462 6.39705L13.5303 6.46967C13.7966 6.73594 13.8208 7.1526 13.6029 7.44621L13.5303 7.53033L11.061 10L13.5303 12.4697C13.7966 12.7359 13.8208 13.1526 13.6029 13.4462L13.5303 13.5303C13.2641 13.7966 12.8474 13.8208 12.5538 13.6029L12.4697 13.5303L10 11.061L7.53033 13.5303C7.26406 13.7966 6.8474 13.8208 6.55379 13.6029L6.46967 13.5303C6.2034 13.2641 6.1792 12.8474 6.39705 12.5538L6.46967 12.4697L8.939 10L6.46967 7.53033C6.2034 7.26406 6.1792 6.8474 6.39705 6.55379L6.46967 6.46967C6.73594 6.2034 7.1526 6.1792 7.44621 6.39705L7.53033 6.46967L10 8.939L12.4697 6.46967C12.7359 6.2034 13.1526 6.1792 13.4462 6.39705Z" fill="white"/></svg>';
-                    card_user_title = "Tivemos um problema com o seu documento";
-                    card_user_description = "Um ou mais documentos foram reprovados após a análise.";
-                    card_user_button =
+                    card_user_biometry_title = "Valide sua identidade";
+                    card_user_biometry_description =
+                        "Para reforçarmos a segurança, coletaremos seus dados. Acesse as configurações e realize a biometria.";
+                    card_user_biometry_button =
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                        card_user_link +
-                        '">Regularizar documentos</button>';
-                } else if (response.data.user.status == "approved") {
-                    card_user_status = "status-check redirect-to-accounts";
-                    card_user_icon =
+                    card_user_biometry_link +
+                        '">Ir para configurações</button>';
+                } else if (response.data.user_status === "analyzing") {
+                    count += 1;
+
+                    card_user_biometry_status = "status-warning redirect-to-accounts";
+                    card_user_biometry_icon =
+                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
+                    card_user_biometry_title = "Estamos analisando sua identidade";
+                    card_user_biometry_description =
+                        "O processo de revisão dos dados biométricos e seu comprovante de residência leva um tempinho. Em breve retornaremos!";
+                } else if (response.data.user_status == "refused") {
+                    count += 1;
+
+                    card_user_biometry_status = "status-error";
+                    card_user_biometry_icon =
+                        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.5C5.30558 1.5 1.5 5.30558 1.5 10C1.5 14.6944 5.30558 18.5 10 18.5C14.6944 18.5 18.5 14.6944 18.5 10C18.5 5.30558 14.6944 1.5 10 1.5ZM13.4462 6.39705L13.5303 6.46967C13.7966 6.73594 13.8208 7.1526 13.6029 7.44621L13.5303 7.53033L11.061 10L13.5303 12.4697C13.7966 12.7359 13.8208 13.1526 13.6029 13.4462L13.5303 13.5303C13.2641 13.7966 12.8474 13.8208 12.5538 13.6029L12.4697 13.5303L10 11.061L7.53033 13.5303C7.26406 13.7966 6.8474 13.8208 6.55379 13.6029L6.46967 13.5303C6.2034 13.2641 6.1792 12.8474 6.39705 12.5538L6.46967 12.4697L8.939 10L6.46967 7.53033C6.2034 7.26406 6.1792 6.8474 6.39705 6.55379L6.46967 6.46967C6.73594 6.2034 7.1526 6.1792 7.44621 6.39705L7.53033 6.46967L10 8.939L12.4697 6.46967C12.7359 6.2034 13.1526 6.1792 13.4462 6.39705Z" fill="white"/></svg>';
+                    card_user_biometry_title = "Seus dados foram recusados";
+                    card_user_biometry_description =
+                        "Acesse as configurações da sua conta e realize a biometria ou envie seu comprovante de residência novamente.";
+                    card_user_biometry_button =
+                        '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
+                        card_user_biometry_link +
+                        '">Ir para configurações</button>';
+                } else if (response.data.user_status === "approved") { //
+                    card_user_biometry_status = "status-check redirect-to-accounts";
+                    card_user_biometry_icon =
                         '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
-                    card_user_title = "Sua documentação foi recebida e aprovada";
-                    card_user_description = "Se você já aprovou uma empresa com a gente, agora é só vender!";
-                    card_user_button = "";
+                    card_user_biometry_title =
+                        "Sua identidade foi validada";
+                    card_user_biometry_description =
+                        "Seus dados biométricos foram coletados e aprovados.";
+                    card_user_biometry_button = "";
                 }
 
-                $(".user-status").html(`
-                    <div class="card ${card_user_status}" data-url-value="${card_user_link}">
+                $(".user-biometry-status").html(`
+                    <div class="card ${card_user_biometry_status}" data-url-value="${card_user_biometry_link}">
                         <div class="d-flex">
                             <div>
                                 <div class="icon d-flex align-items-center">
-                                    ${card_user_icon}
+                                    ${card_user_biometry_icon}
                                 </div>
                             </div>
                             <div class="content">
-                                <h1 class="title">${card_user_title}</h1>
-                                <p class="description">${card_user_description}</p>
-                                ${card_user_button}
+                                <h1 class="title">${card_user_biometry_title}</h1>
+                                <p class="description">${card_user_biometry_description}</p>
+                                ${card_user_biometry_button}
                             </div>
                         </div>
                     </div>
@@ -1226,17 +1233,30 @@ function verifyDocumentPending() {
 
                 $(".new-register-open-modal-btn")
                     .find(".count")
-                    .html(" (" + count + (count > 1 ? " itens pendentes" : " item pendente") + ")")
-                    .promise()
-                    .done(function () {
-                        $(".alert-pendings").css("display", "inline-flex");
+                    .html(
+                        " (" +
+                            count +
+                            (count > 1
+                                ? " itens pendentes"
+                                : " item pendente") +
+                            ")"
+                    ).promise().done(function(){
+                        $('.alert-pendings').css('display','inline-flex')
                     });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
 
-                let verifyAccount = JSON.parse(localStorage.getItem("verifyAccount"));
-                if (verifyAccount && verifyAccount.account.status !== "approved") {
-                    localStorage.setItem("verifyAccount", JSON.stringify(response.data));
+                let verifyAccount = JSON.parse(
+                    localStorage.getItem("verifyAccount")
+                );
+                if (
+                    verifyAccount &&
+                    verifyAccount.account.status !== "approved"
+                ) {
+                    localStorage.setItem(
+                        "verifyAccount",
+                        JSON.stringify(response.data)
+                    );
                 }
             }
         },
@@ -1493,8 +1513,6 @@ function loadNewRegisterSavedData() {
 
 function saveNewRegisterData() {
     const newRegisterData = {
-        document: JSON.parse(localStorage.getItem("verifyAccount")).user.document,
-        email: JSON.parse(localStorage.getItem("verifyAccount")).user.email,
         niche: JSON.stringify({
             others: $("div[data-step-1-value=others]").attr("data-step-1-selected"),
             classes: $("div[data-step-1-value=classes]").attr("data-step-1-selected"),
@@ -1848,7 +1866,7 @@ function buildModalBonusBalance(bonusObject) {
             <img class="bonus-illustration-1" src="../../../../../../build/global/img/svg/bonus-illustration-1.svg" alt=""/>
 
             <div class="bonus-text">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center" style="width: 100%">
                     <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: 10px 0;">
                         <path d="M15.125 0C17.3687 0 19.1875 1.81884 19.1875 4.0625C19.1875 4.86819 18.953 5.6191 18.5484 6.25068L21.6875 6.25C22.5504 6.25 23.25 6.94955 23.25 7.8125V12.1875C23.25 12.943 22.7138 13.5733 22.0012 13.7185L22 20.9375C22 23.1038 20.3044 24.8741 18.168 24.9936L17.9375 25H6.0625C3.89621 25 2.12594 23.3044 2.00643 21.168L2 20.9375L2.00006 13.7188C1.28683 13.574 0.75 12.9434 0.75 12.1875V7.8125C0.75 6.94955 1.44956 6.25 2.3125 6.25L5.45157 6.25068C5.04704 5.6191 4.8125 4.86819 4.8125 4.0625C4.8125 1.81884 6.63134 0 8.875 0C10.1319 0 11.2555 0.57083 12.0007 1.46739C12.7445 0.57083 13.8681 0 15.125 0ZM11.0625 13.7487H3.875V20.9375C3.875 22.0852 4.75889 23.0265 5.88309 23.1178L6.0625 23.125H11.0625V13.7487ZM20.125 13.7487H12.9375V23.125H17.9375C19.0852 23.125 20.0265 22.2411 20.1178 21.1169L20.125 20.9375V13.7487ZM11.0625 8.125H2.625V11.875L11.0625 11.8737V8.125ZM21.375 11.875V8.125H12.9375V11.8737L21.375 11.875ZM15.125 1.875C13.9169 1.875 12.9375 2.85438 12.9375 4.0625V6.24875H15.155L15.3044 6.24275C16.4286 6.15149 17.3125 5.21022 17.3125 4.0625C17.3125 2.85438 16.3331 1.875 15.125 1.875ZM8.875 1.875C7.66688 1.875 6.6875 2.85438 6.6875 4.0625C6.6875 5.21022 7.57139 6.15149 8.69559 6.24275L8.845 6.24875H11.0625V4.0625L11.0552 3.88309C10.964 2.75889 10.0227 1.875 8.875 1.875Z" fill="#FF4E05"/>
                     </svg>
