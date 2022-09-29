@@ -1015,7 +1015,7 @@ function verifyDocumentPending()
 
             if (response.data.user_account !== "approved") {
 
-                let verifyAccount = localStorage.getItem("verifyAccount");
+                let verifyAccount = localStorage.getItem("newVerifyAccount");
                 if (verifyAccount == null) {
                     $('.new-register-page-open-modal-container').hide();
                     $('.new-register-navbar-open-modal-container').fadeOut();
@@ -1028,7 +1028,7 @@ function verifyDocumentPending()
                 }
 
                 localStorage.setItem(
-                    "verifyAccount",
+                    "newVerifyAccount",
                     JSON.stringify(response.data)
                 );
 
@@ -1243,14 +1243,14 @@ function verifyDocumentPending()
                 $(".new-register-navbar-open-modal-container").remove();
 
                 let verifyAccount = JSON.parse(
-                    localStorage.getItem("verifyAccount")
+                    localStorage.getItem("newVerifyAccount")
                 );
                 if (
                     verifyAccount &&
                     verifyAccount.account.status !== "approved"
                 ) {
                     localStorage.setItem(
-                        "verifyAccount",
+                        "newVerifyAccount",
                         JSON.stringify(response.data)
                     );
                 }
@@ -1509,8 +1509,8 @@ function loadNewRegisterSavedData() {
 
 function saveNewRegisterData() {
     const newRegisterData = {
-        document: JSON.parse(localStorage.getItem("verifyAccount")).user.document,
-        email: JSON.parse(localStorage.getItem("verifyAccount")).user.email,
+        document: JSON.parse(localStorage.getItem("newVerifyAccount")).user.document,
+        email: JSON.parse(localStorage.getItem("newVerifyAccount")).user.email,
         niche: JSON.stringify({
             others: $("div[data-step-1-value=others]").attr("data-step-1-selected"),
             classes: $("div[data-step-1-value=classes]").attr("data-step-1-selected"),
