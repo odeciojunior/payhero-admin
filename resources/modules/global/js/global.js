@@ -67,6 +67,7 @@ $(document).ready(function () {
             });
 
             $("#new-register-first-page").fadeIn();
+            $("#new-register-first-page-banner").fadeIn();
         } else {
             $(".new-register-overlay").fadeOut(400, function () {
                 changeNewRegisterLayoutOnWindowResize();
@@ -76,6 +77,8 @@ $(document).ready(function () {
 
     $(".init-operation-container").on("click", ".extra-informations-user", function () {
         $("#new-register-first-page").hide();
+        $("#new-register-first-page-banner").hide();
+
 
         $(".modal-top-btn").hide();
 
@@ -197,6 +200,7 @@ $(document).ready(function () {
 
         if (step === 1) {
             $("#new-register-first-page").show();
+            $("#new-register-first-page-banner").show();
 
             $(".modal-top-btn").show();
 
@@ -1015,7 +1019,7 @@ function verifyDocumentPending()
 
             if (response.data.user_account !== "approved") {
 
-                let verifyAccount = localStorage.getItem("newVerifyAccount");
+                let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
                     $('.new-register-page-open-modal-container').hide();
                     $('.new-register-navbar-open-modal-container').fadeOut();
@@ -1028,7 +1032,7 @@ function verifyDocumentPending()
                 }
 
                 localStorage.setItem(
-                    "newVerifyAccount",
+                    "verifyAccount",
                     JSON.stringify(response.data)
                 );
 
@@ -1243,14 +1247,14 @@ function verifyDocumentPending()
                 $(".new-register-navbar-open-modal-container").remove();
 
                 let verifyAccount = JSON.parse(
-                    localStorage.getItem("newVerifyAccount")
+                    localStorage.getItem("verifyAccount")
                 );
                 if (
                     verifyAccount &&
                     verifyAccount.account.status !== "approved"
                 ) {
                     localStorage.setItem(
-                        "newVerifyAccount",
+                        "verifyAccount",
                         JSON.stringify(response.data)
                     );
                 }
@@ -1509,8 +1513,6 @@ function loadNewRegisterSavedData() {
 
 function saveNewRegisterData() {
     const newRegisterData = {
-        document: JSON.parse(localStorage.getItem("newVerifyAccount")).user.document,
-        email: JSON.parse(localStorage.getItem("newVerifyAccount")).user.email,
         niche: JSON.stringify({
             others: $("div[data-step-1-value=others]").attr("data-step-1-selected"),
             classes: $("div[data-step-1-value=classes]").attr("data-step-1-selected"),
