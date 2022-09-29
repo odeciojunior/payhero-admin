@@ -73,4 +73,19 @@ class CacheService
             return false;
         }
     }
+
+    public static function clearBalanceCache($companyId)
+    {
+        $gateways = ["vega", "asaas", "getnet", "gerencianet"];
+
+        foreach ($gateways as $gateway) {
+            cache()->forget("balance-available-{$gateway}-{$companyId}");
+            cache()->forget("balance-pending-{$gateway}-{$companyId}");
+            cache()->forget("balance-pending-count-{$gateway}-{$companyId}");
+            cache()->forget("balance-blocked-{$gateway}-{$companyId}");
+            cache()->forget("balance-blocked-count-{$gateway}-{$companyId}");
+            cache()->forget("balance-debt-{$gateway}-{$companyId}");
+            cache()->forget("resume-{$gateway}-{$companyId}");
+        }
+    }
 }
