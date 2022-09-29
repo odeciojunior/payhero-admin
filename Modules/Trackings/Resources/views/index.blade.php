@@ -282,7 +282,7 @@
                             </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0 form-icons">
                                 <label for="date_updated">Data de aprovação venda</label>
-                                <i style="right: 30px; margin-top: -11px;"
+                                <i style="right: 20px; margin-top: -13px;"
                                    class="form-control-icon form-control-icon-right o-agenda-1 font-size-25"></i>
                                 <input name='date_updated'
                                        id="date_updated"

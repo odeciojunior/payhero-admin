@@ -437,7 +437,7 @@ $(() => {
                     unknown,
                     delivered,
                 ]);
-            }, 2000);
+            }, 3000);
         }
         const formatTotal = "<div>Total:<br> <b>" + numberWithDecimal(total) + "</b> </div>";
 
