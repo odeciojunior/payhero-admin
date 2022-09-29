@@ -67,7 +67,7 @@ $(document).ready(function () {
             });
 
             $("#new-register-first-page").fadeIn();
-            $("#new-register-first-page-banner").fadeIn();
+
         } else {
             $(".new-register-overlay").fadeOut(400, function () {
                 changeNewRegisterLayoutOnWindowResize();
@@ -77,7 +77,7 @@ $(document).ready(function () {
 
     $(".init-operation-container").on("click", ".extra-informations-user", function () {
         $("#new-register-first-page").hide();
-        $("#new-register-first-page-banner").hide();
+
 
 
         $(".modal-top-btn").hide();
@@ -200,7 +200,7 @@ $(document).ready(function () {
 
         if (step === 1) {
             $("#new-register-first-page").show();
-            $("#new-register-first-page-banner").show();
+
 
             $(".modal-top-btn").show();
 
