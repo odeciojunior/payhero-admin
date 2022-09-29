@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(ScheduleCheckHeartbeatCommand::class)->everyMinute();
         $schedule
-            ->command("change:pix-to-canceled-test")
+            ->command("change:pix-to-canceled")
             ->everyMinute()
             ->withoutOverlapping();
 

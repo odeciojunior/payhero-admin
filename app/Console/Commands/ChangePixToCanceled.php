@@ -13,7 +13,7 @@ class ChangePixToCanceled extends Command
      *
      * @var string
      */
-    protected $signature = "change:pix-to-canceled-test";
+    protected $signature = "change:pix-to-canceled";
 
     /**
      * The console command description.
