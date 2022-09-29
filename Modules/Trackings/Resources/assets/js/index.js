@@ -210,6 +210,7 @@ $(() => {
 
     window.loadData = function () {
         elementButton = $("#bt_filter");
+        $("#myChart").hide();
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
             //console.log(elementButton.attr('block_search'));
@@ -304,6 +305,7 @@ $(() => {
     //CRIANDO GRAFICO
     let myChart = null;
     function inicializeChart(colors, dataValues) {
+        $("#myChart").show();
         if (myChart !== null) {
             myChart.destroy();
         }
@@ -425,15 +427,17 @@ $(() => {
                 $("#noData, #warning-text").remove();
             }
 
-            $("#myChart, .labels, .total-container").show();
-            inicializeChart(chartDefaultColorsLabel, [
-                posted,
-                dispatched,
-                out_for_delivery,
-                exception,
-                unknown,
-                delivered,
-            ]);
+            $(".labels, .total-container").show(); //#myChart,
+            const myTimeoutChart = setTimeout(function () {
+                inicializeChart(chartDefaultColorsLabel, [
+                    posted,
+                    dispatched,
+                    out_for_delivery,
+                    exception,
+                    unknown,
+                    delivered,
+                ]);
+            }, 2000);
         }
         const formatTotal = "<div>Total:<br> <b>" + numberWithDecimal(total) + "</b> </div>";
 
