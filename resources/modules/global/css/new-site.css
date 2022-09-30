@@ -714,14 +714,9 @@ h3 {
     overflow: hidden;
 }
 
-<<<<<<< HEAD
-.badge-pendente, .badge-pending {
-    background: #FF9900;
-=======
 .badge-pendente,
 .badge-pending {
     background: rgb(255, 157, 0);
->>>>>>> master
 }
 
 .badge-antifraude {
@@ -783,14 +778,9 @@ h3 {
     margin-left: 5px;
 }
 
-<<<<<<< HEAD
-.table-striped > tbody > tr:nth-child(2n+2) > td, .table-striped > tbody > tr:nth-child(2n+2) > th {
-    background-color: #FAFAFA !important;
-=======
 .table-striped > tbody > tr:nth-child(2n + 2) > td,
 .table-striped > tbody > tr:nth-child(2n + 2) > th {
     background-color: #fbfbfb !important;
->>>>>>> master
 }
 
 .table-striped tbody tr:nth-of-type(2n + 1) {
@@ -802,15 +792,9 @@ h3 {
 .table td,
 .table {
     vertical-align: middle !important;
-<<<<<<< HEAD
-    font-family: 'Muli', sans-serif;
-    color: #636363;
-    margin-bottom: 0px;
-=======
     font-family: "Inter", sans-serif;
-    color: #707070;
+    color: #636363;
     margin-bottom: 20px;
->>>>>>> master
 }
 
 @media screen and (max-width: 767px) {

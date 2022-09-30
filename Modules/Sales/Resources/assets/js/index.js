@@ -139,7 +139,7 @@ function atualizar(link = null) {
                     }
 
                     let cupomCode = "";
-
+                    console.log(value);
                     if (
                         !isEmpty(value.cupom_code) ||
                         (value.cupom_code === null && false) ||
@@ -148,7 +148,8 @@ function atualizar(link = null) {
                         cupomCode = `
                             <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}" role="button" style='margin-left: 5px;'>
                                 <img width="25px" src="/build/global/img/icons-cupom.svg">
-                            </a>`;
+                            </a>`
+                        ;
                     }
 
                     let upsell = "";
@@ -157,7 +158,8 @@ function atualizar(link = null) {
                         upsell = `
                             <a data-toggle="tooltip" title="Upsell" role="button" style='margin-left: 5px;'>
                                 <img width="20px" src="/build/global/img/icon-upsell.svg">
-                            </a>`;
+                            </a>`
+                        ;
                     }
 
                     let has_order_bump = "";
@@ -165,7 +167,8 @@ function atualizar(link = null) {
                         has_order_bump = `
                             <a data-toggle="tooltip" title="Order Bump" role="button" style='margin-left: 5px;'>
                                 <img width="20px" src="/build/global/img/order-bump.svg">
-                            </a>`;
+                            </a>`
+                        ;
                     }
 
                     let cashback = "";
@@ -174,7 +177,8 @@ function atualizar(link = null) {
                         cashbackIcon = `
                             <a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
                                 <span style="color: #5EE2A1; font-size: 26px; -webkit-text-stroke: 2px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
-                            </a>`;
+                            </a>`
+                        ;
 
                         cashback = `<b style="color: #5EE2A1;">${value.total_paid}</b>`;
                     }

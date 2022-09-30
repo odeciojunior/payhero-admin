@@ -286,10 +286,15 @@ li.select2-selection__choice {
 }
 
 .table td:nth-child(2) {
-    max-width: 220px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .table td:nth-child(2) {
+        max-width: 220px;
+    }
 }
 
 .table td:nth-child(3) {
@@ -301,6 +306,7 @@ li.select2-selection__choice {
 
 .table thead > tr > td, .table thead > tr > th{
     border-top: none !important;
+    background-color: #fafafa !important;
 }
 
 .table thead > tr > td:first-child, .table thead > tr > th:first-child {
@@ -313,4 +319,8 @@ li.select2-selection__choice {
 
 .table-detail{
     padding-left: 32px !important;
+}
+.nav-btn {
+    border: none;
+    border-radius: 4px;
 }

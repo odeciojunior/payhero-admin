@@ -570,7 +570,6 @@
                                     <td >Produto</td>
                                     <td >Aprovação</td>
                                     <td class="text-center">Status</td>
-                                    <td class="text-center"></td>
                                     <td >Código de Rastreio</td>
                                 </tr>
                             </thead>
@@ -583,7 +582,7 @@
                 </div>
 
                 <div class="row no-gutters justify-content-center justify-content-md-end mb-60" style="max-height: 45px;">
-                    <ul id="pagination-trackings" class="pagination-style" style="margin-top:10px;position:relative;float:right;">
+                    <ul id="pagination-trackings" class="pagination-style" style="margin-top:15px; position:relative; float:right;">
                         {{-- js carrega... --}}
                     </ul>
                 </div>
@@ -667,9 +666,9 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th>Data</th>
-                                                <th>Status</th>
-                                                <th>Evento</th>
+                                                <th class="default-title-modal">Data</th>
+                                                <th class="text-center">Status</th>
+                                                <th class="text-center">Evento</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-checkpoint"></tbody>

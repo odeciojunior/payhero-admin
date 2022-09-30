@@ -973,6 +973,7 @@ mix.styles(
     [
         "resources/modules/global/css/table.css",
         "Modules/Sales/Resources/assets/css/index.css",
+        "Modules/SalesRecovery/Resources/assets/css/index.css",
         "resources/modules/global/css/switch.css",
         "resources/cdn/select2.min.css",
     ],

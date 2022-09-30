@@ -2611,22 +2611,11 @@ function verifyIfCompanyIsDefault(companyId) {
 }
 
 function fillSelectProject(companiesAndProjects, selectorName, value = "") {
-<<<<<<< HEAD
-    $.each(
-        companiesAndProjects.company_default_projects,
-        function (i, project) {
-            if (project.status === "1") {
-                $(selectorName).append(
-                    $("<option>", { value: project.id, text: project.name })
-                );
-            }
-=======
     $.each(companiesAndProjects.company_default_projects, function (i, project) {
         if (parseInt(project.status) === 1) {
             $(selectorName).append($("<option>", { value: project.id, text: project.name }));
->>>>>>> master
         }
-    );
+});
     if (!isEmpty(value)) {
         $(selectorName).val(value);
     }

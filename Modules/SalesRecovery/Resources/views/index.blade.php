@@ -2,8 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet"
-              href="{{ mix('build/layouts/salesrecovery/index.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/salesrecovery/index.min.css') }}">
     @endpush
 
     <!-- Page -->

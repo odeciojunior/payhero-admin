@@ -419,11 +419,16 @@ $(document).ready(function () {
      * @param value
      */
     function createHtmlCartAbandoned(value) {
+        let date = value.date.split(" ", 1)
+        let parseDate = value.date.split(" ", 2)
+        let hours = parseDate[1]
+
         let data = "";
         data += "<tr>";
         data +=
             "<td class='display-sm-none display-m-none display-lg-none'>" +
-            value.date +
+                date +
+                "<br><span class='subdescription'>" + hours + "</span>"
             "</td>";
         data +=
             "<td> <span data-toggle='tooltip' data-placement='top' title='" +
@@ -457,7 +462,7 @@ $(document).ready(function () {
             "'>" +
             value.status_translate +
             "</span></td>";
-        data += "<td>" + value.value + "</td>";
+        data += "<td class='commission-fweight'>" + value.value + "</td>";
         data +=
             "<td class='display-sm-none' align='center'> <a href='" +
             value.whatsapp_link +
@@ -485,11 +490,16 @@ $(document).ready(function () {
      * @returns {string}
      */
     function createHtmlOthers(value) {
+        let date = value.start_date.split(" ", 1)
+        let parseDate = value.start_date.split(" ", 2)
+        let hours = parseDate[1]
+
         let data = "";
         data += "<tr>";
         data +=
             "<td class='display-sm-none display-m-none display-lg-none'>" +
-            value.start_date +
+                date +
+                "<br><span class='subdescription'>" + hours + "</span>"
             "</td>";
         data +=
             "<td> <span data-toggle='tooltip' data-placement='top' title='" +
@@ -521,13 +531,13 @@ $(document).ready(function () {
             "'>" +
             value.recovery_status +
             "</span></td>";
-        data += "<td>" + value.total_paid + "</td>";
+        data += "<td class='commission-fweight'>" + value.total_paid + "</td>";
         data +=
             "<td class='display-sm-none' align='center'> <a href='" +
             value.whatsapp_link +
             "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
         data +=
-            "<td class='display-sm-none text-right' style='padding:0!important' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
+            "<td class='display-sm-none text-center' style='padding:0!important' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
             value.link +
             "' title='Copiar link'><span class=''><img src='build/global/img/icon-copy-table.svg'/></span></a></td>";
         data +=

@@ -300,7 +300,7 @@
 
                         <div class="page-invoice-table table-responsive">
 
-                            <table id="tabela_vendas" class="table unify">
+                            <table id="tabela_vendas" class="table unify mb-0">
 
                                 <thead>
 

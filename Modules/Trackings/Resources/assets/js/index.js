@@ -22,10 +22,10 @@ const statusEnum = {
 //ICONES DO STATUS //
 const systemStatus = {
     1: "",
-    2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
-    3: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`,
-    4: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`,
-    5: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="Já existe uma venda com esse código de rastreio cadastrado">report_problem</i>`,
+    2: `<img src="/build/global/img/alert-icon-code.svg" class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias"/>`,
+    3: `<img src="/build/global/img/alert-icon-code.svg" class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora"/>`,
+    4: `<img src="/build/global/img/alert-icon-code.svg" class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda"/>`,
+    5: `<img src="/build/global/img/alert-icon-code.svg" class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="Já existe uma venda com esse código de rastreio cadastrado"/>`,
     "": "",
 };
 
@@ -105,22 +105,39 @@ $(() => {
         alertCustom("success", "Código copiado!");
     });
 
+    $(document).on("focus", ".input-tracking-code", function(){
+        $(this).next("span").css({"background" : "#ffffff"});
+    })
+    $(document).on("focusout", ".input-tracking-code",function(){
+        $(this).next("span").css({"background" : "#f4f4f4"});
+
+    })
+
+    $(document).on("click", ".tracking-add, .input-tracking-code", function (event) {
+        $(event.target).closest(".tracking-add").removeClass("d-flex").addClass("d-none");
+    })
+
+
     $(document).on("click", ".tracking-add, .tracking-edit", function (event) {
-        $(event.target).closest(".edit-detail").removeClass("col-5");
+        $(event.target).closest(".edit-detail").removeClass("d-flex");
+        $(event.target).closest(".edit-detail").addClass("d-none");
 
         let row = $(this).parent().parent();
         row.find(".input-tracking-code")
-            .removeClass("fake-label")
-            .prop("readonly", false)
-            .focus()
-            .removeAttr("placeholder");
+        .removeClass("fake-label")
+        .prop("readonly", false)
+        .focus()
+        .removeAttr("placeholder");
+
         row.find(".tracking-save, .tracking-close").show();
         row.find(".tracking-detail, .tracking-add").hide();
         $(this).hide();
     });
 
     $(document).on("click", ".tracking-close", function (event) {
-        $(event.target).parent().prev().addClass("col-5");
+        $(event.target).parent().prev().removeClass("d-none");
+        $(event.target).parent().prev().addClass("d-flex");
+
 
         let row = $(this).parent().parent();
         row.find(".input-tracking-code")
@@ -595,13 +612,16 @@ $(() => {
                     }
 
                     let htmlButtonAdd = `
-                        <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;max-height:38px;">
+                        <div class="d-flex col-sm-6 px-0 tracking-code-empty">
+                            <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-left:10px !important;border-radius: 12px;">
+                        </div>
 
-                        <a class='tracking-add pointer mt-1 ml-10 px-0 default-buttons' title="Adicionar">
+                        <a class='tracking-add pointer ml-20 px-0 default-buttons d-flex align-items-center' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                         </a>`;
+
                     let htmlButtonEdit = `
-                        <div class="edit-detail d-flex justify-content-between px-0 col-5">
+                        <div class="edit-detail d-flex justify-content-between px-0 ml-20 col-3">
 
                             <a class='tracking-edit pointer default-buttons' title="Editar">
                                 <span>
@@ -650,29 +670,31 @@ $(() => {
                                 </span>
                             </td>
 
-                            <td style="width: 2%;padding: 0px !important;">
-                                ${systemStatus[tracking.system_status_enum]}
-                                ${
-                                    tracking.is_chargeback_recovered
-                                        ? '<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">'
-                                        : ""
-                                }
-                            </td>
+
 
                             <td class="text-left mb-0" style="max-height:74px!important;">
-                                <div class="d-flex">
+                                <div class="d-flex align-items-center">
 
                                     ${
                                         tracking.tracking_status_enum
-                                            ? `
-                                    <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` +
-                                              htmlButtonEdit
-                                            : htmlButtonAdd
-                                    }
+                                        ?`<div class="d-flex col-6 px-0 input-code-options">
+                                        <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
 
-                                    <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
+                                        <span class="d-flex align-items-center icon-alert-code">
+                                            ${systemStatus[tracking.system_status_enum]}
+                                            ${tracking.is_chargeback_recovered
+                                            ? '<img src="/build/global/img/alert-icon-code.svg"/>'
+                                            :""}
+                                        </span>
+                                    </div>`+
+                                    htmlButtonEdit
+                                :
+                                    htmlButtonAdd
+                                }
 
-                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${
+                                    <div class="save-close buttons d-flex justify-content-between px-0 col-3 ml-20" style="max-height: 38px;">
+
+                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer text-center default-buttons' title="Salvar" pps='${
                                             tracking.pps_id
                                         }'style="display:none"></a>
 
@@ -768,15 +790,19 @@ $(() => {
                     for (let checkpoint of tracking.checkpoints) {
                         $("#table-checkpoint").append(
                             `<tr>
-                              <td>${checkpoint.created_at}</td>
-                              <td>
-                                  <span class="text-secondary badge badge-${
-                                      statusEnum[
-                                          checkpoint.tracking_status_enum
-                                      ]
-                                  }">${checkpoint.tracking_status}</span>
-                              </td>
-                              <td>${checkpoint.event}</td>
+                                <td>
+                                    ${checkpoint.created_at}
+                                </td>
+
+                                <td>
+                                    <span class="text-secondary badge badge-${statusEnum[checkpoint.tracking_status_enum]}">
+                                        ${checkpoint.tracking_status}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    ${checkpoint.event}
+                                </td>
                           </tr>`
                         );
                     }
@@ -856,7 +882,7 @@ $(() => {
                     );
 
                     let buttons = `
-                        <div class="edit-detail d-flex justify-content-between px-0 col-5">
+                        <div class="edit-detail d-flex justify-content-between px-0 ml-20 col-3">
 
                             <a class='tracking-edit pointer default-buttons' title="Editar">
                                 <span>
