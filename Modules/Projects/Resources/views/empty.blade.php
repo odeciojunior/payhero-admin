@@ -29,9 +29,7 @@
         }
     @endphp
 
-    @if ($account_is_approved &&
-        auth()->user()->address_document_status == 3 &&
-        auth()->user()->personal_document_status == 3)
+    @if ($account_is_approved && auth()->user()->address_document_status == 3)
         <button id="new-store-button"
                 data-toggle="modal"
                 data-target="#new-store-modal"
@@ -46,7 +44,7 @@
         @endif
     @else
         @if (Request::is('projects'))
-            @if (auth()->user()->address_document_status == 3 && auth()->user()->biometry_status == 3)
+            @if (auth()->user()->address_document_status == 3)
                 <button type="button"
                         id="new-store-button"
                         data-toggle="modal"
