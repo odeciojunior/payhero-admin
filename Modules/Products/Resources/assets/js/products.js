@@ -1,5 +1,5 @@
-getCompaniesAndProjects().done( function (data){
-    $('.site-navbar .sirius-select-container').addClass('disabled');
+getCompaniesAndProjects().done(function (data) {
+    $(".site-navbar .sirius-select-container").addClass("disabled");
 });
 
 loadingOnScreen();
@@ -67,10 +67,10 @@ $(document).ready(function () {
                     );
 
                     /**
-                     * Se nao for produto shopify o botao converter nao aparece
+                     * Se nao for produto shopify OU se o produto tiver vendas, o botao converter nao aparece
                      *
                      */
-                    if (!response.data.product.shopify_variant_id) {
+                    if (!response.data.product.shopify_variant_id || response.data.product.has_sales) {
                         $(".converte-product").parent().hide();
                     }
                     $(".converte-product").attr("product", response.data.product.id);
@@ -85,6 +85,16 @@ $(document).ready(function () {
                     }
                     $(".delete-product").attr("product", response.data.product.id);
                     $(".delete-product").attr("productname", response.data.product.name);
+
+                    /**
+                     * Se não houver botao pra converter nem pra deletar exibe div vazia
+                     */
+                    if (
+                        (!response.data.product.shopify_variant_id || response.data.product.has_sales) &&
+                        response.data.product.shopify_variant_id
+                    ) {
+                        $("#empty-space").show();
+                    }
 
                     /**
                      * Image

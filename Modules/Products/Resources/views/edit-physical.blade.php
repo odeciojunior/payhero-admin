@@ -9,7 +9,7 @@
     <!-- Page -->
     <div class="page">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
         <div class="page-header container">
             <h1 class="page-title my-10"
@@ -176,6 +176,8 @@
                 </div>
 
                 <div class="form-buttons">
+                    <div id="empty-space"
+                         style="display: none">&nbsp;</div>
                     <div>
                         <a class="btn btn-lg btn-excluir delete-product"
                            data-toggle="modal"

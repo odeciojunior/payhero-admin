@@ -39,10 +39,13 @@ class WithdrawalsApiController
                 );
             }
 
-            if ($company->id <> Company::DEMO_ID && !Gate::allows('edit', [$company])) {
-                return response()->json([
-                        'message' => 'Sem permissão para visualizar saques',
-                    ],403);
+            if ($company->id != Company::DEMO_ID && !Gate::allows("edit", [$company])) {
+                return response()->json(
+                    [
+                        "message" => "Sem permissão para visualizar saques",
+                    ],
+                    403
+                );
             }
 
             return Gateway::getServiceById($gatewayId)
@@ -75,7 +78,7 @@ class WithdrawalsApiController
                 return response()->json(["message" => "Sem permissão para realizar saques"], 403);
             }
 
-            $companyId = $request->company_id? hashids_decode($request->company_id): auth()->user()->company_default;
+            $companyId = $request->company_id ? hashids_decode($request->company_id) : auth()->user()->company_default;
             $company = Company::find($companyId);
             if (empty($company)) {
                 return response()->json(["message" => "Não identificamos a empresa."], 400);
@@ -85,6 +88,13 @@ class WithdrawalsApiController
 
             if (!Gate::allows("edit", [$company])) {
                 return response()->json(["message" => "Sem permissão para saques"], 403);
+            }
+
+            if ($company->user->biometry_status != User::BIOMETRY_STATUS_APPROVED) {
+                return response()->json(
+                    ["message" => "Para sacar primeiro você precisa finalizar a biometria facial"],
+                    403
+                );
             }
 
             if (!(new WithdrawalService())->companyCanWithdraw($company->id, $gatewayId)) {
@@ -289,8 +299,8 @@ class WithdrawalsApiController
             $data = $request->all();
 
             $companyId = auth()->user()->company_default;
-            if(!empty($filters['company_id'])){
-                $companyId = hashids_decode($filters['company_id']);
+            if (!empty($filters["company_id"])) {
+                $companyId = hashids_decode($filters["company_id"]);
             }
 
             $company = Company::find($companyId);
@@ -298,24 +308,24 @@ class WithdrawalsApiController
                 return response()->json(["message" => "Sem permissão para visualizar dados da conta"], 403);
             }
 
-            if ($userService->haveAnyDocumentPending()) {
-                return response()->json([
-                    "data" => [
-                        "user_pending" => true,
-                        "route" => env("ACCOUNT_FRONT_URL") . "/personal-info",
-                    ],
-                ]);
-            }
+            // if ($userService->haveAnyDocumentPending()) {
+            //     return response()->json([
+            //         "data" => [
+            //             "user_pending" => true,
+            //             "route" => env("ACCOUNT_FRONT_URL") . "/personal-info",
+            //         ],
+            //     ]);
+            // }
 
-            if (!$companyService->haveAnyDocumentPending()) {
-                return response()->json([
-                    "data" => [
-                        "company_pending" => true,
-                        "route" =>
-                            env("ACCOUNT_FRONT_URL") . "/companies/company-detail/" . \hashids()->encode($company->id),
-                    ],
-                ]);
-            }
+            // if (!$companyService->haveAnyDocumentPending()) {
+            //     return response()->json([
+            //         "data" => [
+            //             "company_pending" => true,
+            //             "route" =>
+            //                 env("ACCOUNT_FRONT_URL") . "/companies/company-detail/" . \hashids()->encode($company->id),
+            //         ],
+            //     ]);
+            // }
 
             return response()->json([
                 "message" => "Sem documentos pendentes",

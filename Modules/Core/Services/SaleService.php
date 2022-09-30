@@ -101,17 +101,17 @@ class SaleService
                 $tokens = [];
 
                 foreach ($projects as $project) {
-                    if(str_contains($project,'TOKEN')){
-                        array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
+                    if (str_contains($project, 'TOKEN')) {
+                        array_push($tokens, hashids_decode(str_replace('TOKEN-', '', $project)));
                         continue;
                     }
 
                     array_push($projectIds, hashids_decode($project));
                 }
 
-                $transactions->whereHas("sale", function ($querySale) use ($projectIds,$tokens) {
+                $transactions->whereHas("sale", function ($querySale) use ($projectIds, $tokens) {
                     $querySale->whereIn("project_id", $projectIds)
-                    ->orWhereIn('api_token_id',$tokens);
+                        ->orWhereIn('api_token_id', $tokens);
                 });
             }
 
@@ -452,9 +452,9 @@ class SaleService
                 : 0,
             "tax_type" => $userTransaction->tax_type ?? 0,
             "checkout_tax" =>
-                foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0
-                    ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100)
-                    : null,
+            foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0
+                ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100)
+                : null,
             "totalTax" => foxutils()->formatMoney($totalTax / 100),
             "total" => foxutils()->formatMoney($total / 100),
             "subTotal" => foxutils()->formatMoney(intval($subTotal) / 100),
@@ -465,9 +465,9 @@ class SaleService
             "taxaDiscount" => foxutils()->formatMoney($totalTaxPercentage / 100),
             "taxaReal" => foxutils()->formatMoney($taxaReal / 100),
             "release_date" =>
-                $userTransaction->release_date != null
-                    ? $userTransaction->release_date->format("d/m/Y")
-                    : "Processando",
+            $userTransaction->release_date != null
+                ? $userTransaction->release_date->format("d/m/Y")
+                : "Processando",
             "has_withdrawal" => $userTransaction->withdrawal_id,
             "affiliate_comission" => $affiliateComission,
             "refund_value" => foxutils()->formatMoney(intval($sale->refund_value) / 100),
@@ -477,7 +477,7 @@ class SaleService
                 ? $sale->saleRefundHistory->first()->refund_observation
                 : null,
             "user_changed_observation" =>
-                $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
+            $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
             "company_name" => $companyName,
         ];
     }
@@ -494,7 +494,6 @@ class SaleService
             }
 
             return null;
-
         } catch (Exception $ex) {
             Log::warning("Erro ao buscar produtos - SaleService - getProducts");
             report($ex);
@@ -594,9 +593,9 @@ class SaleService
         $foxValue = $sale->transactions->whereNull("company_id")->first()->value ?? 0;
         $inviteValue =
             $sale->transactions
-                ->whereNotNull("company_id")
-                ->where("type", 3)
-                ->first()->value ?? 0;
+            ->whereNotNull("company_id")
+            ->where("type", 3)
+            ->first()->value ?? 0;
 
         $saleTax = $foxValue + $cashbackValue + $inviteValue;
 
@@ -1268,19 +1267,19 @@ class SaleService
         $companyId = auth()->user()->company_default;
         $userId = auth()->user()->getAccountOwnerId();
 
-        return DB::table('sales')->select('sales.project_id', 'projects.name',DB::Raw("'' as prefix"))
+        return DB::table('sales')->select('sales.project_id', 'projects.name', DB::Raw("'' as prefix"))
             ->distinct()
-            ->leftJoin('projects', 'projects.id','=', 'sales.project_id')
+            ->leftJoin('projects', 'projects.id', '=', 'sales.project_id')
             ->leftJoin('transactions', 'transactions.sale_id', '=', 'sales.id')
-            ->where('sales.gateway_status','!=','canceled')
+            ->where('sales.gateway_status', '!=', 'canceled')
             ->where('transactions.user_id', $userId)
             ->where('transactions.company_id', $companyId)
             ->whereNull('transactions.invitation_id')
-            ->where(function($query){
-                if(auth()->user()->deleted_project_filter)
-                    $query->whereIn('projects.status', [1,2]);
+            ->where(function ($query) {
+                if (auth()->user()->deleted_project_filter)
+                    $query->whereIn('projects.status', [1, 2]);
                 else
-                    $query->where('projects.status',1);
+                    $query->where('projects.status', 1);
             })->get();
     }
 
@@ -1291,15 +1290,15 @@ class SaleService
 
         $projects =  self::getProjectsWithSales();
 
-        $tokens = DB::table('sales')->select('api.id as project_id','api.description as name',DB::Raw("'TOKEN-' as prefix"))
-        ->distinct()
-        ->join('api_tokens as api', 'api.id','=', 'sales.api_token_id')
-        ->where('api.user_id',$userId)
-        ->whereIn('api.integration_type_enum',[4,5])
-        ->whereNull('api.deleted_at')
-        ->where('api.company_id',$companyId)
-        ->where('sales.gateway_status','!=','canceled')
-        ->get();
+        $tokens = DB::table('sales')->select('api.id as project_id', 'api.description as name', DB::Raw("'TOKEN-' as prefix"))
+            ->distinct()
+            ->join('api_tokens as api', 'api.id', '=', 'sales.api_token_id')
+            ->where('api.user_id', $userId)
+            ->whereIn('api.integration_type_enum', [4, 5])
+            ->whereNull('api.deleted_at')
+            ->where('api.company_id', $companyId)
+            ->where('sales.gateway_status', '!=', 'canceled')
+            ->get();
 
         return $projects->merge($tokens);
     }

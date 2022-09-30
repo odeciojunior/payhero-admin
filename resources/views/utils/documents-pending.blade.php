@@ -42,10 +42,10 @@
                             <div class="user-informations-status">
                                 <!-- JS load -->
                             </div>
-                            <div class="company-status">
+                            <div class="user-biometry-status">
                                 <!-- JS load -->
                             </div>
-                            <div class="user-status">
+                            <div class="company-status">
                                 <!-- JS load -->
                             </div>
                         </div>
@@ -521,7 +521,18 @@
                                 <div class="d-flex flex-column mt-4">
                                     <span class="font-size-24 text-center mb-3"
                                           style="color: #0B1D3D; word-wrap: break-word;">
-                                        <strong>Obrigado, {{ explode(' ', trim(auth()->user()->name))[0] }}</strong>
+
+                                          @php
+                                            $user = auth()->user();
+                                            $name = $user->name;
+                                            if($user->is_cloudfox && $user->logged_id){
+                                                $userModel = new \Modules\Core\Entities\User();
+                                                $query = $userModel::select('name')->where('id',$user->logged_id)->get();
+                                                $name = $query[0]->name;
+                                            }
+                                            @endphp
+
+                                        <strong>Obrigado, {{ explode(' ', trim($name))[0] }}</strong>
                                     </span>
                                     <p class="font-size-14 font-weight-400 text-center mb-4"
                                        style="color: #636363">As
