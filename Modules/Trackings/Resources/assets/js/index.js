@@ -572,12 +572,21 @@ $(() => {
                             <td class="text-left mb-0" style="max-height:74px!important;">
                                 <div class="d-flex">
 
+                                    ${!tracking.tracking_status_enum ? htmlButtonAdd : ``}
+
                                     ${
-                                        tracking.tracking_status_enum
+                                        tracking.tracking_status_enum && tracking.tracking_status_enum != 3
                                             ? `
                                     <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` +
                                               htmlButtonEdit
-                                            : htmlButtonAdd
+                                            : ``
+                                    }
+
+                                    ${
+                                        tracking.tracking_status_enum && tracking.tracking_status_enum == 3
+                                            ? `
+                                            ${tracking.tracking_code}`
+                                            : ``
                                     }
 
                                     <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
