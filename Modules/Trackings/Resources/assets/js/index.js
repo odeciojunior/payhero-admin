@@ -305,6 +305,7 @@ $(() => {
     //CRIANDO GRAFICO
     let myChart = null;
     function inicializeChart(colors, dataValues) {
+        dataValues = dataValues.map((n) => (n ? n.split(".").join("") : "0"));
         $("#myChart").show();
         if (myChart !== null) {
             myChart.destroy();
@@ -412,7 +413,7 @@ $(() => {
     }
 
     function setDataView(data) {
-        let { total, posted, dispatched, out_for_delivery, delivered, exception, unknown } = data;
+        let { total, posted, dispatched, out_for_delivery, exception, unknown, delivered } = data;
         const thousand = 10000;
 
         if (verifyValueIsZero(data.total)) {
