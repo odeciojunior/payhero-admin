@@ -22,7 +22,6 @@ class UserService
 
     public function isDocumentValidated($userId = null): bool
     {
-        $userModel = new User();
         if (empty($userId)) {
             $user = auth()->user();
             if ($user->is_cloudfox && $user->logged_id) {
@@ -32,10 +31,9 @@ class UserService
             $user = User::find($userId);
         }
 
-        $userPresenter = $userModel->present();
         if (!empty($user)) {
             return $user->address_document_status == User::DOCUMENT_STATUS_APPROVED &&
-                $user->personal_document_status == User::DOCUMENT_STATUS_APPROVED;
+                $user->biometry_status == User::BIOMETRY_STATUS_APPROVED;
         }
 
         return false;
