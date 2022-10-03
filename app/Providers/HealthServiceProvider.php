@@ -25,8 +25,10 @@ class HealthServiceProvider extends ServiceProvider
     public function register()
     {
         $checks = [
-            DatabaseCheck::new()->name('Database check'),
-            DatabaseCheck::new()->connectionName('demo')->name('Demo database check'),
+            DatabaseCheck::new()->name("Database check"),
+            DatabaseCheck::new()
+                ->connectionName("demo")
+                ->name("Demo database check"),
             RedisCheck::new(),
             HorizonCheck::new(),
             DebugModeCheck::new(),
@@ -37,10 +39,12 @@ class HealthServiceProvider extends ServiceProvider
             //CacheCheck::new(),
         ];
 
-        if(env('APP_NAME') == 'Cloudfox-cron') {
+        if (env("APP_NAME") == "Cloudfox-cron") {
             $checks[] = ScheduleCheck::new();
             $checks[] = QueueSizeCheck::new()->maxSize(10000);
-            $checks[] = DatabaseConnectionCountCheck::new()->warnWhenMoreConnectionsThan(700)->failWhenMoreConnectionsThan(1200);
+            $checks[] = DatabaseConnectionCountCheck::new()
+                ->warnWhenMoreConnectionsThan(1200)
+                ->failWhenMoreConnectionsThan(1600);
         }
 
         Health::checks($checks);
