@@ -85,7 +85,7 @@
 
             <!-- LEGENDA DRAG DROP -->
             <div id="subtitle_drag_drop"
-                 class="container pl-30 pt-25">
+                 class="container pl-30 pt-25 d-none">
                 <div class="px-0">
                     Você pode reordenar suas lojas utilizando o arrastar e soltar
                     <img src="build/layouts/projects/img/dragItem.svg"

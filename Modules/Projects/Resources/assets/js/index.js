@@ -1,37 +1,38 @@
 $(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $("#subtitle_drag_drop").hide();
+        $("#subtitle_drag_drop").addClass("d-none");
         $("#data-table-projects").empty();
         $("#project-empty").hide();
         $("#new-store-button").hide();
-        loadOnAny('#data-table-projects');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                companiesAndProjects = data2
-                index('n');
+        loadingSkeletonCards($("#data-table-projects"));
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects(removeLoadingSkeletonCards).done(function (data2) {
+                companiesAndProjects = data2;
+                index("n");
             });
         });
     });
 
-    var companiesAndProjects = ''
+    var companiesAndProjects = "";
 
-    getCompaniesAndProjects().done( function (data){
-        companiesAndProjects = data
+    getCompaniesAndProjects().done(function (data) {
+        companiesAndProjects = data;
         index();
     });
 
     // Funcao Responsavel por gerar cards de cada projeto
-    index = function (loading='y') {
-        if(loading=='y'){
-            loadingOnScreen();
+    index = function (loading = "y") {
+        $(".page-header").fadeIn();
+
+        if (loading == "y") {
+            loadingSkeletonCards($("#data-table-projects"));
         }
         $.ajax({
             url: "/api/projects",
             data: {
-                company: $('.company-navbar').val(),
-                status: 'active',
+                company: $(".company-navbar").val(),
+                status: "active",
             },
             dataType: "json",
             headers: {
@@ -39,12 +40,11 @@ $(function () {
                 Accept: "application/json",
             },
             error: (response) => {
-                loadOnAny("#data-table-projects", true);
                 errorAjaxResponse(response);
                 loadingOnScreenRemove();
             },
             success: (response) => {
-                loadOnAny("#data-table-projects", true);
+                removeLoadingSkeletonCards();
                 let deleteProjectsShowOrHidde = $("#deleted_project_filter");
                 if (deleteProjectsShowOrHidde.val() === "1") {
                     $("#deleted_project_filter").prop("checked", true);
@@ -53,7 +53,7 @@ $(function () {
                 if (response.data.length) {
                     $("#project-empty").hide();
                     $("#company-empty").hide();
-                    $("#data-table-projects").css({visibility: "visible"});
+                    $("#data-table-projects").css({ visibility: "visible" });
 
                     $.each(response.data, (key, project) => {
                         if (verifyAccountFrozen()) {
@@ -67,29 +67,34 @@ $(function () {
                         let data = `
                             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 name_project" data-id="${project.id}">
                                 <div class="card">
-                                    ${project.woocommerce_id != null ?
-                                        `<div class="ribbon ribbon-woo">
+                                    ${
+                                        project.woocommerce_id != null
+                                            ? `<div class="ribbon ribbon-woo">
                                             <span>WooCommerce
                                                 <a class="ribbon-woocommerce-default"></a>
                                             </span>
                                         </div>`
                                             : ""
                                     }
-                                    ${project.shopify_id != null && !project.affiliated ?
-                                        `<div class="ribbon">
+                                    ${
+                                        project.shopify_id != null && !project.affiliated
+                                            ? `<div class="ribbon">
                                             <span>Shopify
                                                 <a class="ribbon-shopify-default"></a>
                                             </span>
                                         </div>`
                                             : ""
                                     }
-                                    ${project.affiliated ?
-                                        `<div class="ribbon-left">
+                                    ${
+                                        project.affiliated
+                                            ? `<div class="ribbon-left">
                                             <span>Afiliado</span>
                                         </div>`
                                             : ""
                                     }
-                                    <img class="card-img-top" onerror="this.src = 'build/global/img/produto.svg'" src="${project.photo ? project.photo : "build/global/img/produto.svg"}" alt="${project.name}">
+                                    <img class="card-img-top" onerror="this.src = 'build/global/img/produto.svg'" src="${
+                                        project.photo ? project.photo : "build/global/img/produto.svg"
+                                    }" alt="${project.name}">
                                     <div class="card-body">
                                         <h5 class="card-title text-truncate">${project.name}</h5>
                                         <div class="d-flex align-item-center justify-content-between">
@@ -110,10 +115,10 @@ $(function () {
                     });
                     verifyHasOnlyOne();
                 } else {
-                    $("#subtitle_drag_drop").hide();
+                    $("#subtitle_drag_drop").addClass("d-none");
                     //$("#button_toggle").css({visibility: "hidden"});
-                    $("#data-table-projects").css({visibility: "hidden"});
-                    $("#btn-config").css({visibility: "hidden"});
+                    $("#data-table-projects").css({ visibility: "hidden" });
+                    $("#btn-config").css({ visibility: "hidden" });
                     if (response.no_company) {
                         $("#company-empty").show();
                         $("#project-empty").hide();
@@ -125,7 +130,7 @@ $(function () {
                 loadingOnScreenRemove();
             },
         });
-    }
+    };
 
     // Funcao responsavel pelo Arrastar e soltar(DRAG e DROP)
     const sortableElement = $("#data-table-projects");
@@ -173,14 +178,11 @@ $(function () {
         let hasOnlyOne = $("#data-table-projects").children().length <= 1;
         if (hasOnlyOne) {
             $("img.drag-drop-icon").hide();
-            $("#subtitle_drag_drop").hide();
+            $("#subtitle_drag_drop").addClass("d-none");
             sortableElement.sortable({
                 disabled: true,
             });
-        }
-        else
-            $("#subtitle_drag_drop").show();
-
+        } else $("#subtitle_drag_drop").removeClass("d-none");
     }
 
     // Seta valor do filtro toggle(ALTERNANCIA) para exibir/esconder projetos
