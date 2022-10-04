@@ -532,6 +532,14 @@ $(() => {
                                 <span class="o-eye-1"></span>
                             </a>
                         </div>`;
+
+                    let htmlButtonView = `
+                        <div class="edit-detail d-flex justify-content-between px-0 col-5" style="margin: -11px auto auto 30px">
+                            <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
+                                <span class="o-eye-1"></span>
+                            </a>
+                        </div>`;
+
                     let dados = `
                         <tr>
 
@@ -586,7 +594,7 @@ $(() => {
                                     ${
                                         tracking.tracking_status_enum && tracking.tracking_status_enum == 3
                                             ? `
-                                            ${tracking.tracking_code}`
+                                            ${tracking.tracking_code}` + htmlButtonView
                                             : ``
                                     }
 
