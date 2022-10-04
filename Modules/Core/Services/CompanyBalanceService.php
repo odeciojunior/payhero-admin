@@ -3,8 +3,6 @@
 namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;

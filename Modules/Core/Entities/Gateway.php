@@ -15,6 +15,7 @@ use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Services\Gateways\VegaService;
 use Spatie\Activitylog\LogOptions;
 
 /**
@@ -122,6 +123,10 @@ class Gateway extends Model
             case self::IUGU_PRODUCTION_ID:
             case self::IUGU_SANDBOX_ID:
                 return new IuguService();
+
+            case self::VEGA_PRODUCTION_ID:
+            case self::VEGA_SANDBOX_ID:
+                return new VegaService();
 
             default:
                 throw new LogicException("Gateway {self->name} não encontrado");
