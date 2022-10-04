@@ -25,7 +25,7 @@ use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
-class Safe2PayService implements Statement
+class VegaService implements Statement
 {
     public Company $company;
     public $companyBankAccount;
@@ -35,7 +35,11 @@ class Safe2PayService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID];
+        $this->gatewayIds = [
+            Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID,
+            Gateway::IUGU_PRODUCTION_ID, Gateway::IUGU_SANDBOX_ID,
+            Gateway::VEGA_PRODUCTION_ID, Gateway::VEGA_SANDBOX_ID
+        ];
     }
 
     public function setCompany(Company $company)
@@ -181,8 +185,8 @@ class Safe2PayService implements Statement
                     "tax" => 0,
                     "observation" => $isFirstUserWithdrawal ? "Primeiro saque" : null,
                     "gateway_id" => foxutils()->isProduction()
-                        ? Gateway::SAFE2PAY_PRODUCTION_ID
-                        : Gateway::SAFE2PAY_SANDBOX_ID,
+                        ? Gateway::VEGA_PRODUCTION_ID
+                        : Gateway::VEGA_SANDBOX_ID,
                 ];
 
                 $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
@@ -267,8 +271,8 @@ class Safe2PayService implements Statement
                     "value" => $transaction->value,
                     "type" => "in",
                     "gateway_id" => foxutils()->isProduction()
-                        ? Gateway::SAFE2PAY_PRODUCTION_ID
-                        : Gateway::SAFE2PAY_SANDBOX_ID,
+                        ? Gateway::IUGU_PRODUCTION_ID
+                        : Gateway::IUGU_SANDBOX_ID,
                 ]);
 
                 $company->update([
@@ -320,8 +324,8 @@ class Safe2PayService implements Statement
                     "type" => "in",
                     "reason" => "Saldo bônus da transação ",
                     "gateway_id" => foxutils()->isProduction()
-                        ? Gateway::SAFE2PAY_PRODUCTION_ID
-                        : Gateway::SAFE2PAY_SANDBOX_ID,
+                        ? Gateway::IUGU_PRODUCTION_ID
+                        : Gateway::IUGU_SANDBOX_ID,
                 ]);
 
                 $company->update([
@@ -376,7 +380,7 @@ class Safe2PayService implements Statement
                 "total_available" => $availableBalance,
                 "last_transaction" => $lastTransactionDate,
                 "pending_debt_balance" => 0,
-                "id" => "BeYEwR3AdgdKykA",
+                "id" => "pqbz5KZby37dLlm",
             ];
         });
     }
@@ -401,117 +405,18 @@ class Safe2PayService implements Statement
 
         $this->companyId = $company->id;
         $this->apiKey = $company->getGatewayApiKey(
-            foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
+            foxutils()->isProduction() ? Gateway::VEGA_PRODUCTION_ID : Gateway::VEGA_SANDBOX_ID
         );
     }
 
     public function getGatewayId(): int
     {
-        return foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::VEGA_PRODUCTION_ID : Gateway::VEGA_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
     {
-        try {
-            DB::beginTransaction();
-            $responseGateway = $response->response ?? [];
-            $statusGateway = $response->status_gateway ?? "";
-            $saleIdEncode = hashids_encode($sale->id, "sale_id");
-
-            SaleRefundHistory::create([
-                "sale_id" => $sale->id,
-                "refunded_amount" => foxutils()->onlyNumbers($sale->total_paid_value),
-                "date_refunded" => Carbon::now(),
-                "gateway_response" => json_encode($responseGateway),
-                "refund_value" => foxutils()->onlyNumbers($sale->total_paid_value),
-                "refund_observation" => $refundObservation,
-                "user_id" => auth()->user()->account_owner_id ?? $sale->owner_id,
-            ]);
-
-            $saleService = new SaleService();
-            $saleTax = 0;
-
-            $cashbackValue = $sale->cashback()->first()->value ?? 0;
-            $saleTax = $saleService->getSaleTaxRefund($sale, $cashbackValue);
-
-            $totalSale = $saleService->getSaleTotalValue($sale);
-            $safe2payBalance = 0;
-            foreach ($sale->transactions as $refundTransaction) {
-                if (empty($refundTransaction->company_id)) {
-                    $refundTransaction->update([
-                        "status_enum" => Transaction::STATUS_REFUNDED,
-                        "status" => "refunded",
-                    ]);
-                    continue;
-                }
-
-                $safe2payBalance = $refundTransaction->company->vega_balance;
-
-                if ($refundTransaction->status_enum == Transaction::STATUS_PAID) {
-                    Transfer::create([
-                        "transaction_id" => $refundTransaction->id,
-                        "user_id" => $refundTransaction->company->user_id,
-                        "company_id" => $refundTransaction->company->id,
-                        "type_enum" => Transfer::TYPE_IN,
-                        "value" => $refundTransaction->value,
-                        "type" => "in",
-                        "gateway_id" => foxutils()->isProduction()
-                            ? Gateway::SAFE2PAY_PRODUCTION_ID
-                            : Gateway::SAFE2PAY_SANDBOX_ID,
-                    ]);
-                    $safe2payBalance += $refundTransaction->value;
-                    $refundTransaction->company->update([
-                        "vega_balance" => $safe2payBalance,
-                    ]);
-                }
-
-                $refundValue = $refundTransaction->value;
-                if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
-                    $refundValue += $saleTax;
-                }
-
-                if ($refundValue > $totalSale) {
-                    $refundValue = $totalSale;
-                }
-
-                Transfer::create([
-                    "transaction_id" => $refundTransaction->id,
-                    "user_id" => $refundTransaction->user_id,
-                    "company_id" => $refundTransaction->company_id,
-                    "gateway_id" => $sale->gateway_id,
-                    "value" => $refundValue,
-                    "type" => "out",
-                    "type_enum" => Transfer::TYPE_OUT,
-                    "reason" => "Estorno #{$saleIdEncode}",
-                    "is_refunded_tax" => 0,
-                ]);
-
-                $refundTransaction->company->update([
-                    "vega_balance" => $safe2payBalance - $refundValue,
-                ]);
-
-                $refundTransaction->status = "refunded";
-                $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
-                $refundTransaction->save();
-            }
-
-            $sale->update([
-                "status" => Sale::STATUS_REFUNDED,
-                "gateway_status" => $statusGateway,
-                "refund_value" => foxutils()->onlyNumbers($sale->total_paid_value),
-                "date_refunded" => Carbon::now(),
-            ]);
-
-            SaleService::createSaleLog($sale->id, "refunded");
-
-            DB::commit();
-
-            return true;
-        } catch (Exception $ex) {
-            report($ex);
-            DB::rollBack();
-            throw $ex;
-        }
+        return false;
     }
 
     public function refundEnabled(): bool

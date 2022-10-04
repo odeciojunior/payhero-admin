@@ -25,7 +25,7 @@ use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
-class Safe2PayService implements Statement
+class IuguService implements Statement
 {
     public Company $company;
     public $companyBankAccount;
@@ -35,7 +35,7 @@ class Safe2PayService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID];
+        $this->gatewayIds = [Gateway::IUGU_PRODUCTION_ID, Gateway::IUGU_SANDBOX_ID];
     }
 
     public function setCompany(Company $company)
@@ -51,12 +51,12 @@ class Safe2PayService implements Statement
 
     public function getAvailableBalance(): int
     {
-        return $this->company->vega_balance;
+        return $this->company->iugu_balance;
     }
 
     public function getPendingBalance(): int
     {
-        $cacheName = "balance-pending-vega-{$this->company->id}";
+        $cacheName = "balance-pending-iugu-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("transactions.company_id", $this->company->id)
                 ->where("transactions.status_enum", Transaction::STATUS_PAID)
@@ -67,7 +67,7 @@ class Safe2PayService implements Statement
 
     public function getPendingBalanceCount(): int
     {
-        $cacheName = "balance-pending-count-vega-{$this->company->id}";
+        $cacheName = "balance-pending-count-iugu-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("transactions.company_id", $this->company->id)
                 ->where("transactions.status_enum", Transaction::STATUS_PAID)
@@ -78,7 +78,7 @@ class Safe2PayService implements Statement
 
     public function getBlockedBalance(): int
     {
-        $cacheName = "balance-blocked-vega-{$this->company->id}";
+        $cacheName = "balance-blocked-iugu-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("company_id", $this->company->id)
                 ->whereIn("gateway_id", $this->gatewayIds)
@@ -91,7 +91,7 @@ class Safe2PayService implements Statement
 
     public function getBlockedBalanceCount(): int
     {
-        $cacheName = "balance-blocked-count-vega-{$this->company->id}";
+        $cacheName = "balance-blocked-count-iugu-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("company_id", $this->company->id)
                 ->whereIn("gateway_id", $this->gatewayIds)
@@ -157,7 +157,7 @@ class Safe2PayService implements Statement
             DB::beginTransaction();
 
             $this->company->update([
-                "vega_balance" => $this->company->vega_balance - $value,
+                "iugu_balance" => $this->company->iugu_balance - $value,
             ]);
 
             $withdrawal = Withdrawal::where([
@@ -181,8 +181,8 @@ class Safe2PayService implements Statement
                     "tax" => 0,
                     "observation" => $isFirstUserWithdrawal ? "Primeiro saque" : null,
                     "gateway_id" => foxutils()->isProduction()
-                        ? Gateway::SAFE2PAY_PRODUCTION_ID
-                        : Gateway::SAFE2PAY_SANDBOX_ID,
+                        ? Gateway::IUGU_PRODUCTION_ID
+                        : Gateway::IUGU_SANDBOX_ID,
                 ];
 
                 $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
@@ -267,12 +267,12 @@ class Safe2PayService implements Statement
                     "value" => $transaction->value,
                     "type" => "in",
                     "gateway_id" => foxutils()->isProduction()
-                        ? Gateway::SAFE2PAY_PRODUCTION_ID
-                        : Gateway::SAFE2PAY_SANDBOX_ID,
+                        ? Gateway::IUGU_PRODUCTION_ID
+                        : Gateway::IUGU_SANDBOX_ID,
                 ]);
 
                 $company->update([
-                    "vega_balance" => $company->vega_balance + $transaction->value,
+                    "iugu_balance" => $company->iugu_balance + $transaction->value,
                 ]);
 
                 $transaction->update([
@@ -320,12 +320,12 @@ class Safe2PayService implements Statement
                     "type" => "in",
                     "reason" => "Saldo bônus da transação ",
                     "gateway_id" => foxutils()->isProduction()
-                        ? Gateway::SAFE2PAY_PRODUCTION_ID
-                        : Gateway::SAFE2PAY_SANDBOX_ID,
+                        ? Gateway::IUGU_PRODUCTION_ID
+                        : Gateway::IUGU_SANDBOX_ID,
                 ]);
 
                 $company->update([
-                    "vega_balance" => $company->vega_balance + $taxValue,
+                    "iugu_balance" => $company->iugu_balance + $taxValue,
                 ]);
             }
 
@@ -348,7 +348,7 @@ class Safe2PayService implements Statement
 
     public function getResume()
     {
-        $cacheName = "resume-vega-{$this->company->id}";
+        $cacheName = "resume-iugu-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             $lastTransaction = Transaction::whereIn("gateway_id", $this->gatewayIds)
                 ->where("company_id", $this->company->id)
@@ -376,7 +376,7 @@ class Safe2PayService implements Statement
                 "total_available" => $availableBalance,
                 "last_transaction" => $lastTransactionDate,
                 "pending_debt_balance" => 0,
-                "id" => "BeYEwR3AdgdKykA",
+                "id" => "QnVroegNzgKwjdb",
             ];
         });
     }
@@ -401,13 +401,13 @@ class Safe2PayService implements Statement
 
         $this->companyId = $company->id;
         $this->apiKey = $company->getGatewayApiKey(
-            foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
+            foxutils()->isProduction() ? Gateway::IUGU_PRODUCTION_ID : Gateway::IUGU_SANDBOX_ID
         );
     }
 
     public function getGatewayId(): int
     {
-        return foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::IUGU_PRODUCTION_ID : Gateway::IUGU_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -445,7 +445,7 @@ class Safe2PayService implements Statement
                     continue;
                 }
 
-                $safe2payBalance = $refundTransaction->company->vega_balance;
+                $safe2payBalance = $refundTransaction->company->iugu_balance;
 
                 if ($refundTransaction->status_enum == Transaction::STATUS_PAID) {
                     Transfer::create([
@@ -456,12 +456,12 @@ class Safe2PayService implements Statement
                         "value" => $refundTransaction->value,
                         "type" => "in",
                         "gateway_id" => foxutils()->isProduction()
-                            ? Gateway::SAFE2PAY_PRODUCTION_ID
-                            : Gateway::SAFE2PAY_SANDBOX_ID,
+                            ? Gateway::IUGU_PRODUCTION_ID
+                            : Gateway::IUGU_SANDBOX_ID,
                     ]);
                     $safe2payBalance += $refundTransaction->value;
                     $refundTransaction->company->update([
-                        "vega_balance" => $safe2payBalance,
+                        "iugu_balance" => $safe2payBalance,
                     ]);
                 }
 
@@ -487,7 +487,7 @@ class Safe2PayService implements Statement
                 ]);
 
                 $refundTransaction->company->update([
-                    "vega_balance" => $safe2payBalance - $refundValue,
+                    "iugu_balance" => $safe2payBalance - $refundValue,
                 ]);
 
                 $refundTransaction->status = "refunded";

@@ -643,7 +643,7 @@ class SaleService
     {
         try {
             DB::beginTransaction();
-            $safe2payBalance = 0;
+            $vegaBalance = 0;
             $saleIdEncode = hashids_encode($sale->id, "sale_id");
             $isBillet = $sale->payment_method == Sale::BILLET_PAYMENT;
 
@@ -666,7 +666,7 @@ class SaleService
                     continue;
                 }
 
-                $safe2payBalance = $transaction->company->safe2pay_balance;
+                $vegaBalance = $transaction->company->vega_balance;
 
                 if ($transaction->status_enum == Transaction::STATUS_PAID) {
                     Transfer::create([
@@ -679,9 +679,9 @@ class SaleService
                         "gateway_id" => $sale->gateway_id,
                     ]);
 
-                    $safe2payBalance += $transaction->value;
+                    $vegaBalance += $transaction->value;
                     $transaction->company->update([
-                        "safe2pay_balance" => $safe2payBalance,
+                        "vega_balance" => $vegaBalance,
                     ]);
                 }
 
@@ -703,7 +703,7 @@ class SaleService
                 ]);
 
                 $transaction->company->update([
-                    "safe2pay_balance" => $safe2payBalance - $refundValue,
+                    "vega_balance" => $vegaBalance - $refundValue,
                 ]);
 
                 $transaction->update([

@@ -90,11 +90,11 @@ class UpdateContestations extends Command
             $cashbackValue = !empty($sale->cashback->value) ? $sale->cashback->value : 0;
             $saleTax = $saleService->getSaleTaxRefund($sale, $cashbackValue);
 
-            $safe2payBalance = 0;
+            $vegaBalance = 0;
             foreach ($chargebackTransactions as $chargebackTransaction) {
                 $company = $chargebackTransaction->company;
                 if (!empty($company)) {
-                    $safe2payBalance = $company->safe2pay_balance;
+                    $vegaBalance = $company->vega_balance;
 
                     $chargebackValue = $chargebackTransaction->value;
                     if ($chargebackTransaction->type == Transaction::TYPE_PRODUCER) {
@@ -102,7 +102,7 @@ class UpdateContestations extends Command
                     }
 
                     if ($chargebackTransaction->status_enum != Transaction::STATUS_TRANSFERRED) {
-                        $safe2payBalance += $chargebackTransaction->value;
+                        $vegaBalance += $chargebackTransaction->value;
                         Transfer::create([
                             "transaction_id" => $chargebackTransaction->id,
                             "user_id" => $company->user_id,
@@ -114,7 +114,7 @@ class UpdateContestations extends Command
                         ]);
 
                         $company->update([
-                            "safe2pay_balance" => $safe2payBalance,
+                            "vega_balance" => $vegaBalance,
                         ]);
                         $this->line("Vai transferir o dinheiro da venda");
                     }
@@ -132,7 +132,7 @@ class UpdateContestations extends Command
                     ]);
 
                     $company->update([
-                        "safe2pay_balance" => $safe2payBalance - $chargebackValue,
+                        "vega_balance" => $vegaBalance - $chargebackValue,
                     ]);
                     $this->line("Vai lançar o chargeback");
                 }

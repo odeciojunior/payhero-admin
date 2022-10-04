@@ -13,6 +13,7 @@ use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
+use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 use Spatie\Activitylog\LogOptions;
 
@@ -54,6 +55,10 @@ class Gateway extends Model
     public const ASAAS_SANDBOX_ID = 20;
     public const SAFE2PAY_PRODUCTION_ID = 21;
     public const SAFE2PAY_SANDBOX_ID = 22;
+    public const IUGU_PRODUCTION_ID = 23;
+    public const IUGU_SANDBOX_ID = 24;
+    public const VEGA_PRODUCTION_ID = 25;
+    public const VEGA_SANDBOX_ID = 26;
 
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
@@ -113,6 +118,10 @@ class Gateway extends Model
             case self::SAFE2PAY_PRODUCTION_ID:
             case self::SAFE2PAY_SANDBOX_ID:
                 return new Safe2PayService();
+
+            case self::IUGU_PRODUCTION_ID:
+            case self::IUGU_SANDBOX_ID:
+                return new IuguService();
 
             default:
                 throw new LogicException("Gateway {self->name} não encontrado");

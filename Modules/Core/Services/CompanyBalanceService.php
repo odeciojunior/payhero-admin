@@ -9,7 +9,7 @@ use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
-use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Services\Gateways\VegaService;
 
 /**
  * Class CompanyService
@@ -20,7 +20,7 @@ class CompanyBalanceService
     private Company $company;
 
     private $defaultGateways = [
-        Safe2PayService::class,
+        VegaService::class,
         AsaasService::class,
         GetnetService::class,
         GerencianetService::class,

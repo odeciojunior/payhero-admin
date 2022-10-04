@@ -150,7 +150,7 @@ $(window).on("load", function () {
                                                 ${gatewayLogos.cielo}
                                             </a>`);
                 break;
-            case "BeYEwR3AdgdKykA":
+            case "pqbz5KZby37dLlm":
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.vega}
@@ -315,9 +315,7 @@ $(window).on("load", function () {
         });
 
         $.ajax({
-            url:
-                "/api/core/verify-biometry/" +
-                $('meta[name="user-id"]').attr("content"),
+            url: "/api/core/verify-biometry/" + $('meta[name="user-id"]').attr("content"),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -339,5 +337,4 @@ $(window).on("load", function () {
             },
         });
     }
-
 });
