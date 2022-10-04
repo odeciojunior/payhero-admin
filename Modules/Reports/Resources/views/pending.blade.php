@@ -292,7 +292,7 @@
                     <div class="col-lg-12">
                         <div class="card shadow">
                             <div class="page-invoice-table table-responsive">
-                                <table class="table-vendas table unify table-striped pending">
+                                <table class="table-vendas table unify table-striped pending mb-0">
                                     <thead>
                                         <tr>
                                             <td class="">Transação</td>

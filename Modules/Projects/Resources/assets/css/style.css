@@ -489,14 +489,25 @@
 }
 
 .table thead > tr > td, .table thead > tr > th {
-    background-color: #FAFAFA;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
-    color: #15034C;
+    color: #15034C !important;
+}
+
+.page-project .table thead > tr > td{
+    background-color: #FBFBFB !important;
 }
 
 .table thead > tr > td:first-child {
     padding: 16px 16px 16px 32px;
 }
+.standarzing-line{
+    border-radius: 0px;
+    border-bottom-left-radius: 8px;
+}
+.badge-danger{
+    background-color: #E81414;
+}
+

@@ -135,7 +135,7 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         data += `
                         <tr>
-                            <td>${value.description}</td>
+                            <td class="ellipsis-text">${value.description}</td>
                             <td class="text-center">${
                                 value.active_flag
                                     ? `<span class="badge badge-success">Ativo</span>`

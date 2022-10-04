@@ -613,7 +613,7 @@ $(() => {
 
                     let htmlButtonAdd = `
                         <div class="d-flex col-sm-6 px-0 tracking-code-empty">
-                            <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-left:10px !important;border-radius: 12px;">
+                            <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-left:10px !important;border-radius: 8px;">
                         </div>
 
                         <a class='tracking-add pointer ml-20 px-0 default-buttons d-flex align-items-center' title="Adicionar">

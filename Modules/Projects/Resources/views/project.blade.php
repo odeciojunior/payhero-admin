@@ -28,12 +28,9 @@
             </h1>
         </div>
 
-        <div class="page-content container page-project"
-             style="display: none">
+        <div class="page-content container page-project pb-15" style="display: none">
             <!-- Painel de informações gerais -->
-            <div class="row"
-                 id="tab_info_geral"
-                 role="tabpanel">
+            <div class="row" id="tab_info_geral" role="tabpanel">
 
                 <div class="col-md-12">
 
@@ -45,23 +42,18 @@
 
                                 <div class="col-md-4">
                                     <div class="pl-0">
-                                        <img id="show-photo"
-                                             class="card-img-edit"
-                                             src=""
-                                             alt="">
+                                        <img id="show-photo" class="card-img-edit" src="" alt="">
                                     </div>
                                 </div>
 
                                 <div class="col-md-8 d-flex flex-column justify-content-between pl-10 pr-25">
 
-                                    <div alt="titulo"
-                                         class="pt-10 pt-md-10 pt-lg-15 pt-xl-20 mr-15">
+                                    <div alt="titulo" class="pt-10 pt-md-10 pt-lg-15 pt-xl-20 mr-15">
 
                                         <!-- TITULO -->
                                         <div class="row d-flex row-title justify-content-between pt-0 align-items-start">
                                             <div class="col-lg-9 col-xl-10 title-pad s-title pl-10 pl-sm-0"></div>
-                                            <div id="show-status"
-                                                 class="col-3 col-md-3 col-lg-3 col-xl-2 text-white text-center details-text my-5 ml-10 ml-sm-0 badge-pill badge-success">
+                                            <div id="show-status"class="col-3 col-md-3 col-lg-3 col-xl-2 text-white text-center details-text my-5 ml-10 ml-sm-0 badge-pill badge-success">
                                             </div>
                                         </div>
 

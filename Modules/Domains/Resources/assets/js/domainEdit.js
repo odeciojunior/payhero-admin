@@ -553,7 +553,7 @@ $(document).ready(function () {
                     value.system_flag +
                     "' data-record='" +
                     value.id +
-                    "'><span class='o-bin-1'></span> </button></td>";
+                    "'><span><img <img src='/build/global/img/icon-trash-tale.svg'/></span> </button></td>";
             } else {
                 cont++;
                 let enabledA = "";
@@ -570,12 +570,12 @@ $(document).ready(function () {
                         value.system_flag +
                         "' data-record='" +
                         value.id +
-                        "'><span class='o-bin-1'></span> </button></td>";
+                        "'><span><img <img src='/build/global/img/icon-trash-tale.svg'/></span> </button></td>";
                 } else {
                     enabledA =
                         "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " +
                         enabledEntrada +
-                        "><span class='o-bin-1'></span> </a></td>";
+                        "><span><img <img src='/build/global/img/icon-trash-tale.svg'/></span> </a></td>";
                 }
                 data +=
                     '<td><div class="switch-holder" style=" opacity: 0.5;">' +

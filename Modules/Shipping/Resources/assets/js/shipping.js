@@ -531,10 +531,10 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         let dados = `<tr>
                                         <td style="vertical-align: middle; display: none;">${value.zip_code_origin}</td>
-                                        <td style="vertical-align: middle;">${value.type_name}</td>
-                                        <td style="vertical-align: middle;">${value.name}</td>
-                                        <td style="vertical-align: middle;">${value.value}</td>
-                                        <td style="vertical-align: middle;">${value.information}</td>
+                                        <td class="text-nowrap ellipsis-text" style="vertical-align: middle;">${value.type_name}</td>
+                                        <td class="text-nowrap ellipsis-text" style="vertical-align: middle;">${value.name}</td>
+                                        <td class="text-nowrap ellipsis-text" style="vertical-align: middle;">${value.value}</td>
+                                        <td class="text-nowrap ellipsis-text" style="vertical-align: middle;">${value.information}</td>
                                         <td class="text-center" style="vertical-align: middle;">
                                             <span class="badge badge-${statusShipping[value.status]}">${
                             value.status_translated

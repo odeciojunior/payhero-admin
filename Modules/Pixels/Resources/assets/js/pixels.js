@@ -102,7 +102,7 @@ $(function () {
                     $.each(response.data, function (index, value) {
                         $("#data-table-pixel").append(`
                             <tr>
-                                <td>${value.name}</td>
+                                <td class="ellipsis-text">${value.name}</td>
                                 <td>${value.code}</td>
                                 <td>${value.platform_enum}</td>
                                 <td class="text-center"><span class="badge badge-${

@@ -147,7 +147,7 @@ function atualizar(link = null) {
                     ) {
                         cupomCode = `
                             <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}" role="button" style='margin-left: 5px;'>
-                                <img width="25px" src="/build/global/img/icons-cupom.svg">
+                                <img width="25px" src="/build/global/img/icon-cupom-discout.svg">
                             </a>`
                         ;
                     }
@@ -176,7 +176,7 @@ function atualizar(link = null) {
                     if (value.cashback_value != "0.00") {
                         cashbackIcon = `
                             <a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
-                                <span style="color: #5EE2A1; font-size: 26px; -webkit-text-stroke: 2px rgba(94, 226, 161, 0.1);" class="o-reload-1"></span>
+                                <img width="27px" src="/build/global/img/icons-cashback.svg">
                             </a>`
                         ;
 
@@ -570,10 +570,6 @@ $(document).ready(function () {
         //atualizar();
         loadData();
     });
-
-    $("#bt_filtro").on("click", function(){
-        console.log("CLICOU!!")
-    })
 
     let startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");

@@ -62,3 +62,9 @@ thead {
     border-radius: 4px;
     background-color: #ffffff;
 }
+.table tbody > tr {
+    border-bottom: 1px solid #ebebeb;
+}
+.table tbody > tr:last-child {
+    border-bottom: none;
+}

@@ -87,7 +87,7 @@ $(() => {
 
                     for (let rule of rules) {
                         let row = `<tr>
-                                       <td>${rule.description}</td>
+                                       <td class="ellipsis-text">${rule.description}</td>
                                        <td class="text-center">${
                                            rule.active_flag
                                                ? `<span class="badge badge-success">Ativo</span>`

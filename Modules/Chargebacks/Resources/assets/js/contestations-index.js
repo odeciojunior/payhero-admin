@@ -321,7 +321,7 @@ $(document).ready(function () {
                             <td class="line-overflow" title="${value.company}">
                                 ${value.company_limit}
                                 <br>
-                                <small class="text-muted">
+                                <small class="subdescription">
                                     ${value.project}
                                 </small>
                             </td>
@@ -329,7 +329,7 @@ $(document).ready(function () {
                             <td class="line-overflow" title="${value.customer}">
                                 ${value.customer}
                                 <br>
-                                <small class="text-muted">
+                                <small class="subdescription">
                                     Pagamento em ${value.adjustment_date}
                                 </small>
                             </td>`;
@@ -375,7 +375,7 @@ $(document).ready(function () {
                                 `;
 
                     dados += `
-                                <td class="line-overflow" style="white-space: normal;">
+                                <td class="line-overflow">
                                     ${value.reason}
                                 </td>
                                 <!-- <td style='white-space: nowrap'> <b>${
@@ -641,8 +641,6 @@ $(document).ready(function () {
             getTotalValues();
         }
     });
-
-    $("#pagination").css({ marginBottom: "100px" });
 
     //window.atualizar();
     getTotalValues();

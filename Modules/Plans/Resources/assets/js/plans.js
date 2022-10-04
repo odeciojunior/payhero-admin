@@ -3737,7 +3737,7 @@ $(function () {
                             data = "";
                             data += "<tr>";
                             data +=
-                                '<td id="" class="" style="vertical-align: middle; line-height: 1;"><span ' +
+                                '<td id="" class="ellipsis-text" style="vertical-align: middle; line-height: 1;"><span class="text-nowrap"' +
                                 (value.name_short_flag
                                     ? 'data-toggle="tooltip" title="' +
                                       value.name +
@@ -3745,13 +3745,13 @@ $(function () {
                                     : "") +
                                 ">" +
                                 value.name_short +
-                                '</span><div style="color: #8B8B8B; line-height: 1;"><small>com ' +
+                                '</span><div><small class="subdescription font-size-12">com ' +
                                 (value.products_length > 1
                                     ? value.products_length + " produtos"
                                     : value.products_length + " produto") +
                                 "</small></div></td>";
                             data +=
-                                "<td id='' class='' style='vertical-align: middle;'><span " +
+                                "<td id='' class='ellipsis-text' style='vertical-align: middle;'><span class='text-nowrap'" +
                                 (value.description_short_flag
                                     ? "data-toggle='tooltip' title='" +
                                       value.description +
@@ -3761,9 +3761,9 @@ $(function () {
                                 value.description_short +
                                 "</span></td>";
                             data +=
-                                '<td id="" class="" style="vertical-align: middle;">' +
+                                '<td id="" class="text-nowrap" style="vertical-align: middle;"> <strong>' +
                                 value.price +
-                                "</td>";
+                                "</strong></td>";
                             data +=
                                 '<td id="link" data-status="' +
                                 value.status +

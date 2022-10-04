@@ -49,7 +49,7 @@
 </style>
 
 <div class="card card-body"
-     style="margin-bottom: 25px; padding-bottom: 0;">
+     style="margin-bottom: 40px; padding-bottom: 0;">
     <div class='row no-gutters mb-20'>
         <div class="top-holder text-right mb-0"
              style="width: 100%;">
@@ -81,7 +81,7 @@
     <div class="card shadow"
          style="margin: 0 -1.429rem;">
         <div>
-            <div class='page-invoice-table table-responsive'>
+            <div class='page-invoice-table table-responsive standarzing-line'>
                 <table id='table-pixel' class='table text-left table-pixels table-striped unify mb-0' style="width: 100%;">
                     <thead>
                         <tr>

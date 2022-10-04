@@ -36,7 +36,7 @@
     <div class="card shadow"
          style="margin: 0 -1.429rem;">
         <div>
-            <div class='page-invoice-table table-responsive'>
+            <div class='page-invoice-table table-responsive standarzing-line'>
                 <table id='table-upsell'class='table text-left table-striped unify mb-0' style="width: 100%;">
                     <thead>
                         <tr>

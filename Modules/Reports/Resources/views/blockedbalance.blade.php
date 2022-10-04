@@ -343,7 +343,7 @@
                 <div class="col-lg-12 p-0 pb-10">
                     <div class="card shadow">
                         <div class="page-invoice-table table-responsive">
-                            <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                            <table id="tabela_vendas" class="table-vendas table table-striped unify mb-0" style="">
                                 <thead>
                                     <tr>
                                         <td class="display-sm-none display-m-none  display-lg-none">Transação</td>

@@ -1730,11 +1730,11 @@ input[type="radio"] {
     min-width: 125px;
 }
 .page-project .table .badge-success {
-    background-color: #1be4a8;
+    background-color: #41DC8F;
 }
 .page-project .table .badge-default {
-    color: #8b8b8b !important;
-    background-color: #e6e6e6;
+    color: #999999 !important;
+    background-color: #EBEBEB;
 }
 
 .ph-item::before {
@@ -2094,18 +2094,19 @@ tbody td {
 
 /* END vertical scroll */
 
-.page-project .pagination-sm .nav-btn {
-    color: #3d4456;
-    background: #ffffff !important;
-    border: 1px solid #ebebeb !important;
-    border-radius: 8px;
-    margin-right: 10px;
-    min-width: 40px;
-    height: 40px;
-    font-weight: normal;
-    font-size: 16px;
-    padding: 5px;
+.pagination-sm .btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
 }
+.pagination-sm .btn:hover {
+    border-radius: 4px;
+    background: #68aafa;
+    color: #ffffff;
+}
+
 .page-project .pagination-sm .nav-btn:hover {
     background: #68aafa;
     color: #ffffff;
@@ -2123,10 +2124,11 @@ tbody td {
 }
 
 .page-project .pagination-sm .nav-btn.active {
-    border-radius: 8px;
-    color: #2e85ec !important;
-    background: #ffffff !important;
-    border: 1px solid #2e85ec !important;
+    background-color: #2e85ec !important;
+    border: 1px solid #2e85ec;
+    border-radius: 4px;
+    opacity: 1 !important;
+    color: white !important;
 }
 
 .page-project .table > tbody > tr:nth-child(2n + 2) > td,
@@ -2230,7 +2232,7 @@ tbody td {
 }
 .page-project .table td,
 .page-project .table {
-    color: #5d5d5d;
+    color: #636363;
     line-height: 1;
 }
 #stage4 .box-product:hover {
@@ -3581,4 +3583,25 @@ tbody td {
 
 .text-decoration-underline {
     text-decoration: underline;
+}
+.table tbody > tr {
+    border-bottom: 1px solid #ebebeb;
+}
+.table tbody > tr:last-child {
+    border-bottom: none;
+}
+.pagination-style {
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+.ellipsis-text{
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.subdescription {
+    color: #999999;
+    font-size: 12px;
 }

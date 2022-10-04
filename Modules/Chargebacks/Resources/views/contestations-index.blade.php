@@ -274,7 +274,7 @@
 
                 <div class="card shadow">
                     <div class="page-invoice-table table-responsive">
-                        <table id="chargebacks-table" class="table-vendas table table-striped unify" style="width:100%;">
+                        <table id="chargebacks-table" class="table-vendas table table-striped unify mb-0" style="width:100%;">
                             <thead>
                                 <tr class="">
                                     <td class="">Transação</td>
@@ -293,7 +293,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="row no-gutters justify-content-center justify-content-md-end pb-60">
+                <div class="row no-gutters justify-content-center justify-content-md-end">
                     <ul id="pagination" class="pagination-style">
                         {{-- js carrega... --}}
                     </ul>

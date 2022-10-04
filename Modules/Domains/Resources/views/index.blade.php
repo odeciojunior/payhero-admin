@@ -1,6 +1,6 @@
 <!-- Page -->
-<div class="card card-body">
-    <div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+<div class="card card-body p-0">
+    <div class="card card-body mb-0" style="padding-bottom: 0;">
         <div class='row no-gutters mb-20'>
             <div class="top-holder text-right mb-0" style="width: 100%;">
                 <div class='d-flex align-items-center'>
@@ -32,7 +32,7 @@
         </div>
         <div class="card shadow" style="margin: 0 -1.429rem;">
             <div>
-                <div class='page-invoice-table table-responsive'>
+                <div class='page-invoice-table table-responsive standarzing-line'>
                     <table id='tabela-dominios' class='table table-striped table-dominios unify mb-0' style="width: 100%;">
                         <thead>
                             <tr>

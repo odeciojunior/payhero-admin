@@ -1,5 +1,5 @@
 <div class="card card-body"
-     style="margin-bottom: 25px; padding-bottom: 0;">
+     style="margin-bottom: 40px; padding-bottom: 0;">
     <div class='row no-gutters mb-20'>
         <div class="top-holder text-right mb-0"
              style="width: 100%;">
