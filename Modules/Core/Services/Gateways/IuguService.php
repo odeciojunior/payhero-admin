@@ -5,7 +5,7 @@ namespace Modules\Core\Services\Gateways;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Abstracts\GatewayServicesAbstract;
 
-class IuguService implements GatewayServicesAbstract
+class IuguService extends GatewayServicesAbstract
 {
     public function __construct()
     {
@@ -19,7 +19,8 @@ class IuguService implements GatewayServicesAbstract
         $this->companyColumnBalance = 'vega_balance';
     }
 
-    public function getGatewayId(){
+    public function getGatewayId():int
+    {
         return foxutils()->isProduction()?Gateway::IUGU_PRODUCTION_ID:Gateway::IUGU_SANDBOX_ID;
     }
 }

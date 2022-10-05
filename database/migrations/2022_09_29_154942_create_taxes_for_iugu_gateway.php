@@ -57,6 +57,7 @@ return new class extends Migration
         $progress = new ProgressBar($output, $total);
         $progress->start();
 
+        $anticipationTax = 2.05;
         foreach ($flags as $flag) {
             $flagRow = GatewayFlag::create($flag);
             for ($i = 1; $i <= 12; $i++) {
@@ -67,7 +68,11 @@ return new class extends Migration
                     $installmentTax =2.73;
                 }
 
-                $installmentTax+= $i==1? ($i * 2.05) : ($i * 2.05)/2;
+                if($i > 1){
+                    $installmentTax+= round((($i+1)/2)*(1-$installmentTax/100)*$anticipationTax,2) ;
+                }else{
+                    $installmentTax+=$anticipationTax;
+                }
 
                 GatewayFlagTax::create([
                     "gateway_flag_id" => $flagRow->id,
