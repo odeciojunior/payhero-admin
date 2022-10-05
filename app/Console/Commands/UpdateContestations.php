@@ -19,14 +19,14 @@ class UpdateContestations extends Command
      *
      * @var string
      */
-    protected $signature = 'contestations:update';
+    protected $signature = "contestations:update";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Execute the console command.
@@ -37,28 +37,27 @@ class UpdateContestations extends Command
     {
         $users = [];
 
-        $transactions = Transaction::with(['user', 'sale'])
-                                    ->where("gateway_id", Gateway::SAFE2PAY_PRODUCTION_ID)
-                                    ->where('type', Transaction::TYPE_PRODUCER)
-                                    ->whereIn("status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
-                                    ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
-                                    ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
-                                    ->where("block_reason_sales.blocked_reason_id", 1)
-                                    ->get();
+        $transactions = Transaction::with(["user", "sale"])
+            ->where("gateway_id", Gateway::SAFE2PAY_PRODUCTION_ID)
+            ->where("type", Transaction::TYPE_PRODUCER)
+            ->whereIn("status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
+            ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
+            ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
+            ->where("block_reason_sales.blocked_reason_id", 1)
+            ->get();
 
-        foreach($transactions as $transaction) {
+        foreach ($transactions as $transaction) {
             $users[$transaction->user->name] ??= 0;
-            if($users[$transaction->user->name] + $transaction->value < 2000000) {
-                $users[$transaction->user->name] += $transaction->value;
-                $this->processChargebackLost($transaction->sale);
-            }
+            // if ($users[$transaction->user->name] + $transaction->value < 2000000) {
+            $users[$transaction->user->name] += $transaction->value;
+            $this->processChargebackLost($transaction->sale);
+            // }
         }
     }
 
     public function processChargebackLost($sale)
     {
-
-        $this->line("===========>>>>>>>    PROCESSANDO CHARGEBACK DA VENDA " . hashids_encode($sale->id, 'sale_id'));
+        $this->line("===========>>>>>>>    PROCESSANDO CHARGEBACK DA VENDA " . hashids_encode($sale->id, "sale_id"));
         try {
             if ($sale->status != Sale::STATUS_APPROVED) {
                 $this->line("Venda aprovada");
@@ -75,7 +74,7 @@ class UpdateContestations extends Command
 
             $blockSales = BlockReasonSale::where("sale_id", $sale->id)->get();
             if (!empty($blockSales)) {
-                foreach($blockSales as $blockSale) {
+                foreach ($blockSales as $blockSale) {
                     $blockSale->update([
                         "status" => BlockReasonSale::STATUS_UNLOCKED,
                     ]);
@@ -110,7 +109,7 @@ class UpdateContestations extends Command
                             "type_enum" => Transfer::TYPE_IN,
                             "value" => $chargebackTransaction->value,
                             "type" => "in",
-                            "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID
+                            "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID,
                         ]);
 
                         $company->update([
