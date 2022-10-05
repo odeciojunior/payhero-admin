@@ -328,7 +328,10 @@ class TrackingService
         });
 
         $productPlanSales->leftJoin("transactions as t", function ($q) use ($companyId) {
-            $q->on("t.sale_id", "s.id")->where("t.company_id", $companyId);
+            $q->on("t.sale_id", "s.id")
+                ->where("t.company_id", $companyId)
+                ->where("t.status_enum", "!=", 5)
+                ->whereNull("t.deleted_at");
         });
 
         $productPlanSales->whereNotNull("t.id");
