@@ -145,7 +145,6 @@ class Kernel extends ConsoleKernel
         $schedule->command("command:update-user-level")->dailyAt("07:00");
         $schedule->command("updateTransactionsReleaseDate")->dailyAt("07:15");
         $schedule->command("update:currencyquotation")->dailyAt("07:20");
-        $schedule->command("contestations:update")->dailyAt("07:20");
         $schedule->command("balance:unlock")->dailyAt("07:45");
 
         //        $schedule->command("pipefy:first-sale")->dailyAt("07:35");
