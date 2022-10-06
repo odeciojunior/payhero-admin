@@ -244,6 +244,7 @@ class Safe2PayService implements Statement
                 ->where("status_enum", Transaction::STATUS_PAID)
                 ->whereIn("gateway_id", $this->gatewayIds)
                 ->whereNotNull("company_id")
+                ->where("company_id", 471)
                 ->where(function ($where) {
                     $where->where("tracking_required", false)->orWhereHas("sale", function ($query) {
                         $query->where(function ($q) {
