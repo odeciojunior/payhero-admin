@@ -15,7 +15,7 @@ window.loadWithdrawalsTable = function (link = null) {
     loadOnTable("#withdrawals-table-data", "#transfersTable");
     $("#pagination-withdrawals").children().attr("disabled","disabled");
 
-    
+
     if (link == null) {
         link = "/api/withdrawals";
     } else {
@@ -29,10 +29,10 @@ window.loadWithdrawalsTable = function (link = null) {
                             <div class="bold-mobile"> ${data.date_request} </div>`;
 
         if (!isEmpty(data.date_request_time))
-            request_date += `<small style="color: #9E9E9E; font-size: 11px"> às ${data.date_request_time.replace(
+            request_date += `<span class="subdescription font-size-12"> às ${data.date_request_time.replace(
                 ":",
                 "h"
-            )} </small>`;
+            )} </span>`;
 
         return request_date;
     }
@@ -43,10 +43,10 @@ window.loadWithdrawalsTable = function (link = null) {
                             <div class="bold-mobile"> ${data.date_release} </div>`;
 
         if (!isEmpty(data.date_release_time))
-            release_date += `<small style="color: #9E9E9E; font-size: 11px"> às ${data.date_release_time.replace(
+            release_date += `<span class="subdescription font-size-12"> às ${data.date_release_time.replace(
                 ":",
                 "h"
-            )} </small>`;
+            )} </span>`;
 
         return release_date;
     }
@@ -102,23 +102,27 @@ window.loadWithdrawalsTable = function (link = null) {
                     let dateRelease = getReleaseTime(data);
 
                     tableData += `<tr class="s-table table-finance-transfers">;
-                                <td class="sale-finance-transfers" style="grid-area: sale">#${
+                                <td class="sale-finance-transfers ellipsis-text" style="grid-area: sale">#${
                                     data.id
                                 }</td>";
+
                                 <td class="text-left truncate bank-finance-transfers" style="grid-area: bank">
                                     <div style="color: #636363;" class="truncate"> ${
                                         data.account_information_bank
                                     } </div>
-                                    <small style="color: #9E9E9E; font-size: 11px;"> ${
+                                    <span class="subdescription font-size-12"> ${
                                         data.account_information
-                                    } </small>
+                                    } </span>
                                 </td>;
+
                                 <td class="text-left date-start-finance-transfers" style="grid-area: date-start">
                                     ${dateRequest}
                                 </td>;
+
                                 <td class="text-left date-end-finance-transfers" style="grid-area: date-end">
                                     ${dateRelease}
                                 </td>;
+
                                 <td class="shipping-status text-center status-finance-transfers" style="grid-area: status">
                                     <span class="badge badge-${statusWithdrawals[data.status]} "> ${
                         data.status_translated

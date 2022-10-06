@@ -202,7 +202,7 @@ $(document).ready(function () {
 
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
-        
+
 
         if (link == null) {
             link = "/chargebacks/getchargebacks?" + getFilters();
@@ -232,11 +232,11 @@ $(document).ready(function () {
                                     <td>${value.customer}</td>
                                     <td>${value.transaction_date}</td>
                                     <td>${value.adjustment_date}</td>
-                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>                                      
+                                    <td style='white-space: nowrap'><b>${value.amount}</b></td>
                                     <td>
                                         <div class="row">
                                             <div class="col-4">
-                                                <a role="button" class="detalhes_venda pointer" venda="${value.transaction_id}" data-target="#modal_detalhes" data-toggle="modal" 
+                                                <a role="button" class="detalhes_venda pointer" venda="${value.transaction_id}" data-target="#modal_detalhes" data-toggle="modal"
                                                 data-tooltip='tooltip' title="Detalhes da venda" style="margin-right:10px;">
                                                     <i class='material-icons gradient'>remove_red_eye</i>
                                                 </a>
@@ -248,9 +248,9 @@ $(document).ready(function () {
                                                 </a>
 <!--                                                <a role='button' class='chargeback_details pointer' company='" + value.id + "' data-target='#details-modal' data-toggle='modal' -->
 <!--                                                title='Visualizar' style='margin-right:10px;'><i class='material-icons gradient'>remove_red_eye</i></a>";-->
-                                            </div>                                                                                           
+                                            </div>
                                         </div>
-                                    </td>                                     
+                                    </td>
                                 </tr>`;
 
                     $("#chargebacks-table-data").append(dados);
@@ -301,12 +301,12 @@ $(document).ready(function () {
                 $("#total-chargeback-value").html(response.total_chargeback_value);
                 $("#total-chargeback-tax").html(
                     response.total_chargeback_tax +
-                        " (" +
-                        response.total_chargeback +
-                        " de " +
-                        response.total_sale_approved +
-                        " aprovadas" +
-                        ")"
+                    " (" +
+                    response.total_chargeback +
+                    " de " +
+                    response.total_sale_approved +
+                    " aprovadas" +
+                    ")"
                 );
             },
         });
@@ -397,10 +397,10 @@ $(document).ready(function () {
 
             $("#pagination").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page - x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page - x) +
-                    "</button>"
+                (response.meta.current_page - x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page - x) +
+                "</button>"
             );
 
             $("#pagina_" + (response.meta.current_page - x)).on("click", function () {
@@ -425,10 +425,10 @@ $(document).ready(function () {
 
             $("#pagination").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page + x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page + x) +
-                    "</button>"
+                (response.meta.current_page + x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page + x) +
+                "</button>"
             );
 
             $("#pagina_" + (response.meta.current_page + x)).on("click", function () {

@@ -2778,7 +2778,7 @@ h4.number {
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
-    
+
 }
 .table tbody tr:last-child td:first-child {
     border-radius: 0 0 0 16px !important;
@@ -2786,8 +2786,14 @@ h4.number {
 .table tbody tr:last-child td:last-child {
     border-radius: 0 0 16px 0 !important;
 }
-.badge{
-    min-width: 120px;
+
+.badge-disable{
+    color: #999999;
+    background-color:  #EBEBEB;
+}
+.badge-dispute{
+    background: #2E85EC;
+    color: #FFFFFF;
 }
 
 .pagination .nav-btn.active {

@@ -103,8 +103,8 @@ $(function () {
                         $("#data-table-pixel").append(`
                             <tr>
                                 <td class="ellipsis-text">${value.name}</td>
-                                <td>${value.code}</td>
-                                <td>${value.platform_enum}</td>
+                                <td class="ellipsis-text">${value.code}</td>
+                                <td class="ellipsis-text">${value.platform_enum}</td>
                                 <td class="text-center"><span class="badge badge-${
                                     statusPixel[value.status]
                                 }">${value.status_translated}</span></td>

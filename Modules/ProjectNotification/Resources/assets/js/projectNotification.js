@@ -1,6 +1,6 @@
 let statusNotification = {
     1: "success",
-    0: "danger",
+    0: "disable",
 };
 
 $(function () {
@@ -162,7 +162,7 @@ $(function () {
                 $("#modal-detail-project-notification .projectn-status").html(
                     response.data.status == "1"
                         ? '<span class="badge badge-success text-left">Ativo</span>'
-                        : '<span class="badge badge-danger">Inativo</span>'
+                        : '<span class="badge badge-disable">Inativo</span>'
                 );
 
                 if (response.data.type_enum == 2) {
@@ -233,12 +233,12 @@ $(function () {
             success: function success(data) {
                 alertCustom("success", "Notificação atualizada com sucesso");
                 if (data.status == 1) {
-                    $(".notification-status-" + projectNotification + " span").removeClass("badge-danger");
+                    $(".notification-status-" + projectNotification + " span").removeClass("badge-disable");
                     $(".notification-status-" + projectNotification + " span").addClass("badge-success");
                     $(".notification-status-" + projectNotification + " span").html("Ativo");
                 } else {
                     $(".notification-status-" + projectNotification + " span").removeClass("badge-success");
-                    $(".notification-status-" + projectNotification + " span").addClass("badge-danger");
+                    $(".notification-status-" + projectNotification + " span").addClass("badge-disable");
                     $(".notification-status-" + projectNotification + " span").html("Inativo");
                 }
                 // atualizarProjectNotification();
@@ -301,11 +301,11 @@ $(function () {
                         let data = `<tr>
                             <td class="project-notification-id">${value.type}</td>
 
-                            <td class="project-notification-type">${value.event}</td>
+                            <td class="project-notification-type ellipsis-text">${value.event}</td>
 
-                            <td class="project-notification-value">${value.time}</td>
+                            <td class="project-notification-value ellipsis-text">${value.time}</td>
 
-                            <td class="project-notification-zip-code-origin">${value.message}</td>
+                            <td class="project-notification-zip-code-origin ellipsis-text">${value.message}</td>
 
                             <td class="text-center project-notification-status notification-status-${
                                 value.id
@@ -331,7 +331,7 @@ $(function () {
                                         value.notification_enum == 13 ||
                                         value.notification_enum == 17
                                             ? `<button style="background-color: transparent;" role="button" class="px-0 pb-0 btn  disabled="">
-                                            <span class="o-edit-1"></span>
+                                            <span class=""><img src="/build/global/img/pencil-icon.svg"></span>
                                         </button>`
                                             : `<a role="button" title="Editar" class="edit-project-notification mg-responsive pointer" project-notification='${value.id}'>
                                             <span class=""><img src='/build/global/img/pencil-icon.svg'/></span>

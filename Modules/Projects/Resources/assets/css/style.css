@@ -511,3 +511,7 @@
     background-color: #E81414;
 }
 
+.badge-disable{
+    background-color: #EBEBEB;
+    color: #999999;
+}

@@ -780,7 +780,7 @@ h3 {
 
 .table-striped > tbody > tr:nth-child(2n + 2) > td,
 .table-striped > tbody > tr:nth-child(2n + 2) > th {
-    background-color: #fbfbfb !important;
+    background-color: #fbfbfb ;
 }
 
 .table-striped tbody tr:nth-of-type(2n + 1) {

@@ -322,9 +322,23 @@ function atualizarCoupon() {
                 $.each(response.data, function (index, value) {
                     let data = `<tr>
                         <td class="">${value.discount}</td>
-                        <td class="">${value.name}<br><span class="subdescription font-size-12">${value.plans}</span></td>
-                        <td class="">${value.value}</td>
-                        <td class="">${value.code}</td>
+
+                        <td class="">${value.name}<br>
+                            <span class="subdescription font-size-12">
+                                ${value.plans}
+                            </span>
+                        </td>
+
+                        <td class="">
+                            ${value.value}
+                        </td>
+                        ${console.log(value.value)}
+
+                        <td class="">
+                            ${value.code}
+                        </td>
+
+
                         <td class="" style="vertical-align: middle; text-align:center">
                             <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
                         </td>
@@ -332,13 +346,17 @@ function atualizarCoupon() {
 
 
                         <td class="mg-responsive text-right" style="line-height: 1;">
+
                             <div class="d-flex justify-content-end align-items-right" style="margin-right:-10px">
-                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" discount="${
-                                    value.discount
-                                }" coupon="${value.id}"><span class=""><img src='/build/global/img/icon-eye.svg'/></span> </a>
-                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${
-                                    value.id
-                                }"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
+
+                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" discount="${value.discount}" coupon="${value.id}">
+                                    <span class=""><img src='/build/global/img/icon-eye.svg'/></span>
+                                </a>
+
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id }">
+                                    <span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span>
+                                </a>
+
                             </div>
                         </td>
 

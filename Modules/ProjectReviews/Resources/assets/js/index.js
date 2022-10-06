@@ -164,7 +164,7 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         data = `
                         <tr>
-                            <td>
+                            <td class="ellipsis-text">
                                 <img src="${
                                     value.photo ||
                                     "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"
@@ -172,7 +172,7 @@ $(document).ready(function () {
                                 class="img-fluid rounded-circle mr-2" width="35" height="35">
                                 ${value.name}
                             </td>
-                            <td>${value.description.substring(0, 50)}...</td>
+                            <td class="ellipsis-text">${value.description.substring(0, 50)}...</td>
                             <td>
                                 <div id="stars-${value.id}" data-score="${value.stars}"></div>
                             </td>

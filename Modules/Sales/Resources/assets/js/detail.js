@@ -378,11 +378,11 @@ $(() => {
         }
         $("#payment-type").text(
             "Pagamento via " +
-                paymentMethod +
-                " em " +
-                sale.start_date +
-                " às " +
-                sale.hours
+            paymentMethod +
+            " em " +
+            sale.start_date +
+            " às " +
+            sale.hours
         );
         if (sale.release_date != "") {
             $("#release-date").text("Data de liberação: " + sale.release_date);
@@ -406,8 +406,8 @@ $(() => {
         status.html("");
         status.append(
             '<img style="width: 50px;" src="/build/global/img/cartoes/' +
-                sale.flag +
-                '.png">'
+            sale.flag +
+            '.png">'
         );
 
         switch (sale.status) {
@@ -428,7 +428,7 @@ $(() => {
                 break;
             case 4:
                 status.append(
-                    "<span class='ml-2 badge badge-danger'>Chargeback</span>"
+                    "<span class='ml-2 badge badge-chargeback'>Chargeback</span>"
                 );
                 break;
             case 6:
@@ -474,8 +474,8 @@ $(() => {
             default:
                 status.append(
                     "<span class='ml-2 badge badge-primary'>" +
-                        sale.status +
-                        "</span>"
+                    sale.status +
+                    "</span>"
                 );
                 break;
         }
@@ -500,7 +500,7 @@ $(() => {
         $("#taxas-installment-free-label, #taxa-installment-value").hide();
         if (
             parseFloat(sale.installment_tax_value.replace(/[^\d]/g, "")) !==
-                0 &&
+            0 &&
             sale.user_sale_type == "producer"
         ) {
             $("#taxa-installment-value").html(sale.installment_tax_value);
@@ -583,17 +583,17 @@ $(() => {
             sale.tax
                 ? sale.checkout_tax
                     ? "Taxas (" +
-                      sale.tax +
-                      " + " +
-                      sale.transaction_tax +
-                      " + " +
-                      sale.checkout_tax +
-                      "): "
+                    sale.tax +
+                    " + " +
+                    sale.transaction_tax +
+                    " + " +
+                    sale.checkout_tax +
+                    "): "
                     : "Taxas (" +
-                      sale.tax +
-                      " + " +
-                      sale.transaction_tax +
-                      "): "
+                    sale.tax +
+                    " + " +
+                    sale.transaction_tax +
+                    "): "
                 : "Taxas"
         );
 
@@ -722,8 +722,8 @@ $(() => {
                     .show()
                     .html(
                         "<h4 class='table-title'>Venda realizada pelo afiliado " +
-                            sale.affiliate +
-                            "</h4>"
+                        sale.affiliate +
+                        "</h4>"
                     );
                 $(".div-user-type-comission-value")
                     .show()
@@ -868,29 +868,29 @@ $(() => {
             if (sale.payment_method != 2) {
                 $("#div_refund").html(
                     '<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' +
-                        sale.id +
-                        ">Estornar transação</button>"
+                    sale.id +
+                    ">Estornar transação</button>"
                 );
             } else {
                 $("#div_refund").html(
                     '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' +
-                        sale.id +
-                        ">Estornar boleto</button>"
+                    sale.id +
+                    ">Estornar boleto</button>"
                 );
             }
         } else if (sale.already_refunded) {
             $("#div_refund").html(
                 '<a href="/sales/' +
-                    sale.id +
-                    '/refundreceipt" class="btn btn-sm btn-primary" target="_blank" style="color:white">Comprovante de estorno</a>'
+                sale.id +
+                '/refundreceipt" class="btn btn-sm btn-primary" target="_blank" style="color:white">Comprovante de estorno</a>'
             );
         }
 
         if (sale.status == 7 || sale.status == 22) {
             $("#div_refund_receipt").html(
                 '<a href="/sales/' +
-                    sale.id +
-                    '/refundreceipt" class="btn btn-sm btn-primary" target="_blank" style="color:white">Comprovante de estorno</a>'
+                sale.id +
+                '/refundreceipt" class="btn btn-sm btn-primary" target="_blank" style="color:white">Comprovante de estorno</a>'
             );
         } else {
             $("#div_refund_receipt").html("");
@@ -1012,8 +1012,8 @@ $(() => {
                     : "Enviado para Notazz";
                 let link = invoice.pdf
                     ? "<a href='" +
-                      invoice.pdf +
-                      "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
+                    invoice.pdf +
+                    "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
                     : "";
                 let data = `
                     <tr>
@@ -1038,7 +1038,7 @@ $(() => {
                         </td>
 
                     </tr>`
-                ;
+                    ;
                 $("#data-notazz-invoices").append(data);
             }
 
@@ -1096,8 +1096,8 @@ $(() => {
             if (invoice.date_canceled) {
                 let link = invoice.pdf
                     ? "<a href='" +
-                      invoice.pdf +
-                      "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
+                    invoice.pdf +
+                    "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
                     : "";
                 let data = `<tr>
                                 <td>
@@ -1239,7 +1239,7 @@ $(() => {
                         <p class="sm-text text-muted">${value.amount}x</p>
                     </div>
                 </div>`
-            ;
+                ;
 
             if (
                 typeof value.custom_products != "undefined" &&
@@ -1343,7 +1343,7 @@ $(() => {
                     status = "<span class='ml-2 badge badge-danger'>Recusada</span>"
                     break;
                 case 4:
-                    status = "<span class='ml-2 badge badge-danger'>Chargeback</span>"
+                    status = "<span class='ml-2 badge badge-chargeback'>Chargeback</span>"
                     break;
                 case 6:
                     status = "<span class='ml-2 badge badge-primary'>Em análise</span>"
@@ -1407,7 +1407,7 @@ $(() => {
                         </td>
 
                     </tr>`
-                ;
+                    ;
 
                 $("#div_tracking_code").css("display", "block");
                 $("#data-tracking-products").append(data);

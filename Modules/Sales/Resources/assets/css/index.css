@@ -37,8 +37,9 @@
     color: #41dc8f !important;
 }
 
-.badge.badge-danger {
-    background-color: #ebebeb;
+.badge-chargeback {
+    color: #FFFFFF;
+    background: #2E85EC;
 }
 
 .status-sale {
@@ -314,7 +315,7 @@ li.select2-selection__choice {
 }
 
 .table thead > tr > td:first-child, .table thead > tr > th:last-child {
-    -webkit-border-radius: 0px 4px 0px 0px !important;
+    -webkit-border-radius: 15px 4px 0px 0px !important;
 }
 
 .table-detail{

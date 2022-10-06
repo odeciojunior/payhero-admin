@@ -47,11 +47,11 @@ $('.company-navbar').change(function () {
             },
         }
     });
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.getProjects(data2,'company-navbar');
+    updateCompanyDefault().done(function (data1) {
+        getCompaniesAndProjects().done(function (data2) {
+            window.getProjects(data2, 'company-navbar');
         });
-	});
+    });
 });
 
 window.atualizar = function (link = null) {
@@ -96,8 +96,8 @@ window.atualizar = function (link = null) {
             $("#tabela_vendas").addClass("table-striped");
             $("#dados_tabela").html(
                 "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                    $("#dados_tabela").attr("img-empty") +
-                    "'>Nenhuma venda encontrada</td></tr>"
+                $("#dados_tabela").attr("img-empty") +
+                "'>Nenhuma venda encontrada</td></tr>"
             );
             errorAjaxResponse(response);
         },
@@ -108,91 +108,85 @@ window.atualizar = function (link = null) {
             let statusArray = {
                 1: "success",
                 6: "primary",
-                7: "danger",
+                7: "disable", //ESTORNADO
                 8: "warning",
-                4: "danger",
+                4: "dispute", //CHARGEBACK
                 3: "danger",
                 2: "pendente",
                 12: "success",
                 20: "antifraude",
-                22: "danger",
+                22: "disable", //ESTORNADO
                 23: "warning",
                 24: "antifraude",
             };
 
             if (!isEmpty(response.data)) {
                 $.each(response.data, function (index, value) {
+
+                    console.log(value.status + "  " + statusArray[value.status]);
+
                     let start_date = "";
                     if (value.start_date) {
                         start_date = value.start_date.split(/\s/g); //data inicial
-                        start_date = start_date[0] + " <br> <small class='gray'>" + start_date[1] + " </small>";
+                        start_date = start_date[0] + " <br> <span class='subdescription font-size-12'>" + start_date[1] + " </span>";
                     }
                     let end_date = "";
                     if (value.end_date) {
                         end_date = value.end_date.split(/\s/g); //data final
-                        end_date = end_date[0] + " <br> <small class='gray'>" + end_date[1] + " </small>";
+                        end_date = end_date[0] + " <br> <span class='subdescription font-size-12'>" + end_date[1] + " </span>";
                     }
                     dados = `  <tr>
                                 <td class='display-sm-none display-m-none display-lg-none text-center text-left'>
                                     ${value.sale_code}
-                                    ${
-                                        value.upsell
-                                            ? '<span class="text-muted font-size-10">(Upsell)</span>'
-                                            : ""
-                                    }
+                                    ${value.upsell
+                            ? '<span class="text-muted font-size-10">(Upsell)</span>'
+                            : ""
+                        }
                                 </td>
-                                <td class="text-left">${
-                                    value.project
-                                }</td>
-                                <td class="text-left">${
-                                    value.product
-                                }${
-                        value.affiliate != null &&
-                        value.user_sale_type == "producer"
+
+                                <td class="text-left ellipsis-text">${value.project
+                        }</td>
+
+                                <td class="text-left ellipsis-text">${value.product
+                        }${value.affiliate != null &&
+                            value.user_sale_type == "producer"
                             ? `<br><small>(Afiliado: ${value.affiliate})</small>`
                             : ""
-                    }</td>
-                                <td class='display-sm-none display-m-none display-lg-none text-left'>${
-                                    value.client
-                                }</td>
+                        }</td>
+                                <td class='display-sm-none display-m-none display-lg-none text-left ellipsis-text'>${value.client
+                        }</td>
                                 <td>
-                                    <img src='/build/global/img/cartoes/${
-                                        value.brand
-                                    }.png'  style='width: 45px'>
+                                    <img src='/build/global/img/cartoes/${value.brand
+                        }.png'  style='width: 45px'>
                                 </td>
                                 <td>
-                                   <div class="d-flex align-items-center">
-                                        <span class="badge badge-${
-                                            statusArray[value.status]
-                                        } ${
-                        value.status_translate === "Pendente"
+                                   <div class="d-flex justify-content-center">
+                                        <span class="badge badge-${statusArray[value.status]
+                        } ${value.status_translate === "Pendente"
                             ? "boleto-pending"
                             : ""
-                    }" ${
-                        value.status_translate === "Pendente"
+                        }" ${value.status_translate === "Pendente"
                             ? 'status="' +
-                              value.status_translate +
-                              '" sale="' +
-                              value.id_default +
-                              '"'
+                            value.status_translate +
+                            '" sale="' +
+                            value.id_default +
+                            '"'
                             : ""
-                    }>${value.status_translate}</span>
-                                           ${
-                                               value.is_chargeback_recovered &&
-                                               value.status_translate ===
-                                                   "Aprovado"
-                                                   ? `
+                        }>${value.status_translate}</span>
+                                           ${value.is_chargeback_recovered &&
+                            value.status_translate ===
+                            "Aprovado"
+                            ? `
                                             <img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
-                                                   : ""
-                                           }
+                            : ""
+                        }
                                     </div>
                                 </td>
                                 <td class='display-sm-none text-left display-m-none'>${start_date}</td>
                                 <td class='display-sm-none text-left'>${end_date}</td>
-                                <td style='white-space: nowrap' class="text-left"><b>${
-                                    value.total_paid
-                                }</b></td>
-                                <td class="text-left">
+                                <td style='white-space: nowrap' class="text-left"><b>${value.total_paid
+                        }</b></td>
+                                <td class="text-left ellipsis-text">
                                     ${value.reason_blocked}
                                 </td>
                             </tr>`;
@@ -207,8 +201,8 @@ window.atualizar = function (link = null) {
             } else {
                 $("#dados_tabela").html(
                     "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
-                        $("#dados_tabela").attr("img-empty") +
-                        "'>Nenhuma venda encontrada</td></tr>"
+                    $("#dados_tabela").attr("img-empty") +
+                    "'>Nenhuma venda encontrada</td></tr>"
                 );
             }
             pagination(response, "sales", atualizar);
@@ -291,14 +285,14 @@ function blockedResume() {
                     .attr(
                         "title",
                         "Saldo retido de convites: R$ " +
-                            response.commission_invite
+                        response.commission_invite
                     )
                     .tooltip({ placement: "bottom" });
                 $(".blocked-balance-icon")
                     .attr(
                         "data-original-title",
                         "Saldo retido de convites: R$ " +
-                            response.commission_invite
+                        response.commission_invite
                     )
                     .tooltip({ placement: "bottom" });
                 $("#total").html(
@@ -418,11 +412,11 @@ $(document).ready(function () {
         });
     }
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         window.getProjects(data);
     });
 
-    window.fillProjectsSelect = function(){
+    window.fillProjectsSelect = function () {
         return $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -463,7 +457,7 @@ $(document).ready(function () {
         });
     }
 
-    window.getProjects = function(data, origin='') {
+    window.getProjects = function (data, origin = '') {
 
         loadingOnScreen();
 
@@ -481,18 +475,18 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
             },
             success: function success(response) {
-                if(!isEmpty(response) || data.has_api_integration){
+                if (!isEmpty(response) || data.has_api_integration) {
                     $(".div-filters").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     $("#export-excel > div >").show();
                     $.each(response, function (c, project) {
-                        $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
+                        $("#project").append($("<option>", { value: project.project_id, text: project.name, }));
                     });
-                    if(data.has_api_integration)
-                        $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-                    $("#project option:first").attr('selected','selected');
-                    if(sessionStorage.info) {
+                    if (data.has_api_integration)
+                        $("#project").append($("<option>", { value: 'API-TOKEN', text: 'Vendas por API' }));
+                    $("#project option:first").attr('selected', 'selected');
+                    if (sessionStorage.info) {
                         $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
                         $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
                     }
@@ -501,8 +495,8 @@ $(document).ready(function () {
                     $(".div-filters").show();
                     loadingOnScreenRemove();
                 }
-                else{
-                    if(!isEmpty(data.company_default_projects)){
+                else {
+                    if (!isEmpty(data.company_default_projects)) {
                         $(".div-filters").hide();
                         $("#project-empty").hide();
                         $("#project-not-empty").show();
@@ -510,16 +504,16 @@ $(document).ready(function () {
                         // $.each(data.company_default_projects, function (i, project) {
                         //     $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
-                        if(data.has_api_integration)
-                            $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-                        $("#project option:first").attr('selected','selected');
-                        if( $('#select_projects option').length == 0 )
-                            $('#select_projects').next().css('display','none')
+                        if (data.has_api_integration)
+                            $("#project").append($("<option>", { value: 'API-TOKEN', text: 'Vendas por API' }));
+                        $("#project option:first").attr('selected', 'selected');
+                        if ($('#select_projects option').length == 0)
+                            $('#select_projects').next().css('display', 'none')
                         atualizar();
                         $(".div-filters").show();
                         loadingOnScreenRemove();
                     }
-                    else{
+                    else {
                         loadingOnScreenRemove();
                         $(".div-filters").hide();
                         $("#project-empty").show();
@@ -632,14 +626,14 @@ $(document).ready(function () {
                         .attr(
                             "title",
                             "Saldo bloqueado de convites: R$ " +
-                                response.commission_invite
+                            response.commission_invite
                         )
                         .tooltip({ placement: "bottom" });
                     $(".blocked-balance-icon")
                         .attr(
                             "data-original-title",
                             "Saldo bloqueado de convites: R$ " +
-                                response.commission_invite
+                            response.commission_invite
                         )
                         .tooltip({ placement: "bottom" });
                     $("#total").html(
@@ -676,7 +670,7 @@ function changeCalendar() {
                 }
             },
         })
-        .on("datepicker-change", function () {})
+        .on("datepicker-change", function () { })
         .on("datepicker-open", function () {
             $(".filter-badge-input").removeClass("show");
         })

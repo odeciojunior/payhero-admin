@@ -101,9 +101,9 @@ function atualizar(link = null) {
                     }
                     let is_security_reserve = "";
                     if (value.is_security_reserve) {
-                        is_security_reserve = `<br><label data-toggle="tooltip" title="Reserva de Segurança">
-                                                   <img width="12px" src="/build/global/img/money_lock.svg" alt="Reserva de Segurança">
-                                               </label>`;
+                        is_security_reserve = `<br><div data-toggle="tooltip" title="Reserva de Segurança">
+                                                   <img class="ml-30" width="12px" src="/build/global/img/money_lock.svg" alt="Reserva de Segurança">
+                                               </div>`;
                     }
 
                     dados = `  <tr>
@@ -557,39 +557,48 @@ $(document).ready(function () {
                         let start_date = "";
                         if (value.start_date) {
                             start_date = value.start_date.split(/\s/g); //data inicial
-                            start_date = start_date[0] + " <br> <small class='gray'>" + start_date[1] + " </small>";
+                            start_date = start_date[0] + " <br> <span class='subdescription font-size-12'>" + start_date[1] + " </span>";
                         }
 
                         let end_date = "";
                         if (value.end_date) {
                             end_date = value.end_date.split(/\s/g); //data final
-                            end_date = end_date[0] + " <br> <small class='gray font-size-12'>" + end_date[1] + " </small>";
+                            end_date = end_date[0] + " <br> <span class='subdescription font-size-12'>" + end_date[1] + " </span>";
                         }
                         let is_security_reserve = "";
                         if (value.is_security_reserve) {
-                            is_security_reserve = `<br><label data-toggle="tooltip" title="Reserva de Segurança">
-                                                       <img width="12px" src="/build/global/img/money_lock.svg" alt="Reserva de Segurança">
-                                                   </label>`;
+                            is_security_reserve = `<br><div data-toggle="tooltip" title="Reserva de Segurança">
+                                                       <img class="ml-30 "width="12px" src="/build/global/img/money_lock.svg" alt="Reserva de Segurança">
+                                                   </div>`;
                         }
 
                         dados = `  <tr>
+
                                     <td class="">
                                         ${value.sale_code}
                                         ${is_security_reserve}
                                     </td>
-                                    <td class="text-left">${value.project}</td>
-                                    <td class="text-left">${value.client}</td>
+
+                                    <td class="text-left ellipsis-text">${value.project}</td>
+
+                                    <td class="text-left ellipsis-text">${value.client}</td>
+
                                     <td class="display-sm-none display-m-none display-lg-none">
                                         <img src='/build/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
                                     </td>
+
                                     <td class="display-sm-none display-m-none display-lg-none text-left">${start_date}</td>
+
                                     <td class="text-left">${end_date}</td>
+
                                     <td><b class="font-md-size-20">${value.total_paid}</b></td>
+
                                     <td>
                                         <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span>
                                         <img src="/build/global/img/icon-eye.svg">
                                     </span></button></a>
                                     </td>
+
                                 </tr>`;
 
                         $("#body-table-pending").append(dados);

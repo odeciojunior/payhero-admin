@@ -556,21 +556,21 @@ a.label {
 
 .table thead > tr > td:first-child,
 .table thead > tr > th:first-child {
-    border-radius: 16px 0 0 0 !important;
-    -webkit-border-radius: 16px 0 0 0 !important;
-    -moz-border-radius: 16px 0 0 0 !important;
+    border-radius: 0px 0px 0px 0px !important;
+    -webkit-border-radius: 0px 0px 0px 0px !important;
+    -moz-border-radius: 0px 0px 0px 0px !important;
 }
 
 .table thead > tr > td:last-child,
 .table thead > tr > th:last-child {
-    border-radius: 0 16px 0 0 !important;
-    -webkit-border-radius: 0 16px 0 0 !important;
-    -moz-border-radius: 0 16px 0 0 !important;
+    border-radius: 0px 0px 0px 0px !important;
+    -webkit-border-radius: 0px 0px 0px 0px !important;
+    -moz-border-radius: 0px 0px 0px 0px !important;
 }
 
 .table thead > tr > td,
 .table thead > tr > th {
-    background-color: #fff !important;
+    background-color: #fbfbfb !important;
     border-top: 1px solid #f7f7f7 !important;
     border-bottom: 1px solid #f7f7f7 !important;
     /* padding: 20px 0 20px 20px !important; */
@@ -3596,7 +3596,7 @@ tbody td {
     background-color: #ffffff;
 }
 .ellipsis-text{
-    max-width: 180px;
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

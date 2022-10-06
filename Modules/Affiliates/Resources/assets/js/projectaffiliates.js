@@ -3,8 +3,8 @@ $(document).ready(function () {
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         loadOnAny('.page-content');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2
                 $("#project-affiliate").find('option').not(':first').remove();
                 $("#project-affiliate-request").find('option').not(':first').remove();
@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     var companiesAndProjects = ''
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         companiesAndProjects = data
         getProjects();
     });
@@ -28,7 +28,7 @@ $(document).ready(function () {
     };
     var badgeAffiliates = {
         1: "success",
-        2: "danger",
+        2: "disable",
     };
 
     $("#btn-filter-affiliates").on("click", function () {
@@ -55,8 +55,8 @@ $(document).ready(function () {
         }
     }
 
-    function getProjects(loading='y') {
-        if(loading=='y')
+    function getProjects(loading = 'y') {
+        if (loading == 'y')
             loadingOnScreen();
         else
             loadOnAny('.page-content');
@@ -65,14 +65,14 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?affiliate=true&status=active&company="+ $('.company-navbar').val(),
+            url: "/api/projects?affiliate=true&status=active&company=" + $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadOnAny('.page-content',true);
+                loadOnAny('.page-content', true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -115,7 +115,7 @@ $(document).ready(function () {
                         })
                     );
                 }
-                loadOnAny('.page-content',true);
+                loadOnAny('.page-content', true);
                 loadingOnScreenRemove();
             },
         });
@@ -140,7 +140,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#body-table-affiliates", ".table-affiliate");
-        $("#pagination-affiliates").children().attr("disabled","disabled");
+        $("#pagination-affiliates").children().attr("disabled", "disabled");
 
         $.ajax({
             method: "GET",
@@ -158,27 +158,36 @@ $(document).ready(function () {
                 if (response.data == "") {
                     $("#body-table-affiliates").html(
                         "<tr class='text-center'><td colspan='8' style='height: 257px; vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
-                            $("#body-table-affiliates").attr("img-empty") +
-                            "'> Nenhum afiliado encontrado</td></tr>"
+                        $("#body-table-affiliates").attr("img-empty") +
+                        "'> Nenhum afiliado encontrado</td></tr>"
                     );
                 } else {
                     $.each(response.data, function (index, value) {
+
+                        let fullData = value.date
+                        let dataParse = fullData.split(" ")
+                        let dataDay = dataParse[0]
+                        let dataTime = dataParse[1]
+
+                        console.log(dataDay);
+                        console.log(dataTime);
+
                         if (value.percentage == "" || value.percentage == "0")
                             value.percentage = "0%";
                         data = "";
                         data += "<tr>";
                         data +=
-                            '<td class="" style="vertical-align: middle;">' +
+                            '<td class="ellipsis-text" style="vertical-align: middle;">' +
                             value.name +
                             "</td>";
                         // data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
                         data +=
-                            '<td class="" style="vertical-align: middle;">' +
+                            '<td class="ellipsis-text" style="vertical-align: middle;">' +
                             value.project_name +
                             "</td>";
                         data +=
                             '<td class="" style="vertical-align: middle;">' +
-                            value.date +
+                            dataDay + '<br> <span class="subdescription font-size-12">' + dataTime + '</span> ' +
                             "</td>";
                         data +=
                             '<td class="text-center" style="vertical-align: middle;">' +
@@ -352,10 +361,10 @@ $(document).ready(function () {
                             );
                             $("#modal-show-affiliate .affiliate-status").html(
                                 '<span class="badge badge-' +
-                                    badgeAffiliates[response.data.status] +
-                                    '">' +
-                                    response.data.status_translated +
-                                    "</span>"
+                                badgeAffiliates[response.data.status] +
+                                '">' +
+                                response.data.status_translated +
+                                "</span>"
                             );
 
                             $(
@@ -433,7 +442,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#body-table-affiliate-requests", ".table-affiliate-request");
-        $("#pagination-affiliates-request").children().attr("disabled","disabled");
+        $("#pagination-affiliates-request").children().attr("disabled", "disabled");
 
         $.ajax({
             method: "GET",
@@ -451,30 +460,36 @@ $(document).ready(function () {
                 if (response.data == "") {
                     $("#body-table-affiliate-requests").html(
                         "<tr class='text-center'><td colspan='8' style='height: 257px; vertical-align: middle;'><img style='width:124px;margin-right:12px;' src='" +
-                            $("#body-table-affiliate-requests").attr(
-                                "img-empty"
-                            ) +
-                            "'>Nenhuma solicitação de afiliação encontrada</td></tr>"
+                        $("#body-table-affiliate-requests").attr(
+                            "img-empty"
+                        ) +
+                        "'>Nenhuma solicitação de afiliação encontrada</td></tr>"
                     );
                 } else {
+
                     $.each(response.data, function (index, value) {
+                        let fullData = value.date
+                        let dataParse = fullData.split(" ")
+                        let dataDay = dataParse[0]
+                        let dataTime = dataParse[1]
+
                         data = "";
                         data += "<tr>";
                         data +=
-                            '<td class="" style="vertical-align: middle;">' +
+                            '<td class="ellipsis-text" style="vertical-align: middle;">' +
                             value.name +
                             "</td>";
                         data +=
-                            '<td class="" style="vertical-align: middle;">' +
+                            '<td class="ellipsis-text" style="vertical-align: middle;">' +
                             value.email +
                             "</td>";
                         data +=
-                            '<td class="" style="vertical-align: middle;">' +
+                            '<td class="ellipsis-text" style="vertical-align: middle;">' +
                             value.project_name +
                             "</td>";
                         data +=
                             '<td class="" style="vertical-align: middle;">' +
-                            value.date +
+                            dataDay + '<br> <span class="subdescription font-size-12">' + dataTime + '</span> ' +
                             "</td>";
                         // data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td class='text-center text-nowrap'>";

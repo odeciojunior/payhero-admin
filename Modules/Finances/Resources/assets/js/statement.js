@@ -5,7 +5,7 @@ function getRequestTime(data = "") {
                         <div class="bold-mobile"> ${data.date_request} </div>`;
 
     if (!isEmpty(data.date_request_time))
-        request_date += `<small style="color: #9E9E9E; font-size: 11px"> ás ${data.date_request_time.replace(
+        request_date += `<span class="subdescription font-size-12"> ás ${data.date_request_time.replace(
             ":",
             "h"
         )} </small>`;
@@ -19,7 +19,7 @@ function getReleaseTime(data = "") {
                         <div class="bold-mobile"> ${data.date_release} </div>`;
 
     if (!isEmpty(data.date_release_time))
-        release_date += `<small style="color: #9E9E9E; font-size: 11px"> ás ${data.date_release_time.replace(
+        release_date += `<span class="subdescription font-size-12"> ás ${data.date_release_time.replace(
             ":",
             "h"
         )} </small>`;
@@ -234,7 +234,7 @@ window.updateTransfersTable = function (link = null) {
                 updateTransfersTable("?page=" + $(this).html());
             });
         }
-        
+
         if (response.meta.last_page != "1") {
             let ultima_pagina =
                 "<button id='ultima_pagina' class='btn nav-btn mr-0'>" + response.meta.last_page + "</button>";

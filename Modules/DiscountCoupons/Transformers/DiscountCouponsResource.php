@@ -34,7 +34,7 @@ class DiscountCouponsResource extends JsonResource
                         : 'R$' . str_replace(".", ",", $prog_rules[0]["value"]);
                 $rules_description =
                     $value .
-                    '<br><span class="small-text">' .
+                    '<br><span class="subdescription font-size-12">' .
                     $rule .
                     $prog_rules[0]["qtde"] .
                     " ite" .
@@ -59,7 +59,7 @@ class DiscountCouponsResource extends JsonResource
                 }
 
                 $rules_description =
-                    count($prog_rules) . ' regras<br><span class="small-text">descontos em ' . $type . "</span>";
+                    count($prog_rules) . ' regras<br><span class="subdescription font-size-12">descontos em ' . $type . "</span>";
             }
         } else {
             if ($this->type == 0) {
@@ -69,7 +69,7 @@ class DiscountCouponsResource extends JsonResource
             }
             if ($this->rule_value > 0) {
                 $rules_description .=
-                    '<br><span class="small-text"> a partir de R$' .
+                    '<br><span class="subdescription font-size-12"> a partir de R$' .
                     number_format($this->rule_value / 100, 2, ",", ".") .
                     "</span>";
             } else {
@@ -77,7 +77,7 @@ class DiscountCouponsResource extends JsonResource
             }
         }
 
-        $code_description = '<br><span class="small-text">%</span>';
+        $code_description = '<br><span class="subdescription font-size-12">%</span>';
         if (!empty($this->expires)) {
             $expires = date("d/m/Y", strtotime($this->expires));
             $verb = "vence";

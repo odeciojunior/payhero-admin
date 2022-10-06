@@ -91,7 +91,7 @@ $(() => {
                                        <td class="text-center">${
                                            rule.active_flag
                                                ? `<span class="badge badge-success">Ativo</span>`
-                                               : `<span class="badge badge-danger">Desativado</span>`
+                                               : `<span class="badge badge-disable">Desativado</span>`
                                        }</td>
                                        <td>
                                             <div class='d-flex justify-content-end align-items-center'>
