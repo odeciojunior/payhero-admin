@@ -268,68 +268,76 @@ class PipefyService
     public function updateCardUserinformations(User $user)
     {
         try {
-            $userInformations = $user->userInformations()->first();
-            $fieldsApi = "";
-            foreach (self::$FIELD_API_USER_INFORMATIONS as $api => $field) {
-                if ($api == "nome") {
-                    if (!empty($userInformations->monthly_income) && $userInformations->monthly_income > 0) {
-                        $valueMonthlyIncome = number_format($userInformations->monthly_income, "0", ",", ".");
-                        $fieldsApi .=
-                            '{fieldId: \\"' .
-                            $api .
-                            '\\", value: \\"' .
-                            $valueMonthlyIncome .
-                            " - " .
-                            $user->$field .
-                            '\\"} ';
-                    }
-                } elseif (
-                    !empty($userInformations->$field) &&
-                    $api != "qual_e_commerce_voc_usa_hoje" &&
-                    $api != "como_conheceu_a_cloudfox" &&
-                    $api != "qual_seu_nicho_de_atua_o"
-                ) {
-                    $fieldsApi .= '{fieldId: \\"' . $api . '\\", value: \\"' . $userInformations->$field . '\\"} ';
-                } elseif (
-                    !empty($userInformations->$field) &&
-                    ($api == "qual_e_commerce_voc_usa_hoje" ||
-                        $api == "qual_seu_nicho_de_atua_o" ||
-                        $api == "como_conheceu_a_cloudfox")
-                ) {
-                    $options = self::$FIELD_MODEL_CLOUDFOX_LABEL_API[$field];
-                    $values = "[ ";
-                    foreach ($options as $modelAtribute => $optionLabel) {
-                        $selected = json_decode($userInformations->$field);
-                        foreach ($selected as $option => $select) {
-                            if ($option == $modelAtribute && $select == 1) {
-                                $values .= '\\"' . $optionLabel . '\\",';
+            $pipefyCardDataLocal = empty($user->pipefy_card_data) ? [] : json_decode($user->pipefy_card_data, true);
+            if (
+                empty($pipefyCardDataLocal["pipe_id"]) ||
+                (!empty($pipefyCardDataLocal["pipe_id"]) && $pipefyCardDataLocal["pipe_id"] == $this->idBoard)
+            ) {
+                $userInformations = $user->userInformations()->first();
+                $fieldsApi = "";
+                foreach (self::$FIELD_API_USER_INFORMATIONS as $api => $field) {
+                    if ($api == "nome") {
+                        if (!empty($userInformations->monthly_income) && $userInformations->monthly_income > 0) {
+                            $valueMonthlyIncome = number_format($userInformations->monthly_income, "0", ",", ".");
+                            $fieldsApi .=
+                                '{fieldId: \\"' .
+                                $api .
+                                '\\", value: \\"' .
+                                $valueMonthlyIncome .
+                                " - " .
+                                $user->$field .
+                                '\\"} ';
+                        }
+                    } elseif (
+                        !empty($userInformations->$field) &&
+                        $api != "qual_e_commerce_voc_usa_hoje" &&
+                        $api != "como_conheceu_a_cloudfox" &&
+                        $api != "qual_seu_nicho_de_atua_o"
+                    ) {
+                        $fieldsApi .= '{fieldId: \\"' . $api . '\\", value: \\"' . $userInformations->$field . '\\"} ';
+                    } elseif (
+                        !empty($userInformations->$field) &&
+                        ($api == "qual_e_commerce_voc_usa_hoje" ||
+                            $api == "qual_seu_nicho_de_atua_o" ||
+                            $api == "como_conheceu_a_cloudfox")
+                    ) {
+                        $options = self::$FIELD_MODEL_CLOUDFOX_LABEL_API[$field];
+                        $values = "[ ";
+                        foreach ($options as $modelAtribute => $optionLabel) {
+                            $selected = json_decode($userInformations->$field);
+                            foreach ($selected as $option => $select) {
+                                if ($option == $modelAtribute && $select == 1) {
+                                    $values .= '\\"' . $optionLabel . '\\",';
+                                }
                             }
                         }
+                        $values .= " ]";
+                        $fieldsApi .= '{fieldId: \\"' . $api . '\\", value: ' . $values . "} ";
                     }
-                    $values .= " ]";
-                    $fieldsApi .= '{fieldId: \\"' . $api . '\\", value: ' . $values . "} ";
                 }
-            }
 
-            $pipefyCardId = $user->pipefy_card_id;
+                $pipefyCardId = $user->pipefy_card_id;
 
-            $graphql =
-                "mutation {updateFieldsValues(  input: { nodeId: " .
-                $pipefyCardId .
-                ", values:[ " .
-                $fieldsApi .
-                " ]  }),{ success userErrors{ message }} }";
-            $response = $this->request($graphql);
-            if (!empty($response->getBody())) {
-                $pipefyCard = json_decode($response->getBody());
-                if (isset($pipefyCard->errors)) {
-                    return false;
+                $graphql =
+                    "mutation {updateFieldsValues(  input: { nodeId: " .
+                    $pipefyCardId .
+                    ", values:[ " .
+                    $fieldsApi .
+                    " ]  }),{ success userErrors{ message }} }";
+                $response = $this->request($graphql);
+                if (!empty($response->getBody())) {
+                    $pipefyCard = json_decode($response->getBody());
+                    if (isset($pipefyCard->errors)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 } else {
-                    return true;
+                    return false;
                 }
-            } else {
-                return false;
+                return true;
             }
+
             return true;
         } catch (Exception $e) {
             report($e);
@@ -340,65 +348,72 @@ class PipefyService
     public function updateCardLabel(User $user, array $labels, $pipefyPipe = null)
     {
         try {
-            $pipefyCardId = $user->pipefy_card_id;
             $pipefyCardDataLocal = empty($user->pipefy_card_data) ? [] : json_decode($user->pipefy_card_data, true);
-            $pipefyCardDataLocal["pipe_id"] = empty($pipefyPipe) ? $this->idBoard : $pipefyPipe;
-            $status = false;
-            foreach ($labels as $label) {
-                if (!empty($pipefyCardDataLocal["labels"])) {
-                    foreach ($pipefyCardDataLocal["labels"] as $dataLocal) {
-                        if ($dataLocal != $label) {
-                            $status = true;
-                        } else {
-                            $status = false;
-                            break;
-                        }
-                    }
-                } else {
-                    $status = true;
-                }
-            }
-
-            if ($status) {
-                $graphqlLabels = "{ card(id: " . $pipefyCardId . "){ labels{ id } } }";
-                $response = $this->request($graphqlLabels);
-                $pipefyCard = json_decode($response->getBody());
-                foreach ($pipefyCard->data->card->labels as $label) {
-                    array_unshift($labels, $label->id);
-                }
-
-                $labels = array_unique($labels);
-
-                $data = "[";
+            if (
+                empty($pipefyCardDataLocal["pipe_id"]) ||
+                (!empty($pipefyCardDataLocal["pipe_id"]) && $pipefyCardDataLocal["pipe_id"] == $this->idBoard)
+            ) {
+                $pipefyCardId = $user->pipefy_card_id;
+                $pipefyCardDataLocal = empty($user->pipefy_card_data) ? [] : json_decode($user->pipefy_card_data, true);
+                $pipefyCardDataLocal["pipe_id"] = empty($pipefyPipe) ? $this->idBoard : $pipefyPipe;
+                $status = false;
                 foreach ($labels as $label) {
-                    $data .= '\\"' . $label . '\\", ';
-                }
-                $data .= "]";
-
-                $graphql =
-                    "mutation { updateCard( input: { id: " .
-                    $pipefyCardId .
-                    ", label_ids: " .
-                    $data .
-                    " }, ),{  card { id title  }} }";
-
-                $response = $this->request($graphql);
-                if (!empty($response->getBody())) {
-                    $pipefyCard = json_decode($response->getBody());
-                    if (isset($pipefyCard->errors)) {
-                        return false;
-                    } elseif (!empty($pipefyCard->data->updateCard->card->id)) {
-                        $dataLocal = ["labels" => $labels];
-                        $dataLocal = array_merge($dataLocal, ["pipe" => $pipefyCardDataLocal["pipe_id"]]);
-                        if (!empty($pipefyCardDataLocal["phase"])) {
-                            $dataLocal = array_merge($dataLocal, ["phase" => $pipefyCardDataLocal["phase"]]);
+                    if (!empty($pipefyCardDataLocal["labels"])) {
+                        foreach ($pipefyCardDataLocal["labels"] as $dataLocal) {
+                            if ($dataLocal != $label) {
+                                $status = true;
+                            } else {
+                                $status = false;
+                                break;
+                            }
                         }
-                        $user->pipefy_card_data = json_encode($dataLocal);
-                        $user->save();
+                    } else {
+                        $status = true;
                     }
-                } else {
-                    return false;
                 }
+
+                if ($status) {
+                    $graphqlLabels = "{ card(id: " . $pipefyCardId . "){ labels{ id } } }";
+                    $response = $this->request($graphqlLabels);
+                    $pipefyCard = json_decode($response->getBody());
+                    foreach ($pipefyCard->data->card->labels as $label) {
+                        array_unshift($labels, $label->id);
+                    }
+
+                    $labels = array_unique($labels);
+
+                    $data = "[";
+                    foreach ($labels as $label) {
+                        $data .= '\\"' . $label . '\\", ';
+                    }
+                    $data .= "]";
+
+                    $graphql =
+                        "mutation { updateCard( input: { id: " .
+                        $pipefyCardId .
+                        ", label_ids: " .
+                        $data .
+                        " }, ),{  card { id title  }} }";
+
+                    $response = $this->request($graphql);
+                    if (!empty($response->getBody())) {
+                        $pipefyCard = json_decode($response->getBody());
+                        if (isset($pipefyCard->errors)) {
+                            return false;
+                        } elseif (!empty($pipefyCard->data->updateCard->card->id)) {
+                            $dataLocal = ["labels" => $labels];
+                            $dataLocal = array_merge($dataLocal, ["pipe" => $pipefyCardDataLocal["pipe_id"]]);
+                            if (!empty($pipefyCardDataLocal["phase"])) {
+                                $dataLocal = array_merge($dataLocal, ["phase" => $pipefyCardDataLocal["phase"]]);
+                            }
+                            $user->pipefy_card_data = json_encode($dataLocal);
+                            $user->save();
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+                return true;
             }
             return true;
         } catch (Exception $e) {
@@ -410,42 +425,58 @@ class PipefyService
     public function moveCardToPhase(User $user, $phase, $pipefyPipe = null)
     {
         try {
-            $pipefyCardId = $user->pipefy_card_id;
             $pipefyCardDataLocal = empty($user->pipefy_card_data) ? [] : json_decode($user->pipefy_card_data, true);
-            $pipefyCardDataLocal["pipe_id"] = empty($pipefyPipe) ? $this->idBoard : $pipefyPipe;
-            if (empty($pipefyCardDataLocal["phase"])) {
-                $pipefyPhase = ["pipe_id" => $pipefyCardDataLocal["pipe_id"], "phase" => $phase];
-                $graphql =
-                    "mutation { moveCardToPhase(  input: { card_id: " .
-                    $pipefyCardId .
-                    ", destination_phase_id:" .
-                    $phase .
-                    "  }),{ card { id current_phase{ name } } } }";
-            } elseif ($pipefyCardDataLocal["phase"] != $phase) {
-                $pipefyPhase = ["pipe_id" => $pipefyCardDataLocal["pipe_id"], "phase" => $phase];
-                $graphql =
-                    "mutation { moveCardToPhase(  input: { card_id: " .
-                    $pipefyCardId .
-                    ", destination_phase_id:" .
-                    $phase .
-                    "  }),{ card { id current_phase{ name } } } }";
-            }
-
-            if (!empty($graphql)) {
-                $response = $this->request($graphql);
-                if (!empty($response->getBody())) {
-                    $pipefyCard = json_decode($response->getBody());
-                    if (isset($pipefyCard->errors)) {
-                        return false;
-                    } elseif (!empty($pipefyCard->data->moveCardToPhase->card->current_phase->name)) {
-                        $user->pipefy_card_data = json_encode($pipefyPhase);
-                        $user->save();
+            if (
+                empty($pipefyCardDataLocal["pipe_id"]) ||
+                (!empty($pipefyCardDataLocal["pipe_id"]) && $pipefyCardDataLocal["pipe_id"] == $this->idBoard)
+            ) {
+                if (
+                    empty($pipefyCardDataLocal["phase"]) ||
+                    ((!empty($pipefyCardDataLocal["phase"]) &&
+                        $pipefyCardDataLocal["phase"] != self::PHASE_ACTIVE_AND_SELLING) ||
+                        $phase == self::PHASE_REFUSED_DOCUMENT)
+                ) {
+                    $pipefyCardId = $user->pipefy_card_id;
+                    $pipefyCardDataLocal = empty($user->pipefy_card_data)
+                        ? []
+                        : json_decode($user->pipefy_card_data, true);
+                    $pipefyCardDataLocal["pipe_id"] = empty($pipefyPipe) ? $this->idBoard : $pipefyPipe;
+                    if (empty($pipefyCardDataLocal["phase"])) {
+                        $pipefyPhase = ["pipe_id" => $pipefyCardDataLocal["pipe_id"], "phase" => $phase];
+                        $graphql =
+                            "mutation { moveCardToPhase(  input: { card_id: " .
+                            $pipefyCardId .
+                            ", destination_phase_id:" .
+                            $phase .
+                            "  }),{ card { id current_phase{ name } } } }";
+                    } elseif ($pipefyCardDataLocal["phase"] != $phase) {
+                        $pipefyPhase = ["pipe_id" => $pipefyCardDataLocal["pipe_id"], "phase" => $phase];
+                        $graphql =
+                            "mutation { moveCardToPhase(  input: { card_id: " .
+                            $pipefyCardId .
+                            ", destination_phase_id:" .
+                            $phase .
+                            "  }),{ card { id current_phase{ name } } } }";
                     }
-                } else {
-                    return false;
+
+                    if (!empty($graphql)) {
+                        $response = $this->request($graphql);
+                        if (!empty($response->getBody())) {
+                            $pipefyCard = json_decode($response->getBody());
+                            if (isset($pipefyCard->errors)) {
+                                return false;
+                            } elseif (!empty($pipefyCard->data->moveCardToPhase->card->current_phase->name)) {
+                                $user->pipefy_card_data = json_encode($pipefyPhase);
+                                $user->save();
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    return true;
                 }
             }
-
             return true;
         } catch (Exception $e) {
             report($e);

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\User;
@@ -34,6 +35,10 @@ class PipefyUpdateCard extends Command
     public function handle()
     {
         if (FoxUtils::isProduction()) {
+            DB::table("users")
+                ->whereNotNull("pipefy_card_id")
+                ->update(["pipefy_card_data" => null]);
+
             //Criar todos os Cards que não foram criados desde do dia 1 de setempro
             $users = User::whereNull("pipefy_card_id")
                 ->where("created_at", ">=", "2022-09-01 00:00:00")
@@ -74,12 +79,14 @@ class PipefyUpdateCard extends Command
                 }
             }
 
+            $this->checkDocumentUser();
+
             dd("Finalizado");
             exit();
 
             //        $this->createCardFailt();
             //        $this->updateCardInformation();
-            //        $this->checkDocumentUser();
+            $this->checkDocumentUser();
         }
     }
 
@@ -92,49 +99,45 @@ class PipefyUpdateCard extends Command
         foreach ($users->cursor() as $user) {
             if ($user->total_commission_value > 0) {
                 if ($user->total_commission_value < 10000000) {
-                    $pipefyService->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_0_100k]);
+                    (new PipefyService())->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_0_100k]);
                 } elseif ($user->total_commission_value < 100000000) {
-                    $pipefyService->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_100k_1M]);
+                    (new PipefyService())->updateCardLabel($user, [
+                        PipefyService::LABEL_SALES_BETWEEN_0_100k,
+                        PipefyService::LABEL_SALES_BETWEEN_100k_1M,
+                    ]);
                 } elseif ($user->total_commission_value < 1000000000) {
-                    $pipefyService->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_1M_10M]);
+                    (new PipefyService())->updateCardLabel($user, [
+                        PipefyService::LABEL_SALES_BETWEEN_0_100k,
+                        PipefyService::LABEL_SALES_BETWEEN_100k_1M,
+                        PipefyService::LABEL_SALES_BETWEEN_1M_10M,
+                    ]);
                 } elseif ($user->total_commission_value < 2500000000) {
-                    $pipefyService->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_10M_25M]);
+                    (new PipefyService())->updateCardLabel($user, [
+                        PipefyService::LABEL_SALES_BETWEEN_0_100k,
+                        PipefyService::LABEL_SALES_BETWEEN_100k_1M,
+                        PipefyService::LABEL_SALES_BETWEEN_1M_10M,
+                        PipefyService::LABEL_SALES_BETWEEN_10M_25M,
+                    ]);
                 } elseif ($user->total_commission_value < 5000000000) {
-                    $pipefyService->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_25M_50M]);
+                    (new PipefyService())->updateCardLabel($user, [
+                        PipefyService::LABEL_SALES_BETWEEN_0_100k,
+                        PipefyService::LABEL_SALES_BETWEEN_100k_1M,
+                        PipefyService::LABEL_SALES_BETWEEN_1M_10M,
+                        PipefyService::LABEL_SALES_BETWEEN_10M_25M,
+                        PipefyService::LABEL_SALES_BETWEEN_25M_50M,
+                    ]);
                 } elseif ($user->total_commission_value >= 5000000000) {
-                    $pipefyService->updateCardLabel($user, [PipefyService::LABEL_SALES_OVER_50M]);
+                    (new PipefyService())->updateCardLabel($user, [
+                        PipefyService::LABEL_SALES_BETWEEN_0_100k,
+                        PipefyService::LABEL_SALES_BETWEEN_100k_1M,
+                        PipefyService::LABEL_SALES_BETWEEN_1M_10M,
+                        PipefyService::LABEL_SALES_BETWEEN_10M_25M,
+                        PipefyService::LABEL_SALES_BETWEEN_25M_50M,
+                        PipefyService::LABEL_SALES_OVER_50M,
+                    ]);
                 }
             }
         }
-    }
-
-    public function createCardFailt()
-    {
-        $pipefyService = new PipefyService();
-        $usersNews = User::where("total_commission_value", ">", "20000000")
-            ->orderBy("created_at", "DESC")
-            ->limit(7)
-            ->get();
-        foreach ($usersNews as $teste) {
-            $pipefyService->createCardUser($teste);
-        }
-    }
-
-    public function updateCardInformation()
-    {
-        $pipefyService = new PipefyService();
-
-        $users = User::whereNotNull("users.pipefy_card_id");
-
-        $total = $users->count();
-        $bar = $this->output->createProgressBar($total);
-        $bar->start();
-        foreach ($users->cursor() as $user) {
-            $pipefyService->updateCardUserinformations($user);
-            $pipefyService->updateAssignee($user);
-            $bar->advance();
-        }
-        $bar->finish();
     }
 
     public function checkDocumentUser()
@@ -216,6 +219,35 @@ class PipefyUpdateCard extends Command
         $bar->finish();
     }
 
+    public function createCardFailt()
+    {
+        $pipefyService = new PipefyService();
+        $usersNews = User::where("total_commission_value", ">", "20000000")
+            ->orderBy("created_at", "DESC")
+            ->limit(7)
+            ->get();
+        foreach ($usersNews as $teste) {
+            $pipefyService->createCardUser($teste);
+        }
+    }
+
+    public function updateCardInformation()
+    {
+        $pipefyService = new PipefyService();
+
+        $users = User::whereNotNull("users.pipefy_card_id");
+
+        $total = $users->count();
+        $bar = $this->output->createProgressBar($total);
+        $bar->start();
+        foreach ($users->cursor() as $user) {
+            $pipefyService->updateCardUserinformations($user);
+            $pipefyService->updateAssignee($user);
+            $bar->advance();
+        }
+        $bar->finish();
+    }
+
     public function checkFirstSale()
     {
         $pipefyService = new PipefyService();
@@ -228,6 +260,7 @@ class PipefyUpdateCard extends Command
             ->get();
 
         foreach ($users as $user) {
+            $pipefyService->moveCardToPhase($user, PipefyService::PHASE_ACTIVE);
             $pipefyService->moveCardToPhase($user, PipefyService::PHASE_ACTIVE_AND_SELLING);
         }
     }
