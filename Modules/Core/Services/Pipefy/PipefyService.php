@@ -363,8 +363,10 @@ class PipefyService
                     $graphqlLabels = "{ card(id: " . $pipefyCardId . "){ labels{ id } } }";
                     $response = $this->request($graphqlLabels);
                     $pipefyCard = json_decode($response->getBody());
-                    foreach ($pipefyCard->data->card->labels as $label) {
-                        array_unshift($labels, $label->id);
+                    if (!empty($pipefyCard->data->card->labels)) {
+                        foreach ($pipefyCard->data->card->labels as $label) {
+                            array_unshift($labels, $label->id);
+                        }
                     }
 
                     $labels = array_unique($labels);
