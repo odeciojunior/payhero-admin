@@ -327,19 +327,13 @@ class TrackingService
             }
         });
 
-        $productPlanSales->leftJoin("transactions as t", function ($q) use ($companyId) {
-            $q->on("t.sale_id", "s.id")
-                ->where("t.company_id", $companyId)
-                ->where("t.status_enum", "!=", 5)
-                ->whereNull("t.deleted_at");
-        });
-
-        $productPlanSales->whereNotNull("t.id");
-
         //filtro transactions
         if (!empty($filters["transaction_status"])) {
-            $productPlanSales->join("transactions as tr", function ($join) use ($filters) {
-                $join->on("tr.sale_id", "=", "s.id")->whereNull("tr.deleted_at");
+            $productPlanSales->join("transactions as t", function ($join) use ($companyId, $filters) {
+                $join
+                    ->on("t.sale_id", "=", "s.id")
+                    ->where("t.company_id", $companyId)
+                    ->whereNull("t.deleted_at");
 
                 $transactionPresenter = (new Transaction())->present();
                 $filterTransaction = explode(",", $filters["transaction_status"]);
@@ -354,62 +348,52 @@ class TrackingService
                     $join
                         ->where(function ($where) use ($statusEnum) {
                             $where
-                                ->where("tr.release_date", ">", "2020-05-25") //data que começou a bloquear
-                                ->orWhere("s.is_chargeback_recovered", true);
+                                ->where("t.release_date", ">", "2020-05-25") //data que começou a bloquear
+                                ->orWhere(function ($where) {
+                                    $where
+                                        ->where("s.is_chargeback_recovered", true)
+                                        ->where("t.release_date", "<=", "2020-05-25");
+                                });
                         })
-                        ->where("tr.release_date", "<=", Carbon::now()->format("Y-m-d"))
-                        ->where("tr.tracking_required", true);
+                        ->where("t.release_date", "<=", Carbon::now()->format("Y-m-d"))
+                        ->where("t.tracking_required", true);
 
                     if (count($statusEnum) > 0) {
-                        $join->orWhereIn("tr.status_enum", $statusEnum);
+                        $join->orWhereIn("t.status_enum", $statusEnum);
                     }
                 } else {
-                    $join->whereIn("tr.status_enum", $statusEnum);
+                    $join->whereIn("t.status_enum", $statusEnum);
                 }
 
                 $join
-                    ->where("tr.type", Transaction::TYPE_PRODUCER)
-                    ->whereNull("tr.invitation_id")
-                    ->where("tr.is_waiting_withdrawal", 0)
-                    ->whereNull("tr.withdrawal_id");
-            });
-        }
-
-        if ((!empty($filters["problem"]) && $filters["problem"] == 1) || !empty($filters["tracking_code"])) {
-            $productPlanSales->join("trackings as t2", function ($q) use ($filters) {
-                $q->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
-
-                if (!empty($filters["problem"]) && $filters["problem"] == 1) {
-                    $q->whereIn("t2.system_status_enum", [
-                        Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
-                        Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
-                        Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
-                        Tracking::SYSTEM_STATUS_DUPLICATED,
-                    ]);
-                }
-
-                if (!empty($filters["tracking_code"])) {
-                    $q->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
-                }
+                    ->where("t.type", Transaction::TYPE_PRODUCER)
+                    ->whereNull("t.invitation_id")
+                    ->where("t.is_waiting_withdrawal", 0)
+                    ->whereNull("t.withdrawal_id");
             });
         } else {
-            $productPlanSales->leftJoin("trackings as t2", function ($q) use ($filters) {
-                $q->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
-
-                if (!empty($filters["problem"]) && $filters["problem"] == 1) {
-                    $q->whereIn("t2.system_status_enum", [
-                        Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
-                        Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
-                        Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
-                        Tracking::SYSTEM_STATUS_DUPLICATED,
-                    ]);
-                }
-
-                if (!empty($filters["tracking_code"])) {
-                    $q->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
-                }
+            $productPlanSales->leftJoin("transactions as t", function ($join) use ($companyId) {
+                $join->on("t.sale_id", "s.id")->where("t.company_id", $companyId);
             });
+            $productPlanSales->whereNotNull("t.id");
         }
+
+        $productPlanSales->leftJoin("trackings as t2", function ($leftJoin) use ($filters) {
+            $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
+
+            if (!empty($filters["problem"]) && $filters["problem"] == 1) {
+                $leftJoin->whereIn("t2.system_status_enum", [
+                    Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
+                    Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
+                    Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
+                    Tracking::SYSTEM_STATUS_DUPLICATED,
+                ]);
+            }
+
+            if (!empty($filters["tracking_code"])) {
+                $leftJoin->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
+            }
+        });
 
         if (!empty($filters["status"])) {
             $productPlanSales->where(function ($where) use ($filters) {
