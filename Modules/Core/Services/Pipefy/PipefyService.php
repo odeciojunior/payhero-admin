@@ -24,8 +24,8 @@ class PipefyService
     const LABEL_SALES_BETWEEN_25M_50M = 307586193; // De R$25.000.000,00 a R$50.000.000,00
     const LABEL_SALES_OVER_50M = 307588157; // Maior que R$50.000.000,00
     const LABEL_TOP_SALE = 307552829;
-    const LABEL_FACEBOOK_ADS = 307722739;
-    const LABEL_GOOGLE_ADS = 307722750;
+    const LABEL_FACEBOOK_ADS = 307722758;
+    const LABEL_GOOGLE_ADS = 307722759;
 
     const PHASE_REFUSED_DOCUMENT = 315203355; //Coluna Documento recusado
     const PHASE_ACTIVE = 315322780; //Coluna cadastro finalizados e ativos

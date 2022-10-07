@@ -40,7 +40,6 @@ class PipefyUpdateCard extends Command
                 ->get();
             foreach ($users as $user) {
                 (new PipefyService())->createCardUser($user);
-                (new PipefyService())->updateCardUserinformations($user);
             }
 
             //Atualizar todos os cards com o Label Facebook Ads ou Google Ads
@@ -57,6 +56,7 @@ class PipefyUpdateCard extends Command
                         }
                     }
                 }
+                (new PipefyService())->updateCardUserinformations($user);
                 (new PipefyService())->updateCardLabel($user, [$labelAd]);
             }
 
