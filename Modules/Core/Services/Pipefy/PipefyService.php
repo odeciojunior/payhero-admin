@@ -245,7 +245,7 @@ class PipefyService
             if (!empty($response->getBody())) {
                 $pipefyCard = json_decode($response->getBody());
                 if (isset($pipefyCard->errors)) {
-                    dd($pipefyCard->errors);
+                    //                    dd($pipefyCard->errors);
                     return false;
                 } else {
                     $user->pipefy_card_id = $pipefyCard->data->createCard->card->id;
