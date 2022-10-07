@@ -152,8 +152,9 @@ abstract class GatewayServicesAbstract
         try {
             DB::beginTransaction();
 
+            $columnBalanceName = $this->companyColumnBalance;
             $this->company->update([
-                $this->companyColumnBalance => $this->company->$this->companyColumnBalance - $value,
+                $this->companyColumnBalance => $this->company->$columnBalanceName - $value,
             ]);
 
             $withdrawal = Withdrawal::where([
@@ -250,6 +251,8 @@ abstract class GatewayServicesAbstract
                 $transactions->where("sale_id", $saleId);
             }
 
+            $columnBalanceName = $this->companyColumnBalance;
+
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
 
@@ -264,7 +267,7 @@ abstract class GatewayServicesAbstract
                 ]);
 
                 $company->update([
-                    $this->companyColumnBalance => $company->$this->companyColumnBalance + $transaction->value,
+                    $this->companyColumnBalance => $company->$columnBalanceName + $transaction->value,
                 ]);
 
                 $transaction->update([
@@ -315,7 +318,7 @@ abstract class GatewayServicesAbstract
                 ]);
 
                 $company->update([
-                    $this->companyColumnBalance => $company->vega_balance + $taxValue,
+                    $this->companyColumnBalance => $company->$columnBalanceName + $taxValue,
                 ]);
             }
 
