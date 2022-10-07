@@ -305,7 +305,6 @@ $(window).on("load", function () {
             },
             success: (response) => {
                 if (response.allowed && verifyAccountFrozen() == false) {
-                    $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
                     $("#blocked-withdrawal").hide();
                 } else {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
@@ -329,12 +328,14 @@ $(window).on("load", function () {
                 $(".btn-request-withdrawal").addClass("disabled");
             },
             success: (response) => {
-                if (response.allowed && verifyAccountFrozen() == false) {
-                    $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
+                if (response.data.check_user_biometry == false) {
                     $("#blocked-unico").hide();
                 } else {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-unico").show();
+
+                    $(".bt-sacar").attr("disabled","disabled");
+                    $("#custom-input-addon").attr("disabled","disabled");
                 }
             },
         });

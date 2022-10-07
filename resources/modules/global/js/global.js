@@ -67,6 +67,7 @@ $(document).ready(function () {
             });
 
             $("#new-register-first-page").fadeIn();
+
         } else {
             $(".new-register-overlay").fadeOut(400, function () {
                 changeNewRegisterLayoutOnWindowResize();
@@ -76,6 +77,8 @@ $(document).ready(function () {
 
     $(".init-operation-container").on("click", ".extra-informations-user", function () {
         $("#new-register-first-page").hide();
+
+
 
         $(".modal-top-btn").hide();
 
@@ -197,6 +200,7 @@ $(document).ready(function () {
 
         if (step === 1) {
             $("#new-register-first-page").show();
+
 
             $(".modal-top-btn").show();
 
@@ -1012,11 +1016,9 @@ function verifyDocumentPending()
             errorAjaxResponse(response);
         },
         success: (response) => {
-            if (response.data.account.type === "collaborator") {
-                return;
-            }
 
-            if (response.data.account.status !== "approved") {
+            if (response.data.user_account !== "approved") {
+
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
                     $('.new-register-page-open-modal-container').hide();
@@ -1040,7 +1042,7 @@ function verifyDocumentPending()
                 var card_user_info_description =
                     "Temos algumas perguntas para conhecer melhor você e seu negócio.";
 
-                if (!response.data.user.informations) {
+                if (!response.data.informations_completed) {
                     count += 1;
 
                     card_user_info_status = "extra-informations-user";
@@ -1073,9 +1075,9 @@ function verifyDocumentPending()
                 var card_company_title = "";
                 var card_company_description = "";
                 var card_company_button = "";
-                var card_company_link = response.data.company.link;
+                var card_company_link = response.data.link_company;
 
-                if (response.data.company.status == null) {
+                if (response.data.company_status == null) {
                     count += 1;
 
                     card_company_status = "redirect-to-accounts";
@@ -1086,7 +1088,7 @@ function verifyDocumentPending()
                         "Na Cloudfox você pode ter uma ou mais empresas.";
                     card_company_button = "";
                 } else {
-                    if (response.data.company.status == "pending") {
+                    if (response.data.company_status == "pending") {
                         count += 1;
 
                         card_company_status = "status-info";
@@ -1100,7 +1102,7 @@ function verifyDocumentPending()
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Enviar documentos</button>';
-                    } else if (response.data.company.status == "analyzing") {
+                    } else if (response.data.company_status == "analyzing") {
                         count += 1;
 
                         card_company_status =
@@ -1111,20 +1113,10 @@ function verifyDocumentPending()
                             "Estamos analisando seus documentos da sua empresa";
                         card_company_description =
                             "Esse processo de revisão leva um tempinho. Mas em breve retornaremos.";
-                        if (
-                            response.data.company.address_document !==
-                                "pending" &&
-                            response.data.company.contract_document !==
-                                "pending"
-                        ) {
-                            card_company_button = "";
-                        } else {
-                            card_company_button =
-                                '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                                card_company_link +
-                                '">Enviar documentos</button>';
-                        }
-                    } else if (response.data.company.status == "refused") {
+
+                        card_company_button = "";
+
+                    } else if (response.data.company_status == "refused") {
                         count += 1;
 
                         card_company_status = "status-error";
@@ -1138,7 +1130,7 @@ function verifyDocumentPending()
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Reenviar documentos</button>';
-                    } else if (response.data.company.status == "approved") {
+                    } else if (response.data.company_status == "approved") {
                         card_company_status =
                             "status-check redirect-to-accounts";
                         card_company_icon =
@@ -1173,11 +1165,10 @@ function verifyDocumentPending()
                 var card_user_biometry_title = "";
                 var card_user_biometry_description = "";
                 var card_user_biometry_button = "";
-                var card_user_biometry_link = response.data.user.biometry_status;
+                var card_user_biometry_link = "/personal-info";
 
-                response.data.user.biometry_status = "approved";
 
-                if (response.data.user.biometry_status === "pending" || response.data.user.biometry_status === "") {
+                if (response.data.user_status === "pending" || response.data.user_status === "") {
                     count += 1;
 
                     card_user_biometry_status = "redirect-to-accounts";
@@ -1190,7 +1181,7 @@ function verifyDocumentPending()
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                     card_user_biometry_link +
                         '">Ir para configurações</button>';
-                } else if (response.data.user.biometry_status === "analazying") {
+                } else if (response.data.user_status === "analyzing") {
                     count += 1;
 
                     card_user_biometry_status = "status-warning redirect-to-accounts";
@@ -1199,7 +1190,7 @@ function verifyDocumentPending()
                     card_user_biometry_title = "Estamos analisando sua identidade";
                     card_user_biometry_description =
                         "O processo de revisão dos dados biométricos e seu comprovante de residência leva um tempinho. Em breve retornaremos!";
-                }else if (response.data.user.biometry_status == "refused") {
+                } else if (response.data.user_status == "refused") {
                     count += 1;
 
                     card_user_biometry_status = "status-error";
@@ -1212,7 +1203,7 @@ function verifyDocumentPending()
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                         card_user_biometry_link +
                         '">Ir para configurações</button>';
-                } else if (response.data.user.biometry_status == "approved") { //
+                } else if (response.data.user_status === "approved") { //
                     card_user_biometry_status = "status-check redirect-to-accounts";
                     card_user_biometry_icon =
                         '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
@@ -1249,7 +1240,9 @@ function verifyDocumentPending()
                                 ? " itens pendentes"
                                 : " item pendente") +
                             ")"
-                    );
+                    ).promise().done(function(){
+                        $('.alert-pendings').css('display','inline-flex')
+                    });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
 
@@ -1520,8 +1513,6 @@ function loadNewRegisterSavedData() {
 
 function saveNewRegisterData() {
     const newRegisterData = {
-        document: JSON.parse(localStorage.getItem("verifyAccount")).user.document,
-        email: JSON.parse(localStorage.getItem("verifyAccount")).user.email,
         niche: JSON.stringify({
             others: $("div[data-step-1-value=others]").attr("data-step-1-selected"),
             classes: $("div[data-step-1-value=classes]").attr("data-step-1-selected"),
@@ -1875,7 +1866,7 @@ function buildModalBonusBalance(bonusObject) {
             <img class="bonus-illustration-1" src="../../../../../../build/global/img/svg/bonus-illustration-1.svg" alt=""/>
 
             <div class="bonus-text">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center" style="width: 100%">
                     <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: 10px 0;">
                         <path d="M15.125 0C17.3687 0 19.1875 1.81884 19.1875 4.0625C19.1875 4.86819 18.953 5.6191 18.5484 6.25068L21.6875 6.25C22.5504 6.25 23.25 6.94955 23.25 7.8125V12.1875C23.25 12.943 22.7138 13.5733 22.0012 13.7185L22 20.9375C22 23.1038 20.3044 24.8741 18.168 24.9936L17.9375 25H6.0625C3.89621 25 2.12594 23.3044 2.00643 21.168L2 20.9375L2.00006 13.7188C1.28683 13.574 0.75 12.9434 0.75 12.1875V7.8125C0.75 6.94955 1.44956 6.25 2.3125 6.25L5.45157 6.25068C5.04704 5.6191 4.8125 4.86819 4.8125 4.0625C4.8125 1.81884 6.63134 0 8.875 0C10.1319 0 11.2555 0.57083 12.0007 1.46739C12.7445 0.57083 13.8681 0 15.125 0ZM11.0625 13.7487H3.875V20.9375C3.875 22.0852 4.75889 23.0265 5.88309 23.1178L6.0625 23.125H11.0625V13.7487ZM20.125 13.7487H12.9375V23.125H17.9375C19.0852 23.125 20.0265 22.2411 20.1178 21.1169L20.125 20.9375V13.7487ZM11.0625 8.125H2.625V11.875L11.0625 11.8737V8.125ZM21.375 11.875V8.125H12.9375V11.8737L21.375 11.875ZM15.125 1.875C13.9169 1.875 12.9375 2.85438 12.9375 4.0625V6.24875H15.155L15.3044 6.24275C16.4286 6.15149 17.3125 5.21022 17.3125 4.0625C17.3125 2.85438 16.3331 1.875 15.125 1.875ZM8.875 1.875C7.66688 1.875 6.6875 2.85438 6.6875 4.0625C6.6875 5.21022 7.57139 6.15149 8.69559 6.24275L8.845 6.24875H11.0625V4.0625L11.0552 3.88309C10.964 2.75889 10.0227 1.875 8.875 1.875Z" fill="#FF4E05"/>
                     </svg>

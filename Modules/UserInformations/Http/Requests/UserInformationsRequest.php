@@ -14,7 +14,7 @@ class UserInformationsRequest extends FormRequest
     public function rules()
     {
         return [
-            "document" => "required",
+
         ];
     }
 
