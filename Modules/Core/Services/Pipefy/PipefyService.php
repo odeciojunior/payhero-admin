@@ -176,18 +176,14 @@ class PipefyService
                     " ] }) { clientMutationId card { id title } } }";
 
                 $response = $this->request($graphql);
+                $response = json_decode($response->getBody());
 
-                if (!empty($response->getBody())) {
-                    $pipefyCard = json_decode($response->getBody());
-                    //                dd($pipefyCard);
-                    if (isset($pipefyCard->errors)) {
-                        return false;
-                    } else {
-                        $user->pipefy_card_id = $pipefyCard->data->createCard->card->id;
-                        $user->pipefy_card_data = json_encode($pipefyCardDataLocal);
-                        $user->save();
-                        return true;
-                    }
+                if (empty($response->errors)) {
+                    $pipefyCard = $response;
+                    $user->pipefy_card_id = $pipefyCard->data->createCard->card->id;
+                    $user->pipefy_card_data = json_encode($pipefyCardDataLocal);
+                    $user->save();
+                    return true;
                 } else {
                     return false;
                 }
@@ -241,19 +237,14 @@ class PipefyService
                 " ] }) { clientMutationId card { id title } } }";
 
             $response = $this->request($graphql);
+            $response = json_decode($response->getBody());
 
-            if (!empty($response->getBody())) {
-                $pipefyCard = json_decode($response->getBody());
-                if (isset($pipefyCard->errors)) {
-                    //                    dd($pipefyCard->errors);
-                    return false;
-                } else {
-                    $user->pipefy_card_id = $pipefyCard->data->createCard->card->id;
-                    $user->pipefy_card_data = json_encode($pipefyCardDataLocal);
-                    $user->save();
-
-                    return true;
-                }
+            if (empty($response->errors)) {
+                $pipefyCard = $response;
+                $user->pipefy_card_id = $pipefyCard->data->createCard->card->id;
+                $user->pipefy_card_data = json_encode($pipefyCardDataLocal);
+                $user->save();
+                return true;
             } else {
                 return false;
             }
@@ -325,17 +316,13 @@ class PipefyService
                     $fieldsApi .
                     " ]  }),{ success userErrors{ message }} }";
                 $response = $this->request($graphql);
-                if (!empty($response->getBody())) {
-                    $pipefyCard = json_decode($response->getBody());
-                    if (isset($pipefyCard->errors)) {
-                        return false;
-                    } else {
-                        return true;
-                    }
+                $response = json_decode($response->getBody());
+
+                if (empty($response->errors)) {
+                    return true;
                 } else {
                     return false;
                 }
-                return true;
             }
 
             return true;
@@ -396,19 +383,16 @@ class PipefyService
                         " }, ),{  card { id title  }} }";
 
                     $response = $this->request($graphql);
-                    if (!empty($response->getBody())) {
-                        $pipefyCard = json_decode($response->getBody());
-                        if (isset($pipefyCard->errors)) {
-                            return false;
-                        } elseif (!empty($pipefyCard->data->updateCard->card->id)) {
-                            $dataLocal = ["labels" => $labels];
-                            $dataLocal = array_merge($dataLocal, ["pipe" => $pipefyCardDataLocal["pipe_id"]]);
-                            if (!empty($pipefyCardDataLocal["phase"])) {
-                                $dataLocal = array_merge($dataLocal, ["phase" => $pipefyCardDataLocal["phase"]]);
-                            }
-                            $user->pipefy_card_data = json_encode($dataLocal);
-                            $user->save();
+                    $response = json_decode($response->getBody());
+
+                    if (empty($response->errors)) {
+                        $dataLocal = ["labels" => $labels];
+                        $dataLocal = array_merge($dataLocal, ["pipe" => $pipefyCardDataLocal["pipe_id"]]);
+                        if (!empty($pipefyCardDataLocal["phase"])) {
+                            $dataLocal = array_merge($dataLocal, ["phase" => $pipefyCardDataLocal["phase"]]);
                         }
+                        $user->pipefy_card_data = json_encode($dataLocal);
+                        $user->save();
                     } else {
                         return false;
                     }
@@ -461,14 +445,11 @@ class PipefyService
 
                     if (!empty($graphql)) {
                         $response = $this->request($graphql);
-                        if (!empty($response->getBody())) {
-                            $pipefyCard = json_decode($response->getBody());
-                            if (isset($pipefyCard->errors)) {
-                                return false;
-                            } elseif (!empty($pipefyCard->data->moveCardToPhase->card->current_phase->name)) {
-                                $user->pipefy_card_data = json_encode($pipefyPhase);
-                                $user->save();
-                            }
+                        $response = json_decode($response->getBody());
+
+                        if (empty($response->errors)) {
+                            $user->pipefy_card_data = json_encode($pipefyPhase);
+                            $user->save();
                         } else {
                             return false;
                         }
