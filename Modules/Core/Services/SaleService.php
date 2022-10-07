@@ -283,8 +283,10 @@ class SaleService
                               sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
                               sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
                 )
-            )
-            ->first()
+                );
+                \Log::info(__FUNCTION__);
+                \Log::info(str_replace_array('?',$resume->getBindings(),$resume->toSql()));
+                $resume = $resume->first()
             ->toArray();
 
         $resume["commission"] = number_format($resume["commission"], 2, ",", ".");
