@@ -7,20 +7,23 @@
 
     <div class="page">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
-        <div style="display: none !important;" class="page-header container">
-            <div class="row align-items-center justify-content-between" style="min-height:50px">
+        <div class="page-header container">
+            <div class="row align-items-center justify-content-between"
+                 style="min-height:50px">
                 <div class="col-6">
                     <h1 class="page-title">Aplicativos</h1>
                 </div>
             </div>
         </div>
-        <div id="project-not-empty"
-             style="display: none !important;">
+        <div>
             <div class="page-content container"
                  style="padding-top: 0">
-                <div class="row">
+                <div class="row loading-container"></div>
+                <div class="row"
+                     id="project-not-empty"
+                     style="display: none !important;">
                     <div
                          class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch div-notazz-integration">
                         <div class="card app-integration"

@@ -536,8 +536,8 @@ function loadingSkeletonCards(elementAppend) {
     const loadingHtml =
         '<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 card-skeleton-loading">' +
         '    <div class="card">' +
-        '        <div class="d-flex justify-content-center pt-30">' +
-        '            <div class="skeleton-loading card-loading-img-top"></div>' +
+        '        <div class="d-flex justify-content-center">' +
+        '            <div class="skeleton-loading card-skeleton-loading-img-top" style="border-radius: 0;"></div>' +
         "        </div>" +
         '        <div class="card-body">' +
         '            <div class="skeleton-loading mt-3" style="width: 80%; height: 20px;"></div>' +

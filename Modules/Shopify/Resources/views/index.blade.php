@@ -14,10 +14,9 @@
     <!-- Page -->
     <div class="page">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
-        <div style="display: none !important;"
-             class="page-header container">
+        <div class="page-header container">
             <div class="row jusitfy-content-between"
                  style="min-height:56px">
                 <div class="col-lg-8  align-items-center">
@@ -42,7 +41,7 @@
                     </a>
                     <a data-toggle="modal"
                        id="button-information"
-                       data-target='#modal_explicacao'
+                       data-target="#modal_explicacao"
                        class="btn btn-floating"
                        style="background-color: #2E85EC;position: relative;float: right;color: white; display:none;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-question-1 white font-size-30"

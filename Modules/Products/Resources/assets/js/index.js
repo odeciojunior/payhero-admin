@@ -1,19 +1,18 @@
 jQuery(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $("#type-products").find('option').not(':first').remove();
-        loadOnAny('.page-content');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
+        $("#type-products").find("option").not(":first").remove();
+        showLoadingSkeleton();
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
                 renderSiriusSelect("#type-products");
-                $("#select-projects-1").find('option').remove();
-                $("#select-projects-2").find('option').remove();
+                $("#select-projects-1").find("option").remove();
+                $("#select-projects-2").find("option").remove();
                 $("#projects-list select").prop("disabled", true).addClass("disabled");
                 $("#projects-list, .box-projects").addClass("d-none");
-                localStorage.removeItem('page')
-                localStorage.removeItem('filtersApplied')
-                getProjects('n');
+                localStorage.removeItem("page");
+                localStorage.removeItem("filtersApplied");
+                getProjects("n");
             });
         });
     });
@@ -42,24 +41,19 @@ jQuery(function () {
 
     let storeTypeProduct = () => {
         if (localStorage.getItem("filtersApplied")) {
-            let getProductValue = JSON.parse(
-                localStorage.getItem("filtersApplied")
-            );
+            let getProductValue = JSON.parse(localStorage.getItem("filtersApplied"));
             return getProductValue;
         } else {
             return 0;
         }
     };
 
-    function getProjects(loading='y') {
-        if(loading=='y')
-            loadingOnScreen();
-        else
-            loadOnAny('.page-content');
+    function getProjects(loading = "y") {
+        showLoadingSkeleton();
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&status=active&company="+ $('.company-navbar').val(),
+            url: "/api/projects?select=true&status=active&company=" + $(".company-navbar").val(),
             data: {
                 status: "active",
             },
@@ -69,8 +63,6 @@ jQuery(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadOnAny('.page-content',true);
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -82,19 +74,18 @@ jQuery(function () {
                     } else {
                         $("#div-create").show();
                     }
-                    if (response.data != 'api sales') {
+                    if (response.data != "api sales") {
                         $.each(appsList, function (index, value) {
-                            let exist_shopify = 'n';
-                            let exist_woocommerce = 'n';
+                            let exist_shopify = "n";
+                            let exist_woocommerce = "n";
                             $.each(response.data, function (index, value) {
                                 if (value.shopify) {
-                                    exist_shopify = 's';
-                                }
-                                else if (value.woocommerce) {
-                                    exist_woocommerce = 's';
+                                    exist_shopify = "s";
+                                } else if (value.woocommerce) {
+                                    exist_woocommerce = "s";
                                 }
                             });
-                            if (index == 1 && exist_shopify == 's') {
+                            if (index == 1 && exist_shopify == "s") {
                                 $("#type-products").append(
                                     $("<option>", {
                                         value: index,
@@ -102,7 +93,7 @@ jQuery(function () {
                                     })
                                 );
                             }
-                            if (index == 2 && exist_woocommerce == 's') {
+                            if (index == 2 && exist_woocommerce == "s") {
                                 $("#type-products").append(
                                     $("<option>", {
                                         value: index,
@@ -119,8 +110,7 @@ jQuery(function () {
                                         text: value.name,
                                     })
                                 );
-                            }
-                            else if (value.woocommerce) {
+                            } else if (value.woocommerce) {
                                 $("#select-projects-2").append(
                                     $("<option>", {
                                         value: value.id,
@@ -128,17 +118,16 @@ jQuery(function () {
                                     })
                                 );
                             }
-                        })
+                        });
                     }
                     handleLocalStorage();
                     updateProducts();
                 } else {
+                    removeLoadingSkeletonCards();
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                     $("#div-create").hide();
-                    loadOnAny('.page-content',true);
                 }
-                loadingOnScreenRemove();
             },
         });
     }
@@ -147,9 +136,7 @@ jQuery(function () {
         pageCurrent = link;
         let existFilters = () => {
             if (localStorage.getItem("filtersApplied") != null) {
-                let getFilters = JSON.parse(
-                    localStorage.getItem("filtersApplied")
-                );
+                let getFilters = JSON.parse(localStorage.getItem("filtersApplied"));
                 return getFilters;
             } else {
                 return null;
@@ -174,13 +161,9 @@ jQuery(function () {
             pageCurrent = parsePage.atualPage;
         }
         link = pageCurrent;
-        loadOnAny(".page-content");
-        let type =
-            existFilters() != null
-                ? existFilters().getTypeProducts
-                : $("#type-products").val();
-        let name =
-            existFilters() != null ? existFilters().getName : $("#name").val();
+        showLoadingSkeleton();
+        let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
+        let name = existFilters() != null ? existFilters().getName : $("#name").val();
         let project = "";
         if (existFilters() != null) {
             if (type == 1 && existFilters().getProject_1) {
@@ -195,23 +178,9 @@ jQuery(function () {
                 project = $("#select-projects-2 option:selected").val();
         }
         if (link == null) {
-            link =
-                "/api/products?shopify=" +
-                type +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
         } else {
-            link =
-                "/api/products" +
-                link +
-                "&shopify=" +
-                type +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/products" + link + "&shopify=" + type + "&project=" + project + "&name=" + name;
         }
         $.ajax({
             method: "GET",
@@ -222,7 +191,6 @@ jQuery(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadOnAny(".page-content", true);
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -236,41 +204,29 @@ jQuery(function () {
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
                             <div class="card shadow mb-20 mx-0" style="flex: 1 1 100%">
                                 <div style="margin: 10px 10px 0px 0px;position: absolute;right: 0px;">
-                                    <button type="button" class="menu_product" data-id="${
-                                        value.id
-                                    }">&#8942;</button>
+                                    <button type="button" class="menu_product" data-id="${value.id}">&#8942;</button>
                                 </div>
                                 <img class="card-img-top product-image pointer" src="${
                                     value.image
-                                }" alt="Imagem do produto" data-link="/products/${
-                            value.id
-                        }/edit">
+                                }" alt="Imagem do produto" data-link="/products/${value.id}/edit">
                                 ${
                                     value.type_enum == 2
                                         ? `<span class="ribbon-inner ribbon-primary" style="background-color:${
                                               badgeList[value.status_enum]
-                                          };border-radius: 0px 10px 10px 0px;"> ${
-                                              statusList[value.status_enum]
-                                          }
+                                          };border-radius: 0px 10px 10px 0px;"> ${statusList[value.status_enum]}
                                         </span>`
                                         : ""
                                 }
                                 <hr class="mt-0">
                                 <div class="card-body py-0">
                                     <h5 class="card-title">${value.name}</h5>
-                                    <h5 class="card-description">${
-                                        value.description
-                                    }</h5>
+                                    <h5 class="card-description">${value.description}</h5>
                                 </div>
                                 <div class="card-footer bg-transparent">
-                                    <p class="text-muted card-text sm">Criado em ${
-                                        value.created_at
-                                    }</p>
+                                    <p class="text-muted card-text sm">Criado em ${value.created_at}</p>
                                 </div>
                             </div>
-                            <div class="menu_product_tooltip" data-id="${
-                                value.id
-                            }">
+                            <div class="menu_product_tooltip" data-id="${value.id}">
                                 <a id="bt_editar" href="/products/${
                                     value.id
                                 }/edit" class="mx-20"><span class="o-edit-1 mr-10" />Editar produto</a>
@@ -293,9 +249,7 @@ jQuery(function () {
                     });
 
                     function closeTooltips(except = "") {
-                        $(
-                            '.menu_product_tooltip[style*="display: block"]'
-                        ).each(function (_, tooltip) {
+                        $('.menu_product_tooltip[style*="display: block"]').each(function (_, tooltip) {
                             if (except[0] == tooltip) {
                                 return;
                             }
@@ -306,9 +260,7 @@ jQuery(function () {
 
                     $(".menu_product").off("click");
                     $(".menu_product").on("click", function () {
-                        var tooltip = $(
-                            `.menu_product_tooltip[data-id="${this.dataset.id}"]`
-                        );
+                        var tooltip = $(`.menu_product_tooltip[data-id="${this.dataset.id}"]`);
                         closeTooltips(tooltip);
                         tooltip.toggle();
                     });
@@ -334,9 +286,7 @@ jQuery(function () {
                             url: "/api/products/" + this.dataset.id,
                             dataType: "json",
                             headers: {
-                                Authorization: $(
-                                    'meta[name="access-token"]'
-                                ).attr("content"),
+                                Authorization: $('meta[name="access-token"]').attr("content"),
                                 Accept: "application/json",
                             },
                             error: function (response) {
@@ -353,31 +303,19 @@ jQuery(function () {
                         });
                     });
                     $("img").on("error", function () {
-                        $(this).attr(
-                            "src",
-                            "https://cloudfox-files.s3.amazonaws.com/produto.svg"
-                        );
+                        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                     });
                     pagination(response, "products", updateProducts);
                     $(".products-is-empty").hide();
                 } else {
-                    if (
-                        localStorage.getItem("filtersApplied") != null &&
-                        localStorage.getItem("page") != null
-                    ) {
+                    if (localStorage.getItem("filtersApplied") != null && localStorage.getItem("page") != null) {
                         localStorage.removeItem("page");
                         $("#btn-filtro").trigger("click");
                     } else {
-                        $("#data-table-products, #pagination-products").html(
-                            ""
-                        );
+                        $("#data-table-products, #pagination-products").html("");
                         $(".products-is-empty").show();
                     }
                 }
-                setTimeout(() => {
-                    loadOnAny(".page-content", true);
-                }, 2000);
-                loadOnAny('.page-content',true);
             },
             complete: (response) => {
                 unlockSearch($("#btn-filtro"));
@@ -396,18 +334,10 @@ jQuery(function () {
 
     function handleLocalStorage() {
         if (localStorage.getItem("filtersApplied") != null) {
-            let parseLocalStorage = JSON.parse(
-                localStorage.getItem("filtersApplied")
-            );
-            $("#type-products")
-                .val(parseLocalStorage.getTypeProducts)
-                .trigger("change");
-            $("#select-projects-1")
-                .val(parseLocalStorage.getProject_1)
-                .trigger("change");
-            $("#select-projects-2")
-                .val(parseLocalStorage.getProject_2)
-                .trigger("change");
+            let parseLocalStorage = JSON.parse(localStorage.getItem("filtersApplied"));
+            $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
+            $("#select-projects-1").val(parseLocalStorage.getProject_1).trigger("change");
+            $("#select-projects-2").val(parseLocalStorage.getProject_2).trigger("change");
             $("#name").val(parseLocalStorage.getName);
             $("#projects-list, .box-projects").addClass("d-none");
             type = parseLocalStorage.getTypeProducts;
@@ -445,9 +375,7 @@ jQuery(function () {
                 .removeClass("disabled");
             //$("#select-projects-" + type + " .opcao-vazia").remove();
         } else {
-            $("#projects-list select")
-                .prop("disabled", true)
-                .addClass("disabled");
+            $("#projects-list select").prop("disabled", true).addClass("disabled");
             $("#projects-list").addClass("d-none");
         }
     });
@@ -468,9 +396,7 @@ jQuery(function () {
         }
 
         if ($(this).attr("data-add-url") === "/products/create/digital") {
-            $("#selected-option-desc").text(
-                "Ao selecionar produto digital, avance e preencha os dados."
-            );
+            $("#selected-option-desc").text("Ao selecionar produto digital, avance e preencha os dados.");
         }
 
         $("#selected-option-url").attr("href", $(this).attr("data-add-url"));
@@ -480,13 +406,10 @@ jQuery(function () {
 
     $("#btn-filtro").on("click", function () {
         if (
-            storeTypeProduct().getTypeProducts !=
-                $("#type-products option:selected").val() ||
+            storeTypeProduct().getTypeProducts != $("#type-products option:selected").val() ||
             storeTypeProduct().getName != $("#name").val() ||
-            storeTypeProduct().getProject_1 !=
-                $("#select-projects-1 option:selected").val() ||
-            storeTypeProduct().getProject_2 !=
-                $("#select-projects-2 option:selected").val()
+            storeTypeProduct().getProject_1 != $("#select-projects-1 option:selected").val() ||
+            storeTypeProduct().getProject_2 != $("#select-projects-2 option:selected").val()
         ) {
             if (localStorage.getItem("page") != null) {
                 let getPageStored = JSON.parse(localStorage.getItem("page"));
@@ -504,7 +427,12 @@ jQuery(function () {
         loadData();
     });
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getProjects();
     });
+
+    function showLoadingSkeleton() {
+        $("#data-table-products").empty();
+        loadingSkeletonCards($("#data-table-products"));
+    }
 });
