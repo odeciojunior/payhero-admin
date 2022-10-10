@@ -3,10 +3,10 @@ $(document).ready(function () {
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         loadOnAny('#page-integrates');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2
-                $('.company_name').val( companiesAndProjects.company_default_fullname );
+                $('.company_name').val(companiesAndProjects.company_default_fullname);
                 onlyData();
             });
         });
@@ -14,22 +14,22 @@ $(document).ready(function () {
 
     var companiesAndProjects = ''
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         companiesAndProjects = data
-        $('.company_name').val( companiesAndProjects.company_default_fullname );
+        $('.company_name').val(companiesAndProjects.company_default_fullname);
         refreshIntegrations();
         createIntegration();
     });
 
-    function onlyData(){
+    function onlyData() {
 
-        $("#content-error").css('display','none');
-        $("#content-script").css('display','none');
-        $("#card-table-integrate").css('display','none');
-        $("#pagination-integrates").css('display','none');
+        $("#content-error").css('display', 'none');
+        $("#content-script").css('display', 'none');
+        $("#card-table-integrate").css('display', 'none');
+        $("#pagination-integrates").css('display', 'none');
         $.ajax({
             method: "GET",
-            url: "/api/integrations?resume=true&page=1&company_id="+$('.company-navbar').val(),
+            url: "/api/integrations?resume=true&page=1&company_id=" + $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -37,7 +37,7 @@ $(document).ready(function () {
             },
             error: (response) => {
                 errorAjaxResponse(response);
-                loadOnAny('#page-integrates',true);
+                loadOnAny('#page-integrates', true);
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
@@ -59,7 +59,7 @@ $(document).ready(function () {
                 getIntegration();
                 refreshToken();
                 deleteIntegration();
-                loadOnAny('#page-integrates',true);
+                loadOnAny('#page-integrates', true);
             }
         });
     }
@@ -73,7 +73,7 @@ $(document).ready(function () {
         personal: 'default',
         external: 'success',
         checkout_api: 'primary'
-    }; 
+    };
     let status = {
         active: 'Ativo',
         inactive: 'Inativo',
@@ -151,12 +151,12 @@ $(document).ready(function () {
             dados = "";
             dados += "<tr>";
 
-            dados += '<td class="" style="vertical-align: middle;">';
-                dados += '<p class="description m-0">' + value.description + '</p>';
-                if (value.integration_type_enum !== 5) {
-                    dados += '<div><small class="text-muted">' + integrationTypeEnum[value.integration_type] + '</small></div>';
-                }
-                dados += '<small class="text-muted">Criada em ' + value.register_date + '</small>';
+            dados += '<td class="ellipsis-text">';
+            dados += value.description + '<br>';
+            if (value.integration_type_enum !== 5) {
+                dados += '<div><span class="subdescription font-size-12">' + integrationTypeEnum[value.integration_type] + '</span></div>';
+            }
+            dados += '<span class="subdescription font-size-12">Criada em ' + value.register_date + '</span>';
             dados += '</td>';
 
             dados += '<td style="vertical-align: middle;">';
@@ -424,7 +424,7 @@ $(document).ready(function () {
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
-            $("#pagination-integrates").css({"background":"#f4f4f4"})
+            $("#pagination-integrates").css({ "background": "#f4f4f4" })
             $("#primeira_pagina_" + model).hide();
             $("#ultima_pagina_" + model).hide();
         } else {
@@ -449,10 +449,10 @@ $(document).ready(function () {
 
                 $("#pagination-" + model).append(
                     "<button id='page_" +
-                        (response.meta.current_page - x) +
-                        "' class='btn nav-btn'>" +
-                        (response.meta.current_page - x) +
-                        "</button>"
+                    (response.meta.current_page - x) +
+                    "' class='btn nav-btn'>" +
+                    (response.meta.current_page - x) +
+                    "</button>"
                 );
 
                 $("#page_" + (response.meta.current_page - x)).on("click", function () {
@@ -475,10 +475,10 @@ $(document).ready(function () {
 
                 $("#pagination-" + model).append(
                     "<button id='page_" +
-                        (response.meta.current_page + x) +
-                        "' class='btn nav-btn'>" +
-                        (response.meta.current_page + x) +
-                        "</button>"
+                    (response.meta.current_page + x) +
+                    "' class='btn nav-btn'>" +
+                    (response.meta.current_page + x) +
+                    "</button>"
                 );
 
                 $("#page_" + (response.meta.current_page + x)).on("click", function () {

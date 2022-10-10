@@ -1,0 +1,10 @@
+.table thead > tr > td:first-child {
+    -webkit-border-radius: 16px 0px 0px 0px !important;
+}
+.table thead > tr > td:last-child {
+    -webkit-border-radius: 0px 16px 0px 0px !important;
+}
+.badge-warning {
+    background: #E81414;
+    color: #FFFFFF;
+}

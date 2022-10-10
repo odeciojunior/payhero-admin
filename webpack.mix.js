@@ -465,6 +465,7 @@ mix.styles(
         "resources/modules/global/css/table.css",
         "resources/modules/global/css/new-dashboard.css",
         "resources/modules/global/css/empty.css",
+        "Modules/Invites/Resources/assets/css/index.css",
     ],
     "public/build/layouts/invites/index.min.css"
 );

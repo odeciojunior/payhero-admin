@@ -2137,7 +2137,7 @@ tbody td {
 }
 .page-project .table thead > tr > td,
 .page-project .table thead > tr > th {
-    background-color: #ffffff !important;
+    background-color: #ffffff ;
     border-top: 1px solid #ededed !important;
     border-bottom: 1px solid #ededed !important;
 }

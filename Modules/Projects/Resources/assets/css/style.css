@@ -515,3 +515,9 @@
     background-color: #EBEBEB;
     color: #999999;
 }
+
+#divCustomDomain > table thead > tr > td,
+#divCustomDomain thead > tr > th {
+    border-top: none !important;
+    padding: 25px 16px;
+}

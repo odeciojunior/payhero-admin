@@ -308,8 +308,8 @@ $(document).ready(function () {
                 .parent()
                 .after(
                     ' <div id="div-input-priority" class="col-sm-12 col-md-5 col-lg-2 mb-3">' +
-                        '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
-                        "</div>"
+                    '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
+                    "</div>"
                 );
             $("#proxy-active").attr("disabled", true);
             $("#proxy-select ").val("0").change();
@@ -471,7 +471,7 @@ $(document).ready(function () {
                                 Authorization: $('meta[name="access-token"]').attr("content"),
                                 Accept: "application/json",
                             },
-                            error: function (response) {},
+                            error: function (response) { },
                             success: function (response) {
                                 alertCustom("success", response.message);
                             },
@@ -511,7 +511,7 @@ $(document).ready(function () {
 
                                 <!-- Trigger -->
                                 <button class="btn copy-data col-2" data-clipboard-target="#copy-data-${index}">
-                                    <span class="material-icons icon-copy-1"> content_copy </span>
+                                    <span><img src="/build/global/img/icon-copy-b.svg"/></span>
                                 </button>
                         </div>
                     </td>`;
