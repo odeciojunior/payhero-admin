@@ -143,8 +143,12 @@ abstract class GatewayServicesAbstract
     public function existsBankAccountApproved()
     {
         //verifica se existe uma conta bancaria aprovada
-        $this->companyBankAccount = $this->company->getDefaultBankAccount();
-        return !empty($this->companyBankAccount);
+        $companyBankAccount = $this->company->getDefaultBankAccount()??null;
+        if(empty($companyBankAccount)){
+            return false;
+        }
+        $this->companyBankAccount = $companyBankAccount;
+        return true;
     }
 
     public function createWithdrawal($value)
