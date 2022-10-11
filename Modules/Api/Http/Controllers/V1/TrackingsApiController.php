@@ -8,8 +8,10 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Modules\Api\Http\Requests\V1\TrackingsApiRequest;
 use Modules\Api\Transformers\V1\TrackingsApiResource;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Services\Api\V1\TrackingsApiService;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -32,9 +34,9 @@ class TrackingsApiController extends Controller
                 return response()->json($validator->errors()->toArray());
             }
 
-            $saleId = current(Hashids::decode($requestData['sale_id']));
+            $saleId = current(Hashids::connection("sale_id")->decode($requestData['sale_id']));
             $productId = current(Hashids::decode($requestData['product_id']));
-            $trackingCodeId = current(Hashids::decode($requestData['tracking_code']));
+            $trackingCode = $requestData['tracking_code'];
 
             $pps = ProductPlanSale::select("id")
                     ->where("sale_id", $saleId)
@@ -46,33 +48,54 @@ class TrackingsApiController extends Controller
             $trackingService = new TrackingService();
             $tracking = $trackingService
                     ->createOrUpdateTracking(
-                        $trackingCodeId,
+                        $trackingCode,
                         $pps->id,
                         true
                     );
 
             return response()->json([
-                'message' => 'Código de rastreio salvo',
+                'message' => 'Código de rastreio salvo.',
                 'data' => new TrackingsApiResource($tracking)
             ], 200);
         } catch (Exception $e) {
             report($e);
 
             return response()->json([
-                // 'message' => 'Erro ao salvar código de rastreio'
-                'message' => $e->getMessage()
+                'message' => 'Erro ao salvar código de rastreio.'
             ], 400);
         }
     }
 
-    public function getTrackings()
+    public function getTrackings(Request $request)
     {
-        //
+        try {
+            $requestData = $request->all();
+
+            $trackings = TrackingsApiService::getTrackingsQueryBuilder($requestData);
+
+            return TrackingsApiResource::collection($trackings->simplePaginate(10));
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao listar códigos de rastreio.'
+            ], 400);
+        }
     }
 
     public function showTrackings($id)
     {
-        //
+        try {
+            $trackings = TrackingsApiService::showTrackingsQueryBuilder($id);
+
+            return new TrackingsApiResource($trackings);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao listar códigos de rastreio.'
+            ], 400);
+        }
     }
 
     public function updateTrackings($id, Request $request)

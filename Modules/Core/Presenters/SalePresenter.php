@@ -298,7 +298,8 @@ class SalePresenter extends Presenter
         $productsApi = [];
         foreach ($this->productsSaleApi as $productSale) {
             $product = [];
-            $product["id"] = $productSale->item_id;
+            $product["id"] = Hashids::encode($productSale->id);
+            $product["item_id"] = $productSale->item_id;
             $product["name"] = $productSale->name;
             $product["price"] = $productSale->price;
             $product["quantity"] = $productSale->quantity;

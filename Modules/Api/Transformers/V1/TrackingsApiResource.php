@@ -15,11 +15,11 @@ class TrackingsApiResource extends JsonResource
 
         return [
             "id" => Hashids::encode($this->id),
-            "tracking_code" => $this->tracking_code,
-            "tracking_status_enum" => $this->tracking_status_enum,
-            "tracking_status" => Lang::get(
+            "code" => $this->tracking_code,
+            "status" => Lang::get(
                 "definitions.enum.tracking.tracking_status_enum." .$trackingModel->present()->getTrackingStatusEnum($this->tracking_status_enum)
             ),
+            "status_enum" => $this->tracking_status_enum
         ];
     }
 }
