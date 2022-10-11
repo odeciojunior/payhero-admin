@@ -32,6 +32,7 @@ abstract class GatewayServicesAbstract
     public $gatewayName ='Vega';
     public $companyColumnBalance='vega_balance';
     public $companyId;
+    public $gatewayHashId = 'pqbz5KZby37dLlm';
 
     public function setCompany(Company $company)
     {
@@ -373,7 +374,7 @@ abstract class GatewayServicesAbstract
                 "total_available" => $availableBalance,
                 "last_transaction" => $lastTransactionDate,
                 "pending_debt_balance" => 0,
-                "id" => "BeYEwR3AdgdKykA",
+                "id" => $this->gatewayHashId,
             ];
         });
     }

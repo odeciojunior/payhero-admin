@@ -2,8 +2,8 @@
 
 namespace Modules\Core\Services\Gateways;
 
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Abstracts\GatewayServicesAbstract;
+use Modules\Core\Entities\Gateway;
 
 class VegaService extends GatewayServicesAbstract
 {

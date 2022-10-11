@@ -16,6 +16,8 @@ class Safe2PayService extends GatewayServicesAbstract
         $this->gatewayName = 'Vega';
 
         $this->companyColumnBalance = 'vega_balance';
+
+        $this->gatewayHashId = 'BeYEwR3AdgdKykA';
     }
 
     public function getGatewayId():int

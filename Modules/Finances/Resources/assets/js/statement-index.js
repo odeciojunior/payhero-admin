@@ -332,8 +332,8 @@ $(window).on("load", function () {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-unico").show();
 
-                    $(".bt-sacar").attr("disabled","disabled");
-                    $("#custom-input-addon").attr("disabled","disabled");
+                    $(".bt-sacar").attr("disabled", "disabled");
+                    $("#custom-input-addon").attr("disabled", "disabled");
                 }
             },
         });
