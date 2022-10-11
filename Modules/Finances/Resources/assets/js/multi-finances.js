@@ -539,6 +539,7 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (response.allowed && verifyAccountFrozen() == false) {
+                    $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
                     $("#blocked-withdrawal").hide();
                 } else {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
