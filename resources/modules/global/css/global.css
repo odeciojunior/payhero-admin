@@ -1970,17 +1970,19 @@ tbody td {
 }
 
 .sirius-select-container .sirius-select-text {
+    display: flex;
+    align-items: center;
     width: 100%;
     min-height: 43.14px;
     padding: 10px 35px 12px 16px;
     background-color: #ffffff;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMC43ODEgMS4yMjUgNi4wMjggNS43OWEuNzY5Ljc2OSAwIDAgMS0xLjA1NiAwTC4yMTkgMS4yMjVhLjY5Ny42OTcgMCAwIDEgMC0xLjAxNS43NjkuNzY5IDAgMCAxIDEuMDU2IDBMNS41IDQuMjY4IDkuNzI1LjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDAgLjY5Ny42OTcgMCAwIDEgMCAxLjAxNVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPgo=);
     background-repeat: no-repeat;
-    background-position: 95% center;
+    background-position: calc(100% - 12px) center;
     border: 1px solid #e0e7ee;
     border-radius: 8px;
     font-size: 16px;
-    line-height: 20px;
+    line-height: 16px;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -3523,7 +3525,6 @@ tbody td {
     text-decoration: underline;
     color: #856404 !important;
 }
-
 
 .alert-danger {
     background: #f8d7da;
