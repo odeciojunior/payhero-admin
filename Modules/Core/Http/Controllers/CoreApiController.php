@@ -439,7 +439,9 @@ class CoreApiController extends Controller
     {
         try {
 
-            $checkUserBiometry = User::find(hashids_decode($id))->biometry_status;
+            $user = User::find(hashids_decode($id));
+            $accountOwner = User::find($user->account_owner_id);
+            $checkUserBiometry = $accountOwner->biometry_status;
 
             return response()->json(
                 [
