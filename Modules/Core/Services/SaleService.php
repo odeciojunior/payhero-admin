@@ -270,8 +270,8 @@ class SaleService
         $transactionStatus = implode(",", [
             Transaction::STATUS_PAID,
             Transaction::STATUS_TRANSFERRED,
-            Transaction::STATUS_CHARGEBACK,
-            Transaction::STATUS_REFUNDED,
+            //Transaction::STATUS_CHARGEBACK,
+            // Transaction::STATUS_REFUNDED,
         ]);
         $statusDispute = Sale::STATUS_IN_DISPUTE;
 
@@ -283,10 +283,7 @@ class SaleService
                               sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
                               sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
                 )
-                );
-                \Log::info(__FUNCTION__);
-                \Log::info(str_replace_array('?',$resume->getBindings(),$resume->toSql()));
-                $resume = $resume->first()
+            )->first()
             ->toArray();
 
         $resume["commission"] = number_format($resume["commission"], 2, ",", ".");

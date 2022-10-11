@@ -50,8 +50,7 @@ class CheckAutomaticWithdrawals extends Command
 
     public function handle()
     {
-        $withdrawalsSettings = WithdrawalSettings::
-            whereNull("deleted_at")
+        $withdrawalsSettings = WithdrawalSettings::whereNull("deleted_at")
             ->orderBy("id", "DESC")
             ->get();
 
@@ -65,16 +64,21 @@ class CheckAutomaticWithdrawals extends Command
                 $company = Company::find($settings->company_id);
 
                 //It only generates the automatic withdrawal if the account is active
-                if ($company->user->status == User::STATUS_ACTIVE) {
-
+                if (
+                    $company->user->status == User::STATUS_ACTIVE &&
+                    $company->user->biometry_status == User::BIOMETRY_STATUS_APPROVED
+                ) {
                     foreach ($this->defaultGateways as $gatewayClass) {
                         $gatewayService = new $gatewayClass();
                         $gatewayService->setCompany($company);
 
                         $availableBalance = $gatewayService->getAvailableBalance();
                         $pendingBalance = $gatewayService->getPendingBalance();
-
-                        (new CompanyService())->applyBlockedBalance($gatewayService, $availableBalance, $pendingBalance);
+                        (new CompanyService())->applyBlockedBalance(
+                            $gatewayService,
+                            $availableBalance,
+                            $pendingBalance
+                        );
 
                         $withdrawalValue = $this->getAvailableBalance($settings, $availableBalance);
 
