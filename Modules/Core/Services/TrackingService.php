@@ -356,8 +356,8 @@ class TrackingService
                                 });
                         })
                         ->where("t.release_date", "<=", Carbon::now()->format("Y-m-d"))
-                        ->where("t.tracking_required", true);
-
+                        ->where("t.tracking_required", true)
+                        ->where("t.status_enum", Transaction::STATUS_PAID);
                     if (count($statusEnum) > 0) {
                         $join->orWhereIn("t.status_enum", $statusEnum);
                     }
@@ -432,7 +432,7 @@ class TrackingService
             ->where(function ($where) {
                 $where->whereNotNull("p.id")->orWhereNotNull("psa.id");
             });
-
+        \Log::debug(builder2sql($productPlanSales));
         return $productPlanSales;
     }
 
