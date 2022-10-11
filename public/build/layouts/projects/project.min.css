@@ -1968,7 +1968,7 @@ input[type="text"] {
 
 .adjust-select {
     /* height: 49px !important; */
-    width: 126px !important;
+    width: 120px !important;
 }
 
 #coupon-modals .sirius-select-text {
@@ -1979,7 +1979,9 @@ input[type="text"] {
 .check-pad {
     margin-left: 4px !important;
 }
-
+.mCustomScrollBox {
+    padding-right: 18px;
+}
 input::placeholder {
     color: #b2b2b2;
 }
