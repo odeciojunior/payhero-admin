@@ -1142,7 +1142,8 @@ $(() => {
 
             //Tabela de produtos Tracking Code
             if ((value.sale_status == 1 || value.sale_status == 4) && sale.delivery_id != "") {
-                let data = `<tr>
+                if (value.type_enum == 1) {
+                    let data = `<tr>
                                 <td>
                                     <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
                                     <span class='small ellipsis'>${value.name}</span>
@@ -1157,8 +1158,9 @@ $(() => {
                                     <span class='small'>${value.tracking_created_at}</span>
                                 </td>
                             </tr>`;
-                $("#div_tracking_code").css("display", "block");
-                $("#data-tracking-products").append(data);
+                    $("#div_tracking_code").css("display", "block");
+                    $("#data-tracking-products").append(data);
+                }
             } else {
                 $("#div_tracking_code").css("display", "none");
             }
@@ -1233,13 +1235,8 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    function refundedClick(
-        refundedValue = 0,
-        refundObservation,
-        refundUrl,
-        partial = 0
-    ) {
-        $(".btn-confirm-refund-transaction").prop('disabled', true);
+    function refundedClick(refundedValue = 0, refundObservation, refundUrl, partial = 0) {
+        $(".btn-confirm-refund-transaction").prop("disabled", true);
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -1256,19 +1253,19 @@ $(() => {
             },
             error: (response) => {
                 loadingOnScreenRemove();
-                $("#modal-refund-transaction").modal('toggle')
+                $("#modal-refund-transaction").modal("toggle");
                 errorAjaxResponse(response);
                 //atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop("disabled", false);
             },
             success: (response) => {
                 loadingOnScreenRemove();
-                $("#modal-refund-transaction").modal('toggle')
+                $("#modal-refund-transaction").modal("toggle");
                 alertCustom("success", response.message);
                 $("#refund-observation-transaction").val("");
 
-                if(window.location.pathname.includes('finances')){
-                    $('#bt_filtro').trigger('click');
+                if (window.location.pathname.includes("finances")) {
+                    $("#bt_filtro").trigger("click");
                 }
 
                 atualizar(currentPage);
