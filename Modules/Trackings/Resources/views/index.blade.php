@@ -276,7 +276,7 @@
                                         class="form-control select-pad applySelect2">
                                     <option value="">Todos</option>
                                     <option value="transfered">Transferido</option>
-                                    <option value="pending">Pendente</option>
+                                    <option value="paid">Pendente</option>
                                     <option value="blocked">Não transferido por falta de rastreio</option>
                                 </select>
                             </div>

@@ -346,15 +346,6 @@ class TrackingService
 
                 if (in_array("blocked", $filterTransaction)) {
                     $join
-                        ->where(function ($where) use ($statusEnum) {
-                            $where
-                                ->where("t.release_date", ">", "2020-05-25") //data que começou a bloquear
-                                ->orWhere(function ($where) {
-                                    $where
-                                        ->where("s.is_chargeback_recovered", true)
-                                        ->where("t.release_date", "<=", "2020-05-25");
-                                });
-                        })
                         ->where("t.release_date", "<=", Carbon::now()->format("Y-m-d"))
                         ->where("t.tracking_required", true)
                         ->where("t.status_enum", Transaction::STATUS_PAID);
@@ -364,19 +355,20 @@ class TrackingService
                 } else {
                     $join->whereIn("t.status_enum", $statusEnum);
                 }
-
-                $join
-                    ->where("t.type", Transaction::TYPE_PRODUCER)
-                    ->whereNull("t.invitation_id")
-                    ->where("t.is_waiting_withdrawal", 0)
-                    ->whereNull("t.withdrawal_id");
             });
         } else {
             $productPlanSales->leftJoin("transactions as t", function ($join) use ($companyId) {
+                $join->whereIn("t.status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED]);
                 $join->on("t.sale_id", "s.id")->where("t.company_id", $companyId);
             });
             $productPlanSales->whereNotNull("t.id");
         }
+
+        $productPlanSales
+            ->where("t.type", Transaction::TYPE_PRODUCER)
+            ->whereNull("t.invitation_id")
+            ->where("t.is_waiting_withdrawal", 0)
+            ->whereNull("t.withdrawal_id");
 
         $productPlanSales->leftJoin("trackings as t2", function ($leftJoin) use ($filters) {
             $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
@@ -432,7 +424,6 @@ class TrackingService
             ->where(function ($where) {
                 $where->whereNotNull("p.id")->orWhereNotNull("psa.id");
             });
-        \Log::debug(builder2sql($productPlanSales));
         return $productPlanSales;
     }
 
