@@ -306,11 +306,11 @@ $(window).on("load", function () {
             success: (response) => {
                 if (response.allowed && verifyAccountFrozen() == false) {
                     $("#blocked-withdrawal").hide();
+                    checkUserBimetry();
                 } else {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-withdrawal").show();
                 }
-                checkUserBimetry();
             },
 
         });
