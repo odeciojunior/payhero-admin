@@ -37,6 +37,25 @@ class PipefyUpdateCard extends Command
     public function handle()
     {
         if (FoxUtils::isProduction()) {
+            //Atualizar todos os cards com o Label Facebook Ads ou Google Ads
+            $users = User::whereNotNull("pipefy_card_id")->where("created_at", ">=", "2022-09-01 00:00:00");
+            foreach ($users->cursor() as $user) {
+                if (!empty($user->utm_srcs)) {
+                    $utmSrcs = json_decode($user->utm_srcs, true);
+                    if (!empty($utmSrcs["utm_source"])) {
+                        if ($utmSrcs["utm_source"] == "google_ads") {
+                            $labelAd = PipefyService::LABEL_GOOGLE_ADS;
+                            (new PipefyService())->updateCardLabel($user, [$labelAd]);
+                        } elseif ($utmSrcs["utm_source"] == "facebook_ads") {
+                            $labelAd = PipefyService::LABEL_FACEBOOK_ADS;
+                            (new PipefyService())->updateCardLabel($user, [$labelAd]);
+                        }
+                    }
+                }
+            }
+
+            dd("Finalizado atualização das TAGs");
+
             //Criar Card no Pipe Gerenciamento 100k ou monitoriamento -100k (Apenas para os usuários que não estão no pipefy)
             $users = User::whereNotNull("users.total_commission_value")
                 ->whereNull("users.pipefy_card_id")

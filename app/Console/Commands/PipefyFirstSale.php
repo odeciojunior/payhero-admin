@@ -59,6 +59,8 @@ class PipefyFirstSale extends Command
                     $phase = json_decode($user->pipefy_card_data);
                     if (!empty($phase->phase) && $phase->phase == PipefyService::PHASE_ACTIVE_AND_SELLING) {
                         (new PipefyService())->updateCardLabel($user, [PipefyService::LABEL_WITHOUT_SELLING, $labelAd]); //30 dias sem vender
+                    } elseif (!empty($labelAd)) {
+                        (new PipefyService())->updateCardLabel($user, [$labelAd]);
                     }
                 } elseif ($user->total_sale > 0) {
                     (new PipefyService())->moveCardToPhase($user, PipefyService::PHASE_ACTIVE_AND_SELLING);
