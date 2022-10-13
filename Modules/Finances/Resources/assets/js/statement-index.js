@@ -306,13 +306,16 @@ $(window).on("load", function () {
             success: (response) => {
                 if (response.allowed && verifyAccountFrozen() == false) {
                     $("#blocked-withdrawal").hide();
+                    checkUserBimetry();
                 } else {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-withdrawal").show();
                 }
             },
         });
+    }
 
+    function checkUserBimetry() {
         $.ajax({
             url: "/api/core/verify-biometry/" + $('meta[name="user-id"]').attr("content"),
             dataType: "json",
@@ -327,6 +330,7 @@ $(window).on("load", function () {
             },
             success: (response) => {
                 if (response.data.check_user_biometry == false) {
+                    $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
                     $("#blocked-unico").hide();
                 } else {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
