@@ -294,7 +294,8 @@
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
                                 <label for="tracking_problem"
                                        class='mb-10 mr-5'>Problemas com o código</label>
-                                <label class="switch">
+                                <label class="switch"
+                                       style="margin-bottom: 50px !important;">
                                     <input type="checkbox"
                                            id='tracking_problem'
                                            name="tracking_problem"
