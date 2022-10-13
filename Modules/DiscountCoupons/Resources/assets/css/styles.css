@@ -107,18 +107,21 @@ input[type="text"] {
 }
 
 .adjust-select {
-    height: 49px !important;
-    width: 128px !important;
+    /* height: 49px !important; */
+    width: 120px !important;
 }
 
 #coupon-modals .sirius-select-text {
     height: 49px !important;
+    line-height: 32px;
 }
 
 .check-pad {
     margin-left: 4px !important;
 }
-
+.mCustomScrollBox {
+    padding-right: 18px;
+}
 input::placeholder {
     color: #b2b2b2;
 }
