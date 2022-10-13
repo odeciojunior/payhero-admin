@@ -3,7 +3,6 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use Spatie\Activitylog\Traits\LogsActivity;
 use App\Traits\PaginatableTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +13,7 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyPresenter;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class Company
@@ -72,7 +72,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $pix_key_situation
  * @property string|null $installment_tax
  * @property string|null $checkout_tax
- //* @property string|null $extra_document
+ * //* @property string|null $extra_document
  * @property string|null $id_wall_date_update
  * @property string|null $transaction_tax
  * @property int $block_checkout
@@ -116,7 +116,7 @@ class Company extends Model
     public const GATEWAY_TAX_30 = 4.9;
 
     public const DEMO_ID = 1;
-    public const DEMO_HASH_ID = 'v2RmA83EbZPVpYB';
+    public const DEMO_HASH_ID = "v2RmA83EbZPVpYB";
 
     public const SITUACTION_ACTIVE = 1;
     public const SITUACTION_SUSPENDED = 2;
@@ -180,7 +180,7 @@ class Company extends Model
         "situation",
         "created_at",
         "updated_at",
-        "deleted_at"
+        "deleted_at",
     ];
 
     protected $casts = [
@@ -275,6 +275,11 @@ class Company extends Model
         return $this->hasMany("Modules\Core\Entities\GatewaysBackofficeRequests");
     }
 
+    public function companyBalance(): BelongsTo
+    {
+        return $this->belongsTo("Modules\Core\Entities\CompanyBalance");
+    }
+
     public function getDefaultBankAccount()
     {
         return $this->companyBankAccounts
@@ -295,16 +300,16 @@ class Company extends Model
     {
         //PF
         if ($this->company_type == self::PHYSICAL_PERSON) {
-            return 'Aprovado';
+            return "Aprovado";
         }
 
         //PJ
-        if ($this->statusCompanyJuridicalPerson() == 'refused') {
-            return 'Recusado';
-        } elseif ($this->statusCompanyJuridicalPerson() == 'approved') {
-            return 'Aprovado';
+        if ($this->statusCompanyJuridicalPerson() == "refused") {
+            return "Recusado";
+        } elseif ($this->statusCompanyJuridicalPerson() == "approved") {
+            return "Aprovado";
         } else {
-            return 'Em análise';
+            return "Em análise";
         }
     }
 
@@ -314,22 +319,22 @@ class Company extends Model
             $this->contract_document_status === self::DOCUMENT_STATUS_APPROVED &&
             $this->address_document_status === self::DOCUMENT_STATUS_APPROVED
         ) {
-            return 'approved';
+            return "approved";
         } elseif (
             $this->contract_document_status === self::DOCUMENT_STATUS_PENDING ||
             $this->address_document_status === self::DOCUMENT_STATUS_PENDING
         ) {
-            return 'pending';
+            return "pending";
         } elseif (
             $this->contract_document_status === self::DOCUMENT_STATUS_REFUSED ||
             $this->address_document_status === self::DOCUMENT_STATUS_REFUSED
         ) {
-            return 'refused';
+            return "refused";
         } elseif (
             $this->contract_document_status === self::DOCUMENT_STATUS_ANALYZING ||
             $this->address_document_status === self::DOCUMENT_STATUS_ANALYZING
         ) {
-            return 'analyzing';
+            return "analyzing";
         }
     }
 
