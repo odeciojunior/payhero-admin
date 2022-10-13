@@ -370,22 +370,28 @@ class TrackingService
             ->where("t.is_waiting_withdrawal", 0)
             ->whereNull("t.withdrawal_id");
 
-        $productPlanSales->leftJoin("trackings as t2", function ($leftJoin) use ($filters) {
-            $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
+        if ((!empty($filters["problem"]) && $filters["problem"] == 1) || !empty($filters["tracking_code"])) {
+            $productPlanSales->join("trackings as t2", function ($leftJoin) use ($filters) {
+                $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
 
-            if (!empty($filters["problem"]) && $filters["problem"] == 1) {
-                $leftJoin->whereIn("t2.system_status_enum", [
-                    Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
-                    Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
-                    Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
-                    Tracking::SYSTEM_STATUS_DUPLICATED,
-                ]);
-            }
+                if (!empty($filters["problem"]) && $filters["problem"] == 1) {
+                    $leftJoin->whereIn("t2.system_status_enum", [
+                        Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
+                        Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
+                        Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
+                        Tracking::SYSTEM_STATUS_DUPLICATED,
+                    ]);
+                }
 
-            if (!empty($filters["tracking_code"])) {
-                $leftJoin->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
-            }
-        });
+                if (!empty($filters["tracking_code"])) {
+                    $leftJoin->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
+                }
+            });
+        } else {
+            $productPlanSales->leftJoin("trackings as t2", function ($leftJoin) use ($filters) {
+                $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
+            });
+        }
 
         if (!empty($filters["status"])) {
             $productPlanSales->where(function ($where) use ($filters) {
