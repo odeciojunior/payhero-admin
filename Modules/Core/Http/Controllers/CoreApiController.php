@@ -110,6 +110,7 @@ class CoreApiController extends Controller
                 [
                     "data" => [
                         "informations_completed" => $userInformations,
+                        "user_account" => $user->present()->getAccountStatus($user->account_is_approved),
                         "user_status" => $userStatus,
                         "company_status" => $companyStatus,
                         "link_company" => $companyRedirect,
@@ -438,12 +439,14 @@ class CoreApiController extends Controller
     {
         try {
 
-            $checkUserBiometry = User::find(hashids_decode($id))->biometry_status;
+            $user = User::find(hashids_decode($id));
+            $accountOwner = User::find($user->account_owner_id);
+            $checkUserBiometry = $accountOwner->biometry_status;
 
             return response()->json(
                 [
                     "data" => [
-                        "check_user_biometry" => $checkUserBiometry === User::BIOMETRY_STATUS_APPROVED,
+                        "check_user_biometry" => $checkUserBiometry !== User::BIOMETRY_STATUS_APPROVED,
 
                     ],
                 ],

@@ -403,9 +403,9 @@ class SaleService
             $totalTax += $taxaCheckout;
         }
 
-        if ($sale->status == Sale::STATUS_REFUNDED) {
-            $comission = foxutils()->formatMoney(0);
-        }
+        // if ($sale->status == Sale::STATUS_REFUNDED) {
+        //     $comission = foxutils()->formatMoney(0);
+        // }
 
         //set flag
 
@@ -670,7 +670,7 @@ class SaleService
                         "type_enum" => Transfer::TYPE_IN,
                         "value" => $transaction->value,
                         "type" => "in",
-                        "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID,
+                        "gateway_id" => $sale->gateway_id,
                     ]);
 
                     $safe2payBalance += $transaction->value;
@@ -691,9 +691,9 @@ class SaleService
                     "value" => $refundValue,
                     "type" => "out",
                     "type_enum" => Transfer::TYPE_OUT,
-                    "reason" => "Estorno #{$saleIdEncode}",
+                    "reason" => $isBillet ? "Estorno de boleto #{$saleIdEncode}" : "Estorno de pix #{$saleIdEncode}",
                     "company_id" => $transaction->company->id,
-                    "gateway_id" => Gateway::SAFE2PAY_PRODUCTION_ID,
+                    "gateway_id" => $sale->gateway_id,
                 ]);
 
                 $transaction->company->update([
@@ -725,7 +725,7 @@ class SaleService
                 "value" => foxutils()->onlyNumbers($sale->total_paid_value),
                 "type_enum" => Transfer::TYPE_IN,
                 "type" => "in",
-                "reason" => "Estorno #{$saleIdEncode}",
+                "reason" => $isBillet ? "Estorno de boleto #{$saleIdEncode}" : "Estorno de pix #{$saleIdEncode}",
             ]);
 
             $sale->customer->update([

@@ -357,6 +357,8 @@ class ShippingApiController extends Controller
                         $melhorenvioId = hashids_decode($hashid);
                         $requestValidated["melhorenvio_integration_id"] = $melhorenvioId;
                         $requestValidated["type"] = "melhorenvio";
+                    } else {
+                        $requestValidated["melhorenvio_integration_id"] = null;
                     }
 
                     $requestValidated["type_enum"] = $shippingModel->present()->getTypeEnum($requestValidated["type"]);

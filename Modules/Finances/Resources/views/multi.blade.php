@@ -48,7 +48,7 @@
 
                 <div class="col-12 d-flex flex-column">
                     <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal' role="alert" style='display:none;'>
-                        <strong class="redirect-to-accounts pointer" data-url-value="/personal-info">Clique aqui</strong> Entre em contato com o suporte para mais
+                        <strong class="redirect-to-accounts pointer" data-url-value="/personal-info">Saque bloqueado!</strong> Entre em contato com o suporte para mais
                         informações.
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">×</span>

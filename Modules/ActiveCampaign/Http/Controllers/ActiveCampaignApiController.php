@@ -116,7 +116,7 @@ class ActiveCampaignApiController extends Controller
                 $activecampaignService->setAccess($data["api_url"], $data["api_key"], 1);
                 $listTest = $activecampaignService->getLists();
 
-                if (!empty($listTest["lists"])) {
+                if (empty($listTest["lists"])) {
                     return response()->json(
                         [
                             "message" => "Erro ao realizar a integração. API URL e/ou API Key inválido(s)",

@@ -198,7 +198,6 @@ class SalesApiController extends Controller
                 ["message" => "Funcionalidade habilitada somente em produção =)"],
                 Response::HTTP_OK
             );
-
         } catch (Exception $e) {
             $message = ShopifyErrors::FormatErrors($e->getMessage());
             if (empty($message)) {
@@ -279,7 +278,6 @@ class SalesApiController extends Controller
                         ["message" => "Requisição não encontrada!"],
                         Response::HTTP_BAD_REQUEST
                     );
-
                 } else {
                     return response()->json(["message" => "Integração não encontrada"], Response::HTTP_BAD_REQUEST);
                 }
@@ -289,7 +287,6 @@ class SalesApiController extends Controller
                 ["message" => "Funcionalidade habilitada somente em produção =)"],
                 Response::HTTP_OK
             );
-
         } catch (Exception $e) {
             report($e);
             $message = "Erro ao tentar gerar ordem no Woocommerce.";
@@ -340,7 +337,6 @@ class SalesApiController extends Controller
             }
 
             return response()->json(["message" => "Os dados informados são inválidos!"], 400);
-
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao alterar causa do estorno!"], 400);
@@ -354,17 +350,16 @@ class SalesApiController extends Controller
 
             $projectIds = [];
             if (!empty($data["project_id"])) {
-            //if (is_array($data["project_id"])) {
-                if(!empty($data['project_id'][0])){
-                    foreach($data['project_id'] as $project){
-                        if(!empty($project)){
+                //if (is_array($data["project_id"])) {
+                if (!empty($data['project_id'][0])) {
+                    foreach ($data['project_id'] as $project) {
+                        if (!empty($project)) {
                             array_push($projectIds, hashids_decode($project));
                         }
                     };
-                }
-                else{
+                } else {
                     $projects = SaleService::getProjectsWithSales();
-                    foreach($projects as $item){
+                    foreach ($projects as $item) {
                         array_push($projectIds, $item->project_id);
                     }
                 }
@@ -376,20 +371,16 @@ class SalesApiController extends Controller
 
             if (current($projectIds)) {
                 if (!empty($data['search'])) {
-                    $plans = Plan::
-                        where('name', 'like', '%' . $data['search'] . '%')
+                    $plans = Plan::where('name', 'like', '%' . $data['search'] . '%')
                         ->whereIn('project_id', $projectIds)
                         ->orderby('name')
                         ->limit(30)
                         ->get();
-
                 } else {
-                    $plans = Plan::
-                        whereIn('project_id', $projectIds)
+                    $plans = Plan::whereIn('project_id', $projectIds)
                         ->orderby('name')
                         ->limit(30);
-                        $plans = $plans->get();
-
+                    $plans = $plans->get();
                 }
                 return PlansSelectResource::collection($plans);
             } else {
@@ -397,15 +388,13 @@ class SalesApiController extends Controller
                 $userProjects = SaleService::getProjectsWithSales();
 
                 if (!empty($data['search'])) {
-                    $plans = Plan::
-                        where('name', 'like', '%' . $data['search'] . '%')
+                    $plans = Plan::where('name', 'like', '%' . $data['search'] . '%')
                         ->whereIn("project_id", $userProjects)
                         ->orderby('name')
                         ->limit(30)
                         ->get();
                 } else {
-                    $plans = Plan::
-                        whereIn("project_id", $userProjects)
+                    $plans = Plan::whereIn("project_id", $userProjects)
                         ->orderby('name')
                         ->limit(30)
                         ->get();
@@ -426,8 +415,7 @@ class SalesApiController extends Controller
     public function setValueObservation(Request $request, $id)
     {
         try {
-            if (!empty($id))
-            {
+            if (!empty($id)) {
                 $saleModel = new Sale();
                 activity()
                     ->on($saleModel)
@@ -456,7 +444,6 @@ class SalesApiController extends Controller
                 ],
                 400
             );
-
         } catch (Exception $e) {
             report($e);
             return response()->json(
@@ -472,14 +459,13 @@ class SalesApiController extends Controller
     {
         $rows = [];
         $projects = SaleService::getProjectsWithSalesAndTokens();
-        foreach($projects as $item){
+        foreach ($projects as $item) {
             $rows[] = [
-                'project_id'=>($item->prefix??'').Hashids::encode($item->project_id),
-                'name'=>$item->name
+                'project_id' => ($item->prefix ?? '') . Hashids::encode($item->project_id),
+                'name' => $item->name
             ];
         }
 
         return $rows;
     }
-
 }

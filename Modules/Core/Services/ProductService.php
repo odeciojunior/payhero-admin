@@ -68,7 +68,12 @@ class ProductService
         return $productModel
             ->with("productsPlanSales")
             ->with("productsPlans")
-            ->where("user_id", auth()->user()->getAccountOwnerId())
+            ->where(
+                "user_id",
+                auth()
+                    ->user()
+                    ->getAccountOwnerId()
+            )
             ->withCount("productsPlanSales")
             ->take(16)
             ->get();
@@ -222,5 +227,13 @@ class ProductService
         }
 
         return [];
+    }
+
+    public function verifyIfProductHasSales(int $productId)
+    {
+        return ProductPlanSale::join("transactions", "transactions.sale_id", "products_plans_sales.sale_id")
+            ->where("products_plans_sales.product_id", $productId)
+            ->whereIn("transactions.status_enum", [1, 2, 8])
+            ->exists();
     }
 }
