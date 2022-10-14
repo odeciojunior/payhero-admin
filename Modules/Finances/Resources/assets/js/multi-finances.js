@@ -362,9 +362,10 @@ $(document).ready(function () {
                             $("#title_available_money").html($titleAvailableBalance);
                             $(".total-available-balance").html(removeMoneyCurrency(data));
                         }
-
-                        checkBlockedWithdrawal();
                     });
+
+                    // Check if is Withdrawal is available
+                    checkBlockedWithdrawal();
 
                     if (emptyStates > 0) {
                         for (let i = 0; i < emptyStates; i++) {
@@ -539,18 +540,19 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (response.allowed && verifyAccountFrozen() == false) {
-                    $("#blocked-withdrawal").hide();
+                    $(".blocked-withdrawal").hide();
+                    checkUserBimetry()
                 } else {
-                    $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
+                    $(".btn-request-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-withdrawal").show();
                 }
             },
         });
+    }
 
+    function checkUserBimetry() {
         $.ajax({
-            url:
-                "/api/core/verify-biometry/" +
-                $('meta[name="user-id"]').attr("content"),
+            url: "/api/core/verify-biometry/" + $('meta[name="user-id"]').attr("content"),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -558,16 +560,16 @@ $(document).ready(function () {
             },
             error: (response) => {
                 errorAjaxResponse(response);
-                $(".btn-request-withdrawal").addClass("disabled");
-                $("#blocked-unico").fadeIn();
+                $(".btn-request-withdrawal").prop("disabled", true).addClass("disabled");
             },
             success: (response) => {
                 if (response.data.check_user_biometry == false) {
                     $(".btn-request-withdrawal").prop("disabled", false).removeClass("disabled");
-                    $("#blocked-unico").fadeOut();
+                    $("#blocked-unico").hide();
                 } else {
                     $(".btn-request-withdrawal").prop("disabled", true).addClass("disabled");
-                    $("#blocked-unico").fadeIn();
+                    $("#blocked-unico").show();
+                    $("#custom-input-addon").prop("disabled", true);
                 }
             },
         });

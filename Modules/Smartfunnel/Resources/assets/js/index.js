@@ -1,59 +1,54 @@
 $(document).ready(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $('#integration-actions').hide();
+        $("#integration-actions").hide();
         $("#no-integration-found").hide();
-        $('#project-empty').hide();
-        loadOnAny('#content');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                companiesAndProjects = data2
-                index('n');
+        $("#project-empty").hide();
+        loadOnAny("#content");
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                companiesAndProjects = data2;
+                index("n");
             });
         });
     });
 
-    var companiesAndProjects = ''
+    var companiesAndProjects = "";
 
-    function index(loading='y') {
-        if(loading=='y')
-            loadingOnScreen();
-        else
-            loadOnAny('#content');
+    function index(loading = "y") {
+        if (loading == "y") loadingOnScreen();
+        else loadOnAny("#content");
 
-        $hasProjects=false;
+        $hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
             $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                if(project.status == 1)
-                    $hasProjects=true;
+                if (project.status == 1) $hasProjects = true;
             });
         }
 
-        if(!$hasProjects){
-            $('#integration-actions').hide();
+        if (!$hasProjects) {
+            $("#integration-actions").hide();
             $("#no-integration-found").hide();
-            $('#project-empty').show();
+            $("#project-empty").show();
             loadingOnScreenRemove();
-            loadOnAny('#content',true);
-        }
-        else{
+            loadOnAny("#content", true);
+        } else {
             $.ajax({
                 method: "GET",
-                url: "/api/apps/smartfunnel?company="+ $('.company-navbar').val(),
+                url: "/api/apps/smartfunnel?company=" + $(".company-navbar").val(),
                 dataType: "json",
                 headers: {
                     Authorization: $('meta[name="access-token"]').attr("content"),
                     Accept: "application/json",
                 },
                 error: (response) => {
-                    loadOnAny('#content',true);
+                    loadOnAny("#content", true);
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
                     $("#project_id, #select_projects_edit").html("");
-                    fillSelectProject(companiesAndProjects,'#project_id, #select_projects_edit')
+                    fillSelectProject(companiesAndProjects, "#project_id, #select_projects_edit");
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
                     } else {
@@ -66,16 +61,15 @@ $(document).ready(function () {
                     }
                     $("#project-empty").hide();
                     $("#integration-actions").show();
-                    if(loading=='y')
-                        loadOnAny('#content',true);
+                    if (loading == "y") loadOnAny("#content", true);
                     loadingOnScreenRemove();
                 },
             });
         }
     }
 
-    getCompaniesAndProjects().done( function (data){
-        companiesAndProjects = data
+    getCompaniesAndProjects().done(function (data) {
+        companiesAndProjects = data;
         index();
     });
 
@@ -105,7 +99,7 @@ $(document).ready(function () {
                 ` style='cursor:pointer;'>
                                     <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
-                ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` +
+                ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
                                     <div class="card-body">
@@ -122,7 +116,7 @@ $(document).ready(function () {
                                                 <a role='button' title='Excluir' class='delete-integration float-right mt-35' project=` +
                 data.id +
                 `>
-                                                    <span class='o-bin-1 pointer'></span>
+                                                    <img src="/build/global/img/icon-trash-new.svg" />
                                                 </a>
                                             </div>
                                         </div>

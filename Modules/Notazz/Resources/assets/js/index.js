@@ -70,7 +70,7 @@ $(document).ready(function () {
                                         <a href='/apps/notazz/${data.id}' class=''>
                                             <img class="card-img-top img-fluid w-full" src="${
                                                 !data.project_photo
-                                                    ? "/build/global/img/produto.png"
+                                                    ? "/build/global/img/produto.svg"
                                                     : data.project_photo
                                             }" style='cursor:pointer'/>
                                         </a>

@@ -306,17 +306,19 @@ $(window).on("load", function () {
             success: (response) => {
                 if (response.allowed && verifyAccountFrozen() == false) {
                     $("#blocked-withdrawal").hide();
+                    checkUserBimetry();
                 } else {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-withdrawal").show();
                 }
             },
-        });
 
+        });
+    }
+
+    function checkUserBimetry() {
         $.ajax({
-            url:
-                "/api/core/verify-biometry/" +
-                $('meta[name="user-id"]').attr("content"),
+            url: "/api/core/verify-biometry/" + $('meta[name="user-id"]').attr("content"),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -329,16 +331,15 @@ $(window).on("load", function () {
             },
             success: (response) => {
                 if (response.data.check_user_biometry == false) {
+                    $("#bt-withdrawal").prop("disabled", false).removeClass("disabled");
                     $("#blocked-unico").hide();
                 } else {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-unico").show();
 
-                    $(".bt-sacar").attr("disabled","disabled");
-                    $("#custom-input-addon").attr("disabled","disabled");
+                    $("#custom-input-addon").prop("disabled", true);
                 }
             },
         });
     }
-
 });

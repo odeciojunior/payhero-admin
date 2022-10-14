@@ -32,9 +32,7 @@ $(() => {
                 $(".page-title, .title-pad").text(project.project_name);
                 $("#show-photo").attr(
                     "src",
-                    project.project_photo
-                        ? project.project_photo
-                        : "/build/global/img/projeto.svg"
+                    project.project_photo ? project.project_photo : "/build/global/img/projeto.svg"
                 );
                 $("#created_at").text("Criado em " + project.created_at);
 
@@ -62,9 +60,7 @@ $(() => {
             return false;
         }
         var integrationId = $("#integration_id").val();
-        var form_data = new FormData(
-            document.getElementById("form_update_integration")
-        );
+        var form_data = new FormData(document.getElementById("form_update_integration"));
 
         $.ajax({
             method: "POST",
@@ -230,7 +226,7 @@ $(() => {
 //                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
 //                             <div class="card shadow card-edit" project=` + data.id + ` style='cursor:pointer;'>
 //                                 <a href="/apps/activecampaign/${data.id}" class="activecampaign-link">
-//                                     <img class="card-img-top img-fluid w-full" src=` + data.project_photo + ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` + data.project_name + `"/>
+//                                     <img class="card-img-top img-fluid w-full" src=` + data.project_photo + ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` + data.project_name + `"/>
 //                                 </a>
 //                                 <div class="card-body">
 //                                     <div class='row'>

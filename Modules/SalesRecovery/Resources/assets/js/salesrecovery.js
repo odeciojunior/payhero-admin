@@ -18,21 +18,11 @@ $(document).ready(function () {
 
     function fillProjectsSelect(data) {
         if (data.company_default == "v2RmA83EbZPVpYB")
-            $("#project").append(
-                $("<option>", {
-                    value: "v2RmA83EbZPVpYB",
-                    text: "Loja Demonstrativa Cloudfox",
-                })
-            );
+            $("#project").append($("<option>", { value: "v2RmA83EbZPVpYB", text: "Loja Demonstrativa Cloudfox" }));
         else {
             projects = allProjects(data);
             for (let i = 0; i < projects.length; i++)
-                $("#project").append(
-                    $("<option>", {
-                        value: projects[i].id,
-                        text: projects[i].name,
-                    })
-                );
+                $("#project").append($("<option>", { value: projects[i].id, text: projects[i].name }));
         }
     }
 
@@ -88,9 +78,7 @@ $(document).ready(function () {
     });
 
     $(".btn-confirm-export-sale").on("click", function () {
-        var regexEmail = new RegExp(
-            /^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/
-        );
+        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
         var email = $("#email_export").val();
 
         if (email == "" || !regexEmail.test(email)) {
@@ -141,16 +129,10 @@ $(document).ready(function () {
             },
             ranges: {
                 Hoje: [moment(), moment()],
-                Ontem: [
-                    moment().subtract(1, "days"),
-                    moment().subtract(1, "days"),
-                ],
+                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
                 "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
                 "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [
-                    moment().startOf("month"),
-                    moment().endOf("month"),
-                ],
+                "Este mês": [moment().startOf("month"), moment().endOf("month")],
                 "Mês passado": [
                     moment().subtract(1, "month").startOf("month"),
                     moment().subtract(1, "month").endOf("month"),
@@ -198,13 +180,9 @@ $(document).ready(function () {
         if (link == null) {
             url = `?project=${$("#project").val()}&recovery_type=${$(
                 "#recovery_type option:selected"
-            ).val()}&date_range=${$(
-                "#date-range-sales-recovery"
-            ).val()}&client=${$(
+            ).val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$(
                 "#client-name"
-            ).val()}&date_type=created_at&client_document=${$(
-                "#client-cpf"
-            ).val()}&plan=${$("#plan").val()}`;
+            ).val()}&date_type=created_at&client_document=${$("#client-cpf").val()}&plan=${$("#plan").val()}`;
         } else {
             url = `${link}&project=${$("#project").val()}
 
@@ -262,10 +240,7 @@ $(document).ready(function () {
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                let recoveryType = $("#recovery_type")
-                    .children("option:selected")
-                    .text()
-                    .toLowerCase();
+                let recoveryType = $("#recovery_type").children("option:selected").text().toLowerCase();
                 let image = $("#table_data").attr("img-empty");
                 if (response.data == "" && recoveryType) {
                     $("#container-pagination").hide();
@@ -308,15 +283,8 @@ $(document).ready(function () {
                             );
                         }
 
-                        $("#date").val(
-                            moment(new Date())
-                                .add(3, "days")
-                                .format("YYYY-MM-DD")
-                        );
-                        $("#date").attr(
-                            "min",
-                            moment(new Date()).format("YYYY-MM-DD")
-                        );
+                        $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                        $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
 
                         $(".sale_status").on("click", function () {
                             if (verifyAccountFrozen() == false) {
@@ -343,9 +311,7 @@ $(document).ready(function () {
                     $(".estornar_venda").on("click", function () {
                         id_venda = $(this).attr("venda");
 
-                        $("#modal_estornar_titulo").html(
-                            "Estornar venda #" + id_venda + " ?"
-                        );
+                        $("#modal_estornar_titulo").html("Estornar venda #" + id_venda + " ?");
                         $("#modal_estornar_body").html("");
                     });
                 }
@@ -586,9 +552,7 @@ $(document).ready(function () {
         clearFields();
 
         $("#modal-title").html("Detalhes " + "<br><hr>");
-        $("#date-as-hours").html(
-            `${data.checkout.date} às ${data.checkout.hours}`
-        );
+        $("#date-as-hours").html(`${data.checkout.date} às ${data.checkout.hours}`);
         $("#status-checkout")
             .addClass("badge-" + statusRecovery[data.status])
             .html(data.status);
@@ -597,7 +561,7 @@ $(document).ready(function () {
          * Produtos
          */
         let div = "";
-        let photo = "public/build/global/img/produto.png";
+        let photo = "public/build/global/img/produto.svg";
         $.each(data.products, function (index, value) {
             if (!isEmpty(value.photo)) {
                 photo = value.photo;
@@ -606,7 +570,7 @@ $(document).ready(function () {
             div +=
                 '<div class="row align-items-baseline justify-content-between mb-15">' +
                 '<div class="col-lg-2">' +
-                "<img onerror=this.src='/build/global/img/produto.png' src='" +
+                "<img onerror=this.src='/build/global/img/produto.svg' src='" +
                 value.photo +
                 "' width='50px' style='border-radius: 6px;'>" +
                 "</div>" +
@@ -639,9 +603,7 @@ $(document).ready(function () {
         $("#client-document").html("CPF: " + data.client.document);
         $("#client-street").html("Endereço: " + data.delivery.street);
         $("#client-zip-code").html("CEP: " + data.delivery.zip_code);
-        $("#client-city-state").html(
-            "Cidade: " + data.delivery.city + "/" + data.delivery.state
-        );
+        $("#client-city-state").html("Cidade: " + data.delivery.city + "/" + data.delivery.state);
         $("#sale-motive").html("Motivo: " + data.client.error);
 
         if (
@@ -675,24 +637,14 @@ $(document).ready(function () {
         /**
          * Dados do checkout - UTM
          */
-        $("#checkout-operational-system").html(
-            "Sistema: " + data.checkout.operational_system
-        );
+        $("#checkout-operational-system").html("Sistema: " + data.checkout.operational_system);
         $("#checkout-browser").html("Navegador: " + data.checkout.browser);
         $("#checkout-src").html("SRC: " + data.checkout.src);
-        $("#checkout-utm-source").html(
-            "UTM Source: " + data.checkout.utm_source
-        );
-        $("#checkout-utm-medium").html(
-            "UTM Medium: " + data.checkout.utm_medium
-        );
-        $("#checkout-utm-campaign").html(
-            "UTM Campaign: " + data.checkout.utm_campaign
-        );
+        $("#checkout-utm-source").html("UTM Source: " + data.checkout.utm_source);
+        $("#checkout-utm-medium").html("UTM Medium: " + data.checkout.utm_medium);
+        $("#checkout-utm-campaign").html("UTM Campaign: " + data.checkout.utm_campaign);
         $("#checkout-utm-term").html("UTM Term: " + data.checkout.utm_term);
-        $("#checkout-utm-content").html(
-            "UTM Content: " + data.checkout.utm_content
-        );
+        $("#checkout-utm-content").html("UTM Content: " + data.checkout.utm_content);
         /**
          * Fim dados do checkout
          */
@@ -720,9 +672,7 @@ $(document).ready(function () {
 
             $("#discount_type").on("change", function () {
                 if ($("#discount_type").val() == "value") {
-                    $("#discount_value")
-                        .mask("#.###,#0", { reverse: true })
-                        .removeAttr("maxlength");
+                    $("#discount_value").mask("#.###,#0", { reverse: true }).removeAttr("maxlength");
                     $("#label_discount_value").html("Valor (ex: 20,00)");
                 } else {
                     $("#discount_value").mask("00%", { reverse: true });
@@ -907,9 +857,7 @@ $(document).ready(function () {
                 result = $.map(res.data, function (obj) {
                     return {
                         id: obj.id,
-                        text:
-                            obj.name +
-                            (obj.description ? " - " + obj.description : ""),
+                        text: obj.name + (obj.description ? " - " + obj.description : ""),
                     };
                 });
 
@@ -938,10 +886,7 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (
-            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
-            collapse.css("transform") == "none"
-        ) {
+        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {

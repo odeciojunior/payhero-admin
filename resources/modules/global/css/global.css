@@ -550,7 +550,7 @@ a.label {
 }
 
 .card {
-    font-family: "Muli", sans-serif;
+    font-family: "Inter", sans-serif;
     border-radius: 16px;
 }
 
@@ -688,7 +688,7 @@ a.label {
 .s-btn {
     background-color: #ffffff;
     border: 2px solid #2626264d;
-    font: normal normal bold 24px/30px Muli;
+    font: normal normal bold 24px/30px "Inter";
     padding: 15px 40px;
     color: #8a8a8a;
 }
@@ -1769,7 +1769,7 @@ input[type="radio"] {
 }
 .page-project .table .table-title {
     color: #15034c !important;
-    font: 16px "Muli" !important;
+    font: 16px "Inter" !important;
 }
 
 .top-holder .input-group .form-control {
@@ -3571,7 +3571,6 @@ tbody td {
     text-decoration: underline;
     color: #856404 !important;
 }
-
 
 .alert-danger {
     background: #f8d7da;

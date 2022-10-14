@@ -1491,12 +1491,7 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    function refundedClick(
-        refundedValue = 0,
-        refundObservation,
-        refundUrl,
-        partial = 0
-    ) {
+    function refundedClick(refundedValue = 0, refundObservation, refundUrl, partial = 0) {
         $(".btn-confirm-refund-transaction").prop("disabled", true);
         loadingOnScreen();
         $.ajax({
