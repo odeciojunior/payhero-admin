@@ -69,7 +69,7 @@ $(document).ready(function () {
                 ` style='cursor:pointer;'>
                                     <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
-                ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` +
+                ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
                                     <div class="card-body">
@@ -86,7 +86,7 @@ $(document).ready(function () {
                                                 <a role='button' title='Excluir' class='delete-integration float-right mt-35' project=` +
                 data.id +
                 `>
-                                                    <span class='o-bin-1 pointer'></span>
+                                                    <img src="/build/global/img/icon-trash-new.svg" />
                                                 </a>
                                             </div>
                                         </div>

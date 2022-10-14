@@ -1,7 +1,6 @@
 $(() => {
-
-    getCompaniesAndProjects().done( function (data){
-        $('.site-navbar .sirius-select-container').addClass('disabled');
+    getCompaniesAndProjects().done(function (data) {
+        $(".site-navbar .sirius-select-container").addClass("disabled");
     });
 
     index();
@@ -40,7 +39,7 @@ $(() => {
                                                        <a role="button" title="Excluir" class="btn-delete" data-id="${
                                                            integration.id
                                                        }">
-                                                           <span class='o-bin-1 pointer'></span>
+                                                           <img src="/build/global/img/icon-trash-new.svg" />
                                                        </a>
                                                    </div>
                                                </div>

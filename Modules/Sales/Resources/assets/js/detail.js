@@ -1042,7 +1042,7 @@ $(() => {
             }
             div += `<div class="row justify-content-between mb-15">
                         <div class="col-lg-2">
-                            <img src='${value.photo}' onerror=this.src='/build/global/img/produto.png' width='50px' height='50px' style='border-radius: 6px;'>
+                            <img src='${value.photo}' onerror=this.src='/build/global/img/produto.svg' width='50px' height='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-md-5 col-lg-6">
                             <h4 class="table-title m-0">${value.name}</h4>
@@ -1233,13 +1233,8 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    function refundedClick(
-        refundedValue = 0,
-        refundObservation,
-        refundUrl,
-        partial = 0
-    ) {
-        $(".btn-confirm-refund-transaction").prop('disabled', true);
+    function refundedClick(refundedValue = 0, refundObservation, refundUrl, partial = 0) {
+        $(".btn-confirm-refund-transaction").prop("disabled", true);
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -1256,19 +1251,19 @@ $(() => {
             },
             error: (response) => {
                 loadingOnScreenRemove();
-                $("#modal-refund-transaction").modal('toggle')
+                $("#modal-refund-transaction").modal("toggle");
                 errorAjaxResponse(response);
                 //atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop("disabled", false);
             },
             success: (response) => {
                 loadingOnScreenRemove();
-                $("#modal-refund-transaction").modal('toggle')
+                $("#modal-refund-transaction").modal("toggle");
                 alertCustom("success", response.message);
                 $("#refund-observation-transaction").val("");
 
-                if(window.location.pathname.includes('finances')){
-                    $('#bt_filtro').trigger('click');
+                if (window.location.pathname.includes("finances")) {
+                    $("#bt_filtro").trigger("click");
                 }
 
                 atualizar(currentPage);
