@@ -89,8 +89,8 @@ $(() => {
         } else {
             $("#date_updated").val(
                 moment("2018-01-01").format("DD/MM/YYYY") +
-                    " - " +
-                    moment().format("DD/MM/YYYY")
+                " - " +
+                moment().format("DD/MM/YYYY")
             );
             $("#date_updated").attr("disabled", true).addClass("disableFields");
         }
@@ -105,11 +105,11 @@ $(() => {
         alertCustom("success", "Código copiado!");
     });
 
-    $(document).on("focus", ".input-tracking-code", function(){
-        $(this).next("span").css({"background" : "#ffffff"});
+    $(document).on("focus", ".input-tracking-code", function () {
+        $(this).next("span").css({ "background": "#ffffff" });
     })
-    $(document).on("focusout", ".input-tracking-code",function(){
-        $(this).next("span").css({"background" : "#f4f4f4"});
+    $(document).on("focusout", ".input-tracking-code", function () {
+        $(this).next("span").css({ "background": "#f4f4f4" });
 
     })
 
@@ -124,10 +124,10 @@ $(() => {
 
         let row = $(this).parent().parent();
         row.find(".input-tracking-code")
-        .removeClass("fake-label")
-        .prop("readonly", false)
-        .focus()
-        .removeAttr("placeholder");
+            .removeClass("fake-label")
+            .prop("readonly", false)
+            .focus()
+            .removeAttr("placeholder");
 
         row.find(".tracking-save, .tracking-close").show();
         row.find(".tracking-detail, .tracking-add").hide();
@@ -161,6 +161,7 @@ $(() => {
     });
 
     $("#bt_filter").on("click", function () {
+        $("#pagination-container").hide()
         window.loadData();
     });
 
@@ -383,16 +384,16 @@ $(() => {
                                     tooltipItem.dataIndex
                                 ] > 10000
                                     ? Math.round(
-                                          tooltipItem.dataset.data[
-                                              tooltipItem.dataIndex
-                                          ] / 1000,
-                                          1
-                                      ) + "K"
+                                        tooltipItem.dataset.data[
+                                        tooltipItem.dataIndex
+                                        ] / 1000,
+                                        1
+                                    ) + "K"
                                     : numberWithDecimal(
-                                          tooltipItem.dataset.data[
-                                              tooltipItem.dataIndex
-                                          ]
-                                      ),
+                                        tooltipItem.dataset.data[
+                                        tooltipItem.dataIndex
+                                        ]
+                                    ),
                         },
                     },
                 },
@@ -590,12 +591,14 @@ $(() => {
                 $("#pagination-trackings").html("");
 
                 if (isEmpty(response.data)) {
+                    $("#pagination-container").hide()
+
                     $("#dados_tabela").html(`
                     <tr class="text-center">
                       <td colspan="6" style="vertical-align: middle;height:257px;">
                         <img style="width:124px;margin-right:12px;" src="${$(
-                            "#dados_tabela"
-                        ).attr("img-empty")}">
+                        "#dados_tabela"
+                    ).attr("img-empty")}">
                         Nenhum rastreamento encontrado
                       </td>
                     </tr>`);
@@ -610,6 +613,8 @@ $(() => {
                     if (lastSale !== tracking.sale) {
                         grayRow = !grayRow;
                     }
+                    $("#pagination-container").show()
+
 
                     let htmlButtonAdd = `
                         <div class="d-flex col-sm-6 px-0 tracking-code-empty">
@@ -638,34 +643,25 @@ $(() => {
                     let dados = `
                         <tr ${grayRow ? 'class="td-odd"' : ""}>
 
-                            ${
-                                lastSale !== tracking.sale
-                                    ? `
-                                <td class="detalhes_venda pointer col-sm-1" venda="${tracking.sale}">
+                            ${lastSale !== tracking.sale
+                            ? `<td class="detalhes_venda pointer col-sm-1" venda="${tracking.sale}">
                                     #${tracking.sale}
                                 </td>`
-                                    : `<td>
-                                </td>`
-                            }
+
+                            : `<td>
+                            </td>`
+                        }
 
                             <td class="">
-                                <span>
-                                    ${tracking.product.amount}x ${
-                        tracking.product.name
-                    } ${
-                        tracking.product.description
-                            ? "(" + tracking.product.description + ")"
-                            : ""
-                    }
+                                <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='" ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? "(" + tracking.product.description + ")" : ""} "' >
+                                    ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? "(" + tracking.product.description + ")" : ""}
                                 </span>
                             </td>
 
                             <td class="">${tracking.approved_date}</td>
 
                             <td class="text-center">
-                                <span class="badge ${
-                                    statusEnum[tracking.tracking_status_enum]
-                                }">
+                                <span class="badge ${statusEnum[tracking.tracking_status_enum]}">
                                     ${tracking.tracking_status}
                                 </span>
                             </td>
@@ -675,32 +671,29 @@ $(() => {
                             <td class="text-left mb-0" style="max-height:74px!important;">
                                 <div class="d-flex align-items-center">
 
-                                    ${
-                                        tracking.tracking_status_enum
-                                        ?`<div class="d-flex col-6 px-0 input-code-options">
+                                    ${tracking.tracking_status_enum
+                            ? `<div class="d-flex col-6 px-0 input-code-options">
                                         <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
 
                                         <span class="d-flex align-items-center icon-alert-code">
                                             ${systemStatus[tracking.system_status_enum]}
                                             ${tracking.is_chargeback_recovered
-                                            ? '<img src="/build/global/img/alert-icon-code.svg"/>'
-                                            :""}
+                                ? '<img src="/build/global/img/alert-icon-code.svg"/>'
+                                : ""}
                                         </span>
                                     </div>`+
-                                    htmlButtonEdit
-                                :
-                                    htmlButtonAdd
-                                }
+                            htmlButtonEdit
+                            :
+                            htmlButtonAdd
+                        }
 
                                     <div class="save-close buttons d-flex justify-content-between px-0 col-3 ml-20" style="max-height: 38px;">
 
-                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer text-center default-buttons' title="Salvar" pps='${
-                                            tracking.pps_id
-                                        }'style="display:none"></a>
+                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer text-center default-buttons' title="Salvar" pps='${tracking.pps_id
+                        }'style="display:none"></a>
 
-                                        <div class='tracking-close pointer' data-code='${
-                                            tracking.tracking_code
-                                        }' title="Fechar" style="display:none">
+                                        <div class='tracking-close pointer' data-code='${tracking.tracking_code
+                        }' title="Fechar" style="display:none">
                                             &#x2715
                                         </div>
 
@@ -713,6 +706,7 @@ $(() => {
                     lastSale = tracking.sale;
                 });
                 pagination(response, "trackings", index);
+                $(".fullInformation").tooltip();
             },
             complete: (response) => {
                 unlockSearch($("#bt_filter"));
@@ -750,16 +744,16 @@ $(() => {
                 );
                 $("#tracking-product-name").text(
                     tracking.product.name +
-                        (tracking.product.description
-                            ? "(" + tracking.product.description + ")"
-                            : "")
+                    (tracking.product.description
+                        ? "(" + tracking.product.description + ")"
+                        : "")
                 );
                 $("#tracking-product-amount").text(tracking.amount + "x");
                 $("#tracking-delivery-address").text(
                     "Endereço: " +
-                        tracking.delivery.street +
-                        ", " +
-                        tracking.delivery.number
+                    tracking.delivery.street +
+                    ", " +
+                    tracking.delivery.number
                 );
                 $("#tracking-delivery-neighborhood").text(
                     "Bairro: " + tracking.delivery.neighborhood
@@ -769,9 +763,9 @@ $(() => {
                 );
                 $("#tracking-delivery-city").text(
                     "Cidade: " +
-                        tracking.delivery.city +
-                        "/" +
-                        tracking.delivery.state
+                    tracking.delivery.city +
+                    "/" +
+                    tracking.delivery.state
                 );
                 $("#modal-tracking-details .btn-notify-trackingcode").attr(
                     "tracking",

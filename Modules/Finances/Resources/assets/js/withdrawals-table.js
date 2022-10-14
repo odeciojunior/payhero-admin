@@ -13,7 +13,7 @@ window.loadWithdrawalsTable = function (link = null) {
 
     $("#withdrawals-table-data").html("");
     loadOnTable("#withdrawals-table-data", "#transfersTable");
-    $("#pagination-withdrawals").children().attr("disabled","disabled");
+    $("#pagination-withdrawals").children().attr("disabled", "disabled");
 
 
     if (link == null) {
@@ -83,7 +83,9 @@ window.loadWithdrawalsTable = function (link = null) {
         success: (response) => {
             $("#withdrawals-table-data").html("");
             if (response.data === "" || response.data === undefined || response.data.length === 0) {
-                $("#pagination-withdrawals").css({"background":"#f4f4f4"})
+                $("#pagination-container").removeClass("d-flex").addClass("d-none")
+
+                $("#pagination-withdrawals").css({ "background": "#f4f4f4" })
                 const emptyImage = $("#withdrawals-table-data").attr("img-empty");
                 $("#withdrawals-table-data").html(
                     `<tr style='border-radius: 16px;'>
@@ -96,23 +98,21 @@ window.loadWithdrawalsTable = function (link = null) {
                 );
                 $("#withdrawals-pagination").html("");
             } else {
+                $("#pagination-container").removeClass("d-none").addClass("d-flex")
                 $.each(response.data, function (index, data) {
                     let tableData = "";
                     let dateRequest = getRequestTime(data);
                     let dateRelease = getReleaseTime(data);
 
                     tableData += `<tr class="s-table table-finance-transfers">;
-                                <td class="sale-finance-transfers ellipsis-text" style="grid-area: sale">#${
-                                    data.id
-                                }</td>";
+                                <td class="sale-finance-transfers ellipsis-text" style="grid-area: sale">#${data.id
+                        }</td>";
 
                                 <td class="text-left truncate bank-finance-transfers" style="grid-area: bank">
-                                    <div style="color: #636363;" class="truncate"> ${
-                                        data.account_information_bank
-                                    } </div>
-                                    <span class="subdescription font-size-12"> ${
-                                        data.account_information
-                                    } </span>
+                                    <div style="color: #636363;" class="truncate"> ${data.account_information_bank
+                        } </div>
+                                    <span class="subdescription font-size-12"> ${data.account_information
+                        } </span>
                                 </td>;
 
                                 <td class="text-left date-start-finance-transfers" style="grid-area: date-start">
@@ -124,9 +124,8 @@ window.loadWithdrawalsTable = function (link = null) {
                                 </td>;
 
                                 <td class="shipping-status text-center status-finance-transfers" style="grid-area: status">
-                                    <span class="badge badge-${statusWithdrawals[data.status]} "> ${
-                        data.status_translated
-                    } </span>
+                                    <span class="badge badge-${statusWithdrawals[data.status]} "> ${data.status_translated
+                        } </span>
                                 </td>`;
                     if (data.tax_value > 0) {
                         tableData += ` <td class="text-left value-finance-transfers" style="grid-area: value">

@@ -93,7 +93,7 @@ $(document).ready(function () {
 
 
 
-        $(".modal-top-btn").hide();
+            $(".modal-top-btn").hide();
 
             setStepButton(getNewRegisterStep());
 
@@ -277,7 +277,7 @@ $(document).ready(function () {
     if (monthRevenueInput) {
         monthRevenueInput.style.backgroundSize =
             ((monthRevenueInput.value - monthRevenueInput.min) * 100) /
-                (monthRevenueInput.max - monthRevenueInput.min) +
+            (monthRevenueInput.max - monthRevenueInput.min) +
             "% 100%";
     }
 
@@ -510,8 +510,8 @@ function loadingOnAccountsHealth(target, margin = "80px") {
         left: 0;
         ">
             <span class="loader-any" style="margin-top: ` +
-                margin +
-                `"></span>
+            margin +
+            `"></span>
         </div>`
         );
 }
@@ -597,9 +597,9 @@ function loadOnNotification(whereToLoad) {
     $(whereToLoad).html("");
     $(whereToLoad).append(
         "<div class='loading' style='width:346px; height:150px'>" +
-            "<span class='loaderNotification' >" +
-            "</span>" +
-            "</div>"
+        "<span class='loaderNotification' >" +
+        "</span>" +
+        "</div>"
     );
 }
 
@@ -666,10 +666,10 @@ function loadOnTable(whereToLoad, tableReference) {
     $(tableReference).removeClass("table-striped");
     $(whereToLoad).append(
         "<tr id='loaderLine'>" +
-            "<td colspan='12' align='center' class='loadingTable' style='height:100px'>" +
-            "<a id='loader' class='loaderTable'></a>" +
-            "</td>" +
-            "</tr>"
+        "<td colspan='12' align='center' class='loadingTable' style='height:100px'>" +
+        "<a id='loader' class='loaderTable'></a>" +
+        "</td>" +
+        "</tr>"
     );
 }
 
@@ -860,9 +860,9 @@ function pagination(response, model, callback) {
     if (currentPage === 1) {
         $(paginationContainer).css({ background: "#ffffff" });
         $(paginationContainer + " .first_page")
-        .attr("disabled", true)
-        .addClass("nav-btn")
-        .addClass("active");
+            .attr("disabled", true)
+            .addClass("nav-btn")
+            .addClass("active");
     }
 
     $(paginationContainer + " .first_page").on("click", function () {
@@ -1163,8 +1163,7 @@ $(".top-alert-close").on("click", function () {
 
 sessionStorage.removeItem("documentsPending");
 
-function verifyDocumentPending()
-{
+function verifyDocumentPending() {
     changeNewRegisterLayoutOnWindowResize();
     var count = 0;
 
@@ -1344,7 +1343,7 @@ function verifyDocumentPending()
                         "Para reforçarmos a segurança, coletaremos seus dados. Acesse as configurações e realize a biometria.";
                     card_user_biometry_button =
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                    card_user_biometry_link +
+                        card_user_biometry_link +
                         '">Ir para configurações</button>';
                 } else if (response.data.user_status === "analyzing") {
                     count += 1;
@@ -1400,13 +1399,13 @@ function verifyDocumentPending()
                     .find(".count")
                     .html(
                         " (" +
-                            count +
-                            (count > 1
-                                ? " itens pendentes"
-                                : " item pendente") +
-                            ")"
-                    ).promise().done(function(){
-                        $('.alert-pendings').css('display','inline-flex')
+                        count +
+                        (count > 1
+                            ? " itens pendentes"
+                            : " item pendente") +
+                        ")"
+                    ).promise().done(function () {
+                        $('.alert-pendings').css('display', 'inline-flex')
                     });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
@@ -2151,10 +2150,9 @@ function buildModalBonusBalance(bonusObject) {
                 </div>
 
 
-                <h3 class="bonus-title"><span id="bonus-username">${
-                    userName.charAt(0).toUpperCase() +
-                        userName.slice(1).toLowerCase() || "Olá!"
-                }</span>, aqui está seu <b>desconto!</b></h3>
+                <h3 class="bonus-title"><span id="bonus-username">${userName.charAt(0).toUpperCase() +
+        userName.slice(1).toLowerCase() || "Olá!"
+        }</span>, aqui está seu <b>desconto!</b></h3>
 
                 <p>
                     Você ganhou <span id="total-bonus-balance" class="bold">${totalBalance}</span> em isenção de taxa sobre suas vendas. Você vai se impressionar com toda a tecnologia embarcada em sua
@@ -2301,14 +2299,14 @@ function showBonusBalance() {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
-            error: (response) => {},
+            error: (response) => { },
             success: (response) => {
                 if (response.error) {
                     return;
                 }
                 setCookie(
                     $('meta[name="user-id"]').attr("content") +
-                        "_bonus_balance",
+                    "_bonus_balance",
                     0.083,
                     response
                 );
@@ -2517,12 +2515,12 @@ function getCompaniesAndProjects() {
                     if (companies[i].company_type == "1") {
                         $(".company-navbar").append(
                             '<option value="' +
-                                companies[i].id +
-                                '" ' +
-                                itemSelected +
-                                " " +
-                                itemDisabled +
-                                ">Pessoa Física</option>"
+                            companies[i].id +
+                            '" ' +
+                            itemSelected +
+                            " " +
+                            itemDisabled +
+                            ">Pessoa Física</option>"
                         );
                     } else {
                         if (companies[i].name.length > 20)
@@ -2531,14 +2529,14 @@ function getCompaniesAndProjects() {
                         else companyName = companies[i].name;
                         $(".company-navbar").append(
                             '<option value="' +
-                                companies[i].id +
-                                '" ' +
-                                itemSelected +
-                                " " +
-                                itemDisabled +
-                                ">" +
-                                companyName +
-                                "</option>"
+                            companies[i].id +
+                            '" ' +
+                            itemSelected +
+                            " " +
+                            itemDisabled +
+                            ">" +
+                            companyName +
+                            "</option>"
                         );
                     }
                 }
@@ -2596,7 +2594,7 @@ function fillSelectProject(companiesAndProjects, selectorName, value = "") {
         if (parseInt(project.status) === 1) {
             $(selectorName).append($("<option>", { value: project.id, text: project.name }));
         }
-});
+    });
     if (!isEmpty(value)) {
         $(selectorName).val(value);
     }

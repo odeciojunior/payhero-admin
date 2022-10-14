@@ -24,14 +24,14 @@ $('.company-navbar').change(function () {
     $("#project").html('');
     sessionStorage.removeItem('info');
 
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            getProjects(data2,'company-navbar');
+    updateCompanyDefault().done(function (data1) {
+        getCompaniesAndProjects().done(function (data2) {
+            getProjects(data2, 'company-navbar');
         });
-	});
+    });
 });
 
-$(function() {
+$(function () {
     changeCalendar();
     changeCompany();
 });
@@ -59,6 +59,7 @@ function loadData() {
 }
 
 function atualizar(link = null) {
+
     currentPage = link;
     let updateResume = true;
 
@@ -135,8 +136,8 @@ function atualizar(link = null) {
             } else {
                 $("#body-table-pending").html(
                     "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#body-table-pending").attr("img-empty") +
-                        "'> Nenhuma venda encontrada </td></tr>"
+                    $("#body-table-pending").attr("img-empty") +
+                    "'> Nenhuma venda encontrada </td></tr>"
                 );
             }
             pagination(response, "pending", atualizar);
@@ -223,9 +224,9 @@ function resumePending() {
                 var comission = response.commission.split(/\s/g);
                 $("#total-pending").html(
                     comission[0] +
-                        ' <span class="font-size-30 bold">' +
-                        comission[1] +
-                        "</span>"
+                    ' <span class="font-size-30 bold">' +
+                    comission[1] +
+                    "</span>"
                 );
             } else {
                 $("#total-pending, #total").html(
@@ -247,6 +248,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
+        $("#pagination-container-pending").removeClass("d-flex").addClass("d-none")
         loadData();
     });
 
@@ -270,11 +272,11 @@ $(document).ready(function () {
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getProjects(data);
     });
 
-    window.fillProjectsSelect = function(){
+    window.fillProjectsSelect = function () {
         return $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -293,8 +295,8 @@ $(document).ready(function () {
         });
     }
 
-    window.getCompanies = function(data,loading='y') {
-        if(loading=='y'){
+    window.getCompanies = function (data, loading = 'y') {
+        if (loading == 'y') {
             loadingOnScreen();
             window.fillProjectsSelect(data.companies)
         }
@@ -317,10 +319,10 @@ $(document).ready(function () {
                         }
                         $("#company").append(
                             '<option value="' +
-                                company.id +
-                                '">' +
-                                company.name +
-                                "</option>"
+                            company.id +
+                            '">' +
+                            company.name +
+                            "</option>"
                         );
                     });
 
@@ -334,8 +336,7 @@ $(document).ready(function () {
         });
     }
 
-    window.getProjects = function(data, origin='')
-    {
+    window.getProjects = function (data, origin = '') {
         loadingOnScreen();
 
         $.ajax({
@@ -352,18 +353,18 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
             },
             success: function success(response) {
-                if(!isEmpty(response) || data.has_api_integration){
+                if (!isEmpty(response) || data.has_api_integration) {
                     $(".div-filters").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     $("#export-excel > div >").show();
                     $.each(response, function (c, project) {
-                        $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
+                        $("#project").append($("<option>", { value: project.project_id, text: project.name, }));
                     });
-                    if(data.has_api_integration)
-                        $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-                    $("#project option:first").attr('selected','selected');
-                    if(sessionStorage.info) {
+                    if (data.has_api_integration)
+                        $("#project").append($("<option>", { value: 'API-TOKEN', text: 'Vendas por API' }));
+                    $("#project option:first").attr('selected', 'selected');
+                    if (sessionStorage.info) {
                         $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
                         $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
                     }
@@ -372,8 +373,8 @@ $(document).ready(function () {
                     $(".div-filters").show();
                     loadingOnScreenRemove();
                 }
-                else{
-                    if(!isEmpty(data.company_default_projects)){
+                else {
+                    if (!isEmpty(data.company_default_projects)) {
                         $(".div-filters").hide();
                         $("#project-empty").hide();
                         $("#project-not-empty").show();
@@ -381,16 +382,16 @@ $(document).ready(function () {
                         // $.each(data.company_default_projects, function (i, project) {
                         //     $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
-                        if(data.has_api_integration)
-                            $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-                        $("#project option:first").attr('selected','selected');
-                        if( $('#select_projects option').length == 0 )
-                            $('#select_projects').next().css('display','none')
+                        if (data.has_api_integration)
+                            $("#project").append($("<option>", { value: 'API-TOKEN', text: 'Vendas por API' }));
+                        $("#project option:first").attr('selected', 'selected');
+                        if ($('#select_projects option').length == 0)
+                            $('#select_projects').next().css('display', 'none')
                         getAcquirer();
                         $(".div-filters").show();
                         loadingOnScreenRemove();
                     }
-                    else{
+                    else {
                         loadingOnScreenRemove();
                         $(".div-filters").hide();
                         $("#project-empty").show();
@@ -405,7 +406,7 @@ $(document).ready(function () {
     function getAcquirer() {
         $.ajax({
             method: "GET",
-            url: '/api/finances/acquirers/'+ $('.company-navbar').val(),
+            url: '/api/finances/acquirers/' + $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -506,8 +507,8 @@ $(document).ready(function () {
                     var comission = response.commission.split(/\s/g);
                     $("#total-pending").html(
                         '<small class="font-size-16 small gray-1">R$</small> <strong class="font-size-24 orange bold">' +
-                            comission[1] +
-                            "</strong>"
+                        comission[1] +
+                        "</strong>"
                     );
                     //var total=response.total.split(/\s/g);
                     //$('#total').html(total[0]+' <span class="font-size-24 orange bold">'+total[1]+'</span>');
@@ -524,6 +525,8 @@ $(document).ready(function () {
     }
 
     atualizar = function (link = null) {
+        $("#pagination-pending").children().attr("disabled", "disabled");
+
         currentPage = link;
         let updateResume = true;
 
@@ -553,6 +556,7 @@ $(document).ready(function () {
                 $(".table-pending").addClass("table-striped");
 
                 if (!isEmpty(response.data)) {
+                    $("#pagination-container-pending").removeClass("d-none").addClass("d-flex")
                     $.each(response.data, function (index, value) {
                         let start_date = "";
                         if (value.start_date) {
@@ -579,9 +583,21 @@ $(document).ready(function () {
                                         ${is_security_reserve}
                                     </td>
 
-                                    <td class="text-left ellipsis-text">${value.project}</td>
+                                    <td class="text-left ellipsis-text">
 
-                                    <td class="text-left ellipsis-text">${value.client}</td>
+                                        <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}">
+                                            ${value.project}
+                                        </span>
+
+
+                                    </td>
+
+                                    <td class="text-left ellipsis-text">
+                                        <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                            ${value.client}
+                                        </span>
+
+                                    </td>
 
                                     <td class="display-sm-none display-m-none display-lg-none">
                                         <img src='/build/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
@@ -603,6 +619,7 @@ $(document).ready(function () {
 
                         $("#body-table-pending").append(dados);
                     });
+                    $(".fullInformation").tooltip();
 
                     $("#date").val(
                         moment(new Date()).add(3, "days").format("YYYY-MM-DD")
@@ -612,10 +629,11 @@ $(document).ready(function () {
                         moment(new Date()).format("YYYY-MM-DD")
                     );
                 } else {
+                    $("#pagination-container-pending").removeClass("d-flex").addClass("d-none")
                     $("#body-table-pending").html(
                         "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
-                            $("#body-table-pending").attr("img-empty") +
-                            "'> Nenhuma venda encontrada </td></tr>"
+                        $("#body-table-pending").attr("img-empty") +
+                        "'> Nenhuma venda encontrada </td></tr>"
                     );
                 }
                 pagination(response, "pending", atualizar);
@@ -636,7 +654,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.company_name').val( $('.company-navbar').find('option:selected').text() );
+    $('.company_name').val($('.company-navbar').find('option:selected').text());
 
 });
 
@@ -666,7 +684,7 @@ function changeCalendar() {
                 }
             },
         })
-        .on("datepicker-change", function () {})
+        .on("datepicker-change", function () { })
         .on("datepicker-open", function () {
             $(".filter-badge-input").removeClass("show");
         })
@@ -681,9 +699,9 @@ function changeCalendar() {
 function changeCompany() {
     $("#project").on("change", function () {
         updateStorage({
-           company: $(this).val(),
+            company: $(this).val(),
             companyName: $(this).find('option:selected').text(),
-       });
+        });
     });
 }
 

@@ -256,7 +256,7 @@ $(function () {
         }
 
         loadOnTable("#data-table-sms", "#tabela-sms");
-        $("#pagination-project-notification").children().attr("disabled","disabled");
+        $("#pagination-project-notification").children().attr("disabled", "disabled");
 
         $("#tab_sms-panel").find(".no-gutters").css("display", "none");
         $("#tabela-sms").find("thead").css("display", "none");
@@ -275,6 +275,8 @@ $(function () {
             success: function success(response) {
                 $("#data-table-sms").html("");
                 if (response.data == "") {
+                    $("#pagination-container-sms").removeClass("d-flex").addClass("d-none")
+
                     $("#data-table-sms").html(`
                         <tr class='text-center'>
                             <td colspan='8' style='height: 70px; vertical-align: middle;'>
@@ -301,81 +303,84 @@ $(function () {
                         let data = `<tr>
                             <td class="project-notification-id">${value.type}</td>
 
-                            <td class="project-notification-type ellipsis-text">${value.event}</td>
+                            <td class="project-notification-type ellipsis-text">
+                                <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.event}">
+                                    ${value.event}
+                                </span>
+                            </td>
 
-                            <td class="project-notification-value ellipsis-text">${value.time}</td>
+                            <td class="project-notification-value ellipsis-text">
+                                <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.time}">
+                                    ${value.time}
+                                </span>
+                            </td>
 
-                            <td class="project-notification-zip-code-origin ellipsis-text">${value.message}</td>
+                            <td class="project-notification-zip-code-origin ellipsis-text">
+                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.message}">
+                                    ${value.message}
+                                </div>
+                            </td>
 
-                            <td class="text-center project-notification-status notification-status-${
-                                value.id
+                            <td class="text-center project-notification-status notification-status-${value.id
                             }" style="vertical-align: middle">
-                                <span class="badge badge-${statusNotification[value.status]}">${
-                            value.status_translated
-                        }</span>
+                                <span class="badge badge-${statusNotification[value.status]}">${value.status_translated
+                            }</span>
                             </td>
 
                             <td style="text-align:center" class="justify-content-between align-items-center mb-0">
 
                                 <div class='d-flex justify-content-end align-items-center'>
 
-                                    <a role="button" title='Visualizar' class="details-project-notification mg-responsive pointer" project-notification="${
-                                        value.id
-                                    }">
+                                    <a role="button" title='Visualizar' class="details-project-notification mg-responsive pointer" project-notification="${value.id
+                            }">
                                         <span class=""><img src='/build/global/img/icon-eye.svg'/></span>
                                     </a>
 
-                                    ${
-                                        value.notification_enum == 11 ||
-                                        value.notification_enum == 12 ||
-                                        value.notification_enum == 13 ||
-                                        value.notification_enum == 17
-                                            ? `<button style="background-color: transparent;" role="button" class="px-0 pb-0 btn  disabled="">
+                                    ${value.notification_enum == 11 ||
+                                value.notification_enum == 12 ||
+                                value.notification_enum == 13 ||
+                                value.notification_enum == 17
+                                ? `<button style="background-color: transparent;" role="button" class="px-0 pb-0 btn  disabled="">
                                             <span class=""><img src="/build/global/img/pencil-icon.svg"></span>
                                         </button>`
-                                            : `<a role="button" title="Editar" class="edit-project-notification mg-responsive pointer" project-notification='${value.id}'>
+                                : `<a role="button" title="Editar" class="edit-project-notification mg-responsive pointer" project-notification='${value.id}'>
                                             <span class=""><img src='/build/global/img/pencil-icon.svg'/></span>
                                         </a>`
-                                    }
-                                    <div class="switch-holder d-inline mg-responsive pointer mr-0" ${
-                                        value.notification_enum == 11 ||
-                                        value.notification_enum == 12 ||
-                                        value.notification_enum == 13 ||
-                                        value.notification_enum == 17
-                                            ? 'style=" opacity: 0.5;"'
-                                            : ""
-                                    }>
+                            }
+                                    <div class="switch-holder d-inline mg-responsive pointer mr-0" ${value.notification_enum == 11 ||
+                                value.notification_enum == 12 ||
+                                value.notification_enum == 13 ||
+                                value.notification_enum == 17
+                                ? 'style=" opacity: 0.5;"'
+                                : ""
+                            }>
 
-                                        <label class="switch mr-0" ${
-                                            value.notification_enum == 11 ||
-                                            value.notification_enum == 12 ||
-                                            value.notification_enum == 13 ||
-                                            value.notification_enum == 17
-                                                ? 'style="cursor: not-allowed"'
-                                                : ""
-                                        }>
+                                        <label class="switch mr-0" ${value.notification_enum == 11 ||
+                                value.notification_enum == 12 ||
+                                value.notification_enum == 13 ||
+                                value.notification_enum == 17
+                                ? 'style="cursor: not-allowed"'
+                                : ""
+                            }>
 
-                                            <input type="checkbox" class="project_notification_status" data-id="${
-                                                value.id
-                                            }" ${check}
-                                            ${
-                                                value.notification_enum == 11 ||
-                                                value.notification_enum == 12 ||
-                                                value.notification_enum == 13 ||
-                                                value.notification_enum == 17
-                                                    ? "disabled"
-                                                    : ""
-                                            }>
+                                            <input type="checkbox" class="project_notification_status" data-id="${value.id
+                            }" ${check}
+                                            ${value.notification_enum == 11 ||
+                                value.notification_enum == 12 ||
+                                value.notification_enum == 13 ||
+                                value.notification_enum == 17
+                                ? "disabled"
+                                : ""
+                            }>
 
 
-                                            <span class="slider round" ${
-                                                value.notification_enum == 11 ||
-                                                value.notification_enum == 12 ||
-                                                value.notification_enum == 13 ||
-                                                value.notification_enum == 17
-                                                    ? 'style="cursor: not-allowed"'
-                                                    : ""
-                                            }></span>
+                                            <span class="slider round" ${value.notification_enum == 11 ||
+                                value.notification_enum == 12 ||
+                                value.notification_enum == 13 ||
+                                value.notification_enum == 17
+                                ? 'style="cursor: not-allowed"'
+                                : ""
+                            }></span>
                                         </label>
 
                                     </div>
@@ -386,6 +391,8 @@ $(function () {
 
                         $("#data-table-sms").append(data);
                     });
+                    $("#pagination-container-sms").removeClass("d-none").addClass("d-flex")
+                    $(".fullInformation").tooltip();
                     pagination(response, "project-notification", atualizarProjectNotification);
                 }
             },

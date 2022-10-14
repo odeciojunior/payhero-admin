@@ -41,6 +41,7 @@ $(document).ready(function () {
                 $("#domain-table-body").html("");
 
                 if (isEmpty(response.data) || response.data == "") {
+                    $("#pagination-container-domain").removeClass("d-flex").addClass("d-none")
                     $("#domain-table-body").html(`
 
                         <tr class='text-center'>
@@ -71,6 +72,7 @@ $(document).ready(function () {
 
                     $("#tabela-dominios").addClass("table-striped");
                 } else {
+                    $("#pagination-container-domain").removeClass("d-none").addClass("d-flex")
                     $("#tab_domains").find(".no-gutters").css("display", "flex");
                     $("#tabela-dominios").find("thead").css("display", "contents");
 

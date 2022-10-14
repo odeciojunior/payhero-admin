@@ -618,7 +618,8 @@ $(document).ready(function () {
 
             $("#pagination-" + model).append(first_page);
 
-            if (response.meta.current_page == "1") {
+            if (response.meta.current_page == 1) {
+                $("#pagination-invites").css({ "background": "#ffffff" })
                 $("#first_page").attr("disabled", true).addClass("nav-btn").addClass("active");
             }
 

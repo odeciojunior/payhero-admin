@@ -114,7 +114,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#data-table-reviews", "#table-reviews");
-        $("#pagination-review").children().attr("disabled","disabled");
+        $("#pagination-review").children().attr("disabled", "disabled");
 
         $("#tab_project_reviews").find(".no-gutters").css("display", "none");
         $("#table-reviews").find("thead").css("display", "none");
@@ -139,6 +139,7 @@ $(document).ready(function () {
                 dataTable.html("");
 
                 if (response.data == "") {
+                    $("#pagination-container-reviews").removeClass("d-flex").addClass("d-none")
                     dataTable.html(`
                         <tr class='text-center'>
                             <td colspan='11' style='height: 70px;vertical-align: middle'>
@@ -158,6 +159,8 @@ $(document).ready(function () {
                     let data = "";
                     $("#tab_project_reviews").find(".no-gutters").css("display", "flex");
                     $("#table-reviews").find("thead").css("display", "contents");
+                    $("#pagination-container-reviews").removeClass("d-none").addClass("d-flex")
+
 
                     $("#count-project-reviews").html(response.meta.total);
 
@@ -165,33 +168,32 @@ $(document).ready(function () {
                         data = `
                         <tr>
                             <td class="ellipsis-text">
-                                <img src="${
-                                    value.photo ||
-                                    "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"
-                                }"
-                                class="img-fluid rounded-circle mr-2" width="35" height="35">
-                                ${value.name}
+                                <img src="${value.photo || "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"}" class="img-fluid rounded-circle mr-2" width="35" height="35">
+
+                                <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.name}">
+                                    ${value.name}
+                                </span>
+
                             </td>
+
                             <td class="ellipsis-text">${value.description.substring(0, 50)}...</td>
+
                             <td>
                                 <div id="stars-${value.id}" data-score="${value.stars}"></div>
                             </td>
-                            <td class='text-center'>${
-                                value.active_flag
-                                    ? `<span class="badge badge-success">Ativo</span>`
-                                    : `<span class="badge badge-danger">Desativado</span>`
+
+                            <td class='text-center'>${value.active_flag
+                                ? `<span class="badge badge-success">Ativo</span>`
+                                : `<span class="badge badge-danger">Desativado</span>`
                             }</td>
                             <td style='text-align:center'>
                                 <div class='d-flex justify-content-end align-items-center'>
-                                    <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${
-                                        value.id
-                                    }" data-target='#modal-detail-review' data-toggle='modal'><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
-                                    <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${
-                                        value.id
-                                    }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
-                                    <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${
-                                        value.id
-                                    }" data-toggle="modal" data-target="#modal-delete-review"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
+                                    <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id
+                            }" data-target='#modal-detail-review' data-toggle='modal'><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
+                                    <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id
+                            }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
+                                    <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id
+                            }" data-toggle="modal" data-target="#modal-delete-review"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                                 </div>
                             </td>
                         </tr>
@@ -199,6 +201,7 @@ $(document).ready(function () {
                         dataTable.append(data);
                         initStarsPlugin("#stars-" + value.id);
                     });
+                    $(".fullInformation").tooltip();
                     $(".div-config").show();
                     pagination(response, "review", loadReviews);
                 }
@@ -285,7 +288,7 @@ $(document).ready(function () {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
-            error: function (response) {},
+            error: function (response) { },
             success: function (response) {
                 let review = response.data;
                 form.trigger("reset");
@@ -300,8 +303,7 @@ $(document).ready(function () {
                 for (let plan of review.apply_on_plans) {
                     applyOnPlans.push(plan.id);
                     form.find("#review_apply_on_plans").append(
-                        `<option value="${plan.id}">${
-                            plan.name + (plan.description ? " - " + plan.description : "")
+                        `<option value="${plan.id}">${plan.name + (plan.description ? " - " + plan.description : "")
                         }</option>`
                     );
                 }
@@ -413,10 +415,9 @@ $(document).ready(function () {
                 $(".review-name").html(review.name);
                 $(".review-description").html(review.description);
                 $(".review-status").html(
-                    `${
-                        review.active_flag
-                            ? `<span class="badge badge-success">Ativo</span>`
-                            : `<span class="badge badge-danger">Desativado</span>`
+                    `${review.active_flag
+                        ? `<span class="badge badge-success">Ativo</span>`
+                        : `<span class="badge badge-danger">Desativado</span>`
                     }`
                 );
 

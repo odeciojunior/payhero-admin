@@ -17,16 +17,16 @@ $(document).ready(function () {
                 },
             },
         });
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                if(!isEmpty(data2.company_default_projects)){
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                if (!isEmpty(data2.company_default_projects)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     fillProjectsSelect(data2.companies)
                     atualizar();
                     getTotalValues();
                 }
-                else{
+                else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
@@ -51,8 +51,8 @@ $(document).ready(function () {
     $("#date_range")
         .val(
             moment().format("DD/MM/YYYY") +
-                " - " +
-                moment().add(30, "days").format("DD/MM/YYYY")
+            " - " +
+            moment().add(30, "days").format("DD/MM/YYYY")
         )
         .dateRangePicker({
             format: "DD/MM/YYYY",
@@ -136,7 +136,7 @@ $(document).ready(function () {
         $("#pagination").html("");
 
         if (response.meta.total <= response.meta.per_page) {
-            $("#pagination").css({"background":"#f4f4f4"})
+            $("#pagination").css({ "background": "#f4f4f4" })
             return;
         }
 
@@ -145,7 +145,7 @@ $(document).ready(function () {
         $("#pagination").append(primeira_pagina);
 
         if (response.meta.current_page == "1") {
-            $("#pagination").css({"background":"#ffffff"})
+            $("#pagination").css({ "background": "#ffffff" })
 
             $("#primeira_pagina").attr("disabled", true);
             $("#primeira_pagina").addClass("nav-btn");
@@ -163,10 +163,10 @@ $(document).ready(function () {
 
             $("#pagination").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page - x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page - x) +
-                    "</button>"
+                (response.meta.current_page - x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page - x) +
+                "</button>"
             );
 
             $("#pagina_" + (response.meta.current_page - x)).on(
@@ -200,10 +200,10 @@ $(document).ready(function () {
 
             $("#pagination").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page + x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page + x) +
-                    "</button>"
+                (response.meta.current_page + x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page + x) +
+                "</button>"
             );
 
             $("#pagina_" + (response.meta.current_page + x)).on(
@@ -275,7 +275,7 @@ $(document).ready(function () {
 
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
-        $("#pagination").children().attr("disabled","disabled");
+        $("#pagination").children().attr("disabled", "disabled");
         if (link == null) {
             link = "/api/contestations/getcontestations?" + getFilters();
         } else {
@@ -298,6 +298,7 @@ $(document).ready(function () {
             success: function (response) {
                 $("#chargebacks-table-data").html("");
                 $("#chargebacks-table").addClass("table-striped");
+                $("#pagination-container").show();
 
                 $.each(response.data, function (index, value) {
                     const objectArray = Object.entries(value.sale_blacklist);
@@ -311,15 +312,14 @@ $(document).ready(function () {
 
                     dados = "";
                     dados += `
-                        <tr ${
-                            value.status == 3 ? "class='won-contestation'" : ""
+                        <tr ${value.status == 3 ? "class='won-contestation'" : ""
                         }>
                             <td id='${value.id}'>
                                 <span>${value.sale_code}</span>
                             </td>
 
-                            <td class="line-overflow" title="${value.company}">
-                                ${value.company_limit}
+                            <td class="line-overflow" >
+                                <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='"${value.company}"' > ${value.company_limit} </span>
                                 <br>
                                 <small class="subdescription">
                                     ${value.project}
@@ -327,34 +327,32 @@ $(document).ready(function () {
                             </td>
 
                             <td class="line-overflow" title="${value.customer}">
-                                ${value.customer}
+                                <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='"${value.customer}"'> ${value.customer} </span>
+
                                 <br>
                                 <small class="subdescription">
                                     Pagamento em ${value.adjustment_date}
                                 </small>
                             </td>`;
 
-                            /*
-                            ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
-                                ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
-                                : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
-                            */
+                    /*
+                    ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
+                        ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
+                        : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
+                    */
                     if (value.status in statusObject) {
                         dados += `
                                     <td class='copy_link'>
                                         <div class="d-flex justify-content-center align-items-center text-center" >
-                                            <span class='badge ${badgeObject[value.status]} ${
-                            value.sale_status === 10 ? "pointer" : "cursor-default"
-                        }' data-toggle="tooltip" data-html="true" data-placement="top" title="${
-                            statusObject[value.status]
-                        }">
+                                            <span class='badge ${badgeObject[value.status]} ${value.sale_status === 10 ? "pointer" : "cursor-default"
+                            }' data-toggle="tooltip" data-html="true" data-placement="top" title="${statusObject[value.status]
+                            }">
                                                 ${statusObject[value.status]}
                                             </span>
-                                            ${
-                                                value.sale_is_chargeback_recovered
-                                                    ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">'
-                                                    : ""
-                                            }
+                                            ${value.sale_is_chargeback_recovered
+                                ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">'
+                                : ""
+                            }
                                         </div>
                                     </td>`;
                     } else {
@@ -367,50 +365,49 @@ $(document).ready(function () {
                     }
 
                     dados += `
-                                    <td class="bold">${value.expiration_user} ${
-                        value.expiration_user.includes("dia")
+                                    <td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia")
                             ? '<br><span class="font-size-12 text-muted"> para expirar</span>'
                             : ""
-                    }</td>
+                        }</td>
                                 `;
 
                     dados += `
                                 <td class="line-overflow">
-                                    ${value.reason}
+                                <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='"${value.reason}"'> ${value.reason} </span>
+
                                 </td>
-                                <!-- <td style='white-space: nowrap'> <b>${
-                                    value.amount
-                                }</b> </td>-->
+
+                                <!-- <td style='white-space: nowrap'> <b>${value.amount
+                        }</b> </td>-->
                                     <td>
-                                        ${
-                                            value.is_file_user_completed
-                                                ? '<a  role="button" class="contetation_file pointer  ' +
-                                                  (value.has_expired
-                                                      ? "disabled"
-                                                      : "") +
-                                                  '" title="' +
-                                                  (value.has_expired
-                                                      ? "Prazo para recurso encerrado"
-                                                      : "Enviar arquivo") +
-                                                  '"   style="margin-right:5px" contestation="' +
-                                                  value.id +
-                                                  '"><span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completo">done</span></a>'
-                                                : '<a  role="button" class="contetation_file pointer  ' +
-                                                  (value.has_expired
-                                                      ? "disabled"
-                                                      : value.has_files
-                                                      ? "text-success"
-                                                      : "") +
-                                                  '" title="' +
-                                                  (value.has_expired
-                                                      ? "Prazo para recurso encerrado"
-                                                      : "Enviar arquivo") +
-                                                  '"   style="margin-right:5px" contestation="' +
-                                                  value.id +
-                                                  '">' +
-                                                  '<span class="'+ (value.has_files ? "text-success" : "") + '" id="upload-file_' + value.id + ' " > <img src="/build/global/img/icon-cloud.svg"/> </span>' +
-                                                  "</a>"
-                                        }
+                                        ${value.is_file_user_completed
+                            ? '<a  role="button" class="contetation_file pointer  ' +
+                            (value.has_expired
+                                ? "disabled"
+                                : "") +
+                            '" title="' +
+                            (value.has_expired
+                                ? "Prazo para recurso encerrado"
+                                : "Enviar arquivo") +
+                            '"   style="margin-right:5px" contestation="' +
+                            value.id +
+                            '"><span class="material-icons" id="check-status-text-icon" data-toggle="tooltip" title="Envio completo">done</span></a>'
+                            : '<a  role="button" class="contetation_file pointer  ' +
+                            (value.has_expired
+                                ? "disabled"
+                                : value.has_files
+                                    ? "text-success"
+                                    : "") +
+                            '" title="' +
+                            (value.has_expired
+                                ? "Prazo para recurso encerrado"
+                                : "Enviar arquivo") +
+                            '"   style="margin-right:5px" contestation="' +
+                            value.id +
+                            '">' +
+                            '<span class="' + (value.has_files ? "text-success" : "") + '" id="upload-file_' + value.id + ' " > <img src="/build/global/img/icon-cloud.svg"/> </span>' +
+                            "</a>"
+                        }
                                         <a role='button' class='detalhes_venda pointer' venda='${value.sale_id}'>
                                             <span>
                                                 <img src="/build/global/img/icon-eye.svg"/>
@@ -421,12 +418,13 @@ $(document).ready(function () {
 
                     $("#chargebacks-table-data").append(dados);
                 });
+                $(".fullInformation").tooltip();
 
                 if (response.data == "") {
                     $("#chargebacks-table-data").html(
                         "<tr class='text-center gray'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                            $("#chargebacks-table-data").attr("img-empty") +
-                            "' alt='Sem contestações'>Nenhuma contestação encontrada</td></tr>"
+                        $("#chargebacks-table-data").attr("img-empty") +
+                        "' alt='Sem contestações'>Nenhuma contestação encontrada</td></tr>"
                     );
                 }
                 pagination(response);
@@ -527,10 +525,10 @@ $(document).ready(function () {
                 if ($("#date_type").val() == "transaction_date") {
                     $("#total-contestation-tax").html(
                         " (" +
-                            response.total_contestation_tax +
-                            " de " +
-                            response.total_sale_approved +
-                            ")"
+                        response.total_contestation_tax +
+                        " de " +
+                        response.total_sale_approved +
+                        ")"
                     );
                     $("#total-chargeback-tax").html(
                         " (" + response.total_chargeback_tax + ")"
@@ -557,6 +555,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
+        $("#pagination-container").hide();
         loadData();
     });
 
@@ -573,8 +572,8 @@ $(document).ready(function () {
         } else {
             $("#date_range").val(
                 moment("2018-01-01").format("DD/MM/YYYY") +
-                    " - " +
-                    moment().format("DD/MM/YYYY")
+                " - " +
+                moment().format("DD/MM/YYYY")
             );
             $("#date_type").attr("disabled", true).addClass("disableFields");
             $("#date_range").attr("disabled", true).addClass("disableFields");
@@ -645,7 +644,7 @@ $(document).ready(function () {
     //window.atualizar();
     getTotalValues();
 
-    function fillProjectsSelect(data){
+    function fillProjectsSelect(data) {
         $.ajax({
             method: "GET",
             url: "/api/contestations/projects-with-contestations",
@@ -661,23 +660,23 @@ $(document).ready(function () {
             success: function success(response) {
                 return response;
             }
-        }).done(function(dataSales){
+        }).done(function (dataSales) {
             $.each(data, function (c, company) {
                 //if( data2.company_default == company.id){
-                    $.each(company.projects, function (i, project) {
-                        if( dataSales.includes(project.id) )
-                            $("#project").append($("<option>", {value: project.id,text: project.name,}));
-                    });
+                $.each(company.projects, function (i, project) {
+                    if (dataSales.includes(project.id))
+                        $("#project").append($("<option>", { value: project.id, text: project.name, }));
+                });
                 //}
             });
         });
     }
 
-    getCompaniesAndProjects().done( function (data){
-        if(!isEmpty(data.company_default_projects)){
+    getCompaniesAndProjects().done(function (data) {
+        if (!isEmpty(data.company_default_projects)) {
             getProjects(data);
         }
-        else{
+        else {
             $('#export-excel').hide()
             $("#project-empty").show();
             $("#project-not-empty").hide();

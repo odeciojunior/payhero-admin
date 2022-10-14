@@ -55,7 +55,7 @@ $('.company-navbar').change(function () {
 });
 
 window.atualizar = function (link = null) {
-
+    $("#pagination-sales").children().attr("disabled", "disabled");
     currentPage = link;
     let updateResume = true;
 
@@ -121,9 +121,9 @@ window.atualizar = function (link = null) {
             };
 
             if (!isEmpty(response.data)) {
-                $.each(response.data, function (index, value) {
+                $("#pagination-container").removeClass("d-none").addClass("d-flex")
 
-                    console.log(value.status + "  " + statusArray[value.status]);
+                $.each(response.data, function (index, value) {
 
                     let start_date = "";
                     if (value.start_date) {
@@ -135,70 +135,82 @@ window.atualizar = function (link = null) {
                         end_date = value.end_date.split(/\s/g); //data final
                         end_date = end_date[0] + " <br> <span class='subdescription font-size-12'>" + end_date[1] + " </span>";
                     }
-                    dados = `  <tr>
-                                <td class='display-sm-none display-m-none display-lg-none text-center text-left'>
+                    dados = `
+                        <tr>
+                            <td class='display-sm-none display-m-none display-lg-none text-center text-left'>
+
+                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.sale_code}">
                                     ${value.sale_code}
-                                    ${value.upsell
-                            ? '<span class="text-muted font-size-10">(Upsell)</span>'
-                            : ""
-                        }
-                                </td>
+                                </div>
 
-                                <td class="text-left ellipsis-text">${value.project
-                        }</td>
+                                ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ""}
+                            </td>
 
-                                <td class="text-left ellipsis-text">${value.product
-                        }${value.affiliate != null &&
-                            value.user_sale_type == "producer"
-                            ? `<br><small>(Afiliado: ${value.affiliate})</small>`
-                            : ""
-                        }</td>
-                                <td class='display-sm-none display-m-none display-lg-none text-left ellipsis-text'>${value.client
-                        }</td>
-                                <td>
-                                    <img src='/build/global/img/cartoes/${value.brand
-                        }.png'  style='width: 45px'>
-                                </td>
-                                <td>
-                                   <div class="d-flex justify-content-center">
-                                        <span class="badge badge-${statusArray[value.status]
-                        } ${value.status_translate === "Pendente"
-                            ? "boleto-pending"
-                            : ""
-                        }" ${value.status_translate === "Pendente"
-                            ? 'status="' +
-                            value.status_translate +
-                            '" sale="' +
-                            value.id_default +
-                            '"'
-                            : ""
-                        }>${value.status_translate}</span>
-                                           ${value.is_chargeback_recovered &&
-                            value.status_translate ===
-                            "Aprovado"
-                            ? `
-                                            <img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
-                            : ""
-                        }
-                                    </div>
-                                </td>
+                            <td class="text-left ellipsis-text">
+                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}">
+                                    ${value.project}
+                                </div>
+
+                            </td>
+
+                            <td class="text-left ellipsis-text">
+
+                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.product}${value.affiliate != null && value.user_sale_type == "producer" ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ""}">
+                                    ${value.product}${value.affiliate != null && value.user_sale_type == "producer" ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ""}
+                                </div>
+
+                            </td>
+
+                            <td class='display-sm-none display-m-none display-lg-none text-left ellipsis-text'>
+                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                    ${value.client}
+                                </div>
+                            </td>
+
+                            <td>
+                                <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
+                            </td>
+
+                            <td>
+                                <div class="d-flex justify-content-center">
+
+                                    <span class="badge badge-${statusArray[value.status]} ${value.status_translate === "Pendente" ? "boleto-pending" : ""}" ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
+                                        ${value.status_translate}
+                                    </span>
+
+                                    ${value.is_chargeback_recovered && value.status_translate === "Aprovado" ? `
+
+                                    <img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">` : ""}
+                                </div>
+                            </td>
+
                                 <td class='display-sm-none text-left display-m-none'>${start_date}</td>
+
                                 <td class='display-sm-none text-left'>${end_date}</td>
-                                <td style='white-space: nowrap' class="text-left"><b>${value.total_paid
-                        }</b></td>
-                                <td class="text-left ellipsis-text">
-                                    ${value.reason_blocked}
+
+                                <td style='white-space: nowrap' class="text-left">
+                                    <b>${value.total_paid}</b>
                                 </td>
-                            </tr>`;
+
+                                <td class="text-left ellipsis-text">
+                                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.reason_blocked}">
+                                        ${value.reason_blocked}
+                                    </span>
+                                </td>
+
+                            </tr>`
+                        ;
 
                     $("#dados_tabela").append(dados);
                 });
+                $(".fullInformation").tooltip();
 
                 $("#date").val(
                     moment(new Date()).add(3, "days").format("YYYY-MM-DD")
                 );
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
             } else {
+                $("#pagination-container").removeClass("d-flex").addClass("d-none")
                 $("#dados_tabela").html(
                     "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
                     $("#dados_tabela").attr("img-empty") +
@@ -331,6 +343,8 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
+        $("#pagination-container").removeClass("d-flex").addClass("d-none")
+
         window.atualizar();
     });
 

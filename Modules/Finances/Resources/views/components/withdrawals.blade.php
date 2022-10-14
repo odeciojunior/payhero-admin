@@ -16,7 +16,7 @@
         </tbody>
     </table>
 </div>
-<div class="row justify-content-end pr-15">
+<div id="pagination-container" class="d-none row justify-content-end pr-15">
     <ul id="pagination-withdrawals" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10 pagination-style">
         {{-- js carrega... --}}
     </ul>

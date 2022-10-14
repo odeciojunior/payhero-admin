@@ -224,26 +224,34 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
                                     <td class='display-sm-none display-m-none display-lg-none'>#${value.sale_code}</td>
+
                                     <td>
-                                        <small>${value.product}</small>
+                                        <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.product}">
+                                            <small>${value.product}</small>
+                                        </span>
                                     </td>
-                                    <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
+
+                                    <td class='display-sm-none display-m-none display-lg-none'>
+                                        <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                            ${value.client}
+                                        </span>
+                                    }</td>
+
                                     <td>
-                                        <span class="badge badge-${statusArray[value.status]}">${
-                            value.status_translate
-                        }</span>
+                                        <span class="badge badge-${statusArray[value.status]}">${value.status_translate
+                            }</span>
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.updated_date}</td>
                                     <td class='display-sm-none'>${value.value}</td>
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' sale="${
-                                            value.sale_code
-                                        }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></button></a>
+                                        <a role='button' class='detalhes_venda pointer' sale="${value.sale_code
+                            }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></button></a>
                                     </td>
                                 </tr>`;
 
                         $("#dados_tabela").append(dados);
                     });
+                    $(".fullInformation").tooltip();
 
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));

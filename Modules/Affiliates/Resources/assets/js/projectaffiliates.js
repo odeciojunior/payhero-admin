@@ -178,13 +178,13 @@ $(document).ready(function () {
                         data += "<tr>";
                         data +=
                             '<td class="ellipsis-text" style="vertical-align: middle;">' +
-                            value.name +
-                            "</td>";
+                            '<span class="fullInformation" data-toggle="tooltip" data-placement="top" title="' + value.name + '">' + value.name + '</span>'
+                        "</td>";
                         // data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
                         data +=
                             '<td class="ellipsis-text" style="vertical-align: middle;">' +
-                            value.project_name +
-                            "</td>";
+                            '<span class="fullInformation" data-toggle="tooltip" data-placement="top" title="' + value.project_name + '">' + value.project_name + '</span>'
+                        "</td>";
                         data +=
                             '<td class="" style="vertical-align: middle;">' +
                             dataDay + '<br> <span class="subdescription font-size-12">' + dataTime + '</span> ' +
@@ -216,6 +216,8 @@ $(document).ready(function () {
                         data += "</tr>";
                         $("#body-table-affiliates").append(data);
                     });
+                    $(".fullInformation").tooltip();
+                    $(".fullInformation").tooltip();
                 }
                 $(".table-affiliate").addClass("table-striped");
                 $(".table-affiliate").addClass("mb-0");
@@ -477,16 +479,16 @@ $(document).ready(function () {
                         data += "<tr>";
                         data +=
                             '<td class="ellipsis-text" style="vertical-align: middle;">' +
-                            value.name +
-                            "</td>";
+                            '<span class="fullInformation" data-toggle="tooltip" data-placement="top" title="' + value.name + '">' + value.name + '</span>'
+                        "</td>";
                         data +=
                             '<td class="ellipsis-text" style="vertical-align: middle;">' +
-                            value.email +
-                            "</td>";
+                            '<span class="fullInformation" data-toggle="tooltip" data-placement="top" title="' + value.email + '">' + value.email + '</span>'
+                        "</td>";
                         data +=
                             '<td class="ellipsis-text" style="vertical-align: middle;">' +
-                            value.project_name +
-                            "</td>";
+                            '<span class="fullInformation" data-toggle="tooltip" data-placement="top" title="' + value.project_name + '">' + value.project_name + '</span>'
+                        "</td>";
                         data +=
                             '<td class="" style="vertical-align: middle;">' +
                             dataDay + '<br> <span class="subdescription font-size-12">' + dataTime + '</span> ' +

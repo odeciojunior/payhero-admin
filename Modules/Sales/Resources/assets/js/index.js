@@ -25,8 +25,6 @@ function loadData() {
 }
 
 function atualizar(link = null) {
-    $("#container-pagination").hide()
-
     currentPage = link;
 
     let updateResume = true;
@@ -149,7 +147,7 @@ function atualizar(link = null) {
                             <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}" role="button" style='margin-left: 5px;'>
                                 <img width="25px" src="/build/global/img/icon-cupom-discout.svg">
                             </a>`
-                        ;
+                            ;
                     }
 
                     let upsell = "";
@@ -159,7 +157,7 @@ function atualizar(link = null) {
                             <a data-toggle="tooltip" title="Upsell" role="button" style='margin-left: 5px;'>
                                 <img width="20px" src="/build/global/img/icon-upsell.svg">
                             </a>`
-                        ;
+                            ;
                     }
 
                     let has_order_bump = "";
@@ -168,7 +166,7 @@ function atualizar(link = null) {
                             <a data-toggle="tooltip" title="Order Bump" role="button" style='margin-left: 5px;'>
                                 <img width="20px" src="/build/global/img/order-bump.svg">
                             </a>`
-                        ;
+                            ;
                     }
 
                     let cashback = "";
@@ -178,7 +176,7 @@ function atualizar(link = null) {
                             <a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
                                 <img width="27px" src="/build/global/img/icons-cashback.svg">
                             </a>`
-                        ;
+                            ;
 
                         cashback = `<b style="color: #5EE2A1;">${value.total_paid}</b>`;
                     }
@@ -204,7 +202,7 @@ function atualizar(link = null) {
                             </td>
 
                             <td>
-                                <span>
+                                <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.product}">
                                     ${value.product}
                                 </span>
 
@@ -217,17 +215,20 @@ function atualizar(link = null) {
                             </td>
 
                             <td class='display-sm-none display-m-none display-lg-none'>
+                                <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}">
                                 ${value.client}
+                                </span>
+
                             </td>
 
                             <td>
-                                <img src='/build/global/img/cartoes/${ value.brand }.png'  style='width: 55px; height: 36px;'>
+                                <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 55px; height: 36px;'>
                             </td>
 
                             <td class='text-center'>
                                 <span class="status-sale badge badge-${statusArray[value.status]}
-                                ${ value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : "" }"
-                                ${ value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : "" }>
+                                ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""}"
+                                ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
                                     ${value.status_translate}
                                 </span>
 
@@ -242,12 +243,12 @@ function atualizar(link = null) {
                             </td>
 
                             <td class="text-center text-md-right text-nowrap commission-fweight ${value.status_translate === "Aprovado" ? "approved-value" : ""}" >
-                                ${ cashback ? cashback : `${value.total_paid}<br>` }
+                                ${cashback ? cashback : `${value.total_paid}<br>`}
                             </td>
 
                             <td style="text-align: center">
                                 ${observation}
-                                <a role='button' class='detalhes_venda pointer' venda='${ value.id }'>
+                                <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
                                     <span>
                                         <img src="/build/global/img/icon-eye.svg">
                                     </span>
@@ -265,16 +266,15 @@ function atualizar(link = null) {
                     $("#dados_tabela").append(dados);
                 });
 
-                $("#date").val(
-                    moment(new Date()).add(3, "days").format("YYYY-MM-DD")
-                );
+                $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
                 $("#container-pagination").show();
+                $(".fullInformation").tooltip();
             } else {
                 $("#dados_tabela").html(
                     "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#dados_tabela").attr("img-empty") +
-                        "'>Nenhuma venda encontrada</td></tr>"
+                    $("#dados_tabela").attr("img-empty") +
+                    "'>Nenhuma venda encontrada</td></tr>"
                 );
                 $("#export-excel").hide();
             }
@@ -322,8 +322,8 @@ function getFilters(urlParams = false) {
                     .replace(/[^\d]+/g, "")
             ) > 0
                 ? $("#valor")
-                      .val()
-                      .replace(/[^\d]+/g, "")
+                    .val()
+                    .replace(/[^\d]+/g, "")
                 : "",
         email_client: $("#email_cliente").val(),
         upsell: $("#upsell").val(),
@@ -523,8 +523,8 @@ $(document).ready(function () {
         } else {
             $("#date_range").val(
                 moment("2018-01-01").format("DD/MM/YYYY") +
-                    " - " +
-                    moment().format("DD/MM/YYYY")
+                " - " +
+                moment().format("DD/MM/YYYY")
             );
             $("#date_type").attr("disabled", true).addClass("disableFields");
             $("#date_range").attr("disabled", true).addClass("disableFields");
@@ -567,6 +567,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
+        $("#container-pagination").hide()
         //atualizar();
         loadData();
     });

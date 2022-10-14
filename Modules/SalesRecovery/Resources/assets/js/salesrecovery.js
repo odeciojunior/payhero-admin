@@ -72,6 +72,7 @@ $(document).ready(function () {
     });
 
     $("#bt_filtro").on("click", function (event) {
+        $("#container-pagination").hide()
         event.preventDefault();
         loadData();
     });
@@ -267,7 +268,7 @@ $(document).ready(function () {
                     .toLowerCase();
                 let image = $("#table_data").attr("img-empty");
                 if (response.data == "" && recoveryType) {
-                    $("#pagination-salesRecovery").hide();
+                    $("#container-pagination").hide();
                     $("#table_data").html(
                         `<tr>
                             <td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'>
@@ -278,7 +279,7 @@ $(document).ready(function () {
                     );
                 } else {
                     createHTMLTable(response);
-                    $("#pagination-salesRecovery").show();
+                    $("#container-pagination").show();
                     pagination(response, "salesRecovery", updateSalesRecovery);
 
                     $(".copy_link").on("click", function () {
@@ -412,6 +413,7 @@ $(document).ready(function () {
         });
 
         $("#table_data").append(html);
+        $(".fullInformation").tooltip();
     }
 
     /**
@@ -427,9 +429,9 @@ $(document).ready(function () {
         data += "<tr>";
         data +=
             "<td class='display-sm-none display-m-none display-lg-none'>" +
-                date +
-                "<br><span class='subdescription'>" + hours + "</span>"
-            "</td>";
+            date +
+            "<br><span class='subdescription'>" + hours + "</span>"
+        "</td>";
         data +=
             "<td> <span data-toggle='tooltip' data-placement='top' title='" +
             value.project +
@@ -498,19 +500,17 @@ $(document).ready(function () {
         data += "<tr>";
         data +=
             "<td class='display-sm-none display-m-none display-lg-none'>" +
-                date +
-                "<br><span class='subdescription'>" + hours + "</span>"
-            "</td>";
+            date +
+            "<br><span class='subdescription'>" + hours + "</span>"
+        "</td>";
         data +=
-            "<td> <span data-toggle='tooltip' data-placement='top' title='" +
-            value.project +
-            "'>" +
+            "<td> <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='" + value.project + "'>" +
             value.project +
             "</span> </td>";
         data +=
             "<td class='display-sm-none display-m-none'>" +
-            value.client +
-            "</td>";
+            "<span class='fullInformation' data-toggle='tooltip' data-placement='top' title='" + value.client + "'>" + value.client + "</span>"
+        "</td>";
         data +=
             "<td>" +
             value.email_status +
@@ -658,8 +658,8 @@ $(document).ready(function () {
         if (!isEmpty(data.link)) {
             $("#link-sale").html(
                 'Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' +
-                    data.link +
-                    '" title="Copiar link"><span class="o-copy-1"></span> </a> '
+                data.link +
+                '" title="Copiar link"><span class="o-copy-1"></span> </a> '
             );
         } else {
             $("#link-sale").html("Link: " + data.link);

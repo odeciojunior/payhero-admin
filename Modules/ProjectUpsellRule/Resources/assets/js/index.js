@@ -4,20 +4,20 @@ $(document).ready(function () {
     let descriptionconfig;
 
 
-    $('.value-mask').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    $('.value-mask').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
 
     function formatDouble(number) {
-        return number.replace('.','').replace(',','.')
+        return number.replace('.', '').replace(',', '.')
     }
     function formatMoney(number) {
-        return (Math.round(number * 100) / 100).toFixed(2).replace('.',',');
+        return (Math.round(number * 100) / 100).toFixed(2).replace('.', ',');
     }
     //store type
     $('#us_type_value').click(function () {
         $('#us_percent_opt').hide()
         $('#us_money_opt').show()
         $('#us_money_opt input').focus()
-        $('#add_discount_upsell').val( formatDouble($('#us_money_opt input').val()))
+        $('#add_discount_upsell').val(formatDouble($('#us_money_opt input').val()))
     })
 
     $('#us_type_percent').click(function () {
@@ -84,7 +84,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#data-table-upsell", "#table-upsell");
-        $("#pagination-upsell").children().attr("disabled","disabled");
+        $("#pagination-upsell").children().attr("disabled", "disabled");
 
         $("#tab_upsell-panel").find(".no-gutters").css("display", "none");
         $("#table-upsell").find("thead").css("display", "none");
@@ -105,7 +105,7 @@ $(document).ready(function () {
                 let dataTable = $("#data-table-upsell");
                 dataTable.html("");
                 if (response.data == "") {
-
+                    $("#pagination-container-upsell").addClass("d-none").removeClass("d-flex")
                     pagination(response, "upsell", loadUpsell);
                     $(".div-config").hide();
                     $("#data-table-upsell").html(`
@@ -128,6 +128,8 @@ $(document).ready(function () {
                 } else {
                     $("#tab_upsell-panel").find(".no-gutters").css("display", "flex");
                     $("#table-upsell").find("thead").css("display", "contents");
+                    $("#pagination-container-upsell").addClass("d-flex").removeClass("d-none")
+
 
                     $("#table-upsell").addClass("table-striped");
                     $("#count-upsell").html(response.meta.total);
@@ -136,22 +138,18 @@ $(document).ready(function () {
                         data += `
                         <tr>
                             <td class="ellipsis-text">${value.description}</td>
-                            <td class="text-center">${
-                                value.active_flag
-                                    ? `<span class="badge badge-success">Ativo</span>`
-                                    : `<span class="badge badge-disable">Desativado</span>`
+                            <td class="text-center">${value.active_flag
+                                ? `<span class="badge badge-success">Ativo</span>`
+                                : `<span class="badge badge-disable">Desativado</span>`
                             }</td>
                             <td style='text-align:center'>
                                 <div class='d-flex justify-content-end align-items-center'>
-                                    <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${
-                                        value.id
-                                    }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
-                                    <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${
-                                        value.id
-                                    }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
-                                    <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${
-                                        value.id
-                                    }" data-toggle="modal" data-target="#modal-delete-upsell"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
+                                    <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id
+                            }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
+                                    <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id
+                            }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
+                                    <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id
+                            }" data-toggle="modal" data-target="#modal-delete-upsell"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                                 </div>
                             </td>
                         </tr>
@@ -209,10 +207,10 @@ $(document).ready(function () {
                 let upsell = response.data;
                 $("#edit_description_upsell").val(`${upsell.description}`);
 
-                if(upsell.type == 1){
+                if (upsell.type == 1) {
                     $("#usu_type_value").trigger('click');
                     $("#usu_money_opt input").val(formatMoney(upsell.discount));
-                }else{
+                } else {
                     $("#usu_percent_opt input").val(upsell.discount);
                     $("#usu_type_percent").trigger('click');
                 }
@@ -233,8 +231,7 @@ $(document).ready(function () {
                 for (let shipping of upsell.apply_on_shipping) {
                     applyOnShipping.push(shipping.id);
                     $("#edit_apply_on_shipping").append(
-                        `<option value="${shipping.id}">${
-                            shipping.name + (shipping.information ? " - " + shipping.information : "")
+                        `<option value="${shipping.id}">${shipping.name + (shipping.information ? " - " + shipping.information : "")
                         }</option>`
                     );
                 }
@@ -244,8 +241,7 @@ $(document).ready(function () {
                 for (let plan of upsell.apply_on_plans) {
                     applyOnPlans.push(plan.id);
                     $("#edit_apply_on_plans").append(
-                        `<option value="${plan.id}">${
-                            plan.name + (plan.description ? " - " + plan.description : "")
+                        `<option value="${plan.id}">${plan.name + (plan.description ? " - " + plan.description : "")
                         }</option>`
                     );
                 }
@@ -255,8 +251,7 @@ $(document).ready(function () {
                 for (let plan of upsell.offer_on_plans) {
                     offerOnPlans.push(plan.id);
                     $("#edit_offer_on_plans").append(
-                        `<option value="${plan.id}">${
-                            plan.name + (plan.description ? " - " + plan.description : "")
+                        `<option value="${plan.id}">${plan.name + (plan.description ? " - " + plan.description : "")
                         }</option>`
                     );
                 }
@@ -375,20 +370,19 @@ $(document).ready(function () {
                 $(".upsell-offer-plans").html("");
                 $(".upsell-description").html(`${upsell.description}`);
                 $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}` : `Valor sem desconto`}`);
-                if(upsell.discount != 0){
-                    if(upsell.type == 1){
+                if (upsell.discount != 0) {
+                    if (upsell.type == 1) {
                         $(".upsell-discount").html(formatMoney(upsell.discount))
                         $(".upsell-discount").prepend('R$')
-                    }else{
+                    } else {
                         $(".upsell-discount").append('%')
                     }
                 }
 
                 $(".upsell-status").html(
-                    `${
-                        upsell.active_flag
-                            ? `<span class="badge badge-success text-left">Ativo</span>`
-                            : `<span class="badge badge-danger">Desativado</span>`
+                    `${upsell.active_flag
+                        ? `<span class="badge badge-success text-left">Ativo</span>`
+                        : `<span class="badge badge-danger">Desativado</span>`
                     }`
                 );
                 for (let applyShipping of upsell.apply_on_shipping) {

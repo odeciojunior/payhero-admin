@@ -38,7 +38,7 @@ window.updateTransfersTable = function (link = null) {
     $("#table-transfers-body").html("");
 
     loadOnTable("#table-transfers-body", "#transfersTable");
-    $("#pagination-transfers").children().attr("disabled","disabled");
+    $("#pagination-transfers").children().attr("disabled", "disabled");
 
     if (link == null) {
         link = "/api/transfers";
@@ -77,8 +77,7 @@ window.updateTransfersTable = function (link = null) {
             let parseValue = parseFloat(balance_in_period.replace(".", "").replace(",", "."));
             let availableInPeriod = $("#available-in-period");
             availableInPeriod.html(
-                `<span ${
-                    parseValue < 0 ? ' style="color:red;"' : ""
+                `<span ${parseValue < 0 ? ' style="color:red;"' : ""
                 }><span class="currency">R$ </span>${balance_in_period}</span>`
             );
             if (parseValue < 0) {
@@ -105,8 +104,9 @@ window.updateTransfersTable = function (link = null) {
             }
 
             if (response.data == "") {
+                $("#pagination-container").removeClass("d-flex").addClass("d-none")
 
-                $("#pagination-transfers").css({"background" : "#f4f4f4"})
+                $("#pagination-transfers").css({ "background": "#f4f4f4" })
                 $("#table-transfers-body").html(`
                     <tr class='text-center bg-transparent'>
                         <td style='height: 300px; border-radius: 16px !important' colspan='11' >
@@ -122,6 +122,7 @@ window.updateTransfersTable = function (link = null) {
                 `);
                 $("#pagination-transfers").html("");
             } else {
+                $("#pagination-container").removeClass("d-none").addClass("d-flex")
                 data = "";
 
                 $.each(response.data, function (index, value) {
@@ -169,7 +170,7 @@ window.updateTransfersTable = function (link = null) {
                     }
                     data += "</tr>";
                 });
-                $("#pagination-transfers").css({"background" : "#ffffff"})
+                $("#pagination-transfers").css({ "background": "#ffffff" })
 
 
                 $("#table-transfers-body").html(data);
@@ -202,10 +203,10 @@ window.updateTransfersTable = function (link = null) {
             }
             $("#pagination-transfers").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page - x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page - x) +
-                    "</button>"
+                (response.meta.current_page - x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page - x) +
+                "</button>"
             );
             $("#pagina_" + (response.meta.current_page - x)).on("click", function () {
                 updateTransfersTable("?page=" + $(this).html());
@@ -225,10 +226,10 @@ window.updateTransfersTable = function (link = null) {
             }
             $("#pagination-transfers").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page + x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page + x) +
-                    "</button>"
+                (response.meta.current_page + x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page + x) +
+                "</button>"
             );
             $("#pagina_" + (response.meta.current_page + x)).on("click", function () {
                 updateTransfersTable("?page=" + $(this).html());
@@ -312,7 +313,7 @@ window.updateAccountStatementData = function () {
 
             if (isEmpty(items)) {
                 loadOnAnyEllipsis("#nav-statement #available-in-period-statement", true);
-                $("#pagination-transfers").css({"background" : "#f4f4f4"})
+                $("#pagination-transfers").css({ "background": "#f4f4f4" })
                 $("#export-excel").addClass("d-none");
                 $("#table-statement-body").html(`
                     <tr class='text-center bg-transparent'>
@@ -391,12 +392,12 @@ window.updateAccountStatementData = function () {
                         <td class="text-left value-finance-schedule" style="grid-area: value;">
                             <strong class="font-md-size-20" style="color:green">
                                 ${item.amount
-                                    .toLocaleString("pt-BR", {
-                                        style: "currency",
-                                        currency: "BRL",
-                                    })
-                                    .replace(/\s+/g, "")
-                                    .replace("-", "- ")}
+                            .toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                            })
+                            .replace(/\s+/g, "")
+                            .replace("-", "- ")}
                             </strong>
                         </td>
                     </tr>`;
@@ -405,12 +406,12 @@ window.updateAccountStatementData = function () {
                         <td class="text-left value-finance-schedule" style="grid-area: value;">
                             <strong class="font-md-size-20" style="color:red">
                                 ${item.amount
-                                    .toLocaleString("pt-BR", {
-                                        style: "currency",
-                                        currency: "BRL",
-                                    })
-                                    .replace(/\s+/g, "")
-                                    .replace("-", "- ")}
+                            .toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                            })
+                            .replace(/\s+/g, "")
+                            .replace("-", "- ")}
                             </strong>
                         </td>
                     </tr>`;
@@ -437,8 +438,7 @@ window.updateAccountStatementData = function () {
 
             let availableInPeriod = $("#available-in-period");
             availableInPeriod.html(
-                `<span ${
-                    isNegativeStatement ? ' style="color:red;"' : ""
+                `<span ${isNegativeStatement ? ' style="color:red;"' : ""
                 }><span class="currency">R$ </span>${totalInPeriod.toLocaleString("pt-BR")}</span>`
             );
 
@@ -488,6 +488,7 @@ window.updateAccountStatementData = function () {
 $(window).on("load", function () {
     //atualiza a table de extrato
     $(document).on("click", "#bt_filtro, #bt_filtro_statement", function () {
+        $("#pagination-container").removeClass("d-flex").addClass("d-none")
         $("#extract_company_select option[value=" + $("#extract_company_select option:selected").val() + "]").prop(
             "selected",
             true

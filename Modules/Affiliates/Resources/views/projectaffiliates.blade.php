@@ -139,7 +139,7 @@
                                             <td class="">Loja</td>
                                             <td class="">Data</td>
                                             {{-- <td class="table-title" class="text-center">Status</td> --}}
-                                            <td class="" class="text-center">Opções</td>
+                                            <td class="text-center">Opções</td>
                                             {{-- aceitar, recusar --}}
                                         </tr>
                                     </thead>

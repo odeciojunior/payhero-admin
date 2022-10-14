@@ -46,7 +46,7 @@
     </div>
 </div>
 
-<div class="d-flex justify-content-center justify-content-md-end">
+<div id="pagination-container-domain" class="d-none justify-content-center justify-content-md-end">
     <ul id="pagination-domain" class="pagination-sm margin-chat-pagination text-right m-0 pagination-style">
         {{-- js pagination carrega --}}
     </ul>
