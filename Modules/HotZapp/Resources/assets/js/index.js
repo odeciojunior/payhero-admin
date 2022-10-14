@@ -1,67 +1,63 @@
 $(document).ready(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $('#integration-actions').hide();
+        $("#integration-actions").hide();
         $("#no-integration-found").hide();
-        $('#project-empty').hide();
-        loadOnAny('#content');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                companiesAndProjects = data2
-                index('n')
+        $("#project-empty").hide();
+        loadOnAny("#content");
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                companiesAndProjects = data2;
+                index("n");
             });
         });
     });
 
-    var companiesAndProjects = ''
+    var companiesAndProjects = "";
 
-    getCompaniesAndProjects().done( function (data){
-        companiesAndProjects = data
+    getCompaniesAndProjects().done(function (data) {
+        companiesAndProjects = data;
         index();
     });
 
-    function index(loading='y') {
-        if(loading=='y')
-            loadingOnScreen();
-        else{
+    function index(loading = "y") {
+        if (loading == "y") loadingOnScreen();
+        else {
             $("#content").html("");
-            loadOnAny('#content');
+            loadOnAny("#content");
         }
 
-        $hasProjects=false;
+        $hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
             $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                if(project.status == 1)
-                    $hasProjects=true;
+                if (project.status == 1) $hasProjects = true;
             });
         }
 
-        if(!$hasProjects){
-            $('#integration-actions').hide();
+        if (!$hasProjects) {
+            $("#integration-actions").hide();
             $("#no-integration-found").hide();
-            $('#project-empty').show();
+            $("#project-empty").show();
             loadingOnScreenRemove();
-            loadOnAny('#content',true);
-        }
-        else{
+            loadOnAny("#content", true);
+        } else {
             $.ajax({
                 method: "GET",
-                url: "/api/apps/hotzapp?company="+ $('.company-navbar').val(),
+                url: "/api/apps/hotzapp?company=" + $(".company-navbar").val(),
                 dataType: "json",
                 headers: {
                     Authorization: $('meta[name="access-token"]').attr("content"),
                     Accept: "application/json",
                 },
                 error: (response) => {
-                    loadOnAny('#content',true);
+                    loadOnAny("#content", true);
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
                     $("#content").html("");
                     $("#project_id").html("");
-                    fillSelectProject(companiesAndProjects,'#project_id')
+                    fillSelectProject(companiesAndProjects, "#project_id");
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
                     } else {
@@ -74,9 +70,8 @@ $(document).ready(function () {
                     }
                     $("#project-empty").hide();
                     $("#integration-actions").show();
-                    if(loading=='y')
-                        loadingOnScreenRemove();
-                    loadOnAny('#content',true);
+                    if (loading == "y") loadingOnScreenRemove();
+                    loadOnAny("#content", true);
                 },
             });
         }
@@ -99,7 +94,7 @@ $(document).ready(function () {
                 ` style='cursor:pointer;'>
                                     <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
-                ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` +
+                ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
                                     <div class="card-body">
@@ -116,7 +111,7 @@ $(document).ready(function () {
                                                 <a role='button' title='Excluir' class='delete-integration float-right mt-35' project=` +
                 data.id +
                 `>
-                                                    <span class='o-bin-1 pointer'></span>
+                                                    <img src="/build/global/img/icon-trash-new.svg" />
                                                 </a>
                                             </div>
                                         </div>
@@ -169,8 +164,9 @@ $(document).ready(function () {
             error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: (response) => { console.log(response)
-                fillSelectProject(companiesAndProjects,'#select_projects_edit',response.data.project_id)
+            success: (response) => {
+                console.log(response);
+                fillSelectProject(companiesAndProjects, "#select_projects_edit", response.data.project_id);
                 $("#integration_id").val(response.data.id);
                 $("#link_edit").val(response.data.link);
 
@@ -263,26 +259,23 @@ $(document).ready(function () {
 
     //destroy
     $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
-            e.stopPropagation();
-            var project = $(this).attr("project");
-            $.ajax({
-                method: "DELETE",
-                url: "/api/apps/hotzapp/" + project,
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                error: (response) => {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    index();
-                    alertCustom("success", response.message);
-                },
-            });
-        }
-    );
+        e.stopPropagation();
+        var project = $(this).attr("project");
+        $.ajax({
+            method: "DELETE",
+            url: "/api/apps/hotzapp/" + project,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                index();
+                alertCustom("success", response.message);
+            },
+        });
+    });
 });
