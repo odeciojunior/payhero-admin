@@ -699,6 +699,12 @@ class PlansApiController extends Controller
 
     public function getPlans(Request $request)
     {
+        // return response()->json(
+        //     [
+        //         "message" => "Ocorreu um erro, ao buscar dados dos planos",
+        //     ],
+        //     400
+        // );
         try {
             $data = $request->all();
 
@@ -722,7 +728,7 @@ class PlansApiController extends Controller
                 return $return;
             }
             if (!empty($data['search'])) {
-                $plans->where('name', 'like', '%' . $data['search'] . '%');
+                $plans->where('name', 0);
             }
 
             if (!empty($data['search2'])) {
@@ -786,7 +792,6 @@ class PlansApiController extends Controller
 
             return PlansSelectResource::collection($plans);
         } catch (Exception $e) {
-            Log::warning("Erro ao buscar dados dos planos (PlansApiController - getPlans)");
             report($e);
 
             return response()->json(

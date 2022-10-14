@@ -7,6 +7,8 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\CompanyBankAccount;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Services\ShopifyService;
 
 class GenericCommand extends Command
 {
@@ -41,5 +43,24 @@ class GenericCommand extends Command
      */
     public function handle()
     {
+         $integrationId = 1888;
+         $productId = 5327529050272;
+
+         $shopifyIntegration = ShopifyIntegration::find($integrationId);
+
+        $integration = ShopifyIntegration::find($integrationId);
+        $service = new ShopifyService($integration->url_store, $integration->token, false);
+
+        // $result = $service
+        //     ->getClient()
+        //     ->createRequest("GET", "https://{$integration->url_store}/admin/api/2022-04/products/{$productId}.json");
+
+        // dd($result["product"]["status"]);
+
+
+        $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+        //$shopifyService->importShopifyStore($shopifyIntegration->project->id, $shopifyIntegration->userId);
+
+        $shopifyService->importShopifyProduct($shopifyIntegration->project->id, $shopifyIntegration->userId, $productId );
     }
 }
