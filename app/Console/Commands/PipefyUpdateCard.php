@@ -40,21 +40,22 @@ class PipefyUpdateCard extends Command
             //Atualizar todos os cards com o Label Facebook Ads ou Google Ads
             $users = User::whereNotNull("pipefy_card_id")->where("created_at", ">=", "2022-09-01 00:00:00");
             foreach ($users->cursor() as $user) {
+                $labelAd = "";
                 if (!empty($user->utm_srcs)) {
                     $utmSrcs = json_decode($user->utm_srcs, true);
                     if (!empty($utmSrcs["utm_source"])) {
                         if ($utmSrcs["utm_source"] == "google_ads") {
                             $labelAd = PipefyService::LABEL_GOOGLE_ADS;
-                            (new PipefyService())->updateCardLabel($user, [$labelAd]);
                         } elseif ($utmSrcs["utm_source"] == "facebook_ads") {
                             $labelAd = PipefyService::LABEL_FACEBOOK_ADS;
-                            (new PipefyService())->updateCardLabel($user, [$labelAd]);
                         }
                     }
                 }
+                (new PipefyService())->updateCardLabel($user, [$labelAd]);
             }
 
-            dd("Finalizado atualização das TAGs");
+            dd("Finalizado atualização das TAGs Facebook ADs ou Google ADs");
+
 
             //Criar Card no Pipe Gerenciamento 100k ou monitoriamento -100k (Apenas para os usuários que não estão no pipefy)
             $users = User::whereNotNull("users.total_commission_value")
@@ -262,11 +263,11 @@ class PipefyUpdateCard extends Command
                         SELECT count( c.id ) FROM companies AS c
                             WHERE c.user_id = users.id
                                 AND (c.address_document_status = " .
-                    CompanyDocument::STATUS_REFUSED .
-                    "
+                CompanyDocument::STATUS_REFUSED .
+                "
                                 OR c.contract_document_status = " .
-                    CompanyDocument::STATUS_REFUSED .
-                    " )
+                CompanyDocument::STATUS_REFUSED .
+                " )
                             GROUP BY c.user_id
                         ) total_companies_refused"
             )
@@ -275,11 +276,11 @@ class PipefyUpdateCard extends Command
                         SELECT count( c.id ) FROM companies AS c
                             WHERE c.user_id = users.id
                                 AND (c.address_document_status = " .
-                    CompanyDocument::STATUS_APPROVED .
-                    "
+                CompanyDocument::STATUS_APPROVED .
+                "
                                 OR c.contract_document_status = " .
-                    CompanyDocument::STATUS_APPROVED .
-                    " )
+                CompanyDocument::STATUS_APPROVED .
+                " )
                             GROUP BY c.user_id
                         ) total_companies_active"
             )

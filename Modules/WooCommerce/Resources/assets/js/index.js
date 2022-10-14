@@ -1,24 +1,23 @@
 $(document).ready(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                companiesAndProjects = data2
-                $('.company_name').val( companiesAndProjects.company_default_fullname );
-                $("#company-navbar-value").val( $('.company-navbar').val() )
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                companiesAndProjects = data2;
+                $(".company_name").val(companiesAndProjects.company_default_fullname);
+                $("#company-navbar-value").val($(".company-navbar").val());
                 location.reload();
-            })
-        })
-    })
+            });
+        });
+    });
 
-    companiesAndProjects = '';
+    companiesAndProjects = "";
 
-    getCompaniesAndProjects().done(function(data){
-        companiesAndProjects = data
-        $('.company_name').val( companiesAndProjects.company_default_fullname );
-        $("#company-navbar-value").val( $('.company-navbar').val() )
-    })
+    getCompaniesAndProjects().done(function (data) {
+        companiesAndProjects = data;
+        $(".company_name").val(companiesAndProjects.company_default_fullname);
+        $("#company-navbar-value").val($(".company-navbar").val());
+    });
 
     let allCompanyNotApproved = false;
     let companyNotFound = false;
@@ -26,9 +25,7 @@ $(document).ready(function () {
 
     loadingOnScreen();
 
-
-
-    $('#btn-integration-model').hide();
+    $("#btn-integration-model").hide();
 
     index();
 
@@ -63,8 +60,8 @@ $(document).ready(function () {
             $("#button-information").hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
-            $('#btn-integration-model').show();
-            $('#button-information').show().addClass('d-flex').css('display', 'flex');
+            $("#btn-integration-model").show();
+            $("#button-information").show().addClass("d-flex").css("display", "flex");
         }
         loadingOnScreenRemove();
     }
@@ -72,7 +69,7 @@ $(document).ready(function () {
     function index() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/woocommerce?company="+ $('.company-navbar').val(),
+            url: "/api/apps/woocommerce?company=" + $(".company-navbar").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -91,7 +88,7 @@ $(document).ready(function () {
                     if (woocommerceIntegrationNotFound) {
                         $("#no-integration-found").show();
                         loadingOnScreenRemove();
-                    }else{
+                    } else {
                         $("#no-integration-found").hide();
                     }
                     return;
@@ -105,7 +102,7 @@ $(document).ready(function () {
 
                             <svg
                             class="open-cfg" app="${data.id}"
-                            data-img="${!data.project_photo ? "/build/global/img/produto.png" : data.project_photo}"
+                            data-img="${!data.project_photo ? "/build/global/img/produto.svg" : data.project_photo}"
                             data-name="${data.project_name}"
                             style="position:absolute; top:8px; right:8px; cursor:pointer"
                             width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -124,7 +121,7 @@ $(document).ready(function () {
 
 
                                 <img class="card-img-top img-fluid w-full" src="${
-                                    !data.project_photo ? "/build/global/img/produto.png" : data.project_photo
+                                    !data.project_photo ? "/build/global/img/produto.svg" : data.project_photo
                                 }"  alt="Photo Project"/>
                                 <div class="card-body">
                                     <div class='row'>
@@ -238,7 +235,7 @@ $(document).ready(function () {
         function imageFound() {}
 
         function imageNotFound() {
-            img = "/build/global/img/produto.png";
+            img = "/build/global/img/produto.svg";
             $("#project-img").attr("src", img);
         }
 
@@ -299,21 +296,14 @@ $(document).ready(function () {
             success: function success(r) {
                 $("#close-modal").click();
 
+                $("#close-modal").click();
 
-                $('#close-modal').click()
-
-
-                if(r.status == true){
-                    alertCustom('success', 'Chaves de acesso atualizadas com sucesso!');
-
-
-
-                }else{
-                    alertCustom('error', 'Erro ao atualizar as chaves!');
-
+                if (r.status == true) {
+                    alertCustom("success", "Chaves de acesso atualizadas com sucesso!");
+                } else {
+                    alertCustom("error", "Erro ao atualizar as chaves!");
                 }
-
-            }
+            },
         });
 
         $("#keys-content").slideUp();
