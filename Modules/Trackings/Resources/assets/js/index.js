@@ -534,9 +534,9 @@ $(() => {
                         </div>`;
 
                     let htmlButtonView = `
-                        <div class="edit-detail d-flex justify-content-between px-0 col-5" style="margin: -11px auto auto 30px">
-                            <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
-                                <span class="o-eye-1"></span>
+                        <div class="edit-detail d-flex justify-content-between px-0 col-5" style="margin: -11px auto auto 30px; justify-content: end !important;">
+                            <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
+                                <span class="o-eye-1" style="padding-right: 0px !important;"></span>
                             </a>
                         </div>`;
 
