@@ -21,6 +21,13 @@ class TrackingsRule
         ];
     }
 
+    public static function updateTrackings()
+    {
+        return [
+            'tracking_code' => self::$rules['tracking_code']
+        ];
+    }
+
     public static function messages()
     {
         return [

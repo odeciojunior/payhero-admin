@@ -12,6 +12,11 @@ class TrackingsApiRequest extends FormRequest
         return TrackingsRule::storeTrackings();
     }
 
+    public function updateTrackings()
+    {
+        return TrackingsRule::updateTrackings();
+    }
+
     public function messages()
     {
         return TrackingsRule::messages();

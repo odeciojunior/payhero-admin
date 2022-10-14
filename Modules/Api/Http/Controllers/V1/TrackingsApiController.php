@@ -23,7 +23,6 @@ class TrackingsApiController extends Controller
             $requestData = $request->all();
 
             $verifyRequest = new TrackingsApiRequest();
-
             $validator = Validator::make(
                 $requestData,
                 $verifyRequest->storeTrackings(),
@@ -36,26 +35,32 @@ class TrackingsApiController extends Controller
 
             $saleId = current(Hashids::connection("sale_id")->decode($requestData['sale_id']));
             $productId = current(Hashids::decode($requestData['product_id']));
-            $trackingCode = $requestData['tracking_code'];
+            $tracking = $requestData['tracking_code'];
 
-            $pps = ProductPlanSale::select("id")
+            $productPlanSale = ProductPlanSale::select("id")
                     ->where("sale_id", $saleId)
                     ->where(function ($query) use ($productId) {
                         $query->where("product_id", $productId)->orWhere("products_sales_api_id", $productId);
                     })
                     ->first();
 
+            if (empty($productPlanSale)) {
+                return response()->json([
+                    'message' => 'Erro ao salvar código de rastreio.'
+                ], 400);
+            }
+
             $trackingService = new TrackingService();
-            $tracking = $trackingService
+            $trackingCreate = $trackingService
                     ->createOrUpdateTracking(
-                        $trackingCode,
-                        $pps->id,
+                        $tracking,
+                        $productPlanSale->id,
                         true
                     );
 
             return response()->json([
-                'message' => 'Código de rastreio salvo.',
-                'data' => new TrackingsApiResource($tracking)
+                'message' => 'Código de rastreio salvo com sucesso.',
+                'data' => new TrackingsApiResource($trackingCreate)
             ], 200);
         } catch (Exception $e) {
             report($e);
@@ -87,6 +92,7 @@ class TrackingsApiController extends Controller
     {
         try {
             $trackings = TrackingsApiService::showTrackingsQueryBuilder($id);
+            $trackings['checkpoints'] = true;
 
             return new TrackingsApiResource($trackings);
         } catch (Exception $e) {
@@ -100,11 +106,63 @@ class TrackingsApiController extends Controller
 
     public function updateTrackings($id, Request $request)
     {
-        //
+        try {
+            $requestData = $request->all();
+
+            $verifyRequest = new TrackingsApiRequest();
+            $validator = Validator::make(
+                $requestData,
+                $verifyRequest->updateTrackings(),
+                $verifyRequest->messages()
+            );
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toArray());
+            }
+
+            $trackingService = new TrackingService();
+            $trackingUpdate = $trackingService->updateTracking($id, $requestData['tracking_code']);
+
+            if (!empty($trackingUpdate)) {
+                return response()->json([
+                    'message' => 'Código de rastreio atualizado com sucesso.',
+                    'data' => new TrackingsApiResource($trackingUpdate)
+                ], 200);
+            }
+
+            return response()->json([
+                'message' => 'Erro ao atualizar códigos de rastreio.'
+            ], 400);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao atualizar códigos de rastreio.'
+            ], 400);
+        }
     }
 
-    public function deleteTrackings($id)
+    public function deleteTrackings($trackingId)
     {
-        //
+        try {
+            $trackingService = new TrackingService();
+
+            $trackingDelete = $trackingService->deleteTracking($trackingId);
+            if ($trackingDelete) {
+                return response()->json([
+                    'message' => 'Código de rastreio excluído com sucesso.'
+                ], 200);
+            }
+
+            return response()->json([
+                'message' => 'Erro ao excluir código de rastreio.'
+            ], 400);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao excluir código de rastreio.'
+            ], 400);
+        }
     }
 }
