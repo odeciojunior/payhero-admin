@@ -516,9 +516,9 @@ class ShopifyApiController extends Controller
                 ]
             )->find($projectId);
 
-            $domain = new \stdClass();
-            $domain->name = 'cloudfox.net';
-            if(mb_strtolower(config('app.env')) === 'production'){
+            /*$domain = new \stdClass();
+            $domain->name = 'cloudfox.net';*/
+            if(\foxutils()->isProduction()){
                 $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
             }
 
