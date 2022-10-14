@@ -19,7 +19,7 @@ class CompanyBalances extends Command
      *
      * @var string
      */
-    protected $signature = "company-balance";
+    protected $signature = "update:company-balance";
 
     /**
      * The console command description.
@@ -53,7 +53,20 @@ class CompanyBalances extends Command
                 $companyBalance->vega_blocked_balance = $vegaService->getBlockedBalance();
                 $companyBalance->vega_total_balance =
                     $companyBalance->vega_available_balance + $companyBalance->vega_pending_balance;
+                /*
+                                $vegaPendingBalanceWithBlocked = $companyBalance->vega_pending_balance;
+                                $vegaAvailableBalanceWithBlocked = $companyBalance->vega_available_balance;
 
+                                (new CompanyService())->applyBlockedBalance(
+                                    $vegaService,
+                                    $vegaAvailableBalanceWithBlocked,
+                                    $vegaPendingBalanceWithBlocked,
+                                    $companyBalance->vega_blocked_balance
+                                );
+
+                                //$companyBalance->vega_pending_balance_with_blocked = $vegaPendingBalanceWithBlocked;
+                                //$companyBalance->vega_available_balance_with_blocked = $vegaPendingBalanceWithBlocked;
+                */
                 $asaasService = new AsaasService();
                 $asaasService->setCompany($company);
                 $companyBalance->asaas_available_balance = $asaasService->getAvailableBalance();
@@ -96,21 +109,7 @@ class CompanyBalances extends Command
                 $companyBalance->save();
             }
         } catch (Exception $e) {
-            dd($e->getMessage());
             report($e);
-        }
-    }
-
-    private function companyBalance(Company $company)
-    {
-        $companyBalance = CompanyBalance::where("company_id", $company->id)->get();
-        if (empty($companyBalance->id)) {
-            $companyBalance = new CompanyBalance();
-            $companyBalance->company_id = $company->id;
-            return $companyBalance;
-        } else {
-            dd("xxx");
-            return $companyBalance;
         }
     }
 }

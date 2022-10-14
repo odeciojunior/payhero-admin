@@ -21,6 +21,7 @@ return new class extends Migration {
                 ->integer("vega_total_balance")
                 ->default(0)
                 ->after("vega_blocked_balance");
+
             $table
                 ->integer("asaas_blocked_balance")
                 ->default(0)
