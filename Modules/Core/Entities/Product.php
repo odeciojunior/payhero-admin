@@ -53,8 +53,8 @@ class Product extends Model
     public const STATUS_ENUM_APPROVED = 2;
     public const STATUS_ENUM_REFUSED = 3;
 
-    public const STATUS_ACTIVE = 1;
-    public const STATUS_DESABLE = 0;
+    public const ACTIVE_FLAG_ACTIVE = 1;
+    public const ACTIVE_FLAG_DESABLE = 0;
 
     /**
      * @var array

@@ -206,7 +206,7 @@ class PlansApiController extends Controller
                                         "affiliate_id" => $affiliate->id,
                                         "plan_id" => $plan->id,
                                         "parameter" =>
-                                            $affiliateHash . Hashids::connection("affiliate")->encode($plan->id),
+                                        $affiliateHash . Hashids::connection("affiliate")->encode($plan->id),
                                         "clicks_amount" => 0,
                                         "link" => $planService->getCheckoutLink($plan),
                                     ]);
@@ -699,12 +699,6 @@ class PlansApiController extends Controller
 
     public function getPlans(Request $request)
     {
-        // return response()->json(
-        //     [
-        //         "message" => "Ocorreu um erro, ao buscar dados dos planos",
-        //     ],
-        //     400
-        // );
         try {
             $data = $request->all();
 
@@ -727,8 +721,13 @@ class PlansApiController extends Controller
                 $return["total"] = $result[0]->total;
                 return $return;
             }
+
+            if (!empty($data['active_flag'])) {
+                $plans->where('active_flag', $data['active_flag']);
+            }
+
             if (!empty($data['search'])) {
-                $plans->where('name', 0);
+                $plans->where('name', 'like', '%' . $data['search'] . '%');
             }
 
             if (!empty($data['search2'])) {

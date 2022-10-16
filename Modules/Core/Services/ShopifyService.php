@@ -839,7 +839,8 @@ class ShopifyService
                             "name" => $title,
                             "description" => mb_substr($description, 0, 100),
                             "price" => $variant->getPrice(),
-                            "status" => $statusProductShopify,
+                            "status" => "1",
+                            "active_flag" => $statusProductShopify,
                             "project_id" => $projectId,
                         ]);
                         if ($plan->isDirty()) {
@@ -885,7 +886,8 @@ class ShopifyService
                             "description" => mb_substr($description, 0, 100),
                             "code" => "",
                             "price" => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
-                            "status" => $statusProductShopify,
+                            "status" => "1",
+                            "active_flag" => $statusProductShopify,
                         ]);
 
                         $dataProductPlan = [
@@ -930,7 +932,8 @@ class ShopifyService
                         "description" => mb_substr($description, 0, 100),
                         "code" => "",
                         "price" => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
-                        "status" => $statusProductShopify,
+                        "status" => "1",
+                        "active_flag" => $statusProductShopify,
                     ]);
                     $plan->update(["code" => hashids_encode($plan->id)]);
 

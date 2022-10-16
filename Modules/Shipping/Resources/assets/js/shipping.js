@@ -607,6 +607,7 @@ $(document).ready(function () {
                         project_id: projectId,
                         page: params.page || 1,
                         variants: useVariants,
+                        active_flag: 1,
                     };
                 },
                 method: "GET",
