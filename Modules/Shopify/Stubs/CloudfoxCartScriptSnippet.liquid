@@ -1,0 +1,99 @@
+<!-- start cloudfox cart script -->
+<div id="foxScriptCart">
+    <script defer>
+        function inArray(needle, haystack) {
+            var length = haystack.length;
+            for(var i = 0; i < length; i++) {
+                if(haystack[i] == needle) return true;
+            }
+            return false;
+        }
+
+        function setFormDataCloudfoxCheckout(method = "POST") {
+            {% comment %}const urlCloudfoxCheckout = 'https://checkout.{{ shop.domain }}/';{% endcomment %}
+            const urlCloudfoxCheckout = 'https://checkout.localhost:8081';
+            let form = document.querySelector(`form[action="${urlCloudfoxCheckout}"]`);
+
+            if(form === null) {
+                form = document.querySelector('form[action="{{ routes.cart_url }}"]');
+                form.setAttribute('action', urlCloudfoxCheckout);
+            }
+
+            if(!form.hasAttribute('method')) form.setAttribute('method', method);
+            if(!form.hasAttribute('novalidate')) form.setAttribute('novalidate','novalidate');
+            if(!form.hasAttribute('data-fox')) form.setAttribute('data-fox', 'cart-form');
+
+            return form;
+        }
+
+        function createInputDataFox(name, loopIndex, value, dataFoxNumber, type = 'hidden') {
+            const element = document.createElement('input');
+            element.setAttribute('type', type);
+            element.setAttribute('data-fox', dataFoxNumber);
+            element.setAttribute('name',`${name}${loopIndex}`);
+            element.setAttribute('value',`${value}`);
+
+            return element;
+        }
+
+        function submitCheckout(formElement) {
+            const themeName = "{{ theme.name }}";
+            const theme = themeName.toLowerCase();
+            const divFoxData = document.createElement('div');
+            divFoxData.setAttribute('id', 'foxData');
+
+            if(theme == 'warehouse') {
+                {% for line_item in cart.items %}
+                    const productId = createInputDataFox('product_id_', {{ forloop.index }}, '{{ line_item.id }}', 1);
+                    const variantId = createInputDataFox('variant_id_', {{ forloop.index }}, '{{ line_item.variant_id }}', 2);
+                    const productPrice = createInputDataFox('product_price_', {{ forloop.index }}, '{{ line_item.price }}', 3);
+                    const productImage = createInputDataFox('product_image_', {{ forloop.index }}, '{{ line_item.image }}', 4);
+                    const productAmount = createInputDataFox('product_amount_', {{ forloop.index }}, '{{ line_item.quantity }}', 5);
+
+                    divFoxData.append(productId, variantId, productPrice, productImage, productAmount);
+                {% endfor %}
+            } else {
+                {% for item in cart.items %}
+                    const productId = createInputDataFox('product_id_', {{ forloop.index }}, '{{ item.id }}', 1);
+                    const variantId = createInputDataFox('variant_id_', {{ forloop.index }}, '{{ item.variant_id }}', 2);
+                    const productPrice = createInputDataFox('product_price_', {{ forloop.index }}, '{{ item.price }}', 3);
+                    const productImage = createInputDataFox('product_image_', {{ forloop.index }}, '{{ item.image }}', 4);
+                    const productAmount = createInputDataFox('product_amount_', {{ forloop.index }}, '{{ item.quantity }}', 5);
+
+                    divFoxData.append(productId, variantId, productPrice, productImage, productAmount);
+                {% endfor %}
+            }
+
+            // console.log(formElement);
+
+            const form = setFormDataCloudfoxCheckout();
+            form.appendChild(divFoxData);
+
+            console.log(form);
+
+            form.submit();
+        }
+
+        console.log('{{ template.name }}');
+
+        let form = document.querySelector('form[action="{{ routes.cart_url }}"]');
+        if(form !== null) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                console.log(this);
+                submitCheckout(this);
+            });
+        }
+
+        // let buttonSubmit = document.querySelector('button[form="cart"][type="submit"]');
+        let buttonSubmit = document.querySelector('button[form]');
+        if(buttonSubmit !== null) {
+            buttonSubmit.addEventListener('click', function (e) {
+                e.preventDefault();
+                console.log(form);
+                submitCheckout(form);
+            });
+        }
+    </script>
+</div>
+<!-- end cloudfox cart script -->

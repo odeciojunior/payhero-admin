@@ -5,6 +5,7 @@ namespace Modules\Domains\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -395,7 +396,17 @@ class DomainsApiController extends Controller
 
             try {
                 $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token, false);
-                $shopify->setThemeByRole("main");
+
+                $basicTheme = $shopifyIntegration->present()->getThemeType('basic_theme');
+
+                $integrationTemplate = $shopify->templateService->makeTemplateIntegration($shopifyIntegration, $domain, $basicTheme);
+
+                if ($integrationTemplate['failed']) {
+                    return response()->json(['message' => $integrationTemplate['message']], Response::HTTP_BAD_REQUEST);
+                }
+
+                return response()->json(["message" => "Domínio validado com sucesso"], 200);
+
             } catch (Exception $e) {
                 report($e);
 
@@ -416,72 +427,6 @@ class DomainsApiController extends Controller
                 );
             }
 
-            $htmlCart = null;
-            $templateKeyName = null;
-            foreach ($shopify::templateKeyNames as $template) {
-                $templateKeyName = $template;
-                $htmlCart = $shopify->getTemplateHtml($template);
-                if ($htmlCart) {
-                    break;
-                }
-            }
-
-            try {
-                if ($htmlCart) {
-                    //template normal
-                    if ($shopify->checkCartTemplate($htmlCart)) {
-                        return response()->json(["message" => "Domínio validado com sucesso"], 200);
-                    }
-
-                    $shopify->setThemeByRole("main");
-                    $htmlCart = $shopify->getTemplateHtml($templateKeyName);
-
-                    $shopifyIntegration->update([
-                        "theme_type" => ShopifyIntegration::SHOPIFY_BASIC_THEME,
-                        "theme_name" => $shopify->getThemeName(),
-                        "theme_file" => $templateKeyName,
-                        "theme_html" => $htmlCart,
-                    ]);
-
-                    $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domain->name);
-
-                    //Insert Tracking (src, utm)
-                    $htmlBody = $shopify->getTemplateHtml("layout/theme.liquid");
-                    if ($htmlBody) {
-                        $shopifyIntegration->update(["layout_theme_html" => $htmlBody]);
-                        $shopify->insertUtmTracking("layout/theme.liquid", $htmlBody);
-                    }
-
-                    return response()->json(["message" => "Domínio validado com sucesso"], 200);
-                }
-
-                //template ajax
-                $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
-
-                $shopifyIntegration->update([
-                    "theme_type" => ShopifyIntegration::SHOPIFY_AJAX_THEME,
-                    "theme_name" => $shopify->getThemeName(),
-                    "theme_file" => $shopify::templateAjaxKeyName,
-                    "theme_html" => $htmlCart,
-                ]);
-
-                if (!empty($htmlCart)) {
-                    $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domain->name, true);
-                }
-
-                return response()->json(["message" => "Domínio validado com sucesso"], 200);
-            } catch (Exception $e) {
-                report($e);
-
-                $domain->update(["status" => Domain::STATUS_PENDING]);
-
-                return response()->json(
-                    [
-                        "message" => "Domínio validado com sucesso, mas a integração com o shopify não foi encontrada",
-                    ],
-                    400
-                );
-            }
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);
 
