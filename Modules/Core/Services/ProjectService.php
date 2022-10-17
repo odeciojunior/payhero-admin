@@ -273,6 +273,9 @@ class ProjectService
                     ->first();
 
                 if (!empty($shopifyIntegration)) {
+                    $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopify->templateService->removeIntegrationInAllThemes();
+
                     $shopifyIntegration->delete();
                 }
 

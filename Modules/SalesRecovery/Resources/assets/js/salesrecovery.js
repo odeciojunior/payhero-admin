@@ -1,46 +1,49 @@
 var exportFormat = null;
 
 $(document).ready(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $("#project").find('option').not(':first').remove();
-        $("#plan").find('option').not(':first').remove();
+        $("#project").find("option").not(":first").remove();
+        $("#plan").find("option").not(":first").remove();
         $("#project").val($("#project option:first").val());
         $("#plan").val($("#plan option:first").val());
-        $('#plan').data('select2').results.clear();
+        $("#plan").data("select2").results.clear();
         loadOnTable("#table_data", "#carrinhoAbandonado");
-        updateCompanyDefault().done(function(data){
-            getCompaniesAndProjects().done(function(data2){
-                    getProjects(data2, 'company-navbar')
+        updateCompanyDefault().done(function (data) {
+            getCompaniesAndProjects().done(function (data2) {
+                getProjects(data2, "company-navbar");
             });
         });
     });
 
-    function fillProjectsSelect(data){
-        if(data.company_default == 'v2RmA83EbZPVpYB')
-            $("#project").append($("<option>", {value: 'v2RmA83EbZPVpYB', text: 'Loja Demonstrativa Cloudfox'}));
+    function fillProjectsSelect(data) {
+        if (data.company_default == "v2RmA83EbZPVpYB")
+            $("#project").append($("<option>", { value: "v2RmA83EbZPVpYB", text: "Loja Demonstrativa Cloudfox" }));
         else {
-            projects = allProjects(data)
+            projects = allProjects(data);
             for (let i = 0; i < projects.length; i++)
-                $("#project").append($("<option>", {value: projects[i].id, text: projects[i].name,}));
+                $("#project").append($("<option>", { value: projects[i].id, text: projects[i].name }));
         }
     }
 
-    function allProjects(data){
+    function allProjects(data) {
         projects = [];
         for (let i = 0; i < data.companies.length; i++) {
             company = data.companies[i];
-            if(company.active_flag==true && company.company_document_status=='approved' && company.id!='v2RmA83EbZPVpYB'){
+            if (
+                company.active_flag == true &&
+                company.company_document_status == "approved" &&
+                company.id != "v2RmA83EbZPVpYB"
+            ) {
                 $.each(company.projects, function (i, project) {
-                    projects.push({id: project.id, name: project.name});
+                    projects.push({ id: project.id, name: project.name });
                 });
             }
-        };
+        }
         return projects;
     }
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getProjects(data);
     });
 
@@ -74,9 +77,7 @@ $(document).ready(function () {
     });
 
     $(".btn-confirm-export-sale").on("click", function () {
-        var regexEmail = new RegExp(
-            /^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/
-        );
+        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
         var email = $("#email_export").val();
 
         if (email == "" || !regexEmail.test(email)) {
@@ -127,16 +128,10 @@ $(document).ready(function () {
             },
             ranges: {
                 Hoje: [moment(), moment()],
-                Ontem: [
-                    moment().subtract(1, "days"),
-                    moment().subtract(1, "days"),
-                ],
+                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
                 "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
                 "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [
-                    moment().startOf("month"),
-                    moment().endOf("month"),
-                ],
+                "Este mês": [moment().startOf("month"), moment().endOf("month")],
                 "Mês passado": [
                     moment().subtract(1, "month").startOf("month"),
                     moment().subtract(1, "month").endOf("month"),
@@ -153,29 +148,26 @@ $(document).ready(function () {
     /**
      * Busca os lojas para montar o select
      */
-    function getProjects(data,origin='') {
-        if(origin=='')
-            loadingOnScreen();
+    function getProjects(data, origin = "") {
+        if (origin == "") loadingOnScreen();
 
-        projects = allProjects(data)
+        projects = allProjects(data);
 
-        if(data.company_default!='v2RmA83EbZPVpYB' && projects.length == 0){
-            $('#export-excel').hide()
+        if (data.company_default != "v2RmA83EbZPVpYB" && projects.length == 0) {
+            $("#export-excel").hide();
             $("#project-empty").show();
             $("#project-not-empty").hide();
-        }
-        else{
+        } else {
             $("#project-empty").hide();
             $("#project-not-empty").show();
             $("#export-excel").show();
-            fillProjectsSelect(data)
+            fillProjectsSelect(data);
             $("#project").val($("#project option:first").val());
             $("#plan").val($("#plan option:first").val());
             updateSalesRecovery();
         }
 
-        if(origin=='')
-            loadingOnScreenRemove();
+        if (origin == "") loadingOnScreenRemove();
     }
 
     /**
@@ -187,13 +179,9 @@ $(document).ready(function () {
         if (link == null) {
             url = `?project=${$("#project").val()}&recovery_type=${$(
                 "#recovery_type option:selected"
-            ).val()}&date_range=${$(
-                "#date-range-sales-recovery"
-            ).val()}&client=${$(
+            ).val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$(
                 "#client-name"
-            ).val()}&date_type=created_at&client_document=${$(
-                "#client-cpf"
-            ).val()}&plan=${$("#plan").val()}`;
+            ).val()}&date_type=created_at&client_document=${$("#client-cpf").val()}&plan=${$("#plan").val()}`;
         } else {
             url = `${link}&project=${$("#project").val()}
 
@@ -207,7 +195,7 @@ $(document).ready(function () {
 
             &plan=${$("#plan").val()}`;
         }
-        url += "&company="+ $('.company-navbar').val();
+        url += "&company=" + $(".company-navbar").val();
 
         let recoveryTypeSelected = $("#recovery_type option:selected").val();
         if (recoveryTypeSelected == 1) {
@@ -245,15 +233,12 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                const BOLETO_TYPE = '5'
+                const BOLETO_TYPE = "5";
 
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                let recoveryType = $("#recovery_type")
-                    .children("option:selected")
-                    .text()
-                    .toLowerCase();
+                let recoveryType = $("#recovery_type").children("option:selected").text().toLowerCase();
                 let image = $("#table_data").attr("img-empty");
                 if (response.data == "" && recoveryType) {
                     $("#pagination-salesRecovery").hide();
@@ -283,9 +268,7 @@ $(document).ready(function () {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
-                                    $(this)
-                                        .css("cursor", "pointer")
-                                        .text("Regerar");
+                                    $(this).css("cursor", "pointer").text("Regerar");
                                     $(this).css("background", "#545B62");
                                 },
                                 function () {
@@ -296,15 +279,8 @@ $(document).ready(function () {
                             );
                         }
 
-                        $("#date").val(
-                            moment(new Date())
-                                .add(3, "days")
-                                .format("YYYY-MM-DD")
-                        );
-                        $("#date").attr(
-                            "min",
-                            moment(new Date()).format("YYYY-MM-DD")
-                        );
+                        $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                        $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
 
                         $(".sale_status").on("click", function () {
                             if (verifyAccountFrozen() == false) {
@@ -331,9 +307,7 @@ $(document).ready(function () {
                     $(".estornar_venda").on("click", function () {
                         id_venda = $(this).attr("venda");
 
-                        $("#modal_estornar_titulo").html(
-                            "Estornar venda #" + id_venda + " ?"
-                        );
+                        $("#modal_estornar_titulo").html("Estornar venda #" + id_venda + " ?");
                         $("#modal_estornar_body").html("");
                     });
                 }
@@ -410,27 +384,11 @@ $(document).ready(function () {
     function createHtmlCartAbandoned(value) {
         let data = "";
         data += "<tr>";
-        data +=
-            "<td class='display-sm-none display-m-none display-lg-none'>" +
-            value.date +
-            "</td>";
+        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
         data += "<td>" + value.project + "</td>";
-        data +=
-            "<td class='display-sm-none display-m-none'>" +
-            value.client +
-            "</td>";
-        data +=
-            "<td>" +
-            value.email_status +
-            " " +
-            setSend(value.email_status) +
-            "</td>";
-        data +=
-            "<td>" +
-            value.sms_status +
-            " " +
-            setSend(value.sms_status) +
-            "</td>";
+        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
+        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
+        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
         data +=
             "<td><span class='sale_status badge badge-" +
             statusRecovery[value.status_translate] +
@@ -467,27 +425,11 @@ $(document).ready(function () {
     function createHtmlOthers(value) {
         let data = "";
         data += "<tr>";
-        data +=
-            "<td class='display-sm-none display-m-none display-lg-none'>" +
-            value.start_date +
-            "</td>";
+        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.start_date + "</td>";
         data += "<td>" + value.project + "</td>";
-        data +=
-            "<td class='display-sm-none display-m-none'>" +
-            value.client +
-            "</td>";
-        data +=
-            "<td>" +
-            value.email_status +
-            " " +
-            setSend(value.email_status) +
-            "</td>";
-        data +=
-            "<td>" +
-            value.sms_status +
-            " " +
-            setSend(value.sms_status) +
-            "</td>";
+        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
+        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
+        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
         data +=
             "<td><span class='sale_status badge badge-" +
             statusRecovery[value.recovery_status] +
@@ -547,9 +489,7 @@ $(document).ready(function () {
         clearFields();
 
         $("#modal-title").html("Detalhes " + "<br><hr>");
-        $("#date-as-hours").html(
-            `${data.checkout.date} às ${data.checkout.hours}`
-        );
+        $("#date-as-hours").html(`${data.checkout.date} às ${data.checkout.hours}`);
         $("#status-checkout")
             .addClass("badge-" + statusRecovery[data.status])
             .html(data.status);
@@ -558,7 +498,7 @@ $(document).ready(function () {
          * Produtos
          */
         let div = "";
-        let photo = "public/build/global/img/produto.png";
+        let photo = "public/build/global/img/produto.svg";
         $.each(data.products, function (index, value) {
             if (!isEmpty(value.photo)) {
                 photo = value.photo;
@@ -567,7 +507,7 @@ $(document).ready(function () {
             div +=
                 '<div class="row align-items-baseline justify-content-between mb-15">' +
                 '<div class="col-lg-2">' +
-                "<img onerror=this.src='/build/global/img/produto.png' src='" +
+                "<img onerror=this.src='/build/global/img/produto.svg' src='" +
                 value.photo +
                 "' width='50px' style='border-radius: 6px;'>" +
                 "</div>" +
@@ -600,9 +540,7 @@ $(document).ready(function () {
         $("#client-document").html("CPF: " + data.client.document);
         $("#client-street").html("Endereço: " + data.delivery.street);
         $("#client-zip-code").html("CEP: " + data.delivery.zip_code);
-        $("#client-city-state").html(
-            "Cidade: " + data.delivery.city + "/" + data.delivery.state
-        );
+        $("#client-city-state").html("Cidade: " + data.delivery.city + "/" + data.delivery.state);
         $("#sale-motive").html("Motivo: " + data.client.error);
 
         if (
@@ -636,24 +574,14 @@ $(document).ready(function () {
         /**
          * Dados do checkout - UTM
          */
-        $("#checkout-operational-system").html(
-            "Sistema: " + data.checkout.operational_system
-        );
+        $("#checkout-operational-system").html("Sistema: " + data.checkout.operational_system);
         $("#checkout-browser").html("Navegador: " + data.checkout.browser);
         $("#checkout-src").html("SRC: " + data.checkout.src);
-        $("#checkout-utm-source").html(
-            "UTM Source: " + data.checkout.utm_source
-        );
-        $("#checkout-utm-medium").html(
-            "UTM Medium: " + data.checkout.utm_medium
-        );
-        $("#checkout-utm-campaign").html(
-            "UTM Campaign: " + data.checkout.utm_campaign
-        );
+        $("#checkout-utm-source").html("UTM Source: " + data.checkout.utm_source);
+        $("#checkout-utm-medium").html("UTM Medium: " + data.checkout.utm_medium);
+        $("#checkout-utm-campaign").html("UTM Campaign: " + data.checkout.utm_campaign);
         $("#checkout-utm-term").html("UTM Term: " + data.checkout.utm_term);
-        $("#checkout-utm-content").html(
-            "UTM Content: " + data.checkout.utm_content
-        );
+        $("#checkout-utm-content").html("UTM Content: " + data.checkout.utm_content);
         /**
          * Fim dados do checkout
          */
@@ -681,9 +609,7 @@ $(document).ready(function () {
 
             $("#discount_type").on("change", function () {
                 if ($("#discount_type").val() == "value") {
-                    $("#discount_value")
-                        .mask("#.###,#0", { reverse: true })
-                        .removeAttr("maxlength");
+                    $("#discount_value").mask("#.###,#0", { reverse: true }).removeAttr("maxlength");
                     $("#label_discount_value").html("Valor (ex: 20,00)");
                 } else {
                     $("#discount_value").mask("00%", { reverse: true });
@@ -834,7 +760,7 @@ $(document).ready(function () {
     $("#project").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
-        $('#plan').data('select2').results.clear();
+        $("#plan").data("select2").results.clear();
     });
 
     //Search plan
@@ -853,7 +779,7 @@ $(document).ready(function () {
                     list: "plan",
                     search: params.term,
                     project_id: $("#project").val(),
-                    company: $(".company-navbar").val()
+                    company: $(".company-navbar").val(),
                 };
             },
             method: "GET",
@@ -868,9 +794,7 @@ $(document).ready(function () {
                 result = $.map(res.data, function (obj) {
                     return {
                         id: obj.id,
-                        text:
-                            obj.name +
-                            (obj.description ? " - " + obj.description : ""),
+                        text: obj.name + (obj.description ? " - " + obj.description : ""),
                     };
                 });
 
@@ -899,10 +823,7 @@ $(document).ready(function () {
         var text = $("#text-filtro");
 
         text.fadeOut(10);
-        if (
-            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
-            collapse.css("transform") == "none"
-        ) {
+        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
             collapse.css("transform", "rotate(180deg)");
             text.text("Minimizar filtros").fadeIn();
         } else {

@@ -333,19 +333,7 @@ class DomainService
                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
                             $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                            $shopify->setThemeByRole("main");
-                            if (!empty($shopifyIntegration->theme_html)) {
-                                $shopify->setTemplateHtml(
-                                    $shopifyIntegration->theme_file,
-                                    $shopifyIntegration->theme_html
-                                );
-                            }
-                            if (!empty($shopifyIntegration->layout_theme_html)) {
-                                $shopify->setTemplateHtml(
-                                    "layout/theme.liquid",
-                                    $shopifyIntegration->layout_theme_html
-                                );
-                            }
+                            $shopify->templateService->removeIntegrationInAllThemes();
                         }
                     } catch (Exception $e) {
                         return [
