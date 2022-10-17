@@ -16,15 +16,15 @@ use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Core\Services\TaskService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Modules\Core\Abstracts\GatewayServicesAbstract;
 
-class GerencianetService implements Statement
+class GerencianetService extends GatewayServicesAbstract
 {
     public Company $company;
     public CompanyBankAccount $companyBankAccount;
@@ -33,6 +33,10 @@ class GerencianetService implements Statement
     public function __construct()
     {
         $this->gatewayIds = [Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID];
+
+        $this->gatewayName = 'Gerencianet';
+
+        $this->companyColumnBalance = '';
     }
 
     public function setCompany(Company $company)

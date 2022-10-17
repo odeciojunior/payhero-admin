@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
@@ -19,16 +18,15 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\SaleService;
 use Modules\Transfers\Services\GetNetStatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
-use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Abstracts\GatewayServicesAbstract;
 
-class GetnetService implements Statement
+class GetnetService extends GatewayServicesAbstract
 {
     public Company $company;
     public CompanyBankAccount $companyBankAccount;
@@ -37,17 +35,10 @@ class GetnetService implements Statement
     public function __construct()
     {
         $this->gatewayIds = [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID];
-    }
 
-    public function setCompany(Company $company)
-    {
-        $this->company = $company;
-        return $this;
-    }
+        $this->gatewayName = 'Getnet';
 
-    public function setBankAccount(CompanyBankAccount $companyBankAccount)
-    {
-        $this->companyBankAccount = $companyBankAccount;
+        $this->companyColumnBalance = '';
     }
 
     public function getAvailableBalance(): int
@@ -122,39 +113,6 @@ class GetnetService implements Statement
                 ->whereNull("confirm_date")
                 ->sum("value");
         });
-    }
-
-    public function getWithdrawals(): JsonResource
-    {
-        $withdrawals = Withdrawal::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->orderBy("id", "DESC");
-
-        return WithdrawalResource::collection($withdrawals->paginate(10));
-    }
-
-    public function withdrawalValueIsValid($value): bool
-    {
-        if (empty($value) || $value < 1) {
-            return false;
-        }
-
-        $availableBalance = $this->getAvailableBalance();
-        $pendingBalance = $this->getPendingBalance();
-        (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
-
-        if ($value > $availableBalance) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function existsBankAccountApproved()
-    {
-        //verifica se existe uma conta bancaria aprovada
-        $this->companyBankAccount = $this->company->getBankAccountTED();
-        return !empty($this->companyBankAccount);
     }
 
     public function createWithdrawal($value)
@@ -450,17 +408,6 @@ class GetnetService implements Statement
                 "id" => "w7YL9jZD6gp4qmv",
             ];
         });
-    }
-
-    public function getGatewayAvailable()
-    {
-        $lastTransaction = DB::table("transactions")
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->where("company_id", $this->company->id)
-            ->orderBy("id", "desc")
-            ->first();
-
-        return !empty($lastTransaction) ? ["Getnet"] : [];
     }
 
     public function getGatewayId(): int
