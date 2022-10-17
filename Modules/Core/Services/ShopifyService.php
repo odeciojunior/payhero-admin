@@ -109,14 +109,13 @@ class ShopifyService
 
             $statusProductShopify = 1;
             try {
-                $result = $this->client
-                ->createRequest("GET", "https://{$this->urlStore}/admin/api/2022-04/products/{$shopifyProductId}.json");
+                $result = $this->client->createRequest("GET", "https://{$this->urlStore}/admin/api/2022-04/products/{$shopifyProductId}.json");
 
-                if(!empty($result) && isset($result["product"]["status"]) && $result["product"]["status"] != "active") $statusProductShopify = 0;
-
+                if (!empty($result) && isset($result["product"]["status"]) && $result["product"]["status"] != "active") {
+                    $statusProductShopify = 0;
+                }
             } catch (Exception $e) {
                 report($e);
-                $statusProductShopify = 1;
             }
 
             $productsArray = [];
@@ -500,8 +499,8 @@ class ShopifyService
     {
         if (!empty($this->client)) {
             return 'https://' . $this->client->getShopManager()
-                    ->get()
-                    ->getDomain();
+                ->get()
+                ->getDomain();
         }
 
         return '';
@@ -1559,7 +1558,4 @@ class ShopifyService
             return '';
         }
     }
-
 }
-
-
