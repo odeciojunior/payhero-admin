@@ -160,10 +160,21 @@ $(() => {
         });
     });
 
+    function showLoadingModalSkeleton() {
+        $(".modal_sale_details_content").hide();
+        $(".modal_loading_skeleton").show();
+    }
+
+    function removeLoadingModalSkeleton() {
+        $(".modal_loading_skeleton").hide();
+        $(".modal_sale_details_content").show();
+    }
+
     // MODAL DETALHES DA VENDA
     $(document).on("click", ".detalhes_venda", function () {
         let sale = $(this).attr("venda");
-        loadOnAny("#modal-saleDetails");
+
+        showLoadingModalSkeleton();
 
         $("#nav-home-tab").addClass("active");
         $("#nav-home-tab").addClass("show");
@@ -260,6 +271,8 @@ $(() => {
                         refundedBilletClick(refunded_value, refund_observation, response.data.refund_url);
                     });
                 });
+
+                removeLoadingModalSkeleton();
             },
         });
     });
@@ -1233,13 +1246,8 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    function refundedClick(
-        refundedValue = 0,
-        refundObservation,
-        refundUrl,
-        partial = 0
-    ) {
-        $(".btn-confirm-refund-transaction").prop('disabled', true);
+    function refundedClick(refundedValue = 0, refundObservation, refundUrl, partial = 0) {
+        $(".btn-confirm-refund-transaction").prop("disabled", true);
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -1256,19 +1264,19 @@ $(() => {
             },
             error: (response) => {
                 loadingOnScreenRemove();
-                $("#modal-refund-transaction").modal('toggle')
+                $("#modal-refund-transaction").modal("toggle");
                 errorAjaxResponse(response);
                 //atualizar(currentPage);
                 $(".btn-confirm-refund-transaction").prop("disabled", false);
             },
             success: (response) => {
                 loadingOnScreenRemove();
-                $("#modal-refund-transaction").modal('toggle')
+                $("#modal-refund-transaction").modal("toggle");
                 alertCustom("success", response.message);
                 $("#refund-observation-transaction").val("");
 
-                if(window.location.pathname.includes('finances')){
-                    $('#bt_filtro').trigger('click');
+                if (window.location.pathname.includes("finances")) {
+                    $("#bt_filtro").trigger("click");
                 }
 
                 atualizar(currentPage);

@@ -532,6 +532,47 @@ function heightAnimate(element, height) {
     element.stop().animate({ height: autoHeight }, time); // Animate to Auto Height
 }
 
+function loadingSkeletonCards(elementAppend) {
+    const loadingHtml =
+        '<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 card-skeleton-loading">' +
+        '    <div class="card">' +
+        '        <div class="d-flex justify-content-center">' +
+        '            <div class="skeleton-loading card-skeleton-loading-img-top" style="border-radius: 0;"></div>' +
+        "        </div>" +
+        '        <div class="card-body">' +
+        '            <div class="skeleton-loading mt-3" style="width: 80%; height: 20px;"></div>' +
+        '            <div class="skeleton-loading mt-45" style="width: 60%; height: 10px"></div>' +
+        "        </div>" +
+        "    </div>" +
+        "</div>";
+
+    let cont = 2;
+
+    if (window.innerWidth > 479 && window.innerWidth <= 767) {
+        cont = 4;
+    }
+
+    if (window.innerWidth > 767 && window.innerWidth <= 991) {
+        cont = 6;
+    }
+
+    if (window.innerWidth > 991) {
+        cont = 8;
+    }
+
+    let html = "";
+
+    for (let i = 0; i < cont; i++) {
+        html += loadingHtml;
+    }
+
+    elementAppend.append(html);
+}
+
+function removeLoadingSkeletonCards() {
+    $(".card-skeleton-loading").remove();
+}
+
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
         loadOnAnyPage(".page", true);
@@ -645,7 +686,7 @@ function loadOnAny(target, remove = false, options = {}) {
 
         //add message load
         if (options.message) {
-            container.append(`<p class='mb-30'>${options.message}</p>`);
+            container.append(`<p class="mb-30">${options.message}</p>`);
             container.addClass("d-flex").addClass("flex-column");
         }
 
@@ -693,7 +734,7 @@ function loadOnAnyPage(target, remove = false, options = {}) {
 
         //add message load
         if (options.message) {
-            container.append(`<p class='mb-30'>${options.message}</p>`);
+            container.append(`<p class="mb-30">${options.message}</p>`);
             container.addClass("d-flex").addClass("flex-column");
         }
 
@@ -766,7 +807,7 @@ function pagination(response, model, callback) {
         return false;
     }
 
-    let first_page = `<button class='btn nav-btn first_page'>1</button>`;
+    let first_page = `<button class="btn nav-btn first_page">1</button>`;
 
     $(paginationContainer).append(first_page);
 
@@ -788,7 +829,7 @@ function pagination(response, model, callback) {
         }
 
         $(paginationContainer).append(
-            `<button class='btn nav-btn page_${currentPage - x}'>${currentPage - x}</button>`
+            `<button class="btn nav-btn page_${currentPage - x}">${currentPage - x}</button>`
         );
 
         $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
@@ -798,7 +839,7 @@ function pagination(response, model, callback) {
     }
 
     if (currentPage !== 1 && currentPage !== lastPage) {
-        var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
+        var current_page = `<button class="btn nav-btn active current_page">${currentPage}</button>`;
 
         $(paginationContainer).append(current_page);
 
@@ -813,7 +854,7 @@ function pagination(response, model, callback) {
         }
 
         $(paginationContainer).append(
-            `<button class='btn nav-btn page_${currentPage + x}'>${currentPage + x}</button>`
+            `<button class="btn nav-btn page_${currentPage + x}">${currentPage + x}</button>`
         );
 
         $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
@@ -823,7 +864,7 @@ function pagination(response, model, callback) {
     }
 
     if (lastPage !== 1) {
-        var last_page = `<button class='btn nav-btn last_page'>${lastPage}</button>`;
+        var last_page = `<button class="btn nav-btn last_page">${lastPage}</button>`;
 
         $(paginationContainer).append(last_page);
 
@@ -994,16 +1035,13 @@ $(".top-alert-close").on("click", function () {
 
 sessionStorage.removeItem("documentsPending");
 
-function verifyDocumentPending()
-{
+function verifyDocumentPending() {
     changeNewRegisterLayoutOnWindowResize();
     var count = 0;
 
     $.ajax({
         method: "GET",
-        url:
-            "/api/core/verify-account/" +
-            $('meta[name="user-id"]').attr("content"),
+        url: "/api/core/verify-account/" + $('meta[name="user-id"]').attr("content"),
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
@@ -1012,9 +1050,7 @@ function verifyDocumentPending()
             errorAjaxResponse(response);
         },
         success: (response) => {
-
             if (response.data.user_account !== "approved") {
-
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
                     $(".new-register-page-open-modal-container").hide();
@@ -1027,16 +1063,12 @@ function verifyDocumentPending()
                     changeNewRegisterLayoutOnWindowResize();
                 }
 
-                localStorage.setItem(
-                    "verifyAccount",
-                    JSON.stringify(response.data)
-                );
+                localStorage.setItem("verifyAccount", JSON.stringify(response.data));
 
                 var card_user_info_status = "";
                 var card_user_info_icon = "";
                 var card_user_info_title = "Nos conte sobre você";
-                var card_user_info_description =
-                    "Temos algumas perguntas para conhecer melhor você e seu negócio.";
+                var card_user_info_description = "Temos algumas perguntas para conhecer melhor você e seu negócio.";
 
                 if (!response.data.informations_completed) {
                     count += 1;
@@ -1080,8 +1112,7 @@ function verifyDocumentPending()
                     card_company_icon =
                         '<svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 3.5C3.94772 3.5 3.5 3.94772 3.5 4.5C3.5 5.05228 3.94772 5.5 4.5 5.5C5.05229 5.5 5.5 5.05228 5.5 4.5C5.5 3.94772 5.05229 3.5 4.5 3.5ZM3.5 11.5C3.5 10.9477 3.94772 10.5 4.5 10.5C5.05229 10.5 5.5 10.9477 5.5 11.5C5.5 12.0523 5.05229 12.5 4.5 12.5C3.94772 12.5 3.5 12.0523 3.5 11.5ZM4.5 7C3.94772 7 3.5 7.44771 3.5 8C3.5 8.55229 3.94772 9 4.5 9C5.05229 9 5.5 8.55229 5.5 8C5.5 7.44771 5.05229 7 4.5 7ZM7 4.5C7 3.94772 7.44771 3.5 8 3.5C8.55229 3.5 9 3.94772 9 4.5C9 5.05228 8.55229 5.5 8 5.5C7.44771 5.5 7 5.05228 7 4.5ZM8 10.5C7.44771 10.5 7 10.9477 7 11.5C7 12.0523 7.44771 12.5 8 12.5C8.55229 12.5 9 12.0523 9 11.5C9 10.9477 8.55229 10.5 8 10.5ZM10.5 11.5C10.5 10.9477 10.9477 10.5 11.5 10.5C12.0523 10.5 12.5 10.9477 12.5 11.5C12.5 12.0523 12.0523 12.5 11.5 12.5C10.9477 12.5 10.5 12.0523 10.5 11.5ZM8 7C7.44771 7 7 7.44771 7 8C7 8.55229 7.44771 9 8 9C8.55229 9 9 8.55229 9 8C9 7.44771 8.55229 7 8 7ZM2.25 0C1.00736 0 0 1.00736 0 2.25V18.75C0 19.1642 0.335786 19.5 0.75 19.5H15.2528C15.667 19.5 16.0028 19.1642 16.0028 18.75V9.7493C16.0028 8.50666 14.9954 7.4993 13.7528 7.4993H12.5V2.25C12.5 1.00736 11.4926 0 10.25 0H2.25ZM1.5 2.25C1.5 1.83579 1.83579 1.5 2.25 1.5H10.25C10.6642 1.5 11 1.83579 11 2.25V8.2493C11 8.66352 11.3358 8.9993 11.75 8.9993H13.7528C14.167 8.9993 14.5028 9.33509 14.5028 9.7493V18H12.5V15.25C12.5 14.8358 12.1642 14.5 11.75 14.5H4.25C3.83579 14.5 3.5 14.8358 3.5 15.25V18H1.5V2.25ZM11 16V18H8.75V16H11ZM7.25 16V18H5V16H7.25Z" fill="#5B5B5B"/></svg>';
                     card_company_title = "Cadastre sua empresa";
-                    card_company_description =
-                        "Na Cloudfox você pode ter uma ou mais empresas.";
+                    card_company_description = "Na Cloudfox você pode ter uma ou mais empresas.";
                     card_company_button = "";
                 } else {
                     if (response.data.company_status == "pending") {
@@ -1090,8 +1121,7 @@ function verifyDocumentPending()
                         card_company_status = "status-info";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
-                        card_company_title =
-                            "Você cadastrou sua empresa, mas não recebemos nenhum documento";
+                        card_company_title = "Você cadastrou sua empresa, mas não recebemos nenhum documento";
                         card_company_description =
                             "Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.";
                         card_company_button =
@@ -1101,40 +1131,32 @@ function verifyDocumentPending()
                     } else if (response.data.company_status == "analyzing") {
                         count += 1;
 
-                        card_company_status =
-                            "status-warning redirect-to-accounts";
+                        card_company_status = "status-warning redirect-to-accounts";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
-                        card_company_title =
-                            "Estamos analisando seus documentos da sua empresa";
+                        card_company_title = "Estamos analisando seus documentos da sua empresa";
                         card_company_description =
                             "Esse processo de revisão leva um tempinho. Mas em breve retornaremos.";
 
                         card_company_button = "";
-
                     } else if (response.data.company_status == "refused") {
                         count += 1;
 
                         card_company_status = "status-error";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.5C5.30558 1.5 1.5 5.30558 1.5 10C1.5 14.6944 5.30558 18.5 10 18.5C14.6944 18.5 18.5 14.6944 18.5 10C18.5 5.30558 14.6944 1.5 10 1.5ZM13.4462 6.39705L13.5303 6.46967C13.7966 6.73594 13.8208 7.1526 13.6029 7.44621L13.5303 7.53033L11.061 10L13.5303 12.4697C13.7966 12.7359 13.8208 13.1526 13.6029 13.4462L13.5303 13.5303C13.2641 13.7966 12.8474 13.8208 12.5538 13.6029L12.4697 13.5303L10 11.061L7.53033 13.5303C7.26406 13.7966 6.8474 13.8208 6.55379 13.6029L6.46967 13.5303C6.2034 13.2641 6.1792 12.8474 6.39705 12.5538L6.46967 12.4697L8.939 10L6.46967 7.53033C6.2034 7.26406 6.1792 6.8474 6.39705 6.55379L6.46967 6.46967C6.73594 6.2034 7.1526 6.1792 7.44621 6.39705L7.53033 6.46967L10 8.939L12.4697 6.46967C12.7359 6.2034 13.1526 6.1792 13.4462 6.39705Z" fill="white"/></svg>';
-                        card_company_title =
-                            "Tivemos problemas em verificar sua empresa";
-                        card_company_description =
-                            "Há um problema com seus documentos.";
+                        card_company_title = "Tivemos problemas em verificar sua empresa";
+                        card_company_description = "Há um problema com seus documentos.";
                         card_company_button =
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Reenviar documentos</button>';
                     } else if (response.data.company_status == "approved") {
-                        card_company_status =
-                            "status-check redirect-to-accounts";
+                        card_company_status = "status-check redirect-to-accounts";
                         card_company_icon =
                             '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
-                        card_company_title =
-                            "A documentação da sua empresa foi recebida e aprovada.";
-                        card_company_description =
-                            "Se você já aprovou seus documentos pessoais, agora é só vender!";
+                        card_company_title = "A documentação da sua empresa foi recebida e aprovada.";
+                        card_company_description = "Se você já aprovou seus documentos pessoais, agora é só vender!";
                         card_company_button = "";
                     }
                 }
@@ -1163,7 +1185,6 @@ function verifyDocumentPending()
                 var card_user_biometry_button = "";
                 var card_user_biometry_link = "/personal-info";
 
-
                 if (response.data.user_status === "pending" || response.data.user_status === "") {
                     count += 1;
 
@@ -1175,7 +1196,7 @@ function verifyDocumentPending()
                         "Para reforçarmos a segurança, coletaremos seus dados. Acesse as configurações e realize a biometria.";
                     card_user_biometry_button =
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                    card_user_biometry_link +
+                        card_user_biometry_link +
                         '">Ir para configurações</button>';
                 } else if (response.data.user_status === "analyzing") {
                     count += 1;
@@ -1199,14 +1220,13 @@ function verifyDocumentPending()
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                         card_user_biometry_link +
                         '">Ir para configurações</button>';
-                } else if (response.data.user_status === "approved") { //
+                } else if (response.data.user_status === "approved") {
+                    //
                     card_user_biometry_status = "status-check redirect-to-accounts";
                     card_user_biometry_icon =
                         '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
-                    card_user_biometry_title =
-                        "Sua identidade foi validada";
-                    card_user_biometry_description =
-                        "Seus dados biométricos foram coletados e aprovados.";
+                    card_user_biometry_title = "Sua identidade foi validada";
+                    card_user_biometry_description = "Seus dados biométricos foram coletados e aprovados.";
                     card_user_biometry_button = "";
                 }
 
@@ -1229,30 +1249,17 @@ function verifyDocumentPending()
 
                 $(".new-register-open-modal-btn")
                     .find(".count")
-                    .html(
-                        " (" +
-                            count +
-                            (count > 1
-                                ? " itens pendentes"
-                                : " item pendente") +
-                            ")"
-                    ).promise().done(function(){
-                        $('.alert-pendings').css('display','inline-flex')
+                    .html(" (" + count + (count > 1 ? " itens pendentes" : " item pendente") + ")")
+                    .promise()
+                    .done(function () {
+                        $(".alert-pendings").css("display", "inline-flex");
                     });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
 
-                let verifyAccount = JSON.parse(
-                    localStorage.getItem("verifyAccount")
-                );
-                if (
-                    verifyAccount &&
-                    verifyAccount.account.status !== "approved"
-                ) {
-                    localStorage.setItem(
-                        "verifyAccount",
-                        JSON.stringify(response.data)
-                    );
+                let verifyAccount = JSON.parse(localStorage.getItem("verifyAccount"));
+                if (verifyAccount && verifyAccount.account.status !== "approved") {
+                    localStorage.setItem("verifyAccount", JSON.stringify(response.data));
                 }
             }
         },
@@ -2305,6 +2312,7 @@ function fillSelectProject(companiesAndProjects, selectorName, value = "") {
         $(selectorName).val(value);
     }
 }
+
 function showFiltersInReports(show) {
     if (show) {
         $("#box-projects").show();
