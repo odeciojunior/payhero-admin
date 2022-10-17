@@ -1,0 +1,34 @@
+<!-- start cloudfox utm script -->
+<div id='foxScriptUtm'>
+    <script>
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var utmParams = {
+            src: url.searchParams.get('src'),
+            utm_source: url.searchParams.get('utm_source'),
+            utm_medium: url.searchParams.get('utm_medium'),
+            utm_campaign: url.searchParams.get('utm_campaign'),
+            utm_term: url.searchParams.get('utm_term'),
+            utm_content: url.searchParams.get('utm_content')
+        }
+        var cookieValue = '';
+        Object.keys(utmParams).forEach(function(key) {
+            if(utmParams[key]){
+                if(cookieValue) {
+                    cookieValue += '|';
+                }
+                cookieValue += key + '=' + utmParams[key];
+            }
+        });
+
+        if(cookieValue) {
+            var cookieName = '_sirius_track';
+            var myDate = new Date();
+            myDate.setMonth(myDate.getMonth() + 12);
+
+            {% comment %}document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate.toUTCString();{% endcomment %}
+            document.cookie = cookieName +'=' + cookieValue + ';domain=.localhost:8081;path=/;expires=' + myDate.toUTCString();
+        }
+    </script>
+</div>
+<!-- end cloudfox utm script -->
