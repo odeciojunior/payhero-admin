@@ -150,7 +150,7 @@ $(window).on("load", function () {
                                                 ${gatewayLogos.cielo}
                                             </a>`);
                 break;
-            case "BeYEwR3AdgdKykA":
+            case "pqbz5KZby37dLlm":
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.vega}
@@ -312,7 +312,6 @@ $(window).on("load", function () {
                     $("#blocked-withdrawal").show();
                 }
             },
-
         });
     }
 
@@ -337,7 +336,8 @@ $(window).on("load", function () {
                     $("#bt-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-unico").show();
 
-                    $("#custom-input-addon").prop("disabled", true);
+                    $(".bt-sacar").attr("disabled", "disabled");
+                    $("#custom-input-addon").attr("disabled", "disabled");
                 }
             },
         });

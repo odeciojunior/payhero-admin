@@ -13,13 +13,13 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Modules\Core\Abstracts\GatewayServicesAbstract;
 
-class CieloService implements Statement
+class CieloService extends GatewayServicesAbstract
 {
     public Company $company;
     public $gatewayIds = [];
@@ -35,6 +35,10 @@ class CieloService implements Statement
             Gateway::ZOOP_PRODUCTION_ID,
             Gateway::ZOOP_SANDBOX_ID,
         ];
+
+        $this->gatewayName = 'Cielo';
+
+        $this->companyColumnBalance = 'cielo_balance';
     }
 
     public function setCompany(Company $company)

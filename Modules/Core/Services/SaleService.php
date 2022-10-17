@@ -269,8 +269,8 @@ class SaleService
         $transactionStatus = implode(",", [
             Transaction::STATUS_PAID,
             Transaction::STATUS_TRANSFERRED,
-            Transaction::STATUS_CHARGEBACK,
-            Transaction::STATUS_REFUNDED,
+            //Transaction::STATUS_CHARGEBACK,
+            // Transaction::STATUS_REFUNDED,
         ]);
         $statusDispute = Sale::STATUS_IN_DISPUTE;
 
@@ -282,8 +282,7 @@ class SaleService
                               sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
                               sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
                 )
-            )
-            ->first()
+            )->first()
             ->toArray();
 
         $resume["commission"] = number_format($resume["commission"], 2, ",", ".");
@@ -637,7 +636,7 @@ class SaleService
     {
         try {
             DB::beginTransaction();
-            $safe2payBalance = 0;
+            $vegaBalance = 0;
             $saleIdEncode = hashids_encode($sale->id, "sale_id");
             $isBillet = $sale->payment_method == Sale::BILLET_PAYMENT;
 
@@ -660,7 +659,7 @@ class SaleService
                     continue;
                 }
 
-                $safe2payBalance = $transaction->company->safe2pay_balance;
+                $vegaBalance = $transaction->company->vega_balance;
 
                 if ($transaction->status_enum == Transaction::STATUS_PAID) {
                     Transfer::create([
@@ -673,9 +672,9 @@ class SaleService
                         "gateway_id" => $sale->gateway_id,
                     ]);
 
-                    $safe2payBalance += $transaction->value;
+                    $vegaBalance += $transaction->value;
                     $transaction->company->update([
-                        "safe2pay_balance" => $safe2payBalance,
+                        "vega_balance" => $vegaBalance,
                     ]);
                 }
 
@@ -697,7 +696,7 @@ class SaleService
                 ]);
 
                 $transaction->company->update([
-                    "safe2pay_balance" => $safe2payBalance - $refundValue,
+                    "vega_balance" => $vegaBalance - $refundValue,
                 ]);
 
                 $transaction->update([

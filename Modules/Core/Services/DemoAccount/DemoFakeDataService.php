@@ -89,14 +89,14 @@ class DemoFakeDataService
             $cashbackValue = !empty($sale->cashback->value) ? $sale->cashback->value:0;
             $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
 
-            $safe2payBalance = 0;
+            $vegaBalance = 0;
 
             foreach ($refundTransactions as $refundTransaction)
             {
                 $company = $refundTransaction->company;
                 if (!empty($company))
                 {
-                    $safe2payBalance = $company->safe2pay_balance;
+                    $vegaBalance = $company->vega_balance;
 
                     $refundValue = $refundTransaction->value;
                     if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
@@ -105,7 +105,7 @@ class DemoFakeDataService
 
                     if ($refundTransaction->status_enum <> Transaction::STATUS_TRANSFERRED)
                     {
-                        $safe2payBalance += $refundTransaction->value;
+                        $vegaBalance += $refundTransaction->value;
                         Transfer::create(
                             [
                                 'transaction_id' => $refundTransaction->id,
@@ -119,7 +119,7 @@ class DemoFakeDataService
                         );
 
                         $company->update([
-                            'safe2pay_balance' => $safe2payBalance
+                            'vega_balance' => $vegaBalance
                         ]);
                     }
 
@@ -136,7 +136,7 @@ class DemoFakeDataService
                     ]);
 
                     $company->update([
-                        'safe2pay_balance' => $safe2payBalance - $refundValue
+                        'vega_balance' => $vegaBalance - $refundValue
                     ]);
                 }
 
