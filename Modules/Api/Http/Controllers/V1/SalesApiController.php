@@ -27,6 +27,7 @@ class SalesApiController extends Controller
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toArray());
             }
+
             $sales = SalesApiService::getSalesQueryBuilder($data);
 
             return SalesApiResource::collection($sales->simplePaginate(10));

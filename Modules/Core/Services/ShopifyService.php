@@ -55,6 +55,8 @@ class ShopifyService
 
     private $method;
 
+    private $urlStore;
+
     private $project = "admin";
 
     public function __construct(string $urlStore, string $token, $getThemes = true)
@@ -76,6 +78,8 @@ class ShopifyService
                 'meta_cache_dir' => $cache // Metadata cache dir, required
             ]
         );
+
+        $this->urlStore = $urlStore;
     }
 
     /**
@@ -102,6 +106,17 @@ class ShopifyService
             $products = Product::with('productsPlans.plan')
                 ->where('project_id', $projectId)
                 ->get();
+
+            $statusProductShopify = 1;
+            try {
+                $result = $this->client->createRequest("GET", "https://{$this->urlStore}/admin/api/2022-04/products/{$shopifyProductId}.json");
+
+                if (!empty($result) && isset($result["product"]["status"]) && $result["product"]["status"] != "active") {
+                    $statusProductShopify = 0;
+                }
+            } catch (Exception $e) {
+                report($e);
+            }
 
             $productsArray = [];
             foreach ($storeProduct->getVariants() as $variant) {
@@ -141,6 +156,7 @@ class ShopifyService
                         'shopify_variant_id' => $variant->getId(),
                         'sku' => $variant->getSku(),
                         'project_id' => $projectId,
+                        "active_flag" => $statusProductShopify,
                     ]);
 
                     $productPlan = $product->productsPlans
@@ -160,10 +176,17 @@ class ShopifyService
 
                         $plan = $productPlan->plan;
                         $plan->fill([
+                            "name" => $title,
+                            "description" => mb_substr($description, 0, 100),
+                            "price" => $variant->getPrice(),
+                            "status" => "1",
+                            "active_flag" => $statusProductShopify,
+                            "project_id" => $projectId,
                             'name' => $title,
                             'description' => mb_substr($description, 0, 100),
                             'price' => $variant->getPrice(),
                             'status' => '1',
+                            "active_flag" => $statusProductShopify,
                             'project_id' => $projectId,
                         ]);
                         if ($plan->isDirty()) {
@@ -211,6 +234,7 @@ class ShopifyService
                                 'code' => '',
                                 'price' => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
                                 'status' => '1',
+                                "active_flag" => $statusProductShopify,
                             ]
                         );
 
@@ -245,6 +269,7 @@ class ShopifyService
                             'shopify_variant_id' => $variant->getId(),
                             'sku' => $variant->getSku(),
                             'project_id' => $projectId,
+                            "active_flag" => $statusProductShopify,
                         ]
                     );
 
@@ -259,6 +284,7 @@ class ShopifyService
                             'code' => '',
                             'price' => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
                             'status' => '1',
+                            "active_flag" => $statusProductShopify,
                         ]
                     );
                     $plan->update(['code' => hashids_encode($plan->id)]);
@@ -473,8 +499,8 @@ class ShopifyService
     {
         if (!empty($this->client)) {
             return 'https://' . $this->client->getShopManager()
-                    ->get()
-                    ->getDomain();
+                ->get()
+                ->getDomain();
         }
 
         return '';
@@ -1532,7 +1558,4 @@ class ShopifyService
             return '';
         }
     }
-
 }
-
-

@@ -58,7 +58,7 @@ class CreateChargebackDebitListener implements ShouldQueue
                 ]);
 
                 $company->update([
-                    "safe2pay_balance" => $company->safe2pay_balance - $chargebackValue,
+                    "vega_balance" => $company->vega_balance - $chargebackValue,
                 ]);
             }
         } catch (Exception $e) {

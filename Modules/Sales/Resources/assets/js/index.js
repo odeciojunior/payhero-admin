@@ -207,64 +207,39 @@ function atualizar(link = null) {
                                     <div class="fullInformation ellipsis-text">
                                         ${value.product}
                                     </div>
+                                </td>
+                                <td>
+                                <strong class="bold-mobile">${value.product}</strong>
+                                ${value.affiliate != null && value.user_sale_type == "producer"
+                            ? `<br><small class="gray font-size-12">(Afiliado: ${value.affiliate})</small>`
+                            : ""
+                        }
+                                <br> <small class="gray font-size-12">${value.project}</small></td>
 
-                                </span>
+                                <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
+                                <td>
+                                    <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
+                                </td>
+                                <td class='text-center'>
+                                        <span class="status-sale badge badge-${statusArray[value.status]} ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""
+                        }" ${value.status_translate === "Pendente"
+                            ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"'
+                            : ""
+                        }>${value.status_translate}</span>
 
-                                ${value.affiliate != null && value.user_sale_type == "producer" ? ` <br> <small class="subdescription font-size-12"> (Afiliado: ${value.affiliate}) </small>` : ""}
-                                <br>
-
-                                <small class="subdescription font-size-12">
-                                    ${value.project}
-                                </small>
-                            </td>
-
-                            <td class='d-none client-collumn'>
-
-                                <span class="container-tooltips" data-toggle="tooltip" data-placement="top" title="${value.client}">
-
-                                    <div class="fullInformation ellipsis-text">
-                                        ${value.client}
-                                    </div>
-
-                                </span>
-
-                            </td>
-
-                            <td>
-                                <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 55px; height: 36px;'>
-                            </td>
-
-                            <td class='text-center'>
-                                <span class="status-sale badge badge-${statusArray[value.status]}
-                                ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""}"
-                                ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
-                                    ${value.status_translate}
-                                </span>
-
-                            </td>
-
-                            <td class='display-sm-none display-m-none text-left'>
-                                ${start_date}
-                            </td>
-
-                            <td class='display-sm-none text-left'>
-                                ${end_date}
-                            </td>
-
-                            <td class="text-center text-md-right text-nowrap commission-fweight ${value.status_translate === "Aprovado" ? "approved-value" : ""}" >
-                                ${cashback ? cashback : `${value.total_paid}<br>`}
-                            </td>
-
-                            <td style="text-align: center">
-                                ${observation}
-                                <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
-                                    <span>
-                                        <img src="/build/global/img/icon-eye.svg">
-                                    </span>
-                                </a>
-                            </td>
-
-                        </tr>`;
+                                </td>
+                                <td class='display-sm-none display-m-none text-left font-size-14'>${start_date}</td>
+                                <td class='display-sm-none text-left font-size-14'>${end_date}</td>
+                                <td style='white-space: nowrap;' class="text-center text-md-right">
+                                    ${cashback ? cashback : `<b>${value.total_paid}</b> <br>`}
+                                </td>
+                                <td style="text-align: center">
+                                    ${observation}
+                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
+                                        <span class="o-eye-1"></span>
+                                    </a>
+                                </td>
+                            </tr>`;
 
                     $(function () {
                         $('[data-toggle="tooltip"]').tooltip({
@@ -305,10 +280,7 @@ function getFilters(urlParams = false) {
     let transaction = $("#transaction").val().replace("#", "");
     let date_range = $("#date_range").val();
     if (transaction.length > 0) {
-        date_range =
-            moment("2018-01-01").format("DD/MM/YYYY") +
-            " - " +
-            moment().format("DD/MM/YYYY");
+        date_range = moment("2018-01-01").format("DD/MM/YYYY") + " - " + moment().format("DD/MM/YYYY");
     }
 
     let data = {
@@ -394,21 +366,29 @@ function salesResume() {
 
             if (response.total_sales) {
                 $("#total-sales, #commission, #total").text("");
-                $("#total-sales").html(
-                    `<span class="font-size-30 bold"> ${response.total_sales} </span>`
-                );
-                $("#commission").html(
-                    `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.commission} </span>`
-                );
-                if (`${response.total}`.length >= 13) {
-                    $("#total").html(
-                        `<span style="color:#959595">R$</span><span class="font-size-30 bold">&nbsp;</span><span style="font-size:27px !important" class="bold">${response.total}</span>`
-                    );
-                } else {
-                    $("#total").html(
-                        `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.total} </span>`
-                    );
+                $("#total-sales").html(`<span class="font-size-30 bold"> ${response.total_sales} </span>`);
+
+                let font_commission_style = "";
+                if (`${response.commission}`.length == 12) {
+                    font_commission_style = "font-size: 27px !important;";
+                } else if (`${response.commission}`.length > 12) {
+                    font_commission_style = "font-size: 25px !important;";
                 }
+                $("#commission").html(
+                    `<span style="color:#959595">R$</span> <span class="font-size-30 bold" style="
+                        ${font_commission_style} "> ${response.commission} </span>`
+                );
+
+                let font_total_style = "";
+                if (`${response.total}`.length == 12) {
+                    font_total_style = "font-size: 27px !important;";
+                } else if (`${response.total}`.length > 12) {
+                    font_total_style = "font-size: 25px !important;";
+                }
+                $("#total").html(
+                    `<span style="color:#959595">R$</span> <span class="font-size-30 bold" style="
+                        ${font_total_style} "> ${response.total} </span>`
+                );
             }
         },
     });
@@ -506,9 +486,7 @@ $(document).ready(function () {
         prefix: "",
     });
 
-    $(".transaction-value")
-        .mask("#.##0,00", { reverse: true })
-        .removeAttr("maxlength");
+    $(".transaction-value").mask("#.##0,00", { reverse: true }).removeAttr("maxlength");
     $(".transaction-value").on("blur", function () {
         if ($(this).val().length == 1) {
             let val = "0,0" + $(this).val();
@@ -523,18 +501,10 @@ $(document).ready(function () {
         let val = $(this).val();
 
         if (val === "") {
-            $("#date_type")
-                .attr("disabled", false)
-                .removeClass("disableFields");
-            $("#date_range")
-                .attr("disabled", false)
-                .removeClass("disableFields");
+            $("#date_type").attr("disabled", false).removeClass("disableFields");
+            $("#date_range").attr("disabled", false).removeClass("disableFields");
         } else {
-            $("#date_range").val(
-                moment("2018-01-01").format("DD/MM/YYYY") +
-                " - " +
-                moment().format("DD/MM/YYYY")
-            );
+            $("#date_range").val(moment("2018-01-01").format("DD/MM/YYYY") + " - " + moment().format("DD/MM/YYYY"));
             $("#date_type").attr("disabled", true).addClass("disableFields");
             $("#date_range").attr("disabled", true).addClass("disableFields");
         }
@@ -552,9 +522,7 @@ $(document).ready(function () {
     });
 
     $(".btn-confirm-export-sale").on("click", function () {
-        var regexEmail = new RegExp(
-            /^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/
-        );
+        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
         var email = $("#email_export").val();
 
         if (email == "" || !regexEmail.test(email)) {
@@ -620,16 +588,10 @@ $(document).ready(function () {
             },
             ranges: {
                 Hoje: [moment(), moment()],
-                Ontem: [
-                    moment().subtract(1, "days"),
-                    moment().subtract(1, "days"),
-                ],
+                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
                 "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
                 "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [
-                    moment().startOf("month"),
-                    moment().endOf("month"),
-                ],
+                "Este mês": [moment().startOf("month"), moment().endOf("month")],
                 "Mês passado": [
                     moment().subtract(1, "month").startOf("month"),
                     moment().subtract(1, "month").endOf("month"),
@@ -652,7 +614,6 @@ $(document).ready(function () {
         elementButton = $("#bt_filtro");
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr("block_search"));
             atualizar();
         }
     }
@@ -725,12 +686,7 @@ $(document).ready(function () {
                     $("#project-not-empty").show();
                     $("#export-excel > div >").show();
                     $.each(response, function (i, project) {
-                        $("#projeto").append(
-                            $("<option>", {
-                                value: project.project_id,
-                                text: project.name,
-                            })
-                        );
+                        $("#projeto").append($("<option>", { value: project.project_id, text: project.name }));
                     });
                     $("#projeto option:first").attr("selected", "selected");
                     atualizar();
@@ -776,9 +732,7 @@ $(document).ready(function () {
                 $("#cupom").html("");
 
                 if (response.data.length > 0) {
-                    $("#cupom").append(
-                        "<option value=''>Todos cupons</option>"
-                    );
+                    $("#cupom").append("<option value=''>Todos cupons</option>");
 
                     $.each(response.data, function (i, coupon) {
                         $("#cupom").append(
@@ -791,9 +745,7 @@ $(document).ready(function () {
 
                     atualizar();
                 } else {
-                    $("#cupom").append(
-                        "<option value=''>Nenhum cupom encontrado</option>"
-                    );
+                    $("#cupom").append("<option value=''>Nenhum cupom encontrado</option>");
                 }
 
                 loadingOnScreenRemove();
@@ -958,9 +910,7 @@ $(document).ready(function () {
                 result = $.map(res.data, function (obj) {
                     return {
                         id: obj.id,
-                        text:
-                            obj.name +
-                            (obj.description ? " - " + obj.description : ""),
+                        text: obj.name + (obj.description ? " - " + obj.description : ""),
                     };
                 });
 
@@ -984,14 +934,9 @@ $(document).ready(function () {
         let remove;
 
         text.fadeOut(10);
-        if (
-            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
-            collapse.css("transform") == "none"
-        ) {
+        if (collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" || collapse.css("transform") == "none") {
             collapse.css("transform", "rotate(180deg)");
-            text.html(
-                "Minimizar <br class='d-flex d-sm-none'> filtros"
-            ).fadeIn();
+            text.html("Minimizar <br class='d-flex d-sm-none'> filtros").fadeIn();
         } else {
             collapse.css("transform", "rotate(0deg)");
             text.text("Filtros avançados").fadeIn();
