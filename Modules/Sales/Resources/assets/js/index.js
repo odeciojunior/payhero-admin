@@ -207,39 +207,64 @@ function atualizar(link = null) {
                                     <div class="fullInformation ellipsis-text">
                                         ${value.product}
                                     </div>
-                                </td>
-                                <td>
-                                <strong class="bold-mobile">${value.product}</strong>
-                                ${value.affiliate != null && value.user_sale_type == "producer"
-                            ? `<br><small class="gray font-size-12">(Afiliado: ${value.affiliate})</small>`
-                            : ""
-                        }
-                                <br> <small class="gray font-size-12">${value.project}</small></td>
 
-                                <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
-                                <td>
-                                    <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
-                                </td>
-                                <td class='text-center'>
-                                        <span class="status-sale badge badge-${statusArray[value.status]} ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""
-                        }" ${value.status_translate === "Pendente"
-                            ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"'
-                            : ""
-                        }>${value.status_translate}</span>
+                                </span>
 
-                                </td>
-                                <td class='display-sm-none display-m-none text-left font-size-14'>${start_date}</td>
-                                <td class='display-sm-none text-left font-size-14'>${end_date}</td>
-                                <td style='white-space: nowrap;' class="text-center text-md-right">
-                                    ${cashback ? cashback : `<b>${value.total_paid}</b> <br>`}
-                                </td>
-                                <td style="text-align: center">
-                                    ${observation}
-                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
-                                        <span class="o-eye-1"></span>
-                                    </a>
-                                </td>
-                            </tr>`;
+                                ${value.affiliate != null && value.user_sale_type == "producer" ? ` <br> <small class="subdescription font-size-12"> (Afiliado: ${value.affiliate}) </small>` : ""}
+                                <br>
+
+                                <small class="subdescription font-size-12">
+                                    ${value.project}
+                                </small>
+                            </td>
+
+                            <td class='d-none client-collumn'>
+
+                                <span class="container-tooltips" data-toggle="tooltip" data-placement="top" title="${value.client}">
+
+                                    <div class="fullInformation ellipsis-text">
+                                        ${value.client}
+                                    </div>
+
+                                </span>
+
+                            </td>
+
+                            <td>
+                                <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 55px; height: 36px;'>
+                            </td>
+
+                            <td class='text-center'>
+                                <span class="status-sale badge badge-${statusArray[value.status]}
+                                ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""}"
+                                ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
+                                    ${value.status_translate}
+                                </span>
+
+                            </td>
+
+                            <td class='display-sm-none display-m-none text-left'>
+                                ${start_date}
+                            </td>
+
+                            <td class='display-sm-none text-left'>
+                                ${end_date}
+                            </td>
+
+                            <td class="text-center text-md-right text-nowrap commission-fweight ${value.status_translate === "Aprovado" ? "approved-value" : ""}" >
+                                ${cashback ? cashback : `${value.total_paid}<br>`}
+                            </td>
+
+                            <td style="text-align: center">
+                                ${observation}
+                                <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
+                                    <span>
+                                        <img src="/build/global/img/icon-eye.svg">
+                                    </span>
+                                </a>
+                            </td>
+
+                        </tr>`;
 
                     $(function () {
                         $('[data-toggle="tooltip"]').tooltip({
