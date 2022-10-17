@@ -4,10 +4,12 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyBalance;
-use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Services\Gateways\AsaasService;
+use Modules\Core\Services\Gateways\CieloService;
+use Modules\Core\Services\Gateways\GerencianetService;
+use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 
 class CompanyBalances extends Command
@@ -17,7 +19,7 @@ class CompanyBalances extends Command
      *
      * @var string
      */
-    protected $signature = "company-balance";
+    protected $signature = "update:company-balance";
 
     /**
      * The console command description.
@@ -34,50 +36,80 @@ class CompanyBalances extends Command
     public function handle()
     {
         try {
-            $companies = Company::select([
-                "companies.*",
-                "us.address_document_status as u_address_document_status",
-                "us.personal_document_status as u_personal_document_status",
-            ])
-                ->join("users as us", "companies.user_id", "=", "us.id")
-                ->where("companies.situation->situation_enum", Company::SITUACTION_ACTIVE)
-                ->having(
-                    DB::Raw("(
-                    CASE
-                        WHEN company_type = 1 and us.address_document_status = 3 and us.personal_document_status = 3 THEN 3
-                        WHEN company_type = 2 and companies.address_document_status = 3 and companies.contract_document_status = 3 THEN 3
-                        ELSE false
-                    END
-                )"),
-                    "=",
-                    CompanyDocument::STATUS_APPROVED
-                )
-                ->limit(10);
+            $companies = Company::where("address_document_status", Company::STATUS_APPROVED)
+                ->where("contract_document_status", Company::STATUS_APPROVED)
+                ->get();
+            foreach ($companies as $company) {
+                $companyBalance = CompanyBalance::where("company_id", $company->id)->first();
+                if (empty($companyBalance->id)) {
+                    $companyBalance = new CompanyBalance();
+                    $companyBalance->company_id = $company->id;
+                }
 
-            foreach ($companies->cursor() as $company) {
-                $companyBalance = $this->companyBalance($company);
-                $safe2Pay = new Safe2PayService();
-                $safe2Pay->setCompany($company);
-                $companyBalance->safe_2_pay_available_balance = $safe2Pay->getAvailableBalance() ?? 0;
-                $companyBalance->safe_2_pay_pending_balance = $safe2Pay->getPendingBalance() ?? 0;
+                $vegaService = new Safe2PayService();
+                $vegaService->setCompany($company);
+                $companyBalance->vega_available_balance = $vegaService->getAvailableBalance();
+                $companyBalance->vega_pending_balance = $vegaService->getPendingBalance();
+                $companyBalance->vega_blocked_balance = $vegaService->getBlockedBalance();
+                $companyBalance->vega_total_balance =
+                    $companyBalance->vega_available_balance + $companyBalance->vega_pending_balance;
+                /*
+                                $vegaPendingBalanceWithBlocked = $companyBalance->vega_pending_balance;
+                                $vegaAvailableBalanceWithBlocked = $companyBalance->vega_available_balance;
+
+                                (new CompanyService())->applyBlockedBalance(
+                                    $vegaService,
+                                    $vegaAvailableBalanceWithBlocked,
+                                    $vegaPendingBalanceWithBlocked,
+                                    $companyBalance->vega_blocked_balance
+                                );
+
+                                //$companyBalance->vega_pending_balance_with_blocked = $vegaPendingBalanceWithBlocked;
+                                //$companyBalance->vega_available_balance_with_blocked = $vegaPendingBalanceWithBlocked;
+                */
+                $asaasService = new AsaasService();
+                $asaasService->setCompany($company);
+                $companyBalance->asaas_available_balance = $asaasService->getAvailableBalance();
+                $companyBalance->asaas_pending_balance = $asaasService->getPendingBalance();
+                $companyBalance->asaas_blocked_balance = $asaasService->getBlockedBalance();
+                $companyBalance->asaas_total_balance =
+                    $companyBalance->asaas_available_balance + $companyBalance->asaas_pending_balance;
+
+                $cieloService = new CieloService();
+                $cieloService->setCompany($company);
+                $companyBalance->cielo_available_balance = $cieloService->getAvailableBalance();
+                $companyBalance->cielo_pending_balance = $cieloService->getPendingBalance();
+                $companyBalance->cielo_blocked_balance = $cieloService->getBlockedBalance();
+                $companyBalance->cielo_total_balance =
+                    $companyBalance->cielo_available_balance + $companyBalance->cielo_pending_balance;
+
+                $getNetService = new GetnetService();
+                $getNetService->setCompany($company);
+                $companyBalance->getnet_available_balance = $getNetService->getAvailableBalance();
+                $companyBalance->getnet_pending_balance = $getNetService->getPendingBalance();
+                $companyBalance->getnet_blocked_balance = $getNetService->getBlockedBalance();
+                $companyBalance->getnet_total_balance =
+                    $companyBalance->getnet_available_balance + $companyBalance->getnet_pending_balance;
+
+                $gerenciaNetService = new GerencianetService();
+                $gerenciaNetService->setCompany($company);
+                $companyBalance->gerencianet_available_balance = $gerenciaNetService->getAvailableBalance();
+                $companyBalance->gerencianet_pending_balance = $gerenciaNetService->getPendingBalance();
+                $companyBalance->gerencianet_blocked_balance = $gerenciaNetService->getBlockedBalance();
+                $companyBalance->gerencianet_total_balance =
+                    $companyBalance->gerencianet_available_balance + $companyBalance->gerencianet_pending_balance;
+
+                $companyBalance->total_balance =
+                    $companyBalance->vega_total_balance +
+                    $companyBalance->asaas_total_balance +
+                    $companyBalance->cielo_total_balance +
+                    $companyBalance->getnet_total_balance +
+                    $companyBalance->gerencianet_total_balance;
+
                 $companyBalance->save();
             }
         } catch (Exception $e) {
-            dd($e->getMessage());
             report($e);
-        }
-    }
-
-    private function companyBalance(Company $company)
-    {
-        $companyBalance = CompanyBalance::where("company_id", $company->id)->get();
-        if (empty($companyBalance->id)) {
-            $companyBalance = new CompanyBalance();
-            $companyBalance->company_id = $company->id;
-            return $companyBalance;
-        } else {
-            dd("xxx");
-            return $companyBalance;
         }
     }
 }
