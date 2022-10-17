@@ -179,6 +179,10 @@ class TrackingService
             $tracking = Tracking::where("id", $trackingIdDecode)->first();
 
             if (!empty($tracking)) {
+                if ($tracking->tracking_status_enum == Tracking::STATUS_DELIVERED) {
+                    return false;
+                }
+
                 $oldTrackingCode = $tracking->tracking_code;
 
                 $productPlanSale = ProductPlanSale::select([
@@ -223,7 +227,7 @@ class TrackingService
                 return $tracking;
             }
 
-            return null;
+            return false;
         } catch (\Exception $e) {
             report($e);
 

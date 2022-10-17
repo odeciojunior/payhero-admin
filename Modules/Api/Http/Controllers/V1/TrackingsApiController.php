@@ -92,6 +92,11 @@ class TrackingsApiController extends Controller
     {
         try {
             $trackings = TrackingsApiService::showTrackingsQueryBuilder($id);
+            if (empty($trackings)) {
+                return response()->json([
+                    'message' => 'Código de rastreio não encontrado.'
+                ], 404);
+            }
             $trackings['checkpoints'] = true;
 
             return new TrackingsApiResource($trackings);
