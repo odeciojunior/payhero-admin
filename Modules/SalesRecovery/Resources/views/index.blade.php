@@ -123,7 +123,7 @@
                             <tr>
                                 <td class="display-sm-none display-m-none display-lg-none">Data</td>
                                 <td class="">Loja</td>
-                                <td class="display-sm-none display-m-none">Cliente</td>
+                                <td class="d-none client-collumn">Cliente</td>
                                 <td class="">Email</td>
                                 <td class="">Sms</td>
                                 <td class="text-center">Status</td>

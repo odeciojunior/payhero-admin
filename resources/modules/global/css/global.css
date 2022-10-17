@@ -3595,7 +3595,7 @@ tbody td {
     background-color: #ffffff;
 }
 .ellipsis-text{
-    max-width: 100px;
+    max-width: 190px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -3603,4 +3603,12 @@ tbody td {
 .subdescription {
     color: #999999;
     font-size: 12px;
+}
+
+
+@media (min-width: 1600px)
+{
+    .client-collumn {
+        display: table-cell !important;
+    }
 }

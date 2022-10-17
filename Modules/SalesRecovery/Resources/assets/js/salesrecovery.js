@@ -379,7 +379,8 @@ $(document).ready(function () {
         });
 
         $("#table_data").append(html);
-        $(".fullInformation").tooltip();
+        $(".fullInformation").tooltip({ container: '.container-tooltips' });
+
     }
 
     /**
@@ -391,64 +392,95 @@ $(document).ready(function () {
         let parseDate = value.date.split(" ", 2)
         let hours = parseDate[1]
 
-        let data = "";
-        data += "<tr>";
-        data +=
-            "<td class='display-sm-none display-m-none display-lg-none'>" +
-            date +
-            "<br><span class='subdescription'>" + hours + "</span>"
-        "</td>";
-        data +=
-            "<td> <span data-toggle='tooltip' data-placement='top' title='" +
-            value.project +
-            "'>" +
-            value.project +
-            "</span> </td>";
-        data +=
-            "<td class='display-sm-none display-m-none'>" +
-            value.client +
-            "</td>";
-        data +=
-            "<td>" +
-            value.email_status +
-            " " +
-            setSend(value.email_status) +
-            "</td>";
-        data +=
-            "<td>" +
-            value.sms_status +
-            " " +
-            setSend(value.sms_status) +
-            "</td>";
-        data +=
-            "<td><span class='sale_status badge badge-" +
-            statusRecovery[value.status_translate] +
-            "' status='" +
-            value.status_translate +
-            "' sale_id='" +
-            value.id +
-            "'>" +
-            value.status_translate +
-            "</span></td>";
-        data += "<td class='commission-fweight'>" + value.value + "</td>";
-        data +=
-            "<td class='display-sm-none' align='center'> <a href='" +
-            value.whatsapp_link +
-            "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
-        data +=
-            "<td style='padding:0 !important;' class='display-sm-none text-center' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
-            value.link +
-            "' title='Copiar link'><span class=''> <img src='build/global/img/icon-copy-table.svg'/> </span></a></td>";
-        data +=
-            "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
-            value.id +
-            "' ><span> <img src='/build/global/img/icon-eye.svg'> </span></button></td>";
-        data += "</tr>";
+        let data = ``;
+        data =
+            `
+            <tr>
 
-        $('[data-toggle="tooltip"]').tooltip({
-            container: "#carrinhoAbandonado",
-        });
+                <td class="display-sm-none display-m-none display-lg-none">
 
+                    ${date}
+
+                    <br>
+
+                    <span class="subdescription">
+                        ${hours}
+                    </span>
+
+                </td>
+
+                <td>
+                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}" >
+                        ${value.project}
+                    </span>
+                    <div class="container-tooltips"></div>
+
+                </td>
+
+
+                <td class="d-none client-collumn">
+
+                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}" >
+                        <div class="fullInformation ellipsis-text">
+                            ${value.client}
+                        </div>
+                    </span>
+                </td>
+
+
+                <td>
+                    ${value.email_status} ${setSend(value.email_status)}
+                </td>
+
+
+                <td>
+                    ${value.sms_status} ${setSend(value.sms_status)}
+                </td>
+
+
+                <td>
+                    <span class="sale_status badge badge-${statusRecovery[value.status_translate]}" status="${value.status_translate}" sale_id="${value.id}">
+                        ${value.status_translate}
+                    </span>
+                </td>
+
+
+                <td class="commission-fweight">
+                    ${value.value}
+                </td>
+
+
+                <td class="display-sm-none" align="center">
+
+                    <a href="${value.whatsapp_link}" target="_blank" title="Enviar mensagem pelo whatsapp">
+                        <span class="o-whatsapp-1"></span>
+                    </a>
+
+                </td>
+
+
+                <td style="padding:0 !important;" class="display-sm-none text-center" align="center">
+
+                    <a role="button" class="copy_link" style="cursor:pointer;" link="${value.link}" title='Copiar link'>
+
+                        <span class=''>
+                            <img src='build/global/img/icon-copy-table.svg'/>
+                        </span>
+                    </a>
+                </td>
+
+
+                <td class="display-sm-none" align="center">
+                    <a role="button" class="details-cart-recovery" style="cursor:pointer;" data-venda="${value.id}">
+                        <span>
+                            <img src="/build/global/img/icon-eye.svg">
+                        </span>
+                        </button>
+                    </a>
+                </td>
+
+            </tr>
+        `;
         return data;
     }
 
@@ -462,59 +494,95 @@ $(document).ready(function () {
         let parseDate = value.start_date.split(" ", 2)
         let hours = parseDate[1]
 
-        let data = "";
-        data += "<tr>";
-        data +=
-            "<td class='display-sm-none display-m-none display-lg-none'>" +
-            date +
-            "<br><span class='subdescription'>" + hours + "</span>"
-        "</td>";
-        data +=
-            "<td> <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='" + value.project + "'>" +
-            value.project +
-            "</span> </td>";
-        data +=
-            "<td class='display-sm-none display-m-none'>" +
-            "<span class='fullInformation' data-toggle='tooltip' data-placement='top' title='" + value.client + "'>" + value.client + "</span>"
-        "</td>";
-        data +=
-            "<td>" +
-            value.email_status +
-            " " +
-            setSend(value.email_status) +
-            "</td>";
-        data +=
-            "<td>" +
-            value.sms_status +
-            " " +
-            setSend(value.sms_status) +
-            "</td>";
-        data +=
-            "<td><span class='sale_status badge badge-" +
-            statusRecovery[value.recovery_status] +
-            "' sale_id='" +
-            value.id_default +
-            "'>" +
-            value.recovery_status +
-            "</span></td>";
-        data += "<td class='commission-fweight'>" + value.total_paid + "</td>";
-        data +=
-            "<td class='display-sm-none' align='center'> <a href='" +
-            value.whatsapp_link +
-            "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
-        data +=
-            "<td class='display-sm-none text-center' style='padding:0!important' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
-            value.link +
-            "' title='Copiar link'><span class=''><img src='build/global/img/icon-copy-table.svg'/></span></a></td>";
-        data +=
-            "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
-            value.id_default +
-            "' ><span class=''><img src='/build/global/img/icon-eye.svg'/></span></button></td>";
-        data += "</tr>";
+        let data = ``;
 
-        $('[data-toggle="tooltip"]').tooltip({
-            container: "#carrinhoAbandonado",
-        });
+        data =
+            `
+            <tr>
+
+                <td class="display-sm-none display-m-none display-lg-none">
+                    ${date}
+                    <br>
+                    <span class="subdescription">
+                        ${hours}
+                    </span>
+                </td>
+
+
+                <td>
+                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}" >
+                        ${value.project}
+                    </span>
+                    <div class="container-tooltips"></div>
+
+                </td>
+
+
+                <td class="d-none client-collumn">
+
+                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}" >
+                        <div class="fullInformation ellipsis-text">
+                            ${value.client}
+                        </div>
+                    </span>
+                </td>
+
+
+                <td>
+                    ${value.email_status} ${setSend(value.email_status)}
+                </td>
+
+
+                <td>
+                    ${value.sms_status} ${setSend(value.sms_status)}
+                </td>
+
+
+                <td>
+                    <span class="sale_status badge badge-${statusRecovery[value.recovery_status]}" sale_id="${value.id_default}" >
+                        ${value.recovery_status}
+                    </span>
+                </td>
+
+
+                <td class="commission-fweight" >
+                    ${value.total_paid}
+                </td>
+
+
+                <td class="display-sm-none" align="center">
+
+                    <a href=${value.whatsapp_link}" target="_blank" title="Enviar mensagem pelo whatsapp">
+
+                        <span class="o-whatsapp-1"> </span>
+
+                    </a>
+
+                </td>
+
+                <td class="display-sm-none text-center" style="padding:0!important" align="center">
+
+                    <a role="button" class="copy_link" style="cursor:pointer;" link="${value.link}" title="Copiar link">
+
+                        <span class=''>
+                            <img src="build/global/img/icon-copy-table.svg"/>
+                        </span>
+
+                    </a>
+
+                </td>
+
+                <td class="display-sm-none" align="center">
+                    <a role="button" class="details-cart-recovery" style="cursor:pointer;" data-venda="${value.id_default}">
+
+                        <span class="">
+                            <img src="/build/global/img/icon-eye.svg"/>
+                        </span>
+
+                    </a>
+                </td>
+            </tr>
+        `;
 
         return data;
     }

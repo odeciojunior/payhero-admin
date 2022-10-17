@@ -202,8 +202,12 @@ function atualizar(link = null) {
                             </td>
 
                             <td>
-                                <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.product}">
-                                    ${value.product}
+                                <span class="container-tooltips" data-toggle="tooltip" data-placement="top" title="${value.product}">
+
+                                    <div class="fullInformation ellipsis-text">
+                                        ${value.product}
+                                    </div>
+
                                 </span>
 
                                 ${value.affiliate != null && value.user_sale_type == "producer" ? ` <br> <small class="subdescription font-size-12"> (Afiliado: ${value.affiliate}) </small>` : ""}
@@ -214,9 +218,14 @@ function atualizar(link = null) {
                                 </small>
                             </td>
 
-                            <td class='display-sm-none display-m-none display-lg-none'>
-                                <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}">
-                                ${value.client}
+                            <td class='d-none client-collumn'>
+
+                                <span class="container-tooltips" data-toggle="tooltip" data-placement="top" title="${value.client}">
+
+                                    <div class="fullInformation ellipsis-text">
+                                        ${value.client}
+                                    </div>
+
                                 </span>
 
                             </td>
@@ -269,7 +278,7 @@ function atualizar(link = null) {
                 $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
                 $("#container-pagination").show();
-                $(".fullInformation").tooltip();
+                $(".fullInformation").tooltip({ boundary: "scrollParent" });
             } else {
                 $("#dados_tabela").html(
                     "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
