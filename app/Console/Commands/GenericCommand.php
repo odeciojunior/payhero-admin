@@ -2,11 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Exception;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\CompanyBankAccount;
-use Illuminate\Support\Str;
-use Modules\Core\Entities\Sale;
 
 class GenericCommand extends Command
 {
@@ -41,5 +37,6 @@ class GenericCommand extends Command
      */
     public function handle()
     {
+
     }
 }
