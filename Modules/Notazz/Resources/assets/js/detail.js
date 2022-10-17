@@ -417,7 +417,7 @@ $(() => {
         $("#table-product").html("");
         $("#data-tracking-products").html("");
         let div = "";
-        let photo = "/build/global/img/produto.png";
+        let photo = "/build/global/img/produto.svg";
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;

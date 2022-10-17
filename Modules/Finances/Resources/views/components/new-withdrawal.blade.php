@@ -1,6 +1,6 @@
 <div class="card shadow card-tabs p-20 mb-50">
     <div class="col-12 mb-3 px-0">
-        <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal' role="alert" style='display:none;'>
+        <div class="alert alert-danger alert-dismissible fade show blocked-withdrawal" id='blocked-withdrawal' role="alert" style='display:none;'>
             <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais
             informações.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
