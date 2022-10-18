@@ -583,17 +583,18 @@ $(document).ready(function () {
                                         ${is_security_reserve}
                                     </td>
 
-                                    <td class="text-left ellipsis-text">
+                                    <td class="text-left">
 
-                                        <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}">
+                                        <span class="fullInformation-pending ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}">
                                             ${value.project}
                                         </span>
 
-
+                                        <div class="container-tooltips-pending"></div>
                                     </td>
 
-                                    <td class="text-left ellipsis-text">
-                                        <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                    <td class="text-left">
+
+                                        <span class="fullInformation-pending ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
                                             ${value.client}
                                         </span>
 
@@ -607,19 +608,25 @@ $(document).ready(function () {
 
                                     <td class="text-left">${end_date}</td>
 
-                                    <td><b class="font-md-size-20">${value.total_paid}</b></td>
+                                    <td>
+                                        <b class="font-md-size-20">${value.total_paid}</b>
+                                    </td>
 
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><span>
-                                        <img src="/build/global/img/icon-eye.svg">
-                                    </span></button></a>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
+                                            <span>
+                                                <img src="/build/global/img/icon-eye.svg">
+                                            </span>
+                                            </button>
+                                        </a>
                                     </td>
 
                                 </tr>`;
 
                         $("#body-table-pending").append(dados);
                     });
-                    $(".fullInformation").tooltip();
+                    $(".fullInformation-pending").tooltip({ container: '.container-tooltips-pending' });
+
 
                     $("#date").val(
                         moment(new Date()).add(3, "days").format("YYYY-MM-DD")

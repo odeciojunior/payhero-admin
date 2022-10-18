@@ -137,35 +137,47 @@ window.atualizar = function (link = null) {
                     }
                     dados = `
                         <tr>
+
+
                             <td class='display-sm-none display-m-none display-lg-none text-center text-left'>
 
-                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.sale_code}">
+                                <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.sale_code}">
                                     ${value.sale_code}
                                 </div>
-
                                 ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ""}
+                                <div class="container-tooltips-blocked"></div>
                             </td>
 
-                            <td class="text-left ellipsis-text">
-                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}">
+
+
+                            <td class="text-left">
+                                <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}">
                                     ${value.project}
                                 </div>
 
                             </td>
 
-                            <td class="text-left ellipsis-text">
 
-                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.product}${value.affiliate != null && value.user_sale_type == "producer" ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ""}">
+
+
+                            <td class="text-left">
+
+                                <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.product}${value.affiliate != null && value.user_sale_type == "producer" ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ""}">
                                     ${value.product}${value.affiliate != null && value.user_sale_type == "producer" ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ""}
                                 </div>
 
                             </td>
 
-                            <td class='display-sm-none display-m-none display-lg-none text-left ellipsis-text'>
-                                <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}">
+
+
+                            <td class='display-sm-none display-m-none display-lg-none text-left'>
+                                <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
                                     ${value.client}
                                 </div>
                             </td>
+
+
+
 
                             <td>
                                 <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
@@ -203,7 +215,7 @@ window.atualizar = function (link = null) {
 
                     $("#dados_tabela").append(dados);
                 });
-                $(".fullInformation").tooltip();
+                $(".fullInformation-blocked").tooltip({ container: '.container-tooltips-blocked' });
 
                 $("#date").val(
                     moment(new Date()).add(3, "days").format("YYYY-MM-DD")
