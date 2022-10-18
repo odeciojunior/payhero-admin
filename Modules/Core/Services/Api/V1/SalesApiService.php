@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services\Api\V1;
 
-use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
