@@ -18,7 +18,7 @@ class TrackingsApiService
             $trackings = Tracking::join('sales', 'sales.id', 'trackings.sale_id');
 
             if (!empty($id)) {
-                $trackings->where('trackings.id', foxutils()->decodeHash($id));
+                $trackings->where('trackings.id', hashids_decode($id));
             }
 
             if (!empty($filters['company_id'])) {
@@ -33,6 +33,10 @@ class TrackingsApiService
                 $trackings->leftJoin('transactions', function($q) use($companyId) {
                     $q->on('transactions.sale_id', 'sales.id')->whereIn('transactions.company_id', $companyId);
                 });
+            }
+
+            if (!empty($filters['sale_id'])) {
+                $trackings->where('sales.id', hashids_decode($filters['sale_id']));
             }
 
             $trackings
