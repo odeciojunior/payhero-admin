@@ -24,10 +24,6 @@ Route::group(
         Route::apiResource("/projectupsellconfig", "ProjectUpsellConfigApiController")
             ->only("store", "destroy", "update")
             ->middleware("permission:projects_manage");
-
-        Route::post("/projectupsellconfig/previewupsell", "ProjectUpsellConfigApiController@previewUpsell")->middleware(
-            "permission:projects"
-        );
     }
 );
 //Route::middleware('auth:api')->get('/projectupsellconfig', function (Request $request) {
