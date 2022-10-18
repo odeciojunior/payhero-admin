@@ -104,54 +104,95 @@ window.loadWithdrawalsTable = function (link = null) {
                     let dateRequest = getRequestTime(data);
                     let dateRelease = getReleaseTime(data);
 
-                    tableData += `<tr class="s-table table-finance-transfers">;
-                                <td class="sale-finance-transfers ellipsis-text" style="grid-area: sale">#${data.id
-                        }</td>";
+                    tableData +=
+                        `<tr class="s-table table-finance-transfers">;
 
-                                <td class="text-left truncate bank-finance-transfers" style="grid-area: bank">
-                                    <div style="color: #636363;" class="truncate"> ${data.account_information_bank
-                        } </div>
-                                    <span class="subdescription font-size-12"> ${data.account_information
-                        } </span>
-                                </td>;
 
-                                <td class="text-left date-start-finance-transfers" style="grid-area: date-start">
-                                    ${dateRequest}
-                                </td>;
+                            <td class="sale-finance-transfers" style="grid-area: sale">
 
-                                <td class="text-left date-end-finance-transfers" style="grid-area: date-end">
-                                    ${dateRelease}
-                                </td>;
+                                <div class="fullInformation-transfer ellipsis-text" data-toggle="tooltip" data-placement="top" title="#${data.id}" >
+                                    #${data.id}
+                                </div>
+                                <div class="container-tooltips-transfer"></div>
 
-                                <td class="shipping-status text-center status-finance-transfers" style="grid-area: status">
-                                    <span class="badge badge-${statusWithdrawals[data.status]} "> ${data.status_translated
-                        } </span>
-                                </td>`;
+                            </td>
+
+                            <td class="text-left truncate bank-finance-transfers" style="grid-area: bank">
+
+                                <div class="fullInformation-transfer ellipsis-text" data-toggle="tooltip" data-placement="top" title="${data.account_information_bank}" style="color: #636363;">
+                                    ${data.account_information_bank}
+                                </div>
+
+                                <span class="subdescription font-size-12"> ${data.account_information} </span>
+                            </td>;
+
+                            <td class="text-left date-start-finance-transfers" style="grid-area: date-start">
+                                ${dateRequest}
+                            </td>;
+
+                            <td class="text-left date-end-finance-transfers" style="grid-area: date-end">
+                                ${dateRelease}
+                            </td>;
+
+                            <td class="shipping-status text-center status-finance-transfers" style="grid-area: status">
+                                <span class="badge badge-${statusWithdrawals[data.status]} "> ${data.status_translated} </span>
+                            </td>`;
+
                     if (data.tax_value > 0) {
-                        tableData += ` <td class="text-left value-finance-transfers" style="grid-area: value">
+                        tableData += `
+                                        <td class="text-left value-finance-transfers" style="grid-area: value">
+
                                             <span class="font-md-size-20 bold"> R$ </span>
-                                            <strong class="font-md-size-20"> ${data.value} </strong> <br>
-                                            <small>(taxa de R$10,00)</small>`;
+
+                                            <strong class="font-md-size-20"> ${data.value} </strong>
+
+                                            <br>
+
+                                            <small>(taxa de R$10,00)</small>
+                                    `;
                     } else {
-                        tableData += ` <td colspan="2" class="text-left value-finance-transfers" style="grid-area: value">
+                        tableData += `
+                                        <td colspan="2" class="text-left value-finance-transfers" style="grid-area: value">
                                             <span class="font-md-size-20 bold"> R$ </span>
-                                            <strong class="font-md-size-20"> ${data.value} </strong>`;
+                                            <strong class="font-md-size-20"> ${data.value}</strong>
+                                    `;
                     }
 
-                    if (
-                        window.gatewayCode == "w7YL9jZD6gp4qmv" &&
-                        data.debt_pending_value != null &&
-                        data.debt_pending_value != "R$0,00"
-                    ) {
-                        tableData += `<br> <a role='button' class='pending_debit_withdrawal_id' withdrawal_id='${data.id}'><small style="color: #ED1C24;">- ${data.debt_pending_value}</small></a>`;
+                    if (window.gatewayCode == "w7YL9jZD6gp4qmv" && data.debt_pending_value != null && data.debt_pending_value != "R$0,00") {
+
+                        tableData += `
+                                        <br>
+
+                                        <a role='button' class='pending_debit_withdrawal_id' withdrawal_id='${data.id}'>
+                                            <small style="color: #ED1C24;">
+                                                - ${data.debt_pending_value}
+                                            </small>
+                                        </a>
+                                    `;
                     }
                     tableData += "</td>";
+
+
                     if (window.gatewayCode == "w7YL9jZD6gp4qmv") {
-                        tableData += `</td><td class="d-none d-lg-table-cell"><a role='button' class='details_transaction pointer' withdrawal='${data.id}'><span class=''><img src='/build/global/img/icon-eye.svg'/></span></a></td></tr>`;
+                        tableData += `
+                                        </td>
+
+                                        <td class="d-none d-lg-table-cell">
+                                            <a role='button' class='details_transaction pointer' withdrawal='${data.id}'>
+                                                <span class=''>
+                                                    <img src='/build/global/img/icon-eye.svg'/>
+                                                </span>
+                                            </a>
+                                        </td>
+                                    </tr>`;
                     }
                     tableData += "</tr>";
+
                     $("#withdrawals-table-data").append(tableData);
                     $("#withdrawalsTable").addClass("table-striped");
+
+                    $(".fullInformation-transfer").tooltip({ container: '.container-tooltips-transfer' });
+
                 });
                 pagination(response, "withdrawals", loadWithdrawalsTable);
             }

@@ -211,7 +211,6 @@ function atualizar(link = null) {
                                 </span>
 
                                 ${value.affiliate != null && value.user_sale_type == "producer" ? ` <br> <small class="subdescription font-size-12"> (Afiliado: ${value.affiliate}) </small>` : ""}
-                                <br>
 
                                 <small class="subdescription font-size-12">
                                     ${value.project}

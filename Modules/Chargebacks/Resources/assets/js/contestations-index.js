@@ -325,8 +325,6 @@ $(document).ready(function () {
                                     ${value.company_limit}
                                 </div>
 
-                                <br>
-
                                 <small class="subdescription">
                                     ${value.project}
                                 </small>
@@ -342,8 +340,6 @@ $(document).ready(function () {
                                 <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.customer}">
                                     ${value.customer}
                                 </div>
-
-                                <br>
 
                                 <small class="subdescription">
                                     Pagamento em ${value.adjustment_date}
