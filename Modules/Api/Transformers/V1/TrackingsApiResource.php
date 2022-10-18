@@ -20,6 +20,7 @@ class TrackingsApiResource extends JsonResource
                     "definitions.enum.tracking.tracking_status_enum." .$trackingModel->present()->getTrackingStatusEnum($this->tracking_status_enum)
                 ),
                 "tracking_status_enum" => $this->tracking_status_enum,
+                "sale_id" => hashids_encode($this->sale_id),
                 "checkpoints" => $this->checkpoints,
                 "product" => [
                     'id' => hashids_encode($this->product_id),
@@ -37,6 +38,7 @@ class TrackingsApiResource extends JsonResource
                 "definitions.enum.tracking.tracking_status_enum." .$trackingModel->present()->getTrackingStatusEnum($this->tracking_status_enum)
             ),
             "tracking_status_enum" => $this->tracking_status_enum,
+            "sale_id" => hashids_encode($this->sale_id),
             "product" => [
                 'id' => hashids_encode($this->product_id),
                 'name' => $this->product_name,
