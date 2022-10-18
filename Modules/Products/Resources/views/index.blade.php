@@ -33,8 +33,29 @@
         <div id="project-not-empty">
             <div style="padding-top:0"
                  class="page-header container">
-                <div class="card"
-                     id="filter-products">
+                <div id="filter-products-loading"
+                     class="card"
+                     style="display: none">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="skeleton-loading filter-product-loading-label"
+                                 style="width: 50%;"></div>
+                            <div class="skeleton-loading filter-product-loading-field"></div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="skeleton-loading filter-product-loading-label"
+                                 style="width: 25%"></div>
+                            <div class="skeleton-loading filter-product-loading-field"
+                                 style="width: 50%"></div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mt-auto">
+                            <div class="skeleton-loading filter-product-loading-field"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="filter-products"
+                     class="card"
+                     style="display: none">
                     <div class="row">
                         <div class="col-lg-3 col-md-6">
                             <div class="mb-10">

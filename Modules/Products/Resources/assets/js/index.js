@@ -2,7 +2,8 @@ jQuery(function () {
     $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $("#type-products").find("option").not(":first").remove();
-        showLoadingSkeleton();
+        showFiltersLoadingSkeleton();
+        showProductsLoadingSkeleton();
         updateCompanyDefault().done(function (data1) {
             getCompaniesAndProjects().done(function (data2) {
                 renderSiriusSelect("#type-products");
@@ -49,7 +50,8 @@ jQuery(function () {
     };
 
     function getProjects(loading = "y") {
-        showLoadingSkeleton();
+        showFiltersLoadingSkeleton();
+        showProductsLoadingSkeleton();
 
         $.ajax({
             method: "GET",
@@ -161,7 +163,7 @@ jQuery(function () {
             pageCurrent = parsePage.atualPage;
         }
         link = pageCurrent;
-        showLoadingSkeleton();
+        showProductsLoadingSkeleton();
         let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
         let name = existFilters() != null ? existFilters().getName : $("#name").val();
         let project = "";
@@ -196,6 +198,8 @@ jQuery(function () {
             success: function (response) {
                 if (!isEmpty(response.data)) {
                     $(".products-is-empty").hide();
+                    $("#filter-products-loading").hide();
+                    $("#filter-products").show();
                     $("#data-table-products").html("");
                     let dados = "";
                     $.each(response.data, function (index, value) {
@@ -431,8 +435,13 @@ jQuery(function () {
         getProjects();
     });
 
-    function showLoadingSkeleton() {
+    function showProductsLoadingSkeleton() {
         $("#data-table-products").empty();
         loadingSkeletonCards($("#data-table-products"));
+    }
+
+    function showFiltersLoadingSkeleton() {
+        $("#filter-products").hide();
+        $("#filter-products-loading").show();
     }
 });
