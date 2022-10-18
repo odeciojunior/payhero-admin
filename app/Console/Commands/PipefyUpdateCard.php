@@ -37,8 +37,23 @@ class PipefyUpdateCard extends Command
     public function handle()
     {
         if (FoxUtils::isProduction()) {
-            //Atualizar todos os cards com o Label Facebook Ads ou Google Ads
-            $users = User::whereNotNull("pipefy_card_id")->where("created_at", ">=", "2022-09-01 00:00:00");
+            $date = Carbon::today()->subDays(180);
+
+            $users = User::selectRaw("users.*")
+                ->selectRaw(
+                    "(  SELECT SUM(t.value) FROM transactions as t
+                    JOIN companies as c ON c.id = t.company_id
+                    WHERE t.user_id = users.id and t.status_enum IN (1,2)
+                        AND t.created_at > '{$date}'
+                    GROUP BY t.user_id ) as total_sale"
+                )
+                ->whereNotNull("users.pipefy_card_id")
+                ->whereNull("users.pipefy_card_data")
+                ->having("total_sale", ">", "0");
+
+            //            dd($users->toSql());
+            //            dd("Total => " . $users->get()->count());
+
             foreach ($users->cursor() as $user) {
                 $labelAd = "";
                 if (!empty($user->utm_srcs)) {
@@ -51,11 +66,19 @@ class PipefyUpdateCard extends Command
                         }
                     }
                 }
-                (new PipefyService())->updateCardLabel($user, [$labelAd]);
+                if ($user->total_sale > 0) {
+                    $user->pipefy_card_id = null;
+                    (new PipefyService())->createCardUser($user);
+                    (new PipefyService())->updateCardUserinformations($user);
+                    (new PipefyService())->moveCardToPhase($user, PipefyService::PHASE_ACTIVE_AND_SELLING);
+                    (new PipefyService())->updateCardLabel($user, [
+                        PipefyService::LABEL_SALES_BETWEEN_0_100k,
+                        $labelAd,
+                    ]);
+                }
             }
 
-            dd("Finalizado atualização das TAGs Facebook ADs ou Google ADs");
-
+            dd("Finalizado atualização Ativos vendendo");
 
             //Criar Card no Pipe Gerenciamento 100k ou monitoriamento -100k (Apenas para os usuários que não estão no pipefy)
             $users = User::whereNotNull("users.total_commission_value")
@@ -263,11 +286,11 @@ class PipefyUpdateCard extends Command
                         SELECT count( c.id ) FROM companies AS c
                             WHERE c.user_id = users.id
                                 AND (c.address_document_status = " .
-                CompanyDocument::STATUS_REFUSED .
-                "
+                    CompanyDocument::STATUS_REFUSED .
+                    "
                                 OR c.contract_document_status = " .
-                CompanyDocument::STATUS_REFUSED .
-                " )
+                    CompanyDocument::STATUS_REFUSED .
+                    " )
                             GROUP BY c.user_id
                         ) total_companies_refused"
             )
@@ -276,11 +299,11 @@ class PipefyUpdateCard extends Command
                         SELECT count( c.id ) FROM companies AS c
                             WHERE c.user_id = users.id
                                 AND (c.address_document_status = " .
-                CompanyDocument::STATUS_APPROVED .
-                "
+                    CompanyDocument::STATUS_APPROVED .
+                    "
                                 OR c.contract_document_status = " .
-                CompanyDocument::STATUS_APPROVED .
-                " )
+                    CompanyDocument::STATUS_APPROVED .
+                    " )
                             GROUP BY c.user_id
                         ) total_companies_active"
             )
