@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Events\ExtractExportedEvent;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Transaction;
@@ -83,7 +84,18 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
         if (!empty($data["gateway_id"])) {
             $gatewayId = hashids_decode($data["gateway_id"]);
             if (!empty($gatewayId)) {
-                $transfers->where("transfers.gateway_id", $gatewayId);
+                if($gatewayId == Gateway::VEGA_PRODUCTION_ID){
+                    $transfers->whereIn("transfers.gateway_id", [
+                        Gateway::SAFE2PAY_PRODUCTION_ID,
+                        Gateway::SAFE2PAY_SANDBOX_ID,
+                        Gateway::IUGU_PRODUCTION_ID,
+                        Gateway::IUGU_SANDBOX_ID,
+                        Gateway::VEGA_PRODUCTION_ID,
+                        Gateway::VEGA_SANDBOX_ID
+                    ]);
+                }else{
+                    $transfers->where("transfers.gateway_id", $gatewayId);
+                }
             }
         }
 

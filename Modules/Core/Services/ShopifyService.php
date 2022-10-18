@@ -1547,7 +1547,7 @@ class ShopifyService
     {
         try {
             $cost = $this->getShopInventoryItem($variant->getInventoryItemId());
-            if (method_exists($cost, 'getCost')) {
+            if (!is_array($cost) && method_exists($cost, 'getCost')) {
                 $cost = $cost->getCost();
                 $cost = (empty($cost)) ? 0 : $cost;
             } else {
