@@ -3741,92 +3741,99 @@ $(function () {
                     if (response.data[0].document_status == "approved") {
 
                         $.each(response.data, function (index, value) {
-                            data = "";
-                            data += "<tr>";
-                            data +=
-                                '<td id="" class="ellipsis-text" style="vertical-align: middle; line-height: 1;"><span class="text-nowrap"' +
-                                (value.name_short_flag
-                                    ? 'data-toggle="tooltip" title="' +
-                                    value.name +
-                                    '"'
-                                    : "") +
-                                ">" +
-                                value.name_short +
-                                '</span><div><small class="subdescription font-size-12">com ' +
-                                (value.products_length > 1
-                                    ? value.products_length + " produtos"
-                                    : value.products_length + " produto") +
-                                "</small></div></td>";
-                            data +=
-                                "<td id='' class='ellipsis-text' style='vertical-align: middle;'><span class='text-nowrap'" +
-                                (value.description_short_flag
-                                    ? "data-toggle='tooltip' title='" +
-                                    value.description +
-                                    "'"
-                                    : "") +
-                                ">" +
-                                value.description_short +
-                                "</span></td>";
-                            data +=
-                                '<td id="" class="text-nowrap" style="vertical-align: middle;"> <strong>' +
-                                value.price +
-                                "</strong></td>";
-                            data +=
-                                '<td id="link" data-status="' +
-                                value.status +
-                                '" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; ' +
-                                (value.status == 1 ? "cursor:pointer;" : "") +
-                                '" link="' +
-                                value.code +
-                                '">';
-                            data +=
-                                "<span " +
-                                (value.status == 0
-                                    ? 'data-toggle="tooltip" title="Domínio não confirugado"'
-                                    : "") +
-                                ">";
-                            data +=
-                                '<span class="display-sm-none display-m-none">Copiar </span><img src="/build/global/img/icon-copy-c.svg">';
-                            data += "</span>";
-                            data += "</td>";
-                            data +=
-                                '<td id="" class="text-center"><span class="badge badge-' +
-                                statusPlan[value.status] +
-                                '">' +
-                                value.status_translated +
-                                "</span></td>";
-                            data +=
-                                "<td class='mg-responsive text-center' style='line-height: 1;'>";
-                            data +=
-                                "<div class='d-flex justify-content-end align-items-center'>";
-                            data +=
-                                "<a title='Visualizar' class='mg-responsive pointer details-plan' plan='" +
-                                value.id +
-                                "' role='button'><span class=''><img src='/build/global/img/icon-eye.svg'/></span></a>";
-                            //data += "<a title='Editar' class='mg-responsive pointer edit-plan' plan='" + value.id + "' role='button'><span class='o-edit-1'></span></a>"
-                            data +=
-                                "<a title='Excluir' class='mr-0 mg-responsive pointer delete-plan' plan='" +
-                                value.id +
-                                "' role='button'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>";
-                            data += "</div>";
-                            data += "</td>";
-                            data += "</tr>";
+                            data = `
+                                <tr>
+                                    <td style="vertical-align: middle; line-height: 1;">
+
+                                        <span class="ellipsis-text text-nowrap" data-toggle="tooltip" title="${value.name}">
+                                            ${value.name_short}
+                                        </span>
+
+                                        <div>
+                                            <small class="subdescription font-size-12">
+                                                com ${(value.products_length > 1 ? value.products_length + " produtos" : value.products_length + " produto")}
+                                            </small>
+
+                                        </div>
+                                    </td>
+
+                                    <td style="vertical-align: middle;">
+
+                                        <div class="ellipsis-text text-nowrap" data-toggle="tooltip" title="${value.description}">
+                                            ${value.description_short}
+                                        </div>
+
+                                    </td>
+
+                                    <td class="text-nowrap" style="vertical-align: middle;">
+                                        <strong>
+                                            ${value.price}
+                                        </strong>
+                                    </td>
+
+                                    <td id="link" data-status="${value.status}" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; ${(value.status == 1 ? "cursor:pointer;" : "")} link="${value.code}">
+                                        <span ${(value.status == 0 ? 'data-toggle="tooltip" title="Domínio não confirugado"' : "")}>
+
+                                            <span class="display-sm-none display-m-none">
+                                                Copiar
+                                            </span>
+
+                                            <img src="/build/global/img/icon-copy-c.svg">
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="badge badge-${statusPlan[value.status]}">
+                                            ${value.status_translated}
+                                        </span>
+                                    </td>
+
+                                    <td class="mg-responsive text-center" style="line-height: 1;">
+
+                                        <div class="d-flex justify-content-end align-items-center">
+
+                                            <a title="Visualizar" class="mg-responsive pointer details-plan" plan="${value.id}" role="button">
+
+                                                <span class="">
+                                                    <img src="/build/global/img/icon-eye.svg"/>
+                                                </span>
+
+                                            </a>
+
+                                            <a title="Excluir" class="mr-0 mg-responsive pointer delete-plan" plan="${value.id}" role='button'>
+
+                                                <span class="">
+                                                    <img src="/build/global/img/icon-trash-tale.svg"/>
+                                                </span>
+
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            `;
 
                             $("#data-table-plan").append(data);
                             $("#table-plans").addClass("table-striped");
-                            $("#currency_type_project").val(
-                                value.currency_project
-                            );
+                            $("#currency_type_project").val(value.currency_project);
                         });
 
                         $("#pagination-container-plans").removeClass("d-none").addClass("d-flex")
-
                         pagination(response, "plans", index);
 
                     } else {
-                        $("#data-table-plan").html(
-                            "<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Link de pagamento só ficará disponível quando seus documentos e da sua empresa estiverem aprovados</td></tr>"
+                        $("#data-table-plan").html(`
+                            <tr class="text-center">
+
+                                <td colspan="11" style="height: 70px; vertical-align: middle;">
+                                    Link de pagamento só ficará disponível quando seus documentos e da sua empresa estiverem aprovados
+                                </td>
+
+                            </tr>`
                         );
+
                         $("#table-plans").addClass("table-striped");
                     }
 

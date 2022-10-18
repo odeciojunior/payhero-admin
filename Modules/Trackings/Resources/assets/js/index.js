@@ -623,7 +623,8 @@ $(() => {
 
                         <a class='tracking-add pointer ml-20 px-0 default-buttons d-flex align-items-center' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
-                        </a>`;
+                        </a>
+                    `;
 
                     let htmlButtonEdit = `
                         <div class="edit-detail d-flex justify-content-between px-0 ml-20 col-3">
@@ -639,7 +640,8 @@ $(() => {
                                     <img src="/build/global/img/icon-eye.svg"/>
                                 </span>
                             </a>
-                        </div>`;
+                        </div>
+                    `;
                     let dados = `
                         <tr ${grayRow ? 'class="td-odd"' : ""}>
 
@@ -648,15 +650,18 @@ $(() => {
                                     #${tracking.sale}
                                 </td>`
 
-                            : `<td>
-                            </td>`
-                        }
+                            : `<td></td>`}
 
-                            <td class="">
-                                <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='" ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? "(" + tracking.product.description + ")" : ""} "' >
+                            <td>
+
+                                <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? "(" + tracking.product.description + ")" : ""}" >
                                     ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? "(" + tracking.product.description + ")" : ""}
-                                </span>
+                                </div>
+
+                                <div class="container-tooltips"></div>
+
                             </td>
+
 
                             <td class="">${tracking.approved_date}</td>
 
@@ -666,34 +671,26 @@ $(() => {
                                 </span>
                             </td>
 
-
-
                             <td class="text-left mb-0" style="max-height:74px!important;">
+
                                 <div class="d-flex align-items-center">
 
-                                    ${tracking.tracking_status_enum
-                            ? `<div class="d-flex col-6 px-0 input-code-options">
-                                        <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
+                                    ${tracking.tracking_status_enum ? `
+                                        <div class="d-flex col-6 px-0 input-code-options">
 
-                                        <span class="d-flex align-items-center icon-alert-code">
-                                            ${systemStatus[tracking.system_status_enum]}
-                                            ${tracking.is_chargeback_recovered
-                                ? '<img src="/build/global/img/alert-icon-code.svg"/>'
-                                : ""}
-                                        </span>
-                                    </div>`+
-                            htmlButtonEdit
-                            :
-                            htmlButtonAdd
-                        }
+                                            <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
+
+                                            <span class="d-flex align-items-center icon-alert-code">
+                                                ${systemStatus[tracking.system_status_enum]} ${tracking.is_chargeback_recovered ? '<img src="/build/global/img/alert-icon-code.svg"/>' : ""}
+                                            </span>
+
+                                        </div>`+ htmlButtonEdit : htmlButtonAdd}
 
                                     <div class="save-close buttons d-flex justify-content-between px-0 col-3 ml-20" style="max-height: 38px;">
 
-                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer text-center default-buttons' title="Salvar" pps='${tracking.pps_id
-                        }'style="display:none"></a>
+                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none"></a>
 
-                                        <div class='tracking-close pointer' data-code='${tracking.tracking_code
-                        }' title="Fechar" style="display:none">
+                                        <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
                                             &#x2715
                                         </div>
 
@@ -706,7 +703,8 @@ $(() => {
                     lastSale = tracking.sale;
                 });
                 pagination(response, "trackings", index);
-                $(".fullInformation").tooltip();
+                $(".fullInformation").tooltip({ container: '.container-tooltips' });
+
             },
             complete: (response) => {
                 unlockSearch($("#bt_filter"));

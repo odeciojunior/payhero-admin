@@ -87,27 +87,40 @@ $(() => {
                     $("#table-order-bump").find("thead").css("display", "contents");
 
                     for (let rule of rules) {
-                        let row = `<tr>
-                                       <td class="ellipsis-text">${rule.description}</td>
-                                       <td class="text-center">${rule.active_flag
+                        let row =
+                            `<tr>
+
+                                <td>
+
+                                    <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${rule.description}" >
+                                        ${rule.description}
+                                    </div>
+
+                                    <div class="container-tooltips"></div>
+
+                                </td>
+
+
+                                <td class="text-center">${rule.active_flag
                                 ? `<span class="badge badge-success">Ativo</span>`
-                                : `<span class="badge badge-disable">Desativado</span>`
-                            }</td>
-                                       <td>
-                                            <div class='d-flex justify-content-end align-items-center'>
-                                                <a class="pointer mg-responsive show-order-bump" data-id="${rule.id
-                            }" title="Visualizar"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
-                                                <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id
-                            }" title="Editar" ><span class=""><img src='/build/global/img/pencil-icon.svg'/></span></a>
-                                                <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id
-                            }" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class=""><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
-                                            </div>
-                                       </td>
+                                : `<span class="badge badge-disable">Desativado</span>`}
+                                </td>
+
+                                <td>
+                                    <div class='d-flex justify-content-end align-items-center'>
+                                        <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
+
+                                        <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><span class=""><img src='/build/global/img/pencil-icon.svg'/></span></a>
+
+                                        <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class=""><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
+                                    </div>
+                                </td>
                                    </tr>`;
                         table.append(row);
                     }
-
                     pagination(resp, "order-bump", index);
+                    $(".fullInformation").tooltip({ container: '.container-tooltips' });
+
                 } else {
                     $("#pagination-container-order-bump").removeClass("d-flex").addClass("d-none")
 

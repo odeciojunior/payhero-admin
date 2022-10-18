@@ -106,42 +106,83 @@ $(function () {
                     $.each(response.data, function (index, value) {
                         $("#data-table-pixel").append(`
                             <tr>
-                                <td class="ellipsis-text">
-                                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.name}">
+
+                                <td>
+
+                                    <div class="fullInformation-pixel ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.name}">
                                         ${value.name}
-                                    </span>
-
-                                </td>
-
-                                <td class="ellipsis-text">
-                                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.code}">
-                                        ${value.code}
-                                    </span>
-                                </td>
-
-                                <td class="ellipsis-text">
-                                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.platform_enum}">
-                                        ${value.platform_enum}
-                                    </span>
-                                </td>
-
-                                <td class="text-center"><span class="badge badge-${statusPixel[value.status]
-                            }">${value.status_translated}</span></td>
-                                <td style='text-align:center'>
-                                    <div class='d-flex justify-content-end align-items-center'>
-                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id
-                            }' data-target='#modal-details-pixel' data-toggle='modal'><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
-                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id
-                            }' data-toggle='modal' type='a'><span class=""><img src='/build/global/img/pencil-icon.svg'/></span></a>
-                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id
-                            }' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
                                     </div>
+
+                                    <div class="container-tooltips-pixel"></div>
+
                                 </td>
+
+
+                                <td>
+
+                                    <div class="fullInformation-pixel ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.code}">
+                                        ${value.code}
+                                    </div>
+
+                                    <div class="container-tooltips-pixel"></div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="fullInformation-pixel ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.platform_enum}">
+                                        ${value.platform_enum}
+                                    </div>
+
+                                    <div class="container-tooltips-pixel"></div>
+
+                                </td>
+
+
+                                <td class="text-center">
+                                    <span class="badge badge-${statusPixel[value.status]}">
+                                        ${value.status_translated}
+                                    </span>
+                                </td>
+
+                                <td style='text-align:center'>
+
+                                    <div class='d-flex justify-content-end align-items-center'>
+
+                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'>
+
+                                            <span class="">
+                                                <img src='/build/global/img/icon-eye.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'>
+
+                                            <span class="">
+                                                <img src='/build/global/img/pencil-icon.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'>
+                                            <span class=''>
+                                                <img src='/build/global/img/icon-trash-tale.svg'/>
+                                            </span>
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
                             </tr>
                         `);
                         $("#table-pixel").addClass("table-striped");
                     });
-                    $(".fullInformation").tooltip();
+
+                    $(".fullInformation-pixel").tooltip({ container: '.container-tooltips-pixel' });
+
                     pagination(response, "pixels", atualizarPixel);
                 }
             },

@@ -318,22 +318,41 @@ $(document).ready(function () {
                                 <span>${value.sale_code}</span>
                             </td>
 
-                            <td class="line-overflow" >
-                                <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='"${value.company}"' > ${value.company_limit} </span>
+
+                            <td>
+
+                                <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.company}" >
+                                    ${value.company_limit}
+                                </div>
+
                                 <br>
+
                                 <small class="subdescription">
                                     ${value.project}
                                 </small>
+
+                                <div class="container-tooltips"></div>
+
                             </td>
 
+
+
                             <td class="line-overflow" title="${value.customer}">
-                                <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='"${value.customer}"'> ${value.customer} </span>
+
+                                <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.customer}">
+                                    ${value.customer}
+                                </div>
 
                                 <br>
+
                                 <small class="subdescription">
                                     Pagamento em ${value.adjustment_date}
                                 </small>
-                            </td>`;
+
+                                <div class="container-tooltips"></div>
+
+                            </td>
+                        `;
 
                     /*
                     ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
@@ -418,7 +437,7 @@ $(document).ready(function () {
 
                     $("#chargebacks-table-data").append(dados);
                 });
-                $(".fullInformation").tooltip();
+                $(".fullInformation").tooltip({ container: '.container-tooltips' });
 
                 if (response.data == "") {
                     $("#chargebacks-table-data").html(

@@ -167,41 +167,78 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         data = `
                         <tr>
-                            <td class="ellipsis-text">
-                                <img src="${value.photo || "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"}" class="img-fluid rounded-circle mr-2" width="35" height="35">
+                            <td>
 
-                                <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.name}">
+                                <div class="fullInformation-reviwe ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.name}">
+                                    <img src="${value.photo || "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"}" class="img-fluid rounded-circle mr-2" width="35" height="35">
                                     ${value.name}
-                                </span>
+                                </div>
+
+                                <div class="container-tooltips-reviwe"></div>
 
                             </td>
 
-                            <td class="ellipsis-text">${value.description.substring(0, 50)}...</td>
+                            <td>
+
+                                <div class="fullInformation-reviwe ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.description}">
+                                    ${value.description}
+                                </div>
+
+                                <div class="container-tooltips-reviwe"></div>
+
+                            </td>
+
 
                             <td>
                                 <div id="stars-${value.id}" data-score="${value.stars}"></div>
                             </td>
 
-                            <td class='text-center'>${value.active_flag
-                                ? `<span class="badge badge-success">Ativo</span>`
-                                : `<span class="badge badge-danger">Desativado</span>`
-                            }</td>
+                            <td class='text-center'>
+
+                                ${value.active_flag
+                                ? `<span class="badge badge-success">
+                                    Ativo
+                                </span>`
+
+                                : `<span class="badge badge-danger">
+                                    Desativado
+                                </span>`}
+
+                            </td>
+
                             <td style='text-align:center'>
+
                                 <div class='d-flex justify-content-end align-items-center'>
-                                    <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id
-                            }" data-target='#modal-detail-review' data-toggle='modal'><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
-                                    <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id
-                            }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
-                                    <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id
-                            }" data-toggle="modal" data-target="#modal-delete-review"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
+
+                                    <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'>
+                                        <span class="">
+                                            <img src='/build/global/img/icon-eye.svg'/>
+                                        </span>
+                                    </a>
+
+                                    <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}">
+                                        <span class=''>
+                                            <img src='/build/global/img/pencil-icon.svg'/>
+                                        </span>
+                                    </a>
+
+                                    <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id}" data-toggle="modal" data-target="#modal-delete-review">
+                                        <span class=''>
+                                            <img src='/build/global/img/icon-trash-tale.svg'/>
+                                        </span>
+                                    </a>
+
                                 </div>
+
                             </td>
                         </tr>
                         `;
                         dataTable.append(data);
                         initStarsPlugin("#stars-" + value.id);
                     });
-                    $(".fullInformation").tooltip();
+
+                    $(".fullInformation-reviwe").tooltip({ container: '.container-tooltips-reviwe' });
+
                     $(".div-config").show();
                     pagination(response, "review", loadReviews);
                 }

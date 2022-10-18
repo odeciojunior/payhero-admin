@@ -531,47 +531,95 @@ $(document).ready(function () {
                     $("#count-fretes").html(response.meta.total);
 
                     $.each(response.data, function (index, value) {
-                        let dados = `<tr>
-                                        <td style="vertical-align: middle; display: none;">${value.zip_code_origin}</td>
-                                        <td class="text-nowrap ellipsis-text" style="vertical-align: middle;">${value.type_name}</td>
+                        let dados =
+                            `<tr>
+                                <td style="vertical-align: middle; display: none;">
+                                    ${value.zip_code_origin}
+                                </td>
 
-                                        <td class="text-nowrap ellipsis-text" style="vertical-align: middle;">
-                                            <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.name}">
-                                                ${value.name}
-                                            </div>
 
-                                        </td>
+                                <td class="text-nowrap" style="vertical-align: middle;">
 
-                                        <td class="text-nowrap ellipsis-text" style="vertical-align: middle;">${value.value}</td>
-                                        <td class="text-nowrap ellipsis-text" style="vertical-align: middle;">
+                                    <div class="fullInformation-shipping ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.type_name}" >
+                                        ${value.type_name}
+                                    </div>
 
-                                            <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.information}">
-                                                ${value.information}
-                                            </div>
+                                    <div class="container-tooltips-shipping"></div>
 
-                                        </td>
-                                        <td class="text-center" style="vertical-align: middle;">
-                                            <span class="badge badge-${statusShipping[value.status]}">${value.status_translated
-                            }</span>
-                                        </td>
-                                        <td class="text-center display-sm-none display-m-none" style="vertical-align: middle;">
-                                            <span class="badge badge-${activeShipping[value.pre_selected]}">${value.pre_selected_translated
-                            }</span>
-                                        </td>
-                                        <td style='text-align:center'>
-                                            <div class='d-flex justify-content-end align-items-center'>
-                                                <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id
-                            }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
-                                                <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id
-                            }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
-                                                <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id
-                            }" data-toggle='modal' data-target='#modal-delete-shipping'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
-                                            </div>
-                                        </td>
-                                     </tr>`;
+                                </td>
+
+
+                                <td>
+
+                                    <div class="fullInformation-shipping ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.name}" >
+                                        ${value.name}
+                                    </div>
+
+                                </td>
+
+
+                                <td class="text-nowrap" style="vertical-align: middle;">
+
+                                    <div class="fullInformation-shipping ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.value}" >
+                                        ${value.value}
+                                    </div>
+
+                                </td>
+
+
+                                <td class="text-nowrap" style="vertical-align: middle;">
+
+                                    <div class="fullInformation-shipping ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.information}" >
+                                        ${value.information}
+                                    </div>
+
+                                </td>
+
+
+                                <td class="text-center" style="vertical-align: middle;">
+                                    <span class="badge badge-${statusShipping[value.status]}">
+                                        ${value.status_translated}
+                                    </span>
+                                </td>
+
+
+                                <td class="text-center display-sm-none display-m-none" style="vertical-align: middle;">
+                                    <span class="badge badge-${activeShipping[value.pre_selected]}">${value.pre_selected_translated}</span>
+                                </td>
+
+
+                                <td style='text-align:center'>
+
+                                    <div class='d-flex justify-content-end align-items-center'>
+                                        <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}">
+                                            <span class="">
+                                                <img src='/build/global/img/icon-eye.svg'/>
+                                            </span>
+                                        </a>
+
+                                        <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}">
+                                            <span class=''>
+                                                <img src='/build/global/img/pencil-icon.svg'/>
+                                            </span>
+                                        </a>
+
+                                        <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}" data-toggle='modal' data-target='#modal-delete-shipping'>
+                                            <span class=''>
+                                                <img src='/build/global/img/icon-trash-tale.svg'/>
+                                            </span>
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        `;
+
                         $("#dados-tabela-frete").append(dados);
                     });
-                    $(".fullInformation").tooltip();
+                    $(".fullInformation-shipping").tooltip({ container: '.container-tooltips-shipping' });
+
 
 
                     if ($("#dados-tabela-frete").children("tr:first").children("td:first").css("display") == "none") {

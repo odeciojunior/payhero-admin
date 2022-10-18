@@ -134,29 +134,66 @@ $(document).ready(function () {
                     $("#table-upsell").addClass("table-striped");
                     $("#count-upsell").html(response.meta.total);
                     let data = "";
+
                     $.each(response.data, function (index, value) {
                         data += `
-                        <tr>
-                            <td class="ellipsis-text">${value.description}</td>
-                            <td class="text-center">${value.active_flag
+                            <tr>
+
+                                <td>
+
+                                    <div class="fullInformation-upsel ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.description}" >
+                                        ${value.description}
+                                    </div>
+
+                                    <div class="container-tooltips-upsel"></div>
+
+                                </td>
+
+
+                                <td class="text-center">${value.active_flag
                                 ? `<span class="badge badge-success">Ativo</span>`
-                                : `<span class="badge badge-disable">Desativado</span>`
-                            }</td>
-                            <td style='text-align:center'>
-                                <div class='d-flex justify-content-end align-items-center'>
-                                    <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id
-                            }"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
-                                    <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id
-                            }"><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>
-                                    <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id
-                            }" data-toggle="modal" data-target="#modal-delete-upsell"><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
-                                </div>
-                            </td>
-                        </tr>
+                                : `<span class="badge badge-disable">Desativado</span>`}
+                                </td>
+
+                                <td style='text-align:center'>
+
+                                    <div class='d-flex justify-content-end align-items-center'>
+
+                                        <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}">
+
+                                            <span class="">
+                                                <img src='/build/global/img/icon-eye.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                        <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}">
+
+                                            <span class=''>
+                                                <img src='/build/global/img/pencil-icon.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                        <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id}" data-toggle="modal" data-target="#modal-delete-upsell">
+
+                                            <span class=''>
+                                                <img src='/build/global/img/icon-trash-tale.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
                         `;
                     });
                     dataTable.append(data);
                     $(".div-config").show();
+                    $(".fullInformation-upsel").tooltip({ container: '.container-tooltips-upsel' });
+
 
                     pagination(response, "upsell", loadUpsell);
                 }
