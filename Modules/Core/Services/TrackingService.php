@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use App\Jobs\RevalidateTrackingDuplicateJob;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -16,6 +17,7 @@ use Modules\Core\Entities\User;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Events\ReportanaTrackingEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingService
 {
@@ -169,6 +171,105 @@ class TrackingService
         return $systemStatusEnum;
     }
 
+    public function updateTracking(string $trackingId, string $trackingCode)
+    {
+        try {
+            $trackingIdDecode = current(Hashids::decode($trackingId));
+
+            $tracking = Tracking::where("id", $trackingIdDecode)->first();
+
+            if (!empty($tracking)) {
+                if ($tracking->tracking_status_enum == Tracking::STATUS_DELIVERED) {
+                    return false;
+                }
+
+                $oldTrackingCode = $tracking->tracking_code;
+
+                $productPlanSale = ProductPlanSale::select([
+                    "products_plans_sales.id",
+                    "products_plans_sales.sale_id",
+                    "products_plans_sales.product_id",
+                    "products_plans_sales.amount",
+                    "products_plans_sales.created_at",
+                    "s.delivery_id",
+                    "s.customer_id",
+                    "s.upsell_id",
+                ])
+                ->join("sales as s", "products_plans_sales.sale_id", "=", "s.id")
+                ->find($tracking->product_plan_sale_id);
+
+                $apiResult = $this->sendTrackingToApi($trackingCode);
+                $statusEnum = $this->parseStatusApi($apiResult->status ?? "");
+                $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
+
+                $tracking->fill([
+                    "tracking_code" => $trackingCode,
+                    "tracking_status_enum" => $statusEnum,
+                    "system_status_enum" => $systemStatusEnum,
+                ]);
+
+                if ($tracking->isDirty()) {
+                    $tracking->save();
+                    event(new CheckSaleHasValidTrackingEvent($tracking->sale_id));
+                }
+
+                if (strtoupper($oldTrackingCode) !== strtoupper($trackingCode)) {
+                    //verifica se existem duplicatas do antigo código
+                    $duplicates = Tracking::select("product_plan_sale_id as id")
+                        ->where("tracking_code", $oldTrackingCode)
+                        ->get();
+                    //caso existam recria/revalida os códigos
+                    if ($duplicates->isNotEmpty()) {
+                        RevalidateTrackingDuplicateJob::dispatch($oldTrackingCode, $duplicates->toArray());
+                    }
+                }
+
+                return $tracking;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            report($e);
+
+            return null;
+        }
+    }
+
+    public function deleteTracking($trackingId)
+    {
+        try {
+            $tracking = Tracking::find(current(Hashids::decode($trackingId)));
+
+            switch (true) {
+                case preg_match('/^\d{14}$/', $tracking->tracking_code):
+                    $carrierCode = "dpd-brazil"; //jadlog
+                    break;
+                case preg_match('/^[A-Z]{2}\d{9}BR$/', $tracking->tracking_code):
+                    $carrierCode = "brazil-correios";
+                    break;
+                case preg_match("/^LP00516\d{9}/", $tracking->tracking_code):
+                    $carrierCode = "ltexp";
+                    break;
+                default:
+                    $carrierCode = "cainiao";
+                    break;
+            }
+
+            $trackingmoreService = new TrackingmoreService();
+
+            $trackingDeleteService = $trackingmoreService->delete($carrierCode, $tracking->tracking_code);
+            if ($trackingDeleteService) {
+                return $tracking->delete();
+            }
+
+            return false;
+        } catch(Exception $e) {
+            report($e);
+
+            return null;
+        }
+    }
+
     public function createOrUpdateTracking(
         string $trackingCode,
         int $productPlanSaleId,
@@ -274,9 +375,6 @@ class TrackingService
             $companyId = DB::table('users')->select('company_default')->where('id',$userId)->first()->company_default;
         }
 
-        $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
-        $filters["project"] = is_array($filters["project"]) ? implode(",", $filters["project"]) : $filters["project"];
-
         if (!empty($filters["transaction_status"])) {
             $filters["transaction_status"] = is_array($filters["transaction_status"])
                 ? implode(",", $filters["transaction_status"])
@@ -289,9 +387,13 @@ class TrackingService
             $saleStatus = [Sale::STATUS_APPROVED, Sale::STATUS_IN_DISPUTE];
 
             //tipo da data e periodo obrigatorio
-            $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
+            if (!empty($filters["date_updated"])) {
+                $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
+
+                $join->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"]);
+            }
+
             $join
-                ->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
                 ->whereIn("s.status", $saleStatus)
                 ->where("s.owner_id", $userId);
 
@@ -300,7 +402,7 @@ class TrackingService
                 $join->where("s.id", $saleId);
             }
 
-            $projects = $filters['project'] ? explode(",", $filters["project"]):null;
+            $projects = !empty($filters['project']) ? explode(",", $filters["project"]) : null;
 
             $tokens = [];
             $projectIds = [];
@@ -387,6 +489,8 @@ class TrackingService
         });
 
         if (!empty($filters["status"])) {
+            $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
+
             $productPlanSales->where(function ($where) use ($filters) {
                 $filterStatus = explode(",", $filters["status"]);
 

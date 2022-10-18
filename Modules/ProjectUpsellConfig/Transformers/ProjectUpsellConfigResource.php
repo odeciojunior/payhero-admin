@@ -20,7 +20,7 @@ class ProjectUpsellConfigResource extends JsonResource
      */
     public function toArray($request)
     {
-        $projectUpsell      = ProjectUpsellRule::where('project_id', $this->project_id)->exists();
+        $projectUpsell = ProjectUpsellRule::where("project_id", $this->project_id)->exists();
 
         return [
             "id" => Hashids::encode($this->id),
@@ -30,6 +30,7 @@ class ProjectUpsellConfigResource extends JsonResource
             "countdown_time" => $this->countdown_time ?? "",
             "countdown_flag" => $this->countdown_flag,
             "has_upsell" => $projectUpsell ? true : false,
+            "checkout_url" => $this->checkoutUrl . "/upsell/preview/" . hashids_encode($this->project_id),
         ];
     }
 }

@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Listeners\IntegrationOrderCancelListener;
 use App\Observers\TransactionObserver;
 use App\Observers\TransferObserver;
+use App\Observers\WithdrawalObserver;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
 use Modules\Core\Events\BilletExpiredEvent;
@@ -188,5 +190,6 @@ class EventServiceProvider extends ServiceProvider
 
         Transaction::observe(TransactionObserver::class);
         Transfer::observe(TransferObserver::class);
+        Withdrawal::observe(WithdrawalObserver::class);
     }
 }

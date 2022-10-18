@@ -50,7 +50,8 @@ class TrackingmoreService
      */
     public function createTracking($trackingNumber, $optionalParams = null)
     {
-        $result = $this->find($trackingNumber);
+        // $result = $this->find($trackingNumber);
+        $result = null;
 
         if (!empty($result)) {
             $result->already_exists = true;
@@ -100,7 +101,7 @@ class TrackingmoreService
      * @param $carrierCode
      * @param $trackingNumber
      * @return mixed
-     * @see https://www.trackingmore.com/api-track-delete-a-tracking-item.html#single-delete
+     * @see https://www.trackingmore.com/api-track-delete-a-tr acking-item.html#single-delete
      */
     public function delete($carrierCode, $trackingNumber)
     {
@@ -165,6 +166,8 @@ class TrackingmoreService
             "Trackingmore-Api-Key: " . $this->apiKey,
             "Content-Type: application/json",
         ]);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
         $retry = true;

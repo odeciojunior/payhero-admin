@@ -12,7 +12,7 @@ use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\GerencianetService;
-use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Services\Gateways\VegaService;
 
 class CheckAutomaticWithdrawals extends Command
 {
@@ -34,7 +34,7 @@ class CheckAutomaticWithdrawals extends Command
         AsaasService::class,
         //GetnetService::class,
         GerencianetService::class,
-        Safe2PayService::class
+        VegaService::class
         //CieloService::class,
     ];
 
@@ -50,8 +50,7 @@ class CheckAutomaticWithdrawals extends Command
 
     public function handle()
     {
-        $withdrawalsSettings = WithdrawalSettings::
-            whereNull("deleted_at")
+        $withdrawalsSettings = WithdrawalSettings::whereNull("deleted_at")
             ->orderBy("id", "DESC")
             ->get();
 
@@ -62,18 +61,24 @@ class CheckAutomaticWithdrawals extends Command
         foreach ($withdrawalsSettings as $settings) {
             try {
                 DB::beginTransaction();
-                $company = Company::find($settings->company->id);
+                $company = Company::find($settings->company_id);
 
                 //It only generates the automatic withdrawal if the account is active
-                if ($company->user->status == User::STATUS_ACTIVE) {
-
+                if (
+                    $company->user->status == User::STATUS_ACTIVE &&
+                    $company->user->biometry_status == User::BIOMETRY_STATUS_APPROVED
+                ) {
                     foreach ($this->defaultGateways as $gatewayClass) {
                         $gatewayService = new $gatewayClass();
                         $gatewayService->setCompany($company);
 
                         $availableBalance = $gatewayService->getAvailableBalance();
                         $pendingBalance = $gatewayService->getPendingBalance();
-                        (new CompanyService())->applyBlockedBalance($gatewayService, $availableBalance, $pendingBalance);
+                        (new CompanyService())->applyBlockedBalance(
+                            $gatewayService,
+                            $availableBalance,
+                            $pendingBalance
+                        );
 
                         $withdrawalValue = $this->getAvailableBalance($settings, $availableBalance);
 
@@ -107,21 +112,30 @@ class CheckAutomaticWithdrawals extends Command
         $withdrawalValue = 0;
         if ($settings->rule == WithdrawalSettings::RULE_AMOUNT) {
             if ($availableBalance >= $settings->amount) {
-                $withdrawalValue = $availableBalance;
-            }
-        } elseif ($settings->rule == WithdrawalSettings::RULE_PERIOD) {
-            if ($settings->frequency == WithdrawalSettings::FREQUENCY_DAILY) {
-                $withdrawalValue = $availableBalance;
-            } elseif ($settings->frequency == WithdrawalSettings::FREQUENCY_WEEKLY && $settings->weekday == date("w")) {
-                $withdrawalValue = $availableBalance;
-            } elseif ($settings->frequency == WithdrawalSettings::FREQUENCY_MONTHLY) {
-                $isFebruary = date("m") == 2;
-                $isFebruaryLastDay = $isFebruary && in_array(date("d"), [28, 29]);
-                if ($settings->day == date("d") || ($settings->day == 30 && $isFebruaryLastDay)) {
-                    $withdrawalValue = $availableBalance;
-                }
+                return $availableBalance;
             }
         }
+
+        if ($settings->rule == WithdrawalSettings::RULE_PERIOD) {
+            switch ($settings->frequency) {
+                case WithdrawalSettings::FREQUENCY_DAILY:
+                    $withdrawalValue = $availableBalance;
+                break;
+                case WithdrawalSettings::FREQUENCY_WEEKLY:
+                    if ($settings->weekday == date("w")) {
+                        $withdrawalValue = $availableBalance;
+                    }
+                break;
+                case WithdrawalSettings::FREQUENCY_MONTHLY:
+                    $isFebruary = date("m") == 2;
+                    $isFebruaryLastDay = $isFebruary && in_array(date("d"), [28, 29]);
+                    if ($settings->day == date("d") || ($settings->day == 30 && $isFebruaryLastDay)) {
+                        $withdrawalValue = $availableBalance;
+                    }
+                break;
+            }
+        }
+
         return $withdrawalValue;
     }
 }

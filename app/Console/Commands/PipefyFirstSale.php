@@ -44,14 +44,30 @@ class PipefyFirstSale extends Command
                 ->whereNotNull("users.pipefy_card_id");
 
             foreach ($users->cursor() as $user) {
+                $labelAd = "";
+                if (!empty($user->utm_srcs)) {
+                    $utmSrcs = json_decode($user->utm_srcs, true);
+                    if (!empty($utmSrcs["utm_source"])) {
+                        if ($utmSrcs["utm_source"] == "google_ads") {
+                            $labelAd = PipefyService::LABEL_GOOGLE_ADS;
+                        } elseif ($utmSrcs["utm_source"] == "facebook_ads") {
+                            $labelAd = PipefyService::LABEL_FACEBOOK_ADS;
+                        }
+                    }
+                }
                 if (empty($user->total_sale)) {
                     $phase = json_decode($user->pipefy_card_data);
                     if (!empty($phase->phase) && $phase->phase == PipefyService::PHASE_ACTIVE_AND_SELLING) {
-                        (new PipefyService())->updateCardLabel($user, [PipefyService::LABEL_WITHOUT_SELLING]); //30 dias sem vender
+                        (new PipefyService())->updateCardLabel($user, [PipefyService::LABEL_WITHOUT_SELLING, $labelAd]); //30 dias sem vender
+                    } elseif (!empty($labelAd)) {
+                        (new PipefyService())->updateCardLabel($user, [$labelAd]);
                     }
                 } elseif ($user->total_sale > 0) {
                     (new PipefyService())->moveCardToPhase($user, PipefyService::PHASE_ACTIVE_AND_SELLING);
-                    (new PipefyService())->updateCardLabel($user, [PipefyService::LABEL_SALES_BETWEEN_0_100k]);
+                    (new PipefyService())->updateCardLabel($user, [
+                        PipefyService::LABEL_SALES_BETWEEN_0_100k,
+                        $labelAd,
+                    ]);
                 }
             }
 
