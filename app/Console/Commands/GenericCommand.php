@@ -37,6 +37,5 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-
     }
 }
