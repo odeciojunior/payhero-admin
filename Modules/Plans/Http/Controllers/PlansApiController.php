@@ -206,7 +206,7 @@ class PlansApiController extends Controller
                                         "affiliate_id" => $affiliate->id,
                                         "plan_id" => $plan->id,
                                         "parameter" =>
-                                            $affiliateHash . Hashids::connection("affiliate")->encode($plan->id),
+                                        $affiliateHash . Hashids::connection("affiliate")->encode($plan->id),
                                         "clicks_amount" => 0,
                                         "link" => $planService->getCheckoutLink($plan),
                                     ]);
@@ -721,6 +721,11 @@ class PlansApiController extends Controller
                 $return["total"] = $result[0]->total;
                 return $return;
             }
+
+            if (!empty($data['active_flag'])) {
+                $plans->where('active_flag', $data['active_flag']);
+            }
+
             if (!empty($data['search'])) {
                 $plans->where('name', 'like', '%' . $data['search'] . '%');
             }
@@ -786,7 +791,6 @@ class PlansApiController extends Controller
 
             return PlansSelectResource::collection($plans);
         } catch (Exception $e) {
-            Log::warning("Erro ao buscar dados dos planos (PlansApiController - getPlans)");
             report($e);
 
             return response()->json(

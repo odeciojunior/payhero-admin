@@ -17,6 +17,7 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
         Gateway::ASAAS_PRODUCTION_ID,
         Gateway::GERENCIANET_PRODUCTION_ID,
         Gateway::SAFE2PAY_PRODUCTION_ID,
+        Gateway::VEGA_PRODUCTION_ID,
     ];
 
     public function __construct()

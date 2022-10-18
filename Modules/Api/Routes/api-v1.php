@@ -32,6 +32,13 @@ Route::group(["middleware" => "authApiV1"], function () {
     Route::get("sales", "V1\SalesApiController@getSales");
     Route::post("sales/refund/{id}", "V1\SalesApiController@refundSales");
 
+    // TRACKINGS
+    Route::post("trackings", "V1\TrackingsApiController@storeTrackings");
+    Route::get("trackings", "V1\TrackingsApiController@getTrackings");
+    Route::get("trackings/{id}", "V1\TrackingsApiController@showTrackings");
+    Route::put("trackings/{id}", "V1\TrackingsApiController@updateTrackings");
+    Route::delete("trackings/{id}", "V1\TrackingsApiController@deleteTrackings");
+
     // WITHDRAWALS
     Route::post("withdrawals", "V1\WithdrawalsApiController@storeWithdrawals");
     Route::get("withdrawals", "V1\WithdrawalsApiController@getWithdrawals");

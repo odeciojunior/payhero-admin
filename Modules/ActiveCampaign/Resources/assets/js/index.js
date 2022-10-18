@@ -1,88 +1,80 @@
 $(document).ready(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $('#integration-actions').hide();
+        $("#integration-actions").hide();
         $("#no-integration-found").hide();
-        $('#project-empty').hide();
-        loadOnAny('#content');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
+        $("#project-empty").hide();
+        loadOnAny("#content");
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2;
-                index('n');
+                index("n");
             });
         });
     });
 
-    var companiesAndProjects = ''
+    var companiesAndProjects = "";
 
-    getCompaniesAndProjects().done( function (data){
-        companiesAndProjects = data
+    getCompaniesAndProjects().done(function (data) {
+        companiesAndProjects = data;
         index();
     });
 
-    function index(loading='y') {
-        if(loading=='y')
-            loadingOnScreen();
-        else{
+    function index(loading = "y") {
+        if (loading == "y") loadingOnScreen();
+        else {
             $("#content").html("");
-            loadOnAny('#content');
+            loadOnAny("#content");
         }
 
-        $hasProjects=false;
+        $hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
             $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                if(project.status == 1)
-                    $hasProjects=true;
+                if (project.status == 1) $hasProjects = true;
             });
         }
 
-        if(!$hasProjects){
-            $('#integration-actions').hide();
+        if (!$hasProjects) {
+            $("#integration-actions").hide();
             $("#no-integration-found").hide();
-            $('#project-empty').show();
+            $("#project-empty").show();
             loadingOnScreenRemove();
-            loadOnAny('#content',true);
-        }
-        else{
-
+            loadOnAny("#content", true);
+        } else {
             $.ajax({
                 method: "GET",
-                url: "/api/apps/activecampaign?company="+ $('.company-navbar').val(),
+                url: "/api/apps/activecampaign?company=" + $(".company-navbar").val(),
                 dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 error: (response) => {
-                    loadOnAny('#content',true);
+                    loadOnAny("#content", true);
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
+                    $("#project_id, #select_projects_edit").html("");
+                    fillSelectProject(companiesAndProjects, "#project_id, #select_projects_edit");
 
-                        $('#project_id, #select_projects_edit').html("");
-                        fillSelectProject(companiesAndProjects,'#project_id, #select_projects_edit')
-
-                        if (isEmpty(response.integrations)) {
-                            $("#no-integration-found").show();
-                        } else {
-                            $('#content').html("");
-                            let integrations = response.integrations;
-                            for (let i = 0; i < integrations.length; i++) {
-                                renderIntegration(integrations[i]);
-                            }
-                            $("#no-integration-found").hide();
+                    if (isEmpty(response.integrations)) {
+                        $("#no-integration-found").show();
+                    } else {
+                        $("#content").html("");
+                        let integrations = response.integrations;
+                        for (let i = 0; i < integrations.length; i++) {
+                            renderIntegration(integrations[i]);
                         }
-                        $('#project-empty').hide();
-                        $('#integration-actions').show();
+                        $("#no-integration-found").hide();
+                    }
+                    $("#project-empty").hide();
+                    $("#integration-actions").show();
                     // }
-                    if(loading=='y')
-                        loadingOnScreenRemove();
-                    loadOnAny('#content',true);
-                }
+                    if (loading == "y") loadingOnScreenRemove();
+                    loadOnAny("#content", true);
+                },
             });
-
         }
     }
 
@@ -113,7 +105,7 @@ $(document).ready(function () {
                                     <a href="/apps/activecampaign/${data.id}" class="activecampaign-link">
                                         <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
-                ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` +
+                ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
                                     </a>
@@ -222,35 +214,30 @@ $(document).ready(function () {
         e.stopPropagation();
         let project = $(this).attr("project");
         var card = $(this).parent().parent().parent().parent().parent();
-        card.find('.card-edit').unbind('click');
+        card.find(".card-edit").unbind("click");
         $("#modal-delete-integration .btn-delete").attr("project", project);
         $("#modal-delete-integration").modal("show");
     });
     //destroy
-    $(document).on(
-        "click",
-        "#modal-delete-integration .btn-delete",
-        function (e) {
-            e.stopPropagation();
-            var project = $(this).attr("project");
+    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
+        e.stopPropagation();
+        var project = $(this).attr("project");
 
-
-            $.ajax({
-                method: "DELETE",
-                url: "/api/apps/activecampaign/" + project,
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: (response) => {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    index();
-                    alertCustom("success", response.message);
-                }
-            });
-        }
-    );
+        $.ajax({
+            method: "DELETE",
+            url: "/api/apps/activecampaign/" + project,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                index();
+                alertCustom("success", response.message);
+            },
+        });
+    });
 });

@@ -1251,7 +1251,7 @@ function verifyDocumentPending()
                 );
                 if (
                     verifyAccount &&
-                    verifyAccount.account.status !== "approved"
+                    verifyAccount.user_status !== "approved"
                 ) {
                     localStorage.setItem(
                         "verifyAccount",

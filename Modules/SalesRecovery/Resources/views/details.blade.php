@@ -22,7 +22,7 @@
     @foreach ($products as $product)
         <div class='row align-items-baseline justify-content-between mb-15'>
             <div class="col-lg-2">
-                <img onerror=this.src='/build/global/img/produto.png'
+                <img onerror=this.src='/build/global/img/produto.svg'
                      src='{{ $product['photo'] ?? mix('build/global/img/produto.png') }}'
                      width='50px'
                      style='border-radius: 6px;'>

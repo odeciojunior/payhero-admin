@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\AsaasAnticipationRequests;
 use Modules\Core\Entities\BlockReasonSale;
@@ -18,14 +17,12 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\SaleRefundHistory;
-use Modules\Core\Interfaces\Statement;
+use Modules\Core\Abstracts\GatewayServicesAbstract;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
-use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
-use Modules\Withdrawals\Transformers\WithdrawalResource;
 
-class AsaasService implements Statement
+class AsaasService extends GatewayServicesAbstract
 {
     public Company $company;
     public CompanyBankAccount $companyBankAccount;
@@ -36,22 +33,9 @@ class AsaasService implements Statement
     public function __construct()
     {
         $this->gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID];
-    }
+        $this->gatewayName = 'Assas';
 
-    public function setCompany(Company $company)
-    {
-        $this->company = $company;
-        return $this;
-    }
-
-    public function setBankAccount(CompanyBankAccount $companyBankAccount)
-    {
-        $this->companyBankAccount = $companyBankAccount;
-    }
-
-    public function getAvailableBalance(): int
-    {
-        return $this->company->asaas_balance;
+        $this->companyColumnBalance = 'asaas_balance';
     }
 
     public function getPendingBalance(): int
@@ -120,39 +104,6 @@ class AsaasService implements Statement
             ->first();
 
         return $availableBalance >= $transaction->value;
-    }
-
-    public function getWithdrawals(): JsonResource
-    {
-        $withdrawals = Withdrawal::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->orderBy("id", "DESC");
-
-        return WithdrawalResource::collection($withdrawals->paginate(10));
-    }
-
-    public function withdrawalValueIsValid($value): bool
-    {
-        if (empty($value) || $value < 1) {
-            return false;
-        }
-
-        $availableBalance = $this->getAvailableBalance();
-        $pendingBalance = $this->getPendingBalance();
-        (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
-
-        if ($value > $availableBalance) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function existsBankAccountApproved()
-    {
-        //verifica se existe uma chave pix aprovada
-        $this->companyBankAccount = $this->company->getBankAccountTED();
-        return !empty($this->companyBankAccount);
     }
 
     public function createWithdrawal($value)
@@ -265,16 +216,6 @@ class AsaasService implements Statement
         }
     }
 
-    public function getStatement($filters)
-    {
-        return (new StatementService())->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
-    }
-
-    public function getPeriodBalance($filters)
-    {
-        return (new StatementService())->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
-    }
-
     public function getResume()
     {
         $cacheName = "resume-asaas-{$this->company->id}";
@@ -312,17 +253,6 @@ class AsaasService implements Statement
                 "id" => "NzJqoR32egVj5D6",
             ];
         });
-    }
-
-    public function getGatewayAvailable()
-    {
-        $lastTransaction = DB::table("transactions")
-            ->whereIn("gateway_id", $this->gatewayIds)
-            ->where("company_id", $this->company->id)
-            ->orderBy("id", "desc")
-            ->first();
-
-        return !empty($lastTransaction) ? ["Asaas"] : [];
     }
 
     public function makeAnticipation(Sale $sale, $saveRequests = true, $simulate = false)
@@ -396,19 +326,6 @@ class AsaasService implements Statement
         }
 
         return json_decode($result, true);
-    }
-
-    public function getCompanyApiKey(Sale $sale)
-    {
-        $company = $sale
-            ->transactions()
-            ->where("type", Transaction::TYPE_PRODUCER)
-            ->first()->company;
-
-        $this->companyId = $company->id;
-        $this->apiKey = $company->getGatewayApiKey(
-            foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
-        );
     }
 
     private function saleInstallmentId(Sale $sale): ?string

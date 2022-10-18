@@ -1042,7 +1042,7 @@ $(() => {
             }
             div += `<div class="row justify-content-between mb-15">
                         <div class="col-lg-2">
-                            <img src='${value.photo}' onerror=this.src='/build/global/img/produto.png' width='50px' height='50px' style='border-radius: 6px;'>
+                            <img src='${value.photo}' onerror=this.src='/build/global/img/produto.svg' width='50px' height='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-md-5 col-lg-6">
                             <h4 class="table-title m-0">${value.name}</h4>

@@ -1,36 +1,32 @@
 $(document).ready(function () {
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $('#integration-actions').hide();
+        $("#integration-actions").hide();
         $("#no-integration-found").hide();
-        $('#project-empty').hide();
-        loadOnAny('#content');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
+        $("#project-empty").hide();
+        loadOnAny("#content");
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2;
-                $('.company_name').val( companiesAndProjects.company_default_fullname );
-                $("#company-navbar-value").val( $('.company-navbar').val() );
-                getCompanies('n');
+                $(".company_name").val(companiesAndProjects.company_default_fullname);
+                $("#company-navbar-value").val($(".company-navbar").val());
+                getCompanies("n");
             });
         });
     });
 
-    companiesAndProjects = ''
+    companiesAndProjects = "";
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         companiesAndProjects = data;
-        $('.company_name').val( companiesAndProjects.company_default_fullname );
-        $("#company-navbar-value").val( $('.company-navbar').val() );
+        $(".company_name").val(companiesAndProjects.company_default_fullname);
+        $("#company-navbar-value").val($(".company-navbar").val());
         getCompanies();
     });
 
-
-
-    function getCompanies(loading='y') {
-        if(loading=='y')
-            loadingOnScreen();
-        else
-            loadOnAny('#content');
+    function getCompanies(loading = "y") {
+        if (loading == "y") loadingOnScreen();
+        else loadOnAny("#content");
 
         $.ajax({
             method: "GET",
@@ -42,15 +38,17 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-                loadOnAny('#content',true);
+                loadOnAny("#content", true);
                 loadingOnScreenRemove();
             },
             success: function success(response) {
                 verifyCompanies(response.data);
+
+                if (loading == "y") loadingOnScreenRemove();
+                else loadOnAny("#content", true);
             },
         });
     }
-
 
     function verifyCompanies(companies) {
         if (isEmpty(companies)) {
@@ -80,19 +78,18 @@ $(document).ready(function () {
     function getShopifyIntegrations() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/shopify?company="+ $('.company-navbar').val(),
+            url: "/api/apps/shopify?company=" + $(".company-navbar").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadOnAny('#content',true);
+                loadOnAny("#content", true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-
                 let shopifyIntegrations = response.data;
 
                 $("#content").html("");
@@ -111,7 +108,7 @@ $(document).ready(function () {
 
                             <svg
                             class="open-cfg" app="${data.id}"
-                            data-img="${!data.project_photo ? "/build/global/img/produto.png" : data.project_photo}"
+                            data-img="${!data.project_photo ? "/build/global/img/produto.svg" : data.project_photo}"
                             data-name="${data.project_name}"
                             data-token="${data.token}"
                             data-skip="${shopifyIntegration.skip_to_cart}"
@@ -129,9 +126,9 @@ $(document).ready(function () {
                                 </defs>
                                 <title>Configurações da Integração</title>
                             </svg>
-                                <img class="card-img-top img-fluid w-full" style="height: 297px;" onerror="this.src = '/build/global/img/produto.png'" src="${
+                                <img class="card-img-top img-fluid w-full" style="height: 297px;" onerror="this.src = '/build/global/img/produto.svg'" src="${
                                     !shopifyIntegration.project_photo
-                                        ? "/build/global/img/produto.png"
+                                        ? "/build/global/img/produto.svg"
                                         : shopifyIntegration.project_photo
                                 }"  alt="Photo Project"/>
                                 <div class="card-body">
@@ -169,7 +166,7 @@ $(document).ready(function () {
         $(".modal-title").html("Adicionar nova integração com Shopify");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
-        loadOnAny('#content',true);
+        loadOnAny("#content", true);
         loadingOnScreenRemove();
     }
 
@@ -179,11 +176,8 @@ $(document).ready(function () {
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
         $("#integration-actions").show();
-        $("#button-information")
-            .show()
-            .addClass("d-flex")
-            .css("display", "flex");
-        loadOnAny('#content',true);
+        $("#button-information").show().addClass("d-flex").css("display", "flex");
+        loadOnAny("#content", true);
         loadingOnScreenRemove();
     }
 
@@ -219,12 +213,12 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function error(response) {
-                loadOnAny('#content',true);
+                loadOnAny("#content", true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadOnAny('#content',true);
+                loadOnAny("#content", true);
                 loadingOnScreenRemove();
                 alertCustom("success", response.message);
                 getCompanies();
@@ -246,7 +240,7 @@ $(document).ready(function () {
         function imageFound() {}
 
         function imageNotFound() {
-            img = "/build/global/img/produto.png";
+            img = "/build/global/img/produto.svg";
             $("#project-img").attr("src", img);
         }
 
@@ -276,22 +270,20 @@ $(document).ready(function () {
             $("#bt-close").show();
             return;
         }
-        $('#project-token').attr('disabled',false)
-        $('#project-token').val('')
-        $('#project-token').focus()
-        $(this).html('Cancelar')
+        $("#project-token").attr("disabled", false);
+        $("#project-token").val("");
+        $("#project-token").focus();
+        $(this).html("Cancelar");
 
-        $('#bt-close').hide()
-        $('#bt-update-keys').show()
-    })
+        $("#bt-close").hide();
+        $("#bt-update-keys").show();
+    });
 
-    $('#skiptocart-input').on('change', function () {
-
-        if($('#skiptocart-input').prop('checked')==true){
-            $(this).val(1)
-        }else{
-            $(this).val(0)
-
+    $("#skiptocart-input").on("change", function () {
+        if ($("#skiptocart-input").prop("checked") == true) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
         }
 
         var input = $(this);
@@ -371,10 +363,9 @@ $(document).ready(function () {
         );
     });
 
-    $('#bt-close-confirm').on('click', function () {
-        $("#modal_edit").modal('show');
-
-    })
+    $("#bt-close-confirm").on("click", function () {
+        $("#modal_edit").modal("show");
+    });
 
     function toggle_confirm(name, desc) {
         $("#modal_edit").modal("hide");
@@ -447,8 +438,7 @@ $(document).ready(function () {
                     },
                 });
                 break;
-            case 'tracking':
-
+            case "tracking":
                 $.ajax({
                     method: "POST",
                     url: "/api/apps/shopify/synchronize/trackings",
@@ -462,7 +452,6 @@ $(document).ready(function () {
                     },
                     error: function (response) {
                         errorAjaxResponse(response);
-
                     },
                     success: function (response) {
                         alertCustom("success", response.message);
@@ -495,16 +484,15 @@ $(document).ready(function () {
                 project_id: projectId,
             },
             error: function (response) {
-                loadOnAny('#content',true);
+                loadOnAny("#content", true);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function (response) {
-                loadOnAny('#content',true);
+                loadOnAny("#content", true);
                 loadingOnScreenRemove();
                 alertCustom("success", response.message);
             },
         });
     });
-
 });

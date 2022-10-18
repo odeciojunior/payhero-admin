@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Presenters;
 
+use Illuminate\Auth\Access\Gate;
 use Laracasts\Presenter\Presenter;
 use Modules\Core\Entities\Gateway;
 
@@ -54,8 +55,8 @@ class GatewayPresenter extends Presenter
             return "Asaas";
         } elseif (in_array($this->id, [Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
             return "Gerencianet";
-        } elseif (in_array($this->id, [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID])) {
-            return "Safe2pay";
+        } elseif (in_array($this->id, [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID, Gateway::IUGU_PRODUCTION_ID, Gateway::IUGU_SANDBOX_ID, Gateway::VEGA_PRODUCTION_ID, Gateway::VEGA_SANDBOX_ID])) {
+            return "Vega";
         } else {
             return "Cielo";
         }
