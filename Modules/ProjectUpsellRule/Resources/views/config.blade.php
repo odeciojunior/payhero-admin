@@ -17,33 +17,6 @@
                            required>
                 </div>
             </div>
-            <div class='form-group col-12 mb-20'>
-                <label for="title_config">Título</label>
-                <div class="d-flex input-group">
-                    <input type="text"
-                           class="form-control"
-                           name="title"
-                           id="title_config"
-                           placeholder="Digite o título"
-                           maxlength='255'
-                           required>
-                </div>
-            </div>
-            <div class='form-group col-12 mb-20'>
-                <label for="description_config">Descrição</label>
-                <textarea class='form-control'
-                          name="description"
-                          id="description_config"
-                          placeholder="Digite a descrição"
-                          required>
-                </textarea>
-            </div>
-        </div>
-        <div>
-            <label for="name">Parâmetros</label><br>
-            <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default param-first-name'
-               data-clipboard-text="{primeiro_nome}"
-               data-value='{primeiro_nome}'>{primeiro_nome}</a>
         </div>
         <div class="row mb-10">
             <div class='form-group col-md-4 div-countdown-time'>
@@ -62,7 +35,7 @@
             <div class="form-group col-md-4">
                 <label for="countdown_flag"
                        class='mb-10'>Habilitar Contador</label>
-                <div class="switch-holder pt-2">
+                <div class="switch-holder">
                     <label class="switch">
                         <input type="checkbox"
                                value='1'
@@ -75,11 +48,15 @@
                 </div>
             </div>
             <div class="col-md-4 text-right">
-                <button class='btn btn-primary btn-sm btn-view-config mt-md-20 text-white'
-                        style='display:none;'>
-                    <span class="o-eye-1 white font-size-16"></span>
-                    Visualizar
-                </button>
+                <a id="btn-preview-config"
+                   class="btn btn-primary mt-md-20 text-center"
+                   href="#"
+                   target="_blank"
+                   style="display: none">
+                    <span class="o-eye-1 font-size-16 text-white mr-1"
+                          style="-webkit-text-stroke: unset;"></span>
+                    <span class="text-white">Visualizar</span>
+                </a>
             </div>
         </div>
     </div>

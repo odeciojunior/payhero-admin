@@ -1,73 +1,58 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split("/")).get(-1);
     let countdownInterval = null;
-    let descriptionconfig;
 
-
-    $('.value-mask').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
+    $(".value-mask").maskMoney({ thousands: ".", decimal: ",", allowZero: true, prefix: "" });
 
     function formatDouble(number) {
-        return number.replace('.', '').replace(',', '.')
+        return number.replace(".", "").replace(",", ".");
     }
     function formatMoney(number) {
-        return (Math.round(number * 100) / 100).toFixed(2).replace('.', ',');
+        return (Math.round(number * 100) / 100).toFixed(2).replace(".", ",");
     }
     //store type
-    $('#us_type_value').click(function () {
-        $('#us_percent_opt').hide()
-        $('#us_money_opt').show()
-        $('#us_money_opt input').focus()
-        $('#add_discount_upsell').val(formatDouble($('#us_money_opt input').val()))
-    })
+    $("#us_type_value").click(function () {
+        $("#us_percent_opt").hide();
+        $("#us_money_opt").show();
+        $("#us_money_opt input").focus();
+        $("#add_discount_upsell").val(formatDouble($("#us_money_opt input").val()));
+    });
 
-    $('#us_type_percent').click(function () {
-        $('#us_money_opt').hide()
-        $('#us_percent_opt').show()
-        $('#us_percent_opt input').focus()
-        $('#add_discount_upsell').val($('#us_percent_opt input').val())
-    })
-    $('#us_money_opt input').change(function () {
-        $('#add_discount_upsell').val(formatDouble($('#us_money_opt input').val()))
+    $("#us_type_percent").click(function () {
+        $("#us_money_opt").hide();
+        $("#us_percent_opt").show();
+        $("#us_percent_opt input").focus();
+        $("#add_discount_upsell").val($("#us_percent_opt input").val());
+    });
+    $("#us_money_opt input").change(function () {
+        $("#add_discount_upsell").val(formatDouble($("#us_money_opt input").val()));
         // .replace('.','').replace(',','.')
-    })
-    $('#us_percent_opt input').change(function () {
-        $('#add_discount_upsell').val($('#us_percent_opt input').val())
-    })
+    });
+    $("#us_percent_opt input").change(function () {
+        $("#add_discount_upsell").val($("#us_percent_opt input").val());
+    });
 
     //update type
-    $('#usu_type_value').click(function () {
-        $('#usu_percent_opt').hide()
-        $('#usu_money_opt').show()
-        $('#usu_money_opt input').focus()
-        $('#edit_discount_upsell').val(formatDouble($('#usu_money_opt input').val()))
-    })
+    $("#usu_type_value").click(function () {
+        $("#usu_percent_opt").hide();
+        $("#usu_money_opt").show();
+        $("#usu_money_opt input").focus();
+        $("#edit_discount_upsell").val(formatDouble($("#usu_money_opt input").val()));
+    });
 
-    $('#usu_type_percent').click(function () {
-        $('#usu_money_opt').hide()
-        $('#usu_percent_opt').show()
-        $('#usu_percent_opt input').focus()
-        $('#edit_discount_upsell').val($('#usu_percent_opt input').val())
-    })
-    $('#usu_money_opt input').change(function () {
-        $('#edit_discount_upsell').val(formatDouble($('#usu_money_opt input').val()))
+    $("#usu_type_percent").click(function () {
+        $("#usu_money_opt").hide();
+        $("#usu_percent_opt").show();
+        $("#usu_percent_opt input").focus();
+        $("#edit_discount_upsell").val($("#usu_percent_opt input").val());
+    });
+    $("#usu_money_opt input").change(function () {
+        $("#edit_discount_upsell").val(formatDouble($("#usu_money_opt input").val()));
         // .replace('.','').replace(',','.')
-    })
-    $('#usu_percent_opt input').change(function () {
-        $('#edit_discount_upsell').val($('#usu_percent_opt input').val())
-    })
-
-
-    ClassicEditor.create(document.querySelector("#description_config"), {
-        language: "pt-br",
-        uiColor: "#F1F4F5",
-        toolbar: ["heading", "|", "bold", "italic", "|", "link", "|", "undo", "redo"],
-    })
-        .then((newEditor) => {
-            descriptionconfig = newEditor;
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    });
+    $("#usu_percent_opt input").change(function () {
+        $("#edit_discount_upsell").val($("#usu_percent_opt input").val());
+    });
 
     $(".tab_upsell").on("click", function () {
         loadUpsell();
@@ -236,20 +221,22 @@ $(document).ready(function () {
             url: "/api/projectupsellrule/" + upsellId + "/edit",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            }, error: function (response) {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function (response) {
                 errorAjaxResponse(response);
-            }, success: function (response) {
+            },
+            success: function (response) {
                 let upsell = response.data;
                 $("#edit_description_upsell").val(`${upsell.description}`);
 
                 if (upsell.type == 1) {
-                    $("#usu_type_value").trigger('click');
+                    $("#usu_type_value").trigger("click");
                     $("#usu_money_opt input").val(formatMoney(upsell.discount));
                 } else {
                     $("#usu_percent_opt input").val(upsell.discount);
-                    $("#usu_type_percent").trigger('click');
+                    $("#usu_type_percent").trigger("click");
                 }
                 $("#edit_discount_upsell").val(`${upsell.discount}`);
 
@@ -409,10 +396,10 @@ $(document).ready(function () {
                 $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}` : `Valor sem desconto`}`);
                 if (upsell.discount != 0) {
                     if (upsell.type == 1) {
-                        $(".upsell-discount").html(formatMoney(upsell.discount))
-                        $(".upsell-discount").prepend('R$')
+                        $(".upsell-discount").html(formatMoney(upsell.discount));
+                        $(".upsell-discount").prepend("R$");
                     } else {
-                        $(".upsell-discount").append('%')
+                        $(".upsell-discount").append("%");
                     }
                 }
 
@@ -638,8 +625,6 @@ $(document).ready(function () {
             success: function success(response) {
                 let upsellConfig = response.data;
                 $("#header_config").val(`${upsellConfig.header}`);
-                $("#title_config").val(`${upsellConfig.title}`);
-                descriptionconfig.setData(`${upsellConfig.description ?? " "}`);
                 $("#countdown_time_config").val(`${upsellConfig.countdown_time}`);
 
                 if (upsellConfig.countdown_flag) {
@@ -648,13 +633,14 @@ $(document).ready(function () {
                     $("#countdown_flag").prop("checked", false);
                 }
                 if (upsellConfig.has_upsell) {
-                    $(".btn-view-config").show();
+                    $("#btn-preview-config").prop("href", upsellConfig.checkout_url).show();
                 }
 
                 $("#modal_config_upsell").modal("show");
             },
         });
     });
+
     $(document).on("click", ".bt-upsell-config-update", function (event) {
         event.preventDefault();
         if ($("#countdown_flag").is(":checked") && $("#countdown_time_config").val() == "") {
@@ -669,14 +655,10 @@ $(document).ready(function () {
 
         let form_data = new FormData(document.getElementById("form_config_upsell"));
         let header = $("#header_config").val();
-        let title = $("#title_config").val();
-        let description = descriptionconfig.getData();
         let countdownTime = $("#countdown_time_config").val();
         let countDownFlag = $("#countdown_flag").val();
 
         form_data.set("header", header);
-        form_data.set("title", title);
-        form_data.set("description", description);
         form_data.set("countdown_time", countdownTime);
         form_data.set("countdown_flag", countDownFlag);
 
@@ -700,130 +682,4 @@ $(document).ready(function () {
             },
         });
     });
-    $(document).on("click", ".btn-return-to-config", function (event) {
-        event.preventDefault();
-        $("#modal-view-upsell-config").modal("hide");
-        $("#modal_config_upsell").modal("show");
-    });
-    $(document).on("click", ".btn-view-config", function (event) {
-        event.preventDefault();
-        $("#modal_config_upsell").modal("hide");
-
-        $.ajax({
-            method: "POST",
-            url: "/api/projectupsellconfig/previewupsell",
-            dataType: "json",
-            data: {
-                project_id: projectId,
-            },
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                let upsell = response.data;
-
-                $("#div-upsell-products").html("");
-
-                $("#upsell-header").html(upsell.header);
-                $("#upsell-title").html(upsell.title);
-                $("#upsell-description").html(upsell.description);
-
-                if (upsell.countdown_flag) {
-                    $("#timer_upsell").show();
-                    startCountdown(upsell.countdown_time);
-                } else {
-                    $("#timer_upsell").hide();
-                }
-
-                let data = "";
-
-                for (let key in upsell.plans) {
-                    let plan = upsell.plans[key];
-                    data += `<div class="product-info">
-                                <div class="d-flex flex-column">`;
-                    for (let product of plan.products) {
-                        let firstVariant = Object.keys(product)[0];
-                        data += `<div class="product-row">
-                                    <img src="${product[firstVariant].photo}" class="product-img">
-                                    <div class="ml-4">
-                                        <h3>${product[firstVariant].amount}x ${product[firstVariant].name}</h3>`;
-                        if (Object.keys(product).length > 1) {
-                            data += `<select class="product-variant">`;
-                            for (let i in product) {
-                                data += `<option value="${i}">${product[i].description}</option>`;
-                            }
-                            data += `</select>`;
-                        } else {
-                            data += `<span class="text-muted">${product[firstVariant].description}</span>`;
-                        }
-                        data += `</div>
-                             </div>`;
-                    }
-                    data += `</div>
-                                <div class="d-flex flex-column mt-4 mt-md-0">`;
-                    if (plan.discount) {
-                        data += `<span class="original-price line-through">R$ ${plan.original_price}</span>
-                                                 <div class="d-flex mb-2">
-                                                     <span class="price font-30 mr-1" style="line-height: .8">R$ ${plan.price}</span>
-                                                     <span class="discount text-success font-weight-bold">${plan.discount}% OFF</span>
-                                                 </div>`;
-                    }
-
-                    if (!isEmpty(plan.installments)) {
-                        data += `<div class="form-group">
-                                    <select class="installments">`;
-                        for (let installment of plan.installments) {
-                            data += `<option value="${installment["amount"]}">${installment["amount"]}X DE R$ ${installment["value"]}</option>`;
-                        }
-                        data += `</select>
-                             </div>`;
-                    } else {
-                        data += `<h2 class="text-primary mb-md-4"><b>R$ ${plan.price}</b></h2>`;
-                    }
-                    data += `<button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
-                         </div>
-                    </div>`;
-
-                    if (parseInt(key) !== upsell.plans.length - 1) {
-                        data += `<hr class="plan-separator">`;
-                    }
-                }
-
-                $("#div-upsell-products").append(data);
-
-                $("#modal-view-upsell-config").modal("show");
-            },
-        });
-    });
-
-    function setIntervalAndExecute(fn, t) {
-        fn();
-        return setInterval(fn, t);
-    }
-
-    function startCountdown(countdownTime) {
-        let countdown = new Date().getTime() + countdownTime * 60000;
-
-        if (countdownInterval !== null) {
-            clearInterval(countdownInterval);
-        }
-
-        countdownInterval = setIntervalAndExecute(() => {
-            let now = new Date().getTime();
-            let distance = countdown - now;
-
-            if (distance > 0) {
-                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                $("#minutes").text(minutes.toString().padStart(2, "0"));
-                $("#seconds").text(seconds.toString().padStart(2, "0"));
-            } else {
-                countdown = new Date().getTime() + countdownTime * 60000;
-            }
-        }, 1000);
-    }
 });

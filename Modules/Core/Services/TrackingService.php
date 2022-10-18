@@ -375,9 +375,6 @@ class TrackingService
             $companyId = DB::table('users')->select('company_default')->where('id',$userId)->first()->company_default;
         }
 
-        $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
-        $filters["project"] = is_array($filters["project"]) ? implode(",", $filters["project"]) : $filters["project"];
-
         if (!empty($filters["transaction_status"])) {
             $filters["transaction_status"] = is_array($filters["transaction_status"])
                 ? implode(",", $filters["transaction_status"])
@@ -390,9 +387,13 @@ class TrackingService
             $saleStatus = [Sale::STATUS_APPROVED, Sale::STATUS_IN_DISPUTE];
 
             //tipo da data e periodo obrigatorio
-            $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
+            if (!empty($filters["date_updated"])) {
+                $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
+
+                $join->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"]);
+            }
+
             $join
-                ->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
                 ->whereIn("s.status", $saleStatus)
                 ->where("s.owner_id", $userId);
 
@@ -401,7 +402,7 @@ class TrackingService
                 $join->where("s.id", $saleId);
             }
 
-            $projects = $filters['project'] ? explode(",", $filters["project"]):null;
+            $projects = !empty($filters['project']) ? explode(",", $filters["project"]) : null;
 
             $tokens = [];
             $projectIds = [];
@@ -488,6 +489,8 @@ class TrackingService
         });
 
         if (!empty($filters["status"])) {
+            $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
+
             $productPlanSales->where(function ($where) use ($filters) {
                 $filterStatus = explode(",", $filters["status"]);
 

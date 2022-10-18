@@ -22,8 +22,6 @@ class ProjectUpsellConfig extends Model
     protected $fillable = [
         "project_id",
         "header",
-        "title",
-        "description",
         "countdown_time",
         "countdown_flag",
         "created_at",
