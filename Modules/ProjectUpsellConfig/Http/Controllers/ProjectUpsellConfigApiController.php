@@ -34,6 +34,7 @@ class ProjectUpsellConfigApiController extends Controller
                 if (FoxUtils::isProduction()) {
                     $domain = Domain::select("name")
                         ->where("status", Domain::STATUS_APPROVED)
+                        ->where('project_id', $projectId)
                         ->orderByDesc("id")
                         ->first();
 
