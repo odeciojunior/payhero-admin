@@ -178,6 +178,11 @@ class FoxUtils
         return current(Hashids::decode($hash));
     }
 
+    public static function encodeHash($hash)
+    {
+        return Hashids::encode($hash);
+    }
+
     /**
      * @param $dateString
      * @return bool|mixed

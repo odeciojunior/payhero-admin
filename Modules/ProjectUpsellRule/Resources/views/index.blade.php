@@ -108,7 +108,7 @@
      aria-labelledby="exampleModalTitle"
      role="dialog"
      style='overflow-y: scroll;'>
-    <div class="modal-dialog modal-lg d-flex justify-content-center">
+    <div class="modal-dialog d-flex justify-content-center">
         <div class="modal-content"
              id="conteudo_modal_add">
             <div class="modal-header mb-0">
@@ -200,36 +200,6 @@
                         style="width: 20%;">
                     <b class="mr-2">Excluir </b>
                     <span class="o-bin-1"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- End Modal --}}
-
-{{-- Modal visualizar configurações do upsell --}}
-<div class="modal fade example-modal-lg"
-     id="modal-view-upsell-config"
-     aria-hidden="true"
-     aria-labelledby="exampleModalTitle"
-     role="dialog"
-     style='overflow-y:auto;'>
-    <div class="modal-dialog modal-lg d-flex justify-content-center">
-        <div class="modal-content"
-             id="">
-            <div class="modal-header border-bottom d-flex justify-content-center">
-                <h4 class="modal-title"
-                    id="modal-title"
-                    style="margin-left: 0;">Upsell no checkout</h4>
-            </div>
-            <div class="pt-0 px-0 modal_upsell_body">
-                @include('projectupsellconfig::previewupsellconfig')
-            </div>
-            <div class="modal-footer text-right pt-20 border-top">
-                <button class='btn btn-primary btn-sm btn-return-to-config'>
-                    <i class="icon wb-settings"
-                       aria-hidden="true"></i>
-                    Voltar para configurações
                 </button>
             </div>
         </div>
