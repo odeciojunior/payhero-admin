@@ -160,8 +160,7 @@
             </td>
             <td style="width: 50%; text-align: right">
                 @if (!empty($checkoutConfigs->checkout_logo))
-                    <img src="{{ $checkoutConfigs->checkout_logo }}"
-                         style="max-width: 160px; max-height: 100px">
+                <img src="{{ $checkoutConfigs->checkout_logo }}" style="max-width: 160px; max-height: 100px">
                 @endif
             </td>
         </tr>
@@ -171,9 +170,7 @@
                     <table>
                         <tr>
                             <td class="box-icon">
-                                <img src="build/global/img/estorno-money.svg"
-                                     class="icon"
-                                     alt="icon money">
+                                <img src="build/global/img/estorno-money.svg" class="icon" alt="icon money">
                             </td>
                             <td>
                                 <div class="tit">Valor estornado</div>
@@ -190,15 +187,14 @@
                     <table>
                         <tr>
                             <td class="box-icon">
-                                <img src="build/global/img/estorno-calendar.svg"
-                                     class="icon"
-                                     alt="icon calendar">
+                                <img src="build/global/img/estorno-calendar.svg" class="icon" alt="icon calendar">
                             </td>
                             <td>
                                 <div class="tit">Realizado em</div>
                                 <div class="val">
                                     {{ \Illuminate\Support\Carbon::parse($refundDate)->format('d/m/Y') }} às
-                                    {{ \Illuminate\Support\Carbon::parse($refundDate)->format('H:i') }}</div>
+                                    {{ \Illuminate\Support\Carbon::parse($refundDate)->format('H:i') }}
+                                </div>
                             </td>
                         </tr>
                     </table>
@@ -225,7 +221,7 @@
                         Produto(s):
                     </span>
                     @foreach ($productsPlansSales as $item)
-                        <br>{{ \Illuminate\Support\Str::limit($item->name, 40) }} ({{ $item->amount }}x)
+                    <br>{{ \Illuminate\Support\Str::limit($item->name, 40) }} ({{ $item->amount }}x)
                     @endforeach
                 </div>
 
@@ -249,20 +245,20 @@
                 <div class="content">
                     <span class="bold">
                         @if ($transaction->sale->payment_method == 1)
-                            Cartão de crédito
+                        Cartão de crédito
                         @elseif ($transaction->sale->payment_method == 2)
-                            Boleto
+                        Boleto
                         @elseif ($transaction->sale->payment_method == 4)
-                            PIX
+                        PIX
                         @endif
 
                         @if ($transaction->sale->payment_method == 1 && $transaction->flag)
-                            {{ $transaction->flag }}
+                        {{ $transaction->flag }}
                         @endif
                     </span>
                     <br />
                     @if ($transaction->sale->payment_method == 1 && $saleInfo->last_four_digits)
-                        Final {{ $saleInfo->last_four_digits }}
+                    Final {{ $saleInfo->last_four_digits }}
                     @endif
                 </div>
 
@@ -270,44 +266,28 @@
             </td>
             <td style="vertical-align: top">
                 <div class="bg-azul">
-                    <div id="linha1"><img src="build/global/img/estorno-shape.svg"
-                             alt="icon estorno"></div>
-                    <div id="linha2"
-                         class="head">Sua compra foi estornada, <span>{{ $saleInfo->firstname }}</span></div>
-                    <div id="linha3"
-                         class="head">Esperamos que seu problema tenha sido solucionado e pedimos desculpas por
+                    <div id="linha1"><img src="build/global/img/estorno-shape.svg" alt="icon estorno"></div>
+                    <div id="linha2" class="head">Sua compra foi estornada, <span>{{ $saleInfo->firstname }}</span></div>
+                    <div id="linha3" class="head">Esperamos que seu problema tenha sido solucionado e pedimos desculpas por
                         qualquer transtorno.</div>
-                    <div id="linha4"
-                         class="head">Lembrando que você sempre pode voltar a conversar conosco através do <a
-                           href="mailto:help@cloudfox.net">help@cloudfox.net</a></div>
+                    <div id="linha4" class="head">Lembrando que você sempre pode voltar a conversar conosco através do <a href="mailto:help@cloudfox.net">help@cloudfox.net</a></div>
                 </div>
             </td>
         </tr>
         <tr>
-            <td colspan="2"
-                style="text-align: right">
+            <td colspan="2" style="text-align: right">
                 <br>
                 <div style="font-size: 14px;">Com a tecnologia &nbsp; &nbsp;
                     @if ($transaction->gateway_id == 8 || $transaction->gateway_id == 20)
-                        <img src="build/global/img/adquirintes/asaas.svg"
-                             alt="Asaas Logo"
-                             class="gateway-logo">
+                    <img src="build/global/img/gateways/asaas.svg" alt="Asaas Logo" class="gateway-logo">
                     @elseif($transaction->gateway_id == 18 || $transaction->gateway_id == 19)
-                        <img src="build/global/img/adquirintes/gerencianet.svg"
-                             alt="Gerencianet Logo"
-                             class="gateway-logo">
+                    <img src="build/global/img/gateways/gerencianet.svg" alt="Gerencianet Logo" class="gateway-logo">
                     @elseif($transaction->gateway_id == 15 || $transaction->gateway_id == 14)
-                        <img src="build/global/img/getnet-logo.png"
-                             alt="Getnet Logo"
-                             class="gateway-logo">
+                    <img src="build/global/img/gateways/getnet.png" alt="Getnet Logo" class="gateway-logo">
                     @elseif($transaction->gateway_id == 5 || $transaction->gateway_id == 6)
-                        <img src="build/global/img/adquirintes/cielo.svg"
-                             alt="Cielo Logo"
-                             class="gateway-logo">
-                    @elseif($transaction->gateway_id == 21 || $transaction->gateway_id == 22)
-                        <img src="build/global/img/vega-logo.png"
-                             alt="Vega Logo"
-                             class="gateway-logo">
+                    <img src="build/global/img/gateways/cielo.svg" alt="Cielo Logo" class="gateway-logo">
+                    @elseif(in_array($transaction->gateway_id, [21, 22, 23, 24, 25, 26]))
+                    <img src="build/global/img/gateways/vega.svg" alt="Vega Logo" class="gateway-logo">
                     @endif
                 </div>
             </td>
