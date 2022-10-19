@@ -555,8 +555,8 @@ $(() => {
                                 <div class="row" style="max-height: 35px;">`;
 
                     let save = `<div class="save-close buttons d-flex px-0" style="max-height: 35px;">
-                            <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none"></a>
-                            <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none; padding: 9px 9px 0px 9px !important">
+                            <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none; height:34px"></a>
+                            <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none; padding: 7px 7px 0px 9px !important; height:34px">
                                 &#x2715
                             </div>
                         </div>`;
@@ -577,11 +577,11 @@ $(() => {
                             ? `<div class="col-7" >
                             <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">
                             </div>
-                        <div class="edit-detail" style="text-align:right">
+                        <div class="edit-detail" style="text-align:right; margin-top: 3px">
                             <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
                                 <span class="text-right o-edit-1"></span>
                             </a>
-                            <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
+                            <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0; vertical-align: middle;">
                                 <span class="o-eye-1"></span>
                             </a>` +
                               save +
@@ -737,13 +737,13 @@ $(() => {
                     td.find(".input-tracking-code").removeClass("fake-label, border-danger");
 
                     let buttons = `
-                        <div class="edit-detail d-flex justify-content-between px-0 col-5">
+                        <div class="edit-detail" style="text-align:right; margin-top: 3px">
 
-                            <a class='tracking-edit pointer' title="Editar">
+                            <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
                                 <span class="text-right o-edit-1"></span>
                             </a>
 
-                            <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
+                            <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0; vertical-align: middle;">
                                 <span class="o-eye-1"></span>
                             </a>
                         </div>`;
