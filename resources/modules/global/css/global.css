@@ -3595,7 +3595,7 @@ tbody td {
     background-color: #ffffff;
 }
 .ellipsis-text{
-    max-width: 158px;
+    max-width: 115px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

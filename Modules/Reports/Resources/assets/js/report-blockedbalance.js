@@ -205,9 +205,9 @@ window.atualizar = function (link = null) {
                                 </td>
 
                                 <td class="text-left ellipsis-text">
-                                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.reason_blocked}">
+                                    <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.reason_blocked}">
                                         ${value.reason_blocked}
-                                    </span>
+                                    </div>
                                 </td>
 
                             </tr>`

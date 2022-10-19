@@ -585,18 +585,18 @@ $(document).ready(function () {
 
                                     <td class="text-left">
 
-                                        <span class="fullInformation-pending ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}">
+                                        <div class="fullInformation-pending ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}">
                                             ${value.project}
-                                        </span>
+                                        </div>
 
                                         <div class="container-tooltips-pending"></div>
                                     </td>
 
                                     <td class="text-left">
 
-                                        <span class="fullInformation-pending ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                        <div class="fullInformation-pending ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
                                             ${value.client}
-                                        </span>
+                                        </div>
 
                                     </td>
 
