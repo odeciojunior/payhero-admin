@@ -163,7 +163,7 @@ class WithdrawalsApiController
     public function checkAllowed(): JsonResponse
     {
         try {
-            $user = User::find(auth()->user()->account_owner_id);
+            $user = User::find(auth()->user()->getAccountOwnerId());
             return response()->json([
                 "allowed" => $user->status != (new User())->present()->getStatus("withdrawal blocked"),
             ]);

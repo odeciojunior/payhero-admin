@@ -37,5 +37,6 @@ class GenericCommand extends Command
      */
     public function handle()
     {
+        dd(date('z'));
     }
 }
