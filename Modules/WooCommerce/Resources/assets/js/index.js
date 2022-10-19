@@ -40,12 +40,13 @@ $(document).ready(function () {
         error: function error(response) {
             $("#modal-content").hide();
             errorAjaxResponse(response);
+            loadingOnScreenRemove();
         },
         success: function success(response) {
             create(response.data);
 
             htmlAlertWooCommerce();
-            removeLoadingSkeletonCards();
+            loadingOnScreenRemove();
         },
     });
 
@@ -100,7 +101,7 @@ $(document).ready(function () {
 
                             <svg
                             class="open-cfg" app="${data.id}"
-                            data-img="${!data.project_photo ? "/build/global/img/produto.png" : data.project_photo}"
+                            data-img="${!data.project_photo ? "/build/global/img/produto.svg" : data.project_photo}"
                             data-name="${data.project_name}"
                             style="position:absolute; top:8px; right:8px; cursor:pointer"
                             width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -119,7 +120,7 @@ $(document).ready(function () {
 
 
                                 <img class="card-img-top img-fluid w-full" src="${
-                                    !data.project_photo ? "/build/global/img/produto.png" : data.project_photo
+                                    !data.project_photo ? "/build/global/img/produto.svg" : data.project_photo
                                 }"  alt="Photo Project"/>
                                 <div class="card-body">
                                     <div class='row'>
@@ -233,7 +234,7 @@ $(document).ready(function () {
         function imageFound() {}
 
         function imageNotFound() {
-            img = "/build/global/img/produto.png";
+            img = "/build/global/img/produto.svg";
             $("#project-img").attr("src", img);
         }
 

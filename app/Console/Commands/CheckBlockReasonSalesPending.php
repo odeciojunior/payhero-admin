@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Services\Gateways\VegaService;
 
 class CheckBlockReasonSalesPending extends Command
 {
@@ -48,13 +48,13 @@ class CheckBlockReasonSalesPending extends Command
                 ->where("type", Transaction::TYPE_PRODUCER)
                 ->first();
 
-            $safe2payService = new Safe2PayService();
-            $safe2payService->setCompany($transaction->company);
+            $vegaService = new VegaService();
+            $vegaService->setCompany($transaction->company);
 
-            $availableBalance = $safe2payService->getAvailableBalance();
-            $pendingBalance = $safe2payService->getPendingBalance();
+            $availableBalance = $vegaService->getAvailableBalance();
+            $pendingBalance = $vegaService->getPendingBalance();
 
-            (new CompanyService())->applyBlockedBalance($safe2payService, $availableBalance, $pendingBalance);
+            (new CompanyService())->applyBlockedBalance($vegaService, $availableBalance, $pendingBalance);
 
             if ($availableBalance + $pendingBalance >= $transaction->value) {
                 $pendingBlockSale->update(["status" => BlockReasonSale::STATUS_BLOCKED]);

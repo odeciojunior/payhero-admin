@@ -988,7 +988,7 @@ class ReportFinanceService
 
             $cashbacks = Cashback::with('sale')
                         ->join('sales', 'sales.id', 'cashbacks.sale_id')
-                        ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
+                        ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
                         ->where('company_id', $companyId)
                         ->where('sales.api_flag', $showFromApi)
                         ->where($showFromApi ? 'sales.api_token_id' : 'sales.project_id', $projectId);

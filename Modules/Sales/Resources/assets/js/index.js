@@ -339,18 +339,28 @@ function salesResume() {
             if (response.total_sales) {
                 $("#total-sales, #commission, #total").text("");
                 $("#total-sales").html(`<span class="font-size-30 bold"> ${response.total_sales} </span>`);
-                $("#commission").html(
-                    `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.commission} </span>`
-                );
-                if (`${response.total}`.length >= 13) {
-                    $("#total").html(
-                        `<span style="color:#959595">R$</span><span class="font-size-30 bold">&nbsp;</span><span style="font-size:27px !important" class="bold">${response.total}</span>`
-                    );
-                } else {
-                    $("#total").html(
-                        `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.total} </span>`
-                    );
+
+                let font_commission_style = "";
+                if (`${response.commission}`.length == 12) {
+                    font_commission_style = "font-size: 27px !important;";
+                } else if (`${response.commission}`.length > 12) {
+                    font_commission_style = "font-size: 25px !important;";
                 }
+                $("#commission").html(
+                    `<span style="color:#959595">R$</span> <span class="font-size-30 bold" style="
+                        ${font_commission_style} "> ${response.commission} </span>`
+                );
+
+                let font_total_style = "";
+                if (`${response.total}`.length == 12) {
+                    font_total_style = "font-size: 27px !important;";
+                } else if (`${response.total}`.length > 12) {
+                    font_total_style = "font-size: 25px !important;";
+                }
+                $("#total").html(
+                    `<span style="color:#959595">R$</span> <span class="font-size-30 bold" style="
+                        ${font_total_style} "> ${response.total} </span>`
+                );
             }
         },
     });
@@ -575,7 +585,6 @@ $(document).ready(function () {
         elementButton = $("#bt_filtro");
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr("block_search"));
             atualizar();
         }
     }

@@ -33,7 +33,7 @@ class AutomaticTicketCreation extends Command
             "sales.customer_id",
             DB::raw("sum(transactions.value) as transaction_value"),
             "transactions.company_id",
-            "companies.safe2pay_balance",
+            "companies.vega_balance",
         ])
             ->leftJoin("trackings", "trackings.sale_id", "=", "sales.id")
             ->leftJoin("tickets", "tickets.sale_id", "=", "sales.id")
@@ -51,7 +51,7 @@ class AutomaticTicketCreation extends Command
             ->whereNull("trackings.id")
             ->whereNull("tickets.id")
             ->whereNotNull("sales.delivery_id")
-            ->groupBy("sales.id", "sales.customer_id", "transactions.company_id", "companies.safe2pay_balance");
+            ->groupBy("sales.id", "sales.customer_id", "transactions.company_id", "companies.vega_balance");
 
         $total = $sales->count();
         $bar = $this->getOutput()->createProgressBar($total);
@@ -100,7 +100,7 @@ class AutomaticTicketCreation extends Command
 
         $company = new Company([
             "id" => $sale->company_id,
-            "safe2pay_balance" => $sale->safe2pay_balance,
+            "vega_balance" => $sale->vega_balance,
         ]);
 
         $safe2payService->setCompany($company);

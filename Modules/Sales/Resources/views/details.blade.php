@@ -244,6 +244,7 @@
                              aria-controls="taxas-detail">
                             <small data-toggle="tooltip"
                                    data-placement="top"
+                                   data-container="#modal_detalhes"
                                    title="Clique para obter mais detalhes">Taxa detalhada</small>
                         </div>
 

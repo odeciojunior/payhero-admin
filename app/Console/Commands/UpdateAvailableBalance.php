@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
+use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 
 class UpdateAvailableBalance extends Command
@@ -26,11 +27,12 @@ class UpdateAvailableBalance extends Command
     protected $description = "Command description";
 
     private $defaultGateways = [
-        AsaasService::class,
-        //CieloService::class,
-        GetnetService::class,
-        GerencianetService::class,
+        IuguService::class,
         Safe2PayService::class,
+        AsaasService::class,
+        GerencianetService::class,
+        GetnetService::class,
+        //CieloService::class,
     ];
 
     /**

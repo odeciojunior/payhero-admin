@@ -42,6 +42,9 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 verifyCompanies(response.data);
+
+                if (loading == "y") loadingOnScreenRemove();
+                else loadOnAny("#content", true);
             },
         });
     }
@@ -104,7 +107,7 @@ $(document).ready(function () {
 
                             <svg
                             class="open-cfg" app="${data.id}"
-                            data-img="${!data.project_photo ? "/build/global/img/produto.png" : data.project_photo}"
+                            data-img="${!data.project_photo ? "/build/global/img/produto.svg" : data.project_photo}"
                             data-name="${data.project_name}"
                             data-token="${data.token}"
                             data-skip="${shopifyIntegration.skip_to_cart}"
@@ -122,9 +125,9 @@ $(document).ready(function () {
                                 </defs>
                                 <title>Configurações da Integração</title>
                             </svg>
-                                <img class="card-img-top img-fluid w-full" style="height: 297px;" onerror="this.src = '/build/global/img/produto.png'" src="${
+                                <img class="card-img-top img-fluid w-full" style="height: 297px;" onerror="this.src = '/build/global/img/produto.svg'" src="${
                                     !shopifyIntegration.project_photo
-                                        ? "/build/global/img/produto.png"
+                                        ? "/build/global/img/produto.svg"
                                         : shopifyIntegration.project_photo
                                 }"  alt="Photo Project"/>
                                 <div class="card-body">

@@ -1249,17 +1249,30 @@ function verifyDocumentPending() {
 
                 $(".new-register-open-modal-btn")
                     .find(".count")
-                    .html(" (" + count + (count > 1 ? " itens pendentes" : " item pendente") + ")")
-                    .promise()
-                    .done(function () {
-                        $(".alert-pendings").css("display", "inline-flex");
+                    .html(
+                        " (" +
+                            count +
+                            (count > 1
+                                ? " itens pendentes"
+                                : " item pendente") +
+                            ")"
+                    ).promise().done(function(){
+                        $('.alert-pendings').css('display','inline-flex')
                     });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
 
-                let verifyAccount = JSON.parse(localStorage.getItem("verifyAccount"));
-                if (verifyAccount && verifyAccount.account.status !== "approved") {
-                    localStorage.setItem("verifyAccount", JSON.stringify(response.data));
+                let verifyAccount = JSON.parse(
+                    localStorage.getItem("verifyAccount")
+                );
+                if (
+                    verifyAccount &&
+                    verifyAccount.user_status !== "approved"
+                ) {
+                    localStorage.setItem(
+                        "verifyAccount",
+                        JSON.stringify(response.data)
+                    );
                 }
             }
         },
@@ -2262,7 +2275,7 @@ function getCompaniesAndProjects(removeLoadingFunction = null) {
                 if (removeLoadingFunction) {
                     removeLoadingFunction();
                 }
-                // loadingOnScreenRemove();
+                loadingOnScreenRemove();
             }
         },
     });
