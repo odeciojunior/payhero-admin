@@ -405,7 +405,10 @@ class TrackingService
                 $join->where("s.id", $saleId);
             }
 
-            $projects = !empty($filters["project"]) ? explode(",", $filters["project"]) : null;
+            $projects = null;
+            if (!empty($filters["project"]) && $filters["project"][0] != "") {
+                explode(",", $filters["project"]);
+            }
 
             $tokens = [];
             $projectIds = [];

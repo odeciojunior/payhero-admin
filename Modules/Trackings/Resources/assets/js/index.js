@@ -22,10 +22,10 @@ const statusEnum = {
 //ICONES DO STATUS //
 const systemStatus = {
     1: "",
-    2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" style="margin-top: -8px;" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
-    3: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" style="margin-top: -8px;" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`,
-    4: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" style="margin-top: -8px;" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`,
-    5: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" style="margin-top: -8px;" title="Já existe uma venda com esse código de rastreio cadastrado">report_problem</i>`,
+    2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
+    3: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`,
+    4: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`,
+    5: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="Já existe uma venda com esse código de rastreio cadastrado">report_problem</i>`,
     "": "",
 };
 
@@ -305,7 +305,7 @@ $(() => {
     //CRIANDO GRAFICO
     let myChart = null;
     function inicializeChart(colors, dataValues) {
-        dataValues = dataValues.map((n) => (n ? n.split(".").join("") : "0"));
+        if (dataValues) dataValues = dataValues.map((n) => (n ? n.split(".").join("") : "0"));
         $("#myChart").show();
         if (myChart !== null) {
             myChart.destroy();
@@ -582,7 +582,7 @@ $(() => {
                                 <span class="text-right o-edit-1"></span>
                             </a>
                             <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0; vertical-align: middle;">
-                                <span class="o-eye-1"></span>
+                                <span class="o-eye-1" style="padding-left: 10px !important"></span>
                             </a>` +
                               save +
                               `
