@@ -515,3 +515,10 @@ td.table-title {
     border-radius: 0px 8px 8px 0px;
     background: #f4f4f4;
 }
+
+@media (min-width: 768px) {
+    .table td:nth-child(2) {
+        max-width: 106px;
+    }
+}
+

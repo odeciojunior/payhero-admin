@@ -221,13 +221,13 @@
                         <thead>
                             <tr class="">
                                 <td class="">Transação</td>
-                                <td class="" style="min-width: 200px; text-align:left">Empresa</td>
+                                <td class="" style="text-align:left">Empresa</td>
                                 <td class="">Compra</td>
                                 <td class=" text-center" style="min-width: 100px;">Status</td>
                                 <td class="">Prazo</td>
                                 <td class="">Motivo</td>
                                 {{-- <td class="">Valor</td> --}}
-                                <td class="" style="min-width: 100px;"></td>
+                                <td class=""></td>
                             </tr>
                         </thead>
                         <tbody id="chargebacks-table-data" img-empty="{!! mix('build/global/img/contestacoes.svg') !!}">
@@ -237,7 +237,7 @@
                 </div>
             </div>
             <div id="pagination-container" class="row no-gutters justify-content-center justify-content-md-end">
-                <ul id="pagination" class="pagination-style">
+                <ul id="pagination" class="pagination-style mt-10">
                     {{-- js carrega... --}}
                 </ul>
             </div>

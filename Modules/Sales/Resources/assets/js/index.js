@@ -202,30 +202,24 @@ function atualizar(link = null) {
                             </td>
 
                             <td>
-                                <span class="container-tooltips" data-toggle="tooltip" data-placement="top" title="${value.product}">
-
-                                    <div class="fullInformation ellipsis-text">
-                                        ${value.product}
-                                    </div>
-
-                                </span>
+                                <div class="m-auto fullInformation-sales ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.product}">
+                                    ${value.product}
+                                </div>
 
                                 ${value.affiliate != null && value.user_sale_type == "producer" ? ` <br> <small class="subdescription font-size-12"> (Afiliado: ${value.affiliate}) </small>` : ""}
 
-                                <small class="subdescription font-size-12">
+                                <small class="fullInformation-sales subdescription font-size-12" data-toggle="tooltip" data-placement="top" title="${value.project}">
                                     ${value.project}
                                 </small>
+
+                                <div class="container-tooltips-sales"></div>
                             </td>
 
                             <td class='d-none client-collumn'>
 
-                                <span class="container-tooltips" data-toggle="tooltip" data-placement="top" title="${value.client}">
-
-                                    <div class="fullInformation ellipsis-text">
-                                        ${value.client}
-                                    </div>
-
-                                </span>
+                                <div class="fullInformation-sales ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                    ${value.client}
+                                </div>
 
                             </td>
 
@@ -250,8 +244,8 @@ function atualizar(link = null) {
                                 ${end_date}
                             </td>
 
-                            <td class="text-center text-md-right text-nowrap commission-fweight ${value.status_translate === "Aprovado" ? "approved-value" : ""}" >
-                                ${cashback ? cashback : `${value.total_paid}<br>`}
+                            <td class="text-center text-md-right text-nowrap commission-fweight">
+                                ${cashback ? cashback : `<b>${value.total_paid}<b><br>`}
                             </td>
 
                             <td style="text-align: center">
@@ -265,19 +259,14 @@ function atualizar(link = null) {
 
                         </tr>`;
 
-                    $(function () {
-                        $('[data-toggle="tooltip"]').tooltip({
-                            container: ".page",
-                        });
-                    });
-
                     $("#dados_tabela").append(dados);
                 });
 
                 $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
                 $("#container-pagination").show();
-                $(".fullInformation").tooltip({ boundary: "scrollParent" });
+                $(".fullInformation-sales").tooltip({ container: ".container-tooltips-sales" });
+
             } else {
                 $("#dados_tabela").html(
                     "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +

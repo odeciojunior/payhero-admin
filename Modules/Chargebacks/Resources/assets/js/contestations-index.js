@@ -335,7 +335,7 @@ $(document).ready(function () {
 
 
 
-                            <td class="line-overflow" title="${value.customer}">
+                            <td class="" title="${value.customer}">
 
                                 <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.customer}">
                                     ${value.customer}
@@ -387,8 +387,8 @@ $(document).ready(function () {
                                 `;
 
                     dados += `
-                                <td class="line-overflow">
-                                <span class='fullInformation' data-toggle='tooltip' data-placement='top' title='"${value.reason}"'> ${value.reason} </span>
+                                <td class="">
+                                    <div class='fullInformation ellipsis-text' data-toggle='tooltip' data-placement='top' title='"${value.reason}"'> ${value.reason} </div>
 
                                 </td>
 

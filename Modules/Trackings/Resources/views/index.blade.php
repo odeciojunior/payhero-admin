@@ -407,7 +407,7 @@
             </div>
 
             <div id="pagination-container" class="row no-gutters justify-content-center justify-content-md-end mb-60" style="max-height: 45px;">
-                <ul id="pagination-trackings" class="pagination-style" style="margin-top:15px; position:relative; float:right;">
+                <ul id="pagination-trackings" class="pagination-style" style="margin-top:10px; position:relative; float:right;">
                     {{-- js carrega... --}}
                 </ul>
             </div>

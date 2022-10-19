@@ -98,3 +98,21 @@
     color: #2e85ec;
 }
 
+.table td:nth-child(3) {
+    max-width: none !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+@media (min-width: 768px) {
+    .table td:nth-child(3) {
+        max-width: 108px;
+    }
+}
+
+.table td:nth-child(6) {
+    max-width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -294,12 +294,12 @@ li.select2-selection__choice {
 
 @media (min-width: 768px) {
     .table td:nth-child(2) {
-        max-width: 220px;
+        max-width: 108px;
     }
 }
 
 .table td:nth-child(3) {
-    max-width: 220px;
+    max-width: 108px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

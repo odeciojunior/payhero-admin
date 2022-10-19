@@ -410,9 +410,11 @@ $(document).ready(function () {
                 </td>
 
                 <td>
-                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}" >
+
+                    <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}" >
                         ${value.project}
-                    </span>
+                    </div>
+
                     <div class="container-tooltips"></div>
 
                 </td>
@@ -420,11 +422,10 @@ $(document).ready(function () {
 
                 <td class="d-none client-collumn">
 
-                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}" >
-                        <div class="fullInformation ellipsis-text">
-                            ${value.client}
-                        </div>
-                    </span>
+                    <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                        ${value.client}
+                    </div>
+
                 </td>
 
 
@@ -510,21 +511,20 @@ $(document).ready(function () {
 
 
                 <td>
-                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}" >
+                    <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}" >
                         ${value.project}
-                    </span>
-                    <div class="container-tooltips"></div>
+                    </div>
 
+                    <div class="container-tooltips"></div>
                 </td>
 
 
                 <td class="d-none client-collumn">
 
-                    <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}" >
-                        <div class="fullInformation ellipsis-text">
-                            ${value.client}
-                        </div>
-                    </span>
+                    <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                        ${value.client}
+                    </div>
+
                 </td>
 
 
