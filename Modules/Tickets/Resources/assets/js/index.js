@@ -54,39 +54,36 @@ const messageLoader = {
 const attachments2send = [];
 
 $(() => {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $("#project-empty").hide();
         $("#project-not-empty").show();
-        loadOnAny('.tickets-container', false, ticketLoader);
-        $("#project-select").find('option').not(':first').remove()
-        $('#ticket-open .detail').html('');
-        $('#ticket-mediation .detail').html('');
-        $('#ticket-closed .detail').html('');
-        loadOnAny('.number', false, resumeLoader);
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                companiesAndProjects = data2
-                if(!isEmpty(data2.company_default_projects)){
+        loadOnAny(".tickets-container", false, ticketLoader);
+        $("#project-select").find("option").not(":first").remove();
+        $("#ticket-open .detail").html("");
+        $("#ticket-mediation .detail").html("");
+        $("#ticket-closed .detail").html("");
+        // loadOnAny(".number", false, resumeLoader);
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                companiesAndProjects = data2;
+                if (!isEmpty(data2.company_default_projects)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     for (let project of data2.company_default_projects) {
-                        $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+                        $("#project-select").append(`<option value="${project.id}">${project.name}</option>`);
                     }
-                    index()
-                    getResume()
-
-                }
-                else{
+                    index();
+                    getResume();
+                } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
-            })
-        })
-    })
+            });
+        });
+    });
 
-    var companiesAndProjects = ''
+    var companiesAndProjects = "";
 
     //fill the filter if the parameter comes in the url
     const params = new URLSearchParams(window.location.search);
@@ -94,38 +91,37 @@ $(() => {
         $("#filter-transaction").data("value", params.get("sale_id")).addClass("active");
         $("#input-transaction input").val(params.get("sale_id"));
     }
-    getCompaniesAndProjects().done( function (data){
-        companiesAndProjects = data
+    getCompaniesAndProjects().done(function (data) {
+        companiesAndProjects = data;
         getProjects();
     });
 
-    function getProjects(loading='y') {
-        if(loading=='y')
-            loadingOnScreen();
-        else{
-            $("#content").html("");
-        }
+    function getProjects(loading = "y") {
+        // if(loading=='y')
+        //     loadingOnScreen();
+        // else{
+        //     $("#content").html("");
+        // }
 
-        let hasProjects=false;
+        let hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
             $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                hasProjects=true;
+                hasProjects = true;
             });
         }
 
-        if(!hasProjects){
-            $('.page-header').hide();
+        if (!hasProjects) {
+            $(".page-header").hide();
             $("#project-not-empty").hide();
             $("#project-empty").show();
             loadingOnScreenRemove();
-        }
-        else{
+        } else {
             $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+                $("#project-select").append(`<option value="${project.id}">${project.name}</option>`);
             });
             index();
             getResume();
-            $('.page-header').show();
+            $(".page-header").show();
             $("#project-not-empty").show();
             $("#project-empty").hide();
             loadingOnScreenRemove();
@@ -203,7 +199,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets?' + getFilters(page) + '&company='+ $('.company-navbar').val(),
+            url: "/api/tickets?" + getFilters(page) + "&company=" + $(".company-navbar").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -253,7 +249,7 @@ $(() => {
 
     function show(id) {
         if (!isMobile()) {
-            loadOnAny(".tickets-grid-right", false, messageLoader);
+            // loadOnAny(".tickets-grid-right", false, messageLoader);
         }
         $.ajax({
             method: "GET",
@@ -366,11 +362,15 @@ $(() => {
         $("#ticket-mediation .detail").html("");
         $("#ticket-closed .detail").html("");
 
-        loadOnAny(".number", false, resumeLoader);
+        // loadOnAny(".number", false, resumeLoader);
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets/getvalues?project=' + $('#project-select').val() + "&company_id="+$('.company-navbar').val(),
+            url:
+                "/api/tickets/getvalues?project=" +
+                $("#project-select").val() +
+                "&company_id=" +
+                $(".company-navbar").val(),
             dataType: "json",
             data: {
                 date: $("#date_range").val(),

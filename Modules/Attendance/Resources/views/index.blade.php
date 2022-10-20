@@ -1,4 +1,4 @@
-@extends("layouts.master")
+@extends('layouts.master')
 
 @section('content')
     @push('css')
@@ -8,10 +8,12 @@
 
     <div class="page">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
-        <div class="page-header container pb-0" style="display: none !important;">
-            <div class="row align-items-center justify-content-between" style="min-height:50px">
+        <div class="page-header container pb-0"
+             style="display: none !important;">
+            <div class="row align-items-center justify-content-between"
+                 style="min-height:50px">
                 <div class="col-md-12">
                     <h1 class="page-title mt-25 mt-md-0">
                         Atendimento <span class="new-circle"></span>
@@ -45,6 +47,8 @@
                                  id="ticket-open">
                                 <span class="number"></span>
                                 <span class="detail"></span>
+                                <span class="skeleton-loading"
+                                      style="width: 100%; height: 30px;"></span>
                             </div>
                         </div>
                     </div>
@@ -164,7 +168,8 @@
                                         <select id="filter-status"
                                                 class="input-select">
                                             <option value=""
-                                                    selected>todos</option>
+                                                    selected>todos
+                                            </option>
                                             <option value="1">abertos</option>
                                             <option value="2">resolvidos</option>
                                             <option value="3">em mediação</option>

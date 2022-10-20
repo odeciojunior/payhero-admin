@@ -1155,7 +1155,8 @@ $(() => {
 
             //Tabela de produtos Tracking Code
             if ((value.sale_status == 1 || value.sale_status == 4) && sale.delivery_id != "") {
-                let data = `<tr>
+                if (value.type_enum == 1) {
+                    let data = `<tr>
                                 <td>
                                     <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
                                     <span class='small ellipsis'>${value.name}</span>
@@ -1170,8 +1171,9 @@ $(() => {
                                     <span class='small'>${value.tracking_created_at}</span>
                                 </td>
                             </tr>`;
-                $("#div_tracking_code").css("display", "block");
-                $("#data-tracking-products").append(data);
+                    $("#div_tracking_code").css("display", "block");
+                    $("#data-tracking-products").append(data);
+                }
             } else {
                 $("#div_tracking_code").css("display", "none");
             }
