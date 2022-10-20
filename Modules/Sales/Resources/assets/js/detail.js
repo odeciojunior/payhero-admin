@@ -1375,43 +1375,26 @@ $(() => {
             }
 
             //Tabela de produtos Tracking Code
-            if (
-                (value.sale_status == 1 || value.sale_status == 4) &&
-                sale.delivery_id != ""
-            ) {
-                let data = `
-                    <tr>
-                        <td class="d-flex align-items-center">
-
-                            <img src='${value.photo}'  width='35px;' style='border-radius:6px;'>
-
-                            <span class='ml-3 small ellipsis font-weight-bold font-size-14'>
-                                ${value.name}
-                            </span>
-                        </td>
-
-                        <td class="pl-2">
-                            <span class="small font-size-16">
-                                ${value.tracking_code}
-                            </span>
-                        </td>
-
-                        <td>
-                            ${status}
-                        </td>
-
-                        <td>
-                            <span class='small font-size-16'>
-                                ${value.tracking_created_at}
-                            </span>
-                        </td>
-
-                    </tr>`
-                    ;
-
-                $("#div_tracking_code").css("display", "block");
-                $("#data-tracking-products").append(data);
-
+            if ((value.sale_status == 1 || value.sale_status == 4) && sale.delivery_id != "") {
+                if (value.type_enum == 1) {
+                    let data = `<tr>
+                                <td>
+                                    <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
+                                    <span class='small ellipsis'>${value.name}</span>
+                                </td>
+                                <td>
+                                    <span class="small font-weight-bold">${value.tracking_code}</span>
+                                </td>
+                                <td>
+                                    <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
+                                </td>
+                                <td>
+                                    <span class='small'>${value.tracking_created_at}</span>
+                                </td>
+                            </tr>`;
+                    $("#div_tracking_code").css("display", "block");
+                    $("#data-tracking-products").append(data);
+                }
             } else {
                 $("#div_tracking_code").css("display", "none");
             }

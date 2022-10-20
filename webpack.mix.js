@@ -1216,7 +1216,7 @@ mix.copy("resources/modules/global/css/font", "public/build/global/css/font");
 
 // global / img
 mix.copy("resources/modules/global/img", "public/build/global/img");
-mix.copy("resources/modules/global/img/adquirintes", "public/build/global/img/adquirintes");
+mix.copy("resources/modules/global/img/gateways", "public/build/global/img/gateways");
 mix.copy("resources/modules/global/img/cartoes", "public/build/global/img/cartoes");
 mix.copy("resources/modules/global/img/custom-product", "public/build/global/img/custom-product");
 mix.copy("resources/modules/global/img/icon-red", "public/build/global/img/icon-red");

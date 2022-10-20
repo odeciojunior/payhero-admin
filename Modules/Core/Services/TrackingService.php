@@ -195,8 +195,8 @@ class TrackingService
                     "s.customer_id",
                     "s.upsell_id",
                 ])
-                ->join("sales as s", "products_plans_sales.sale_id", "=", "s.id")
-                ->find($tracking->product_plan_sale_id);
+                    ->join("sales as s", "products_plans_sales.sale_id", "=", "s.id")
+                    ->find($tracking->product_plan_sale_id);
 
                 $apiResult = $this->sendTrackingToApi($trackingCode);
                 $statusEnum = $this->parseStatusApi($apiResult->status ?? "");
@@ -263,7 +263,7 @@ class TrackingService
             }
 
             return false;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
 
             return null;
@@ -365,14 +365,19 @@ class TrackingService
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         if (!$userId) {
-            $userId = auth()->user()->getAccountOwnerId();
+            $userId = auth()
+                ->user()
+                ->getAccountOwnerId();
         }
 
         $companyId = Company::DEMO_ID;
-        if(!empty($filters['company'])){
-            $companyId = hashids_decode($filters['company']);
-        }else{
-            $companyId = DB::table('users')->select('company_default')->where('id',$userId)->first()->company_default;
+        if (!empty($filters["company"])) {
+            $companyId = hashids_decode($filters["company"]);
+        } else {
+            $companyId = DB::table("users")
+                ->select("company_default")
+                ->where("id", $userId)
+                ->first()->company_default;
         }
 
         if (!empty($filters["transaction_status"])) {
@@ -387,13 +392,10 @@ class TrackingService
             $saleStatus = [Sale::STATUS_APPROVED, Sale::STATUS_IN_DISPUTE];
 
             //tipo da data e periodo obrigatorio
-            if (!empty($filters["date_updated"])) {
-                $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-
-                $join->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"]);
-            }
+            $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
 
             $join
+                ->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
                 ->whereIn("s.status", $saleStatus)
                 ->where("s.owner_id", $userId);
 
@@ -402,40 +404,38 @@ class TrackingService
                 $join->where("s.id", $saleId);
             }
 
-            $projects = !empty($filters['project']) ? explode(",", $filters["project"]) : null;
+            $projects = null;
+            if (!empty($filters["project"]) && $filters["project"][0] != "") {
+                explode(",", $filters["project"]);
+            }
 
             $tokens = [];
             $projectIds = [];
 
-            if(!empty($projects)){
+            if (!empty($projects)) {
                 foreach ($projects as $project) {
-                    if(str_starts_with($project,'TOKEN')){
-                        array_push($tokens, hashids_decode(str_replace('TOKEN-','',$project)));
+                    if (str_starts_with($project, "TOKEN")) {
+                        array_push($tokens, hashids_decode(str_replace("TOKEN-", "", $project)));
                         continue;
                     }
                     array_push($projectIds, hashids_decode($project));
                 }
             }
 
-            if(count($projectIds) > 0 || count($tokens) > 0){
-                $join->where(function ($querySale) use ($projectIds,$tokens) {
-                    $querySale->whereIn("s.project_id", $projectIds)
-                    ->orWhereIn('s.api_token_id',$tokens);
+            if (count($projectIds) > 0 || count($tokens) > 0) {
+                $join->where(function ($querySale) use ($projectIds, $tokens) {
+                    $querySale->whereIn("s.project_id", $projectIds)->orWhereIn("s.api_token_id", $tokens);
                 });
             }
         });
 
-        $productPlanSales->leftJoin('transactions as t', function($q) use($companyId) {
-            $q->on('t.sale_id', 's.id')
-            ->where('t.company_id', $companyId);
-        });
-
-        $productPlanSales->whereNotNull('t.id');
-
         //filtro transactions
         if (!empty($filters["transaction_status"])) {
-            $productPlanSales->join("transactions as t", function ($join) use ($filters) {
-                $join->on("t.sale_id", "=", "s.id")->whereNull("t.deleted_at");
+            $productPlanSales->join("transactions as t", function ($join) use ($companyId, $filters) {
+                $join
+                    ->on("t.sale_id", "=", "s.id")
+                    ->where("t.company_id", $companyId)
+                    ->whereNull("t.deleted_at");
 
                 $transactionPresenter = (new Transaction())->present();
                 $filterTransaction = explode(",", $filters["transaction_status"]);
@@ -448,45 +448,52 @@ class TrackingService
 
                 if (in_array("blocked", $filterTransaction)) {
                     $join
-                        ->where(function ($where) use ($statusEnum) {
-                            $where
-                                ->where("t.release_date", ">", "2020-05-25") //data que começou a bloquear
-                                ->orWhere("s.is_chargeback_recovered", true);
-                        })
                         ->where("t.release_date", "<=", Carbon::now()->format("Y-m-d"))
-                        ->where("t.tracking_required", true);
-
+                        ->where("t.tracking_required", true)
+                        ->where("t.status_enum", Transaction::STATUS_PAID);
                     if (count($statusEnum) > 0) {
                         $join->orWhereIn("t.status_enum", $statusEnum);
                     }
                 } else {
                     $join->whereIn("t.status_enum", $statusEnum);
                 }
-
-                $join
-                    ->where("t.type", Transaction::TYPE_PRODUCER)
-                    ->whereNull("t.invitation_id")
-                    ->where("t.is_waiting_withdrawal", 0)
-                    ->whereNull("t.withdrawal_id");
             });
+        } else {
+            $productPlanSales->leftJoin("transactions as t", function ($join) use ($companyId) {
+                $join->whereIn("t.status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED]);
+                $join->on("t.sale_id", "s.id")->where("t.company_id", $companyId);
+            });
+            $productPlanSales->whereNotNull("t.id");
         }
 
-        $productPlanSales->leftJoin("trackings as t2", function ($leftJoin) use ($filters) {
-            $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
+        $productPlanSales
+            ->where("t.type", Transaction::TYPE_PRODUCER)
+            ->whereNull("t.invitation_id")
+            ->where("t.is_waiting_withdrawal", 0)
+            ->whereNull("t.withdrawal_id");
 
-            if (!empty($filters["problem"]) && $filters["problem"] == 1) {
-                $leftJoin->whereIn("t2.system_status_enum", [
-                    Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
-                    Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
-                    Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
-                    Tracking::SYSTEM_STATUS_DUPLICATED,
-                ]);
-            }
+        if ((!empty($filters["problem"]) && $filters["problem"] == 1) || !empty($filters["tracking_code"])) {
+            $productPlanSales->join("trackings as t2", function ($leftJoin) use ($filters) {
+                $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
 
-            if (!empty($filters["tracking_code"])) {
-                $leftJoin->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
-            }
-        });
+                if (!empty($filters["problem"]) && $filters["problem"] == 1) {
+                    $leftJoin->whereIn("t2.system_status_enum", [
+                        Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
+                        Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
+                        Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
+                        Tracking::SYSTEM_STATUS_DUPLICATED,
+                    ]);
+                }
+
+                if (!empty($filters["tracking_code"])) {
+                    $leftJoin->where("t2.tracking_code", "like", "%" . $filters["tracking_code"] . "%");
+                }
+            });
+        } else {
+            $productPlanSales->leftJoin("trackings as t2", function ($leftJoin) use ($filters) {
+                $leftJoin->on("t2.product_plan_sale_id", "=", "products_plans_sales.id")->whereNull("t2.deleted_at");
+            });
+        }
 
         if (!empty($filters["status"])) {
             $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
@@ -527,7 +534,6 @@ class TrackingService
             ->where(function ($where) {
                 $where->whereNotNull("p.id")->orWhereNotNull("psa.id");
             });
-
         return $productPlanSales;
     }
 
@@ -548,7 +554,7 @@ class TrackingService
                 "p.description as product_description",
                 "products_plans_sales.amount as product_amount",
             ])
-            ->orderBy("products_plans_sales.id", "desc")
+            ->orderBy("approved_date", "desc")
             ->paginate(10);
     }
 

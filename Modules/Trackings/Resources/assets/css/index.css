@@ -368,7 +368,7 @@ div.tracking-close.pointer {
     font-size: 25px;
     width: 36px;
     height: 38px;
-    padding: 2px 0px 0px 8px;
+    padding: 9px 0px 0px 8px;
     transition: 1s;
 }
 div.tracking-close.pointer:hover {
@@ -381,7 +381,7 @@ a.tracking-edit.pointer {
     color: #f1f1f1;
     border: 1px solid !important;
     border-radius: 5px !important;
-    padding: 7px 0px 0px 7px;
+    padding-top: 6px;
     min-width: 37px;
     background: #ebebeb;
 
@@ -389,14 +389,14 @@ a.tracking-edit.pointer {
 span.text-right.o-edit-1 {
     border-radius: 5px !important;
     border-width: 2px !important;
-    padding: 0px 7px 0px 7px !important;
+    padding: 0px 2px 0px 7px !important;
 }
 
 /*  ======== BOTAO DE VISUALIZAR ======== */
 a.tracking-detail.pointer {
     color: #f1f1f1;
-    height: 38px;
-    width: 38px;
+    padding-top: 6px;
+    margin-right: 20px;
 }
 span.o-eye-1 {
     padding: 6px 5px 0px 5px !important;
@@ -433,7 +433,6 @@ div#dataCharts {
     align-items: center;
     justify-content: center;
     display: flex;
-    z-index: 1;
     flex-direction: column;
 }
 span#total-products {
