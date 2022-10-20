@@ -392,13 +392,12 @@ class TrackingService
             $saleStatus = [Sale::STATUS_APPROVED, Sale::STATUS_IN_DISPUTE];
 
             //tipo da data e periodo obrigatorio
-            if (!empty($filters["date_updated"])) {
-                $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
+            $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
 
-                $join->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"]);
-            }
-
-            $join->whereIn("s.status", $saleStatus)->where("s.owner_id", $userId);
+            $join
+                ->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->whereIn("s.status", $saleStatus)
+                ->where("s.owner_id", $userId);
 
             if (!empty($filters["sale"])) {
                 $saleId = hashids_decode($filters["sale"], "sale_id");
@@ -555,7 +554,7 @@ class TrackingService
                 "p.description as product_description",
                 "products_plans_sales.amount as product_amount",
             ])
-            ->orderBy("products_plans_sales.id", "desc")
+            ->orderBy("approved_date", "desc")
             ->paginate(10);
     }
 
