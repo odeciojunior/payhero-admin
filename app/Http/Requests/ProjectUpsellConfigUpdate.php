@@ -23,8 +23,6 @@ class ProjectUpsellConfigUpdate extends FormRequest
     {
         return [
             "header" => "required|max:255",
-            "title" => "required|max:255",
-            "description" => "required",
             "countdown_time" => "nullable",
             "countdown_flag" => "nullable",
         ];
@@ -38,9 +36,6 @@ class ProjectUpsellConfigUpdate extends FormRequest
         return [
             "header.required" => "O campo Cabeçalho é obrigatório",
             "header.max" => "O campo Cabeçalho permite apenas 255 caracteres",
-            "description.required" => "O campo Descrição é obrigatório",
-            "title.required" => "O campo Título é obrigatório",
-            "title.max" => "O campo Título permite apenas 255 caracteres",
         ];
     }
 }

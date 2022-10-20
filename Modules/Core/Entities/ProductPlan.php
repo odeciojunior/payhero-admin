@@ -51,6 +51,7 @@ class ProductPlan extends Model
         "is_custom",
         "custom_config",
         "currency_type_enum",
+        "active_flag",
         "created_at",
         "updated_at",
         "deleted_at",

@@ -46,12 +46,15 @@ class Product extends Model
 {
     use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
 
-    const TYPE_PHYSICAL = 1;
-    const TYPE_DIGITAL = 2;
+    public const TYPE_PHYSICAL = 1;
+    public const TYPE_DIGITAL = 2;
 
-    const STATUS_ENUM_ANALYZING = 1;
-    const STATUS_ENUM_APPROVED = 2;
-    const STATUS_ENUM_REFUSED = 3;
+    public const STATUS_ENUM_ANALYZING = 1;
+    public const STATUS_ENUM_APPROVED = 2;
+    public const STATUS_ENUM_REFUSED = 3;
+
+    public const ACTIVE_FLAG_ACTIVE = 1;
+    public const ACTIVE_FLAG_DESABLE = 0;
 
     /**
      * @var array
@@ -96,6 +99,7 @@ class Product extends Model
         "project_id",
         "type_enum",
         "status_enum",
+        "active_flag",
     ];
 
     public function getActivitylogOptions(): LogOptions

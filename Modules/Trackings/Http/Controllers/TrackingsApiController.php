@@ -43,7 +43,6 @@ class TrackingsApiController extends Controller
             }
 
             return response()->json(["message" => "Erro ao exibir códigos de rastreio"], 400);
-
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao exibir códigos de rastreio"], 400);
@@ -92,6 +91,19 @@ class TrackingsApiController extends Controller
             ]);
 
             $checkpointsApi = $trackingService->getCheckpointsApi($tracking, $apiTracking);
+
+            if (count($checkpointsApi) == 0) {
+                $details = $trackingModel::find($trackingId);
+                $checkpointsApi->add([
+                    "tracking_status_enum" => $details["tracking_status_enum"],
+                    "tracking_status" => __(
+                        "definitions.enum.tracking.tracking_status_enum." .
+                            $trackingModel->present()->getTrackingStatusEnum($details["tracking_status_enum"])
+                    ),
+                    "created_at" => Carbon::parse($details["updated_at"])->format("d/m/Y"),
+                    "event" => "",
+                ]);
+            }
 
             $checkpoints = $checkpoints->merge($checkpointsApi);
 
@@ -156,7 +168,6 @@ class TrackingsApiController extends Controller
             }
 
             return response()->json(["message" => "Erro ao exibir detalhes do código de rastreio"], 400);
-
         } catch (Exception $e) {
             report($e);
 
@@ -180,7 +191,6 @@ class TrackingsApiController extends Controller
             }
 
             return response()->json(["message" => "Erro ao exibir resumo dos rastreamentos"], 400);
-
         } catch (Exception $e) {
             report($e);
 
@@ -225,7 +235,6 @@ class TrackingsApiController extends Controller
                     ],
                     400
                 );
-
             }
 
             return response()->json(
@@ -234,7 +243,6 @@ class TrackingsApiController extends Controller
                 ],
                 400
             );
-
         } catch (Exception $e) {
             report($e);
 
@@ -258,7 +266,6 @@ class TrackingsApiController extends Controller
             }
 
             return response()->json(["message" => "Erro ao notificar cliente"], 400);
-
         } catch (Exception $e) {
             report($e);
 
