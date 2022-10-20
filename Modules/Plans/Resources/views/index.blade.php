@@ -54,8 +54,8 @@
         </div>
     </div>
 </div>
-<div id="pagination-container-plans" class="d-none justify-content-center justify-content-md-end">
-    <ul id="pagination-plans" class="pagination-sm margin-chat-pagination text-right m-0 pagination-style">
+<div id="pagination-container-plans" class="d-none justify-content-center justify-content-md-end mb-50">
+    <ul id="pagination-plans" class="pagination-sm text-right m-0 pagination-style">
         {{-- js pagination carrega --}}
     </ul>
 </div>

@@ -236,7 +236,7 @@
                     </table>
                 </div>
             </div>
-            <div id="pagination-container" class="row no-gutters justify-content-center justify-content-md-end">
+            <div id="pagination-container" class="row no-gutters justify-content-center justify-content-md-end mb-60">
                 <ul id="pagination" class="pagination-style mt-10">
                     {{-- js carrega... --}}
                 </ul>

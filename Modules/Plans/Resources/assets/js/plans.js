@@ -3745,24 +3745,23 @@ $(function () {
                                 <tr>
                                     <td style="vertical-align: middle; line-height: 1;">
 
-                                        <span class="ellipsis-text text-nowrap" data-toggle="tooltip" title="${value.name}">
-                                            ${value.name_short}
-                                        </span>
-
-                                        <div>
-                                            <small class="subdescription font-size-12">
-                                                com ${(value.products_length > 1 ? value.products_length + " produtos" : value.products_length + " produto")}
-                                            </small>
-
+                                        <div class="fullInformation-plans ellipsis-text">
+                                            ${value.name}
                                         </div>
+
+                                        <div class="fullInformation-plans ellipsis-text subdescription">
+                                            com ${(value.products_length > 1 ? value.products_length + " produtos" : value.products_length + " produto")}
+                                        </div>
+
+                                        <div class="container-tooltips-plans"></div>
                                     </td>
+
 
                                     <td style="vertical-align: middle;">
 
-                                        <div class="ellipsis-text text-nowrap" data-toggle="tooltip" title="${value.description}">
-                                            ${value.description_short}
+                                        <div class="fullInformation-plans ellipsis-text">
+                                            ${value.description}
                                         </div>
-
                                     </td>
 
                                     <td class="text-nowrap" style="vertical-align: middle;">
@@ -3837,8 +3836,17 @@ $(function () {
                         $("#table-plans").addClass("table-striped");
                     }
 
-                    $('[data-toggle="tooltip"]').tooltip({
-                        container: ".page",
+                    $('.fullInformation-plans').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-plans" })
+                            $this.tooltip("show")
+                        }
                     });
                 }
             },

@@ -654,9 +654,10 @@ $(() => {
 
                             <td>
 
-                                <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? "(" + tracking.product.description + ")" : ""}" >
+                                <div class="fullInformation ellipsis-text"  >
                                     ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? "(" + tracking.product.description + ")" : ""}
                                 </div>
+
 
                                 <div class="container-tooltips"></div>
 
@@ -703,7 +704,19 @@ $(() => {
                     lastSale = tracking.sale;
                 });
                 pagination(response, "trackings", index);
-                $(".fullInformation").tooltip({ container: '.container-tooltips' });
+
+                $('.fullInformation').bind('mouseover', function () {
+                    var $this = $(this);
+
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                        $this.attr({
+                            'data-toggle': "tooltip",
+                            'data-placement': "top",
+                            'title': $this.text()
+                        }).tooltip({ container: ".container-tooltips" })
+                        $this.tooltip("show")
+                    }
+                });
 
             },
             complete: (response) => {

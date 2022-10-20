@@ -1,5 +1,5 @@
 <!-- Page -->
-<div class="card card-body p-0">
+<div class="card card-body mb-40 p-0">
     <div class="card card-body mb-0" style="padding-bottom: 0;">
         <div class='row no-gutters mb-20'>
             <div class="top-holder text-right mb-0" style="width: 100%;">

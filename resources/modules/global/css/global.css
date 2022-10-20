@@ -1942,6 +1942,7 @@ input[type="radio"] {
     line-height: 1.2;
     font-size: 0.8rem;
     top: -4px !important;
+    padding-bottom: 0px !important;
 }
 /*
 .tooltip.product-select .tooltip-inner {

@@ -187,6 +187,7 @@ function atualizar(link = null) {
 
                     dados = `
                         <tr class='${tableClass}'>
+
                             <td class='text-center'>
 
                                 <br class="d-sm-none"/>
@@ -202,22 +203,22 @@ function atualizar(link = null) {
                             </td>
 
                             <td>
-                                <div class="m-auto fullInformation-sales ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.product}">
+                                <div class="m-auto fullInformation-sales ellipsis-text">
                                     ${value.product}
                                 </div>
 
                                 ${value.affiliate != null && value.user_sale_type == "producer" ? ` <br> <small class="subdescription font-size-12"> (Afiliado: ${value.affiliate}) </small>` : ""}
 
-                                <small class="fullInformation-sales subdescription font-size-12" data-toggle="tooltip" data-placement="top" title="${value.project}">
+                                <div class="m-auto fullInformation-sales subdescription ellipsis-text">
                                     ${value.project}
-                                </small>
+                                </div>
 
                                 <div class="container-tooltips-sales"></div>
                             </td>
 
                             <td class='d-none client-collumn'>
 
-                                <div class="fullInformation-sales ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                <div class="fullInformation-sales ellipsis-text">
                                     ${value.client}
                                 </div>
 
@@ -229,8 +230,8 @@ function atualizar(link = null) {
 
                             <td class='text-center'>
                                 <span class="status-sale badge badge-${statusArray[value.status]}
-                                ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""}"
-                                ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
+                                    ${value.status_translate === "Pendente" && value.brand != "pix" ? "boleto-pending" : ""}"
+                                    ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
                                     ${value.status_translate}
                                 </span>
 
@@ -265,7 +266,19 @@ function atualizar(link = null) {
                 $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
                 $("#container-pagination").show();
-                $(".fullInformation-sales").tooltip({ container: ".container-tooltips-sales" });
+
+                $('.fullInformation-sales').bind('mouseover', function () {
+                    var $this = $(this);
+
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                        $this.attr({
+                            'data-toggle': "tooltip",
+                            'data-placement': "top",
+                            'title': $this.text()
+                        }).tooltip({ container: ".container-tooltips-sales" })
+                        $this.tooltip("show")
+                    }
+                });
 
             } else {
                 $("#dados_tabela").html(

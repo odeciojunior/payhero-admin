@@ -321,13 +321,13 @@ $(document).ready(function () {
 
                             <td>
 
-                                <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.company}" >
+                                <div class="fullInformation ellipsis-text">
                                     ${value.company_limit}
                                 </div>
 
-                                <small class="subdescription">
+                                <div class="fullInformation subdescription ellipsis-text">
                                     ${value.project}
-                                </small>
+                                </div>
 
                                 <div class="container-tooltips"></div>
 
@@ -337,13 +337,13 @@ $(document).ready(function () {
 
                             <td class="" title="${value.customer}">
 
-                                <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.customer}">
+                                <div class="fullInformation ellipsis-text">
                                     ${value.customer}
                                 </div>
 
-                                <small class="subdescription">
+                                <div class="fullInformation subdescription ellipsis-text">
                                     Pagamento em ${value.adjustment_date}
-                                </small>
+                                </div>
 
                                 <div class="container-tooltips"></div>
 
@@ -433,7 +433,19 @@ $(document).ready(function () {
 
                     $("#chargebacks-table-data").append(dados);
                 });
-                $(".fullInformation").tooltip({ container: '.container-tooltips' });
+
+                $('.fullInformation').bind('mouseover', function () {
+                    var $this = $(this);
+
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                        $this.attr({
+                            'data-toggle': "tooltip",
+                            'data-placement': "top",
+                            'title': $this.text()
+                        }).tooltip({ container: ".container-tooltips" })
+                        $this.tooltip("show")
+                    }
+                });
 
                 if (response.data == "") {
                     $("#chargebacks-table-data").html(

@@ -540,7 +540,7 @@ $(document).ready(function () {
 
                                 <td class="text-nowrap" style="vertical-align: middle;">
 
-                                    <div class="fullInformation-shipping ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.type_name}" >
+                                    <div class="fullInformation-shipping ellipsis-text">
                                         ${value.type_name}
                                     </div>
 
@@ -551,7 +551,7 @@ $(document).ready(function () {
 
                                 <td>
 
-                                    <div class="fullInformation-shipping ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.name}" >
+                                    <div class="fullInformation-shipping ellipsis-text">
                                         ${value.name}
                                     </div>
 
@@ -560,7 +560,7 @@ $(document).ready(function () {
 
                                 <td class="text-nowrap" style="vertical-align: middle;">
 
-                                    <div class="fullInformation-shipping ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.value}" >
+                                    <div class="fullInformation-shipping ellipsis-text">
                                         ${value.value}
                                     </div>
 
@@ -569,7 +569,7 @@ $(document).ready(function () {
 
                                 <td class="text-nowrap" style="vertical-align: middle;">
 
-                                    <div class="fullInformation-shipping ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.information}" >
+                                    <div class="fullInformation-shipping ellipsis-text">
                                         ${value.information}
                                     </div>
 
@@ -618,7 +618,20 @@ $(document).ready(function () {
 
                         $("#dados-tabela-frete").append(dados);
                     });
-                    $(".fullInformation-shipping").tooltip({ container: '.container-tooltips-shipping' });
+
+
+                    $('.fullInformation-shipping').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-shipping" })
+                            $this.tooltip("show")
+                        }
+                    });
 
 
 

@@ -300,7 +300,7 @@
                 <!-- End Modal -->
             </div>
             <div id="container-pagination" class="row no-gutters justify-content-center justify-content-md-end">
-                <ul id="pagination-salesRecovery" class="pagination-style" style="margin-top:10px;position:relative;float:right;">
+                <ul id="pagination-salesRecovery" class="pagination-style p-5 mb-70" style="margin-top:10px;position:relative;float:right;">
                     {{-- js carrega... --}}
                 </ul>
             </div>

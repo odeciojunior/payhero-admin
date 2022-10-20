@@ -387,7 +387,7 @@
             <!-- Tabela -->
             <div class="fixhalf my-10"></div>
 
-            <div class="card shadow">
+            <div class="card shadow mb-100">
                 <div class="page-invoice-table table-responsive no-final-space">
                     <table id="tabela_trackings" class="table mb-0 table-trackings unify">
                         <thead>
@@ -406,8 +406,8 @@
                 </div>
             </div>
 
-            <div id="pagination-container" class="row no-gutters justify-content-center justify-content-md-end mb-60" style="max-height: 45px;">
-                <ul id="pagination-trackings" class="pagination-style" style="margin-top:10px; position:relative; float:right;">
+            <div id="pagination-container" class="row no-gutters justify-content-center justify-content-md-end" style="max-height: 45px; margin-bottom: 110px;">
+                <ul id="pagination-trackings" class="pagination-style " style="margin-top:10px; position:relative; float:right;">
                     {{-- js carrega... --}}
                 </ul>
             </div>

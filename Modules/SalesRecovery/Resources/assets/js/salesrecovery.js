@@ -379,7 +379,18 @@ $(document).ready(function () {
         });
 
         $("#table_data").append(html);
-        $(".fullInformation").tooltip({ container: '.container-tooltips' });
+        $('.fullInformation').bind('mouseover', function () {
+            var $this = $(this);
+
+            if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                $this.attr({
+                    'data-toggle': "tooltip",
+                    'data-placement': "top",
+                    'title': $this.text()
+                }).tooltip({ container: ".container-tooltips" })
+                $this.tooltip("show")
+            }
+        });
 
     }
 
@@ -411,7 +422,7 @@ $(document).ready(function () {
 
                 <td>
 
-                    <div class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.project}" >
+                    <div class="fullInformation ellipsis-text">
                         ${value.project}
                     </div>
 
@@ -422,7 +433,7 @@ $(document).ready(function () {
 
                 <td class="d-none client-collumn">
 
-                    <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                    <div class="fullInformation ellipsis-text">
                         ${value.client}
                     </div>
 
@@ -511,7 +522,7 @@ $(document).ready(function () {
 
 
                 <td>
-                    <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}" >
+                    <div class="fullInformation ellipsis-text">
                         ${value.project}
                     </div>
 
@@ -521,7 +532,7 @@ $(document).ready(function () {
 
                 <td class="d-none client-collumn">
 
-                    <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                    <div class="fullInformation ellipsis-text">
                         ${value.client}
                     </div>
 
