@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyBalance;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
@@ -39,6 +40,7 @@ class CompanyBalances extends Command
             $companies = Company::where("address_document_status", Company::STATUS_APPROVED)
                 ->where("contract_document_status", Company::STATUS_APPROVED)
                 ->get();
+
             foreach ($companies as $company) {
                 $companyBalance = CompanyBalance::where("company_id", $company->id)->first();
                 if (empty($companyBalance->id)) {
@@ -53,20 +55,22 @@ class CompanyBalances extends Command
                 $companyBalance->vega_blocked_balance = $vegaService->getBlockedBalance();
                 $companyBalance->vega_total_balance =
                     $companyBalance->vega_available_balance + $companyBalance->vega_pending_balance;
-                /*
-                                $vegaPendingBalanceWithBlocked = $companyBalance->vega_pending_balance;
-                                $vegaAvailableBalanceWithBlocked = $companyBalance->vega_available_balance;
 
-                                (new CompanyService())->applyBlockedBalance(
-                                    $vegaService,
-                                    $vegaAvailableBalanceWithBlocked,
-                                    $vegaPendingBalanceWithBlocked,
-                                    $companyBalance->vega_blocked_balance
-                                );
+                $pendingBalance = $vegaService->getPendingBalance();
+                $availableBalance = $vegaService->getAvailableBalance();
+                $blockedBalance = $vegaService->getBlockedBalance();
 
-                                //$companyBalance->vega_pending_balance_with_blocked = $vegaPendingBalanceWithBlocked;
-                                //$companyBalance->vega_available_balance_with_blocked = $vegaPendingBalanceWithBlocked;
-                */
+                (new CompanyService())->applyBlockedBalance(
+                    $vegaService,
+                    $availableBalance,
+                    $pendingBalance,
+                    $blockedBalance
+                );
+                $companyBalance->vega_pending_balance_with_blocked = $pendingBalance;
+                $companyBalance->vega_available_balance_with_blocked = $availableBalance;
+                $companyBalance->vega_total_balance_with_blocked =
+                    $availableBalance + $pendingBalance + $blockedBalance;
+
                 $asaasService = new AsaasService();
                 $asaasService->setCompany($company);
                 $companyBalance->asaas_available_balance = $asaasService->getAvailableBalance();
@@ -74,6 +78,21 @@ class CompanyBalances extends Command
                 $companyBalance->asaas_blocked_balance = $asaasService->getBlockedBalance();
                 $companyBalance->asaas_total_balance =
                     $companyBalance->asaas_available_balance + $companyBalance->asaas_pending_balance;
+
+                $pendingBalance = $asaasService->getPendingBalance();
+                $availableBalance = $asaasService->getAvailableBalance();
+                $blockedBalance = $asaasService->getBlockedBalance();
+
+                (new CompanyService())->applyBlockedBalance(
+                    $asaasService,
+                    $availableBalance,
+                    $pendingBalance,
+                    $blockedBalance
+                );
+                $companyBalance->asaas_pending_balance_with_blocked = $pendingBalance;
+                $companyBalance->asaas_available_balance_with_blocked = $availableBalance;
+                $companyBalance->asaas_total_balance_with_blocked =
+                    $availableBalance + $pendingBalance + $blockedBalance;
 
                 $cieloService = new CieloService();
                 $cieloService->setCompany($company);
@@ -83,6 +102,21 @@ class CompanyBalances extends Command
                 $companyBalance->cielo_total_balance =
                     $companyBalance->cielo_available_balance + $companyBalance->cielo_pending_balance;
 
+                $pendingBalance = $cieloService->getPendingBalance();
+                $availableBalance = $cieloService->getAvailableBalance();
+                $blockedBalance = $cieloService->getBlockedBalance();
+
+                (new CompanyService())->applyBlockedBalance(
+                    $cieloService,
+                    $availableBalance,
+                    $pendingBalance,
+                    $blockedBalance
+                );
+                $companyBalance->cielo_pending_balance_with_blocked = $pendingBalance;
+                $companyBalance->cielo_available_balance_with_blocked = $availableBalance;
+                $companyBalance->cielo_total_balance_with_blocked =
+                    $availableBalance + $pendingBalance + $blockedBalance;
+
                 $getNetService = new GetnetService();
                 $getNetService->setCompany($company);
                 $companyBalance->getnet_available_balance = $getNetService->getAvailableBalance();
@@ -90,6 +124,21 @@ class CompanyBalances extends Command
                 $companyBalance->getnet_blocked_balance = $getNetService->getBlockedBalance();
                 $companyBalance->getnet_total_balance =
                     $companyBalance->getnet_available_balance + $companyBalance->getnet_pending_balance;
+
+                $pendingBalance = $getNetService->getPendingBalance();
+                $availableBalance = $getNetService->getAvailableBalance();
+                $blockedBalance = $getNetService->getBlockedBalance();
+
+                (new CompanyService())->applyBlockedBalance(
+                    $getNetService,
+                    $availableBalance,
+                    $pendingBalance,
+                    $blockedBalance
+                );
+                $companyBalance->getnet_pending_balance_with_blocked = $pendingBalance;
+                $companyBalance->getnet_available_balance_with_blocked = $availableBalance;
+                $companyBalance->getnet_total_balance_with_blocked =
+                    $availableBalance + $pendingBalance + $blockedBalance;
 
                 $gerenciaNetService = new GerencianetService();
                 $gerenciaNetService->setCompany($company);
@@ -99,12 +148,34 @@ class CompanyBalances extends Command
                 $companyBalance->gerencianet_total_balance =
                     $companyBalance->gerencianet_available_balance + $companyBalance->gerencianet_pending_balance;
 
+                $pendingBalance = $gerenciaNetService->getPendingBalance();
+                $availableBalance = $gerenciaNetService->getAvailableBalance();
+                $blockedBalance = $gerenciaNetService->getBlockedBalance();
+
+                (new CompanyService())->applyBlockedBalance(
+                    $gerenciaNetService,
+                    $availableBalance,
+                    $pendingBalance,
+                    $blockedBalance
+                );
+                $companyBalance->gerencianet_pending_balance_with_blocked = $pendingBalance;
+                $companyBalance->gerencianet_available_balance_with_blocked = $availableBalance;
+                $companyBalance->gerencianet_total_balance_with_blocked =
+                    $availableBalance + $pendingBalance + $blockedBalance;
+
                 $companyBalance->total_balance =
                     $companyBalance->vega_total_balance +
                     $companyBalance->asaas_total_balance +
                     $companyBalance->cielo_total_balance +
                     $companyBalance->getnet_total_balance +
                     $companyBalance->gerencianet_total_balance;
+
+                $companyBalance->total_balance_with_blocked =
+                    $companyBalance->vega_total_balance_with_blocked +
+                    $companyBalance->asaas_total_balance_with_blocked +
+                    $companyBalance->cielo_total_balance_with_blocked +
+                    $companyBalance->getnet_total_balance_with_blocked +
+                    $companyBalance->gerencianet_total_balance_with_blocked;
 
                 $companyBalance->save();
             }
