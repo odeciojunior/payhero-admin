@@ -92,11 +92,11 @@ $(() => {
 
                                 <td>
 
-                                    <div class="fullInformation ellipsis-text" data-toggle="tooltip" data-placement="top" title="${rule.description}" >
+                                    <div class="fullInformation-order-bump ellipsis-text">
                                         ${rule.description}
                                     </div>
 
-                                    <div class="container-tooltips"></div>
+                                    <div class="container-tooltips-order-bump"></div>
 
                                 </td>
 
@@ -120,6 +120,19 @@ $(() => {
                     }
                     pagination(resp, "order-bump", index);
                     $(".fullInformation").tooltip({ container: '.container-tooltips' });
+
+                    $('.fullInformation-order-bump').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-order-bump" })
+                            $this.tooltip("show")
+                        }
+                    });
 
                 } else {
                     $("#pagination-container-order-bump").removeClass("d-flex").addClass("d-none")

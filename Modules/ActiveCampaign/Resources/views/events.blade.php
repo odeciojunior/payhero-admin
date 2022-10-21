@@ -12,9 +12,9 @@
     </div>
 </div>
 <div class="card shadow">
-    <div style='min-height: 300px'>
+    <div>
         <div class='page-invoice-table table-responsive'>
-            <table id='table-events' class='table text-left table-pixels table-striped unify' style='width:100%'>
+            <table id='table-events' class='table text-left table-pixels table-striped unify mb-0' style='width:100%'>
                 <thead>
                     <tr>
                         <td class=''>Evento</td>
@@ -32,8 +32,8 @@
         </div>
     </div>
 </div>
-<div id="container-pagination" class="d-none row justify-content-center justify-content-md-end pr-md-15 pb-25">
-    <ul id="pagination-events" class="pagination-sm margin-chat-pagination pagination-style">
+<div id="container-pagination" class="d-none row justify-content-center justify-content-md-end pr-md-15 pb-25 mb-5">
+    <ul id="pagination-events" class="pagination-sm pagination-style">
         {{-- js pagination carrega --}}
     </ul>
 </div>

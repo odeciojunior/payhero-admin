@@ -169,7 +169,7 @@ $(document).ready(function () {
                         <tr>
                             <td>
 
-                                <div class="fullInformation-reviwe ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.name}">
+                                <div class="fullInformation-reviwe ellipsis-text">
                                     <img src="${value.photo || "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"}" class="img-fluid rounded-circle mr-2" width="35" height="35">
                                     ${value.name}
                                 </div>
@@ -180,11 +180,9 @@ $(document).ready(function () {
 
                             <td>
 
-                                <div class="fullInformation-reviwe ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.description}">
+                                <div class="fullInformation-reviwe ellipsis-text">
                                     ${value.description}
                                 </div>
-
-                                <div class="container-tooltips-reviwe"></div>
 
                             </td>
 
@@ -237,7 +235,18 @@ $(document).ready(function () {
                         initStarsPlugin("#stars-" + value.id);
                     });
 
-                    $(".fullInformation-reviwe").tooltip({ container: '.container-tooltips-reviwe' });
+                    $('.fullInformation-reviwe').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-reviwe" })
+                            $this.tooltip("show")
+                        }
+                    });
 
                     $(".div-config").show();
                     pagination(response, "review", loadReviews);

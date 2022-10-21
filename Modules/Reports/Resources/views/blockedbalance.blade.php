@@ -307,8 +307,8 @@
                     </div>
                 </div>
 
-                <div id="pagination-container" class="d-none row no-gutters justify-content-center justify-content-md-end">
-                    <ul id="pagination-sales" class="pagination-sm margin-chat-pagination pagination-style mb-5" style="position:relative;float:right">
+                <div id="pagination-container" class="d-none row no-gutters justify-content-center justify-content-md-end mb-50">
+                    <ul id="pagination-sales" class="pagination-sm pagination-style mb-5" style="position:relative;float:right">
                         {{-- js carrega... --}}
                     </ul>
                 </div>

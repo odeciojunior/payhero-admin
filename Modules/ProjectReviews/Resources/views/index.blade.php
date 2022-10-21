@@ -45,8 +45,8 @@
     </div>
 </div>
 
-<div id="pagination-container-reviews" class="d-none justify-content-center justify-content-md-end">
-    <ul id="pagination-review" class="pagination-sm margin-chat-pagination text-right m-0 pagination-style">
+<div id="pagination-container-reviews" class="d-none justify-content-center justify-content-md-end mb-50">
+    <ul id="pagination-review" class="pagination-sm text-right m-0 pagination-style">
         {{-- js carrega... --}}
     </ul>
 </div>

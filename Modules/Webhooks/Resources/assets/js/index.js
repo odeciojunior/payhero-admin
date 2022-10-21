@@ -51,6 +51,7 @@ $(document).ready(function () {
                     $("#content-script").show();
                     updateWebhookTableData(response);
                     pagination(response, "webhooks");
+
                 }
             },
             complete: function () {
@@ -263,7 +264,10 @@ $(document).ready(function () {
         if (response.meta.last_page == 1) {
             $("#first_page").hide();
             $("#last_page").hide();
+            $("#pagination-container-webhooks").removeClass("d-flex").addClass("d-none")
+
         } else {
+
             $("#pagination-" + model).html("");
 
             var first_page = "<button id='first_page' class='btn nav-btn'>1</button>";
@@ -335,6 +339,8 @@ $(document).ready(function () {
                     refreshWebhooks(response.meta.last_page);
                 });
             }
+            $("#pagination-container-webhooks").removeClass("d-none").addClass("d-flex")
+
         }
     }
 

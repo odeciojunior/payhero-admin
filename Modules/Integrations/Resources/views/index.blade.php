@@ -80,9 +80,12 @@
                 </table>
             </div>
         </div>
-        <ul id="pagination-integrates" class="pagination-sm margin-chat-pagination pagination-style" style="margin-top:10px;position:relative;float:right">
-            {{-- js pagination carrega --}}
-        </ul>
+
+        <div id="container-pagination" class="row justify-content-center justify-content-md-end pb-25 mb-40">
+            <ul id="pagination-integrates" class="pagination-sm pagination-style" style="margin-top:10px;position:relative;float:right">
+                {{-- js pagination carrega --}}
+            </ul>
+        </div>
 
         <!-- Modal para criar integração -->
         <div class="modal fade modal-new-layout" id="modal-integrate" role="dialog" tabindex="-1">

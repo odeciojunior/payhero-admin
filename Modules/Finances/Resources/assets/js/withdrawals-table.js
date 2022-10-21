@@ -110,7 +110,7 @@ window.loadWithdrawalsTable = function (link = null) {
 
                             <td class="sale-finance-transfers" style="grid-area: sale">
 
-                                <div class="fullInformation-transfer ellipsis-text" data-toggle="tooltip" data-placement="top" title="#${data.id}" >
+                                <div class="fullInformation-transfer">
                                     #${data.id}
                                 </div>
                                 <div class="container-tooltips-transfer"></div>
@@ -119,7 +119,7 @@ window.loadWithdrawalsTable = function (link = null) {
 
                             <td class="text-left truncate bank-finance-transfers" style="grid-area: bank">
 
-                                <div class="fullInformation-transfer ellipsis-text" data-toggle="tooltip" data-placement="top" title="${data.account_information_bank}" style="color: #636363;">
+                                <div class="fullInformation-transfer ellipsis-text" style="color: #636363;">
                                     ${data.account_information_bank}
                                 </div>
 
@@ -191,7 +191,19 @@ window.loadWithdrawalsTable = function (link = null) {
                     $("#withdrawals-table-data").append(tableData);
                     $("#withdrawalsTable").addClass("table-striped");
 
-                    $(".fullInformation-transfer").tooltip({ container: '.container-tooltips-transfer' });
+
+                    $('.fullInformation-transfer').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-transfer" })
+                            $this.tooltip("show")
+                        }
+                    });
 
                 });
                 pagination(response, "withdrawals", loadWithdrawalsTable);

@@ -126,7 +126,7 @@ $(document).ready(function () {
 
                                 <td>
 
-                                    <div class="fullInformation-upsel ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.description}" >
+                                    <div class="fullInformation-upsel ellipsis-text">
                                         ${value.description}
                                     </div>
 
@@ -177,7 +177,19 @@ $(document).ready(function () {
                     });
                     dataTable.append(data);
                     $(".div-config").show();
-                    $(".fullInformation-upsel").tooltip({ container: '.container-tooltips-upsel' });
+
+                    $('.fullInformation-upsel').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-upsel" })
+                            $this.tooltip("show")
+                        }
+                    });
 
 
                     pagination(response, "upsell", loadUpsell);

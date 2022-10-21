@@ -43,9 +43,9 @@
 
 </div>
 
-<div id="pagination-container" class="d-none row justify-content-end pr-15">
+<div id="pagination-container-transfers" class="d-none row justify-content-end pr-15 mb-50">
 
-    <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right pagination-style" style="margin-top:10px;position:relative;float:right">
+    <ul id="pagination-transfers" class="pagination-sm pagination-statement-class text-xs-center text-md-right pagination-style" style="margin-top:10px;position:relative;float:right">
         {{-- loaded by js... --}}
     </ul>
 

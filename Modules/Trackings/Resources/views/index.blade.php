@@ -186,47 +186,29 @@
                             <select name='status_commission' id="status_commission" class="form-control select-pad applySelect2">
                                 <option value="">Todos</option>
                                 <option value="transfered">Transferido</option>
-                                <option value="pending">Pendente</option>
+                                <option value="paid">Pendente</option>
                                 <option value="blocked">Não transferido por falta de rastreio</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0 form-icons">
                             <label for="date_updated">Data de aprovação venda</label>
-                            <i style="right: 30px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-25"></i>
-                            <input name='date_updated' id="date_updated" class="input-pad" placeholder="Clique para editar..." readonly>
+                            <i style="right: 20px; margin-top: -13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-25"></i>
+                            <input name='date_updated' id="date_updated" class="input-pad" placeholder="Clique para editar..." readonly style="margin-bottom: 50px">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
-                            <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
-                            <label class="switch">
+                            <label for="tracking_problem" style="margin-top: -10px;" class='mb-20 mr-5'>Problemas com o código</label>
+                            <label class="switch" style="margin-bottom: 50px !important;">
                                 <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
                                 <span class="slider round"></span>
                             </label>
                         </div>
                     </div>
-
-                    <div class="collapse" id="bt_collapse">
-                        <div class="row pt-15">
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
-                                <label for="status_commission">Status da comissão</label>
-                                <select name='status_commission' id="status_commission" class="form-control select-pad applySelect2">
-                                    <option value="">Todos</option>
-                                    <option value="transfered">Transferido</option>
-                                    <option value="paid">Pendente</option>
-                                    <option value="blocked">Não transferido por falta de rastreio</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0 form-icons">
-                                <label for="date_updated">Data de aprovação venda</label>
-                                <i style="right: 20px; margin-top: -13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-25"></i>
-                                <input name='date_updated' id="date_updated" class="input-pad" placeholder="Clique para editar..." readonly style="margin-bottom: 50px">
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
-                                <label for="tracking_problem" style="margin-top: -10px;" class='mb-20 mr-5'>Problemas com o código</label>
-                                <label class="switch" style="margin-bottom: 50px !important;">
-                                    <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
+                </div>
+                <div class="row mb-10 mb-sm-0" style="height: 30px">
+                    <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
+                        <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center" data-toggle="collapse" data-target="#bt_collapse" aria-expanded="false" aria-controls="bt_collapse">
+                            <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} " />
+                            <div id="text-filtro" style="white-space: normal">Filtros avançados</div>
                         </div>
                     </div>
                     <div class="col-6 col-xl-3 mt-20">
@@ -404,17 +386,17 @@
 
             <!-- Tabela -->
             <div class="fixhalf my-10"></div>
-
-            <div class="card shadow mb-100">
+            <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive no-final-space">
-                    <table id="tabela_trackings" class="table mb-0 table-trackings unify">
+                    <table id="tabela_trackings" class="table-trackings table unify mb-0" style="">
                         <thead>
                             <tr>
-                                <td>Venda</td>
-                                <td>Produto</td>
-                                <td>Aprovação</td>
-                                <td class="text-center">Status</td>
-                                <td>Código de Rastreio</td>
+                                <td class="table-title">Venda</td>
+                                <td class="table-title">Produto</td>
+                                <td class="table-title">Aprovação</td>
+                                <td class="table-title text-center">Status</td>
+                                <td class="table-title text-center"></td>
+                                <td class="table-title">Código de Rastreio</td>
                             </tr>
                         </thead>
                         <tbody id="dados_tabela" img-empty="{!! mix('build/global/img/rastreio.svg') !!}">
@@ -423,9 +405,8 @@
                     </table>
                 </div>
             </div>
-
-            <div id="pagination-container" class="row no-gutters justify-content-center justify-content-md-end" style="max-height: 45px; margin-bottom: 110px;">
-                <ul id="pagination-trackings" class="pagination-style " style="margin-top:10px; position:relative; float:right;">
+            <div id="container-pagination-trackings" class="d-none row justify-content-center justify-content-md-end mb-80">
+                <ul id="pagination-trackings" class="pagination-style pl-5 pr-md-15 p-10" style="margin-top:10px;position:relative;float:right;">
                     {{-- js carrega... --}}
                 </ul>
             </div>
@@ -487,9 +468,9 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th class="default-title-modal">Data</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Evento</th>
+                                            <th>Data</th>
+                                            <th>Status</th>
+                                            <th>Evento</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-checkpoint"></tbody>

@@ -255,7 +255,7 @@
                         </table>
                     </div>
                 </div>
-                <div id="pagination-container-pending" class="d-none row no-gutters justify-content-center justify-content-md-end">
+                <div id="pagination-container-pending" class="d-none row no-gutters justify-content-center justify-content-md-end mb-50">
                     <ul id="pagination-pending" class="pagination-style mb-15" style="position:relative;float:right">
                         {{-- js carrega... --}}
                     </ul>

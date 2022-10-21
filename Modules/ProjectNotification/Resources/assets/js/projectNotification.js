@@ -308,7 +308,7 @@ $(function () {
 
                                 <td class="project-notification-type">
 
-                                    <div class="fullInformation-sms ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.event}">
+                                    <div class="fullInformation-sms ellipsis-text">
                                         ${value.event}
                                     </div>
 
@@ -318,7 +318,7 @@ $(function () {
 
                                 <td class="project-notification-value">
 
-                                    <div class="fullInformation-sms ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.time}">
+                                    <div class="fullInformation-sms ellipsis-text">
                                         ${value.time}
                                     </div>
 
@@ -326,7 +326,7 @@ $(function () {
 
                                 <td class="project-notification-zip-code-origin">
 
-                                    <div class="fullInformation-sms ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.message}">
+                                    <div class="fullInformation-sms ellipsis-text">
                                         ${value.message}
                                     </div>
 
@@ -387,7 +387,18 @@ $(function () {
                     });
                     $("#pagination-container-sms").removeClass("d-none").addClass("d-flex")
 
-                    $(".fullInformation-sms").tooltip({ container: '.container-tooltips-sms' });
+                    $('.fullInformation-sms').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-sms" })
+                            $this.tooltip("show")
+                        }
+                    });
 
                     pagination(response, "project-notification", atualizarProjectNotification);
                 }

@@ -141,7 +141,7 @@ window.atualizar = function (link = null) {
 
                             <td class='display-sm-none display-m-none display-lg-none text-center text-left'>
 
-                                <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.sale_code}">
+                                <div class="">
                                     ${value.sale_code}
                                 </div>
                                 ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ""}
@@ -151,7 +151,7 @@ window.atualizar = function (link = null) {
 
 
                             <td class="text-left">
-                                <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}">
+                                <div class="fullInformation-blocked ellipsis-text">
                                     ${value.project}
                                 </div>
 
@@ -162,7 +162,7 @@ window.atualizar = function (link = null) {
 
                             <td class="text-left">
 
-                                <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.product}${value.affiliate != null && value.user_sale_type == "producer" ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ""}">
+                                <div class="fullInformation-blocked ellipsis-text">
                                     ${value.product}${value.affiliate != null && value.user_sale_type == "producer" ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ""}
                                 </div>
 
@@ -171,7 +171,7 @@ window.atualizar = function (link = null) {
 
 
                             <td class='display-sm-none display-m-none display-lg-none text-left'>
-                                <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                <div class="fullInformation-blocked ellipsis-text">
                                     ${value.client}
                                 </div>
                             </td>
@@ -205,7 +205,7 @@ window.atualizar = function (link = null) {
                                 </td>
 
                                 <td class="text-left ellipsis-text">
-                                    <div class="fullInformation-blocked ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.reason_blocked}">
+                                    <div class="fullInformation-blocked ellipsis-text">
                                         ${value.reason_blocked}
                                     </div>
                                 </td>
@@ -215,7 +215,19 @@ window.atualizar = function (link = null) {
 
                     $("#dados_tabela").append(dados);
                 });
-                $(".fullInformation-blocked").tooltip({ container: '.container-tooltips-blocked' });
+
+                $('.fullInformation-blocked').bind('mouseover', function () {
+                    var $this = $(this);
+
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                        $this.attr({
+                            'data-toggle': "tooltip",
+                            'data-placement': "top",
+                            'title': $this.text()
+                        }).tooltip({ container: ".container-tooltips-blocked" })
+                        $this.tooltip("show")
+                    }
+                });
 
                 $("#date").val(
                     moment(new Date()).add(3, "days").format("YYYY-MM-DD")

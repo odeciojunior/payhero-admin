@@ -35,8 +35,8 @@
     </div>
 </div>
 
-<div id="pagination-container-order-bump" class="d-none justify-content-center justify-content-md-end">
-    <ul id="pagination-order-bump" class="pagination-s margin-chat-pagination float-right text-right m-0 pagination-style">
+<div id="pagination-container-order-bump" class="d-none justify-content-center justify-content-md-end mb-50">
+    <ul id="pagination-order-bump" class="pagination-s float-right text-right m-0 pagination-style">
         {{-- js carrega... --}}
     </ul>
 </div>

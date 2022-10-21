@@ -104,7 +104,7 @@ window.updateTransfersTable = function (link = null) {
             }
 
             if (response.data == "") {
-                $("#pagination-container").removeClass("d-flex").addClass("d-none")
+                $("#pagination-container-transfers").removeClass("d-flex").addClass("d-none")
 
                 $("#pagination-transfers").css({ "background": "#f4f4f4" })
                 $("#table-transfers-body").html(`
@@ -122,7 +122,7 @@ window.updateTransfersTable = function (link = null) {
                 `);
                 $("#pagination-transfers").html("");
             } else {
-                $("#pagination-container").removeClass("d-none").addClass("d-flex")
+                $("#pagination-container-transfers").removeClass("d-none").addClass("d-flex")
                 data = "";
 
                 $.each(response.data, function (index, value) {
@@ -488,7 +488,7 @@ window.updateAccountStatementData = function () {
 $(window).on("load", function () {
     //atualiza a table de extrato
     $(document).on("click", "#bt_filtro, #bt_filtro_statement", function () {
-        $("#pagination-container").removeClass("d-flex").addClass("d-none")
+        $("#pagination-container-transfers").removeClass("d-flex").addClass("d-none")
         $("#extract_company_select option[value=" + $("#extract_company_select option:selected").val() + "]").prop(
             "selected",
             true

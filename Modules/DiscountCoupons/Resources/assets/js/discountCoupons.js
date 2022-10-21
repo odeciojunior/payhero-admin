@@ -326,19 +326,31 @@ function atualizarCoupon() {
                     let data = `<tr>
                         <td class="">${value.discount}</td>
 
-                        <td class="">${value.name}<br>
-                            <span class="subdescription font-size-12">
+
+                        <td>
+
+                            <div class="fullInformation-coupon ellipsis-text">
+                                ${value.name}
+                            </div>
+
+                            <div class="subdescription fullInformation-coupon ellipsis-text">
                                 ${value.plans}
-                            </span>
+                            </div>
+
+                            <div class="container-tooltips-coupon"></div>
+
                         </td>
+
 
                         <td class="">
                             ${value.value}
                         </td>
-                        ${console.log(value.value)}
+
 
                         <td class="">
-                            ${value.code}
+                            <div class="fullInformation-coupon ellipsis-text">
+                                ${value.code}
+                            </div>
                         </td>
 
 
@@ -377,6 +389,19 @@ function atualizarCoupon() {
                 }
                 // response.meta.current_page = 2
                 pagination(response, 'coupons', atualizarCoupon);
+
+                $('.fullInformation-coupon').bind('mouseover', function () {
+                    var $this = $(this);
+
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                        $this.attr({
+                            'data-toggle': "tooltip",
+                            'data-placement': "top",
+                            'title': $this.text()
+                        }).tooltip({ container: ".container-tooltips-coupon" })
+                        $this.tooltip("show")
+                    }
+                });
             }
         }
     });

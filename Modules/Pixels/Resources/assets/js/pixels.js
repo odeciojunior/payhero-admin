@@ -109,7 +109,7 @@ $(function () {
 
                                 <td>
 
-                                    <div class="fullInformation-pixel ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.name}">
+                                    <div class="fullInformation-pixel ellipsis-text">
                                         ${value.name}
                                     </div>
 
@@ -120,7 +120,7 @@ $(function () {
 
                                 <td>
 
-                                    <div class="fullInformation-pixel ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.code}">
+                                    <div class="fullInformation-pixel">
                                         ${value.code}
                                     </div>
 
@@ -131,7 +131,7 @@ $(function () {
 
                                 <td>
 
-                                    <div class="fullInformation-pixel ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.platform_enum}">
+                                    <div class="fullInformation-pixel ellipsis-text">
                                         ${value.platform_enum}
                                     </div>
 
@@ -181,7 +181,19 @@ $(function () {
                         $("#table-pixel").addClass("table-striped");
                     });
 
-                    $(".fullInformation-pixel").tooltip({ container: '.container-tooltips-pixel' });
+
+                    $('.fullInformation-pixel').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-pixel" })
+                            $this.tooltip("show")
+                        }
+                    });
 
                     pagination(response, "pixels", atualizarPixel);
                 }

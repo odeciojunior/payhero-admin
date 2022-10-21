@@ -37,8 +37,8 @@
     </div>
 </div>
 
-<div id="pagination-container-sms" class="d-none justify-content-center justify-content-md-end">
-    <div id="pagination-project-notification" class="pagination-sm text-right margin-chat-pagination text-right m-0 pagination-style">
+<div id="pagination-container-sms" class="d-none justify-content-center justify-content-md-end mb-50">
+    <div id="pagination-project-notification" class="pagination-sm text-right text-right m-0 pagination-style">
         {{-- js carrega... --}}
     </div>
 </div>

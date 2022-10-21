@@ -8,9 +8,7 @@
 }
 
 /* CONFIGURATIONS THE INTERN CONTENT*/
-.select2-container--default
-    .select2-selection--multiple
-    .select2-selection__choice {
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
     height: 32px;
     border: none !important;
     padding-top: 5px !important;
@@ -20,9 +18,11 @@
 span.select2-selection.select2-selection--multiple {
     scrollbar-width: thin;
 }
+
 .select2-results__options {
     scrollbar-width: thin;
 }
+
 /* and */
 
 ::-webkit-scrollbar {
@@ -55,6 +55,7 @@ span.select2-selection.select2-selection--multiple {
     outline: none;
     border: 1px solid #e0e7ee;
 }
+
 .default-border :focus {
     border: 1px solid #88bfff;
 }
@@ -72,10 +73,12 @@ li.select2-selection__choice {
     width: 100% !important;
     padding-top: 5px !important;
 }
+
 /* END CONFIGURATIONS MULTIPLE SELECT 2 */
 
 /* COMPORTAMENTO TELA */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
+
     #panel-graph,
     #panel-cards {
         min-height: 225px !important;
@@ -83,10 +86,12 @@ li.select2-selection__choice {
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1440px) {
+
     #panel-graph,
     #panel-cards {
         min-height: 200px !important;
     }
+
     #panel-graph {
         max-height: 200px;
     }
@@ -104,6 +109,11 @@ li.select2-selection__choice {
         margin: 0 auto;
     }
 }
+
+.td-odd {
+    background-color: rgba(51, 51, 51, 0.06) !important;
+}
+
 /* END - Trackings Table */
 
 /* Tutorial */
@@ -119,6 +129,7 @@ li.select2-selection__choice {
 .import-example-table tbody tr:nth-child(even) {
     background: #ffffff;
 }
+
 .import-example-table tbody tr:nth-child(odd) {
     background: #e5e5e5;
 }
@@ -168,16 +179,19 @@ td {
     from {
         width: 0;
     }
+
     to {
         width: 100%;
     }
 }
 
 @keyframes blink-caret {
+
     from,
     to {
         border-color: transparent;
     }
+
     50% {
         border-color: #000;
     }
@@ -225,6 +239,7 @@ h4.number {
 #btn-export-csv {
     border-radius: 0em 0.5em 0.5em 0 !important;
 }
+
 .disableFields {
     background-color: #f3f7f9;
 }
@@ -238,13 +253,16 @@ input#date_updated {
 .alert-tracking {
     background-color: #f6faff;
 }
+
 .alert-tracking span.alert-text {
     vertical-align: middle;
     padding-left: 5px;
 }
+
 .alert-tracking img {
     width: 24px;
 }
+
 .text-muted {
     color: #959595 !important;
 }
@@ -253,69 +271,85 @@ input#date_updated {
 .card-height {
     max-height: 101px;
 }
+
 .card-posted {
     border-top-left-radius: 8px !important;
 }
+
 .card-to-delivery {
     border-top-right-radius: 8px !important;
 }
+
 .card-delivery-problem {
     border-bottom-left-radius: 8px !important;
 }
+
 .card-delivered {
     border-bottom-right-radius: 8px !important;
 }
+
 .card-graphic-labels {
     border-radius: 8px !important;
 }
+
 .adjust .card-body {
     padding: 18px;
 }
 
 /* ======== CORES DA LEGENDA DO GRACIFO ======== */
 .posted {
-    color: #ffcd1b; /*postado em amarelo #ffcd1b*/
+    color: #33638f;
 }
+
 .onDelivery {
-    color: #2e85ec; /*Saiu para entrega azul escuro #2E85EC*/
+    color: #00b1ff;
 }
+
 .delivered {
-    color: #41dc8f;
+    color: #1be4a8;
 }
+
 .inTransit {
-    color: #00b1ff; /*em trasito azul claro #00b1ff*/
+    color: #ffcd1b;
 }
+
 .withProblem {
-    color: #e81414;
+    color: #ff2f2f;
 }
+
 .withoutInfo {
-    color: #ebebeb;
+    color: #b9b9b9;
 }
 
 /* ======== CORES DO STATUS NA TABELA ======== */
 .statusPosted {
-    background-color: #ffcd1b; /*postado em amarelo #ffcd1b*/
+    background-color: #33638f;
     color: white;
 }
+
 .statusOnDelivery {
-    background-color: #2e85ec; /*Saiu para entrega azul escuro #2E85EC*/
+    background-color: #00b1ff;
     color: white;
 }
+
 .statusDelivered {
-    background-color: #41dc8f;
+    background-color: #1be4a8;
     color: white;
 }
+
 .statusInTransit {
-    background-color: #00b1ff; /*em trasito azul claro #00b1ff*/
+    background-color: #ffcd1b;
     color: white;
 }
+
 .statusProblem {
-    background-color: #e81414;
+    background-color: #ff2f2f;
     color: white;
 }
+
 .statusWithoutInfo {
-    background-color: #ebebeb;
-    color: #999999 !important;
+    background-color: #b9b9b9;
+    color: white;
 }
 
 /* ======== ARRENDONDA FINAL DA TABELA ======== */
@@ -333,6 +367,13 @@ span.o-add-1.text-primary.border.border-primary {
 }
 
 /* ======== INPUT CODIGO DE RASTREIO ======== */
+input.form-control.font-weight-bold.input-tracking-code[readonly] {
+    border: 1px solid;
+    border-radius: 8px;
+    border-color: #cecece;
+    background: #f1f1f1;
+}
+
 input[type="text"]::placeholder {
     text-align: center;
 }
@@ -344,7 +385,7 @@ input[type="text"]::placeholder {
 }
 
 /* ======== BOTAO CHECKED SALVAR ======== */
-a.tracking-save.pointer.text-center {
+a.tracking-save.pointer.mr-10.text-center {
     text-align: center;
     background: #2e85ec;
     border-radius: 5px;
@@ -352,9 +393,11 @@ a.tracking-save.pointer.text-center {
     padding: 7px 9px 0px 9px !important;
     transition: 0.5s;
 }
+
 a.tracking-save.pointer.mr-10.text-center:hover {
     background: #206eca;
 }
+
 #pencil {
     font-size: 20px !important;
     -webkit-text-stroke: 2px rgb(255, 255, 255);
@@ -362,15 +405,16 @@ a.tracking-save.pointer.mr-10.text-center:hover {
 
 /* ======== BOTAO FECHAR/CANCELAR ======== */
 div.tracking-close.pointer {
-    color: black;
+    color: #000;
     background: #ededed;
     border-radius: 5px;
     font-size: 25px;
     width: 36px;
     height: 38px;
-    padding: 9px 0px 0px 8px;
+    padding: 9px 0 0 8px;
     transition: 1s;
 }
+
 div.tracking-close.pointer:hover {
     background: #d1d1d1;
     font-size: 25px !important;
@@ -380,12 +424,12 @@ div.tracking-close.pointer:hover {
 a.tracking-edit.pointer {
     color: #f1f1f1;
     border: 1px solid !important;
+    border-color: #cecece !important;
     border-radius: 5px !important;
     padding-top: 6px;
     min-width: 37px;
-    background: #ebebeb;
-
 }
+
 span.text-right.o-edit-1 {
     border-radius: 5px !important;
     border-width: 2px !important;
@@ -398,6 +442,7 @@ a.tracking-detail.pointer {
     padding-top: 6px;
     margin-right: 20px;
 }
+
 span.o-eye-1 {
     padding: 6px 5px 0px 5px !important;
 }
@@ -408,6 +453,7 @@ div#dataCharts {
     justify-content: flex-end;
     border-radius: 8px;
 }
+
 #noData {
     z-index: 1;
     position: relative;
@@ -435,19 +481,23 @@ div#dataCharts {
     display: flex;
     flex-direction: column;
 }
+
 span#total-products {
     font-size: 24px;
     font-weight: bold;
     color: #0d2c54;
     margin-top: 4px;
 }
+
 td.table-title {
     color: #0d2c54 !important;
 }
+
 .resume-number {
     font-size: 24px;
     font-weight: bold;
 }
+
 #graphic-loading {
     height: 100%;
     width: 95%;
@@ -457,67 +507,12 @@ td.table-title {
     align-items: center;
     background-color: rgb(255, 255, 255);
 }
+
 #alert-tracking-issues {
     border-radius: 10px;
 }
+
 .labels {
     margin-top: 9px;
     margin-bottom: 9px;
 }
-.nav-btn {
-    height: 36px;
-}
-.table td:nth-child(2) span {
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.default-title-modal{
-    padding-left: 32px !important;
-}
-
-.badge-statusPosted{
-    background-color: #41dc8f;
-    color: #FFFFFF !important;
-}
-
-/* INPUT VAZIO */
-.tracking-code-empty{
-    height: 38px;
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-}
-.input-tracking-code{
-    outline: none !important;
-    border-radius: 12px 0px 0px 12px;
-    border-right: none;
-    border: none;
-}
-
-/* DIV PAI DO INPUT */
-.input-code-options{
-    border-radius: 10px;
-    border:1px solid #cccccc;
-    background: #f1f1f1;
-}
-.input-code-options:hover{
-    border: 1px solid #2bb2ff;
-    outline: none;
-}
-
-/* SPANB DE ALERTA */
-.icon-alert-code {
-    padding: 0px 8px;
-    border: none;
-    border-radius: 0px 8px 8px 0px;
-    background: #f4f4f4;
-}
-
-@media (min-width: 768px) {
-    .table td:nth-child(2) {
-        max-width: 106px;
-    }
-}
-

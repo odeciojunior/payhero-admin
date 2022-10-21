@@ -423,6 +423,7 @@ $(document).ready(function () {
     });
 
     function pagination(response, model) {
+        console.log("CAIU AQUI");
         if (response.meta.last_page == 1) {
             $("#pagination-integrates").css({ "background": "#f4f4f4" })
             $("#primeira_pagina_" + model).hide();

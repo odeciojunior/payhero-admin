@@ -388,7 +388,7 @@ $(document).ready(function () {
 
                     dados += `
                                 <td class="">
-                                    <div class='fullInformation ellipsis-text' data-toggle='tooltip' data-placement='top' title='"${value.reason}"'> ${value.reason} </div>
+                                    <div class='fullInformation ellipsis-text'> ${value.reason} </div>
 
                                 </td>
 

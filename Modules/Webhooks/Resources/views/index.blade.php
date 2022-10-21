@@ -68,9 +68,13 @@
             </div>
         </div>
 
-        <ul id="pagination-webhooks" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
-            {{-- js pagination carrega --}}
-        </ul>
+        <div id="pagination-container-webhooks" class="d-none row no-gutters justify-content-center justify-content-md-end mb-50">
+
+            <ul id="pagination-webhooks" class="pagination-sm pagination-style" style="margin-top:10px;position:relative;float:right">
+                {{-- js pagination carrega --}}
+            </ul>
+
+        </div>
 
         <div class="modal fade modal-new-layout" id="modal-webhook" data-backdrop="static" role="dialog" tabindex="-1">
             <div id="mainModalBody" class="modal-dialog modal-dialog-centered modal-simple">

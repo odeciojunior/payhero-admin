@@ -585,7 +585,7 @@ $(document).ready(function () {
 
                                     <td class="text-left">
 
-                                        <div class="fullInformation-pending ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}">
+                                        <div class="fullInformation-pending ellipsis-text">
                                             ${value.project}
                                         </div>
 
@@ -594,7 +594,7 @@ $(document).ready(function () {
 
                                     <td class="text-left">
 
-                                        <div class="fullInformation-pending ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                        <div class="fullInformation-pending ellipsis-text">
                                             ${value.client}
                                         </div>
 
@@ -625,7 +625,19 @@ $(document).ready(function () {
 
                         $("#body-table-pending").append(dados);
                     });
-                    $(".fullInformation-pending").tooltip({ container: '.container-tooltips-pending' });
+
+                    $('.fullInformation-pending').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-pending" })
+                            $this.tooltip("show")
+                        }
+                    });
 
 
                     $("#date").val(
