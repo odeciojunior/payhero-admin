@@ -36,8 +36,7 @@ class CompaniesSelectResource extends JsonResource
         $companyIsApproved = false;
         if (
             $companyDocumentStatus == "approved" &&
-            $userAddressDocumentStatus == "approved" &&
-            $this->user->biometry_status == User::BIOMETRY_STATUS_APPROVED
+            $userAddressDocumentStatus == "approved"
         ) {
             $companyIsApproved = true;
         }
