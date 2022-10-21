@@ -9,7 +9,7 @@
     <!-- Page -->
     <div class="page">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
         <div class="page-header container">
             <h1 class="page-title"
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="page-content container">
-            <div class="mb-15">
+            <div style="margin-bottom: 24px">
                 <div class="nav-tabs-horizontal"
                      data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line"

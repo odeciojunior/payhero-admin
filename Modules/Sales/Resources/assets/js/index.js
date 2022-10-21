@@ -392,7 +392,8 @@ function salesResume() {
 
             if (response.total_sales) {
                 $("#total-sales, #commission, #total").text("");
-                $("#total-sales").html(`<span class="font-size-30 bold"> ${response.total_sales} </span>`);
+                let quant = response.total_sales;
+                $("#total-sales").html(`<span class="font-size-30 bold"> ${quant.toLocaleString("pt-BR")} </span>`);
 
                 let font_commission_style = "";
                 if (`${response.commission}`.length == 12) {

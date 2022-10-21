@@ -11,6 +11,16 @@
         </div>
     </div>
 </div>
+<style>
+    #tab_configuration_integration .card {
+        padding: 24px 9px;
+    }
+
+    #table-events thead tr td:first-child,
+    #table-events tbody tr td:first-child {
+        padding-left: 32px !important;
+    }
+</style>
 <div class="card shadow">
     <div>
         <div class='page-invoice-table table-responsive'>
