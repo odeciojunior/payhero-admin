@@ -245,7 +245,7 @@ function atualizar(link = null) {
                                 ${end_date}
                             </td>
 
-                            <td class="text-center text-md-right text-nowrap commission-fweight">
+                            <td class="text-left text-nowrap commission-fweight">
                                 ${cashback ? cashback : `<b>${value.total_paid}<b><br>`}
                             </td>
 
