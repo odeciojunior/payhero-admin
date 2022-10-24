@@ -13,12 +13,12 @@ thead {
 }
 
 .table thead>tr>td:first-child {
-    padding: 16px 16px 16px 32px;
+    padding: 16px 16px 16px 20px;
 }
 
 @media (min-width: 767px) {
     .table tbody>tr>td:first-child {
-        padding-left: 32px;
+        padding-left: 20px;
     }
 }
 

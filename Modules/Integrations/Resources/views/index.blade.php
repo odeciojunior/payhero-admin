@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <div id="container-pagination" class="row justify-content-center justify-content-md-end pb-25 mb-40">
+        <div id="container-pagination" class="row no-gutters justify-content-center justify-content-md-end pb-25 mb-40">
             <ul id="pagination-integrates" class="pagination-sm pagination-style" style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>
