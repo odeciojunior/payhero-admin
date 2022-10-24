@@ -1221,6 +1221,7 @@ class SaleService
         $saleInfo = DB::table("sale_informations")
             ->select("customer_name", "last_four_digits")
             ->where("sale_id", "=", $transaction->sale_id)
+            ->orderByDesc('id')
             ->first();
 
         $arr = explode(" ", trim($saleInfo->customer_name));

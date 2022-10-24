@@ -198,7 +198,8 @@
                                 <div class="tit">Realizado em</div>
                                 <div class="val">
                                     {{ \Illuminate\Support\Carbon::parse($refundDate)->format('d/m/Y') }} às
-                                    {{ \Illuminate\Support\Carbon::parse($refundDate)->format('H:i') }}</div>
+                                    {{ \Illuminate\Support\Carbon::parse($refundDate)->format('H:i') }}
+                                </div>
                             </td>
                         </tr>
                     </table>
@@ -289,23 +290,23 @@
                 <br>
                 <div style="font-size: 14px;">Com a tecnologia &nbsp; &nbsp;
                     @if ($transaction->gateway_id == 8 || $transaction->gateway_id == 20)
-                        <img src="build/global/img/adquirintes/asaas.svg"
+                        <img src="build/global/img/gateways/asaas.svg"
                              alt="Asaas Logo"
                              class="gateway-logo">
                     @elseif($transaction->gateway_id == 18 || $transaction->gateway_id == 19)
-                        <img src="build/global/img/adquirintes/gerencianet.svg"
+                        <img src="build/global/img/gateways/gerencianet.svg"
                              alt="Gerencianet Logo"
                              class="gateway-logo">
                     @elseif($transaction->gateway_id == 15 || $transaction->gateway_id == 14)
-                        <img src="build/global/img/getnet-logo.png"
+                        <img src="build/global/img/gateways/getnet.png"
                              alt="Getnet Logo"
                              class="gateway-logo">
                     @elseif($transaction->gateway_id == 5 || $transaction->gateway_id == 6)
-                        <img src="build/global/img/adquirintes/cielo.svg"
+                        <img src="build/global/img/gateways/cielo.svg"
                              alt="Cielo Logo"
                              class="gateway-logo">
-                    @elseif($transaction->gateway_id == 21 || $transaction->gateway_id == 22)
-                        <img src="build/global/img/vega-logo.png"
+                    @elseif(in_array($transaction->gateway_id, [21, 22, 23, 24, 25, 26]))
+                        <img src="build/global/img/gateways/vega.svg"
                              alt="Vega Logo"
                              class="gateway-logo">
                     @endif

@@ -2,6 +2,7 @@
 
 namespace Modules\Api\Http\Controllers\V1;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -13,6 +14,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\Api\V1\TrackingsApiService;
 use Modules\Core\Services\TrackingService;
+use Modules\Trackings\Transformers\TrackingResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
@@ -76,14 +78,15 @@ class TrackingsApiController extends Controller
         try {
             $requestData = $request->all();
 
-            $trackings = TrackingsApiService::getTrackingsQueryBuilder($requestData);
+            $trackingService = new TrackingsApiService();
+            $trackings = $trackingService->getTrackingsQueryBuilder($requestData);
 
             return TrackingsApiResource::collection($trackings->simplePaginate(10));
         } catch (Exception $e) {
             report($e);
 
             return response()->json([
-                'message' => 'Erro ao listar códigos de rastreio.'
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -91,20 +94,54 @@ class TrackingsApiController extends Controller
     public function showTrackings($id)
     {
         try {
-            $trackings = TrackingsApiService::showTrackingsQueryBuilder($id);
+            $trackingsApiService = new TrackingsApiService();
+            $trackingService = new TrackingService();
+            $trackingModel = new Tracking();
+
+            $trackingBuilder = $trackingsApiService->getTrackingsQueryBuilder([], $id);
+
+            $trackings = $trackingBuilder->first();
+
             if (empty($trackings)) {
                 return response()->json([
                     'message' => 'Código de rastreio não encontrado.'
                 ], 404);
             }
-            $trackings['checkpoints'] = true;
+
+            $postedStatus = $trackingModel->present()->getTrackingStatusEnum("posted");
+            $checkpoints = collect();
+
+            //objeto postado
+            $checkpoints->add([
+                "tracking_status_enum" => $postedStatus,
+                "tracking_status" => __(
+                    "definitions.enum.tracking.tracking_status_enum." . $trackingModel->present()->getTrackingStatusEnum($postedStatus)
+                ),
+                "created_at" => Carbon::parse($trackings->created_at)->format("d/m/Y"),
+                "event" => "Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.",
+            ]);
+
+            $apiTracking = $trackingService->findTrackingApi($trackings);
+            $checkpointsApi = $trackingService->getCheckpointsApi($trackings, $apiTracking);
+
+            $checkpoints = $checkpoints
+                ->merge($checkpointsApi)
+                ->unique()
+                ->sortKeysDesc()
+                ->values()
+                ->toArray();
+
+            $trackings->checkpoints = $checkpoints;
+
+
 
             return new TrackingsApiResource($trackings);
         } catch (Exception $e) {
             report($e);
 
             return response()->json([
-                'message' => 'Erro ao listar códigos de rastreio.'
+                // 'message' => 'Erro ao listar código de rastreio.'
+                'message' => $e->getMessage()
             ], 400);
         }
     }

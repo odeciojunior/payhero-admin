@@ -43,6 +43,9 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 verifyCompanies(response.data);
+
+                if (loading == "y") loadingOnScreenRemove();
+                else loadOnAny("#content", true);
             },
         });
     }

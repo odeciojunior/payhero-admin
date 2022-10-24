@@ -39,7 +39,7 @@ use Spatie\Activitylog\Models\Activity;
 class Plan extends Model
 {
     use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
-    
+
     public const STATUS_ACTIVE = 1;
     public const STATUS_DESABLE = 0;
 
@@ -71,6 +71,8 @@ class Plan extends Model
         "status",
         "shopify_id",
         "shopify_variant_id",
+        "active_flag",
+        "processing_cost",
         "created_at",
         "updated_at",
         "deleted_at",
