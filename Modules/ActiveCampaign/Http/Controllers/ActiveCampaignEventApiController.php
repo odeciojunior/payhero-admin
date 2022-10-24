@@ -63,11 +63,12 @@ class ActiveCampaignEventApiController extends Controller
     public function show(Request $request)
     {
         try {
-            $data = current($request->only("integration"));
+            $data = $request->id;
             $id = current(Hashids::decode($data));
 
             $activecampaignEventModel = new ActivecampaignEvent();
             $activecampaignEvent = $activecampaignEventModel->find($id);
+
             $event = $this->getEventsName([$activecampaignEvent->event_sale]);
             $activecampaignEvent->event_text = $event[0]["name"];
 
@@ -449,9 +450,10 @@ class ActiveCampaignEventApiController extends Controller
             $activeCampaignService = new ActiveCampaignService();
 
             $eventsIntegration = $integration->events->pluck("event_sale")->toArray();
-            $eventsDiff = array_diff([1, 2, 3, 4, 5, 6], $eventsIntegration);
 
+            $eventsDiff = array_diff([1, 2, 3, 4, 5, 6, 7, 8, 9], $eventsIntegration);
             $events = $this->getEventsName($eventsDiff);
+
             $events = collect($events);
             if ($activeCampaignService->setAccess($integration->api_url, $integration->api_key, $integration->id)) {
                 $tags = $activeCampaignService->getTags();
@@ -490,6 +492,15 @@ class ActiveCampaignEventApiController extends Controller
                     break;
                 case 6:
                     $events[] = ["name" => "Rastreio adicionado", "id" => 6];
+                    break;
+                case 7:
+                    $events[] = ["name" => "Pix gerado", "id" => 7];
+                    break;
+                case 8:
+                    $events[] = ["name" => "Pix pago", "id" => 8];
+                    break;
+                case 9:
+                    $events[] = ["name" => "Pix expirado", "id" => 9];
                     break;
             }
         }

@@ -695,7 +695,7 @@ $(() => {
         let btnSave = $(this);
         btnSave.prop("disabled", true);
 
-        let tracking_code = btnSave.parent().parent().find(".input-tracking-code").val();
+        let tracking_code = btnSave.parent().parent().parent().find(".input-tracking-code").val();
         let ppsId = btnSave.attr("pps");
 
         $.ajax({
@@ -747,7 +747,7 @@ $(() => {
                                 <span class="o-eye-1"></span>
                             </a>
                         </div>`;
-                    $(buttons).insertBefore(saveClose);
+                    //$(buttons).insertBefore(saveClose);
 
                     let statusBadge = btnSave.parent().parent().parent().parent().find(".badge");
                     statusBadge
