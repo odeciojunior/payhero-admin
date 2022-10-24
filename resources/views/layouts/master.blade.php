@@ -125,7 +125,7 @@
     @stack('scripts')
     @stack('scriptsModal')
 
-    @if (env('APP_ENV', 'production') == 'local')
+    @if (env('APP_ENV', 'production') == 'production')
     <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
 
     <style>
