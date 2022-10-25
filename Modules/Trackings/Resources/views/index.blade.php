@@ -405,7 +405,7 @@
                     </table>
                 </div>
             </div>
-            <div id="container-pagination-trackings" class="d-none row justify-content-center justify-content-md-end mb-80">
+            <div id="container-pagination-trackings" class="d-none row no-gutters justify-content-center justify-content-md-end mb-80">
                 <ul id="pagination-trackings" class="pagination-style pl-5 pr-md-15 p-10" style="margin-top:10px;position:relative;float:right;">
                     {{-- js carrega... --}}
                 </ul>

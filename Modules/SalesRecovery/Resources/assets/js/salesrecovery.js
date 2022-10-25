@@ -450,7 +450,7 @@ $(document).ready(function () {
                 </td>
 
 
-                <td>
+                <td class="text-center">
                     <span class="sale_status badge badge-${statusRecovery[value.status_translate]}" status="${value.status_translate}" sale_id="${value.id}">
                         ${value.status_translate}
                     </span>
@@ -549,7 +549,7 @@ $(document).ready(function () {
                 </td>
 
 
-                <td>
+                <td class="text-center">
                     <span class="sale_status badge badge-${statusRecovery[value.recovery_status]}" sale_id="${value.id_default}" >
                         ${value.recovery_status}
                     </span>
@@ -565,7 +565,10 @@ $(document).ready(function () {
 
                     <a href=${value.whatsapp_link}" target="_blank" title="Enviar mensagem pelo whatsapp">
 
-                        <span class="o-whatsapp-1"> </span>
+                        <span class="">
+                        <img src="build/global/img/whatsapp-icon-new.svg"/>
+
+                        </span>
 
                     </a>
 

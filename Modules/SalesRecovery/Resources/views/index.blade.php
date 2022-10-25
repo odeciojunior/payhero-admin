@@ -129,8 +129,8 @@
                                 <td class="text-center">Status</td>
                                 <td class="">Valor</td>
                                 <td class="display-sm-none"></td>
-                                <td class="display-sm-none">Link</td>
-                                <td class="display-sm-none">Detalhes</td>
+                                <td class="display-sm-none text-center">Link</td>
+                                <td class="display-sm-none text-center">Detalhes</td>
                             </tr>
                         </thead>
                         <tbody id="table_data" class='min-row-height' img-empty="{!! mix('build/global/img/geral-1.svg') !!}">

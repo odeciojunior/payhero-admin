@@ -348,7 +348,7 @@ function atualizarCoupon() {
 
 
                         <td class="">
-                            <div class="fullInformation-coupon ellipsis-text">
+                            <div class="">
                                 ${value.code}
                             </div>
                         </td>
@@ -1755,6 +1755,7 @@ var items_selected = []
 $(function () {
 
     $('#bt-search').click(function () {
+        $("#pagination-container-coupon").removeClass("d-flex").addClass("d-none")
         atualizarCoupon()
     })
 

@@ -3770,15 +3770,16 @@ $(function () {
                                         </strong>
                                     </td>
 
-                                    <td id="link" data-status="${value.status}" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; ${(value.status == 1 ? "cursor:pointer;" : "")} link="${value.code}">
-                                        <span ${(value.status == 0 ? 'data-toggle="tooltip" title="Domínio não confirugado"' : "")}>
+                                    <td id="link" data-status="${value.status}" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; ${value.status == 1 ? "cursor:pointer;" : ""}" link="${value.code}">
 
-                                            <span class="display-sm-none display-m-none">
-                                                Copiar
-                                            </span>
+                                        <span${(value.status == 0 ? "data-toggle='tooltip' title='Domínio não confirugado'" : "")}>
+
+                                            <span class="display-sm-none display-m-none">Copiar</span>
 
                                             <img src="/build/global/img/icon-copy-c.svg">
+
                                         </span>
+
                                     </td>
 
                                     <td class="text-center">

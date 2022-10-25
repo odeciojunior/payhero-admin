@@ -78,7 +78,7 @@ $(document).ready(function () {
             dados += value.url + "<br>";
             dados += '<span class="subdescription font-size-12">' + value.company_name + "</span>";
             dados += "</td>";
-            dados += '<td class="text-center">';
+            dados += '<td class="text-right">';
             dados +=
                 '<button type="button" class="btn pointer edit-webhook" style="background-color:transparent;" webhook="' +
                 value.id +

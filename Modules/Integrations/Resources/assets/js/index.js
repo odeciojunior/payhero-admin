@@ -151,12 +151,12 @@ $(document).ready(function () {
             dados = "";
             dados += "<tr>";
 
-            dados += '<td class="ellipsis-text">';
-            dados += value.description + '<br>';
+            dados += '<td>';
+            dados += '<div class="fullInformation-api ellipsis-text">' + value.description + '</div>';
             if (value.integration_type_enum !== 5) {
                 dados += '<div><span class="subdescription font-size-12">' + integrationTypeEnum[value.integration_type] + '</span></div>';
             }
-            dados += '<span class="subdescription font-size-12">Criada em ' + value.register_date + '</span>';
+            dados += '<span class="subdescription font-size-12">Criada em ' + value.register_date + '</span> <div class="container-tooltips-api"></div>';
             dados += '</td>';
 
             dados += '<td style="vertical-align: middle;">';
@@ -202,6 +202,19 @@ $(document).ready(function () {
         $("#integrations_active").html("" + response.resume.active + "");
         $("#posts_received").html("" + response.resume.received + "");
         $("#posts_sent").html("" + response.resume.sent + "");
+
+        $('.fullInformation-api').bind('mouseover', function () {
+            var $this = $(this);
+
+            if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                $this.attr({
+                    'data-toggle': "tooltip",
+                    'data-placement': "top",
+                    'title': $this.text()
+                }).tooltip({ container: ".container-tooltips-api" })
+                $this.tooltip("show")
+            }
+        });
     }
 
     // Obtem os dados da integração
