@@ -305,7 +305,7 @@ $(() => {
     //CRIANDO GRAFICO
     let myChart = null;
     function inicializeChart(colors, dataValues) {
-        if (dataValues) dataValues = dataValues.map((n) => (n ? n.split(".").join("") : "0"));
+        if (dataValues) dataValues = dataValues.map((n) => (n ? n.toString().split(".").join("") : "0"));
         $("#myChart").show();
         if (myChart !== null) {
             myChart.destroy();

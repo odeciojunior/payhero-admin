@@ -404,9 +404,13 @@ class TrackingService
                 $join->where("s.id", $saleId);
             }
 
+            $filters["project"] = is_array($filters["project"])
+                ? implode(",", $filters["project"])
+                : $filters["project"];
+
             $projects = null;
             if (!empty($filters["project"]) && $filters["project"][0] != "") {
-                explode(",", $filters["project"]);
+                $projects = explode(",", $filters["project"]);
             }
 
             $tokens = [];
@@ -430,7 +434,7 @@ class TrackingService
         });
 
         //filtro transactions
-        if (!empty($filters["transaction_status"])) {
+        if (!empty($filters["transaction_status"]) && $filters["transaction_status"][0] != "") {
             $productPlanSales->join("transactions as t", function ($join) use ($companyId, $filters) {
                 $join
                     ->on("t.sale_id", "=", "s.id")
@@ -495,7 +499,7 @@ class TrackingService
             });
         }
 
-        if (!empty($filters["status"])) {
+        if (!empty($filters["status"]) && $filters["status"][0] != "") {
             $filters["status"] = is_array($filters["status"]) ? implode(",", $filters["status"]) : $filters["status"];
 
             $productPlanSales->where(function ($where) use ($filters) {
