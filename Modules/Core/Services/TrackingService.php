@@ -470,11 +470,7 @@ class TrackingService
             $productPlanSales->whereNotNull("t.id");
         }
 
-        $productPlanSales
-            ->where("t.type", Transaction::TYPE_PRODUCER)
-            ->whereNull("t.invitation_id")
-            ->where("t.is_waiting_withdrawal", 0)
-            ->whereNull("t.withdrawal_id");
+        $productPlanSales->where("t.type", Transaction::TYPE_PRODUCER)->whereNull("t.invitation_id");
 
         if ((!empty($filters["problem"]) && $filters["problem"] == 1) || !empty($filters["tracking_code"])) {
             $productPlanSales->join("trackings as t2", function ($leftJoin) use ($filters) {
