@@ -319,3 +319,8 @@ li.select2-selection__choice {
     border: none;
     border-radius: 4px;
 }
+
+.badge-disable {
+    background-color: #EBEBEB;
+    color: #999999;
+}

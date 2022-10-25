@@ -1880,9 +1880,14 @@ input[type="radio"] {
     padding-right: 38px !important;
 }
 
-.page-project .table td {
+.page-project .table>thead>tr>td:nth-of-type(1) {
     padding-top: 25px !important;
     padding-bottom: 25px !important;
+}
+
+.page-project .table td {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
 }
 
 .page-project .table .copy_link {
@@ -3849,6 +3854,7 @@ tbody td {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    height: 19px;
 }
 
 .subdescription {

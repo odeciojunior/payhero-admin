@@ -57,7 +57,7 @@ function atualizar(link = null) {
             let statusArray = {
                 1: "success",
                 6: "primary",
-                7: "danger",
+                7: "disable",
                 8: "warning",
                 4: "danger",
                 3: "danger",
@@ -65,7 +65,7 @@ function atualizar(link = null) {
                 12: "success",
                 20: "antifraude",
                 21: "danger",
-                22: "danger",
+                22: "disable",
                 23: "warning",
                 24: "antifraude",
             };
@@ -137,14 +137,14 @@ function atualizar(link = null) {
                     }
 
                     let cupomCode = "";
-                    console.log(value);
+
                     if (
                         !isEmpty(value.cupom_code) ||
                         (value.cupom_code === null && false) ||
                         (value.cupom_code === "" && false)
                     ) {
                         cupomCode = `
-                            <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}" role="button" style='margin-left: 5px;'>
+                            <a class="icon-transaction" data-toggle="tooltip" data-placement="top" title="Utilizado o cupom ${value.cupom_code}" role="button" style='margin-left: 5px;'>
                                 <img width="25px" src="/build/global/img/icon-cupom-discout.svg">
                             </a>`
                             ;
@@ -154,7 +154,7 @@ function atualizar(link = null) {
 
                     if (value.upsell) {
                         upsell = `
-                            <a data-toggle="tooltip" title="Upsell" role="button" style='margin-left: 5px;'>
+                            <a class="icon-transaction" data-toggle="tooltip" data-placement="top" title="Upsell" role="button" style='margin-left: 5px;'>
                                 <img width="20px" src="/build/global/img/icon-upsell.svg">
                             </a>`
                             ;
@@ -163,8 +163,8 @@ function atualizar(link = null) {
                     let has_order_bump = "";
                     if (value.has_order_bump) {
                         has_order_bump = `
-                            <a data-toggle="tooltip" title="Order Bump" role="button" style='margin-left: 5px;'>
-                                <img width="20px" src="/build/global/img/order-bump.svg">
+                            <a class="icon-transaction" data-toggle="tooltip" data-placement="top" title="Order bump" role="button" style='margin-left: 5px;'>
+                                <img id="order-bump" width="20px" src="/build/global/img/order-bump-icon-new.svg">
                             </a>`
                             ;
                     }
@@ -173,12 +173,12 @@ function atualizar(link = null) {
                     let cashbackIcon = "";
                     if (value.cashback_value != "0.00") {
                         cashbackIcon = `
-                            <a data-toggle="tooltip" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
+                            <a class="icon-transaction" data-toggle="tooltip" data-placement="top" title="${value.cashback_value}" role="button" style='margin-left: 5px;'>
                                 <img width="27px" src="/build/global/img/icons-cashback.svg">
                             </a>`
                             ;
 
-                        cashback = `<b style="color: #5EE2A1;">${value.total_paid}</b>`;
+                        cashback = `<b style="color: #636363;">${value.total_paid}</b>`;
                     }
 
                     if (value.status_translate === "Cancelado Antifraude") {
@@ -245,7 +245,7 @@ function atualizar(link = null) {
                                 ${end_date}
                             </td>
 
-                            <td class="text-left text-nowrap commission-fweight">
+                            <td class="text-center text-nowrap commission-fweight">
                                 ${cashback ? cashback : `<b>${value.total_paid}<b><br>`}
                             </td>
 
@@ -261,6 +261,7 @@ function atualizar(link = null) {
                         </tr>`;
 
                     $("#dados_tabela").append(dados);
+
                 });
 
                 $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
@@ -279,6 +280,8 @@ function atualizar(link = null) {
                         $this.tooltip("show")
                     }
                 });
+
+                $('.icon-transaction').tooltip({ container: ".container-tooltips-sales" })
 
             } else {
                 $("#dados_tabela").html(

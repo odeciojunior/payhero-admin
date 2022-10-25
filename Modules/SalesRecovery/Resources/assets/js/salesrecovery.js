@@ -458,7 +458,7 @@ $(document).ready(function () {
 
 
                 <td class="commission-fweight">
-                    ${value.value}
+                    <b>${value.value}</b>
                 </td>
 
 
@@ -557,7 +557,7 @@ $(document).ready(function () {
 
 
                 <td class="commission-fweight" >
-                    ${value.total_paid}
+                    <b>${value.total_paid}</b>
                 </td>
 
 
