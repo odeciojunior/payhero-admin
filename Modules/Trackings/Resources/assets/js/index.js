@@ -543,7 +543,11 @@ $(() => {
                                 </td>`;
 
                     dados += `<td style="width: 2%;padding: 0px !important;">
-                                    ${systemStatus[tracking.system_status_enum]}
+                                    ${
+                                        systemStatus[tracking.system_status_enum] != undefined
+                                            ? systemStatus[tracking.system_status_enum]
+                                            : ""
+                                    }
                                     ${
                                         tracking.is_chargeback_recovered
                                             ? `<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
