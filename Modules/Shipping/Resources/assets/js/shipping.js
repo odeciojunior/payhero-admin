@@ -1,6 +1,6 @@
 let statusShipping = {
     1: "success",
-    0: "danger",
+    0: "disable",
 };
 
 let activeShipping = {

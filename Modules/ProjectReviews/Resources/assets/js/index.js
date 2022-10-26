@@ -169,7 +169,7 @@ $(document).ready(function () {
                         <tr>
                             <td>
 
-                                <div class="fullInformation-reviwe ellipsis-text">
+                                <div class="fullInformation-reviwe ellipsis-text" style="height:35px;">
                                     <img src="${value.photo || "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"}" class="img-fluid rounded-circle mr-2" width="35" height="35">
                                     ${value.name}
                                 </div>
@@ -198,7 +198,7 @@ $(document).ready(function () {
                                     Ativo
                                 </span>`
 
-                                : `<span class="badge badge-danger">
+                                : `<span class="badge badge-disable">
                                     Desativado
                                 </span>`}
 

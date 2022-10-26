@@ -1,6 +1,6 @@
 let statusCupons = {
     1: "success",
-    0: "secondary",
+    0: "disable",
 };
 var edit_rules = []
 var cancel_edit_rules = []

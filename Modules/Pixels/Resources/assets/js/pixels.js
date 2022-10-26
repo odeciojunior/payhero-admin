@@ -1,6 +1,6 @@
 const statusPixel = {
     1: "success",
-    0: "danger",
+    0: "disable",
 };
 
 const srcPlatforms = {

@@ -1,6 +1,6 @@
 $(function () {
     var statusPlan = {
-        0: "default",
+        0: "disable",
         1: "success",
     };
     var projectId = $(window.location.pathname.split("/")).get(-1);
