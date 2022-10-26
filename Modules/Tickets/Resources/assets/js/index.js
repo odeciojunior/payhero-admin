@@ -13,42 +13,12 @@ const statusColor = {
     2: "closed",
     3: "mediation",
 };
-const resumeLoader = {
-    styles: {
-        container: {
-            justifyContent: "flex-start",
-            minHeight: 33,
-        },
-        loader: {
-            width: 20,
-            height: 20,
-            borderWidth: 4,
-        },
-    },
-};
 const loader = {
     width: "60px",
     height: "60px",
     borderWidth: "5px",
     borderColor: "#d3d3d3",
     borderLeftColor: "transparent",
-};
-const ticketLoader = {
-    styles: {
-        loader: loader,
-        container: {
-            minHeight: "430px",
-        },
-    },
-    insertBefore: ".pagination-container",
-};
-const messageLoader = {
-    styles: {
-        loader: loader,
-        container: {
-            minHeight: "520px",
-        },
-    },
 };
 
 const attachments2send = [];
@@ -58,12 +28,11 @@ $(() => {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $("#project-empty").hide();
         $("#project-not-empty").show();
-        loadOnAny(".tickets-container", false, ticketLoader);
         $("#project-select").find("option").not(":first").remove();
         $("#ticket-open .detail").html("");
         $("#ticket-mediation .detail").html("");
         $("#ticket-closed .detail").html("");
-        // loadOnAny(".number", false, resumeLoader);
+        showLoadingSkeleton();
         updateCompanyDefault().done(function (data1) {
             getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2;
@@ -97,12 +66,6 @@ $(() => {
     });
 
     function getProjects(loading = "y") {
-        // if(loading=='y')
-        //     loadingOnScreen();
-        // else{
-        //     $("#content").html("");
-        // }
-
         let hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
             $.each(companiesAndProjects.company_default_projects, function (i, project) {
@@ -126,37 +89,6 @@ $(() => {
             $("#project-empty").hide();
             loadingOnScreenRemove();
         }
-
-        // $.ajax({
-        //     method: "GET",
-        //     url: '/api/projects?select=true&company='+ $('.company-navbar').val(),
-        //     dataType: "json",
-        //     headers: {
-        //         'Authorization': $('meta[name="access-token"]').attr('content'),
-        //         'Accept': 'application/json',
-        //     },
-        //     error: resp => {
-        //         loadingOnScreenRemove();
-        //         errorAjaxResponse(resp);
-        //     },
-        //     success: resp => {
-        //         if (resp.data.length) {
-        //             for (let project of resp.data) {
-        //                 $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
-        //             }
-        //             index();
-        //             getResume();
-        //             $('.page-header').show();
-        //             $("#project-not-empty").show();
-        //             $("#project-empty").hide();
-        //         } else {
-        //             $('.page-header').hide();
-        //             $("#project-not-empty").hide();
-        //             $("#project-empty").show();
-        //         }
-        //         loadingOnScreenRemove();
-        //     }
-        // });
     }
 
     window.getFilters = function (page = 1) {
@@ -194,7 +126,9 @@ $(() => {
     };
 
     function index(page = 1) {
-        loadOnAny(".tickets-container", false, ticketLoader);
+        showTicketsContainerLoading();
+        showTicketHeaderLoading();
+        showTicketMessagesLoading();
         clearViews();
 
         $.ajax({
@@ -209,7 +143,8 @@ $(() => {
                 errorAjaxResponse(resp);
             },
             success: (resp) => {
-                loadOnAny(".tickets-container", true);
+                removeTicketsContainerLoading();
+
                 if (resp.data.length) {
                     renderTickets(resp.data);
                     if (!isMobile()) {
@@ -249,7 +184,8 @@ $(() => {
 
     function show(id) {
         if (!isMobile()) {
-            // loadOnAny(".tickets-grid-right", false, messageLoader);
+            showTicketHeaderLoading();
+            showTicketMessagesLoading();
         }
         $.ajax({
             method: "GET",
@@ -263,7 +199,8 @@ $(() => {
                 errorAjaxResponse(resp);
             },
             success: (resp) => {
-                loadOnAny(".tickets-grid-right", true);
+                removeTicketHeaderLoading();
+                removeTicketMessagesLoading();
                 showTicket(resp.data);
                 showMessagesMobile();
             },
@@ -332,12 +269,17 @@ $(() => {
     function clearViews() {
         $(".tickets-container").html("");
         $(".messages-container").html("");
-        $(".ticket-back, .ticket-customer, .ticket-status, .ticket-sale").addClass("d-none");
+        $(
+            ".ticket-back, .ticket-customer, .ticket-status:not(.ticket-skeleton-loading), .ticket-sale:not(.ticket-skeleton-loading)"
+        ).addClass("d-none");
         $(".write-container").hide();
         $(".pagination-container").hide();
     }
 
     function setEmptyViews() {
+        removeTicketHeaderLoading();
+        removeTicketMessagesLoading();
+
         const ticketEmpty = `<div class="tickets-empty">
                                <img src="/build/global/img/tickets.svg">
                                <h3>Tudo tranquilo por aqui!</h3>
@@ -362,7 +304,7 @@ $(() => {
         $("#ticket-mediation .detail").html("");
         $("#ticket-closed .detail").html("");
 
-        // loadOnAny(".number", false, resumeLoader);
+        showTicketsResumeLoading();
 
         $.ajax({
             method: "GET",
@@ -398,7 +340,7 @@ $(() => {
 
                 $("#ticket-total .number").html(resp.total);
 
-                loadOnAny(".number", true);
+                removeTicketsResumeLoading();
             },
         });
     }
@@ -782,4 +724,50 @@ $(() => {
     $("#btn-emoji").on("click", function () {
         picker.togglePicker(this);
     });
+
+    function showLoadingSkeleton() {
+        showTicketsResumeLoading();
+        showTicketsContainerLoading();
+        showTicketHeaderLoading();
+        showTicketMessagesLoading();
+    }
+
+    function showTicketsResumeLoading() {
+        $(".tickets-resume .number, .detail").html("");
+        $(".tickets-resume .skeleton-loading").show();
+    }
+
+    function removeTicketsResumeLoading() {
+        $(".tickets-resume .skeleton-loading").hide();
+    }
+
+    function showTicketsContainerLoading() {
+        $(".pagination-container").hide();
+        $(".tickets-container").html("");
+        $("#tickets-container-loading").show();
+    }
+
+    function removeTicketsContainerLoading() {
+        $("#tickets-container-loading").hide();
+    }
+
+    function showTicketHeaderLoading() {
+        $(".ticket-status:not(.ticket-skeleton-loading)").addClass("d-none");
+        $(".ticket-sale:not(.ticket-skeleton-loading)").addClass("d-none");
+        $(".ticket-skeleton-loading").show();
+    }
+
+    function removeTicketHeaderLoading() {
+        $(".ticket-skeleton-loading").hide();
+    }
+
+    function removeTicketMessagesLoading() {
+        $("#messages-container-loading").hide();
+    }
+
+    function showTicketMessagesLoading() {
+        $(".messages-container").html("");
+        $("#messages-container-loading").show();
+        $(".write-container").hide();
+    }
 });

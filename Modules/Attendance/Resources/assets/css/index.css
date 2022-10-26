@@ -684,13 +684,15 @@ button:active {
 
 /* Messages */
 
-.messages-container {
+.messages-container,
+#messages-container-loading {
     padding: 10px 30px;
     overflow-y: auto;
     scrollbar-width: none;
 }
 
-.messages-container::-webkit-scrollbar {
+.messages-container::-webkit-scrollbar,
+#messages-container-loading::-webkit-scrollbar {
     width: 0;
 }
 
@@ -1008,7 +1010,8 @@ button:active {
         display: none !important;
     }
 
-    .messages-container {
+    .messages-container,
+    #messages-container-loading {
         padding: 10px 15px;
     }
 
@@ -1071,6 +1074,22 @@ button:active {
         display: none;
     }
 }
+
 .date-picker-wrapper.no-topbar.no-gap.single-month {
     border-color: #88bfff;
+}
+
+.tickets-resume .skeleton-loading {
+    width: 100%;
+    height: 25px;
+}
+
+.ticket-status-text-loading {
+    width: 70px;
+    height: 12px;
+    margin-left: 5px;
+}
+
+.ticket-message.skeleton-loading {
+    height: 65px;
 }
