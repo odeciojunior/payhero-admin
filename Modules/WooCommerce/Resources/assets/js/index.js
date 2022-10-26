@@ -119,11 +119,13 @@ $(document).ready(function () {
                                 <title>Configurações da Integração</title>
                             </svg>
 
+                            <div class="d-flex align-items-center justify-content-center" style="height:290px" >
+                            <img class="card-img-top img-fluid w-full" src="${
+                                !data.project_photo ? "/build/global/img/produto.svg" : data.project_photo
+                            }"  alt="Photo Project"/>
+                            </div>
 
-                                <img class="card-img-top img-fluid w-full" src="${
-                                    !data.project_photo ? "/build/global/img/produto.svg" : data.project_photo
-                                }"  alt="Photo Project"/>
-                                <div class="card-body">
+                            <div class="card-body">
                                     <div class='row'>
                                         <div class='col-md-12'>
                                             <h4 class="card-title">${data.project_name}</h4>

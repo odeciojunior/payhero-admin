@@ -106,11 +106,13 @@ $(document).ready(function () {
                                 <div class="card shadow card-edit" project=` +
                 data.id +
                 ` style='cursor:pointer;'>
+                <div class="d-flex align-items-center justify-content-center" style="height:290px" >
                                     <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
                 ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
+                </div>
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>

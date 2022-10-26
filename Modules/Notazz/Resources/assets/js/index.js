@@ -68,11 +68,12 @@ $(document).ready(function () {
                                     data.id +
                                     `>
                                         <a href='/apps/notazz/${data.id}' class=''>
-                                            <img class="card-img-top img-fluid w-full" src="${
-                                                !data.project_photo
-                                                    ? "/build/global/img/produto.svg"
-                                                    : data.project_photo
-                                            }" style='cursor:pointer'/>
+
+                                        <div class="d-flex align-items-center justify-content-center" style="height:290px" >
+                                        <img class="card-img-top img-fluid w-full" src="${
+                                            !data.project_photo ? "/build/global/img/produto.svg" : data.project_photo
+                                        }" style='cursor:pointer'/>
+                                        </div>
                                         </a>
                                         <div class="card-body">
                                             <div class='row'>
