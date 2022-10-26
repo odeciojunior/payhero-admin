@@ -521,7 +521,7 @@ $(() => {
 
                     dados += `${
                         lastSale !== tracking.sale
-                            ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}">
+                            ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}" style="padding-right:4px">
                                     #${tracking.sale}
                                 </td>`
                             : `<td></td>`
@@ -573,7 +573,9 @@ $(() => {
                     }`;
 
                     dados += `${
-                        tracking.tracking_status_enum && tracking.tracking_status_enum != 3
+                        tracking.tracking_status_enum &&
+                        (tracking.tracking_status_enum != 3 ||
+                            (tracking.tracking_status_enum == 3 && tracking.system_status_enum == 5))
                             ? `<div class="col-7" >
                             <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">
                             </div>
@@ -591,7 +593,9 @@ $(() => {
                     }`;
 
                     dados += `${
-                        tracking.tracking_status_enum && tracking.tracking_status_enum == 3
+                        tracking.tracking_status_enum &&
+                        tracking.tracking_status_enum == 3 &&
+                        tracking.system_status_enum != 5
                             ? `<div class="col-7">${tracking.tracking_code}</div>
                         <div class="edit-detail" style="margin-top:-5px; text-align:right; margin-left: 62px;">
                             <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
