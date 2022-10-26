@@ -386,7 +386,7 @@ $(document).ready(function () {
                 $this.attr({
                     'data-toggle': "tooltip",
                     'data-placement': "top",
-                    'title': $this.text()
+                    'data-title': $this.text()
                 }).tooltip({ container: ".container-tooltips" })
                 $this.tooltip("show")
             }

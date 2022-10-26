@@ -128,7 +128,7 @@ $(() => {
                             $this.attr({
                                 'data-toggle': "tooltip",
                                 'data-placement': "top",
-                                'title': $this.text()
+                                'data-title': $this.text()
                             }).tooltip({ container: ".container-tooltips-order-bump" })
                             $this.tooltip("show")
                         }

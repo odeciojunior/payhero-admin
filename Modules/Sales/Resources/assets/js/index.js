@@ -275,7 +275,7 @@ function atualizar(link = null) {
                         $this.attr({
                             'data-toggle': "tooltip",
                             'data-placement': "top",
-                            'title': $this.text()
+                            'data-title': $this.text()
                         }).tooltip({ container: ".container-tooltips-sales" })
                         $this.tooltip("show")
                     }

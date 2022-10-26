@@ -178,7 +178,7 @@ $(document).ready(function () {
             dados += "</div>";
             dados += "</td>";
 
-            dados += '<td class="text-center">';
+            dados += '<td class="text-right">';
             dados +=
                 '<button class="btn pointer edit-integration" style="background-color:transparent;" integration="' +
                 value.id_code +
@@ -210,7 +210,7 @@ $(document).ready(function () {
                 $this.attr({
                     'data-toggle': "tooltip",
                     'data-placement': "top",
-                    'title': $this.text()
+                    'data-title': $this.text()
                 }).tooltip({ container: ".container-tooltips-api" })
                 $this.tooltip("show")
             }
