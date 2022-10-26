@@ -3077,6 +3077,8 @@ $(function () {
 
     // Tab general data
     $("body").on("click", "#tab-general-data", function () {
+        $("#tab_plans").addClass("active");
+
         if (!$(this).hasClass("clicked")) {
             var modal = "#modal_edit_plan";
             getPlanData(modal);
@@ -3088,6 +3090,8 @@ $(function () {
 
     // Tab customizations
     $("body").on("click", "#tab-customizations", function () {
+        $("#tab_plans").addClass("active");
+
         if (!$(this).hasClass("clicked")) {
             var modal = "#modal_edit_plan";
             getCustom(modal, true);
@@ -3865,6 +3869,8 @@ $(function () {
 
     // Tab general settings
     $("body").on("click", "#tab_configuration", function () {
+        $("#tab_plans").addClass("active");
+
         $("#modal_config_cost_plan")
             .find(".tab-pane")
             .removeClass("active show")
@@ -3887,6 +3893,8 @@ $(function () {
 
     // Tab plan cost change
     $("body").on("click", "#tab_update_cost_block", function () {
+        $("#tab_plans").addClass("active");
+
         if (!$(this).hasClass("active")) {
             let modal = "#modal_config_cost_plan";
             getPlansConfig(modal);
@@ -4198,6 +4206,8 @@ $(function () {
 
     // Get Products Config Cost
     function getPlansConfig(modal) {
+        console.log(modal);
+
         $(modal).find(".product-photo").unbind("load");
         $(modal)
             .find(".modal-body")
