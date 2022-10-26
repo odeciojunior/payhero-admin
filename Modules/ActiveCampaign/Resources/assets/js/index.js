@@ -125,7 +125,8 @@ $(document).ready(function () {
                                                 <div role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project=` +
                 data.id +
                 `>
-                                                    <span class='o-bin-1'></span>
+
+                                                    <img src="/build/global/img/icon-trash-new.svg" />
                                                 </div>
                                             </div>
                                         </div>

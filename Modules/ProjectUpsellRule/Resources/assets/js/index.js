@@ -360,7 +360,11 @@ $(document).ready(function () {
                 $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}` : `Valor sem desconto`}`);
                 if (upsell.discount != 0) {
                     if (upsell.type == 1) {
-                        $(".upsell-discount").html(formatMoney(upsell.discount));
+                        // $(".upsell-discount").html(formatMoney(upsell.discount));
+                        $(".upsell-discount").html(
+                            upsell.discount.toLocaleString("pt-br", { minimumFractionDigits: 2 })
+                        );
+
                         $(".upsell-discount").prepend("R$");
                     } else {
                         $(".upsell-discount").append("%");

@@ -93,7 +93,8 @@ $(document).ready(function () {
                                                     <a role='button' class='delete-integration pointer float-right mt-10' integration=` +
                                     data.id +
                                     ` data-toggle='modal' data-target='#modal-delete' type='a'>
-                                                        <span class='o-bin-1'></span>
+
+                                                        <img src="/build/global/img/icon-trash-new.svg" />
                                                     </a>
                                                 </div>
                                             </div>

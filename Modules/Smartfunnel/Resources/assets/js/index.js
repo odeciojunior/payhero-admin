@@ -230,6 +230,10 @@ $(document).ready(function () {
     });
 
     //destroy
+    // $(document).on("click", ".delete-integration", function (e) {
+    //     $("#modal-delete-funel").modal();
+    //     return false;
+    // });
     $(document).on("click", ".delete-integration", function (e) {
         e.stopPropagation();
         var project = $(this).attr("project");
@@ -247,8 +251,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                index();
                 alertCustom("success", response.message);
+                location.reload();
             },
         });
     });

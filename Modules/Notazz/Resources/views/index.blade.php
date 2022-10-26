@@ -11,9 +11,10 @@
 @section('content')
     <div class='page'>
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
-        <div class="page-header container" style="display:none !important;">
+        <div class="page-header container"
+             style="display:none !important;">
             <div class="row justify-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10"
@@ -25,15 +26,22 @@
                         </a>
                     </h1>
                 </div>
-                <div class="col text-right" id="integration-actions">
-                    <a data-toggle="modal" id='btn-add-integration' class="btn btn-floating btn-primary" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
-                        <i class="o-add-1" aria-hidden="true"></i>
+                <div class="col text-right"
+                     id="integration-actions">
+                    <a data-toggle="modal"
+                       id='btn-add-integration'
+                       class="btn btn-floating btn-primary"
+                       style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
+                        <i class="o-add-1"
+                           aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
         </div>
 
-        <div id="no-integration-found" class='justify-content-center' style="display:none !important;
+        <div id="no-integration-found"
+             class='justify-content-center'
+             style="display:none !important;
                                                                 height: 100%;
                                                                 width: 100%;
                                                                 position: absolute;
@@ -44,16 +52,19 @@
                                                                 -webkit-justify-content: center;
                                                                 justify-content: center;
                                                                 padding-bottom:116px">
-                <div class="content-error text-center">
-                    <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
-                    <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                    <p class="desc gray">Integre suas lojas com Notazz de forma totalmente automatizada!</p>
-                </div>
+            <div class="content-error text-center">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}"
+                     width="250px">
+                <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
+                <p class="desc gray">Integre suas lojas com Notazz de forma totalmente automatizada!</p>
+            </div>
         </div>
 
-        <div class='page-content container' id='project-integrated'>
+        <div class='page-content container'
+             id='project-integrated'>
             <div class='col-md-12'>
-                <div class="row" id="content">
+                <div class="row"
+                     id="content">
                 </div>
             </div>
 
@@ -136,7 +147,8 @@
                             class="col-4 btn border-0 btn-delete btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"
                             style="width: 20%;">
                         <b class="mr-2">Excluir </b>
-                        <span class="o-bin-1"></span>
+
+                        <img src="/build/global/img/icon-trash-new-white.svg" />
                     </button>
                 </div>
             </div>
