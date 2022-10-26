@@ -516,7 +516,7 @@
                                                     <td class="th-notification">
                                                         Mensagem
                                                     </td>
-                                                    <td class="th-notification">
+                                                    <td class="th-notification p-40">
                                                         Qtd Mínima
                                                     </td>
                                                 </tr>

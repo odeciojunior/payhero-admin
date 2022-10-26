@@ -465,7 +465,9 @@ $(document).ready(function () {
                 <td class="display-sm-none" align="center">
 
                     <a href="${value.whatsapp_link}" target="_blank" title="Enviar mensagem pelo whatsapp">
-                        <span class="o-whatsapp-1"></span>
+                        <span class="">
+                            <img src="build/global/img/whatsapp-icon-new.svg"/>
+                        </span>
                     </a>
 
                 </td>
@@ -566,7 +568,7 @@ $(document).ready(function () {
                     <a href=${value.whatsapp_link}" target="_blank" title="Enviar mensagem pelo whatsapp">
 
                         <span class="">
-                        <img src="build/global/img/whatsapp-icon-new.svg"/>
+                            <img src="build/global/img/whatsapp-icon-new.svg"/>
 
                         </span>
 
