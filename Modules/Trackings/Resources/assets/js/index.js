@@ -305,7 +305,7 @@ $(() => {
     //CRIANDO GRAFICO
     let myChart = null;
     function inicializeChart(colors, dataValues) {
-        if (dataValues) dataValues = dataValues.map((n) => (n ? n.split(".").join("") : "0"));
+        if (dataValues) dataValues = dataValues.map((n) => (n ? n.toString().split(".").join("") : "0"));
         $("#myChart").show();
         if (myChart !== null) {
             myChart.destroy();
@@ -521,7 +521,7 @@ $(() => {
 
                     dados += `${
                         lastSale !== tracking.sale
-                            ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}">
+                            ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}" style="padding-right:4px">
                                     #${tracking.sale}
                                 </td>`
                             : `<td></td>`
@@ -543,7 +543,11 @@ $(() => {
                                 </td>`;
 
                     dados += `<td style="width: 2%;padding: 0px !important;">
-                                    ${systemStatus[tracking.system_status_enum]}
+                                    ${
+                                        systemStatus[tracking.system_status_enum] != undefined
+                                            ? systemStatus[tracking.system_status_enum]
+                                            : ""
+                                    }
                                     ${
                                         tracking.is_chargeback_recovered
                                             ? `<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
@@ -573,7 +577,9 @@ $(() => {
                     }`;
 
                     dados += `${
-                        tracking.tracking_status_enum && tracking.tracking_status_enum != 3
+                        tracking.tracking_status_enum &&
+                        (tracking.tracking_status_enum != 3 ||
+                            (tracking.tracking_status_enum == 3 && tracking.system_status_enum == 5))
                             ? `<div class="col-7" >
                             <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">
                             </div>
@@ -591,7 +597,9 @@ $(() => {
                     }`;
 
                     dados += `${
-                        tracking.tracking_status_enum && tracking.tracking_status_enum == 3
+                        tracking.tracking_status_enum &&
+                        tracking.tracking_status_enum == 3 &&
+                        tracking.system_status_enum != 5
                             ? `<div class="col-7">${tracking.tracking_code}</div>
                         <div class="edit-detail" style="margin-top:-5px; text-align:right; margin-left: 62px;">
                             <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
@@ -695,7 +703,7 @@ $(() => {
         let btnSave = $(this);
         btnSave.prop("disabled", true);
 
-        let tracking_code = btnSave.parent().parent().find(".input-tracking-code").val();
+        let tracking_code = btnSave.parent().parent().parent().find(".input-tracking-code").val();
         let ppsId = btnSave.attr("pps");
 
         $.ajax({
@@ -747,7 +755,7 @@ $(() => {
                                 <span class="o-eye-1"></span>
                             </a>
                         </div>`;
-                    $(buttons).insertBefore(saveClose);
+                    //$(buttons).insertBefore(saveClose);
 
                     let statusBadge = btnSave.parent().parent().parent().parent().find(".badge");
                     statusBadge

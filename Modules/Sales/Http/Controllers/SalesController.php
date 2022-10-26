@@ -46,14 +46,13 @@ class SalesController extends Controller
     {
         try {
             $id = current(Hashids::connection("sale_id")->decode($hashid));
-
             $arrDatewaysIds = foxutils()->isProduction()
                 ? [
                     Gateway::ASAAS_PRODUCTION_ID,
                     Gateway::GETNET_PRODUCTION_ID,
                     Gateway::GERENCIANET_PRODUCTION_ID,
                     Gateway::SAFE2PAY_PRODUCTION_ID,
-                    Gateway::IUGU_PRODUCTION_ID
+                    Gateway::IUGU_PRODUCTION_ID,
                 ]
                 : [
                     Gateway::ASAAS_PRODUCTION_ID,
@@ -64,7 +63,7 @@ class SalesController extends Controller
                     Gateway::GETNET_SANDBOX_ID,
                     Gateway::GERENCIANET_SANDBOX_ID,
                     Gateway::SAFE2PAY_SANDBOX_ID,
-                    Gateway::IUGU_SANDBOX_ID
+                    Gateway::IUGU_SANDBOX_ID,
                 ];
 
             $transaction = Transaction::with(["sale", "company"])

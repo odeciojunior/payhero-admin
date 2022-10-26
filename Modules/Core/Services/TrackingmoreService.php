@@ -50,8 +50,8 @@ class TrackingmoreService
      */
     public function createTracking($trackingNumber, $optionalParams = null)
     {
-        // $result = $this->find($trackingNumber);
-        $result = null;
+        // do not remove this query, duplicates will incur additional costs :C
+        $result = $this->find($trackingNumber);
 
         if (!empty($result)) {
             $result->already_exists = true;
