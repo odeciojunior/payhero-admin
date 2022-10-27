@@ -405,13 +405,13 @@ a.tracking-save.pointer.mr-10.text-center:hover {
 
 /* ======== BOTAO FECHAR/CANCELAR ======== */
 div.tracking-close.pointer {
-    color: black;
+    color: #000;
     background: #ededed;
     border-radius: 5px;
     font-size: 25px;
     width: 36px;
     height: 38px;
-    padding: 9px 0px 0px 8px;
+    padding: 9px 0 0 8px;
     transition: 1s;
 }
 
