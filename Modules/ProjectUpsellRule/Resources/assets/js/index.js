@@ -258,6 +258,9 @@ $(document).ready(function () {
     $(document).on("click", ".bt-upsell-save", function () {
         var form_data = new FormData(document.getElementById("form_add_upsell"));
         form_data.append("project_id", projectId);
+
+        $(".bt-upsell-save").attr("disabled", true);
+
         $.ajax({
             method: "POST",
             url: "/api/projectupsellrule",
@@ -271,12 +274,14 @@ $(document).ready(function () {
             data: form_data,
             error: function error(response) {
                 errorAjaxResponse(response);
+                $(".bt-upsell-save").attr("disabled", false);
             },
             success: function success(response) {
                 $("#modal_add_upsell").modal("hide");
                 loadUpsell();
                 alertCustom("success", response.message);
                 $("#add_apply_on_plans, #add_offer_on_plans").val(null).trigger("change");
+                $(".bt-upsell-save").attr("disabled", false);
             },
         });
     });

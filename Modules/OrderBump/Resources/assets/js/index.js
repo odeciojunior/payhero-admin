@@ -274,6 +274,7 @@ $(() => {
             data[pair[0]] = pair[1];
         }
 
+        $("#btn-store-order-bump").attr("disabled", true);
         $.ajax({
             method: "POST",
             url: "/api/orderbump",
@@ -287,6 +288,7 @@ $(() => {
             data: formData,
             error: (resp) => {
                 errorAjaxResponse(resp);
+                $("#btn-store-order-bump").attr("disabled", false);
             },
             success: (resp) => {
                 alertCustom("success", resp.message);
@@ -300,6 +302,7 @@ $(() => {
                     .val(null)
                     .trigger("change");
                 index();
+                $("#btn-store-order-bump").attr("disabled", false);
             },
         });
     });
