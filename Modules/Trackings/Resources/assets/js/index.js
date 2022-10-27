@@ -531,10 +531,11 @@ $(() => {
                         }`;
 
                     dados += `<td>
-                                    <div class="ellipsis-text" style="max-width: 240px; display:block; margin: 0px 0px 0px 0px;">
-                                    ${tracking.product.amount}x ${tracking.product.name}
-                                    ${tracking.product.description ? "(" + tracking.product.description + ")" : ""}
+                                    <div class="fullInformation-tracking ellipsis-text" style="max-width: 240px; display:block; margin: 0px 0px 0px 0px;">
+                                        ${tracking.product.amount}x ${tracking.product.name}
+                                        ${tracking.product.description ? "(" + tracking.product.description + ")" : ""}
                                     </div>
+                                    <div class="container-tooltips-tracking"></div>
                                 </td>`;
 
                     dados += `<td class="col-sm-1">${tracking.approved_date}</td>`;
@@ -598,7 +599,7 @@ $(() => {
                     dados += `${tracking.tracking_status_enum &&
                         tracking.tracking_status_enum == 3 &&
                         tracking.system_status_enum != 5
-                        ? `<div class="col-7">${tracking.tracking_code}</div>
+                        ? `<div class="col-7 pt-5">${tracking.tracking_code}</div>
                         <div class="edit-detail" style="margin-top:-5px; text-align:right; margin-left: 62px;">
                             <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
                                 <span class="o-eye-1"></span>
@@ -617,6 +618,19 @@ $(() => {
                 });
                 pagination(response, "trackings", index);
                 $("#container-pagination-trackings").removeClass("d-none").addClass("d-flex")
+
+                $('.fullInformation-tracking').bind('mouseover', function () {
+                    var $this = $(this);
+
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                        $this.attr({
+                            'data-toggle': "tooltip",
+                            'data-placement': "top",
+                            'data-title': $this.text()
+                        }).tooltip({ container: ".container-tooltips-tracking" })
+                        $this.tooltip("show")
+                    }
+                });
 
             },
             complete: (response) => {
