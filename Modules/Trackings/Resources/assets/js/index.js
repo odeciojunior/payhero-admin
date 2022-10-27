@@ -520,13 +520,13 @@ $(() => {
                     dados += "<tr>";
 
                     dados += `${lastSale !== tracking.sale
-                        ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}" style="padding-right:4px">
+                        ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}">
                                     #${tracking.sale}
                                 </td>`
                         : `<td></td>`
                         }`;
 
-                    dados += `<td class="">
+                    dados += `<td>
                                     <span style="max-width: 330px; display:block; margin: 0px 0px 0px 0px;">
                                     ${tracking.product.amount}x ${tracking.product.name}
                                     ${tracking.product.description ? "(" + tracking.product.description + ")" : ""}
@@ -542,10 +542,7 @@ $(() => {
                                 </td>`;
 
                     dados += `<td style="width: 2%;padding: 0px !important;">
-                                    ${systemStatus[tracking.system_status_enum] != undefined
-                            ? systemStatus[tracking.system_status_enum]
-                            : ""
-                        }
+                                    ${systemStatus[tracking.system_status_enum]}
                                     ${tracking.is_chargeback_recovered
                             ? `<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
                             : ``
@@ -557,7 +554,7 @@ $(() => {
 
                     let save = `<div class="save-close buttons d-flex px-0" style="max-height: 35px;">
                             <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none; height:34px"></a>
-                            <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none; padding: 7px 7px 0px 9px !important; height:34px">
+                            <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none; padding: 0px 7px 0px 9px; height:34px">
                                 &#x2715
                             </div>
                         </div>`;
@@ -572,9 +569,7 @@ $(() => {
                         : ``
                         }`;
 
-                    dados += `${tracking.tracking_status_enum &&
-                        (tracking.tracking_status_enum != 3 ||
-                            (tracking.tracking_status_enum == 3 && tracking.system_status_enum == 5))
+                    dados += `${tracking.tracking_status_enum && tracking.tracking_status_enum != 3
                         ? `<div class="col-7" >
                             <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">
                             </div>
@@ -591,9 +586,7 @@ $(() => {
                         : ``
                         }`;
 
-                    dados += `${tracking.tracking_status_enum &&
-                        tracking.tracking_status_enum == 3 &&
-                        tracking.system_status_enum != 5
+                    dados += `${tracking.tracking_status_enum && tracking.tracking_status_enum == 3
                         ? `<div class="col-7">${tracking.tracking_code}</div>
                         <div class="edit-detail" style="margin-top:-5px; text-align:right; margin-left: 62px;">
                             <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
