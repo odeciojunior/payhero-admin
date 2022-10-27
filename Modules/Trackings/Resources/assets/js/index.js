@@ -135,6 +135,8 @@ $(() => {
     });
 
     $("#bt_filter").on("click", function () {
+        $("#container-pagination-trackings").removeClass("d-flex").addClass("d-none")
+
         window.loadData();
     });
 
@@ -497,6 +499,7 @@ $(() => {
                 $("#pagination-trackings").html("");
 
                 if (isEmpty(response.data)) {
+                    $("#container-pagination-trackings").removeClass("d-flex").addClass("d-none")
                     $("#dados_tabela").html(`
                     <tr class="text-center">
                       <td colspan="6" style="vertical-align: middle;height:257px;">
@@ -511,6 +514,7 @@ $(() => {
                 let lastSale = "";
 
                 $.each(response.data, function (index, tracking) {
+
                     if (lastSale !== tracking.sale) {
                         grayRow = !grayRow;
                     }
@@ -612,6 +616,8 @@ $(() => {
                     lastSale = tracking.sale;
                 });
                 pagination(response, "trackings", index);
+                $("#container-pagination-trackings").removeClass("d-none").addClass("d-flex")
+
             },
             complete: (response) => {
                 unlockSearch($("#bt_filter"));
