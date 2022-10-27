@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 //role:account_owner|admin|finantial
 Route::group(
     [
@@ -25,5 +26,7 @@ Route::group(
         Route::put("/dashboard/update-achievements/{achievement}", "DashboardApiController@updateAchievements");
         Route::get("/dashboard/verify-pix-onboarding", "DashboardApiController@verifyPixOnboarding");
         Route::put("/dashboard/update-pix-onboarding/{onboarding}", "DashboardApiController@updatePixOnboarding");
+        Route::get("/dashboard/verify-user-terms", "DashboardApiController@getUserTerms");
+        Route::put("/dashboard/update-user-terms", "DashboardApiController@updateUserTerms");
     }
 );

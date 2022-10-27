@@ -45,3 +45,38 @@
     border-radius: 4px;
     background-color: #e8eefe;
 }
+
+.modal-terms {
+    background: #f4f6fb;
+    display: flex;
+}
+
+.button-modal-term {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon-modal-term {
+    background: url("/build/global/img/icon-term-modal.svg") no-repeat;
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.text-modal-term {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 48px;
+    padding-left: 15px;
+}
+
+.icon-vetctor-modal-term {
+    background: url("/build/global/img/icon-vector-term-modal.svg") no-repeat;
+    width: 16px;
+    height: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}

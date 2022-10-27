@@ -19,11 +19,13 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\IpService;
 use Modules\Core\Services\Reports\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
@@ -38,9 +40,15 @@ class DashboardApiController extends Controller
     public function index()
     {
         try {
-            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())
-                    ->where('active_flag', true)
-                    ->orderBy('order_priority')
+            $companies =
+                Company::where(
+                    "user_id",
+                    auth()
+                        ->user()
+                        ->getAccountOwnerId()
+                )
+                    ->where("active_flag", true)
+                    ->orderBy("order_priority")
                     ->get() ?? collect();
 
             return response()->json(["companies" => $companies]);
@@ -53,7 +61,9 @@ class DashboardApiController extends Controller
     public function getValues(Request $request)
     {
         try {
-            $companyId = !empty($request->company_id) ? hashids_decode($request->company_id): auth()->user()->company_default;
+            $companyId = !empty($request->company_id)
+                ? hashids_decode($request->company_id)
+                : auth()->user()->company_default;
             $company = Company::find($companyId);
 
             if (empty($company)) {
@@ -194,7 +204,6 @@ class DashboardApiController extends Controller
                 "money_cashback" => $this->getCashbackReceivedValue(),
                 "benefits" => $benefitService->getUserBenefits($user),
             ];
-
         } catch (Exception $e) {
             report($e);
         } catch (Exception $e) {
@@ -202,6 +211,23 @@ class DashboardApiController extends Controller
 
             return [];
         }
+    }
+
+    function getCashbackReceivedValue()
+    {
+        return number_format(
+            intval(
+                Cashback::where(
+                    "user_id",
+                    auth()
+                        ->user()
+                        ->getAccountOwnerId()
+                )->sum("value")
+            ) / 100,
+            2,
+            ",",
+            "."
+        );
     }
 
     public function getAccountHealth(Request $request)
@@ -457,11 +483,6 @@ class DashboardApiController extends Controller
         }
     }
 
-    function getCashbackReceivedValue()
-    {
-        return number_format(intval(Cashback::where('user_id', auth()->user()->getAccountOwnerId())->sum('value')) / 100, 2, ',', '.');
-    }
-
     public function getAchievements()
     {
         try {
@@ -624,6 +645,112 @@ class DashboardApiController extends Controller
             return \response()->json(
                 [
                     "message" => "Ocorreu um erro no update do  onboarding",
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    public function getUserTerms()
+    {
+        try {
+            $user = auth()->user();
+            $userTermV2 = UserTerms::where([
+                "user_id" => $user->id,
+                "term_version" => "v2",
+            ])->first();
+            if (empty($userTermV2)) {
+                return \response()->json(
+                    [
+                        "message" => true,
+                    ],
+                    Response::HTTP_OK
+                );
+            } else {
+                return \response()->json(
+                    [
+                        "message" => false,
+                    ],
+                    Response::HTTP_OK
+                );
+            }
+        } catch (Exception $exception) {
+            report($exception);
+            return \response()->json(
+                [
+                    "message" => "Ocorreu um erro",
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    public function updateUserTerms()
+    {
+        try {
+            $user = auth()->user();
+            $userTermV2 = UserTerms::where([
+                "user_id" => $user->id,
+                "term_version" => "v2",
+            ])->first();
+
+            if (empty($userTermV2)) {
+                $geoIp = null;
+                try {
+                    $geoIp = geoip()->getLocation(IpService::getRealIpAddr());
+                } catch (Exception $e) {
+                    report($e);
+                }
+
+                $operationalSystem = Agent::platform();
+                $browser = Agent::browser();
+
+                $deviceData = [
+                    "operational_system" => Agent::platform(),
+                    "operation_system_version" => Agent::version($operationalSystem),
+                    "browser" => Agent::browser(),
+                    "browser_version" => Agent::version($browser),
+                    "is_mobile" => Agent::isMobile(),
+                    "ip" => @$geoIp["ip"],
+                    "country" => @$geoIp["country"],
+                    "city" => @$geoIp["city"],
+                    "state" => @$geoIp["state"],
+                    "state_name" => @$geoIp["state_name"],
+                    "zip_code" => @$geoIp["postal_code"],
+                    "currency" => @$geoIp["currency"],
+                    "lat" => @$geoIp["lat"],
+                    "lon" => @$geoIp["lon"],
+                ];
+
+                $userTermV2 = new UserTerms();
+                $userTermsCreated = $userTermV2->create([
+                    "user_id" => $user->id,
+                    "term_version" => "v2",
+                    "device_data" => json_encode($deviceData),
+                    "accepted_at" => Carbon::now(),
+                ]);
+
+                if ($userTermsCreated) {
+                    return \response()->json(
+                        [
+                            "message" => true,
+                        ],
+                        Response::HTTP_OK
+                    ); // Salvo com Sucesso
+                }
+
+                return \response()->json(
+                    [
+                        "message" => false,
+                    ],
+                    Response::HTTP_OK
+                );
+            }
+        } catch (Exception $exception) {
+            report($exception);
+            return \response()->json(
+                [
+                    "message" => "Ocorreu um erro",
                 ],
                 Response::HTTP_BAD_REQUEST
             );
