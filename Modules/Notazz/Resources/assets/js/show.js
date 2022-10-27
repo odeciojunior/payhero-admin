@@ -21,6 +21,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
+        $("#container-pagination-nottaz").removeClass("d-flex").addClass("d-none")
         atualizar();
     });
 
@@ -226,13 +227,14 @@ $(document).ready(function () {
                                     <td class='display-sm-none display-m-none display-lg-none'>#${value.sale_code}</td>
 
                                     <td>
-                                        <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.product}">
-                                            <small>${value.product}</small>
-                                        </span>
+                                        <div class="fullInformation-notazz">
+                                            ${value.product}
+                                        </div>
+                                        <div class="container-tooltips-notazz"></div>
                                     </td>
 
                                     <td class='display-sm-none display-m-none display-lg-none'>
-                                        <span class="fullInformation" data-toggle="tooltip" data-placement="top" title="${value.client}">
+                                        <span class="fullInformation-notazz">
                                             ${value.client}
                                         </span>
                                     }</td>
@@ -251,11 +253,27 @@ $(document).ready(function () {
 
                         $("#dados_tabela").append(dados);
                     });
-                    $(".fullInformation").tooltip();
+                    $("#container-pagination-nottaz").removeClass("d-none").addClass("d-flex")
+
+
+                    $('.fullInformation-notazz').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'data-title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-notazz" })
+                            $this.tooltip("show")
+                        }
+                    });
 
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
                 } else {
+                    $("#container-pagination-nottaz").removeClass("d-flex").addClass("d-none")
+
                     $("#dados_tabela").html(
                         "<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>"
                     );
