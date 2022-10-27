@@ -2117,7 +2117,7 @@ tbody td {
 
 #btn-modal-plan-delete:hover * {
     color: #f10800 !important;
-    stroke: #f10800 !important;
+    fill: #f10800 !important;
 }
 
 .input-number .form-control:focus {
