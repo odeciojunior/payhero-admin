@@ -552,7 +552,7 @@ $(() => {
                     dados += `<td class="text-left mb-0" style="max-height:74px!important;">
                                 <div class="row" style="max-height: 35px;">`;
 
-                    let save = `<div class="save-close buttons d-flex px-0" style="max-height: 35px;">
+                    let save = `<div class="save-close buttons d-flex px-0 ml-5" style="max-height: 35px;">
                             <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none; height:34px"></a>
                             <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none; padding: 0px 7px 0px 9px; height:34px">
                                 &#x2715
@@ -560,10 +560,10 @@ $(() => {
                         </div>`;
 
                     dados += `${!tracking.tracking_status_enum
-                        ? `<div class="col-7">
+                        ? `<div class="col-7 px-0">
                             <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="border-radius: 8px; max-height:35px; padding: 8px 0 8px 10px !important;">
                             </div>
-                            <a class='tracking-add pointer mt-1 px-0 default-buttons' title="Adicionar">
+                            <a class='tracking-add pointer mt-1 px-0 default-buttons ml-5' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                         </a>` + save
                         : ``
