@@ -561,7 +561,7 @@ $(() => {
 
                     dados += `${!tracking.tracking_status_enum
                         ? `<div class="col-7 px-0">
-                            <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="border-radius: 8px; max-height:35px; padding: 8px 0 8px 10px !important;">
+                            <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="border-radius: 8px; max-height:35px; padding: 8px 0px 8px 5px !important;">
                             </div>
                             <a class='tracking-add pointer mt-1 px-0 default-buttons ml-5' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
@@ -574,7 +574,7 @@ $(() => {
                             <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">
                             </div>
                         <div class="edit-detail" style="text-align:right; margin-top: 3px">
-                            <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
+                            <a class='tracking-edit pointer default-buttons' title="Editar" style="padding-top:8px; padding-bottom: 4px;">
                                 <span class="text-right o-edit-1"></span>
                             </a>
                             <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0; vertical-align: middle;">
@@ -588,7 +588,7 @@ $(() => {
 
                     dados += `${tracking.tracking_status_enum && tracking.tracking_status_enum == 3
                         ? `<div class="col-7">${tracking.tracking_code}</div>
-                        <div class="edit-detail" style="margin-top:-5px; text-align:right; margin-left: 62px;">
+                        <div class="edit-detail" style="margin-top:-5px; text-align:right;">
                             <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
                                 <span class="o-eye-1"></span>
                             </a>
@@ -735,7 +735,7 @@ $(() => {
                     let buttons = `
                         <div class="edit-detail" style="text-align:right; margin-top: 3px">
 
-                            <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
+                            <a class='tracking-edit pointer default-buttons' title="Editar" style="padding-top:8px; padding-bottom: 4px;">
                                 <span class="text-right o-edit-1"></span>
                             </a>
 
