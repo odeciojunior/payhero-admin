@@ -41,7 +41,6 @@ $(function () {
             },
             error: (response) => {
                 errorAjaxResponse(response);
-                loadingOnScreenRemove();
             },
             success: (response) => {
                 removeLoadingSkeletonCards();
@@ -53,7 +52,6 @@ $(function () {
                 if (response.data.length) {
                     $("#project-empty").hide();
                     $("#company-empty").hide();
-                    $("#data-table-projects").css({ visibility: "visible" });
 
                     $.each(response.data, (key, project) => {
                         if (verifyAccountFrozen()) {
@@ -116,8 +114,6 @@ $(function () {
                     verifyHasOnlyOne();
                 } else {
                     $("#subtitle_drag_drop").addClass("d-none");
-                    //$("#button_toggle").css({visibility: "hidden"});
-                    $("#data-table-projects").css({ visibility: "hidden" });
                     $("#btn-config").css({ visibility: "hidden" });
                     if (response.no_company) {
                         $("#company-empty").show();

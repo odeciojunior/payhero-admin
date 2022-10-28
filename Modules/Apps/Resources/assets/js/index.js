@@ -2,11 +2,12 @@ $(document).ready(function () {
     $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $("#project-not-empty").hide();
+        $("#project-empty").hide();
         loadingSkeletonCards($(".loading-container"));
         updateCompanyDefault().done(function (data1) {
             getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2;
-                updateUsedApps();
+                getProjects();
             });
         });
     });
@@ -36,6 +37,7 @@ $(document).ready(function () {
                 }
             },
             success: function success(response) {
+                console.log("testando", response);
                 if (verifyAccountFrozen()) {
                     $(".add-btn").removeAttr("href");
                 }
@@ -43,6 +45,9 @@ $(document).ready(function () {
                 if (response.data.length) {
                     $("#project-empty").hide();
                     updateUsedApps();
+                } else {
+                    removeLoadingSkeletonCards();
+                    $("#project-empty").show();
                 }
             },
         });

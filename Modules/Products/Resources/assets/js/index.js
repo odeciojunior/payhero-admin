@@ -125,6 +125,7 @@ jQuery(function () {
                     handleLocalStorage();
                     updateProducts();
                 } else {
+                    removeFilterLoadingSkeleton();
                     removeLoadingSkeletonCards();
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
@@ -196,9 +197,10 @@ jQuery(function () {
                 errorAjaxResponse(response);
             },
             success: function (response) {
+                removeFilterLoadingSkeleton();
+
                 if (!isEmpty(response.data)) {
                     $(".products-is-empty").hide();
-                    $("#filter-products-loading").hide();
                     $("#filter-products").show();
                     $("#data-table-products").html("");
                     let dados = "";
@@ -443,5 +445,9 @@ jQuery(function () {
     function showFiltersLoadingSkeleton() {
         $("#filter-products").hide();
         $("#filter-products-loading").show();
+    }
+
+    function removeFilterLoadingSkeleton() {
+        $("#filter-products-loading").hide();
     }
 });
