@@ -656,10 +656,10 @@ class DashboardApiController extends Controller
         try {
             $user = auth()->user();
             $userTermV2 = UserTerms::where([
-                "user_id" => $user->id,
+                "user_id" => auth()->user()->account_owner_id,
                 "term_version" => "v2",
             ])->first();
-            if (empty($userTermV2)) {
+            if (empty($userTermV2) && auth()->user()->account_owner_id == auth()->user()->id) {
                 return \response()->json(
                     [
                         "message" => true,
@@ -690,7 +690,7 @@ class DashboardApiController extends Controller
         try {
             $user = auth()->user();
             $userTermV2 = UserTerms::where([
-                "user_id" => $user->id,
+                "user_id" => auth()->user()->account_owner_id,
                 "term_version" => "v2",
             ])->first();
 
@@ -724,7 +724,7 @@ class DashboardApiController extends Controller
 
                 $userTermV2 = new UserTerms();
                 $userTermsCreated = $userTermV2->create([
-                    "user_id" => $user->id,
+                    "user_id" => auth()->user()->account_owner_id,
                     "term_version" => "v2",
                     "device_data" => json_encode($deviceData),
                     "accepted_at" => Carbon::now(),
