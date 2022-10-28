@@ -71,12 +71,15 @@ class CheckoutPresenter extends Presenter
         }
     }
 
-    public function getCheckoutLink($domain)
+    public function getCheckoutLink($domain, $companyDefault = null)
     {
         $hashCheckoutId = Hashids::encode($this->id);
 
-        $user = Auth()->user();
-        if($user->company_default == Company::DEMO_ID)
+        if (empty($companyDefault)) {
+            $companyDefault = Auth()->user()->company_default;
+        }
+
+        if($companyDefault == Company::DEMO_ID)
         {
             return "https://demo.cloudfox.net". '/recovery/' . $hashCheckoutId;
         }
