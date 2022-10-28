@@ -7,13 +7,11 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\Pixel;
 use Modules\Core\Services\CompanyBalanceService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
-use Modules\Finances\Exports\Reports\ExtractReportExportGateway;
-use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -25,6 +23,9 @@ class FinancesApiController extends Controller
 {
     public function getBalances(Request $request): JsonResponse
     {
+
+        $pixel = new Pixel();
+
         try {
             $company = Company::find(hashids_decode($request->input("company")));
             $gatewayId = hashids_decode($request->input("gateway_id"));
@@ -94,10 +95,10 @@ class FinancesApiController extends Controller
     public function getAcquirers($companyId = null)
     {
         $companies = null;
-        if(empty($companyId)){
+        if (empty($companyId)) {
             $companies = Company::with('user')->where('user_id', auth()->user()->account_owner_id)->get();
-        }else{
-            $companies = Company::where('id',hashids_decode($companyId))->get();
+        } else {
+            $companies = Company::where('id', hashids_decode($companyId))->get();
         }
         $gatewayIds = [];
 

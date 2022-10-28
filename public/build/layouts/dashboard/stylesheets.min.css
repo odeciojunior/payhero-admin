@@ -1428,6 +1428,7 @@ button {
     height: 15px;
     display: inline-block;
     vertical-align: middle;
+    margin-right: 10px;
 }
 
 /*Tamanho do card*/

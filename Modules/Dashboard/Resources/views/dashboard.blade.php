@@ -229,7 +229,7 @@
     </div>
 
     <!-- Modal User Term v2 -->
-    <div class="modal fade"
+    <div class="modal fade modal-fade-in-scale-up"
          id="termsModal"
          tabindex="-1"
          role="dialog"
@@ -237,12 +237,12 @@
          aria-hidden="true"
          data-keyboard="false"
          data-backdrop="static">
-        <div class="modal-dialog"
+        <div class="modal-dialog modal-dialog-centered"
              role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title"
-                        id="exampleModalLabel">Termos de uso Cloudfox Atualizados</h3>
+                        id="exampleModalLabel">Termos de uso Cloudfox atualizados</h3>
                 </div>
                 <hr>
                 <div class="modal-body">
