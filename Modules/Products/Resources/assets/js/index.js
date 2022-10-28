@@ -147,20 +147,20 @@ jQuery(function () {
         pageCurrent = link;
         let existFilters = () => {
             if (localStorage.getItem("filtersApplied") != null) {
-                let getFilters = JSON.parse(
-                    localStorage.getItem("filtersApplied")
-                );
+                let getFilters = JSON.parse(localStorage.getItem("filtersApplied"));
                 return getFilters;
             } else {
                 return null;
             }
         };
+
         if (link != null) {
             let getPage = {
                 atualPage: pageCurrent,
             };
             localStorage.setItem("page", JSON.stringify(getPage));
         }
+
         if (localStorage.getItem("page") != null) {
             let parsePage = JSON.parse(localStorage.getItem("page"));
             if (existFilters() != null && existFilters().getName != "") {
@@ -175,6 +175,7 @@ jQuery(function () {
         }
         link = pageCurrent;
         loadOnAny(".page-content");
+
         let type =
             existFilters() != null
                 ? existFilters().getTypeProducts
@@ -273,12 +274,14 @@ jQuery(function () {
                             }">
                                 <a id="bt_editar" href="/products/${
                                     value.id
-                                }/edit" class="mx-20"><span class="o-edit-1 mr-10" />Editar produto</a>
+                                }/edit" class="mx-20"><span>
+                                    <img class="mr-10" src="/build/global/img/pencil-icon.svg"></span>
+                                    Editar produto</a>
                                 ${
                                     shopifyProduct == false
                                         ? `
                                     <hr class="my-5">
-                                    <a href="#" class="mx-20 bt_excluir" data-id="${value.id}"><span class="o-bin-1 mr-10" />Excluir produto</a>
+                                    <a href="#" class="mx-20 bt_excluir" data-id="${value.id}"><span><img class="mr-15" src="/build/global/img/icon-trash-tale.svg"></span>Excluir produto</a>
                                 `
                                         : ""
                                 }

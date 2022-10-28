@@ -51,6 +51,7 @@ $(document).ready(function () {
                     $("#content-script").show();
                     updateWebhookTableData(response);
                     pagination(response, "webhooks");
+
                 }
             },
             complete: function () {
@@ -69,25 +70,25 @@ $(document).ready(function () {
         $.each(response.data, function (index, value) {
             dados = "";
             dados += "<tr>";
-            dados += '<td class="" style="vertical-align: middle;">';
-            dados += '<p class="description mb-0 mr-1">' + value.description + "</p>";
-            dados += '<small class="text-muted">Criada em ' + value.register_date + "</small>";
+            dados += '<td class="ellipsis-text">';
+            dados += value.description + "<br>";
+            dados += '<span class="subdescription font-size-12">Criada em ' + value.register_date + "</span>";
             dados += "</td>";
-            dados += '<td class="" style="vertical-align: middle;">';
-            dados += '<p class="description mb-0 mr-1">' + value.url + "</p>";
-            dados += '<small class="text-muted">' + value.company_name + "</small>";
+            dados += '<td class="ellipsis-text">';
+            dados += value.url + "<br>";
+            dados += '<span class="subdescription font-size-12">' + value.company_name + "</span>";
             dados += "</td>";
-            dados += '<td class="text-center">';
+            dados += '<td class="text-right">';
             dados +=
                 '<button type="button" class="btn pointer edit-webhook" style="background-color:transparent;" webhook="' +
                 value.id +
                 '"' +
-                ' title="Editar webhook"><span class="o-edit-1"></span></button>';
+                ' title="Editar webhook"><span class=""><img src="/build/global/img/icon-eye.svg"></span></button>';
             dados +=
                 '<button type="button" class="btn pointer delete-webhook" style="background-color:transparent;" webhook="' +
                 value.id +
                 '"' +
-                ' title="Deletar webhook"><span class="o-bin-1"></span></button>';
+                ' title="Deletar webhook"><span class=""><img src="/build/global/img/icon-trash-tale.svg"></span></button>';
             dados += "</td>";
             dados += "</tr>";
 
@@ -263,7 +264,10 @@ $(document).ready(function () {
         if (response.meta.last_page == 1) {
             $("#first_page").hide();
             $("#last_page").hide();
+            $("#pagination-container-webhooks").removeClass("d-flex").addClass("d-none")
+
         } else {
+
             $("#pagination-" + model).html("");
 
             var first_page = "<button id='first_page' class='btn nav-btn'>1</button>";
@@ -285,10 +289,10 @@ $(document).ready(function () {
 
                 $("#pagination-" + model).append(
                     "<button id='page_" +
-                        (response.meta.current_page - x) +
-                        "' class='btn nav-btn'>" +
-                        (response.meta.current_page - x) +
-                        "</button>"
+                    (response.meta.current_page - x) +
+                    "' class='btn nav-btn'>" +
+                    (response.meta.current_page - x) +
+                    "</button>"
                 );
 
                 $("#page_" + (response.meta.current_page - x)).on("click", function () {
@@ -311,10 +315,10 @@ $(document).ready(function () {
 
                 $("#pagination-" + model).append(
                     "<button id='page_" +
-                        (response.meta.current_page + x) +
-                        "' class='btn nav-btn'>" +
-                        (response.meta.current_page + x) +
-                        "</button>"
+                    (response.meta.current_page + x) +
+                    "' class='btn nav-btn'>" +
+                    (response.meta.current_page + x) +
+                    "</button>"
                 );
 
                 $("#page_" + (response.meta.current_page + x)).on("click", function () {
@@ -335,6 +339,8 @@ $(document).ready(function () {
                     refreshWebhooks(response.meta.last_page);
                 });
             }
+            $("#pagination-container-webhooks").removeClass("d-none").addClass("d-flex")
+
         }
     }
 

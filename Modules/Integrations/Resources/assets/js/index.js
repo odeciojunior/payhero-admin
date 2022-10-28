@@ -3,10 +3,10 @@ $(document).ready(function () {
     $('.company-navbar').change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         loadOnAny('#page-integrates');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2
-                $('.company_name').val( companiesAndProjects.company_default_fullname );
+                $('.company_name').val(companiesAndProjects.company_default_fullname);
                 onlyData();
             });
         });
@@ -14,21 +14,22 @@ $(document).ready(function () {
 
     var companiesAndProjects = ''
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         companiesAndProjects = data
-        $('.company_name').val( companiesAndProjects.company_default_fullname );
+        $('.company_name').val(companiesAndProjects.company_default_fullname);
         refreshIntegrations();
         createIntegration();
     });
 
-    function onlyData(){
-        $("#content-error").css('display','none');
-        $("#content-script").css('display','none');
-        $("#card-table-integrate").css('display','none');
-        $("#pagination-integrates").css('display','none');
+    function onlyData() {
+
+        $("#content-error").css('display', 'none');
+        $("#content-script").css('display', 'none');
+        $("#card-table-integrate").css('display', 'none');
+        $("#pagination-integrates").css('display', 'none');
         $.ajax({
             method: "GET",
-            url: "/api/integrations?resume=true&page=1&company_id="+$('.company-navbar').val(),
+            url: "/api/integrations?resume=true&page=1&company_id=" + $('.company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -36,7 +37,7 @@ $(document).ready(function () {
             },
             error: (response) => {
                 errorAjaxResponse(response);
-                loadOnAny('#page-integrates',true);
+                loadOnAny('#page-integrates', true);
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
@@ -58,7 +59,7 @@ $(document).ready(function () {
                 getIntegration();
                 refreshToken();
                 deleteIntegration();
-                loadOnAny('#page-integrates',true);
+                loadOnAny('#page-integrates', true);
             }
         });
     }
@@ -100,6 +101,8 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
+                    pagination(response, 'integrates');
+
                     $(".page-header").find('.store-integrate').css('display', 'none');
                     $("#content-error").find('.store-integrate').css('display', 'block');
 
@@ -126,6 +129,7 @@ $(document).ready(function () {
 
     // Atualiza tabela de dados com a lista de integrações
     function updateIntegrationTableData(response) {
+
         $("#content-script").css("display", "block");
         $("#card-table-integrate").css("display", "block");
         $("#card-integration-data").css("display", "block");
@@ -147,12 +151,12 @@ $(document).ready(function () {
             dados = "";
             dados += "<tr>";
 
-            dados += '<td class="" style="vertical-align: middle;">';
-                dados += '<p class="description m-0">' + value.description + '</p>';
-                if (value.integration_type_enum !== 5) {
-                    dados += '<div><small class="text-muted">' + integrationTypeEnum[value.integration_type] + '</small></div>';
-                }
-                dados += '<small class="text-muted">Criada em ' + value.register_date + '</small>';
+            dados += '<td>';
+            dados += '<div class="fullInformation-api ellipsis-text">' + value.description + '</div>';
+            if (value.integration_type_enum !== 5) {
+                dados += '<div><span class="subdescription font-size-12">' + integrationTypeEnum[value.integration_type] + '</span></div>';
+            }
+            dados += '<span class="subdescription font-size-12">Criada em ' + value.register_date + '</span> <div class="container-tooltips-api"></div>';
             dados += '</td>';
 
             dados += '<td style="vertical-align: middle;">';
@@ -174,20 +178,20 @@ $(document).ready(function () {
             dados += "</div>";
             dados += "</td>";
 
-            dados += '<td class="text-center">';
+            dados += '<td class="text-right">';
             dados +=
                 '<button class="btn pointer edit-integration" style="background-color:transparent;" integration="' +
                 value.id_code +
                 '"' +
                 disabled +
-                ' title="Editar integração"><span class="o-edit-1"></span></button>';
+                ' title="Editar integração"><span class=""><img src="/build/global/img/pencil-icon.svg"/></span></button>';
             //dados += '<button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
             dados +=
                 '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' +
                 value.id_code +
                 '"' +
                 disabled +
-                ' title="Deletar token"><span class="o-bin-1"></span></button>';
+                ' title="Deletar token"><span class=""><img src="/build/global/img/icon-trash-tale.svg"/></span></button>';
             dados += "</td>";
 
             dados += "</tr>";
@@ -198,6 +202,19 @@ $(document).ready(function () {
         $("#integrations_active").html("" + response.resume.active + "");
         $("#posts_received").html("" + response.resume.received + "");
         $("#posts_sent").html("" + response.resume.sent + "");
+
+        $('.fullInformation-api').bind('mouseover', function () {
+            var $this = $(this);
+
+            if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                $this.attr({
+                    'data-toggle': "tooltip",
+                    'data-placement': "top",
+                    'data-title': $this.text()
+                }).tooltip({ container: ".container-tooltips-api" })
+                $this.tooltip("show")
+            }
+        });
     }
 
     // Obtem os dados da integração
@@ -420,6 +437,7 @@ $(document).ready(function () {
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
+            $("#pagination-integrates").css({ "background": "#f4f4f4" })
             $("#primeira_pagina_" + model).hide();
             $("#ultima_pagina_" + model).hide();
         } else {
@@ -444,10 +462,10 @@ $(document).ready(function () {
 
                 $("#pagination-" + model).append(
                     "<button id='page_" +
-                        (response.meta.current_page - x) +
-                        "' class='btn nav-btn'>" +
-                        (response.meta.current_page - x) +
-                        "</button>"
+                    (response.meta.current_page - x) +
+                    "' class='btn nav-btn'>" +
+                    (response.meta.current_page - x) +
+                    "</button>"
                 );
 
                 $("#page_" + (response.meta.current_page - x)).on("click", function () {
@@ -470,10 +488,10 @@ $(document).ready(function () {
 
                 $("#pagination-" + model).append(
                     "<button id='page_" +
-                        (response.meta.current_page + x) +
-                        "' class='btn nav-btn'>" +
-                        (response.meta.current_page + x) +
-                        "</button>"
+                    (response.meta.current_page + x) +
+                    "' class='btn nav-btn'>" +
+                    (response.meta.current_page + x) +
+                    "</button>"
                 );
 
                 $("#page_" + (response.meta.current_page + x)).on("click", function () {

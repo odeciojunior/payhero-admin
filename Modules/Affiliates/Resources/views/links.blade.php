@@ -46,10 +46,10 @@
                        style='width:100%; margin-bottom: 0px;'>
                     <thead>
                         <tr>
-                            <td class='table-title'>Descrição</td>
-                            <td class='table-title'>Link Afiliado</td>
-                            <td class='table-title text-center'>Preço</td>
-                            <td class='table-title options-column-width text-center'></td>
+                            <td class=''>Descrição</td>
+                            <td class=''>Link Afiliado</td>
+                            <td class=' text-center'>Preço</td>
+                            <td class='options-column-width text-center'></td>
                         </tr>
                     </thead>
                     <tbody id='data-table-link'
