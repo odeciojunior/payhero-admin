@@ -221,9 +221,9 @@ $(document).ready(function () {
                     var regions_values = JSON.parse(response.regions_values);
                     response.value = '<div class="row">';
                     for (i in regions_values) {
-                        response.value += '<div class="col-8">';
+                        response.value += '<div class="col-7">';
                         response.value +=
-                            regions_values[i].name + ': </div><div class="col-4">' + regions_values[i].value + "";
+                            regions_values[i].name + ': </div><div class="col-5">' + regions_values[i].value + "";
                         response.value += "</div>";
                     }
                     response.value += "</div>";
@@ -443,10 +443,17 @@ $(document).ready(function () {
                     return false;
                 }
             }
-            $(".regions_values").val(JSON.stringify(regions_values));
+            var json = JSON.stringify(regions_values);
+
+            $(".regions_values").val(json);
         }
+
         if ($(".shipping-regions-edit").is(":visible") == true && $(".shipping-regions-edit").is(":checked") == true) {
             $(".regions_values").val("");
+        }
+        if ($(".shipping-regions-edit").is(":checked") == false) {
+            $(".shipping-value").val(0);
+            console.log($(".regions_values").val());
         }
 
         let formData = new FormData(document.querySelector("#modal-edit-shipping #form-update-shipping"));
