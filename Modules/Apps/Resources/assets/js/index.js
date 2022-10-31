@@ -37,7 +37,6 @@ $(document).ready(function () {
                 }
             },
             success: function success(response) {
-                console.log("testando", response);
                 if (verifyAccountFrozen()) {
                     $(".add-btn").removeAttr("href");
                 }
@@ -46,8 +45,9 @@ $(document).ready(function () {
                     $("#project-empty").hide();
                     updateUsedApps();
                 } else {
+                    clearUsedApps();
                     removeLoadingSkeletonCards();
-                    $("#project-empty").show();
+                    $("#project-not-empty").show();
                 }
             },
         });
@@ -186,11 +186,61 @@ $(document).ready(function () {
                     $("#menv-icon").removeClass("o-checkmark-1").addClass("o-add-1");
                 }
 
-                removeLoadingSkeletonCards();
+                // removeLoadingSkeletonCards();
 
-                $("#project-not-empty").show();
+                // $("#project-not-empty").show();
             },
+        }).done(function () {
+            removeLoadingSkeletonCards();
+            $("#project-not-empty").show();
         });
+    }
+
+    function clearUsedApps() {
+        $("#hotzapp-bt").removeClass("added");
+        $("#hotzapp-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#shopify-bt").removeClass("added");
+        $("#shopify-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#notazz-bt").removeClass("added");
+        $("#notazz-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#convertax-bt").removeClass("added");
+        $("#convertax-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#activecampaign-bt").removeClass("added");
+        $("#activecampaign-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#digitalmanager-bt").removeClass("added");
+        $("#digitalmanager-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#whatsapp2-bt").removeClass("added");
+        $("#whatsapp2-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#reportana-bt").removeClass("added");
+        $("#reportana-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#unicodrop-bt").removeClass("added");
+        $("#unicodrop-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#smartfunnel-bt").removeClass("added");
+        $("#smartfunnel-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#woocom-bt").removeClass("added");
+        $("#woocom-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#astronmembers-bt").removeClass("added");
+        $("#astronmembers-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#notificacoesinteligentes-bt").removeClass("added");
+        $("#notificacoesinteligentes-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#hotbillet-bt").removeClass("added");
+        $("#hotbillet-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#menv-bt").removeClass("added");
+        $("#menv-icon").removeClass("o-checkmark-1").addClass("o-add-1");
     }
 
     $(".app-integration").on("click", function () {
