@@ -13,6 +13,7 @@ class OrderBumpRequest extends FormRequest
             "project_id" => "required",
             "description" => "required",
             "discount" => "required",
+            "discount" => "required|numeric|min:0|not_in:0",
             "type" => "int",
             "active_flag" => "boolean",
             "apply_on_shipping" => "array",
@@ -27,6 +28,7 @@ class OrderBumpRequest extends FormRequest
         return [
             "description.required" => "O campo Descrição é obrigatório",
             "discount.required" => "O campo Desconto é obrigatório",
+            "discount.not_in" => "O campo Desconto não pode ser zero",
             "apply_on_shipping.required" => "O campo Ao selecionar o frete é obrigatório",
             "apply_on_plans.required" => "O campo Ao comprar o plano é obrigatório",
             "offer_plans.required" => "O campo Oferecer o plano é obrigatório",
