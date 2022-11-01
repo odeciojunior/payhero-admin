@@ -69,6 +69,7 @@ $(document).ready(function () {
         }
 
         loadOnTable("#data-table-upsell", "#table-upsell");
+        $("#pagination-upsell").children().attr("disabled", "disabled");
 
         $("#tab_upsell-panel").find(".no-gutters").css("display", "none");
         $("#table-upsell").find("thead").css("display", "none");
@@ -89,6 +90,8 @@ $(document).ready(function () {
                 let dataTable = $("#data-table-upsell");
                 dataTable.html("");
                 if (response.data == "") {
+                    $("#pagination-container-upsell").addClass("d-none").removeClass("d-flex")
+                    pagination(response, "upsell", loadUpsell);
                     $(".div-config").hide();
                     $("#data-table-upsell").html(`
                         <tr class='text-center'>
@@ -106,40 +109,88 @@ $(document).ready(function () {
                         </tr>
                     `);
                     $("#table-upsell").addClass("table-striped");
+
                 } else {
                     $("#tab_upsell-panel").find(".no-gutters").css("display", "flex");
                     $("#table-upsell").find("thead").css("display", "contents");
+                    $("#pagination-container-upsell").addClass("d-flex").removeClass("d-none")
+
 
                     $("#table-upsell").addClass("table-striped");
                     $("#count-upsell").html(response.meta.total);
                     let data = "";
+
                     $.each(response.data, function (index, value) {
                         data += `
-                        <tr>
-                            <td>${value.description}</td>
-                            <td class="text-center">${
-                                value.active_flag
-                                    ? `<span class="badge badge-success">Ativo</span>`
-                                    : `<span class="badge badge-danger">Desativado</span>`
-                            }</td>
-                            <td style='text-align:center'>
-                                <div class='d-flex justify-content-end align-items-center'>
-                                    <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${
-                                        value.id
-                                    }"><span class="o-eye-1"></span></a>
-                                    <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${
-                                        value.id
-                                    }"><span class='o-edit-1'></span></a>
-                                    <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${
-                                        value.id
-                                    }" data-toggle="modal" data-target="#modal-delete-upsell"><span class='o-bin-1'></span></a>
-                                </div>
-                            </td>
-                        </tr>
+                            <tr>
+
+                                <td>
+
+                                    <div class="fullInformation-upsel ellipsis-text">
+                                        ${value.description}
+                                    </div>
+
+                                    <div class="container-tooltips-upsel"></div>
+
+                                </td>
+
+
+                                <td class="text-center">${value.active_flag
+                                ? `<span class="badge badge-success">Ativo</span>`
+                                : `<span class="badge badge-disable">Desativado</span>`}
+                                </td>
+
+                                <td style='text-align:center'>
+
+                                    <div class='d-flex justify-content-end align-items-center'>
+
+                                        <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}">
+
+                                            <span class="">
+                                                <img src='/build/global/img/icon-eye.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                        <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}">
+
+                                            <span class=''>
+                                                <img src='/build/global/img/pencil-icon.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                        <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id}" data-toggle="modal" data-target="#modal-delete-upsell">
+
+                                            <span class=''>
+                                                <img src='/build/global/img/icon-trash-tale.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
                         `;
                     });
                     dataTable.append(data);
                     $(".div-config").show();
+
+                    $('.fullInformation-upsel').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'data-title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-upsel" })
+                            $this.tooltip("show")
+                        }
+                    });
+
 
                     pagination(response, "upsell", loadUpsell);
                 }
@@ -216,8 +267,7 @@ $(document).ready(function () {
                 for (let shipping of upsell.apply_on_shipping) {
                     applyOnShipping.push(shipping.id);
                     $("#edit_apply_on_shipping").append(
-                        `<option value="${shipping.id}">${
-                            shipping.name + (shipping.information ? " - " + shipping.information : "")
+                        `<option value="${shipping.id}">${shipping.name + (shipping.information ? " - " + shipping.information : "")
                         }</option>`
                     );
                 }
@@ -227,8 +277,7 @@ $(document).ready(function () {
                 for (let plan of upsell.apply_on_plans) {
                     applyOnPlans.push(plan.id);
                     $("#edit_apply_on_plans").append(
-                        `<option value="${plan.id}">${
-                            plan.name + (plan.description ? " - " + plan.description : "")
+                        `<option value="${plan.id}">${plan.name + (plan.description ? " - " + plan.description : "")
                         }</option>`
                     );
                 }
@@ -238,8 +287,7 @@ $(document).ready(function () {
                 for (let plan of upsell.offer_on_plans) {
                     offerOnPlans.push(plan.id);
                     $("#edit_offer_on_plans").append(
-                        `<option value="${plan.id}">${
-                            plan.name + (plan.description ? " - " + plan.description : "")
+                        `<option value="${plan.id}">${plan.name + (plan.description ? " - " + plan.description : "")
                         }</option>`
                     );
                 }
@@ -377,10 +425,9 @@ $(document).ready(function () {
                 }
 
                 $(".upsell-status").html(
-                    `${
-                        upsell.active_flag
-                            ? `<span class="badge badge-success text-left">Ativo</span>`
-                            : `<span class="badge badge-danger">Desativado</span>`
+                    `${upsell.active_flag
+                        ? `<span class="badge badge-success text-left">Ativo</span>`
+                        : `<span class="badge badge-danger">Desativado</span>`
                     }`
                 );
                 for (let applyShipping of upsell.apply_on_shipping) {

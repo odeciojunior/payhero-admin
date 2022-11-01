@@ -14,7 +14,7 @@ label {
     margin-bottom: 8px;
 }
 
-#div_digital_product_upload > label {
+#div_digital_product_upload>label {
     margin: 8px auto;
 }
 
@@ -42,7 +42,7 @@ a:hover,
 }
 
 .btn-excluir,
-.btn-excluir > span {
+.btn-excluir>span {
     font-size: 18px;
     color: #f10800;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
@@ -50,7 +50,7 @@ a:hover,
 }
 
 .btn-excluir:hover,
-.btn-excluir:hover > span {
+.btn-excluir:hover>span {
     color: #9b0400;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
         box-shadow 0.15s ease-in-out;
@@ -63,7 +63,7 @@ a:hover,
 }
 
 .btn-converter:hover,
-.btn-converter:hover > .svg-converter > path {
+.btn-converter:hover>.svg-converter>path {
     color: #2e85ec;
     fill: #2e85ec;
 }
@@ -235,6 +235,19 @@ p {
     display: none;
 }
 
-.div-expiration-time > .input-group {
+.div-expiration-time>.input-group {
     width: 160px;
+}
+
+.btn-excluir svg {
+    margin-bottom: 7px;
+}
+
+.btn-excluir svg path {
+    fill: #f10800;
+    margin-bottom: 5px;
+}
+
+.btn-excluir:hover svg path {
+    fill: #9b0400;
 }

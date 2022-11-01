@@ -1,12 +1,22 @@
 $(() => {
     let projectId = $(window.location.pathname.split("/")).get(-1);
 
+<<<<<<< HEAD
     $(".value-mask").maskMoney({ thousands: ".", decimal: ",", allowZero: true, prefix: "" });
     function formatDouble(number) {
         return number.replace(".", "").replace(",", ".");
     }
     function formatMoney(number) {
         return (Math.round(number * 100) / 100).toFixed(2).replace(".", ",");
+=======
+
+    $('.value-mask').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
+    function formatDouble(number) {
+        return number.replace('.', '').replace(',', '.')
+    }
+    function formatMoney(number) {
+        return (Math.round(number * 100) / 100).toFixed(2).replace('.', ',');
+>>>>>>> master
     }
     //store type
     $("#ob_type_value").click(function () {
@@ -54,6 +64,7 @@ $(() => {
 
     function index() {
         loadOnTable("#table-order-bump tbody", "#table-order-bump");
+        $("#pagination-invites").children().attr("disabled", "disabled");
 
         let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         link = "/api/orderbump" + (link || "");
@@ -78,37 +89,62 @@ $(() => {
                 let rules = resp.data;
                 let table = $("#table-order-bump tbody");
                 if (rules.length) {
+                    $("#pagination-container-order-bump").removeClass("d-none").addClass("d-flex")
                     table.html("");
                     $("#tab-order-bump-panel").find(".no-gutters").css("display", "flex");
                     $("#table-order-bump").find("thead").css("display", "contents");
 
                     for (let rule of rules) {
-                        let row = `<tr>
-                                       <td>${rule.description}</td>
-                                       <td class="text-center">${
-                                           rule.active_flag
-                                               ? `<span class="badge badge-success">Ativo</span>`
-                                               : `<span class="badge badge-danger">Desativado</span>`
-                                       }</td>
-                                       <td>
-                                            <div class='d-flex justify-content-end align-items-center'>
-                                                <a class="pointer mg-responsive show-order-bump" data-id="${
-                                                    rule.id
-                                                }" title="Visualizar"><span class="o-eye-1"></span></a>
-                                                <a class="pointer mg-responsive edit-order-bump" data-id="${
-                                                    rule.id
-                                                }" title="Editar" ><span class="o-edit-1"></span></a>
-                                                <a class="pointer mg-responsive destroy-order-bump" data-id="${
-                                                    rule.id
-                                                }" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class="o-bin-1"></span></a>
-                                            </div>
-                                       </td>
+                        let row =
+                            `<tr>
+
+                                <td>
+
+                                    <div class="fullInformation-order-bump ellipsis-text">
+                                        ${rule.description}
+                                    </div>
+
+                                    <div class="container-tooltips-order-bump"></div>
+
+                                </td>
+
+
+                                <td class="text-center">${rule.active_flag
+                                ? `<span class="badge badge-success">Ativo</span>`
+                                : `<span class="badge badge-disable">Desativado</span>`}
+                                </td>
+
+                                <td>
+                                    <div class='d-flex justify-content-end align-items-center'>
+                                        <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><span class=""><img src='/build/global/img/icon-eye.svg'/></span></a>
+
+                                        <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><span class=""><img src='/build/global/img/pencil-icon.svg'/></span></a>
+
+                                        <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class=""><img src='/build/global/img/icon-trash-tale.svg'/></span></a>
+                                    </div>
+                                </td>
                                    </tr>`;
                         table.append(row);
                     }
-
                     pagination(resp, "order-bump", index);
+                    $(".fullInformation").tooltip({ container: '.container-tooltips' });
+
+                    $('.fullInformation-order-bump').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'data-title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-order-bump" })
+                            $this.tooltip("show")
+                        }
+                    });
+
                 } else {
+                    $("#pagination-container-order-bump").removeClass("d-flex").addClass("d-none")
+
                     table.html(`
                         <tr class="text-center">
                             <td colspan="3">
@@ -163,10 +199,15 @@ $(() => {
                 $("#order-bump-show-table .order-bump-description").html(rule.description);
 
                 if (rule.type == 1) {
+<<<<<<< HEAD
                     $("#order-bump-show-table .order-bump-discount").html(
                         rule.discount.toLocaleString("pt-br", { minimumFractionDigits: 2 })
                     );
                     $("#order-bump-show-table .order-bump-discount").prepend("R$");
+=======
+                    $("#order-bump-show-table .order-bump-discount").html(formatMoney(rule.discount));
+                    $("#order-bump-show-table .order-bump-discount").prepend('R$')
+>>>>>>> master
                 } else {
                     $("#order-bump-show-table .order-bump-discount").html(rule.discount);
                     $("#order-bump-show-table .order-bump-discount").append("%");
@@ -204,7 +245,11 @@ $(() => {
                 $("#update-description-order-bump").val(rule.description);
 
                 if (rule.type == 1) {
+<<<<<<< HEAD
                     $("#obu_type_value").trigger("click");
+=======
+                    $("#obu_type_value").trigger('click');
+>>>>>>> master
                     $("#obu_money_opt input").val(formatMoney(rule.discount));
                 } else {
                     $("#obu_percent_opt input").val(rule.discount);
@@ -224,8 +269,7 @@ $(() => {
                 for (let shipping of rule.apply_on_shipping) {
                     applyOnShipping.push(shipping.id);
                     applyOnShippingInput.append(
-                        `<option value="${shipping.id}">${
-                            shipping.name + (shipping.information ? ` - ${shipping.information}` : "")
+                        `<option value="${shipping.id}">${shipping.name + (shipping.information ? ` - ${shipping.information}` : "")
                         }</option>`
                     );
                 }
@@ -236,8 +280,7 @@ $(() => {
                 for (let plan of rule.apply_on_plans) {
                     applyOnPlans.push(plan.id);
                     applyOnPlansInput.append(
-                        `<option value="${plan.id}">${
-                            plan.name + (plan.description ? ` - ${plan.description}` : "")
+                        `<option value="${plan.id}">${plan.name + (plan.description ? ` - ${plan.description}` : "")
                         }</option>`
                     );
                 }
@@ -248,8 +291,7 @@ $(() => {
                 for (let plan of rule.offer_plans) {
                     offerPlans.push(plan.id);
                     offerPlansInput.append(
-                        `<option value="${plan.id}">${
-                            plan.name + (plan.description ? ` - ${plan.description}` : "")
+                        `<option value="${plan.id}">${plan.name + (plan.description ? ` - ${plan.description}` : "")
                         }</option>`
                     );
                 }

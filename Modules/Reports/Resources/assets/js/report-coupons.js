@@ -4,11 +4,11 @@ $('.company-navbar').change(function () {
     $("#projeto").find('option').not(':first').remove();
     loadOnTable('#body-table-coupons', '.table-coupons');
     $("#projeto").html('');
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            getProjects(data2,'company-navbar');
+    updateCompanyDefault().done(function (data1) {
+        getCompaniesAndProjects().done(function (data2) {
+            getProjects(data2, 'company-navbar');
         });
-	});
+    });
 });
 
 var currentPage = null;
@@ -61,11 +61,11 @@ $(document).ready(function () {
         }
     }
 
-    getCompaniesAndProjects().done( function (data){
-            getProjects(data);
+    getCompaniesAndProjects().done(function (data) {
+        getProjects(data);
     });
 
-    window.fillProjectsSelect = function(){
+    window.fillProjectsSelect = function () {
         return $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -84,7 +84,7 @@ $(document).ready(function () {
         });
     }
 
-    window.getProjects = function(data, origin='') {
+    window.getProjects = function (data, origin = '') {
 
         loadingOnScreen();
 
@@ -102,30 +102,30 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
             },
             success: function success(response) {
-                if(!isEmpty(response) || data.has_api_integration){
+                if (!isEmpty(response) || data.has_api_integration) {
                     $(".div-filters").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     $("#export-excel > div >").show();
                     $.each(response, function (c, project) {
-                        $("#projeto").append($("<option>", {value: project.project_id,text: project.name,}));
+                        $("#projeto").append($("<option>", { value: project.project_id, text: project.name, }));
                     });
                     // if(data.has_api_integration)
                     //     $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-                    $("#projeto option:first").attr('selected','selected');
-                    if(sessionStorage.info) {
+                    $("#projeto option:first").attr('selected', 'selected');
+                    if (sessionStorage.info) {
                         $("#projeto").val(JSON.parse(sessionStorage.getItem('info')).company);
                         $("#projeto").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
                     }
                     company = $("#projeto").val();
                     window.atualizar();
                     $(".div-filters").show();
-                    if( $('#select_projects option').length == 0 )
-                        $('#select_projects').next().css('display','none')
+                    if ($('#select_projects option').length == 0)
+                        $('#select_projects').next().css('display', 'none')
                     loadingOnScreenRemove();
                 }
-                else{
-                    if(!isEmpty(data.company_default_projects)){
+                else {
+                    if (!isEmpty(data.company_default_projects)) {
                         $(".div-filters").hide();
                         $("#project-empty").hide();
                         $("#project-not-empty").show();
@@ -133,16 +133,16 @@ $(document).ready(function () {
                         // $.each(data.company_default_projects, function (i, project) {
                         //     $("#projeto").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
-                        if(data.has_api_integration)
-                            $("#projeto").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-                        $("#projeto option:first").attr('selected','selected');
-                        if( $('#select_projects option').length == 0 )
-                            $('#select_projects').next().css('display','none')
+                        if (data.has_api_integration)
+                            $("#projeto").append($("<option>", { value: 'API-TOKEN', text: 'Vendas por API' }));
+                        $("#projeto option:first").attr('selected', 'selected');
+                        if ($('#select_projects option').length == 0)
+                            $('#select_projects').next().css('display', 'none')
                         window.atualizar();
                         $(".div-filters").show();
                         loadingOnScreenRemove();
                     }
-                    else{
+                    else {
                         loadingOnScreenRemove();
                         $(".div-filters").hide();
                         $("#project-empty").show();
@@ -180,8 +180,8 @@ $(document).ready(function () {
                 $('#body-table-coupons').html('');
                 $('.table-coupons').addClass('table-striped');
                 $('#body-table-coupons').html("<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                $("#body-table-coupons").attr("img-empty") +
-                "'> Nenhum cupom encontrado</td></tr>");
+                    $("#body-table-coupons").attr("img-empty") +
+                    "'> Nenhum cupom encontrado</td></tr>");
 
                 errorAjaxResponse(response);
             },
@@ -191,22 +191,37 @@ $(document).ready(function () {
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
-                        dados = `  <tr>
-                                    <td>${value.cupom_code}</td>
-                                    <td>${value.project}</td>
-                                    <td>${value.amount}</td>
-                                </tr>`;
+                        dados = `
+                            <tr>
+                                <td>
+                                    ${value.cupom_code}
+                                </td>
+
+                                <td>
+                                    <div class="fullInformation-cupom ellipsis-text" data-toggle="tooltip" data-placement="top" title="${value.project}" >
+                                        ${value.project}
+                                    </div>
+                                    <div class="container-tooltips-cupom"></div>
+                                </td>
+
+                                <td>
+                                    ${value.amount}
+                                </td>
+                            </tr>
+                        `;
 
                         $("#body-table-coupons").append(dados);
                     });
 
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
+                    $(".fullInformation-cupom").tooltip({ container: '.container-tooltips-cupom' });
+
                 } else {
                     $("#body-table-coupons").html(
                         "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                            $("#body-table-coupons").attr("img-empty") +
-                            "'> Nenhum cupom encontrado</td></tr>"
+                        $("#body-table-coupons").attr("img-empty") +
+                        "'> Nenhum cupom encontrado</td></tr>"
                     );
                 }
                 pagination(response, "coupons", atualizar);
@@ -274,7 +289,7 @@ function changeCompany() {
         // $('.onPreLoad').html(skeLoad);
         // $('.onPreLoadBig').html(skeLoadBig);
         $.ajaxQ.abortAll();
-        updateStorage({company: $(this).val(), companyName: $(this).find('option:selected').text()});
+        updateStorage({ company: $(this).val(), companyName: $(this).find('option:selected').text() });
 
         atualizar();
     });
@@ -310,12 +325,12 @@ function resumePending() {
 }
 
 // abort all ajax
-$.ajaxQ = (function(){
+$.ajaxQ = (function () {
     var id = 0, Q = {};
 
-    $(document).ajaxSend(function(e, jqx){
-      jqx._id = ++id;
-      Q[jqx._id] = jqx;
+    $(document).ajaxSend(function (e, jqx) {
+        jqx._id = ++id;
+        Q[jqx._id] = jqx;
     });
     $(document).ajaxComplete(function (e, jqx) {
         delete Q[jqx._id];
@@ -332,7 +347,7 @@ $.ajaxQ = (function(){
         },
     };
 
-  })();
+})();
 
 let skeLoad = `
     <div class="ske-load">

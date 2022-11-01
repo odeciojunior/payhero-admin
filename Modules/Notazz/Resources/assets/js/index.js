@@ -89,13 +89,17 @@ $(document).ready(function () {
                                                     <a role='button' class='edit-integration pointer float-right' integration=` +
                                     data.id +
                                     ` data-toggle='modal' data-target='#modal-edit' type='a'>
-                                                        <span class="o-edit-1"></span>
+                                                        <span class=""><img src='/build/global/img/pencil-icon.svg'/></span>
                                                     </a>
                                                     <a role='button' class='delete-integration pointer float-right mt-10' integration=` +
                                     data.id +
                                     ` data-toggle='modal' data-target='#modal-delete' type='a'>
+<<<<<<< HEAD
 
                                                         <img src="/build/global/img/icon-trash-new.svg" />
+=======
+                                                        <span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span>
+>>>>>>> master
                                                     </a>
                                                 </div>
                                             </div>

@@ -1,8 +1,7 @@
 @extends('layouts.master')
 
 @push('css')
-    <link rel="stylesheet"
-          href="{{ mix('build/layouts/projects/projectaffiliate.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/projects/projectaffiliate.min.css') }}">
 @endpush
 
 @section('content')

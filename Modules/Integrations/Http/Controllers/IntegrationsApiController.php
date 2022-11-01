@@ -31,10 +31,10 @@ class IntegrationsApiController extends Controller
         try {
             $apiTokenModel = new ApiToken();
             $tokens        = $apiTokenModel->newQuery()
-                                            ->where('user_id', auth()->user()->getAccountOwnerId())
-                                            ->where('company_id', auth()->user()->company_default)
-                                            ->latest()
-                                            ->paginate();
+                ->where('user_id', auth()->user()->getAccountOwnerId())
+                ->where('company_id', auth()->user()->company_default)
+                ->latest()
+                ->paginate(10);
             return new ApiTokenCollection($tokens);
         } catch (Exception $ex) {
             Log::debug($ex);

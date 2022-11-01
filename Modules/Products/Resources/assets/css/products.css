@@ -44,6 +44,7 @@ label {
 .modal-content {
     border-radius: 16px;
 }
+
 .new-product-icon {
     width: 72px;
     height: 72px;
@@ -56,14 +57,17 @@ label {
     color: #4c4c4c;
     padding: 12px;
 }
+
 .new-product-icon:hover img {
     filter: invert(67%) sepia(41%) saturate(5064%) hue-rotate(177deg) brightness(96%) contrast(100%);
 }
+
 .new-product-icon:hover {
     border-radius: 50%;
     border: 2px solid #2da6f6;
     color: #2da6f6;
 }
+
 .new-product-icon img {
     display: flex;
     align-items: center;
@@ -137,6 +141,7 @@ button.menu_product {
     padding: 32px 0px;
     width: 60%;
 }
+
 @media screen and (max-width: 350px) {
     .new-product-modal-body {
         width: 70%;
@@ -151,23 +156,28 @@ button.menu_product {
     background: #f4f6fb;
     cursor: pointer;
 }
+
 .new-product-modal-option button:hover {
     border: 2px solid #2e85ec;
     background: #cbe0fa;
 }
+
 .new-product-modal-option button:focus {
     outline: none;
 }
+
 .new-product-modal-option .active {
     border: 2px solid #2e85ec;
     background: #cbe0fa;
 }
+
 .new-product-modal-option span {
     font-weight: 400;
     color: #5b5b5b;
     margin-top: 12px;
     font-size: 16px;
 }
+
 @media screen and (max-width: 430px) {
     .new-product-modal-option button {
         width: 90px;
@@ -198,7 +208,12 @@ button.menu_product {
     font-size: 26px;
     color: #636363;
 }
+
 .new-product-modal-option-close-btn:focus {
     border: none;
     outline: none;
+}
+
+.nav-btn {
+    border: none;
 }

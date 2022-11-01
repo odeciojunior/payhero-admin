@@ -1207,7 +1207,11 @@ class SaleService
             case "Cielo":
                 return [Gateway::CIELO_PRODUCTION_ID, Gateway::CIELO_SANDBOX_ID];
             case "Vega":
-                return [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID];
+                return [
+                    Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID,
+                    Gateway::IUGU_PRODUCTION_ID, Gateway::IUGU_SANDBOX_ID,
+                    Gateway::VEGA_PRODUCTION_ID, Gateway::VEGA_SANDBOX_ID
+                ];
         }
         return [];
     }

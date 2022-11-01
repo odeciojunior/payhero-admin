@@ -97,3 +97,18 @@
     justify-content: center;
     padding-bottom: 116px;
 }
+.table thead > tr > td,
+.table thead > tr > th {
+    background-color: #fafafa;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    color: #15034c;
+}
+.table tbody > tr > td {
+    font-family: 'Inter' !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+}

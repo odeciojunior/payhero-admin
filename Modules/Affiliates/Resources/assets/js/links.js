@@ -305,21 +305,21 @@ $(function () {
                                 data +=
                                     '<a title="Visualizar" class="mg-responsive details-link pointer" link="' +
                                     value.id +
-                                    '" data-target="#modal-details-link" data-toggle="modal"><span class="o-eye-1"></span></a>';
+                                    '" data-target="#modal-details-link" data-toggle="modal"><span class=""><img src="/build/global/img/icon-eye.svg"/></span></a>';
                                 if (value.plan_name == "" && value.link != null) {
                                     data +=
                                         '<a title="Editar" class="mg-responsive edit-link pointer" link="' +
                                         value.id +
-                                        '" data-toggle="modal"><span class="o-edit-1"></span></a>';
+                                        '" data-toggle="modal"><span class=""><img src="/build/global/img/pencil-icon.svg"/></span></a>';
                                     data +=
                                         '<a title="Excluir" class="mg-responsive delete-link pointer" link="' +
                                         value.id +
-                                        '" data-toggle="modal"><span class="o-bin-1"></span></a>';
+                                        '" data-toggle="modal"><span class=""><img src="/build/global/img/icon-trash-tale.svg"/></span></a>';
                                 } else {
                                     data +=
-                                        '<a title="Editar" class="mg-responsive pointer disabled"><span class="o-edit-1"></span></a>';
+                                        '<a title="Editar" class="mg-responsive pointer disabled"><span class=""><img src="/build/global/img/pencil-icon.svg"/></span></a>';
                                     data +=
-                                        '<a title="Excluir" class="mg-responsive pointer disabled"><span class="o-bin-1"></span></a>';
+                                        '<a title="Excluir" class="mg-responsive pointer disabled"><span class=""><img src="/build/global/img/icon-trash-tale.svg"/></span></a>';
                                 }
                                 data += "</div>";
                                 data += "</td>";
