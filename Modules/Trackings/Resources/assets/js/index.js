@@ -97,8 +97,6 @@ $(() => {
     });
 
     $(document).on("click", ".tracking-add, .tracking-edit", function (event) {
-        $(event.target).closest(".edit-detail").removeClass("col-5");
-
         let row = $(this).parent().parent();
         row.find(".input-tracking-code")
             .removeClass("fake-label")
@@ -111,9 +109,7 @@ $(() => {
     });
 
     $(document).on("click", ".tracking-close", function (event) {
-        $(event.target).parent().prev().addClass("col-5");
-
-        let row = $(this).parent().parent().parent();
+        let row = $(this).closest(".row");
         row.find(".input-tracking-code")
             .prop("readonly", true)
             .blur()
@@ -135,7 +131,7 @@ $(() => {
     });
 
     $("#bt_filter").on("click", function () {
-        $("#container-pagination-trackings").removeClass("d-flex").addClass("d-none")
+        $("#container-pagination-trackings").removeClass("d-flex").addClass("d-none");
 
         window.loadData();
     });
@@ -215,7 +211,6 @@ $(() => {
         $("#myChart").hide();
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            //console.log(elementButton.attr('block_search'));
             index();
             getResume();
         }
@@ -282,9 +277,6 @@ $(() => {
                         $("#project-empty").hide();
                         $("#project-not-empty").show();
                         $("#export-excel").show();
-                        // $.each(data.company_default_projects, function (i, project) {
-                        //     $("#project-select").append($("<option>", {value: project.project_id,text: project.name,}));
-                        // });
                         $("#projeto option:first").attr("selected", "selected");
                         window.loadData();
                         if (origin == "") loadingOnScreenRemove();
@@ -499,7 +491,7 @@ $(() => {
                 $("#pagination-trackings").html("");
 
                 if (isEmpty(response.data)) {
-                    $("#container-pagination-trackings").removeClass("d-flex").addClass("d-none")
+                    $("#container-pagination-trackings").removeClass("d-flex").addClass("d-none");
                     $("#dados_tabela").html(`
                     <tr class="text-center">
                       <td colspan="6" style="vertical-align: middle;height:257px;">
@@ -514,7 +506,6 @@ $(() => {
                 let lastSale = "";
 
                 $.each(response.data, function (index, tracking) {
-
                     if (lastSale !== tracking.sale) {
                         grayRow = !grayRow;
                     }
@@ -523,12 +514,13 @@ $(() => {
 
                     dados += "<tr>";
 
-                    dados += `${lastSale !== tracking.sale
-                        ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}" style="padding-right:4px">
+                    dados += `${
+                        lastSale !== tracking.sale
+                            ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}" style="padding-right:4px">
                                     #${tracking.sale}
                                 </td>`
-                        : `<td></td>`
-                        }`;
+                            : `<td></td>`
+                    }`;
 
                     dados += `<td>
                                     <div class="fullInformation-tracking ellipsis-text" style="max-width: 240px; display:block; margin: 0px 0px 0px 0px;">
@@ -547,66 +539,78 @@ $(() => {
                                 </td>`;
 
                     dados += `<td style="width: 2%;padding: 0px !important;">
-                                    ${systemStatus[tracking.system_status_enum] != undefined
-                            ? systemStatus[tracking.system_status_enum]
-                            : ""
-                        }
-                                    ${tracking.is_chargeback_recovered
-                            ? `<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
-                            : ``
-                        }
+                                    ${
+                                        systemStatus[tracking.system_status_enum] != undefined
+                                            ? systemStatus[tracking.system_status_enum]
+                                            : ""
+                                    }
+                                    ${
+                                        tracking.is_chargeback_recovered
+                                            ? `<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
+                                            : ``
+                                    }
                                 </td>`;
+
+                    let save = `<div class="save-close buttons d-flex px-0" style="max-height: 35px;">
+                                <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none; height:34px"></a>
+                                <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none; padding: 0px 7px 0px 9px !important; height:34px">
+                                    &#x2715
+                                </div>
+                            </div>`;
+
+                    let edit_detail_save_close =
+                        `
+                            <div class="edit-detail" style="text-align:right; margin-top: 3px">
+                                <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
+                                    <span class="text-right o-edit-1"></span>
+                                </a>
+                                <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0; vertical-align: middle;">
+                                    <span class="o-eye-1" style="padding-left: 10px !important"></span>
+                                </a>
+                                ` +
+                        save +
+                        `
+                            </div>`;
 
                     dados += `<td class="text-left mb-0" style="max-height:74px!important;">
                                 <div class="row" style="max-height: 35px;">`;
 
-                    let save = `<div class="save-close buttons d-flex px-0" style="max-height: 35px;">
-                            <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none; height:34px"></a>
-                            <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none; padding: 0px 7px 0px 9px !important; height:34px">
-                                &#x2715
-                            </div>
-                        </div>`;
-
-                    dados += `${!tracking.tracking_status_enum
-                        ? `<div class="col-7">
+                    dados += `${
+                        !tracking.tracking_status_enum
+                            ? `<div class="col-7">
                             <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="border-radius: 8px; max-height:35px; padding: 8px 0 8px 10px !important;">
                             </div>
                             <a class='tracking-add pointer mt-1 px-0 default-buttons' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                         </a>` + save
-                        : ``
-                        }`;
+                            : ``
+                    }`;
 
-                    dados += `${tracking.tracking_status_enum &&
+                    dados += `${
+                        tracking.tracking_status_enum &&
                         (tracking.tracking_status_enum != 3 ||
                             (tracking.tracking_status_enum == 3 && tracking.system_status_enum == 5))
-                        ? `<div class="col-7" >
+                            ? `<div class="col-7" >
                             <input maxlength="18" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">
                             </div>
-                        <div class="edit-detail" style="text-align:right; margin-top: 3px">
-                            <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
-                                <span class="text-right o-edit-1"></span>
-                            </a>
-                            <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0; vertical-align: middle;">
-                                <span class="o-eye-1" style="padding-left: 10px !important"></span>
-                            </a>` +
-                        save +
-                        `
-                        </div>`
-                        : ``
-                        }`;
+                        ` +
+                              edit_detail_save_close +
+                              ``
+                            : ``
+                    }`;
 
-                    dados += `${tracking.tracking_status_enum &&
+                    dados += `${
+                        tracking.tracking_status_enum &&
                         tracking.tracking_status_enum == 3 &&
                         tracking.system_status_enum != 5
-                        ? `<div class="col-7 pt-5">${tracking.tracking_code}</div>
+                            ? `<div class="col-7 pt-5">${tracking.tracking_code}</div>
                         <div class="edit-detail" style="margin-top:-5px; text-align:right; margin-left: 62px;">
                             <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
                                 <span class="o-eye-1"></span>
                             </a>
                         </div>`
-                        : ``
-                        }`;
+                            : ``
+                    }`;
 
                     dados += `</div>
                         </td>`;
@@ -617,21 +621,22 @@ $(() => {
                     lastSale = tracking.sale;
                 });
                 pagination(response, "trackings", index);
-                $("#container-pagination-trackings").removeClass("d-none").addClass("d-flex")
+                $("#container-pagination-trackings").removeClass("d-none").addClass("d-flex");
 
-                $('.fullInformation-tracking').bind('mouseover', function () {
+                $(".fullInformation-tracking").bind("mouseover", function () {
                     var $this = $(this);
 
-                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
-                        $this.attr({
-                            'data-toggle': "tooltip",
-                            'data-placement': "top",
-                            'data-title': $this.text()
-                        }).tooltip({ container: ".container-tooltips-tracking" })
-                        $this.tooltip("show")
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr("title")) {
+                        $this
+                            .attr({
+                                "data-toggle": "tooltip",
+                                "data-placement": "top",
+                                "data-title": $this.text(),
+                            })
+                            .tooltip({ container: ".container-tooltips-tracking" });
+                        $this.tooltip("show");
                     }
                 });
-
             },
             complete: (response) => {
                 unlockSearch($("#bt_filter"));
@@ -666,7 +671,7 @@ $(() => {
                 $("#tracking-product-image").attr("src", tracking.product.photo);
                 $("#tracking-product-name").text(
                     tracking.product.name +
-                    (tracking.product.description ? "(" + tracking.product.description + ")" : "")
+                        (tracking.product.description ? "(" + tracking.product.description + ")" : "")
                 );
                 $("#tracking-product-amount").text(tracking.amount + "x");
                 $("#tracking-delivery-address").text(
@@ -691,8 +696,9 @@ $(() => {
                             `<tr>
                               <td>${checkpoint.created_at}</td>
                               <td>
-                                  <span class="text-secondary badge badge-${statusEnum[checkpoint.tracking_status_enum]
-                            }">${checkpoint.tracking_status}</span>
+                                  <span class="text-secondary badge badge-${
+                                      statusEnum[checkpoint.tracking_status_enum]
+                                  }">${checkpoint.tracking_status}</span>
                               </td>
                               <td>${checkpoint.event}</td>
                           </tr>`
@@ -748,27 +754,30 @@ $(() => {
                 if (!isEmpty(response.data.tracking_status)) {
                     let tracking = response.data;
 
-                    let td = btnSave.parent().parent();
-                    let saveClose = td.find(".save-close");
+                    let td = btnSave.closest(".row");
+                    let col7 = td.find(".col-7");
 
-                    td.find(".tracking-add, .edit-detail").remove();
-
-                    td.find(".tracking-close").attr("data-code", response.data.tracking_code).trigger("click");
-
+                    td.find(".tracking-add, .edit-detail, .save-close").remove();
                     td.find(".input-tracking-code").removeClass("fake-label, border-danger");
 
                     let buttons = `
-                        <div class="edit-detail" style="text-align:right; margin-top: 3px">
+                    <div class="edit-detail" style="text-align:right; margin-top: 3px">
+                        <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
+                            <span class="text-right o-edit-1"></span>
+                        </a>
+                        <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${response.data.tracking_code}' style="margin-right: 0; vertical-align: middle;">
+                            <span class="o-eye-1" style="padding-left: 10px !important"></span>
+                        </a>
+                        <div class="save-close buttons d-flex px-0" style="max-height: 35px;">
+                                <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${ppsId}'style="display:none; height:34px"></a>
+                                <div class='tracking-close pointer' data-code='${response.data.tracking_code}' title="Fechar" style="display:none; padding: 0px 7px 0px 9px !important; height:34px">
+                                    &#x2715
+                                </div>
+                            </div>
+                    </div>`;
 
-                            <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
-                                <span class="text-right o-edit-1"></span>
-                            </a>
-
-                            <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0; vertical-align: middle;">
-                                <span class="o-eye-1"></span>
-                            </a>
-                        </div>`;
-                    //$(buttons).insertBefore(saveClose);
+                    $(buttons).insertAfter(col7);
+                    $(".tracking-close").click();
 
                     let statusBadge = btnSave.parent().parent().parent().parent().find(".badge");
                     statusBadge
