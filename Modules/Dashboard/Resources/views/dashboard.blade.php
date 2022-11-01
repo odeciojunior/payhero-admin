@@ -239,19 +239,19 @@
          aria-hidden="true"
          data-keyboard="false"
          data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered"
+        <div class="modal-dialog modal-dialog-centered modal-simple"
              role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title"
+            <div class="modal-content modal-terms-cloudfox">
+                <div class="modal-header p-0 pt-15 pl-15 pb-15">
+                    <span class="modal-title p-0"
                           id="exampleModalLabel">
                         <strong>Termos de uso Cloudfox atualizados</strong>
                     </span>
                 </div>
-                <hr style="margin-top: 0%">
-                <div class="modal-body">
+                <hr style="margin-top: 0%; color: #F4F6FB; height: 1px">
+                <div class="modal-body p-0">
 
-                    <div class="row form-group col-md-12">
+                    <div class="row form-group col-md-12 pl-15 pr-15 m-0 pb-20 text-modal">
                         Atualizamos recentemente os Termos de Uso da nossa plataforma e produtos. Para continuar
                         utilizando os serviços Cloudfox é necessario ler e estar de acordo com o termo.
                     </div>
@@ -268,16 +268,13 @@
                         </a>
                     </div>
                     <br>
-                    <div>
+                    <div class="pl-15">
                         <input id="terms-cloudfox"
                                type="checkbox"> Li e estou de acordo.
                     </div>
                 </div>
-                <hr>
-                <div class="modal-footer">
-                    <button type="button"
-                            id="accept-term"
-                            class="btn btn-primary">Aceitar
+                <div class="modal-footer border-top mt-20 mb-20 pt-15 justify-content-center" id="accept-term">
+                    <button type="button" class="btn btn-primary button-accept">Aceitar
                     </button>
                 </div>
             </div>

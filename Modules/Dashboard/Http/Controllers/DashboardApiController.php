@@ -828,9 +828,8 @@ class DashboardApiController extends Controller
                 "term_version" => "v2",
             ])->first();
             if (
-                (empty($userTermV2) &&
-                    auth()->user()->account_owner_id == auth()->user()->id) ||
-                true
+                empty($userTermV2) &&
+                auth()->user()->account_owner_id == auth()->user()->id
             ) {
                 return \response()->json(
                     [
