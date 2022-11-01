@@ -1,6 +1,6 @@
 $(function () {
     var statusPlan = {
-        0: "default",
+        0: "disable",
         1: "success",
     };
     var projectId = $(window.location.pathname.split("/")).get(-1);
@@ -167,8 +167,8 @@ $(function () {
                                     "<div " +
                                     (product.name_short_flag
                                         ? 'data-toggle="tooltip" data-placement="top" title="' +
-                                          product.name +
-                                          '"'
+                                        product.name +
+                                        '"'
                                         : "") +
                                     ' data-code="' +
                                     product.id +
@@ -176,7 +176,7 @@ $(function () {
                                     (index_product != -1 ? "selected" : "") +
                                     " " +
                                     (product.status_enum == 1 ||
-                                    product.status_enum == 3
+                                        product.status_enum == 3
                                         ? "review"
                                         : "") +
                                     ' d-flex justify-content-between align-items-center">';
@@ -192,7 +192,7 @@ $(function () {
                                 append +=
                                     '<h1 class="title" ' +
                                     (product.status_enum == 1 ||
-                                    product.status_enum == 3
+                                        product.status_enum == 3
                                         ? 'style="color: #C5C5C5"'
                                         : "") +
                                     ">" +
@@ -201,7 +201,7 @@ $(function () {
                                 append +=
                                     '<p class="description" ' +
                                     (product.status_enum == 1 ||
-                                    product.status_enum == 3
+                                        product.status_enum == 3
                                         ? 'style="color: #C7C7C7"'
                                         : "") +
                                     ">" +
@@ -366,7 +366,7 @@ $(function () {
                 .find(".modal-footer")
                 .html(
                     '<button id="btn-modal-plan-return" type="button" data-type="edit" class="btn btn-default btn-lg" role="button">Voltar</button>' +
-                        '<button id="btn-modal-plan-next" type="button" data-type="edit" class="btn btn-primary btn-lg">Continuar</button>'
+                    '<button id="btn-modal-plan-next" type="button" data-type="edit" class="btn btn-primary btn-lg">Continuar</button>'
                 )
                 .removeClass("justify-content-between");
         } else {
@@ -434,8 +434,8 @@ $(function () {
                                     "<div " +
                                     (product.name_short_flag
                                         ? 'data-toggle="tooltip" data-placement="top" title="' +
-                                          product.name +
-                                          '"'
+                                        product.name +
+                                        '"'
                                         : "") +
                                     ' data-code="' +
                                     product.id +
@@ -443,7 +443,7 @@ $(function () {
                                     (index_product != -1 ? "selected" : "") +
                                     " " +
                                     (product.status_enum == 1 ||
-                                    product.status_enum == 3
+                                        product.status_enum == 3
                                         ? "review"
                                         : "") +
                                     ' d-flex justify-content-between align-items-center">';
@@ -459,7 +459,7 @@ $(function () {
                                 append +=
                                     '<h1 class="title" ' +
                                     (product.status_enum == 1 ||
-                                    product.status_enum == 3
+                                        product.status_enum == 3
                                         ? 'style="color: #C5C5C5"'
                                         : "") +
                                     ">" +
@@ -468,7 +468,7 @@ $(function () {
                                 append +=
                                     '<p class="description" ' +
                                     (product.status_enum == 1 ||
-                                    product.status_enum == 3
+                                        product.status_enum == 3
                                         ? 'style="color: #C7C7C7"'
                                         : "") +
                                     ">" +
@@ -573,7 +573,7 @@ $(function () {
                                                 widthBoxPhotosProducts =
                                                     "" +
                                                     selected_products.length *
-                                                        68 +
+                                                    68 +
                                                     "px";
 
                                                 $(modal)
@@ -648,7 +648,7 @@ $(function () {
                                                                 )
                                                                 .height() +
                                                             (type == "edit" &&
-                                                            selected_products.length >
+                                                                selected_products.length >
                                                                 8
                                                                 ? 88
                                                                 : 18);
@@ -789,8 +789,8 @@ $(function () {
                                         '<div class="div-product d-flex align-items-center" ' +
                                         (response.data.name_short_flag
                                             ? 'data-toggle="tooltip" data-placement="top" title="' +
-                                              response.data.name +
-                                              '"'
+                                            response.data.name +
+                                            '"'
                                             : "") +
                                         ">";
                                     append +=
@@ -858,20 +858,20 @@ $(function () {
                                             .find(".box-products")
                                             .html(
                                                 '<div class="box-details">' +
-                                                    '<div class="head d-flex">' +
-                                                    "<div>Produto</div>" +
-                                                    '<div>Quantidade<span style="color: #FF0000;">*</span></div>' +
-                                                    "<div>Custo (un)</div>" +
-                                                    "<div>Moeda</div>" +
-                                                    "</div>" +
-                                                    '<div class="body">' +
-                                                    '<div class="row">' +
-                                                    '<div class="col-sm-12">' +
-                                                    append +
-                                                    "</div>" +
-                                                    "</div>" +
-                                                    "</div>" +
-                                                    "</div>"
+                                                '<div class="head d-flex">' +
+                                                "<div>Produto</div>" +
+                                                '<div>Quantidade<span style="color: #FF0000;">*</span></div>' +
+                                                "<div>Custo (un)</div>" +
+                                                "<div>Moeda</div>" +
+                                                "</div>" +
+                                                '<div class="body">' +
+                                                '<div class="row">' +
+                                                '<div class="col-sm-12">' +
+                                                append +
+                                                "</div>" +
+                                                "</div>" +
+                                                "</div>" +
+                                                "</div>"
                                             )
                                             .promise()
                                             .done(function () {
@@ -1226,14 +1226,14 @@ $(function () {
             .find(".modal-footer")
             .html(
                 '<button plan="' +
-                    plan_id +
-                    '" id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
-                    '<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">'+
-                    '<path d="M15 5.00008C15 3.89551 14.1046 3.00008 13 3.00008C11.8954 3.00008 11 3.89551 11 5.00008H9.66667C9.66667 3.15913 11.1591 1.66675 13 1.66675C14.841 1.66675 16.3333 3.15913 16.3333 5.00008H22.3333C22.7015 5.00008 23 5.29856 23 5.66675C23 6.03494 22.7015 6.33342 22.3333 6.33342H21.5947L19.8666 21.3057C19.7113 22.6513 18.572 23.6667 17.2175 23.6667H8.7825C7.428 23.6667 6.28867 22.6513 6.13341 21.3057L4.404 6.33342H3.66667C3.33939 6.33342 3.06719 6.09758 3.01074 5.78658L3 5.66675C3 5.29856 3.29848 5.00008 3.66667 5.00008H15ZM20.2507 6.33342H5.748L7.45796 21.1529C7.53558 21.8257 8.10525 22.3334 8.7825 22.3334H17.2175C17.8948 22.3334 18.4644 21.8257 18.542 21.1529L20.2507 6.33342ZM11 9.66675C11.3273 9.66675 11.5995 9.8731 11.6559 10.1452L11.6667 10.2501V18.4167C11.6667 18.7389 11.3682 19.0001 11 19.0001C10.6727 19.0001 10.4005 18.7937 10.3441 18.5216L10.3333 18.4167V10.2501C10.3333 9.92792 10.6318 9.66675 11 9.66675ZM15 9.66675C15.3273 9.66675 15.5995 9.8731 15.6559 10.1452L15.6667 10.2501V18.4167C15.6667 18.7389 15.3682 19.0001 15 19.0001C14.6727 19.0001 14.4005 18.7937 14.3441 18.5216L14.3333 18.4167V10.2501C14.3333 9.92792 14.6318 9.66675 15 9.66675Z" fill="#838383"/>' +
-                    "</svg>" +
-                    '<span style="margin-left: 10px;">Excluir plano</span>' +
-                    "</button>" +
-                    '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
+                plan_id +
+                '" id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
+                '<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+                '<path d="M15 5.00008C15 3.89551 14.1046 3.00008 13 3.00008C11.8954 3.00008 11 3.89551 11 5.00008H9.66667C9.66667 3.15913 11.1591 1.66675 13 1.66675C14.841 1.66675 16.3333 3.15913 16.3333 5.00008H22.3333C22.7015 5.00008 23 5.29856 23 5.66675C23 6.03494 22.7015 6.33342 22.3333 6.33342H21.5947L19.8666 21.3057C19.7113 22.6513 18.572 23.6667 17.2175 23.6667H8.7825C7.428 23.6667 6.28867 22.6513 6.13341 21.3057L4.404 6.33342H3.66667C3.33939 6.33342 3.06719 6.09758 3.01074 5.78658L3 5.66675C3 5.29856 3.29848 5.00008 3.66667 5.00008H15ZM20.2507 6.33342H5.748L7.45796 21.1529C7.53558 21.8257 8.10525 22.3334 8.7825 22.3334H17.2175C17.8948 22.3334 18.4644 21.8257 18.542 21.1529L20.2507 6.33342ZM11 9.66675C11.3273 9.66675 11.5995 9.8731 11.6559 10.1452L11.6667 10.2501V18.4167C11.6667 18.7389 11.3682 19.0001 11 19.0001C10.6727 19.0001 10.4005 18.7937 10.3441 18.5216L10.3333 18.4167V10.2501C10.3333 9.92792 10.6318 9.66675 11 9.66675ZM15 9.66675C15.3273 9.66675 15.5995 9.8731 15.6559 10.1452L15.6667 10.2501V18.4167C15.6667 18.7389 15.3682 19.0001 15 19.0001C14.6727 19.0001 14.4005 18.7937 14.3441 18.5216L14.3333 18.4167V10.2501C14.3333 9.92792 14.6318 9.66675 15 9.66675Z" fill="#838383"/>' +
+                "</svg>" +
+                '<span style="margin-left: 10px;">Excluir plano</span>' +
+                "</button>" +
+                '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
             )
             .removeClass("justify-content-end")
             .addClass("justify-content-between");
@@ -1316,8 +1316,8 @@ $(function () {
                                     "<div " +
                                     (product.product_name_short_flag
                                         ? 'data-toggle="tooltip" data-placement="top" title="' +
-                                          product.product_name +
-                                          '"'
+                                        product.product_name +
+                                        '"'
                                         : "") +
                                     ' class="box-product d-flex justify-content-between align-items-center" style="cursor: inherit;">';
                                 append +=
@@ -1393,7 +1393,7 @@ $(function () {
                                     .find(".modal-title")
                                     .html(
                                         "Detalhes de " +
-                                            response.data.name_short
+                                        response.data.name_short
                                     );
                                 $(modal)
                                     .find(".modal-title")
@@ -1541,10 +1541,10 @@ $(function () {
                                     .find("span")
                                     .html(
                                         " " +
-                                            response.data.products.length +
-                                            (response.data.products.length > 1
-                                                ? " produtos"
-                                                : " produto")
+                                        response.data.products.length +
+                                        (response.data.products.length > 1
+                                            ? " produtos"
+                                            : " produto")
                                     );
 
                                 $(modal)
@@ -1659,14 +1659,14 @@ $(function () {
             .find(".modal-footer")
             .html(
                 '<button plan="' +
-                    plan_id +
-                    '" id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
-                    '<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">'+
-                    '<path d="M15 5.00008C15 3.89551 14.1046 3.00008 13 3.00008C11.8954 3.00008 11 3.89551 11 5.00008H9.66667C9.66667 3.15913 11.1591 1.66675 13 1.66675C14.841 1.66675 16.3333 3.15913 16.3333 5.00008H22.3333C22.7015 5.00008 23 5.29856 23 5.66675C23 6.03494 22.7015 6.33342 22.3333 6.33342H21.5947L19.8666 21.3057C19.7113 22.6513 18.572 23.6667 17.2175 23.6667H8.7825C7.428 23.6667 6.28867 22.6513 6.13341 21.3057L4.404 6.33342H3.66667C3.33939 6.33342 3.06719 6.09758 3.01074 5.78658L3 5.66675C3 5.29856 3.29848 5.00008 3.66667 5.00008H15ZM20.2507 6.33342H5.748L7.45796 21.1529C7.53558 21.8257 8.10525 22.3334 8.7825 22.3334H17.2175C17.8948 22.3334 18.4644 21.8257 18.542 21.1529L20.2507 6.33342ZM11 9.66675C11.3273 9.66675 11.5995 9.8731 11.6559 10.1452L11.6667 10.2501V18.4167C11.6667 18.7389 11.3682 19.0001 11 19.0001C10.6727 19.0001 10.4005 18.7937 10.3441 18.5216L10.3333 18.4167V10.2501C10.3333 9.92792 10.6318 9.66675 11 9.66675ZM15 9.66675C15.3273 9.66675 15.5995 9.8731 15.6559 10.1452L15.6667 10.2501V18.4167C15.6667 18.7389 15.3682 19.0001 15 19.0001C14.6727 19.0001 14.4005 18.7937 14.3441 18.5216L14.3333 18.4167V10.2501C14.3333 9.92792 14.6318 9.66675 15 9.66675Z" fill="#838383"/>' +
-                    "</svg>" +
-                    '<span style="margin-left: 10px;">Excluir plano</span>' +
-                    "</button>" +
-                    '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
+                plan_id +
+                '" id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
+                '<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+                '<path d="M15 5.00008C15 3.89551 14.1046 3.00008 13 3.00008C11.8954 3.00008 11 3.89551 11 5.00008H9.66667C9.66667 3.15913 11.1591 1.66675 13 1.66675C14.841 1.66675 16.3333 3.15913 16.3333 5.00008H22.3333C22.7015 5.00008 23 5.29856 23 5.66675C23 6.03494 22.7015 6.33342 22.3333 6.33342H21.5947L19.8666 21.3057C19.7113 22.6513 18.572 23.6667 17.2175 23.6667H8.7825C7.428 23.6667 6.28867 22.6513 6.13341 21.3057L4.404 6.33342H3.66667C3.33939 6.33342 3.06719 6.09758 3.01074 5.78658L3 5.66675C3 5.29856 3.29848 5.00008 3.66667 5.00008H15ZM20.2507 6.33342H5.748L7.45796 21.1529C7.53558 21.8257 8.10525 22.3334 8.7825 22.3334H17.2175C17.8948 22.3334 18.4644 21.8257 18.542 21.1529L20.2507 6.33342ZM11 9.66675C11.3273 9.66675 11.5995 9.8731 11.6559 10.1452L11.6667 10.2501V18.4167C11.6667 18.7389 11.3682 19.0001 11 19.0001C10.6727 19.0001 10.4005 18.7937 10.3441 18.5216L10.3333 18.4167V10.2501C10.3333 9.92792 10.6318 9.66675 11 9.66675ZM15 9.66675C15.3273 9.66675 15.5995 9.8731 15.6559 10.1452L15.6667 10.2501V18.4167C15.6667 18.7389 15.3682 19.0001 15 19.0001C14.6727 19.0001 14.4005 18.7937 14.3441 18.5216L14.3333 18.4167V10.2501C14.3333 9.92792 14.6318 9.66675 15 9.66675Z" fill="#838383"/>' +
+                "</svg>" +
+                '<span style="margin-left: 10px;">Excluir plano</span>' +
+                "</button>" +
+                '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
             )
             .removeClass("justify-content-end")
             .addClass("justify-content-between");
@@ -1699,8 +1699,8 @@ $(function () {
                         '<div class="col-sm-6" ' +
                         (product.product_name_short_flag
                             ? 'data-toggle="tooltip" data-placement="top" title="' +
-                              product.product_name +
-                              '"'
+                            product.product_name +
+                            '"'
                             : "") +
                         ">";
                     append += '<div class="product d-flex align-items-center">';
@@ -1917,7 +1917,7 @@ $(function () {
             .find(".modal-footer")
             .html(
                 '<button id="btn-modal-plan-return" type="button" data-type="custom" class="btn btn-default btn-lg" role="button">Voltar</button>' +
-                    '<button id="btn-modal-plan-next" type="button" data-type="custom" class="btn btn-primary btn-lg">Salvar e fechar</button>'
+                '<button id="btn-modal-plan-next" type="button" data-type="custom" class="btn btn-primary btn-lg">Salvar e fechar</button>'
             )
             .removeClass("justify-content-between")
             .addClass("justify-content-end");
@@ -1951,8 +1951,8 @@ $(function () {
                     .find(".title")
                     .html(
                         "Personalização de " +
-                            products_plan[index_product_custom]
-                                .product_name_short
+                        products_plan[index_product_custom]
+                            .product_name_short
                     );
                 if (
                     products_plan[index_product_custom].product_name_short_flag
@@ -1976,8 +1976,8 @@ $(function () {
                     .find(".background-photo")
                     .html(
                         '<img src="' +
-                            products_plan[index_product_custom].photo +
-                            '" class="product-photo">'
+                        products_plan[index_product_custom].photo +
+                        '" class="product-photo">'
                     );
                 $(modal)
                     .find("#stage2-customization")
@@ -2122,7 +2122,7 @@ $(function () {
                                                                 )
                                                                 .height() +
                                                             (products_plan.length >
-                                                            2
+                                                                2
                                                                 ? 45
                                                                 : 35);
                                                         $(modal)
@@ -2289,10 +2289,10 @@ $(function () {
 
                         getCustom(modal, false);
 
-                    errorAjaxResponse(_error4);
-                },
-                success: function success(data) {
-                    $(modal).find('.modal-footer').find('.btn').prop('disabled', false);
+                        errorAjaxResponse(_error4);
+                    },
+                    success: function success(data) {
+                        $(modal).find('.modal-footer').find('.btn').prop('disabled', false);
 
                         getProductsPlan();
 
@@ -2494,14 +2494,14 @@ $(function () {
                             .find(".d-flex")
                             .append(
                                 '<div class="background-photo" data-toggle="tooltip" data-placement="top" data-id="' +
-                                    product_id +
-                                    '" title="' +
-                                    title +
-                                    '">' +
-                                    '<img class="product-photo" src="' +
-                                    image +
-                                    '">' +
-                                    "</div>"
+                                product_id +
+                                '" title="' +
+                                title +
+                                '">' +
+                                '<img class="product-photo" src="' +
+                                image +
+                                '">' +
+                                "</div>"
                             );
 
                         $('[data-toggle="tooltip"]').tooltip({
@@ -2675,10 +2675,10 @@ $(function () {
                     .find(".title span")
                     .html(
                         " " +
-                            selected_products.length +
-                            (selected_products.length > 1
-                                ? " produtos"
-                                : " produto")
+                        selected_products.length +
+                        (selected_products.length > 1
+                            ? " produtos"
+                            : " produto")
                     );
             }
         } else {
@@ -3001,11 +3001,11 @@ $(function () {
                     .find(".informations-data")
                     .append(
                         '<div class="buttons-update">' +
-                            '<div class="d-flex mt-20" style="justify-content: flex-end !important;">' +
-                            '<button type="button" class="btn btn-default btn-lg mr-10" id="btn-cancel-update-informations-plan">Cancelar</button>' +
-                            '<button type="button" class="btn btn-primary btn-lg" id="btn-update-informations-plan">Atualizar</button>' +
-                            "</div>" +
-                            "</div>"
+                        '<div class="d-flex mt-20" style="justify-content: flex-end !important;">' +
+                        '<button type="button" class="btn btn-default btn-lg mr-10" id="btn-cancel-update-informations-plan">Cancelar</button>' +
+                        '<button type="button" class="btn btn-primary btn-lg" id="btn-update-informations-plan">Atualizar</button>' +
+                        "</div>" +
+                        "</div>"
                     )
                     .promise()
                     .done(function () {
@@ -3345,7 +3345,7 @@ $(function () {
             .find(".modal-footer")
             .html(
                 '<button id="btn-modal-plan-return" type="button" data-type="edit" class="btn btn-default btn-lg" role="button">Voltar</button>' +
-                    '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
+                '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
             )
             .addClass("justify-content-between");
 
@@ -3366,8 +3366,8 @@ $(function () {
                         "<div " +
                         (product.product_name_short_flag
                             ? 'data-toggle="tooltip" data-placement="top" title="' +
-                              product.product_name +
-                              '"'
+                            product.product_name +
+                            '"'
                             : "") +
                         ">";
                     append += '<div class="product d-flex align-items-center">';
@@ -3636,6 +3636,7 @@ $(function () {
     });
 
     $("#btn-search-plan").on("click", function () {
+        $("#pagination-container-plans").removeClass("d-flex").addClass("d-none")
         index();
     });
 
@@ -3652,6 +3653,7 @@ $(function () {
         pageCurrent = link;
 
         loadOnTable("#data-table-plan", "#table-plans");
+        $("#pagination-plans").children().attr("disabled", "disabled");
         if (link == null) {
             link = "/api/project/" + projectId + "/plans";
         } else {
@@ -3695,7 +3697,11 @@ $(function () {
             }),
             success: function success(response) {
                 $("#pagination-plans").html("");
+
                 if (isEmpty(response.data)) {
+
+                    $("#pagination-container-plans").removeClass("d-flex").addClass("d-none")
+
                     if (planName != "") {
                         $("#data-table-plan").html(`
                             <tr class='text-center'>
@@ -3724,6 +3730,7 @@ $(function () {
 
                     $("#table-plans").addClass("table-striped");
                     $("#pagination-plans").html("");
+
                 } else {
                     $("#tab_plans-panel")
                         .find(".no-gutters")
@@ -3734,95 +3741,115 @@ $(function () {
                     $("#count-plans").html(response.meta.total);
 
                     if (response.data[0].document_status == "approved") {
+
                         $.each(response.data, function (index, value) {
-                            data = "";
-                            data += "<tr>";
-                            data +=
-                                '<td id="" class="" style="vertical-align: middle; line-height: 1;"><span ' +
-                                (value.name_short_flag
-                                    ? 'data-toggle="tooltip" title="' +
-                                      value.name +
-                                      '"'
-                                    : "") +
-                                ">" +
-                                value.name_short +
-                                '</span><div style="color: #8B8B8B; line-height: 1;"><small>com ' +
-                                (value.products_length > 1
-                                    ? value.products_length + " produtos"
-                                    : value.products_length + " produto") +
-                                "</small></div></td>";
-                            data +=
-                                "<td id='' class='' style='vertical-align: middle;'><span " +
-                                (value.description_short_flag
-                                    ? "data-toggle='tooltip' title='" +
-                                      value.description +
-                                      "'"
-                                    : "") +
-                                ">" +
-                                value.description_short +
-                                "</span></td>";
-                            data +=
-                                '<td id="" class="" style="vertical-align: middle;">' +
-                                value.price +
-                                "</td>";
-                            data +=
-                                '<td id="link" data-status="' +
-                                value.status +
-                                '" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; ' +
-                                (value.status == 1 ? "cursor:pointer;" : "") +
-                                '" link="' +
-                                value.code +
-                                '">';
-                            data +=
-                                "<span " +
-                                (value.status == 0
-                                    ? 'data-toggle="tooltip" title="Domínio não confirugado"'
-                                    : "") +
-                                ">";
-                            data +=
-                                '<span class="display-sm-none display-m-none">Copiar </span><img src="/build/global/img/icon-copy-c.svg">';
-                            data += "</span>";
-                            data += "</td>";
-                            data +=
-                                '<td id="" class="text-center"><span class="badge badge-' +
-                                statusPlan[value.status] +
-                                '">' +
-                                value.status_translated +
-                                "</span></td>";
-                            data +=
-                                "<td class='mg-responsive text-center' style='line-height: 1;'>";
-                            data +=
-                                "<div class='d-flex justify-content-end align-items-center'>";
-                            data +=
-                                "<a title='Visualizar' class='mg-responsive pointer details-plan' plan='" +
-                                value.id +
-                                "' role='button'><span class='o-eye-1'></span></a>";
-                            //data += "<a title='Editar' class='mg-responsive pointer edit-plan' plan='" + value.id + "' role='button'><span class='o-edit-1'></span></a>"
-                            data +=
-                                "<a title='Excluir' class='mr-0 mg-responsive pointer delete-plan' plan='" +
-                                value.id +
-                                "' role='button'><span class='o-bin-1'></span></a>";
-                            data += "</div>";
-                            data += "</td>";
-                            data += "</tr>";
+                            data = `
+                                <tr>
+                                    <td style="vertical-align: middle; line-height: 1;">
+
+                                        <div class="fullInformation-plans ellipsis-text">
+                                            ${value.name}
+                                        </div>
+
+                                        <div class="fullInformation-plans ellipsis-text subdescription">
+                                            com ${(value.products_length > 1 ? value.products_length + " produtos" : value.products_length + " produto")}
+                                        </div>
+
+                                        <div class="container-tooltips-plans"></div>
+                                    </td>
+
+
+                                    <td style="vertical-align: middle;">
+
+                                        <div class="fullInformation-plans ellipsis-text">
+                                            ${value.description}
+                                        </div>
+                                    </td>
+
+                                    <td class="text-nowrap" style="vertical-align: middle;">
+                                        <strong>
+                                            ${value.price}
+                                        </strong>
+                                    </td>
+
+                                    <td id="link" data-status="${value.status}" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; ${value.status == 1 ? "cursor:pointer;" : ""}" link="${value.code}">
+
+                                        <span${(value.status == 0 ? "data-toggle='tooltip' title='Domínio não confirugado'" : "")}>
+
+                                            <span class="display-sm-none display-m-none">Copiar</span>
+
+                                            <img src="/build/global/img/icon-copy-c.svg">
+
+                                        </span>
+
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="badge badge-${statusPlan[value.status]}">
+                                            ${value.status_translated}
+                                        </span>
+                                    </td>
+
+                                    <td class="mg-responsive text-center" style="line-height: 1;">
+
+                                        <div class="d-flex justify-content-end align-items-center">
+
+                                            <a title="Visualizar" class="mg-responsive pointer details-plan" plan="${value.id}" role="button">
+
+                                                <span class="">
+                                                    <img src="/build/global/img/icon-eye.svg"/>
+                                                </span>
+
+                                            </a>
+
+                                            <a title="Excluir" class="mr-0 mg-responsive pointer delete-plan" plan="${value.id}" role='button'>
+
+                                                <span class="">
+                                                    <img src="/build/global/img/icon-trash-tale.svg"/>
+                                                </span>
+
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            `;
 
                             $("#data-table-plan").append(data);
                             $("#table-plans").addClass("table-striped");
-                            $("#currency_type_project").val(
-                                value.currency_project
-                            );
+                            $("#currency_type_project").val(value.currency_project);
                         });
 
+                        $("#pagination-container-plans").removeClass("d-none").addClass("d-flex")
                         pagination(response, "plans", index);
+
                     } else {
-                        $("#data-table-plan").html(
-                            "<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Link de pagamento só ficará disponível quando seus documentos e da sua empresa estiverem aprovados</td></tr>"
+                        $("#data-table-plan").html(`
+                            <tr class="text-center">
+
+                                <td colspan="11" style="height: 70px; vertical-align: middle;">
+                                    Link de pagamento só ficará disponível quando seus documentos e da sua empresa estiverem aprovados
+                                </td>
+
+                            </tr>`
                         );
+
                         $("#table-plans").addClass("table-striped");
                     }
 
-                    $('[data-toggle="tooltip"]').tooltip({
-                        container: ".page",
+                    $('.fullInformation-plans').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'data-title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-plans" })
+                            $this.tooltip("show")
+                        }
                     });
                 }
             },
@@ -3956,14 +3983,14 @@ $(function () {
                                     "<div " +
                                     (plan.name_short_flag
                                         ? 'data-toggle="tooltip" data-placement="top" title="' +
-                                          plan.name +
-                                          '"'
+                                        plan.name +
+                                        '"'
                                         : "") +
                                     ' data-code="' +
                                     plan.id +
                                     '" class="box-plan d-flex justify-content-between align-items-center ' +
                                     (plan.status_enum == 1 ||
-                                    plan.status_enum == 3
+                                        plan.status_enum == 3
                                         ? "review"
                                         : "") +
                                     " " +
@@ -3981,7 +4008,7 @@ $(function () {
                                 append +=
                                     '<h1 class="title" ' +
                                     (plan.status_enum == 1 ||
-                                    plan.status_enum == 3
+                                        plan.status_enum == 3
                                         ? 'style="color: #C5C5C5"'
                                         : "") +
                                     ">" +
@@ -3990,7 +4017,7 @@ $(function () {
                                 append +=
                                     '<p class="description" ' +
                                     (plan.status_enum == 1 ||
-                                    plan.status_enum == 3
+                                        plan.status_enum == 3
                                         ? 'style="color: #C7C7C7"'
                                         : "") +
                                     ">" +
@@ -4230,29 +4257,29 @@ $(function () {
                                                 .find(".search-type")
                                                 .html(
                                                     '<div class="d-flex">' +
-                                                        '<input class="form-control form-control-lg" type="text" id="search-product_config" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">' +
-                                                        '<div class="input-group input-group-lg" style="width: 650px;">' +
-                                                        '<input class="form-control" type="text" id="search-product-description_config" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">' +
-                                                        '<div class="input-group-append">' +
-                                                        '<span class="input-group-text">' +
-                                                        '<img src="/build/global/img/icon-search.svg" alt="Icon Search">' +
-                                                        "</span>" +
-                                                        "</div>" +
-                                                        "</div>" +
-                                                        "</div>"
+                                                    '<input class="form-control form-control-lg" type="text" id="search-product_config" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">' +
+                                                    '<div class="input-group input-group-lg" style="width: 650px;">' +
+                                                    '<input class="form-control" type="text" id="search-product-description_config" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">' +
+                                                    '<div class="input-group-append">' +
+                                                    '<span class="input-group-text">' +
+                                                    '<img src="/build/global/img/icon-search.svg" alt="Icon Search">' +
+                                                    "</span>" +
+                                                    "</div>" +
+                                                    "</div>" +
+                                                    "</div>"
                                                 );
                                         } else {
                                             $(modal)
                                                 .find(".search-type")
                                                 .html(
                                                     '<div class="input-group input-group-lg">' +
-                                                        '<input class="form-control" type="text" id="search-product_config" placeholder="Pesquisa por nome">' +
-                                                        '<div class="input-group-append">' +
-                                                        '<span class="input-group-text">' +
-                                                        '<img src="/build/global/img/icon-search.svg" alt="Icon Search">' +
-                                                        "</span>" +
-                                                        "</div>" +
-                                                        "</div>"
+                                                    '<input class="form-control" type="text" id="search-product_config" placeholder="Pesquisa por nome">' +
+                                                    '<div class="input-group-append">' +
+                                                    '<span class="input-group-text">' +
+                                                    '<img src="/build/global/img/icon-search.svg" alt="Icon Search">' +
+                                                    "</span>" +
+                                                    "</div>" +
+                                                    "</div>"
                                                 );
                                         }
 
@@ -4272,14 +4299,14 @@ $(function () {
                                                     "<div " +
                                                     (plan.name_short_flag
                                                         ? 'data-toggle="tooltip" data-placement="top" title="' +
-                                                          plan.name +
-                                                          '"'
+                                                        plan.name +
+                                                        '"'
                                                         : "") +
                                                     ' data-code="' +
                                                     plan.id +
                                                     '" class="box-plan d-flex justify-content-between align-items-center ' +
                                                     (plan.status_enum == 1 ||
-                                                    plan.status_enum == 3
+                                                        plan.status_enum == 3
                                                         ? "review"
                                                         : "") +
                                                     '">';
@@ -4296,7 +4323,7 @@ $(function () {
                                                 append +=
                                                     '<h1 class="title" ' +
                                                     (plan.status_enum == 1 ||
-                                                    plan.status_enum == 3
+                                                        plan.status_enum == 3
                                                         ? 'style="color: #C5C5C5"'
                                                         : "") +
                                                     ">" +
@@ -4305,7 +4332,7 @@ $(function () {
                                                 append +=
                                                     '<p class="description" ' +
                                                     (plan.status_enum == 1 ||
-                                                    plan.status_enum == 3
+                                                        plan.status_enum == 3
                                                         ? 'style="color: #C7C7C7"'
                                                         : "") +
                                                     ">" +

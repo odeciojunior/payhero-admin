@@ -1,116 +1,91 @@
 @extends('layouts.master')
 
 @section('content')
-    @push('css')
-        <link rel="stylesheet"
-              href="{{ mix('build/layouts/notazz/show.min.css') }}">
-        <style>
-            .fas {
-                color: #9c47fc;
-                background: -webkit-linear-gradient(77deg, #e6774c, rgb(249, 34, 120));
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                cursor: pointer;
-            }
-        </style>
-    @endpush
+@push('css')
+<link rel="stylesheet" href="{{ mix('build/layouts/notazz/show.min.css') }}">
+<style>
+    .fas {
+        color: #9c47fc;
+        background: -webkit-linear-gradient(77deg, #e6774c, rgb(249, 34, 120));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        cursor: pointer;
+    }
+</style>
+@endpush
 
-    <!-- Page -->
-    <div class="page">
+<!-- Page -->
+<div class="page">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+    @include('layouts.company-select',['version'=>'mobile'])
 
-        <div style="" class="page-header container">
-            <div class="row align-items-center justify-content-between" style="min-height:50px">
-                <div class="col-sm-8 col-12">
-                    <h1 class="page-title">
-                        <a href='/apps/notazz'
-                           class='o-arrow-right-1'></a>
-                        Notas fiscais da loja <span id="title_integration"></span>
-                    </h1>
-                </div>
-                <div class="col-sm-4 col-12 text-right">
-                    <div class="justify-content-end align-items-center"
-                         id="export-excel"
-                         style="display:none">
-                        <div class="p-2 align-items-center">
-                            <span class="o-download-cloud-1 mr-2"></span>
-                            <div class="btn-group"
-                                 role="group">
-                                <button id="bt_get_xls"
-                                        type="button"
-                                        class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                <button id="bt_get_csv"
-                                        type="button"
-                                        class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
-                            </div>
+    <div style="" class="page-header container">
+        <div class="row align-items-center justify-content-between" style="min-height:50px">
+            <div class="col-sm-8 col-12">
+                <h1 class="page-title">
+                    <a href='/apps/notazz' class='o-arrow-right-1'></a>
+                    Notas fiscais da loja <span id="title_integration"></span>
+                </h1>
+            </div>
+            <div class="col-sm-4 col-12 text-right">
+                <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
+                    <div class="p-2 align-items-center">
+                        <span class="o-download-cloud-1 mr-2"></span>
+                        <div class="btn-group" role="group">
+                            <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                            <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="page-content container"
-             style="display:none">
-            <!-- Filtro -->
-            <div class="fixhalf"></div>
-            <form id='filter_form'>
-                <div id=""
-                     class="card shadow p-20">
-                    <div class="row align-items-baseline">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="status">Status</label>
-                            <select name='sale_status'
-                                    id="status"
-                                    class="sirius-select">
-                                <option value="">Todos status</option>
-                                <option value="1">Pendente</option>
-                                <option value="2">Enviado</option>
-                                <option value="3">Finalizado</option>
-                                <option value="4">Erro</option>
-                                <option value="5">Em processamento</option>
-                                <option value="6">Maximo de tentativas</option>
-                                <option value="7">Cancelado</option>
-                                <option value="8">Rejeitado</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="comprador">Nome do cliente</label>
-                            <input name='client'
-                                   id="comprador"
-                                   class="input-pad"
-                                   placeholder="cliente">
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="comprador">Transação</label>
-                            <input name='transaction'
-                                   id="transaction"
-                                   class="input-pad"
-                                   placeholder="transação">
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_type">Data</label>
-                            <input name='date_range'
-                                   id="date_range"
-                                   class="select-pad"
-                                   placeholder="Clique para editar..."
-                                   readonly>
-                        </div>
+    </div>
+    <div class="page-content container" style="display:none">
+        <!-- Filtro -->
+        <div class="fixhalf"></div>
+        <form id='filter_form'>
+            <div id="" class="card shadow p-20">
+                <div class="row align-items-baseline">
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <label for="status">Status</label>
+                        <select name='sale_status' id="status" class="sirius-select">
+                            <option value="">Todos status</option>
+                            <option value="1">Pendente</option>
+                            <option value="2">Enviado</option>
+                            <option value="3">Finalizado</option>
+                            <option value="4">Erro</option>
+                            <option value="5">Em processamento</option>
+                            <option value="6">Maximo de tentativas</option>
+                            <option value="7">Cancelado</option>
+                            <option value="8">Rejeitado</option>
+                        </select>
                     </div>
-                    <div class="row mt-15">
-                        <div class="offset-sm-6 col-sm-6 offset-md-6 col-md-6 offset-xl-9 col-xl-3 col-12">
-                            <button id="bt_filtro"
-                                    class="btn btn-primary col-sm-12">
-                                <img style="height: 12px; margin-right: 4px"
-                                     src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar
-                            </button>
-                        </div>
-                        <div class="col-2">
-                        </div>
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <label for="comprador">Nome do cliente</label>
+                        <input name='client' id="comprador" class="input-pad" placeholder="cliente">
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <label for="comprador">Transação</label>
+                        <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <label for="date_type">Data</label>
+                        <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
                     </div>
                 </div>
-            </form>
-            <!-- Resumo  (PODE SE TORNAR UM RESUMO GERAL DA INTEGRAÇÃO NO FUTURO) -->
-            {{-- <div class="fixhalf"></div>
+                <div class="row mt-15">
+                    <div class="offset-sm-6 col-sm-6 offset-md-6 col-md-6 offset-xl-9 col-xl-3 col-12">
+                        <button id="bt_filtro" class="btn btn-primary col-sm-12">
+                            <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar
+                        </button>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- Resumo  (PODE SE TORNAR UM RESUMO GERAL DA INTEGRAÇÃO NO FUTURO) -->
+        {{-- <div class="fixhalf"></div>
                     <div class="card shadow p-20" style='display:block;'>
                         <div class="row justify-content-center">
                             <div class="col-md-4">
@@ -133,45 +108,43 @@
                             </div>
                         </div>
                     </div> --}}
-            <!-- Tabela -->
-            <div class="fixhalf"></div>
-            <div class="card shadow "
-                 style="min-height: 300px">
-                <div class="page-invoice-table table-responsive">
-                    <table id="tabela_vendas"
-                           class="table-vendas table table-striped unify"
-                           style="">
-                        <thead>
-                            <tr>
-                                <td class="table-title display-sm-none display-m-none display-lg-none">Transação</td>
-                                <td class="table-title">Descrição</td>
-                                <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                <td class="table-title">Status</td>
-                                <td class="table-title display-sm-none display-m-none">Data</td>
-                                <td class="table-title">Valor</td>
-                                <td class="table-title"
-                                    width="80px;"> &nbsp;</td>
-                            </tr>
-                        </thead>
-                        <tbody id="dados_tabela">
-                            {{-- js carrega... --}}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Modal detalhes da venda-->
-                @include('notazz::details')
-                <!-- End Modal -->
+        <!-- Tabela -->
+        <div class="fixhalf"></div>
+        <div class="card shadow ">
+            <div class="page-invoice-table table-responsive">
+                <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
+                    <thead>
+                        <tr>
+                            <td class="display-sm-none display-m-none display-lg-none">Transação</td>
+                            <td class="">Descrição</td>
+                            <td class="display-sm-none display-m-none display-lg-none">Cliente</td>
+                            <td class="">Status</td>
+                            <td class="display-sm-none display-m-none">Data</td>
+                            <td class="">Valor</td>
+                            <td class="" width="80px;"> &nbsp;</td>
+                        </tr>
+                    </thead>
+                    <tbody id="dados_tabela">
+                        {{-- js carrega... --}}
+                    </tbody>
+                </table>
             </div>
-            <ul id="pagination-invoices"
-                class="pagination-sm margin-chat-pagination"
-                style="margin-top:10px;position:relative;float:right">
+            <!-- Modal detalhes da venda-->
+            @include('notazz::details')
+            <!-- End Modal -->
+        </div>
+
+        <div id="container-pagination-nottaz" class="row d-none justify-content-center justify-content-md-end pr-md-15 pb-25" style="">
+            <ul id="pagination-invoices" class="pagination-sm margin-chat-pagination pagination-style" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>
-    </div>
 
-    <!-- Modal regerar boleto (NAO ULTILIZADO POR ENQUANTO)-->
-    {{-- <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+    </div>
+</div>
+
+<!-- Modal regerar boleto (NAO ULTILIZADO POR ENQUANTO)-->
+{{-- <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
          <div class="modal-dialog modal-lg d-flex justify-content-center">
              <div class="modal-content w-450" id="conteudo_modal_add">
                  <div class="modal-header">
@@ -217,9 +190,9 @@
              </div>
          </div>
      </div> --}}
-    <!-- End Modal -->
+<!-- End Modal -->
 
-    @push('scripts')
-        <script src="{{ mix('build/layouts/notazz/show.min.js') }}"></script>
-    @endpush
+@push('scripts')
+<script src="{{ mix('build/layouts/notazz/show.min.js') }}"></script>
+@endpush
 @endsection

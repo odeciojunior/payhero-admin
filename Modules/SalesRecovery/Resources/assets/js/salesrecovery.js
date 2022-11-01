@@ -62,6 +62,7 @@ $(document).ready(function () {
     });
 
     $("#bt_filtro").on("click", function (event) {
+        $("#container-pagination").hide()
         event.preventDefault();
         loadData();
     });
@@ -217,6 +218,7 @@ $(document).ready(function () {
      */
     function updateSalesRecovery(link = null) {
         loadOnTable("#table_data", "#carrinhoAbandonado");
+        $("#pagination-salesRecovery").children().attr("disabled", "disabled");
 
         // Formata a url
         link = urlDataFormatted(link);
@@ -241,7 +243,7 @@ $(document).ready(function () {
                 let recoveryType = $("#recovery_type").children("option:selected").text().toLowerCase();
                 let image = $("#table_data").attr("img-empty");
                 if (response.data == "" && recoveryType) {
-                    $("#pagination-salesRecovery").hide();
+                    $("#container-pagination").hide();
                     $("#table_data").html(
                         `<tr>
                             <td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'>
@@ -252,7 +254,7 @@ $(document).ready(function () {
                     );
                 } else {
                     createHTMLTable(response);
-                    $("#pagination-salesRecovery").show();
+                    $("#container-pagination").show();
                     pagination(response, "salesRecovery", updateSalesRecovery);
 
                     $(".copy_link").on("click", function () {
@@ -268,13 +270,15 @@ $(document).ready(function () {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
-                                    $(this).css("cursor", "pointer").text("Regerar");
-                                    $(this).css("background", "#545B62");
+                                    $(this)
+                                        .css("cursor", "pointer")
+                                        .text("Regerar");
+                                    $(this).css("background", "#3D4456");
                                 },
                                 function () {
                                     var status = $(this).attr("status");
                                     $(this).removeAttr("style");
-                                    $(this).text(status);
+                                    $(this).text("Expirado");
                                 }
                             );
                         }
@@ -375,6 +379,19 @@ $(document).ready(function () {
         });
 
         $("#table_data").append(html);
+        $('.fullInformation').bind('mouseover', function () {
+            var $this = $(this);
+
+            if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                $this.attr({
+                    'data-toggle': "tooltip",
+                    'data-placement': "top",
+                    'data-title': $this.text()
+                }).tooltip({ container: ".container-tooltips" })
+                $this.tooltip("show")
+            }
+        });
+
     }
 
     /**
@@ -382,38 +399,102 @@ $(document).ready(function () {
      * @param value
      */
     function createHtmlCartAbandoned(value) {
-        let data = "";
-        data += "<tr>";
-        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
-        data += "<td>" + value.project + "</td>";
-        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
-        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
-        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
-        data +=
-            "<td><span class='sale_status badge badge-" +
-            statusRecovery[value.status_translate] +
-            "' status='" +
-            value.status_translate +
-            "' sale_id='" +
-            value.id +
-            "'>" +
-            value.status_translate +
-            "</span></td>";
-        data += "<td>" + value.value + "</td>";
-        data +=
-            "<td class='display-sm-none' align='center'> <a href='" +
-            value.whatsapp_link +
-            "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
-        data +=
-            "<td style='padding:0 !important;' class='display-sm-none text-center' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
-            value.link +
-            "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
-        data +=
-            "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
-            value.id +
-            "' ><span class='o-eye-1'></span></button></td>";
-        data += "</tr>";
+        let date = value.date.split(" ", 1)
+        let parseDate = value.date.split(" ", 2)
+        let hours = parseDate[1]
 
+        let data = ``;
+        data =
+            `
+            <tr>
+
+                <td class="display-sm-none display-m-none display-lg-none">
+
+                    ${date}
+
+                    <br>
+
+                    <span class="subdescription">
+                        ${hours}
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <div class="fullInformation ellipsis-text">
+                        ${value.project}
+                    </div>
+
+                    <div class="container-tooltips"></div>
+
+                </td>
+
+
+                <td class="d-none client-collumn">
+
+                    <div class="fullInformation ellipsis-text">
+                        ${value.client}
+                    </div>
+
+                </td>
+
+
+                <td>
+                    ${value.email_status} ${setSend(value.email_status)}
+                </td>
+
+
+                <td>
+                    ${value.sms_status} ${setSend(value.sms_status)}
+                </td>
+
+
+                <td class="text-center">
+                    <span class="sale_status badge badge-${statusRecovery[value.status_translate]}" status="${value.status_translate}" sale_id="${value.id}">
+                        ${value.status_translate}
+                    </span>
+                </td>
+
+
+                <td class="commission-fweight">
+                    <b>${value.value}</b>
+                </td>
+
+
+                <td class="display-sm-none" align="center">
+
+                    <a href="${value.whatsapp_link}" target="_blank" title="Enviar mensagem pelo whatsapp">
+                        <span class="">
+                            <img src="build/global/img/whatsapp-icon-new.svg"/>
+                        </span>
+                    </a>
+
+                </td>
+
+
+                <td style="padding:0 !important;" class="display-sm-none text-center" align="center">
+
+                    <a role="button" class="copy_link" style="cursor:pointer;" link="${value.link}" title='Copiar link'>
+
+                        <span class=''>
+                            <img src='build/global/img/icon-copy-table.svg'/>
+                        </span>
+                    </a>
+                </td>
+
+
+                <td class="display-sm-none" align="center">
+                    <a role="button" class="details-cart-recovery" style="cursor:pointer;" data-venda="${value.id}">
+                        <span>
+                            <img src="/build/global/img/icon-eye.svg">
+                        </span>
+                        </button>
+                    </a>
+                </td>
+
+            </tr>
+        `;
         return data;
     }
 
@@ -423,35 +504,101 @@ $(document).ready(function () {
      * @returns {string}
      */
     function createHtmlOthers(value) {
-        let data = "";
-        data += "<tr>";
-        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.start_date + "</td>";
-        data += "<td>" + value.project + "</td>";
-        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
-        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
-        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
-        data +=
-            "<td><span class='sale_status badge badge-" +
-            statusRecovery[value.recovery_status] +
-            "' sale_id='" +
-            value.id_default +
-            "'>" +
-            value.recovery_status +
-            "</span></td>";
-        data += "<td>" + value.total_paid + "</td>";
-        data +=
-            "<td class='display-sm-none' align='center'> <a href='" +
-            value.whatsapp_link +
-            "' target='_blank' title='Enviar mensagem pelo whatsapp'><span class='o-whatsapp-1'></span></a></td>";
-        data +=
-            "<td class='display-sm-none text-right' style='padding:0!important' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" +
-            value.link +
-            "' title='Copiar link'><span class='material-icons icon-copy-1'> content_copy </span></a></td>";
-        data +=
-            "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" +
-            value.id_default +
-            "' ><span class='o-eye-1'></span></button></td>";
-        data += "</tr>";
+        let date = value.start_date.split(" ", 1)
+        let parseDate = value.start_date.split(" ", 2)
+        let hours = parseDate[1]
+
+        let data = ``;
+
+        data =
+            `
+            <tr>
+
+                <td class="display-sm-none display-m-none display-lg-none">
+                    ${date}
+                    <br>
+                    <span class="subdescription">
+                        ${hours}
+                    </span>
+                </td>
+
+
+                <td>
+                    <div class="fullInformation ellipsis-text">
+                        ${value.project}
+                    </div>
+
+                    <div class="container-tooltips"></div>
+                </td>
+
+
+                <td class="d-none client-collumn">
+
+                    <div class="fullInformation ellipsis-text">
+                        ${value.client}
+                    </div>
+
+                </td>
+
+
+                <td>
+                    ${value.email_status} ${setSend(value.email_status)}
+                </td>
+
+
+                <td>
+                    ${value.sms_status} ${setSend(value.sms_status)}
+                </td>
+
+
+                <td class="text-center">
+                    <span class="sale_status badge badge-${statusRecovery[value.recovery_status]}" sale_id="${value.id_default}" >
+                        ${value.recovery_status}
+                    </span>
+                </td>
+
+
+                <td class="commission-fweight" >
+                    <b>${value.total_paid}</b>
+                </td>
+
+
+                <td class="display-sm-none" align="center">
+
+                    <a href=${value.whatsapp_link}" target="_blank" title="Enviar mensagem pelo whatsapp">
+
+                        <span class="">
+                            <img src="build/global/img/whatsapp-icon-new.svg"/>
+
+                        </span>
+
+                    </a>
+
+                </td>
+
+                <td class="display-sm-none text-center" style="padding:0!important" align="center">
+
+                    <a role="button" class="copy_link" style="cursor:pointer;" link="${value.link}" title="Copiar link">
+
+                        <span class=''>
+                            <img src="build/global/img/icon-copy-table.svg"/>
+                        </span>
+
+                    </a>
+
+                </td>
+
+                <td class="display-sm-none" align="center">
+                    <a role="button" class="details-cart-recovery" style="cursor:pointer;" data-venda="${value.id_default}">
+
+                        <span class="">
+                            <img src="/build/global/img/icon-eye.svg"/>
+                        </span>
+
+                    </a>
+                </td>
+            </tr>
+        `;
 
         return data;
     }
@@ -557,8 +704,8 @@ $(document).ready(function () {
         if (!isEmpty(data.link)) {
             $("#link-sale").html(
                 'Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' +
-                    data.link +
-                    '" title="Copiar link"><span class="o-copy-1"></span> </a> '
+                data.link +
+                '" title="Copiar link"><span class="o-copy-1"></span> </a> '
             );
         } else {
             $("#link-sale").html("Link: " + data.link);

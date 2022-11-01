@@ -720,7 +720,7 @@ h3 {
 }
 
 .badge-antifraude {
-    background: rgb(22, 142, 209);
+    background: #2E85EC;
 }
 
 .badge-aprovado,
@@ -780,7 +780,7 @@ h3 {
 
 .table-striped > tbody > tr:nth-child(2n + 2) > td,
 .table-striped > tbody > tr:nth-child(2n + 2) > th {
-    background-color: #fbfbfb !important;
+    background-color: #fbfbfb ;
 }
 
 .table-striped tbody tr:nth-of-type(2n + 1) {
@@ -793,7 +793,7 @@ h3 {
 .table {
     vertical-align: middle !important;
     font-family: "Inter", sans-serif;
-    color: #707070;
+    color: #636363;
     margin-bottom: 20px;
 }
 

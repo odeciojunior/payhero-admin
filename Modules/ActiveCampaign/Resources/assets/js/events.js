@@ -201,10 +201,19 @@ $(function () {
             }),
             success: function success(response) {
                 if (isEmpty(response.data)) {
+
                     $("#data-table-event").html(
                         "<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>"
                     );
+                    $("#container-pagination").removeClass("d-flex").addClass("d-none")
+
                 } else {
+                    let hasPagination = $("#pagination-events").children().length > 0
+
+                    if (hasPagination) {
+                        $("#container-pagination").removeClass("d-none").addClass("d-flex")
+                    }
+
                     $("#data-table-event").html("");
                     $.each(response.data, function (index, value) {
                         data = "";
@@ -232,15 +241,15 @@ $(function () {
                         data +=
                             "<a title='Visualizar' class='mg-responsive pointer details-event' event='" +
                             value.id +
-                            "' role='button'><span class='o-eye-1'></span></a>";
+                            "' role='button'><span class=''><img src='/build/global/img/icon-eye.svg'/></span></a>";
                         data +=
                             "<a title='Editar' class='mg-responsive pointer edit-event' event='" +
                             value.id +
-                            "' role='button'data-toggle='modal' data-target='#modal-content'><span class='o-edit-1'></span></a>";
+                            "' role='button'data-toggle='modal' data-target='#modal-content'><span class=''><img src='/build/global/img/pencil-icon.svg'/></span></a>";
                         data +=
                             "<a title='Excluir' class='mg-responsive pointer delete-event' event='" +
                             value.id +
-                            "' role='button'data-toggle='modal' data-target='#modal-delete'><span class='o-bin-1'></span></a>";
+                            "' role='button'data-toggle='modal' data-target='#modal-delete'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span></a>";
                         data += "</td>";
                         data += "</tr>";
                         $("#data-table-event").append(data);
@@ -367,14 +376,14 @@ $(function () {
                                     }
                                     $("#add_list_edit").append(
                                         "<option value='" +
-                                            data.id +
-                                            ";" +
-                                            data.name +
-                                            "' " +
-                                            selected +
-                                            ">" +
-                                            data.name +
-                                            "</option>"
+                                        data.id +
+                                        ";" +
+                                        data.name +
+                                        "' " +
+                                        selected +
+                                        ">" +
+                                        data.name +
+                                        "</option>"
                                     );
                                 });
 
@@ -386,14 +395,14 @@ $(function () {
                                     }
                                     $("#remove_list_edit").append(
                                         "<option value='" +
-                                            data.id +
-                                            ";" +
-                                            data.name +
-                                            "' " +
-                                            selected +
-                                            ">" +
-                                            data.name +
-                                            "</option>"
+                                        data.id +
+                                        ";" +
+                                        data.name +
+                                        "' " +
+                                        selected +
+                                        ">" +
+                                        data.name +
+                                        "</option>"
                                     );
                                 });
                             }
@@ -422,25 +431,25 @@ $(function () {
                                     }
                                     $("#add_tags_edit").append(
                                         "<option value='" +
-                                            data.id +
-                                            ";" +
-                                            data.tag +
-                                            "' " +
-                                            selectedAdd +
-                                            ">" +
-                                            data.tag +
-                                            "</option>"
+                                        data.id +
+                                        ";" +
+                                        data.tag +
+                                        "' " +
+                                        selectedAdd +
+                                        ">" +
+                                        data.tag +
+                                        "</option>"
                                     );
                                     $("#remove_tags_edit").append(
                                         "<option value='" +
-                                            data.id +
-                                            ";" +
-                                            data.tag +
-                                            "' " +
-                                            selectedRemove +
-                                            ">" +
-                                            data.tag +
-                                            "</option>"
+                                        data.id +
+                                        ";" +
+                                        data.tag +
+                                        "' " +
+                                        selectedRemove +
+                                        ">" +
+                                        data.tag +
+                                        "</option>"
                                     );
                                 });
                             }

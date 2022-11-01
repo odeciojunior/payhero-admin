@@ -37,26 +37,42 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function (response) {
+
                 $("#domain-table-body").html("");
+
                 if (isEmpty(response.data) || response.data == "") {
+                    $("#pagination-container-domain").removeClass("d-flex").addClass("d-none")
                     $("#domain-table-body").html(`
+
                         <tr class='text-center'>
+
                             <td colspan='4' style='height: 70px; vertical-align: middle;'>
+
                                 <div class='d-flex justify-content-center align-items-center'>
+
                                     <img src='/build/global/img/empty-state-table.svg' style='margin-right: 60px;'>
+
                                     <div class='text-left'>
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum domínio configurado</h1>
-                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro domínio para poder
-                                        <br>gerenciá-los nesse painel.</p>
+
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>
+                                            Cadastre o seu primeiro domínio para poder
+                                            <br>gerenciá-los nesse painel.
+                                        </p>
+
                                         <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-domain' data-toggle="modal" data-target="#modal-add-domain">Adicionar domínio</button>
                                     </div>
+
                                 </div>
                             </td>
+
                         </tr>
+
                     `);
 
                     $("#tabela-dominios").addClass("table-striped");
                 } else {
+                    $("#pagination-container-domain").removeClass("d-none").addClass("d-flex")
                     $("#tab_domains").find(".no-gutters").css("display", "flex");
                     $("#tabela-dominios").find("thead").css("display", "contents");
 
@@ -178,17 +194,17 @@ $(document).ready(function () {
             value.status +
             "' domain='" +
             value.id +
-            "' ><span class='o-eye-1'></span> </a>";
+            "' ><span class=''><img src='/build/global/img/icon-eye.svg'/></span> </a>";
         dados +=
             "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" +
             value.status +
             "' domain='" +
             value.id +
-            "' data-toggle='modal'><span class='o-edit-1'></span> </a>";
+            "' data-toggle='modal'><span class=''><img src='/build/global/img/pencil-icon.svg'/></span> </a>";
         dados +=
             "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" +
             value.id +
-            "' data-toggle='modal'><span class='o-bin-1'></span> </a>";
+            "' data-toggle='modal'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span> </a>";
         dados += "</div>";
         dados += "</td>";
         dados += "</tr>";
@@ -294,8 +310,8 @@ $(document).ready(function () {
                 .parent()
                 .after(
                     ' <div id="div-input-priority" class="col-sm-12 col-md-5 col-lg-2 mb-3">' +
-                        '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
-                        "</div>"
+                    '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
+                    "</div>"
                 );
             $("#proxy-active").attr("disabled", true);
             $("#proxy-select ").val("0").change();
@@ -457,7 +473,7 @@ $(document).ready(function () {
                                 Authorization: $('meta[name="access-token"]').attr("content"),
                                 Accept: "application/json",
                             },
-                            error: function (response) {},
+                            error: function (response) { },
                             success: function (response) {
                                 alertCustom("success", response.message);
                             },
@@ -497,7 +513,7 @@ $(document).ready(function () {
 
                                 <!-- Trigger -->
                                 <button class="btn copy-data col-2" data-clipboard-target="#copy-data-${index}">
-                                    <span class="material-icons icon-copy-1"> content_copy </span>
+                                    <span><img src="/build/global/img/icon-copy-b.svg"/></span>
                                 </button>
                         </div>
                     </td>`;
@@ -539,7 +555,7 @@ $(document).ready(function () {
                     value.system_flag +
                     "' data-record='" +
                     value.id +
-                    "'><span class='o-bin-1'></span> </button></td>";
+                    "'><span><img <img src='/build/global/img/icon-trash-tale.svg'/></span> </button></td>";
             } else {
                 cont++;
                 let enabledA = "";
@@ -556,12 +572,12 @@ $(document).ready(function () {
                         value.system_flag +
                         "' data-record='" +
                         value.id +
-                        "'><span class='o-bin-1'></span> </button></td>";
+                        "'><span><img <img src='/build/global/img/icon-trash-tale.svg'/></span> </button></td>";
                 } else {
                     enabledA =
                         "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " +
                         enabledEntrada +
-                        "><span class='o-bin-1'></span> </a></td>";
+                        "><span><img <img src='/build/global/img/icon-trash-tale.svg'/></span> </a></td>";
                 }
                 data +=
                     '<td><div class="switch-holder" style=" opacity: 0.5;">' +

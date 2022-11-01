@@ -32,3 +32,10 @@
     -o-transition: all 0.3s;
     transition: all 0.3s;
 }
+
+.table thead > tr > td:first-child {
+    border-radius: 16px 0px 0px 0px !important;
+}
+.table thead > tr > td:last-child {
+    border-radius: 0px 16px 0px 0px !important;
+}

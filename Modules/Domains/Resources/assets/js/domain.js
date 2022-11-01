@@ -180,7 +180,9 @@ $(document).ready(function () {
                         });
                     });
                 });
+
             },
+
         });
     }
 
@@ -418,14 +420,14 @@ $(document).ready(function () {
         $("#modal-title").html("Tudo certo!");
         $("#modal-add-body").html(
             '<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' +
-                '<h3 align="center"><strong>Domínio registrado</strong></h3>' +
-                '<h4 align="center">Tudo pronto já podemos começar</h4>' +
-                '<p align="center" style="font-size: 16px">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</p>' +
-                '<div style="width:100%;text-align:center;padding-top:3%">' +
-                '<span class="btn btn-success" onclick="' +
-                updateDomains() +
-                '" data-dismiss="modal" style="font-size: 16px">Começar</span>' +
-                "</div>"
+            '<h3 align="center"><strong>Domínio registrado</strong></h3>' +
+            '<h4 align="center">Tudo pronto já podemos começar</h4>' +
+            '<p align="center" style="font-size: 16px">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</p>' +
+            '<div style="width:100%;text-align:center;padding-top:3%">' +
+            '<span class="btn btn-success" onclick="' +
+            updateDomains() +
+            '" data-dismiss="modal" style="font-size: 16px">Começar</span>' +
+            "</div>"
         );
     }
 
@@ -436,12 +438,12 @@ $(document).ready(function () {
         $("#modal-title").html("Oppsssss...");
         $("#modal-add-body").html(
             '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
-                '<h3 align="center"><strong>Domínio ainda não registrado</strong></h3>' +
-                '<h4 align="center">Parece que o seu domínio ainda não foi liberado</h4>' +
-                '<p align="center" style="font-size: 16px">Seria bom conferir as configurações no seu provedor de domínio, caso tenha alguma duvida em como realizar a configuração <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span></p>' +
-                '<div style="width:100%;text-align:center;padding-top:3%">' +
-                '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 16px">Retornar</span>' +
-                "</div>"
+            '<h3 align="center"><strong>Domínio ainda não registrado</strong></h3>' +
+            '<h4 align="center">Parece que o seu domínio ainda não foi liberado</h4>' +
+            '<p align="center" style="font-size: 16px">Seria bom conferir as configurações no seu provedor de domínio, caso tenha alguma duvida em como realizar a configuração <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span></p>' +
+            '<div style="width:100%;text-align:center;padding-top:3%">' +
+            '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 16px">Retornar</span>' +
+            "</div>"
         );
     }
 
@@ -461,17 +463,17 @@ $(document).ready(function () {
             value.status +
             "' domain='" +
             value.id +
-            "' data-target='#modal-content' data-toggle='modal'><span class='o-eye-1'></span> </a>";
+            "' data-target='#modal-content' data-toggle='modal'><span class=''><img src='/build/global/img/icon-eye.svg'/></span> </a>";
         dados +=
             "<a role='button' class='mg-responsive edit-domain    pointer'       status='" +
             value.status +
             "' domain='" +
             value.id +
-            "' data-target='#modal-content' data-toggle='modal'><span class='o-edit-1'></span> </a>";
+            "' data-target='#modal-content' data-toggle='modal'><span class=''><img src='/build/global/img/pencil-icon.svg'/></span> </a>";
         dados +=
             "<a role='button' class='mg-responsive delete-domain  pointer'       status=''                     domain='" +
             value.id +
-            "' data-target='#modal-delete'  data-toggle='modal'><span class='o-bin-1'></span> </a>";
+            "' data-target='#modal-delete'  data-toggle='modal'><span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span> </a>";
         dados += "</td>";
         dados += "</tr>";
         $("#domain-table-body").append(dados);
@@ -486,22 +488,22 @@ $(document).ready(function () {
         $("#modal-add-body")
             .append(
                 '<div class="swal2-icon swal2-info swal2-animate-info-icon" style="display: flex;">i</div>' +
-                    '<h3 align="center"><strong>Domínio cadastrado</strong></h3>' +
-                    '<h4 align="center">Agora falta pouco</h4>' +
-                    '<p align="center" style="font-size: 16px">Você só precisa adicionar essas novas entradas <strong>DNS</strong>' +
-                    " onde você registrou seu domínio" +
-                    responseDomain.data["domainHost"] +
-                    '. Logo após clique em <strong style="color:green">verificar</strong>!</p>' +
-                    '<div id="tableDomain" style="width:100%">' +
-                    '<table class="table table-striped">' +
-                    "<thead></thead>" +
-                    '<tbody id="tableDomainBody">' +
-                    "</tbody></table></div>" +
-                    '<div style="width:100%;text-align:center;padding-top:3%">' +
-                    '<button class="btn btn-success btn-verifyDomain" domain="' +
-                    responseDomain.data["id_code"] +
-                    '" style="font-size: 16px">Verificar</button>' +
-                    "</div>"
+                '<h3 align="center"><strong>Domínio cadastrado</strong></h3>' +
+                '<h4 align="center">Agora falta pouco</h4>' +
+                '<p align="center" style="font-size: 16px">Você só precisa adicionar essas novas entradas <strong>DNS</strong>' +
+                " onde você registrou seu domínio" +
+                responseDomain.data["domainHost"] +
+                '. Logo após clique em <strong style="color:green">verificar</strong>!</p>' +
+                '<div id="tableDomain" style="width:100%">' +
+                '<table class="table table-striped">' +
+                "<thead></thead>" +
+                '<tbody id="tableDomainBody">' +
+                "</tbody></table></div>" +
+                '<div style="width:100%;text-align:center;padding-top:3%">' +
+                '<button class="btn btn-success btn-verifyDomain" domain="' +
+                responseDomain.data["id_code"] +
+                '" style="font-size: 16px">Verificar</button>' +
+                "</div>"
             )
             .show("slow");
         $.each(responseDomain.data["zones"], function (index, value) {
@@ -520,15 +522,15 @@ $(document).ready(function () {
         $("#modal-add-body")
             .append(
                 '<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' +
-                    '<h3 align="center"><strong>Domínio verificado</strong></h3>' +
-                    '<h4 align="center">Tudo pronto</h4>' +
-                    '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' +
-                    '<p align="center" style="font-size: 16px">Caso tenha problemas ou modifique algo no domínio, ultilize o botão abaixo para verificar se está tudo certo</p>' +
-                    '<div style="width:100%;text-align:center;padding-top:3%">' +
-                    '<button class="btn btn-success btn-verifyDomain" domain="' +
-                    responseDomain.data["id_code"] +
-                    '" style="font-size: 16px">Verificar</button>' +
-                    "</div>"
+                '<h3 align="center"><strong>Domínio verificado</strong></h3>' +
+                '<h4 align="center">Tudo pronto</h4>' +
+                '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' +
+                '<p align="center" style="font-size: 16px">Caso tenha problemas ou modifique algo no domínio, ultilize o botão abaixo para verificar se está tudo certo</p>' +
+                '<div style="width:100%;text-align:center;padding-top:3%">' +
+                '<button class="btn btn-success btn-verifyDomain" domain="' +
+                responseDomain.data["id_code"] +
+                '" style="font-size: 16px">Verificar</button>' +
+                "</div>"
             )
             .show("slow");
         $("#modal-add-body").show("slow");
@@ -555,40 +557,40 @@ $(document).ready(function () {
                 if ($("#new_registers_table").html() == undefined) {
                     $("#divCustomDomain").html(
                         "<table id='new_registers_table' class='table table-hover table-bordered table-stripped unify' style='table-layout: fixed;'>" +
-                            "<thead>" +
-                            "<tr>" +
-                            "<th class='col-2'>Tipo</th>" +
-                            "<th class='col-2'>Nome</th>" +
-                            "<th class='col-6'>Conteúdo</th>" +
-                            "<th class='col-2'></th>" +
-                            "</tr>" +
-                            "</thead>" +
-                            "<tbody id='new_registers'>" +
-                            "</tbody>" +
-                            "</table>"
+                        "<thead>" +
+                        "<tr>" +
+                        "<th class='col-2'>Tipo</th>" +
+                        "<th class='col-2'>Nome</th>" +
+                        "<th class='col-6'>Conteúdo</th>" +
+                        "<th class='col-2'></th>" +
+                        "</tr>" +
+                        "</thead>" +
+                        "<tbody id='new_registers'>" +
+                        "</tbody>" +
+                        "</table>"
                     );
                 }
                 $("#new_registers").after(
                     "<tr class='alert-info' data-row='" +
-                        $("#new_registers_table tr").length +
-                        "' data-save='0'>" +
-                        "<td>" +
-                        $("#tipo_registro").val() +
-                        "</td>" +
-                        "<td>" +
-                        $("#nome_registro").val() +
-                        "</td>" +
-                        "<td>" +
-                        $("#valor_registro").val() +
-                        "</td>" +
-                        "<td hidden='hidden'>" +
-                        $("#valor_prioridade").val() +
-                        "</td>" +
-                        "<td class='col-12 text-center align-middle'>" +
-                        "<button type='button' data-row='" +
-                        $("#new_registers_table tr").length +
-                        "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button>" +
-                        "</td></tr>"
+                    $("#new_registers_table tr").length +
+                    "' data-save='0'>" +
+                    "<td>" +
+                    $("#tipo_registro").val() +
+                    "</td>" +
+                    "<td>" +
+                    $("#nome_registro").val() +
+                    "</td>" +
+                    "<td>" +
+                    $("#valor_registro").val() +
+                    "</td>" +
+                    "<td hidden='hidden'>" +
+                    $("#valor_prioridade").val() +
+                    "</td>" +
+                    "<td class='col-12 text-center align-middle'>" +
+                    "<button type='button' data-row='" +
+                    $("#new_registers_table tr").length +
+                    "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button>" +
+                    "</td></tr>"
                 );
                 $("#nome_registro").val("");
                 $("#valor_registro").val("");
@@ -614,11 +616,11 @@ $(document).ready(function () {
                 .parent()
                 .after(
                     '<div class="col-sm-12 col-md-5 col-lg-3 mb-3">' +
-                        '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' +
-                        '<div class="col-sm-12 col-md-5 col-lg-3 mb-3">' +
-                        '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>' +
-                        '<div class="col-sm-12 col-md-2 col-lg-2 mb-3">' +
-                        '<input id="valor_prioridade" class="input-pad" data-mask="0#" placeholder="Prioridade"></div>'
+                    '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' +
+                    '<div class="col-sm-12 col-md-5 col-lg-3 mb-3">' +
+                    '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>' +
+                    '<div class="col-sm-12 col-md-2 col-lg-2 mb-3">' +
+                    '<input id="valor_prioridade" class="input-pad" data-mask="0#" placeholder="Prioridade"></div>'
                 );
         }
         $("#valor_prioridade").mask("0#");
@@ -631,16 +633,15 @@ $(document).ready(function () {
                 .parent()
                 .after(
                     '<div class="col-sm-12 col-md-6 col-lg-4 mb-3">' +
-                        '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' +
-                        '<div class="col-sm-12 col-md-6 col-lg-4 mb-3">' +
-                        '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>'
+                    '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' +
+                    '<div class="col-sm-12 col-md-6 col-lg-4 mb-3">' +
+                    '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>'
                 );
         }
     }
 
     function pagination(response) {
         $("#pagination").html("");
-
         var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         if (response.meta.last_page == "1") {
@@ -665,10 +666,10 @@ $(document).ready(function () {
 
             $("#pagination").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page - x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page - x) +
-                    "</button>"
+                (response.meta.current_page - x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page - x) +
+                "</button>"
             );
 
             $("#pagina_" + (response.meta.current_page - x)).on("click", function () {
@@ -692,10 +693,10 @@ $(document).ready(function () {
 
             $("#pagination").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page + x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page + x) +
-                    "</button>"
+                (response.meta.current_page + x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page + x) +
+                "</button>"
             );
 
             $("#pagina_" + (response.meta.current_page + x)).on("click", function () {

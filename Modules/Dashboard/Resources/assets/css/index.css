@@ -46,9 +46,18 @@
     background-color: #e8eefe;
 }
 
+.modal {
+    border-radius: 8px;
+}
+
 .modal-terms {
     background: #f4f6fb;
     display: flex;
+}
+
+.modal-title {
+    color: #636363;
+    padding-top: 10px;
 }
 
 .button-modal-term {
