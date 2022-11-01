@@ -765,7 +765,7 @@ $(() => {
                         <a class='tracking-edit pointer default-buttons' title="Editar" style="margin-right: 20px; padding-top:8px; padding-bottom: 4px;">
                             <span class="text-right o-edit-1"></span>
                         </a>
-                        <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${response.data.tracking_code}' style="margin-right: 0; vertical-align: middle;">
+                        <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${response.data.id}' style="margin-right: 0; vertical-align: middle;">
                             <span class="o-eye-1" style="padding-left: 10px !important"></span>
                         </a>
                         <div class="save-close buttons d-flex px-0" style="max-height: 35px;">
