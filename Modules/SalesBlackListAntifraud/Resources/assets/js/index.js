@@ -71,10 +71,16 @@ $(document).ready(function () {
             },
             ranges: {
                 Hoje: [moment(), moment()],
-                Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                Ontem: [
+                    moment().subtract(1, "days"),
+                    moment().subtract(1, "days"),
+                ],
                 "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
                 "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [moment().startOf("month"), moment().endOf("month")],
+                "Este mês": [
+                    moment().startOf("month"),
+                    moment().endOf("month"),
+                ],
                 "Mês passado": [
                     moment().subtract(1, "month").startOf("month"),
                     moment().subtract(1, "month").endOf("month"),
@@ -230,11 +236,20 @@ $(document).ready(function () {
 
                     $("#dados_tabela").append(data);
 
-                    pagination(response, "sales-atifraud-blacklist", updateList);
+                    pagination(
+                        response,
+                        "sales-atifraud-blacklist",
+                        updateList
+                    );
                     $("#pagination-sales-atifraud-blacklist").show();
 
-                    $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                    $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
+                    $("#date").val(
+                        moment(new Date()).add(3, "days").format("YYYY-MM-DD")
+                    );
+                    $("#date").attr(
+                        "min",
+                        moment(new Date()).format("YYYY-MM-DD")
+                    );
                 }
             },
         });

@@ -34,7 +34,12 @@ mix.babel(["Modules/Affiliates/Resources/assets/js/index.js"], "public/build/lay
 /**
  * Modules/Affiliates/Resources/views/projectaffiliates.blade.php
  */
-mix.styles(["resources/modules/global/css/table.css"], "public/build/layouts/affiliates/projectaffiliates.min.css");
+mix.styles(
+    [
+        "resources/modules/global/css/table.css",
+        "Modules/Affiliates/Resources/assets/css/index.css",
+    ],
+    "public/build/layouts/affiliates/projectaffiliates.min.css");
 mix.babel(
     ["Modules/Affiliates/Resources/assets/js/projectaffiliates.js"],
     "public/build/layouts/affiliates/projectaffiliates.min.js"
@@ -460,6 +465,7 @@ mix.styles(
         "resources/modules/global/css/table.css",
         "resources/modules/global/css/new-dashboard.css",
         "resources/modules/global/css/empty.css",
+        "Modules/Invites/Resources/assets/css/index.css",
     ],
     "public/build/layouts/invites/index.min.css"
 );
@@ -973,6 +979,7 @@ mix.styles(
     [
         "resources/modules/global/css/table.css",
         "Modules/Sales/Resources/assets/css/index.css",
+        "Modules/SalesRecovery/Resources/assets/css/index.css",
         "resources/modules/global/css/switch.css",
         "resources/cdn/select2.min.css",
     ],

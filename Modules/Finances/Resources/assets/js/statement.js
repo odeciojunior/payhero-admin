@@ -5,7 +5,7 @@ function getRequestTime(data = "") {
                         <div class="bold-mobile"> ${data.date_request} </div>`;
 
     if (!isEmpty(data.date_request_time))
-        request_date += `<small style="color: #9E9E9E; font-size: 11px"> ás ${data.date_request_time.replace(
+        request_date += `<span class="subdescription font-size-12"> ás ${data.date_request_time.replace(
             ":",
             "h"
         )} </small>`;
@@ -19,7 +19,7 @@ function getReleaseTime(data = "") {
                         <div class="bold-mobile"> ${data.date_release} </div>`;
 
     if (!isEmpty(data.date_release_time))
-        release_date += `<small style="color: #9E9E9E; font-size: 11px"> ás ${data.date_release_time.replace(
+        release_date += `<span class="subdescription font-size-12"> ás ${data.date_release_time.replace(
             ":",
             "h"
         )} </small>`;
@@ -38,6 +38,8 @@ window.updateTransfersTable = function (link = null) {
     $("#table-transfers-body").html("");
 
     loadOnTable("#table-transfers-body", "#transfersTable");
+    $("#pagination-transfers").children().attr("disabled", "disabled");
+
     if (link == null) {
         link = "/api/transfers";
     } else {
@@ -75,8 +77,7 @@ window.updateTransfersTable = function (link = null) {
             let parseValue = parseFloat(balance_in_period.replace(".", "").replace(",", "."));
             let availableInPeriod = $("#available-in-period");
             availableInPeriod.html(
-                `<span ${
-                    parseValue < 0 ? ' style="color:red;"' : ""
+                `<span ${parseValue < 0 ? ' style="color:red;"' : ""
                 }><span class="currency">R$ </span>${balance_in_period}</span>`
             );
             if (parseValue < 0) {
@@ -103,6 +104,9 @@ window.updateTransfersTable = function (link = null) {
             }
 
             if (response.data == "") {
+                $("#pagination-container-transfers").removeClass("d-flex").addClass("d-none")
+
+                $("#pagination-transfers").css({ "background": "#f4f4f4" })
                 $("#table-transfers-body").html(`
                     <tr class='text-center bg-transparent'>
                         <td style='height: 300px; border-radius: 16px !important' colspan='11' >
@@ -118,6 +122,7 @@ window.updateTransfersTable = function (link = null) {
                 `);
                 $("#pagination-transfers").html("");
             } else {
+                $("#pagination-container-transfers").removeClass("d-none").addClass("d-flex")
                 data = "";
 
                 $.each(response.data, function (index, value) {
@@ -126,7 +131,7 @@ window.updateTransfersTable = function (link = null) {
                     let dateRelease = getReleaseTime(value);
 
                     if (value.is_owner && value.sale_id) {
-                        data += `<td style="grid-area: sale" class="sale-finance-schedule text-center">
+                        data += `<td style="grid-area: sale" class="sale-finance-schedule ">
                             <span class="d-block mb-10"> ${value.reason} </span>
                             <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
                                 <span class="transfers-sale">#${value.sale_id}</span>
@@ -134,12 +139,12 @@ window.updateTransfersTable = function (link = null) {
                         </td>`;
                     } else {
                         if (value.reason === "Antecipação") {
-                            data += `<td style="grid-area: sale" class="text-center sale-finance-schedule">
+                            data += `<td style="grid-area: sale" class="sale-finance-schedule">
                                         <span class="d-block mb-10"> ${value.reason} </span>
                                         <span class="transfers-sale"> #${value.anticipation_id} </span>
                                     </td>`;
                         } else {
-                            data += `<td style="grid-area: sale" class="text-center sale-finance-schedule">
+                            data += `<td style="grid-area: sale" class="sale-finance-schedule">
                                         <span class="d-block mb-10"> ${value.reason} </span>
                                         ${value.sale_id ? `<span class="transfers-sale"> #${value.sale_id}</span>` : ""}
                                     </td>`;
@@ -151,8 +156,8 @@ window.updateTransfersTable = function (link = null) {
 
                     if (value.type_enum === 1) {
                         data += `<td class="value-finance-schedule" style="grid-area: value">
-                                    <span class="font-md-size-20 bold" style="color:green"> R$ </span>
-                                    <strong class="font-md-size-20" style="color:green"> ${value.value} </strong>`;
+                                    <span class="font-md-size-20 bold" style="color:#41DC8F"> R$ </span>
+                                    <strong class="font-md-size-20" style="color:#41DC8F"> ${value.value} </strong>`;
                         if (value.reason === "Antecipação") {
                             data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
                         } else {
@@ -165,6 +170,8 @@ window.updateTransfersTable = function (link = null) {
                     }
                     data += "</tr>";
                 });
+                $("#pagination-transfers").css({ "background": "#ffffff" })
+
 
                 $("#table-transfers-body").html(data);
 
@@ -174,57 +181,64 @@ window.updateTransfersTable = function (link = null) {
     });
 
     function paginationTransfersTable(response) {
+
         $("#pagination-transfers").html("");
         let primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
         $("#pagination-transfers").append(primeira_pagina);
+
         if (response.meta.current_page == "1") {
             $("#primeira_pagina").attr("disabled", true);
             $("#primeira_pagina").addClass("nav-btn");
             $("#primeira_pagina").addClass("active");
         }
+
         $("#primeira_pagina").unbind("click");
         $("#primeira_pagina").on("click", function () {
             updateTransfersTable("?page=1");
         });
+
         for (x = 3; x > 0; x--) {
             if (response.meta.current_page - x <= 1) {
                 continue;
             }
             $("#pagination-transfers").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page - x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page - x) +
-                    "</button>"
+                (response.meta.current_page - x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page - x) +
+                "</button>"
             );
             $("#pagina_" + (response.meta.current_page - x)).on("click", function () {
                 updateTransfersTable("?page=" + $(this).html());
             });
         }
+
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
             let pagina_atual =
                 "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
             $("#pagination-transfers").append(pagina_atual);
             $("#pagina_atual").attr("disabled", true).addClass("nav-btn").addClass("active");
         }
+
         for (x = 1; x < 4; x++) {
             if (response.meta.current_page + x >= response.meta.last_page) {
                 continue;
             }
             $("#pagination-transfers").append(
                 "<button id='pagina_" +
-                    (response.meta.current_page + x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page + x) +
-                    "</button>"
+                (response.meta.current_page + x) +
+                "' class='btn nav-btn'>" +
+                (response.meta.current_page + x) +
+                "</button>"
             );
             $("#pagina_" + (response.meta.current_page + x)).on("click", function () {
                 updateTransfersTable("?page=" + $(this).html());
             });
         }
+
         if (response.meta.last_page != "1") {
             let ultima_pagina =
-                "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+                "<button id='ultima_pagina' class='btn nav-btn mr-0'>" + response.meta.last_page + "</button>";
             $("#pagination-transfers").append(ultima_pagina);
             if (response.meta.current_page == response.meta.last_page) {
                 $("#ultima_pagina").attr("disabled", true);
@@ -299,6 +313,7 @@ window.updateAccountStatementData = function () {
 
             if (isEmpty(items)) {
                 loadOnAnyEllipsis("#nav-statement #available-in-period-statement", true);
+                $("#pagination-transfers").css({ "background": "#f4f4f4" })
                 $("#export-excel").addClass("d-none");
                 $("#table-statement-body").html(`
                     <tr class='text-center bg-transparent'>
@@ -377,12 +392,12 @@ window.updateAccountStatementData = function () {
                         <td class="text-left value-finance-schedule" style="grid-area: value;">
                             <strong class="font-md-size-20" style="color:green">
                                 ${item.amount
-                                    .toLocaleString("pt-BR", {
-                                        style: "currency",
-                                        currency: "BRL",
-                                    })
-                                    .replace(/\s+/g, "")
-                                    .replace("-", "- ")}
+                            .toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                            })
+                            .replace(/\s+/g, "")
+                            .replace("-", "- ")}
                             </strong>
                         </td>
                     </tr>`;
@@ -391,12 +406,12 @@ window.updateAccountStatementData = function () {
                         <td class="text-left value-finance-schedule" style="grid-area: value;">
                             <strong class="font-md-size-20" style="color:red">
                                 ${item.amount
-                                    .toLocaleString("pt-BR", {
-                                        style: "currency",
-                                        currency: "BRL",
-                                    })
-                                    .replace(/\s+/g, "")
-                                    .replace("-", "- ")}
+                            .toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                            })
+                            .replace(/\s+/g, "")
+                            .replace("-", "- ")}
                             </strong>
                         </td>
                     </tr>`;
@@ -423,8 +438,7 @@ window.updateAccountStatementData = function () {
 
             let availableInPeriod = $("#available-in-period");
             availableInPeriod.html(
-                `<span ${
-                    isNegativeStatement ? ' style="color:red;"' : ""
+                `<span ${isNegativeStatement ? ' style="color:red;"' : ""
                 }><span class="currency">R$ </span>${totalInPeriod.toLocaleString("pt-BR")}</span>`
             );
 
@@ -474,6 +488,7 @@ window.updateAccountStatementData = function () {
 $(window).on("load", function () {
     //atualiza a table de extrato
     $(document).on("click", "#bt_filtro, #bt_filtro_statement", function () {
+        $("#pagination-container-transfers").removeClass("d-flex").addClass("d-none")
         $("#extract_company_select option[value=" + $("#extract_company_select option:selected").val() + "]").prop(
             "selected",
             true

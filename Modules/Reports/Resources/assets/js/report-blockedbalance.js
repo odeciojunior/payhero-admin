@@ -47,15 +47,15 @@ $('.company-navbar').change(function () {
             },
         }
     });
-    updateCompanyDefault().done(function(data1){
-        getCompaniesAndProjects().done(function(data2){
-            window.getProjects(data2,'company-navbar');
+    updateCompanyDefault().done(function (data1) {
+        getCompaniesAndProjects().done(function (data2) {
+            window.getProjects(data2, 'company-navbar');
         });
-	});
+    });
 });
 
 window.atualizar = function (link = null) {
-
+    $("#pagination-sales").children().attr("disabled", "disabled");
     currentPage = link;
     let updateResume = true;
 
@@ -96,8 +96,8 @@ window.atualizar = function (link = null) {
             $("#tabela_vendas").addClass("table-striped");
             $("#dados_tabela").html(
                 "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                    $("#dados_tabela").attr("img-empty") +
-                    "'>Nenhuma venda encontrada</td></tr>"
+                $("#dados_tabela").attr("img-empty") +
+                "'>Nenhuma venda encontrada</td></tr>"
             );
             errorAjaxResponse(response);
         },
@@ -108,106 +108,125 @@ window.atualizar = function (link = null) {
             let statusArray = {
                 1: "success",
                 6: "primary",
-                7: "danger",
+                7: "disable", //ESTORNADO
                 8: "warning",
-                4: "danger",
+                4: "dispute", //CHARGEBACK
                 3: "danger",
                 2: "pendente",
                 12: "success",
                 20: "antifraude",
-                22: "danger",
+                22: "disable", //ESTORNADO
                 23: "warning",
                 24: "antifraude",
             };
 
             if (!isEmpty(response.data)) {
+                $("#pagination-container").removeClass("d-none").addClass("d-flex")
+
                 $.each(response.data, function (index, value) {
+
                     let start_date = "";
                     if (value.start_date) {
                         start_date = value.start_date.split(/\s/g); //data inicial
-                        start_date =
-                            "<strong class='bold-mobile'>" +
-                            start_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            start_date[1] +
-                            " </small>";
+                        start_date = start_date[0] + " <br> <span class='subdescription font-size-12'>" + start_date[1] + " </span>";
                     }
                     let end_date = "";
                     if (value.end_date) {
                         end_date = value.end_date.split(/\s/g); //data final
-                        end_date =
-                            "<strong class='bold-mobile'>" +
-                            end_date[0] +
-                            " </strong> <br> <small class='gray font-size-12'>" +
-                            end_date[1] +
-                            " </small>";
+                        end_date = end_date[0] + " <br> <span class='subdescription font-size-12'>" + end_date[1] + " </span>";
                     }
-                    dados = `  <tr>
-                                <td class='display-sm-none display-m-none display-lg-none text-center text-left font-size-14'>
+                    dados = `
+                        <tr>
+
+
+                            <td class='display-sm-none display-m-none display-lg-none text-center text-left'>
+
+                                <div class="">
                                     ${value.sale_code}
-                                    ${
-                                        value.upsell
-                                            ? '<span class="text-muted font-size-10">(Upsell)</span>'
-                                            : ""
-                                    }
+                                </div>
+                                ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ""}
+                                <div class="container-tooltips-blocked"></div>
+                            </td>
+
+
+
+                            <td class="text-left">
+                                <div class="fullInformation-blocked ellipsis-text">
+                                    ${value.project}
+                                </div>
+
+                            </td>
+
+
+
+
+                            <td class="text-left">
+
+                                <div class="fullInformation-blocked ellipsis-text">
+                                    ${value.product}${value.affiliate != null && value.user_sale_type == "producer" ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ""}
+                                </div>
+
+                            </td>
+
+
+
+                            <td class='display-sm-none display-m-none display-lg-none text-left'>
+                                <div class="fullInformation-blocked ellipsis-text">
+                                    ${value.client}
+                                </div>
+                            </td>
+
+
+
+
+                            <td>
+                                <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
+                            </td>
+
+                            <td>
+                                <div class="d-flex justify-content-center">
+
+                                    <span class="badge badge-${statusArray[value.status]} ${value.status_translate === "Pendente" ? "boleto-pending" : ""}" ${value.status_translate === "Pendente" ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ""}>
+                                        ${value.status_translate}
+                                    </span>
+
+                                    ${value.is_chargeback_recovered && value.status_translate === "Aprovado" ? `
+
+                                    <img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">` : ""}
+                                </div>
+                            </td>
+
+                                <td class='display-sm-none text-left display-m-none'>${start_date}</td>
+
+                                <td class='display-sm-none text-left'>${end_date}</td>
+
+                                <td style='white-space: nowrap' class="text-left">
+                                    <b>${value.total_paid}</b>
                                 </td>
-                                <td class="text-left font-size-14">${
-                                    value.project
-                                }</td>
-                                <td class="text-left font-size-14">${
-                                    value.product
-                                }${
-                        value.affiliate != null &&
-                        value.user_sale_type == "producer"
-                            ? `<br><small>(Afiliado: ${value.affiliate})</small>`
-                            : ""
-                    }</td>
-                                <td class='display-sm-none display-m-none display-lg-none text-left font-size-14'>${
-                                    value.client
-                                }</td>
-                                <td>
-                                    <img src='/build/global/img/cartoes/${
-                                        value.brand
-                                    }.png'  style='width: 45px'>
-                                </td>
-                                <td>
-                                   <div class="d-flex align-items-center">
-                                        <span class="badge badge-${
-                                            statusArray[value.status]
-                                        } ${
-                        value.status_translate === "Pendente"
-                            ? "boleto-pending"
-                            : ""
-                    }" ${
-                        value.status_translate === "Pendente"
-                            ? 'status="' +
-                              value.status_translate +
-                              '" sale="' +
-                              value.id_default +
-                              '"'
-                            : ""
-                    }>${value.status_translate}</span>
-                                           ${
-                                               value.is_chargeback_recovered &&
-                                               value.status_translate ===
-                                                   "Aprovado"
-                                                   ? `
-                                            <img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
-                                                   : ""
-                                           }
+
+                                <td class="text-left ellipsis-text">
+                                    <div class="fullInformation-blocked ellipsis-text">
+                                        ${value.reason_blocked}
                                     </div>
                                 </td>
-                                <td class='display-sm-none text-left font-size-14 display-m-none'>${start_date}</td>
-                                <td class='display-sm-none text-left font-size-14'>${end_date}</td>
-                                <td style='white-space: nowrap' class="text-left font-size-14"><b>${
-                                    value.total_paid
-                                }</b></td>
-                                <td class="text-left font-size-14">
-                                    ${value.reason_blocked}
-                                </td>
-                            </tr>`;
+
+                            </tr>`
+                        ;
 
                     $("#dados_tabela").append(dados);
+                });
+
+                $('.fullInformation-blocked').bind('mouseover', function () {
+                    var $this = $(this);
+
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                        $this.attr({
+                            'data-toggle': "tooltip",
+                            'data-placement': "top",
+                            'data-title': $this.text()
+                        }).tooltip({ container: ".container-tooltips-blocked" })
+                        $this.tooltip("show")
+                    }
                 });
 
                 $("#date").val(
@@ -215,10 +234,11 @@ window.atualizar = function (link = null) {
                 );
                 $("#date").attr("min", moment(new Date()).format("YYYY-MM-DD"));
             } else {
+                $("#pagination-container").removeClass("d-flex").addClass("d-none")
                 $("#dados_tabela").html(
                     "<tr class='text-center'><td colspan='10' style='vertical-align: middle;height:257px;'><img class='no-data-table' style='width:124px;' src='" +
-                        $("#dados_tabela").attr("img-empty") +
-                        "'>Nenhuma venda encontrada</td></tr>"
+                    $("#dados_tabela").attr("img-empty") +
+                    "'>Nenhuma venda encontrada</td></tr>"
                 );
             }
             pagination(response, "sales", atualizar);
@@ -301,14 +321,14 @@ function blockedResume() {
                     .attr(
                         "title",
                         "Saldo retido de convites: R$ " +
-                            response.commission_invite
+                        response.commission_invite
                     )
                     .tooltip({ placement: "bottom" });
                 $(".blocked-balance-icon")
                     .attr(
                         "data-original-title",
                         "Saldo retido de convites: R$ " +
-                            response.commission_invite
+                        response.commission_invite
                     )
                     .tooltip({ placement: "bottom" });
                 $("#total").html(
@@ -347,6 +367,8 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
+        $("#pagination-container").removeClass("d-flex").addClass("d-none")
+
         window.atualizar();
     });
 
@@ -428,11 +450,11 @@ $(document).ready(function () {
         });
     }
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         window.getProjects(data);
     });
 
-    window.fillProjectsSelect = function(){
+    window.fillProjectsSelect = function () {
         return $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -473,7 +495,7 @@ $(document).ready(function () {
         });
     }
 
-    window.getProjects = function(data, origin='') {
+    window.getProjects = function (data, origin = '') {
 
         loadingOnScreen();
 
@@ -491,18 +513,18 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
             },
             success: function success(response) {
-                if(!isEmpty(response) || data.has_api_integration){
+                if (!isEmpty(response) || data.has_api_integration) {
                     $(".div-filters").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     $("#export-excel > div >").show();
                     $.each(response, function (c, project) {
-                        $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
+                        $("#project").append($("<option>", { value: project.project_id, text: project.name, }));
                     });
-                    if(data.has_api_integration)
-                        $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-                    $("#project option:first").attr('selected','selected');
-                    if(sessionStorage.info) {
+                    if (data.has_api_integration)
+                        $("#project").append($("<option>", { value: 'API-TOKEN', text: 'Vendas por API' }));
+                    $("#project option:first").attr('selected', 'selected');
+                    if (sessionStorage.info) {
                         $("#project").val(JSON.parse(sessionStorage.getItem('info')).company);
                         $("#project").find('option:selected').text(JSON.parse(sessionStorage.getItem('info')).companyName);
                     }
@@ -511,8 +533,8 @@ $(document).ready(function () {
                     $(".div-filters").show();
                     loadingOnScreenRemove();
                 }
-                else{
-                    if(!isEmpty(data.company_default_projects)){
+                else {
+                    if (!isEmpty(data.company_default_projects)) {
                         $(".div-filters").hide();
                         $("#project-empty").hide();
                         $("#project-not-empty").show();
@@ -520,16 +542,16 @@ $(document).ready(function () {
                         // $.each(data.company_default_projects, function (i, project) {
                         //     $("#project").append($("<option>", {value: project.project_id,text: project.name,}));
                         // });
-                        if(data.has_api_integration)
-                            $("#project").append($("<option>", {value: 'API-TOKEN',text: 'Vendas por API'}));
-                        $("#project option:first").attr('selected','selected');
-                        if( $('#select_projects option').length == 0 )
-                            $('#select_projects').next().css('display','none')
+                        if (data.has_api_integration)
+                            $("#project").append($("<option>", { value: 'API-TOKEN', text: 'Vendas por API' }));
+                        $("#project option:first").attr('selected', 'selected');
+                        if ($('#select_projects option').length == 0)
+                            $('#select_projects').next().css('display', 'none')
                         atualizar();
                         $(".div-filters").show();
                         loadingOnScreenRemove();
                     }
-                    else{
+                    else {
                         loadingOnScreenRemove();
                         $(".div-filters").hide();
                         $("#project-empty").show();
@@ -642,14 +664,14 @@ $(document).ready(function () {
                         .attr(
                             "title",
                             "Saldo bloqueado de convites: R$ " +
-                                response.commission_invite
+                            response.commission_invite
                         )
                         .tooltip({ placement: "bottom" });
                     $(".blocked-balance-icon")
                         .attr(
                             "data-original-title",
                             "Saldo bloqueado de convites: R$ " +
-                                response.commission_invite
+                            response.commission_invite
                         )
                         .tooltip({ placement: "bottom" });
                     $("#total").html(
@@ -686,7 +708,7 @@ function changeCalendar() {
                 }
             },
         })
-        .on("datepicker-change", function () {})
+        .on("datepicker-change", function () { })
         .on("datepicker-open", function () {
             $(".filter-badge-input").removeClass("show");
         })

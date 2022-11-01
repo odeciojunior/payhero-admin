@@ -113,7 +113,7 @@
             <div class="page-content container pb-40">
                 <div id='data-table-products'
                      class='row g-2'></div>
-                <div class="row justify-content-center justify-content-md-end">
+                <div class="row no-gutters justify-content-center justify-content-md-end mt-25">
                     <div id='pagination-products'
                          class="pl-5 pr-md-15 mb-20"></div>
                 </div>

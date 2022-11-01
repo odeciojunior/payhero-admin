@@ -1,6 +1,6 @@
 const statusPixel = {
     1: "success",
-    0: "danger",
+    0: "disable",
 };
 
 const srcPlatforms = {
@@ -58,6 +58,7 @@ $(function () {
         }
 
         loadOnTable("#data-table-pixel", "#table-pixel");
+        $("#pagination-pixels").children().attr("disabled", "disabled");
 
         $("#pagination-pixels").html("");
         $("#tab_pixels-panel").find(".no-gutters").css("display", "none");
@@ -78,6 +79,8 @@ $(function () {
                 $("#data-table-pixel, #pagination-pixels").html("");
 
                 if (response.data == "") {
+                    $("#pagination-container-pixel").addClass("d-none").removeClass("d-flex")
+
                     $("#table-pixel").addClass("table-striped");
                     $("#data-table-pixel").html(`
                         <tr class="text-center">
@@ -95,34 +98,101 @@ $(function () {
                         </tr>
                     `);
                 } else {
+                    $("#pagination-container-pixel").addClass("d-flex").removeClass("d-none")
+
                     $("#tab_pixels-panel").find(".no-gutters").css("display", "flex");
                     $("#table-pixel").find("thead").css("display", "contents");
 
                     $.each(response.data, function (index, value) {
                         $("#data-table-pixel").append(`
                             <tr>
-                                <td>${value.name}</td>
-                                <td>${value.code}</td>
-                                <td>${value.platform_enum}</td>
-                                <td class="text-center"><span class="badge badge-${
-                                    statusPixel[value.status]
-                                }">${value.status_translated}</span></td>
-                                <td style='text-align:center'>
-                                    <div class='d-flex justify-content-end align-items-center'>
-                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${
-                                            value.id
-                                        }' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
-                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${
-                                            value.id
-                                        }' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
-                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${
-                                            value.id
-                                        }' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class='o-bin-1'></span></a>
+
+                                <td>
+
+                                    <div class="fullInformation-pixel ellipsis-text">
+                                        ${value.name}
                                     </div>
+
+                                    <div class="container-tooltips-pixel"></div>
+
                                 </td>
+
+
+                                <td>
+
+                                    <div class="fullInformation-pixel">
+                                        ${value.code}
+                                    </div>
+
+                                    <div class="container-tooltips-pixel"></div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="fullInformation-pixel ellipsis-text">
+                                        ${value.platform_enum}
+                                    </div>
+
+                                    <div class="container-tooltips-pixel"></div>
+
+                                </td>
+
+
+                                <td class="text-center">
+                                    <span class="badge badge-${statusPixel[value.status]}">
+                                        ${value.status_translated}
+                                    </span>
+                                </td>
+
+                                <td style='text-align:center'>
+
+                                    <div class='d-flex justify-content-end align-items-center'>
+
+                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'>
+
+                                            <span class="">
+                                                <img src='/build/global/img/icon-eye.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'>
+
+                                            <span class="">
+                                                <img src='/build/global/img/pencil-icon.svg'/>
+                                            </span>
+
+                                        </a>
+
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'>
+                                            <span class=''>
+                                                <img src='/build/global/img/icon-trash-tale.svg'/>
+                                            </span>
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
                             </tr>
                         `);
                         $("#table-pixel").addClass("table-striped");
+                    });
+
+
+                    $('.fullInformation-pixel').bind('mouseover', function () {
+                        var $this = $(this);
+
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                            $this.attr({
+                                'data-toggle': "tooltip",
+                                'data-placement': "top",
+                                'data-title': $this.text()
+                            }).tooltip({ container: ".container-tooltips-pixel" })
+                            $this.tooltip("show")
+                        }
                     });
 
                     pagination(response, "pixels", atualizarPixel);
