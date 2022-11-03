@@ -1,33 +1,30 @@
 $(document).ready(function () {
-
-    $('.company-navbar').on("change", function () {
+    $(".company-navbar").on("change", function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $(".performance-card > .performance-data").html("");
-        $('.sirius-cashback > .card').html('');
-        $('#cashback-container #cashback-container-money').text("");
+        $(".sirius-cashback > .card").html("");
+        $("#cashback-container #cashback-container-money").text("");
         putSkeletonLoadingOnBalanceCards();
         window.putSkeletonLoadingOnPerformance();
         $(".sirius-cashback > .card").addClass("d-none");
         putSkeletonLoadingOnChart();
-        $('#scoreLineToMonth').html('');
+        $("#scoreLineToMonth").html("");
 
         window.putSkeletonLoadingOnAccountHealth();
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                if(!isEmpty(data2.company_default_projects)){
-                    if( $("#project-empty").css('display')!='none' ){
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                if (!isEmpty(data2.company_default_projects)) {
+                    if ($("#project-empty").css("display") != "none") {
                         $("#project-empty").hide();
                         $("#project-not-empty").show();
                         window.getDataDashboard();
-                    }
-                    else{
+                    } else {
                         window.updateValues();
                         window.updateChart();
                         window.updatePerformance();
-                        window.updateAccountHealth('80px');
+                        window.updateAccountHealth("80px");
                     }
-                }
-                else{
+                } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
@@ -35,8 +32,8 @@ $(document).ready(function () {
         });
     });
 
-    window.updateChart = function() {
-        $('#scoreLineToMonth').html('')
+    window.updateChart = function () {
+        $("#scoreLineToMonth").html("");
         putSkeletonLoadingOnChart();
 
         $.ajax({
@@ -44,7 +41,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-chart-data`,
             dataType: "json",
             data: {
-                company: $('.company-navbar').val(),
+                company: $(".company-navbar").val(),
             },
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -62,7 +59,7 @@ $(document).ready(function () {
                 }, 2000);
             },
         });
-    }
+    };
 
     function getChart(chartData) {
         let haveData = 0;
@@ -100,17 +97,18 @@ $(document).ready(function () {
                                 },
                             },
                             axisY: {
-                                labelInterpolationFnc: function labelInterpolationFnc(value) {
-                                    let str = parseInt(value);
+                                labelInterpolationFnc:
+                                    function labelInterpolationFnc(value) {
+                                        let str = parseInt(value);
 
-                                    if (str > 0) {
-                                        str = str / 1e3 + "K";
-                                    } else {
-                                        str = "0.00";
-                                    }
+                                        if (str > 0) {
+                                            str = str / 1e3 + "K";
+                                        } else {
+                                            str = "0.00";
+                                        }
 
-                                    return str;
-                                },
+                                        return str;
+                                    },
                                 scaleMinSpace: 40,
                             },
                             low: 0,
@@ -119,7 +117,9 @@ $(document).ready(function () {
                     );
                     scoreChart
                         .on("created", function (data) {
-                            var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
+                            var defs =
+                                    data.svg.querySelector("defs") ||
+                                    data.svg.elem("defs"),
                                 filter =
                                     (data.svg.width(),
                                     data.svg.height(),
@@ -156,7 +156,9 @@ $(document).ready(function () {
                                       filter: "url(#shadow" + id + ")",
                                   })
                                 : "point" === data.type &&
-                                  new Chartist.Svg(data.element._node.parentNode).elem("line", {
+                                  new Chartist.Svg(
+                                      data.element._node.parentNode
+                                  ).elem("line", {
                                       x1: data.x,
                                       y1: data.y,
                                       x2: data.x + 0.01,
@@ -171,10 +173,14 @@ $(document).ready(function () {
                                             from: data.path
                                                 .clone()
                                                 .scale(1, 0)
-                                                .translate(0, data.chartRect.height())
+                                                .translate(
+                                                    0,
+                                                    data.chartRect.height()
+                                                )
                                                 .stringify(),
                                             to: data.path.clone().stringify(),
-                                            easing: Chartist.Svg.Easing.easeOutQuint,
+                                            easing: Chartist.Svg.Easing
+                                                .easeOutQuint,
                                         },
                                     });
                         });
@@ -195,7 +201,7 @@ $(document).ready(function () {
         }
     }
 
-    window.getDataDashboard = function() {
+    window.getDataDashboard = function () {
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -220,10 +226,9 @@ $(document).ready(function () {
                 }
             },
         });
-    }
+    };
 
-    window.updateValues = function() {
-
+    window.updateValues = function () {
         putSkeletonLoadingOnBalanceCards();
         $.ajax({
             method: "POST",
@@ -234,7 +239,7 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             data: {
-                company_id: $('.company-navbar').val()
+                company_id: $(".company-navbar").val(),
             },
             error: function error(response) {
                 removeSkeletonLoadingFromBalanceCards();
@@ -250,20 +255,26 @@ $(document).ready(function () {
                 $("#total_sales_approved").text(data.total_sales_approved);
                 $("#total_sales_chargeback").text(data.total_sales_chargeback);
 
-                let $titleAvailableMoney = onlyNumbers(data.available_balance) > 0 ? "Disponível" : "Saldo Atual";
+                let $titleAvailableMoney =
+                    onlyNumbers(data.available_balance) > 0
+                        ? "Disponível"
+                        : "Saldo Atual";
                 $("#title_available_money").html($titleAvailableMoney);
 
-                let title = "Valor incluindo o saldo retido de R$ " + data.blocked_balance_total;
+                let title =
+                    "Valor incluindo o saldo retido de R$ " +
+                    data.blocked_balance_total;
 
-                $("#info-total-balance").attr("title", title).tooltip({ placement: "bottom" });
+                $("#info-total-balance")
+                    .attr("title", title)
+                    .tooltip({ placement: "bottom" });
 
                 removeSkeletonLoadingFromBalanceCards();
-            }
+            },
         });
-    }
+    };
 
     function getProjects() {
-
         window.putSkeletonLoadingOnPerformance();
         window.putSkeletonLoadingOnAccountHealth();
         putSkeletonLoadingOnBalanceCards();
@@ -271,15 +282,17 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ $('.company-navbar').val()+'&tokens=true',
+            url:
+                "/api/projects?select=true&company=" +
+                $(".company-navbar").val() +
+                "&tokens=true",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
-                if(!origin)
-                    loadingOnScreenRemove();
+                if (!origin) loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -292,7 +305,7 @@ $(document).ready(function () {
                     $("#project-not-empty").hide();
                 }
                 //if(!origin)
-                    loadingOnScreenRemove();
+                loadingOnScreenRemove();
             },
         });
     }
@@ -412,39 +425,61 @@ $(document).ready(function () {
 
                         $("#modal-achievement-container").append(modal);
 
-                        $(`#modal-achievement-data-${index}`).on("shown.bs.modal", function () {
-                            // $('body').addClass('blurred');
-                            $(`#modal-achievement-data-${index}`).unbind("click");
-                            showConfetti();
-                        });
+                        $(`#modal-achievement-data-${index}`).on(
+                            "shown.bs.modal",
+                            function () {
+                                // $('body').addClass('blurred');
+                                $(`#modal-achievement-data-${index}`).unbind(
+                                    "click"
+                                );
+                                showConfetti();
+                            }
+                        );
 
-                        $(`#modal-achievement-data-${index}`).on("hidden.bs.modal", function () {
-                            $("body").removeClass("blurred");
+                        $(`#modal-achievement-data-${index}`).on(
+                            "hidden.bs.modal",
+                            function () {
+                                $("body").removeClass("blurred");
 
-                            setTimeout(() => {
-                                let totalAchievement = $("[id*=modal-achievement-data-]").length - 1;
+                                setTimeout(() => {
+                                    let totalAchievement =
+                                        $("[id*=modal-achievement-data-]")
+                                            .length - 1;
 
-                                $(`#modal-achievement-data-${totalAchievement}`).modal("show");
-                            }, 500);
-                        });
+                                    $(
+                                        `#modal-achievement-data-${totalAchievement}`
+                                    ).modal("show");
+                                }, 500);
+                            }
+                        );
 
                         $(`#reward-check-data-${index}`).click(() => {
-                            let achievement = $(`#reward-check-data-${index}`).data("achievement");
+                            let achievement = $(
+                                `#reward-check-data-${index}`
+                            ).data("achievement");
 
                             $.ajax({
                                 method: "PUT",
-                                url: "/api/dashboard/update-achievements/" + achievement,
+                                url:
+                                    "/api/dashboard/update-achievements/" +
+                                    achievement,
                                 dataType: "json",
                                 headers: {
-                                    Authorization: $('meta[name="access-token"]').attr("content"),
+                                    Authorization: $(
+                                        'meta[name="access-token"]'
+                                    ).attr("content"),
                                     Accept: "application/json",
                                 },
                                 error: function error(response) {
                                     errorAjaxResponse(response);
-                                    $(`#modal-achievement-data-${index}`).modal("hide");
+                                    $(`#modal-achievement-data-${index}`).modal(
+                                        "hide"
+                                    );
                                 },
                                 success: function success() {
-                                    $(`#modal-achievement-data-${index}`).modal("hide");
+                                    $(`#modal-achievement-data-${index}`).modal(
+                                        "hide"
+                                    );
                                 },
                             });
 
@@ -518,10 +553,14 @@ $(document).ready(function () {
                     $(".pix-onboarding-later").click(() => {
                         $.ajax({
                             method: "PUT",
-                            url: "/api/dashboard/update-pix-onboarding/" + response.onboarding,
+                            url:
+                                "/api/dashboard/update-pix-onboarding/" +
+                                response.onboarding,
                             dataType: "json",
                             headers: {
-                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Authorization: $(
+                                    'meta[name="access-token"]'
+                                ).attr("content"),
                                 Accept: "application/json",
                             },
                             error: function error() {
@@ -538,10 +577,14 @@ $(document).ready(function () {
                     $(".pix-onboarding-finish").click(() => {
                         $.ajax({
                             method: "PUT",
-                            url: "/api/dashboard/update-pix-onboarding/" + response.onboarding,
+                            url:
+                                "/api/dashboard/update-pix-onboarding/" +
+                                response.onboarding,
                             dataType: "json",
                             headers: {
-                                Authorization: $('meta[name="access-token"]').attr("content"),
+                                Authorization: $(
+                                    'meta[name="access-token"]'
+                                ).attr("content"),
                                 Accept: "application/json",
                             },
                             error: function error() {
@@ -549,8 +592,11 @@ $(document).ready(function () {
                             },
                             success: function success() {
                                 $("#modal-pix-onboarding").modal("hide");
-                                if (response.accounts_url.indexOf("http") == -1) {
-                                    response.accounts_url = "//" + response.accounts_url;
+                                if (
+                                    response.accounts_url.indexOf("http") == -1
+                                ) {
+                                    response.accounts_url =
+                                        "//" + response.accounts_url;
                                 }
                                 window.location.href = response.accounts_url;
                             },
@@ -567,12 +613,12 @@ $(document).ready(function () {
         $("#cardWelcome").slideUp("600");
     });
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getProjects();
     });
 
     function putSkeletonLoadingOnBalanceCards() {
-        $(".balances-card > .balance-card-data").hide();
+        $(".balances-card > .balance-card-data").addClass("d-none");
         $(".balances-card > .loading-title").removeClass("d-none");
         $(".balances-card > .loading-content").removeClass("d-none");
     }
@@ -580,11 +626,11 @@ $(document).ready(function () {
     function removeSkeletonLoadingFromBalanceCards() {
         $(".balances-card > .loading-title").addClass("d-none");
         $(".balances-card > .loading-content").addClass("d-none");
-        $(".balances-card > .balance-card-data").show();
+        $(".balances-card > .balance-card-data").removeClass("d-none");
     }
 
     function putSkeletonLoadingOnChart() {
-        $(".chart-data").hide();
+        $(".chart-data").addClass("d-none");
         $(".chart-card > .loading-title").removeClass("d-none");
         $(".chart-card > .loading-content").removeClass("d-none");
         $(".chart-card > .loading-content-inside").removeClass("d-none");
@@ -594,9 +640,6 @@ $(document).ready(function () {
         $(".chart-card > .loading-title").addClass("d-none");
         $(".chart-card > .loading-content").addClass("d-none");
         $(".chart-card > .loading-content-inside").addClass("d-none");
-        $(".chart-data").show();
+        $(".chart-data").removeClass("d-none");
     }
-
-
-
 });
