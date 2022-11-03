@@ -55,10 +55,7 @@ class DashboardApiController extends Controller
             return response()->json(["companies" => $companies]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(
-                ["message" => "Ocorreu um erro, tente novamente mais tarde"],
-                400
-            );
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
         }
     }
 
@@ -71,79 +68,35 @@ class DashboardApiController extends Controller
             $company = Company::find($companyId);
 
             if (empty($company)) {
-                return response()->json(
-                    ["message" => "Ocorreu algum erro"],
-                    400
-                );
+                return response()->json(["message" => "Ocorreu algum erro"], 400);
             }
 
-            $todayBalance = Sale::join(
-                "transactions as t",
-                "t.sale_id",
-                "=",
-                "sales.id"
-            )
+            $todayBalance = Sale::join("transactions as t", "t.sale_id", "=", "sales.id")
                 ->where("t.company_id", $companyId)
                 ->whereDate("sales.end_date", Carbon::today()->toDateString())
                 ->whereIn("t.status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
-                ->whereNull('t.deleted_at')
+                ->whereNull("t.deleted_at")
                 ->sum("t.value");
 
             $companyService = new CompanyBalanceService($company);
             $balancesResume = $companyService->getResumes();
 
-            $availableBalance = array_sum(
-                array_column($balancesResume, "available_balance")
-            );
-            $pendingBalance = array_sum(
-                array_column($balancesResume, "pending_balance")
-            );
-            $blockedBalance = array_sum(
-                array_column($balancesResume, "blocked_balance")
-            );
-            $totalBalance = array_sum(
-                array_column($balancesResume, "total_balance")
-            );
+            $availableBalance = array_sum(array_column($balancesResume, "available_balance"));
+            $pendingBalance = array_sum(array_column($balancesResume, "pending_balance"));
+            $blockedBalance = array_sum(array_column($balancesResume, "blocked_balance"));
+            $totalBalance = array_sum(array_column($balancesResume, "total_balance"));
 
             return response()->json([
-                "available_balance" => number_format(
-                    $availableBalance / 100,
-                    2,
-                    ",",
-                    "."
-                ),
-                "pending_balance" => number_format(
-                    $pendingBalance / 100,
-                    2,
-                    ",",
-                    "."
-                ),
-                "blocked_balance_total" => number_format(
-                    $blockedBalance / 100,
-                    2,
-                    ",",
-                    "."
-                ),
-                "total_balance" => number_format(
-                    $totalBalance / 100,
-                    2,
-                    ",",
-                    "."
-                ),
-                "today_balance" => number_format(
-                    $todayBalance / 100,
-                    2,
-                    ",",
-                    "."
-                ),
+                "available_balance" => number_format($availableBalance / 100, 2, ",", "."),
+                "pending_balance" => number_format($pendingBalance / 100, 2, ",", "."),
+                "blocked_balance_total" => number_format($blockedBalance / 100, 2, ",", "."),
+                "total_balance" => number_format($totalBalance / 100, 2, ",", "."),
+                "today_balance" => number_format($todayBalance / 100, 2, ",", "."),
             ]);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                ["message" => "Ocorreu um erro, tente novamente mais tarde"],
-                400
-            );
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
         }
     }
 
@@ -166,10 +119,7 @@ class DashboardApiController extends Controller
 
             $companyArray = [];
             foreach ($companies as $company) {
-                if (
-                    $company->created_at <= "2020-07-01" &&
-                    $companyService->verifyFieldsEmpty($company)
-                ) {
+                if ($company->created_at <= "2020-07-01" && $companyService->verifyFieldsEmpty($company)) {
                     $companyArray[] = [
                         "id_code" => Hashids::encode($company->id),
                         "fantasy_name" =>
@@ -229,8 +179,7 @@ class DashboardApiController extends Controller
             if (!$request->has("company")) {
                 return response()->json(
                     [
-                        "message" =>
-                            "Ocorreu um erro, tente novamente mais tarde",
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
                     ],
                     400
                 );
@@ -241,10 +190,7 @@ class DashboardApiController extends Controller
             return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(
-                ["message" => "Ocorreu um erro, tente novamente mais tarde"],
-                400
-            );
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
         }
     }
 
@@ -259,13 +205,8 @@ class DashboardApiController extends Controller
 
             return [
                 "level" => $user->level,
-                "achievements" => $achievementService->getCurrentUserAchievements(
-                    $user
-                ),
-                "tasks" =>
-                    $user->level === 1
-                        ? $taskService->getCurrentUserTasks($user)
-                        : [],
+                "achievements" => $achievementService->getCurrentUserAchievements($user),
+                "tasks" => $user->level === 1 ? $taskService->getCurrentUserTasks($user) : [],
                 "billed" => $user->total_commission_value,
                 "money_cashback" => $this->getCashbackReceivedValue(),
                 "benefits" => $benefitService->getUserBenefits($user),
@@ -302,8 +243,7 @@ class DashboardApiController extends Controller
             if (!$request->has("company")) {
                 return response()->json(
                     [
-                        "message" =>
-                            "Ocorreu um erro, tente novamente mais tarde",
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
                     ],
                     400
                 );
@@ -313,10 +253,7 @@ class DashboardApiController extends Controller
             return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(
-                ["message" => "Ocorreu um erro, tente novamente mais tarde"],
-                400
-            );
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
         }
     }
 
@@ -337,22 +274,12 @@ class DashboardApiController extends Controller
 
             return [
                 "level" => $user->level,
-                "account_score" =>
-                    $user->account_score > 1
-                        ? round($user->account_score, 1)
-                        : $user->account_score,
+                "account_score" => $user->account_score > 1 ? round($user->account_score, 1) : $user->account_score,
                 "chargeback_score" =>
-                    $user->chargeback_score > 1
-                        ? round($user->chargeback_score, 1)
-                        : $user->chargeback_score,
+                    $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
                 "attendance_score" =>
-                    $user->attendance_score > 1
-                        ? round($user->attendance_score, 1)
-                        : $user->attendance_score,
-                "tracking_score" =>
-                    $user->tracking_score > 1
-                        ? round($user->tracking_score, 1)
-                        : $user->tracking_score,
+                    $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
+                "tracking_score" => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
             ];
         } catch (Exception $e) {
             report($e);
@@ -367,8 +294,7 @@ class DashboardApiController extends Controller
             if (!$request->has("company")) {
                 return response()->json(
                     [
-                        "message" =>
-                            "Ocorreu um erro, tente novamente mais tarde",
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
                     ],
                     400
                 );
@@ -378,10 +304,7 @@ class DashboardApiController extends Controller
             return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(
-                ["message" => "Ocorreu um erro, tente novamente mais tarde"],
-                400
-            );
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
         }
     }
 
@@ -409,26 +332,14 @@ class DashboardApiController extends Controller
                 ->subDays(20);
 
             $chargebackService = new ChargebackService();
-            $totalContestations = $chargebackService->getTotalContestationsInPeriod(
-                $user,
-                $startDate,
-                $endDate
-            );
+            $totalContestations = $chargebackService->getTotalContestationsInPeriod($user, $startDate, $endDate);
 
             $saleService = new SaleService();
-            $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod(
-                $user,
-                $startDate,
-                $endDate
-            );
-            $contestationsRate = $totalApprovedSales
-                ? round(($totalContestations / $totalApprovedSales) * 100, 2)
-                : 0;
+            $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
+            $contestationsRate = $totalApprovedSales ? round(($totalContestations / $totalApprovedSales) * 100, 2) : 0;
             return [
                 "chargeback_score" =>
-                    $user->chargeback_score > 1
-                        ? round($user->chargeback_score, 1)
-                        : $user->chargeback_score,
+                    $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
                 "chargeback_rate" => $contestationsRate ?? "0.00%",
                 "total_sales_approved" => $totalApprovedSales ?? 0,
                 "total_sales_chargeback" => $totalContestations ?? 0,
@@ -446,8 +357,7 @@ class DashboardApiController extends Controller
             if (!$request->has("company")) {
                 return response()->json(
                     [
-                        "message" =>
-                            "Ocorreu um erro, tente novamente mais tarde",
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
                     ],
                     400
                 );
@@ -457,10 +367,7 @@ class DashboardApiController extends Controller
             return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(
-                ["message" => "Ocorreu um erro, tente novamente mais tarde"],
-                400
-            );
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
         }
     }
 
@@ -502,11 +409,8 @@ class DashboardApiController extends Controller
 
             return [
                 "attendance_score" =>
-                    $user->attendance_score > 1
-                        ? round($user->attendance_score, 1)
-                        : $user->attendance_score,
-                "attendance_average_response_time" =>
-                    $user->attendance_average_response_time,
+                    $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
+                "attendance_average_response_time" => $user->attendance_average_response_time,
                 "total" => $tickets->total,
                 "open" => $tickets->open,
                 "closed" => $tickets->closed,
@@ -525,8 +429,7 @@ class DashboardApiController extends Controller
             if (!$request->has("company")) {
                 return response()->json(
                     [
-                        "message" =>
-                            "Ocorreu um erro, tente novamente mais tarde",
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
                     ],
                     400
                 );
@@ -535,10 +438,7 @@ class DashboardApiController extends Controller
             return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(
-                ["message" => "Ocorreu um erro, tente novamente mais tarde"],
-                400
-            );
+            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
         }
     }
 
@@ -578,51 +478,29 @@ class DashboardApiController extends Controller
                                                ifnull(max(if(t.id is null, timestampdiff(day, s.end_date, now()), 0)), 0) as oldest_sale"
                 )
                 ->join("sales as s", "s.id", "=", "pps.sale_id")
-                ->leftJoin(
-                    "trackings as t",
-                    "t.product_plan_sale_id",
-                    "=",
-                    "pps.id"
-                )
+                ->leftJoin("trackings as t", "t.product_plan_sale_id", "=", "pps.id")
                 ->leftJoin("products as p", "p.id", "=", "pps.product_id")
                 ->where("s.owner_id", $userId)
-                ->where(
-                    "s.status",
-                    $saleModel->present()->getStatus("approved")
-                )
-                ->where(
-                    "p.type_enum",
-                    (new Product())->present()->getType("physical")
-                )
+                ->where("s.status", $saleModel->present()->getStatus("approved"))
+                ->where("p.type_enum", (new Product())->present()->getType("physical"))
                 ->first();
 
             $trackingsInfo->unknown_percentage = $trackingsInfo->total
-                ? number_format(
-                    ($trackingsInfo->unknown / $trackingsInfo->total) * 100,
-                    2
-                )
+                ? number_format(($trackingsInfo->unknown / $trackingsInfo->total) * 100, 2)
                 : "0.00";
             $trackingsInfo->problem_percentage = $trackingsInfo->total
-                ? number_format(
-                    ($trackingsInfo->problem / $trackingsInfo->total) * 100,
-                    2
-                )
+                ? number_format(($trackingsInfo->problem / $trackingsInfo->total) * 100, 2)
                 : "0.00";
 
             return [
-                "tracking_score" =>
-                    $user->tracking_score > 1
-                        ? round($user->tracking_score, 1)
-                        : $user->tracking_score,
+                "tracking_score" => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
                 "average_post_time" => $trackingsInfo->average_post_time,
                 //'oldest_sale'        => $trackingsInfo->oldest_sale,
                 "problem" => $trackingsInfo->problem,
                 "problem_percentage" => $trackingsInfo->problem_percentage,
                 "unknown" => $trackingsInfo->unknown,
                 "unknown_percentage" => $trackingsInfo->unknown_percentage,
-                "tracking_today" => TrackingService::getTrackingToday(
-                    $user
-                )->count(),
+                "tracking_today" => TrackingService::getTrackingToday($user)->count(),
                 //'trackings'          => $trackingsInfo,
             ];
         } catch (Exception $e) {
@@ -657,16 +535,11 @@ class DashboardApiController extends Controller
                 "user_id" => $user->id,
                 "read_at" => null,
             ])
-                ->whereIn("subject_type", [
-                    UpdateUserLevel::class,
-                    UpdateUserAchievements::class,
-                ])
+                ->whereIn("subject_type", [UpdateUserLevel::class, UpdateUserAchievements::class])
                 ->get(["id", "subject_id", "subject_type"]);
 
             if (!empty($dashboardNotifications)) {
-                return DashboardAchievementsResource::collection(
-                    $dashboardNotifications
-                );
+                return DashboardAchievementsResource::collection($dashboardNotifications);
             }
 
             return \response()->json([
@@ -723,10 +596,7 @@ class DashboardApiController extends Controller
     public function verifyPixOnboarding()
     {
         try {
-            if (
-                !empty(request()->cookie("isManagerUser")) ||
-                Agent::isMobile()
-            ) {
+            if (!empty(request()->cookie("isManagerUser")) || Agent::isMobile()) {
                 return \response()->json(
                     [
                         "message" => "Onboarding já lido",
@@ -742,8 +612,7 @@ class DashboardApiController extends Controller
             $notfication = DashboardNotification::firstOrCreate([
                 "user_id" => $user->id,
                 "subject_id" => 1,
-                "subject_type" =>
-                    DashboardApiController::class . "/verifyPixOnboarding",
+                "subject_type" => DashboardApiController::class . "/verifyPixOnboarding",
             ]);
 
             if (!empty($notfication->read_at)) {
@@ -762,12 +631,7 @@ class DashboardApiController extends Controller
                     ->addMinute()
                     ->unix()
             );
-            $urlAuth =
-                env("ACCOUNT_FRONT_URL") .
-                "/redirect/" .
-                $userId .
-                "/" .
-                (string) $expiration;
+            $urlAuth = env("ACCOUNT_FRONT_URL") . "/redirect/" . $userId . "/" . (string) $expiration;
 
             return \response()->json(
                 [
@@ -822,35 +686,26 @@ class DashboardApiController extends Controller
     {
         try {
             $user = auth()->user();
+            $cloudfox = explode("cloudfox.net", $user->email);
+            if (count($cloudfox) == 2) {
+                return \response()->json(["message" => false], Response::HTTP_OK);
+            }
+
             if ($user->company_default == Company::DEMO_ID) {
                 Config::set("database.default", "mysql");
             }
             $userTermV2 = UserTerms::where([
-                "user_id" => auth()->user()->account_owner_id,
+                "user_id" => auth()->user()->id,
                 "term_version" => "v2",
             ])->first();
 
             if ($user->company_default == Company::DEMO_ID) {
                 Config::set("database.default", "demo");
             }
-
-            if (
-                empty($userTermV2) &&
-                auth()->user()->account_owner_id == auth()->user()->id
-            ) {
-                return \response()->json(
-                    [
-                        "message" => true,
-                    ],
-                    Response::HTTP_OK
-                );
+            if (empty($userTermV2)) {
+                return \response()->json(["message" => true], Response::HTTP_OK);
             } else {
-                return \response()->json(
-                    [
-                        "message" => false,
-                    ],
-                    Response::HTTP_OK
-                );
+                return \response()->json(["message" => false], Response::HTTP_OK);
             }
         } catch (Exception $exception) {
             $user = auth()->user();
@@ -858,12 +713,7 @@ class DashboardApiController extends Controller
                 Config::set("database.default", "demo");
             }
             report($exception);
-            return \response()->json(
-                [
-                    "message" => "Ocorreu um erro",
-                ],
-                Response::HTTP_BAD_REQUEST
-            );
+            return \response()->json(["message" => "Ocorreu um erro"], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -872,12 +722,17 @@ class DashboardApiController extends Controller
         try {
             $user = auth()->user();
 
+            $cloudfox = explode("cloudfox.net", $user->email);
+            if (count($cloudfox) == 2) {
+                return \response()->json(["message" => true], Response::HTTP_OK);
+            }
+
             if ($user->company_default == Company::DEMO_ID) {
                 Config::set("database.default", "mysql");
             }
 
             $userTermV2 = UserTerms::where([
-                "user_id" => auth()->user()->account_owner_id,
+                "user_id" => auth()->user()->id,
                 "term_version" => "v2",
             ])->first();
 
@@ -894,9 +749,7 @@ class DashboardApiController extends Controller
 
                 $deviceData = [
                     "operational_system" => Agent::platform(),
-                    "operation_system_version" => Agent::version(
-                        $operationalSystem
-                    ),
+                    "operation_system_version" => Agent::version($operationalSystem),
                     "browser" => Agent::browser(),
                     "browser_version" => Agent::version($browser),
                     "is_mobile" => Agent::isMobile(),
@@ -913,7 +766,7 @@ class DashboardApiController extends Controller
 
                 $userTermV2 = new UserTerms();
                 $userTermsCreated = $userTermV2->create([
-                    "user_id" => auth()->user()->account_owner_id,
+                    "user_id" => auth()->user()->id,
                     "term_version" => "v2",
                     "device_data" => json_encode($deviceData),
                     "accepted_at" => Carbon::now(),
@@ -924,20 +777,9 @@ class DashboardApiController extends Controller
                 }
 
                 if ($userTermsCreated) {
-                    return \response()->json(
-                        [
-                            "message" => true,
-                        ],
-                        Response::HTTP_OK
-                    ); // Salvo com Sucesso
+                    return \response()->json(["message" => true], Response::HTTP_OK); // Salvo com Sucesso
                 }
-
-                return \response()->json(
-                    [
-                        "message" => false,
-                    ],
-                    Response::HTTP_OK
-                );
+                return \response()->json(["message" => false], Response::HTTP_OK);
             }
         } catch (Exception $exception) {
             $user = auth()->user();
@@ -947,10 +789,7 @@ class DashboardApiController extends Controller
 
             report($exception);
             return \response()->json(
-                [
-                    "message" =>
-                        "Ocorreu um erro => " . $exception->getMessage(),
-                ],
+                ["message" => "Ocorreu um erro => " . $exception->getMessage()],
                 Response::HTTP_BAD_REQUEST
             );
         }
