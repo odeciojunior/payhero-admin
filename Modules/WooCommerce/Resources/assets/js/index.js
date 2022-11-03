@@ -4,7 +4,9 @@ $(document).ready(function () {
         updateCompanyDefault().done(function (data1) {
             getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2;
-                $(".company_name").val(companiesAndProjects.company_default_fullname);
+                $(".company_name").val(
+                    companiesAndProjects.company_default_fullname
+                );
                 $("#company-navbar-value").val($(".company-navbar").val());
                 location.reload();
             });
@@ -61,7 +63,10 @@ $(document).ready(function () {
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
             $("#btn-integration-model").show();
-            $("#button-information").show().addClass("d-flex").css("display", "flex");
+            $("#button-information")
+                .show()
+                .addClass("d-flex")
+                .css("display", "flex");
         }
         loadingOnScreenRemove();
     }
@@ -97,12 +102,18 @@ $(document).ready(function () {
                 $(data).each(function (index, data) {
                     $("#content").append(`
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                            <div class="card shadow card-edit" project="${data.id}" >
+                            <div class="card shadow card-edit" project="${
+                                data.id
+                            }" >
 
 
                             <svg
                             class="open-cfg" app="${data.id}"
-                            data-img="${!data.project_photo ? "/build/global/img/produto.svg" : data.project_photo}"
+                            data-img="${
+                                !data.project_photo
+                                    ? "/build/global/img/produto.svg"
+                                    : data.project_photo
+                            }"
                             data-name="${data.project_name}"
                             style="position:absolute; top:8px; right:8px; cursor:pointer"
                             width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -119,17 +130,23 @@ $(document).ready(function () {
                                 <title>Configurações da Integração</title>
                             </svg>
 
-                            <div class="d-flex align-items-center justify-content-center" style="height:290px" >
+                            <div class="d-flex align-items-center justify-content-center"   >
                             <img class="card-img-top img-fluid w-full" src="${
-                                !data.project_photo ? "/build/global/img/produto.svg" : data.project_photo
+                                !data.project_photo
+                                    ? "/build/global/img/produto.svg"
+                                    : data.project_photo
                             }"  alt="Photo Project"/>
                             </div>
 
                             <div class="card-body">
                                     <div class='row'>
                                         <div class='col-md-12'>
-                                            <h4 class="card-title">${data.project_name}</h4>
-                                            <p class="card-text sm">Criado em ${data.created_at}</p>
+                                            <h4 class="card-title">${
+                                                data.project_name
+                                            }</h4>
+                                            <p class="card-text sm">Criado em ${
+                                                data.created_at
+                                            }</p>
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +175,9 @@ $(document).ready(function () {
         $(data).each(function (index, company) {
             if (companyIsApproved(company)) {
                 companyApproved = companyApproved + 1;
-                $("#select_companies").append(`<option value=${company.id}> ${company.name}</option>`);
+                $("#select_companies").append(
+                    `<option value=${company.id}> ${company.name}</option>`
+                );
             }
         });
 
@@ -185,7 +204,11 @@ $(document).ready(function () {
     });
 
     $("#bt_integration").on("click", function () {
-        if ($("#token").val() == "" || $("#url_store").val() == "" || $("#company").val() == "") {
+        if (
+            $("#token").val() == "" ||
+            $("#url_store").val() == "" ||
+            $("#company").val() == ""
+        ) {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
@@ -194,10 +217,15 @@ $(document).ready(function () {
     });
 
     function saveIntegration() {
-        let form_data = new FormData(document.getElementById("form_add_integration"));
+        let form_data = new FormData(
+            document.getElementById("form_add_integration")
+        );
 
         if (!form_data.get("company").length > 0) {
-            alertCustom("error", "A empresa precisa estar aprovada transacionar para realizar a integração! ");
+            alertCustom(
+                "error",
+                "A empresa precisa estar aprovada transacionar para realizar a integração! "
+            );
             return false;
         }
 
@@ -266,8 +294,14 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 if (response.status) {
-                    $("#consumer-k").attr("placeholder", response.consumer_k + "...");
-                    $("#consumer-s").attr("placeholder", response.consumer_s + "...");
+                    $("#consumer-k").attr(
+                        "placeholder",
+                        response.consumer_k + "..."
+                    );
+                    $("#consumer-s").attr(
+                        "placeholder",
+                        response.consumer_s + "..."
+                    );
                 }
             },
         });
@@ -278,13 +312,19 @@ $(document).ready(function () {
         var consumer_secret = $("#consumer-s").val();
 
         if (!consumer_key || !consumer_secret) {
-            alertCustom("error", "Informe os novos valores das chaves de acesso!");
+            alertCustom(
+                "error",
+                "Informe os novos valores das chaves de acesso!"
+            );
             return false;
         }
 
         $.ajax({
             method: "POST",
-            data: { consumer_key: consumer_key, consumer_secret: consumer_secret },
+            data: {
+                consumer_key: consumer_key,
+                consumer_secret: consumer_secret,
+            },
             url: "/api/apps/woocommerce/keys/update?projectId=" + projectId,
             dataType: "json",
             headers: {
@@ -301,7 +341,10 @@ $(document).ready(function () {
                 $("#close-modal").click();
 
                 if (r.status == true) {
-                    alertCustom("success", "Chaves de acesso atualizadas com sucesso!");
+                    alertCustom(
+                        "success",
+                        "Chaves de acesso atualizadas com sucesso!"
+                    );
                 } else {
                     alertCustom("error", "Erro ao atualizar as chaves!");
                 }
@@ -345,7 +388,10 @@ $(document).ready(function () {
         track = false;
         webhook = false;
 
-        toggle_confirm("Produtos", "A sincronização pode demorar algumas horas.");
+        toggle_confirm(
+            "Produtos",
+            "A sincronização pode demorar algumas horas."
+        );
     });
 
     $(".sync-tracking").click(function () {
@@ -353,7 +399,10 @@ $(document).ready(function () {
         track = true;
         webhook = false;
 
-        toggle_confirm("Rastreios", "A sincronização pode demorar algumas horas.");
+        toggle_confirm(
+            "Rastreios",
+            "A sincronização pode demorar algumas horas."
+        );
     });
 
     $("#bt-confirm").on("click", function () {
@@ -372,7 +421,10 @@ $(document).ready(function () {
         track = false;
         webhook = true;
 
-        toggle_confirm("Webhooks", "A sincronização pode demorar algumas horas.");
+        toggle_confirm(
+            "Webhooks",
+            "A sincronização pode demorar algumas horas."
+        );
     });
 
     function toggle_confirm(name, desc) {
@@ -382,7 +434,9 @@ $(document).ready(function () {
         function fill() {
             $("#sync-name").html(name);
             if (desc) {
-                $("#sync-desc").html('<div style="padding:2px 0">' + desc + "</div>");
+                $("#sync-desc").html(
+                    '<div style="padding:2px 0">' + desc + "</div>"
+                );
             } else {
                 $("#sync-desc").html("");
             }
@@ -406,7 +460,9 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             data: data,
-            url: "/api/apps/woocommerce/synchronize/products?projectId=" + projectId,
+            url:
+                "/api/apps/woocommerce/synchronize/products?projectId=" +
+                projectId,
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -417,9 +473,15 @@ $(document).ready(function () {
             },
             success: function success(r) {
                 if (r.status == true) {
-                    alertCustom("success", "Sincronização de dados foi iniciada!");
+                    alertCustom(
+                        "success",
+                        "Sincronização de dados foi iniciada!"
+                    );
                 } else {
-                    alertCustom("error", "Já existe uma sincronização de dados em andamento!");
+                    alertCustom(
+                        "error",
+                        "Já existe uma sincronização de dados em andamento!"
+                    );
                 }
             },
         });
