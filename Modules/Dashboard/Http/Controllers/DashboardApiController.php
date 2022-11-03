@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Facades\Agent;
@@ -823,10 +824,18 @@ class DashboardApiController extends Controller
     {
         try {
             $user = auth()->user();
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "mysql");
+            }
             $userTermV2 = UserTerms::where([
                 "user_id" => auth()->user()->account_owner_id,
                 "term_version" => "v2",
             ])->first();
+
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "demo");
+            }
+
             if (
                 empty($userTermV2) &&
                 auth()->user()->account_owner_id == auth()->user()->id
@@ -846,6 +855,10 @@ class DashboardApiController extends Controller
                 );
             }
         } catch (Exception $exception) {
+            $user = auth()->user();
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "demo");
+            }
             report($exception);
             return \response()->json(
                 [
@@ -860,6 +873,11 @@ class DashboardApiController extends Controller
     {
         try {
             $user = auth()->user();
+
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "mysql");
+            }
+
             $userTermV2 = UserTerms::where([
                 "user_id" => auth()->user()->account_owner_id,
                 "term_version" => "v2",
@@ -903,6 +921,10 @@ class DashboardApiController extends Controller
                     "accepted_at" => Carbon::now(),
                 ]);
 
+                if ($user->company_default == Company::DEMO_ID) {
+                    Config::set("database.default", "demo");
+                }
+
                 if ($userTermsCreated) {
                     return \response()->json(
                         [
@@ -920,10 +942,16 @@ class DashboardApiController extends Controller
                 );
             }
         } catch (Exception $exception) {
+            $user = auth()->user();
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "demo");
+            }
+
             report($exception);
             return \response()->json(
                 [
-                    "message" => "Ocorreu um erro",
+                    "message" =>
+                        "Ocorreu um erro => " . $exception->getMessage(),
                 ],
                 Response::HTTP_BAD_REQUEST
             );
