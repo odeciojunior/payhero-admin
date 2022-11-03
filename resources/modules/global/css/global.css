@@ -801,11 +801,23 @@ img.border-icon {
 
 .modal-plans .btn-delete * {
     color: #f41c1c;
+    fill: #f41c1c;
 }
 
 .modal-plans .btn-edit {
     background-color: #f4f4f4;
     border: 1px solid #f4f4f4;
+}
+
+.modal-plans .btn-trash-custom {
+    padding: 0;
+}
+
+.modal-plans .btn-trash-custom:not(:disabled):hover {
+    background: #f41c1c;
+}
+.modal-plans .btn-trash-custom:not(:disabled):hover * {
+    fill: #fff;
 }
 
 .modal-plans .btn-edit svg path {

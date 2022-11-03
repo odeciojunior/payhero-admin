@@ -85,10 +85,8 @@ class DashboardApiController extends Controller
             )
                 ->where("t.company_id", $companyId)
                 ->whereDate("sales.end_date", Carbon::today()->toDateString())
-                ->whereIn("t.status_enum", [
-                    Transaction::STATUS_PAID,
-                    Transaction::STATUS_TRANSFERRED,
-                ])
+                ->whereIn("t.status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
+                ->whereNull('t.deleted_at')
                 ->sum("t.value");
 
             $companyService = new CompanyBalanceService($company);

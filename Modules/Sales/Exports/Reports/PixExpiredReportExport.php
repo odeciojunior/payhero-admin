@@ -211,7 +211,7 @@ class PixExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSize,
                 "utm_campaign" => $sale->checkout->utm_campaign ?? "",
                 "utm_term" => $sale->checkout->utm_term ?? "",
                 "utm_content" => $sale->checkout->utm_content ?? "",
-                "link" => $sale->checkout->present()->getCheckoutLink($sale->project->domains->first()),
+                "link" => $sale->checkout->present()->getCheckoutLink($sale->project->domains->first(), $this->user->company_default),
                 "whatsapp_link" =>
                     "https://api.whatsapp.com/send?phone=+55" .
                     preg_replace("/[^0-9]/", "", $sale->customer->telephone) .

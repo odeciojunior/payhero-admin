@@ -51,6 +51,13 @@ class AccountApprovedService
                 DB::table("users")
                     ->where("id", $user->id)
                     ->update(["account_is_approved" => true]);
+
+                if (FoxUtils::isProduction()) {
+                    PipefyMoveCardPhaseJob::dispatch(
+                        $user,
+                        PipefyService::PHASE_ACTIVE
+                    );
+                }
             }
 
             if (FoxUtils::isProduction()) {
