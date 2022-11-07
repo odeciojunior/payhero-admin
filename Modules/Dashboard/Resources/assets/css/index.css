@@ -45,3 +45,73 @@
     border-radius: 4px;
     background-color: #e8eefe;
 }
+
+.modal-terms-cloudfox {
+    width: 474px;
+    height: 361px;
+    margin: 0 auto;
+    font-size: 14px;
+    color: #5b5b5b;
+}
+
+.modal-terms {
+    background: #f4f6fb;
+    display: flex;
+}
+
+.modal-title {
+    color: #636363;
+    padding-top: 10px;
+    font-size: 18px;
+}
+
+.text-modal {
+    font-size: 14px;
+    line-height: 24px;
+    color: #5b5b5b;
+}
+
+.button-modal-term {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+    padding: 0 16px;
+}
+
+.border-top {
+    border-top: 1px solid #f4f6fb;
+}
+
+.button-accept {
+    width: 82px;
+    height: 41px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.icon-modal-term {
+    background: url("/build/global/img/icon-term-modal.svg") no-repeat;
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.text-modal-term {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 48px;
+    padding-left: 15px;
+}
+
+.icon-vetctor-modal-term {
+    background: url("/build/global/img/icon-vector-term-modal.svg") no-repeat;
+    width: 16px;
+    height: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}

@@ -10,14 +10,15 @@
 
     <div class="page dashboard">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
         @include('dashboard::achievement-details')
         @include('dashboard::onboarding.presentation')
 
         <div class="page-header container mb-15 mb-sm-0">
 
-            <div class="row align-items-center justify-content-between" style="min-height:50px">
+            <div class="row align-items-center justify-content-between"
+                 style="min-height:50px">
                 <div class="col-lg-6 mb-25">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
@@ -44,7 +45,8 @@
                                     <div class="card-body font-size-24 d-flex align-items-topline">
                                         <div class="card-text d-flex align-items-center">
                                             <span class="moeda">R$</span>
-                                            <span id="today_money" class="text-money"></span>
+                                            <span id="today_money"
+                                                  class="text-money"></span>
                                         </div>
                                     </div>
                                     <div class="s-border-right purple"></div>
@@ -57,7 +59,7 @@
                                 <div class="skeleton-loading loading-content"></div>
                                 <div class="balance-card-data d-none">
                                     <div
-                                        class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                                         class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600">
                                             <span class="card-desc">Pendente</span>
                                         </div>
@@ -79,7 +81,7 @@
                                 <div class="skeleton-loading loading-content"></div>
                                 <div class="balance-card-data d-none">
                                     <div
-                                        class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                                         class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600">
                                             <span class="card-desc"
                                                   id="title_available_money"></span>
@@ -102,7 +104,7 @@
                                 <div class="skeleton-loading loading-content"></div>
                                 <div class="balance-card-data d-none">
                                     <div
-                                        class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                                         class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600 mr-auto">
                                             <span class="card-desc">Total</span>
                                         </div>
@@ -130,7 +132,7 @@
 
                                 <div class="chart-data d-none">
                                     <div
-                                        class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                                         class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600">
                                             <span class="card-desc">Vendas nos últimos 30 dias</span>
                                         </div>
@@ -226,6 +228,60 @@
             </div>
         </div>
         @include('projects::empty')
+    </div>
+
+    <!-- Modal User Term v2 -->
+    <div class="modal fade modal-fade-in-scale-up"
+         id="termsModal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myLargeModalLabel"
+         aria-hidden="true"
+         data-keyboard="false"
+         data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-simple"
+             role="document">
+            <div class="modal-content modal-terms-cloudfox">
+                <div class="modal-header p-0 pt-15 pl-15 pb-15">
+                    <span class="modal-title p-0"
+                          id="exampleModalLabel">
+                        <strong>Termos de uso Cloudfox atualizados</strong>
+                    </span>
+                </div>
+                <hr style="margin-top: 0%; color: #F4F6FB; height: 1px">
+                <div class="modal-body p-0">
+
+                    <div class="row form-group col-md-12 pl-15 pr-15 m-0 pb-20 text-modal">
+                        Atualizamos recentemente os Termos de Uso da nossa plataforma e produtos. Para continuar
+                        utilizando os serviços Cloudfox é necessario ler e estar de acordo com o termo.
+                    </div>
+
+                    <div class="modal-terms">
+                        <a href="//cloudfox.net/use-terms-and-privacy-policy.html"
+                           target="_blank"
+                           class="button-modal-term">
+                            <span>
+                                <span class="icon-modal-term"></span>
+                                <span class="text-modal-term">Veja o documento aqui</span>
+                            </span>
+                            <span class="icon-vetctor-modal-term"></span>
+                        </a>
+                    </div>
+                    <br>
+                    <span class="pl-15">
+                        <input id="terms-cloudfox"
+                               type="checkbox"><span class="pl-2">Li e estou de acordo.</span>
+                    </span>
+
+                </div>
+                <div class="modal-footer border-top mt-20 mb-20 pt-15 justify-content-center"
+                     id="accept-term">
+                    <button type="button"
+                            class="btn btn-primary button-accept">Aceitar
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     @push('scripts')

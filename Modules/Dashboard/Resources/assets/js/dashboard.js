@@ -61,6 +61,31 @@ $(document).ready(function () {
         });
     };
 
+    verifyUserTerms();
+    $("#terms-cloudfox").click(function () {
+        $("#accept-term").toggle();
+    });
+
+    $("#accept-term").click(function () {
+        $.ajax({
+            method: "PUT",
+            url: "/api/dashboard/update-user-terms",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (response.message) {
+                    $("#termsModal").modal("toggle");
+                }
+            },
+        });
+    });
+
     function getChart(chartData) {
         let haveData = 0;
 
@@ -97,18 +122,17 @@ $(document).ready(function () {
                                 },
                             },
                             axisY: {
-                                labelInterpolationFnc:
-                                    function labelInterpolationFnc(value) {
-                                        let str = parseInt(value);
+                                labelInterpolationFnc: function labelInterpolationFnc(value) {
+                                    let str = parseInt(value);
 
-                                        if (str > 0) {
-                                            str = str / 1e3 + "K";
-                                        } else {
-                                            str = "0.00";
-                                        }
+                                    if (str > 0) {
+                                        str = str / 1e3 + "K";
+                                    } else {
+                                        str = "0.00";
+                                    }
 
-                                        return str;
-                                    },
+                                    return str;
+                                },
                                 scaleMinSpace: 40,
                             },
                             low: 0,
@@ -117,9 +141,7 @@ $(document).ready(function () {
                     );
                     scoreChart
                         .on("created", function (data) {
-                            var defs =
-                                    data.svg.querySelector("defs") ||
-                                    data.svg.elem("defs"),
+                            var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
                                 filter =
                                     (data.svg.width(),
                                     data.svg.height(),
@@ -156,9 +178,7 @@ $(document).ready(function () {
                                       filter: "url(#shadow" + id + ")",
                                   })
                                 : "point" === data.type &&
-                                  new Chartist.Svg(
-                                      data.element._node.parentNode
-                                  ).elem("line", {
+                                  new Chartist.Svg(data.element._node.parentNode).elem("line", {
                                       x1: data.x,
                                       y1: data.y,
                                       x2: data.x + 0.01,
@@ -173,14 +193,10 @@ $(document).ready(function () {
                                             from: data.path
                                                 .clone()
                                                 .scale(1, 0)
-                                                .translate(
-                                                    0,
-                                                    data.chartRect.height()
-                                                )
+                                                .translate(0, data.chartRect.height())
                                                 .stringify(),
                                             to: data.path.clone().stringify(),
-                                            easing: Chartist.Svg.Easing
-                                                .easeOutQuint,
+                                            easing: Chartist.Svg.Easing.easeOutQuint,
                                         },
                                     });
                         });
@@ -255,19 +271,12 @@ $(document).ready(function () {
                 $("#total_sales_approved").text(data.total_sales_approved);
                 $("#total_sales_chargeback").text(data.total_sales_chargeback);
 
-                let $titleAvailableMoney =
-                    onlyNumbers(data.available_balance) > 0
-                        ? "Disponível"
-                        : "Saldo Atual";
+                let $titleAvailableMoney = onlyNumbers(data.available_balance) > 0 ? "Disponível" : "Saldo Atual";
                 $("#title_available_money").html($titleAvailableMoney);
 
-                let title =
-                    "Valor incluindo o saldo retido de R$ " +
-                    data.blocked_balance_total;
+                let title = "Valor incluindo o saldo retido de R$ " + data.blocked_balance_total;
 
-                $("#info-total-balance")
-                    .attr("title", title)
-                    .tooltip({ placement: "bottom" });
+                $("#info-total-balance").attr("title", title).tooltip({ placement: "bottom" });
 
                 removeSkeletonLoadingFromBalanceCards();
             },
@@ -282,10 +291,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url:
-                "/api/projects?select=true&company=" +
-                $(".company-navbar").val() +
-                "&tokens=true",
+            url: "/api/projects?select=true&company=" + $(".company-navbar").val() + "&tokens=true",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -425,61 +431,39 @@ $(document).ready(function () {
 
                         $("#modal-achievement-container").append(modal);
 
-                        $(`#modal-achievement-data-${index}`).on(
-                            "shown.bs.modal",
-                            function () {
-                                // $('body').addClass('blurred');
-                                $(`#modal-achievement-data-${index}`).unbind(
-                                    "click"
-                                );
-                                showConfetti();
-                            }
-                        );
+                        $(`#modal-achievement-data-${index}`).on("shown.bs.modal", function () {
+                            // $('body').addClass('blurred');
+                            $(`#modal-achievement-data-${index}`).unbind("click");
+                            showConfetti();
+                        });
 
-                        $(`#modal-achievement-data-${index}`).on(
-                            "hidden.bs.modal",
-                            function () {
-                                $("body").removeClass("blurred");
+                        $(`#modal-achievement-data-${index}`).on("hidden.bs.modal", function () {
+                            $("body").removeClass("blurred");
 
-                                setTimeout(() => {
-                                    let totalAchievement =
-                                        $("[id*=modal-achievement-data-]")
-                                            .length - 1;
+                            setTimeout(() => {
+                                let totalAchievement = $("[id*=modal-achievement-data-]").length - 1;
 
-                                    $(
-                                        `#modal-achievement-data-${totalAchievement}`
-                                    ).modal("show");
-                                }, 500);
-                            }
-                        );
+                                $(`#modal-achievement-data-${totalAchievement}`).modal("show");
+                            }, 500);
+                        });
 
                         $(`#reward-check-data-${index}`).click(() => {
-                            let achievement = $(
-                                `#reward-check-data-${index}`
-                            ).data("achievement");
+                            let achievement = $(`#reward-check-data-${index}`).data("achievement");
 
                             $.ajax({
                                 method: "PUT",
-                                url:
-                                    "/api/dashboard/update-achievements/" +
-                                    achievement,
+                                url: "/api/dashboard/update-achievements/" + achievement,
                                 dataType: "json",
                                 headers: {
-                                    Authorization: $(
-                                        'meta[name="access-token"]'
-                                    ).attr("content"),
+                                    Authorization: $('meta[name="access-token"]').attr("content"),
                                     Accept: "application/json",
                                 },
                                 error: function error(response) {
                                     errorAjaxResponse(response);
-                                    $(`#modal-achievement-data-${index}`).modal(
-                                        "hide"
-                                    );
+                                    $(`#modal-achievement-data-${index}`).modal("hide");
                                 },
                                 success: function success() {
-                                    $(`#modal-achievement-data-${index}`).modal(
-                                        "hide"
-                                    );
+                                    $(`#modal-achievement-data-${index}`).modal("hide");
                                 },
                             });
 
@@ -553,14 +537,10 @@ $(document).ready(function () {
                     $(".pix-onboarding-later").click(() => {
                         $.ajax({
                             method: "PUT",
-                            url:
-                                "/api/dashboard/update-pix-onboarding/" +
-                                response.onboarding,
+                            url: "/api/dashboard/update-pix-onboarding/" + response.onboarding,
                             dataType: "json",
                             headers: {
-                                Authorization: $(
-                                    'meta[name="access-token"]'
-                                ).attr("content"),
+                                Authorization: $('meta[name="access-token"]').attr("content"),
                                 Accept: "application/json",
                             },
                             error: function error() {
@@ -577,14 +557,10 @@ $(document).ready(function () {
                     $(".pix-onboarding-finish").click(() => {
                         $.ajax({
                             method: "PUT",
-                            url:
-                                "/api/dashboard/update-pix-onboarding/" +
-                                response.onboarding,
+                            url: "/api/dashboard/update-pix-onboarding/" + response.onboarding,
                             dataType: "json",
                             headers: {
-                                Authorization: $(
-                                    'meta[name="access-token"]'
-                                ).attr("content"),
+                                Authorization: $('meta[name="access-token"]').attr("content"),
                                 Accept: "application/json",
                             },
                             error: function error() {
@@ -592,11 +568,8 @@ $(document).ready(function () {
                             },
                             success: function success() {
                                 $("#modal-pix-onboarding").modal("hide");
-                                if (
-                                    response.accounts_url.indexOf("http") == -1
-                                ) {
-                                    response.accounts_url =
-                                        "//" + response.accounts_url;
+                                if (response.accounts_url.indexOf("http") == -1) {
+                                    response.accounts_url = "//" + response.accounts_url;
                                 }
                                 window.location.href = response.accounts_url;
                             },
@@ -604,6 +577,27 @@ $(document).ready(function () {
                     });
                 } else {
                     verifyAchievements();
+                }
+            },
+        });
+    }
+
+    function verifyUserTerms() {
+        $("#accept-term").hide();
+        $.ajax({
+            method: "GET",
+            url: "/api/dashboard/verify-user-terms",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (response.message) {
+                    $("#termsModal").modal("show");
                 }
             },
         });
