@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Facades\Agent;
@@ -19,11 +20,13 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\IpService;
 use Modules\Core\Services\Reports\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
@@ -38,9 +41,15 @@ class DashboardApiController extends Controller
     public function index()
     {
         try {
-            $companies = Company::where('user_id', auth()->user()->getAccountOwnerId())
-                    ->where('active_flag', true)
-                    ->orderBy('order_priority')
+            $companies =
+                Company::where(
+                    "user_id",
+                    auth()
+                        ->user()
+                        ->getAccountOwnerId()
+                )
+                    ->where("active_flag", true)
+                    ->orderBy("order_priority")
                     ->get() ?? collect();
 
             return response()->json(["companies" => $companies]);
@@ -53,7 +62,9 @@ class DashboardApiController extends Controller
     public function getValues(Request $request)
     {
         try {
-            $companyId = !empty($request->company_id) ? hashids_decode($request->company_id): auth()->user()->company_default;
+            $companyId = !empty($request->company_id)
+                ? hashids_decode($request->company_id)
+                : auth()->user()->company_default;
             $company = Company::find($companyId);
 
             if (empty($company)) {
@@ -64,7 +75,7 @@ class DashboardApiController extends Controller
                 ->where("t.company_id", $companyId)
                 ->whereDate("sales.end_date", Carbon::today()->toDateString())
                 ->whereIn("t.status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
-                ->whereNull('t.deleted_at')
+                ->whereNull("t.deleted_at")
                 ->sum("t.value");
 
             $companyService = new CompanyBalanceService($company);
@@ -166,7 +177,12 @@ class DashboardApiController extends Controller
     {
         try {
             if (!$request->has("company")) {
-                return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
+                    ],
+                    400
+                );
             }
 
             $values = $this->getDataPerformance($request->company);
@@ -195,7 +211,6 @@ class DashboardApiController extends Controller
                 "money_cashback" => $this->getCashbackReceivedValue(),
                 "benefits" => $benefitService->getUserBenefits($user),
             ];
-
         } catch (Exception $e) {
             report($e);
         } catch (Exception $e) {
@@ -205,11 +220,33 @@ class DashboardApiController extends Controller
         }
     }
 
+    function getCashbackReceivedValue()
+    {
+        return number_format(
+            intval(
+                Cashback::where(
+                    "user_id",
+                    auth()
+                        ->user()
+                        ->getAccountOwnerId()
+                )->sum("value")
+            ) / 100,
+            2,
+            ",",
+            "."
+        );
+    }
+
     public function getAccountHealth(Request $request)
     {
         try {
             if (!$request->has("company")) {
-                return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
+                    ],
+                    400
+                );
             }
             $values = $this->getDataAccountHealth($request->company);
 
@@ -255,7 +292,12 @@ class DashboardApiController extends Controller
     {
         try {
             if (!$request->has("company")) {
-                return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
+                    ],
+                    400
+                );
             }
 
             $values = $this->getDataAccountChargeback($request->company);
@@ -313,7 +355,12 @@ class DashboardApiController extends Controller
     {
         try {
             if (!$request->has("company")) {
-                return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
+                    ],
+                    400
+                );
             }
             $values = $this->getDataAccountAttendance($request->company);
 
@@ -380,7 +427,12 @@ class DashboardApiController extends Controller
     {
         try {
             if (!$request->has("company")) {
-                return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde"], 400);
+                return response()->json(
+                    [
+                        "message" => "Ocorreu um erro, tente novamente mais tarde",
+                    ],
+                    400
+                );
             }
             $values = $this->getDataAccountTracking($request->company);
             return response()->json($values, 200);
@@ -458,11 +510,6 @@ class DashboardApiController extends Controller
         }
     }
 
-    function getCashbackReceivedValue()
-    {
-        return number_format(intval(Cashback::where('user_id', auth()->user()->getAccountOwnerId())->sum('value')) / 100, 2, ',', '.');
-    }
-
     public function getAchievements()
     {
         try {
@@ -524,7 +571,9 @@ class DashboardApiController extends Controller
                 );
             }
 
-            DashboardNotification::where("id", $idAchievement)->update(["read_at" => Carbon::now()]);
+            DashboardNotification::where("id", $idAchievement)->update([
+                "read_at" => Carbon::now(),
+            ]);
 
             return \response()->json(
                 [
@@ -611,7 +660,9 @@ class DashboardApiController extends Controller
         try {
             $onboardingId = \hashids()->decode($onboarding);
 
-            DashboardNotification::where("id", $onboardingId)->update(["read_at" => Carbon::now()]);
+            DashboardNotification::where("id", $onboardingId)->update([
+                "read_at" => Carbon::now(),
+            ]);
 
             return \response()->json(
                 [
@@ -626,6 +677,119 @@ class DashboardApiController extends Controller
                 [
                     "message" => "Ocorreu um erro no update do  onboarding",
                 ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    public function getUserTerms()
+    {
+        try {
+            $user = auth()->user();
+            $cloudfox = explode("cloudfox.net", $user->email);
+            if (count($cloudfox) == 2) {
+                return \response()->json(["message" => false], Response::HTTP_OK);
+            }
+
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "mysql");
+            }
+            $userTermV2 = UserTerms::where([
+                "user_id" => auth()->user()->id,
+                "term_version" => "v2",
+            ])->first();
+
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "demo");
+            }
+            if (empty($userTermV2)) {
+                return \response()->json(["message" => true], Response::HTTP_OK);
+            } else {
+                return \response()->json(["message" => false], Response::HTTP_OK);
+            }
+        } catch (Exception $exception) {
+            $user = auth()->user();
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "demo");
+            }
+            report($exception);
+            return \response()->json(["message" => "Ocorreu um erro"], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function updateUserTerms()
+    {
+        try {
+            $user = auth()->user();
+
+            $cloudfox = explode("cloudfox.net", $user->email);
+            if (count($cloudfox) == 2) {
+                return \response()->json(["message" => true], Response::HTTP_OK);
+            }
+
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "mysql");
+            }
+
+            $userTermV2 = UserTerms::where([
+                "user_id" => auth()->user()->id,
+                "term_version" => "v2",
+            ])->first();
+
+            if (empty($userTermV2)) {
+                $geoIp = null;
+                try {
+                    $geoIp = geoip()->getLocation(IpService::getRealIpAddr());
+                } catch (Exception $e) {
+                    report($e);
+                }
+
+                $operationalSystem = Agent::platform();
+                $browser = Agent::browser();
+
+                $deviceData = [
+                    "operational_system" => Agent::platform(),
+                    "operation_system_version" => Agent::version($operationalSystem),
+                    "browser" => Agent::browser(),
+                    "browser_version" => Agent::version($browser),
+                    "is_mobile" => Agent::isMobile(),
+                    "ip" => @$geoIp["ip"],
+                    "country" => @$geoIp["country"],
+                    "city" => @$geoIp["city"],
+                    "state" => @$geoIp["state"],
+                    "state_name" => @$geoIp["state_name"],
+                    "zip_code" => @$geoIp["postal_code"],
+                    "currency" => @$geoIp["currency"],
+                    "lat" => @$geoIp["lat"],
+                    "lon" => @$geoIp["lon"],
+                ];
+
+                $userTermV2 = new UserTerms();
+                $userTermsCreated = $userTermV2->create([
+                    "user_id" => auth()->user()->id,
+                    "term_version" => "v2",
+                    "device_data" => json_encode($deviceData),
+                    "accepted_at" => Carbon::now(),
+                ]);
+
+                if ($user->company_default == Company::DEMO_ID) {
+                    Config::set("database.default", "demo");
+                }
+
+                if ($userTermsCreated) {
+                    return \response()->json(["message" => true], Response::HTTP_OK); // Salvo com Sucesso
+                }
+                return \response()->json(["message" => false], Response::HTTP_OK);
+            }
+        } catch (Exception $exception) {
+            $user = auth()->user();
+            if ($user->company_default == Company::DEMO_ID) {
+                Config::set("database.default", "demo");
+            }
+
+            report($exception);
+            return \response()->json(
+                ["message" => "Ocorreu um erro => " . $exception->getMessage()],
                 Response::HTTP_BAD_REQUEST
             );
         }

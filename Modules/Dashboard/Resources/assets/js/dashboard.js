@@ -1,33 +1,30 @@
 $(document).ready(function () {
-
-    $('.company-navbar').on("change", function () {
+    $(".company-navbar").on("change", function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $(".performance-card > .performance-data").html("");
-        $('.sirius-cashback > .card').html('');
-        $('#cashback-container #cashback-container-money').text("");
+        $(".sirius-cashback > .card").html("");
+        $("#cashback-container #cashback-container-money").text("");
         putSkeletonLoadingOnBalanceCards();
         window.putSkeletonLoadingOnPerformance();
         $(".sirius-cashback > .card").addClass("d-none");
         putSkeletonLoadingOnChart();
-        $('#scoreLineToMonth').html('');
+        $("#scoreLineToMonth").html("");
 
         window.putSkeletonLoadingOnAccountHealth();
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                if(!isEmpty(data2.company_default_projects)){
-                    if( $("#project-empty").css('display')!='none' ){
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                if (!isEmpty(data2.company_default_projects)) {
+                    if ($("#project-empty").css("display") != "none") {
                         $("#project-empty").hide();
                         $("#project-not-empty").show();
                         window.getDataDashboard();
-                    }
-                    else{
+                    } else {
                         window.updateValues();
                         window.updateChart();
                         window.updatePerformance();
-                        window.updateAccountHealth('80px');
+                        window.updateAccountHealth("80px");
                     }
-                }
-                else{
+                } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                 }
@@ -35,8 +32,8 @@ $(document).ready(function () {
         });
     });
 
-    window.updateChart = function() {
-        $('#scoreLineToMonth').html('')
+    window.updateChart = function () {
+        $("#scoreLineToMonth").html("");
         putSkeletonLoadingOnChart();
 
         $.ajax({
@@ -44,7 +41,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-chart-data`,
             dataType: "json",
             data: {
-                company: $('.company-navbar').val(),
+                company: $(".company-navbar").val(),
             },
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -62,7 +59,32 @@ $(document).ready(function () {
                 }, 2000);
             },
         });
-    }
+    };
+
+    verifyUserTerms();
+    $("#terms-cloudfox").click(function () {
+        $("#accept-term").toggle();
+    });
+
+    $("#accept-term").click(function () {
+        $.ajax({
+            method: "PUT",
+            url: "/api/dashboard/update-user-terms",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (response.message) {
+                    $("#termsModal").modal("toggle");
+                }
+            },
+        });
+    });
 
     function getChart(chartData) {
         let haveData = 0;
@@ -195,7 +217,7 @@ $(document).ready(function () {
         }
     }
 
-    window.getDataDashboard = function() {
+    window.getDataDashboard = function () {
         $.ajax({
             method: "GET",
             url: `/api/dashboard${window.location.search}`,
@@ -220,10 +242,9 @@ $(document).ready(function () {
                 }
             },
         });
-    }
+    };
 
-    window.updateValues = function() {
-
+    window.updateValues = function () {
         putSkeletonLoadingOnBalanceCards();
         $.ajax({
             method: "POST",
@@ -234,7 +255,7 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             data: {
-                company_id: $('.company-navbar').val()
+                company_id: $(".company-navbar").val(),
             },
             error: function error(response) {
                 removeSkeletonLoadingFromBalanceCards();
@@ -258,12 +279,11 @@ $(document).ready(function () {
                 $("#info-total-balance").attr("title", title).tooltip({ placement: "bottom" });
 
                 removeSkeletonLoadingFromBalanceCards();
-            }
+            },
         });
-    }
+    };
 
     function getProjects() {
-
         window.putSkeletonLoadingOnPerformance();
         window.putSkeletonLoadingOnAccountHealth();
         putSkeletonLoadingOnBalanceCards();
@@ -271,15 +291,14 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&company='+ $('.company-navbar').val()+'&tokens=true',
+            url: "/api/projects?select=true&company=" + $(".company-navbar").val() + "&tokens=true",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: function error(response) {
-                if(!origin)
-                    loadingOnScreenRemove();
+                if (!origin) loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -292,7 +311,7 @@ $(document).ready(function () {
                     $("#project-not-empty").hide();
                 }
                 //if(!origin)
-                    loadingOnScreenRemove();
+                loadingOnScreenRemove();
             },
         });
     }
@@ -563,11 +582,32 @@ $(document).ready(function () {
         });
     }
 
+    function verifyUserTerms() {
+        $("#accept-term").hide();
+        $.ajax({
+            method: "GET",
+            url: "/api/dashboard/verify-user-terms",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (response.message) {
+                    $("#termsModal").modal("show");
+                }
+            },
+        });
+    }
+
     $("#closeWelcome").click(function () {
         $("#cardWelcome").slideUp("600");
     });
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getProjects();
     });
 
@@ -596,7 +636,4 @@ $(document).ready(function () {
         $(".chart-card > .loading-content-inside").addClass("d-none");
         $(".chart-data").show();
     }
-
-
-
 });

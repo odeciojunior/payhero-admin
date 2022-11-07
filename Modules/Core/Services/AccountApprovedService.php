@@ -59,6 +59,13 @@ class AccountApprovedService
                     );
                 }
             }
+
+            if (FoxUtils::isProduction()) {
+                PipefyMoveCardPhaseJob::dispatch(
+                    $user,
+                    PipefyService::PHASE_ACTIVE
+                );
+            }
         }
     }
 }
