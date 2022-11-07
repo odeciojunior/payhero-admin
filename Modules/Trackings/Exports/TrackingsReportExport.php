@@ -64,9 +64,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
                 "d.city as delivery_city",
                 "d.state as delivery_state",
                 "d.country as delivery_country",
-            ])
-            ->where("t2.tracking_status_enum", "!=", 3)
-            ->orWhereNull("t2.tracking_status_enum");
+            ]);
     }
 
     public function map($row): array
