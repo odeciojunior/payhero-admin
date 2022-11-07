@@ -34,8 +34,7 @@
             <div style="padding-top:0"
                  class="page-header container">
                 <div id="filter-products-loading"
-                     class="card"
-                     style="display: none">
+                     class="card">
                     <div class="row">
                         <div class="col-lg-3 col-md-6">
                             <div class="skeleton-loading filter-product-loading-label"

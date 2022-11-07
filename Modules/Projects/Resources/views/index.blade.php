@@ -19,15 +19,14 @@
     <div class="page"
          style="padding-bottom: 0;">
 
-        @include('layouts.company-select', ['version' => 'mobile'])
+    @include('layouts.company-select', ['version' => 'mobile'])
 
-        <!-- CONTAINER DO CONTEUDO DA PAGINA -->
+    <!-- CONTAINER DO CONTEUDO DA PAGINA -->
         <div class="page-content container pr-5"
              style="padding-top: 0">
 
             <!-- CABECALHO -->
-            <div style="display: none"
-                 class="page-header container">
+            <div class="page-header container">
                 <div class="row align-items-center justify-content-between"
                      style="min-height:50px">
 
