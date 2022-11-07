@@ -116,7 +116,7 @@ $(document).ready(function () {
                 ` style='cursor:pointer;'>
                                     <a href="/apps/activecampaign/${data.id}" class="activecampaign-link">
 
-                                    <div class="d-flex align-items-center justify-content-center" style="" >
+                                    <div class="d-flex align-items-center justify-content-center" style="height:290px" >
                                         <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
                 ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
