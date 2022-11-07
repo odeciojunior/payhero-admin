@@ -53,7 +53,7 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                 $productId = current(Hashids::decode($productId));
 
                 $pps = ProductPlanSale::select("products_plans_sales.id", "trackings.tracking_status_enum")
-                    ->join("trackings", "trackings.product_plan_sale_id", "=", "products_plans_sales.id")
+                    ->leftJoin("trackings", "trackings.product_plan_sale_id", "=", "products_plans_sales.id")
                     ->where("products_plans_sales.sale_id", $saleId)
                     ->where(function ($query) use ($productId) {
                         $query
@@ -61,7 +61,7 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                             ->orWhere("products_sales_api_id", $productId);
                     })
                     ->first();
-                if ($pps->tracking_status_enum == 3) {
+                if (!empty($pps->tracking_status_enum) && $pps->tracking_status_enum == 3) {
                     continue;
                 }
                 if (!empty($pps) && !empty($trackingCode)) {
